@@ -102,7 +102,7 @@
             // 
             // toolbarFolder
             // 
-            this.toolbarFolder.HelpRequest += new System.EventHandler(this.folderBrowserDialog1_HelpRequest);
+            //this.toolbarFolder.HelpRequest += new System.EventHandler(this.folderBrowserDialog1_HelpRequest);
             // 
             // folderDialogButton
             // 
