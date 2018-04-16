@@ -28,11 +28,6 @@ namespace IRTicker {
         private bool OER_NetworkAvailable = true;
 
         private string cryptoDir = "";
-        /*private Dictionary<string, string> cryptoDirs = new Dictionary<string, string>() {
-            {"XBT", "" },
-            {"ETH", "" },
-            {"BCH", "" }
-        };*/
 
         public IRTicker() {
             InitializeComponent();
@@ -87,11 +82,6 @@ namespace IRTicker {
                 MessageBox.Show("Error connecting to URL: " + uri, "Network error", MessageBoxButtons.OK);
                 return "";
             }
-        }
-
-        // probably accidentally generated this sub
-        private void folderBrowserDialog1_HelpRequest(object sender, EventArgs e) {
-
         }
 
         private void folderDialogButton_Click(object sender, EventArgs e) {
@@ -281,7 +271,7 @@ namespace IRTicker {
 
                 Debug.Print("Begin API poll");
                 ////// IR ///////
-                if(firstRun) {  // leave the API alone.. available currencies won't change.
+                if(firstRun) {  // only pull the currencies once per session as these are essentially static
                     string primaryCurrencyCodesStr = Get("https://api.independentreserve.com/Public/GetValidPrimaryCurrencyCodes");
                     if(string.IsNullOrEmpty(primaryCurrencyCodesStr)) {
                         IR_NetworkAvailable = false;
