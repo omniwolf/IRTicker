@@ -13,6 +13,10 @@ using System.Diagnostics;
 using Newtonsoft.Json;
 using System.Windows.Controls;
 
+// todo:
+// change the colour of the numbers - red if the price has generally dropped over the last 5 minutes (?), green if it's risen
+// maybe align the spread text so it's not dependent on the size of the price text
+
 
 namespace IRTicker {
     public partial class IRTicker : Form {
@@ -26,6 +30,8 @@ namespace IRTicker {
         private bool BTCM_NetworkAvailable = true;
         private bool GDAX_NetworkAvailable = true;
         private bool OER_NetworkAvailable = true;
+        private bool refreshFiat = true;
+
 
         private string cryptoDir = "";
 
@@ -183,6 +189,7 @@ namespace IRTicker {
         }
 
         private void parseFiat_OER(string baseSymbol, string symbols) {
+            Debug.Print("pulling fiat");
             string fxRates = Get("https://openexchangerates.org/api/latest.json?app_id=33bde25e96a6447da4a54d490ca650f2&base=" + baseSymbol + "&symbols=" + symbols + "&prettyprint=false&show_alternative=false");
             if(string.IsNullOrEmpty(fxRates)) {
                 OER_NetworkAvailable = false;
@@ -351,7 +358,10 @@ namespace IRTicker {
 
 
                 //////// fiat rates /////////
-                if (firstRun) parseFiat_OER ("USD", "AUD,NZD,EUR,USD");  // only run this once per session as we have limited fx API calls.
+                if (refreshFiat) {
+                    parseFiat_OER("USD", "AUD,NZD,EUR,USD");  // only run this once per session as we have limited fx API calls.
+                    refreshFiat = false;
+                }
 
                 // OK we now have all the DCE and fiat rates info loaded.
 
@@ -437,7 +447,14 @@ namespace IRTicker {
                 }
             }
 
-            if (OER_NetworkAvailable) printFiat();  // i outsourced updating the fiat UI we do it when loading for the first time, and also when the user clicks the fiat_groupBox.  it doesn't realy need to be done each poll as we only pull fiat once.. but meh
+            if (OER_NetworkAvailable) {
+                printFiat();  // i outsourced updating the fiat UI we do it when loading for the first time, and also when the user clicks the fiat_groupBox.  it doesn't realy need to be done each poll as we only pull fiat once.. but meh
+                if (fiat_checkBox.Checked) {
+                    fiat_checkBox.Enabled = true;
+                    fiat_checkBox.Checked = false;
+                }
+            }
+
 
             if(!IR_NetworkAvailable) return;  // at this point everything else needs IR data.  no point in continuing if there is none.
 
@@ -587,10 +604,10 @@ namespace IRTicker {
             }
             else {  // we're changing it to USD base
                 fiat_GroupBox.Text = "Fiat rates (base: USD)";
-                AUD_Label2.Text = fiatRates.rates.AUD.ToString();
-                NZD_Label2.Text = fiatRates.rates.NZD.ToString();
-                EUR_Label2.Text = fiatRates.rates.EUR.ToString();
-                USD_Label2.Text = fiatRates.rates.USD.ToString();
+                AUD_Label2.Text = (1 / fiatRates.rates.AUD).ToString("0.#####");
+                NZD_Label2.Text = (1 / fiatRates.rates.NZD).ToString("0.#####");
+                EUR_Label2.Text = (1 / fiatRates.rates.EUR).ToString("0.#####");
+                USD_Label2.Text = (1 / fiatRates.rates.USD).ToString("0.#####");
             }
         }
 
@@ -598,6 +615,13 @@ namespace IRTicker {
             if(!gb.Text.EndsWith("API down")) {
                 gb.Text = gb.Text + " - API down";
                 gb.ForeColor = Color.Gray;
+            }
+        }
+
+        private void fiat_checkBox_CheckedChanged(object sender, EventArgs e) {
+            if (fiat_checkBox.Checked) {
+                refreshFiat = true;
+                fiat_checkBox.Enabled = false;
             }
         }
     }

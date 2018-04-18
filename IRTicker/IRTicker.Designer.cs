@@ -71,6 +71,7 @@
             this.IR_BCH_Label1 = new System.Windows.Forms.Label();
             this.IR_ETH_Label1 = new System.Windows.Forms.Label();
             this.IR_XBT_Label1 = new System.Windows.Forms.Label();
+            this.fiat_checkBox = new System.Windows.Forms.CheckBox();
             this.Settings.SuspendLayout();
             this.Main.SuspendLayout();
             this.fiat_GroupBox.SuspendLayout();
@@ -99,10 +100,6 @@
             this.refreshFrequencyLabel.Size = new System.Drawing.Size(126, 26);
             this.refreshFrequencyLabel.TabIndex = 1;
             this.refreshFrequencyLabel.Text = "How fast should the \r\napp refresh (in seconds)?";
-            // 
-            // toolbarFolder
-            // 
-            //this.toolbarFolder.HelpRequest += new System.EventHandler(this.folderBrowserDialog1_HelpRequest);
             // 
             // folderDialogButton
             // 
@@ -166,6 +163,7 @@
             // 
             // fiat_GroupBox
             // 
+            this.fiat_GroupBox.Controls.Add(this.fiat_checkBox);
             this.fiat_GroupBox.Controls.Add(this.USD_Label2);
             this.fiat_GroupBox.Controls.Add(this.USD_Label1);
             this.fiat_GroupBox.Controls.Add(this.AUD_Label2);
@@ -557,6 +555,17 @@
             this.IR_XBT_Label1.TabIndex = 0;
             this.IR_XBT_Label1.Text = "XBT:";
             // 
+            // fiat_checkBox
+            // 
+            this.fiat_checkBox.AutoSize = true;
+            this.fiat_checkBox.Location = new System.Drawing.Point(9, 107);
+            this.fiat_checkBox.Name = "fiat_checkBox";
+            this.fiat_checkBox.Size = new System.Drawing.Size(143, 17);
+            this.fiat_checkBox.TabIndex = 9;
+            this.fiat_checkBox.Text = "Tick to queue an update";
+            this.fiat_checkBox.UseVisualStyleBackColor = true;
+            this.fiat_checkBox.CheckedChanged += new System.EventHandler(this.fiat_checkBox_CheckedChanged);
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -632,6 +641,7 @@
         private System.Windows.Forms.Label BTCM_XRP_Label1;
         private System.Windows.Forms.Label USD_Label2;
         private System.Windows.Forms.Label USD_Label1;
+        private System.Windows.Forms.CheckBox fiat_checkBox;
     }
 }
 
