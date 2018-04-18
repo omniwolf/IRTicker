@@ -109,6 +109,8 @@ namespace IRTicker {
             }
         }
 
+        public Dictionary<string, products_GDAX> exchangeProducts { get; set; }
+
         // this is the class that is used for all DCEs. It is based on IR's JSON.
         public class MarketSummary {
 
@@ -184,5 +186,28 @@ namespace IRTicker {
             public bool limit_only { get; set; }
             public bool cancel_only { get; set; }
         }
+
+        public class products_BFX {
+            public string pair { get; set; }
+            public int price_precision { get; set; }
+            public string initial_margin { get; set; }
+            public string minimum_margin { get; set; }
+            public string maximum_order_size { get; set; }
+            public string minimum_order_size { get; set; }
+            public string expiration { get; set; }
+            public bool margin { get; set; }
+        }
+
+        public class MarketSummary_BFX {
+            public string mid { get; set; }
+            public string bid { get; set; }
+            public string ask { get; set; }
+            public string last_price { get; set; }
+            public string low { get; set; }
+            public string high { get; set; }
+            public string volume { get; set; }
+            public string timestamp { get; set; }
+        }
+      
     }
 }

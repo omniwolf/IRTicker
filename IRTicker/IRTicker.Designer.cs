@@ -31,8 +31,21 @@
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
             this.SettingsOKButton = new System.Windows.Forms.Button();
+            this.LoadingPanel = new System.Windows.Forms.Panel();
+            this.GIFLabel = new System.Windows.Forms.Label();
             this.Main = new System.Windows.Forms.Panel();
+            this.BFX_GroupBox = new System.Windows.Forms.GroupBox();
+            this.BFX_XBT_Label2 = new System.Windows.Forms.Label();
+            this.BFX_ETH_Label2 = new System.Windows.Forms.Label();
+            this.BFX_BCH_Label2 = new System.Windows.Forms.Label();
+            this.BFX_LTC_Label2 = new System.Windows.Forms.Label();
+            this.BFX_LTC_Label1 = new System.Windows.Forms.Label();
+            this.BFX_BCH_Label1 = new System.Windows.Forms.Label();
+            this.BFX_ETH_Label1 = new System.Windows.Forms.Label();
+            this.BFX_XBT_Label1 = new System.Windows.Forms.Label();
             this.fiat_GroupBox = new System.Windows.Forms.GroupBox();
+            this.fiatInvert_checkBox = new System.Windows.Forms.CheckBox();
+            this.fiatRefresh_checkBox = new System.Windows.Forms.CheckBox();
             this.USD_Label2 = new System.Windows.Forms.Label();
             this.USD_Label1 = new System.Windows.Forms.Label();
             this.AUD_Label2 = new System.Windows.Forms.Label();
@@ -71,9 +84,12 @@
             this.IR_BCH_Label1 = new System.Windows.Forms.Label();
             this.IR_ETH_Label1 = new System.Windows.Forms.Label();
             this.IR_XBT_Label1 = new System.Windows.Forms.Label();
-            this.fiat_checkBox = new System.Windows.Forms.CheckBox();
+            this.FolderLabel = new System.Windows.Forms.Label();
+            this.InvertFiatLabel = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
+            this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
+            this.BFX_GroupBox.SuspendLayout();
             this.fiat_GroupBox.SuspendLayout();
             this.GDAX_GroupBox.SuspendLayout();
             this.BTCM_GroupBox.SuspendLayout();
@@ -83,7 +99,7 @@
             // refreshFrequencyTextbox
             // 
             this.refreshFrequencyTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.refreshFrequencyTextbox.Location = new System.Drawing.Point(134, 108);
+            this.refreshFrequencyTextbox.Location = new System.Drawing.Point(383, 50);
             this.refreshFrequencyTextbox.Mask = "00000";
             this.refreshFrequencyTextbox.Name = "refreshFrequencyTextbox";
             this.refreshFrequencyTextbox.Size = new System.Drawing.Size(68, 32);
@@ -91,11 +107,12 @@
             this.refreshFrequencyTextbox.Text = "10";
             this.refreshFrequencyTextbox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.refreshFrequencyTextbox.ValidatingType = typeof(int);
+            this.refreshFrequencyTextbox.TextChanged += new System.EventHandler(this.refreshFrequencyTextbox_TextChanged);
             // 
             // refreshFrequencyLabel
             // 
             this.refreshFrequencyLabel.AutoSize = true;
-            this.refreshFrequencyLabel.Location = new System.Drawing.Point(131, 64);
+            this.refreshFrequencyLabel.Location = new System.Drawing.Point(19, 57);
             this.refreshFrequencyLabel.Name = "refreshFrequencyLabel";
             this.refreshFrequencyLabel.Size = new System.Drawing.Size(126, 26);
             this.refreshFrequencyLabel.TabIndex = 1;
@@ -103,7 +120,7 @@
             // 
             // folderDialogButton
             // 
-            this.folderDialogButton.Location = new System.Drawing.Point(81, 198);
+            this.folderDialogButton.Location = new System.Drawing.Point(310, 221);
             this.folderDialogButton.Name = "folderDialogButton";
             this.folderDialogButton.Size = new System.Drawing.Size(141, 31);
             this.folderDialogButton.TabIndex = 2;
@@ -113,7 +130,7 @@
             // 
             // folderDialogTextbox
             // 
-            this.folderDialogTextbox.Location = new System.Drawing.Point(12, 172);
+            this.folderDialogTextbox.Location = new System.Drawing.Point(191, 191);
             this.folderDialogTextbox.Name = "folderDialogTextbox";
             this.folderDialogTextbox.ReadOnly = true;
             this.folderDialogTextbox.Size = new System.Drawing.Size(260, 20);
@@ -129,19 +146,22 @@
             // 
             // Settings
             // 
+            this.Settings.Controls.Add(this.fiatInvert_checkBox);
+            this.Settings.Controls.Add(this.InvertFiatLabel);
             this.Settings.Controls.Add(this.SettingsOKButton);
+            this.Settings.Controls.Add(this.FolderLabel);
             this.Settings.Controls.Add(this.refreshFrequencyLabel);
-            this.Settings.Controls.Add(this.folderDialogButton);
             this.Settings.Controls.Add(this.folderDialogTextbox);
             this.Settings.Controls.Add(this.refreshFrequencyTextbox);
+            this.Settings.Controls.Add(this.folderDialogButton);
             this.Settings.Location = new System.Drawing.Point(-3, -1);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(388, 385);
+            this.Settings.Size = new System.Drawing.Size(495, 505);
             this.Settings.TabIndex = 4;
             // 
             // SettingsOKButton
             // 
-            this.SettingsOKButton.Location = new System.Drawing.Point(146, 302);
+            this.SettingsOKButton.Location = new System.Drawing.Point(410, 458);
             this.SettingsOKButton.Name = "SettingsOKButton";
             this.SettingsOKButton.Size = new System.Drawing.Size(75, 23);
             this.SettingsOKButton.TabIndex = 4;
@@ -149,8 +169,27 @@
             this.SettingsOKButton.UseVisualStyleBackColor = true;
             this.SettingsOKButton.Click += new System.EventHandler(this.SettingsOKButton_Click);
             // 
+            // LoadingPanel
+            // 
+            this.LoadingPanel.Controls.Add(this.GIFLabel);
+            this.LoadingPanel.Location = new System.Drawing.Point(0, 0);
+            this.LoadingPanel.Name = "LoadingPanel";
+            this.LoadingPanel.Size = new System.Drawing.Size(492, 572);
+            this.LoadingPanel.TabIndex = 10;
+            // 
+            // GIFLabel
+            // 
+            this.GIFLabel.Image = global::IRTicker.Properties.Resources.scrooge;
+            this.GIFLabel.Location = new System.Drawing.Point(-6, -62);
+            this.GIFLabel.Name = "GIFLabel";
+            this.GIFLabel.Size = new System.Drawing.Size(498, 550);
+            this.GIFLabel.TabIndex = 0;
+            this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
+            this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // Main
             // 
+            this.Main.Controls.Add(this.BFX_GroupBox);
             this.Main.Controls.Add(this.fiat_GroupBox);
             this.Main.Controls.Add(this.GDAX_GroupBox);
             this.Main.Controls.Add(this.SettingsButton);
@@ -158,12 +197,103 @@
             this.Main.Controls.Add(this.IR_GroupBox);
             this.Main.Location = new System.Drawing.Point(0, 0);
             this.Main.Name = "Main";
-            this.Main.Size = new System.Drawing.Size(492, 385);
+            this.Main.Size = new System.Drawing.Size(492, 487);
             this.Main.TabIndex = 5;
+            // 
+            // BFX_GroupBox
+            // 
+            this.BFX_GroupBox.Controls.Add(this.BFX_XBT_Label2);
+            this.BFX_GroupBox.Controls.Add(this.BFX_ETH_Label2);
+            this.BFX_GroupBox.Controls.Add(this.BFX_BCH_Label2);
+            this.BFX_GroupBox.Controls.Add(this.BFX_LTC_Label2);
+            this.BFX_GroupBox.Controls.Add(this.BFX_LTC_Label1);
+            this.BFX_GroupBox.Controls.Add(this.BFX_BCH_Label1);
+            this.BFX_GroupBox.Controls.Add(this.BFX_ETH_Label1);
+            this.BFX_GroupBox.Controls.Add(this.BFX_XBT_Label1);
+            this.BFX_GroupBox.ForeColor = System.Drawing.Color.Gray;
+            this.BFX_GroupBox.Location = new System.Drawing.Point(260, 171);
+            this.BFX_GroupBox.Name = "BFX_GroupBox";
+            this.BFX_GroupBox.Size = new System.Drawing.Size(217, 130);
+            this.BFX_GroupBox.TabIndex = 9;
+            this.BFX_GroupBox.TabStop = false;
+            this.BFX_GroupBox.Text = "BitFinex";
+            this.BFX_GroupBox.Click += new System.EventHandler(this.BFX_GroupBox_Click);
+            // 
+            // BFX_XBT_Label2
+            // 
+            this.BFX_XBT_Label2.AutoSize = true;
+            this.BFX_XBT_Label2.Location = new System.Drawing.Point(56, 27);
+            this.BFX_XBT_Label2.Name = "BFX_XBT_Label2";
+            this.BFX_XBT_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_XBT_Label2.TabIndex = 4;
+            // 
+            // BFX_ETH_Label2
+            // 
+            this.BFX_ETH_Label2.AutoSize = true;
+            this.BFX_ETH_Label2.Location = new System.Drawing.Point(56, 47);
+            this.BFX_ETH_Label2.Name = "BFX_ETH_Label2";
+            this.BFX_ETH_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_ETH_Label2.TabIndex = 5;
+            // 
+            // BFX_BCH_Label2
+            // 
+            this.BFX_BCH_Label2.AutoSize = true;
+            this.BFX_BCH_Label2.Location = new System.Drawing.Point(56, 67);
+            this.BFX_BCH_Label2.Name = "BFX_BCH_Label2";
+            this.BFX_BCH_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_BCH_Label2.TabIndex = 6;
+            // 
+            // BFX_LTC_Label2
+            // 
+            this.BFX_LTC_Label2.AutoSize = true;
+            this.BFX_LTC_Label2.Location = new System.Drawing.Point(56, 87);
+            this.BFX_LTC_Label2.Name = "BFX_LTC_Label2";
+            this.BFX_LTC_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_LTC_Label2.TabIndex = 7;
+            // 
+            // BFX_LTC_Label1
+            // 
+            this.BFX_LTC_Label1.AutoSize = true;
+            this.BFX_LTC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_LTC_Label1.Location = new System.Drawing.Point(6, 87);
+            this.BFX_LTC_Label1.Name = "BFX_LTC_Label1";
+            this.BFX_LTC_Label1.Size = new System.Drawing.Size(34, 13);
+            this.BFX_LTC_Label1.TabIndex = 3;
+            this.BFX_LTC_Label1.Text = "LTC:";
+            // 
+            // BFX_BCH_Label1
+            // 
+            this.BFX_BCH_Label1.AutoSize = true;
+            this.BFX_BCH_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_BCH_Label1.Location = new System.Drawing.Point(6, 67);
+            this.BFX_BCH_Label1.Name = "BFX_BCH_Label1";
+            this.BFX_BCH_Label1.Size = new System.Drawing.Size(36, 13);
+            this.BFX_BCH_Label1.TabIndex = 2;
+            this.BFX_BCH_Label1.Text = "BCH:";
+            // 
+            // BFX_ETH_Label1
+            // 
+            this.BFX_ETH_Label1.AutoSize = true;
+            this.BFX_ETH_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_ETH_Label1.Location = new System.Drawing.Point(6, 47);
+            this.BFX_ETH_Label1.Name = "BFX_ETH_Label1";
+            this.BFX_ETH_Label1.Size = new System.Drawing.Size(36, 13);
+            this.BFX_ETH_Label1.TabIndex = 1;
+            this.BFX_ETH_Label1.Text = "ETH:";
+            // 
+            // BFX_XBT_Label1
+            // 
+            this.BFX_XBT_Label1.AutoSize = true;
+            this.BFX_XBT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_XBT_Label1.Location = new System.Drawing.Point(6, 27);
+            this.BFX_XBT_Label1.Name = "BFX_XBT_Label1";
+            this.BFX_XBT_Label1.Size = new System.Drawing.Size(35, 13);
+            this.BFX_XBT_Label1.TabIndex = 0;
+            this.BFX_XBT_Label1.Text = "XBT:";
             // 
             // fiat_GroupBox
             // 
-            this.fiat_GroupBox.Controls.Add(this.fiat_checkBox);
+            this.fiat_GroupBox.Controls.Add(this.fiatRefresh_checkBox);
             this.fiat_GroupBox.Controls.Add(this.USD_Label2);
             this.fiat_GroupBox.Controls.Add(this.USD_Label1);
             this.fiat_GroupBox.Controls.Add(this.AUD_Label2);
@@ -173,13 +303,34 @@
             this.fiat_GroupBox.Controls.Add(this.NZD_Label1);
             this.fiat_GroupBox.Controls.Add(this.AUD_Label1);
             this.fiat_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.fiat_GroupBox.Location = new System.Drawing.Point(260, 171);
+            this.fiat_GroupBox.Location = new System.Drawing.Point(142, 320);
             this.fiat_GroupBox.Name = "fiat_GroupBox";
             this.fiat_GroupBox.Size = new System.Drawing.Size(217, 130);
             this.fiat_GroupBox.TabIndex = 9;
             this.fiat_GroupBox.TabStop = false;
             this.fiat_GroupBox.Text = "Fiat rates";
             this.fiat_GroupBox.Click += new System.EventHandler(this.fiat_GroupBox_Click);
+            // 
+            // fiatInvert_checkBox
+            // 
+            this.fiatInvert_checkBox.AutoSize = true;
+            this.fiatInvert_checkBox.Location = new System.Drawing.Point(436, 126);
+            this.fiatInvert_checkBox.Name = "fiatInvert_checkBox";
+            this.fiatInvert_checkBox.Size = new System.Drawing.Size(15, 14);
+            this.fiatInvert_checkBox.TabIndex = 10;
+            this.fiatInvert_checkBox.UseVisualStyleBackColor = true;
+            this.fiatInvert_checkBox.CheckedChanged += new System.EventHandler(this.fiatInvert_checkBox_CheckedChanged);
+            // 
+            // fiatRefresh_checkBox
+            // 
+            this.fiatRefresh_checkBox.AutoSize = true;
+            this.fiatRefresh_checkBox.Location = new System.Drawing.Point(9, 107);
+            this.fiatRefresh_checkBox.Name = "fiatRefresh_checkBox";
+            this.fiatRefresh_checkBox.Size = new System.Drawing.Size(143, 17);
+            this.fiatRefresh_checkBox.TabIndex = 9;
+            this.fiatRefresh_checkBox.Text = "Tick to queue an update";
+            this.fiatRefresh_checkBox.UseVisualStyleBackColor = true;
+            this.fiatRefresh_checkBox.CheckedChanged += new System.EventHandler(this.fiat_checkBox_CheckedChanged);
             // 
             // USD_Label2
             // 
@@ -346,7 +497,7 @@
             // 
             // SettingsButton
             // 
-            this.SettingsButton.Location = new System.Drawing.Point(78, 319);
+            this.SettingsButton.Location = new System.Drawing.Point(407, 457);
             this.SettingsButton.Name = "SettingsButton";
             this.SettingsButton.Size = new System.Drawing.Size(75, 23);
             this.SettingsButton.TabIndex = 2;
@@ -555,22 +706,30 @@
             this.IR_XBT_Label1.TabIndex = 0;
             this.IR_XBT_Label1.Text = "XBT:";
             // 
-            // fiat_checkBox
+            // FolderLabel
             // 
-            this.fiat_checkBox.AutoSize = true;
-            this.fiat_checkBox.Location = new System.Drawing.Point(9, 107);
-            this.fiat_checkBox.Name = "fiat_checkBox";
-            this.fiat_checkBox.Size = new System.Drawing.Size(143, 17);
-            this.fiat_checkBox.TabIndex = 9;
-            this.fiat_checkBox.Text = "Tick to queue an update";
-            this.fiat_checkBox.UseVisualStyleBackColor = true;
-            this.fiat_checkBox.CheckedChanged += new System.EventHandler(this.fiat_checkBox_CheckedChanged);
+            this.FolderLabel.AutoSize = true;
+            this.FolderLabel.Location = new System.Drawing.Point(19, 191);
+            this.FolderLabel.Name = "FolderLabel";
+            this.FolderLabel.Size = new System.Drawing.Size(115, 13);
+            this.FolderLabel.TabIndex = 5;
+            this.FolderLabel.Text = "Toolbar folder location:";
+            // 
+            // InvertFiatLabel
+            // 
+            this.InvertFiatLabel.AutoSize = true;
+            this.InvertFiatLabel.Location = new System.Drawing.Point(19, 126);
+            this.InvertFiatLabel.Name = "InvertFiatLabel";
+            this.InvertFiatLabel.Size = new System.Drawing.Size(91, 13);
+            this.InvertFiatLabel.TabIndex = 6;
+            this.InvertFiatLabel.Text = "Invert fiat fx rates:";
             // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(489, 381);
+            this.ClientSize = new System.Drawing.Size(494, 489);
+            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Main);
             this.Controls.Add(this.Settings);
             this.Name = "IRTicker";
@@ -578,7 +737,10 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.IRTicker_Closing);
             this.Settings.ResumeLayout(false);
             this.Settings.PerformLayout();
+            this.LoadingPanel.ResumeLayout(false);
             this.Main.ResumeLayout(false);
+            this.BFX_GroupBox.ResumeLayout(false);
+            this.BFX_GroupBox.PerformLayout();
             this.fiat_GroupBox.ResumeLayout(false);
             this.fiat_GroupBox.PerformLayout();
             this.GDAX_GroupBox.ResumeLayout(false);
@@ -641,7 +803,21 @@
         private System.Windows.Forms.Label BTCM_XRP_Label1;
         private System.Windows.Forms.Label USD_Label2;
         private System.Windows.Forms.Label USD_Label1;
-        private System.Windows.Forms.CheckBox fiat_checkBox;
+        private System.Windows.Forms.CheckBox fiatRefresh_checkBox;
+        private System.Windows.Forms.CheckBox fiatInvert_checkBox;
+        private System.Windows.Forms.Panel LoadingPanel;
+        private System.Windows.Forms.Label GIFLabel;
+        private System.Windows.Forms.GroupBox BFX_GroupBox;
+        private System.Windows.Forms.Label BFX_XBT_Label2;
+        private System.Windows.Forms.Label BFX_ETH_Label2;
+        private System.Windows.Forms.Label BFX_BCH_Label2;
+        private System.Windows.Forms.Label BFX_LTC_Label2;
+        private System.Windows.Forms.Label BFX_LTC_Label1;
+        private System.Windows.Forms.Label BFX_BCH_Label1;
+        private System.Windows.Forms.Label BFX_ETH_Label1;
+        private System.Windows.Forms.Label BFX_XBT_Label1;
+        private System.Windows.Forms.Label InvertFiatLabel;
+        private System.Windows.Forms.Label FolderLabel;
     }
 }
 
