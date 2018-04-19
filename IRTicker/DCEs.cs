@@ -13,6 +13,11 @@ namespace IRTicker {
         private int _chosenPrimaryCurrency = 0;
         private int _chosenSecondaryCurrency = 0;
         public Dictionary<string, MarketSummary> cryptoPairs;
+        public List<Tuple<DateTime, double>> XBTHistory = new List<Tuple<DateTime, double>>();
+        public List<Tuple<DateTime, double>> ETHHistory = new List<Tuple<DateTime, double>>();
+        public List<Tuple<DateTime, double>> BCHHistory = new List<Tuple<DateTime, double>>();
+        public List<Tuple<DateTime, double>> LTCHistory = new List<Tuple<DateTime, double>>();
+        public List<Tuple<DateTime, double>> XRPHistory = new List<Tuple<DateTime, double>>();
 
         // constructor
         public DCE() {
@@ -110,6 +115,29 @@ namespace IRTicker {
         }
 
         public Dictionary<string, products_GDAX> exchangeProducts { get; set; }
+
+        public void crytoPairsAdd(string pair, MarketSummary mSummary) {
+            // ok here want to add it to the cryptopairs dictionary, but we also want to add the last price to a list so we can see trends
+            cryptoPairs.Add(pair, mSummary);
+
+            switch (pair.Substring(0, 2)) {
+                case "XBT":
+                    XBTHistory.Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));
+                    break;
+                case "ETH":
+                    ETHHistory.Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));
+                    break;
+                case "BCH":
+                    BCHHistory.Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));
+                    break;
+                case "LTC":
+                    LTCHistory.Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));
+                    break;
+                case "XRP":
+                    LTCHistory.Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));
+                    break;
+            }
+        }
 
         // this is the class that is used for all DCEs. It is based on IR's JSON.
         public class MarketSummary {

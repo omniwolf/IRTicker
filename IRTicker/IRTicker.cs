@@ -518,10 +518,14 @@ namespace IRTicker {
                 //Debug.Print("secondary currency number is " + DCEs["IR"].chosenSecondaryCurrency + " and this is " + DCEs["IR"].currentSecondaryCurrency);
                 IR_GroupBox.ForeColor = Color.Black;
                 IR_GroupBox.Text = "Independent Reserve (fiat pair: " + secondaryCurrencyCode + ")";
-                IR_XBT_Label2.Text = DCEs["IR"].cryptoPairs["XBT-" + secondaryCurrencyCode].LastPrice.ToString() + " (Spread: " + DCEs["IR"].cryptoPairs["XBT-" + secondaryCurrencyCode].spread.ToString("0.##") + ")";
-                IR_ETH_Label2.Text = DCEs["IR"].cryptoPairs["ETH-" + secondaryCurrencyCode].LastPrice.ToString() + " (Spread: " + DCEs["IR"].cryptoPairs["ETH-" + secondaryCurrencyCode].spread.ToString("0.##") + ")";
-                IR_BCH_Label2.Text = DCEs["IR"].cryptoPairs["BCH-" + secondaryCurrencyCode].LastPrice.ToString() + " (Spread: " + DCEs["IR"].cryptoPairs["BCH-" + secondaryCurrencyCode].spread.ToString("0.##") + ")";
-                IR_LTC_Label2.Text = DCEs["IR"].cryptoPairs["LTC-" + secondaryCurrencyCode].LastPrice.ToString() + " (Spread: " + DCEs["IR"].cryptoPairs["LTC-" + secondaryCurrencyCode].spread.ToString("0.##") + ")";
+                IR_XBT_Label2.Text = DCEs["IR"].cryptoPairs["XBT-" + secondaryCurrencyCode].LastPrice.ToString();
+                IR_XBT_Label3.Text = "(Spread: " + DCEs["IR"].cryptoPairs["XBT-" + secondaryCurrencyCode].spread.ToString("0.##") + ")";
+                IR_ETH_Label2.Text = DCEs["IR"].cryptoPairs["ETH-" + secondaryCurrencyCode].LastPrice.ToString();
+                IR_ETH_Label3.Text = "(Spread: " + DCEs["IR"].cryptoPairs["ETH-" + secondaryCurrencyCode].spread.ToString("0.##") + ")";
+                IR_BCH_Label2.Text = DCEs["IR"].cryptoPairs["BCH-" + secondaryCurrencyCode].LastPrice.ToString();
+                IR_BCH_Label3.Text = "(Spread: " + DCEs["IR"].cryptoPairs["BCH-" + secondaryCurrencyCode].spread.ToString("0.##") + ")";
+                IR_LTC_Label2.Text = DCEs["IR"].cryptoPairs["LTC-" + secondaryCurrencyCode].LastPrice.ToString();
+                IR_LTC_Label3.Text = "(Spread: " + DCEs["IR"].cryptoPairs["LTC-" + secondaryCurrencyCode].spread.ToString("0.##") + ")";
             }
             else APIDown(IR_GroupBox);
 
@@ -777,7 +781,7 @@ namespace IRTicker {
             if(fiatRates != null) {
                 fiat_GroupBox.ForeColor = Color.Black;
                 if(!fiatIsUSD) {  // it's USD, but we're changing it to AUD
-                    fiat_GroupBox.Text = "Fiat rates (base: AUD)";
+                    fiat_GroupBox.Text = "Fiat rates (base: AUD" + (fiatInvert_checkBox.Checked ? ", inverted)": ")");
                     if(fiatInvert_checkBox.Checked) {
                         USD_Label2.Text = fiatRates.rates.AUD.ToString("0.#####");
                         NZD_Label2.Text = (1 / ((1 / fiatRates.rates.AUD) * fiatRates.rates.NZD)).ToString("0.#####");
@@ -792,7 +796,7 @@ namespace IRTicker {
                     }
                 }
                 else {  // we're changing it to USD base
-                    fiat_GroupBox.Text = "Fiat rates (base: USD)";
+                    fiat_GroupBox.Text = "Fiat rates (base: USD" + (fiatInvert_checkBox.Checked ? ", inverted)": ")");
                     if(fiatInvert_checkBox.Checked) {
                         AUD_Label2.Text = (1 / fiatRates.rates.AUD).ToString("0.#####");
                         NZD_Label2.Text = (1 / fiatRates.rates.NZD).ToString("0.#####");
