@@ -180,6 +180,8 @@ namespace IRTicker {
                 }
                 else Debug.Print("Could not convert GDAX price: " + mSummary_GDAX.volume);
 
+                mSummary.PrimaryCurrencyCode = crypto;
+                mSummary.SecondaryCurrencyCode = fiat;
                 mSummary.CreatedTimestampUTC = mSummary_GDAX.time;
 
                 if(DCEs["GDAX"].cryptoPairs.ContainsKey(crypto + "-" + fiat)) {  // we need to delete this entry if it exists because we're relpacing it with updated data
@@ -230,6 +232,8 @@ namespace IRTicker {
                 }
                 else Debug.Print("Could not convert BFX price: " + mSummary_BFX.volume);
 
+                mSummary.PrimaryCurrencyCode = crypto;
+                mSummary.SecondaryCurrencyCode = fiat;
                 mSummary.CreatedTimestampUTC = mSummary_BFX.timestamp;
 
                 if(DCEs["BFX"].cryptoPairs.ContainsKey(crypto + "-" + fiat)) {  // we need to delete this entry if it exists because we're relpacing it with updated data
@@ -345,7 +349,7 @@ namespace IRTicker {
                     // next we need to do a manual conversion.
                     DCE.products_GDAX prod_gdax = new DCE.products_GDAX();
                     prod_gdax.id = (prod.pair.Insert(3, "-")).ToUpper();  // converts btcusd into BTC-USD
-                    Debug.Print("prod_gdax id " + prod_gdax.id);
+                    //Debug.Print("BFX prod_gdax id " + prod_gdax.id);
                     prod_gdax.base_min_size = prod.minimum_order_size;
                     prod_gdax.base_max_size = prod.maximum_order_size;
                     prod_gdax.margin_enabled = prod.margin;
@@ -507,6 +511,12 @@ namespace IRTicker {
             } while(true);  // we never stop polling..
         }
 
+        private void updateLabels(System.Windows.Forms.Label priceLabel, System.Windows.Forms.Label spreadLabel, DCE.MarketSummary mSummary, string dExchange) {
+            priceLabel.Text = mSummary.LastPrice.ToString();
+            spreadLabel.Text = "(Spread: " + mSummary.spread.ToString("0.##") + ")";
+            priceLabel.ForeColor = Utilities.priceColour(DCEs[dExchange].getCryptoHistory(mSummary.PrimaryCurrencyCode));
+        }
+
         private void pollingThread_ReportProgress(object sender, ProgressChangedEventArgs e) {
 
             LoadingPanel.Visible = false;
@@ -518,7 +528,7 @@ namespace IRTicker {
                 //Debug.Print("secondary currency number is " + DCEs["IR"].chosenSecondaryCurrency + " and this is " + DCEs["IR"].currentSecondaryCurrency);
                 IR_GroupBox.ForeColor = Color.Black;
                 IR_GroupBox.Text = "Independent Reserve (fiat pair: " + secondaryCurrencyCode + ")";
-                IR_XBT_Label2.Text = DCEs["IR"].cryptoPairs["XBT-" + secondaryCurrencyCode].LastPrice.ToString();
+                /*IR_XBT_Label2.Text = DCEs["IR"].cryptoPairs["XBT-" + secondaryCurrencyCode].LastPrice.ToString();
                 IR_XBT_Label3.Text = "(Spread: " + DCEs["IR"].cryptoPairs["XBT-" + secondaryCurrencyCode].spread.ToString("0.##") + ")";
                 IR_ETH_Label2.Text = DCEs["IR"].cryptoPairs["ETH-" + secondaryCurrencyCode].LastPrice.ToString();
                 IR_ETH_Label3.Text = "(Spread: " + DCEs["IR"].cryptoPairs["ETH-" + secondaryCurrencyCode].spread.ToString("0.##") + ")";
@@ -526,6 +536,12 @@ namespace IRTicker {
                 IR_BCH_Label3.Text = "(Spread: " + DCEs["IR"].cryptoPairs["BCH-" + secondaryCurrencyCode].spread.ToString("0.##") + ")";
                 IR_LTC_Label2.Text = DCEs["IR"].cryptoPairs["LTC-" + secondaryCurrencyCode].LastPrice.ToString();
                 IR_LTC_Label3.Text = "(Spread: " + DCEs["IR"].cryptoPairs["LTC-" + secondaryCurrencyCode].spread.ToString("0.##") + ")";
+                */
+                Debug.Print("XBT IR spread: " + DCEs["IR"].cryptoPairs["XBT-AUD"].spread);
+                updateLabels(IR_XBT_Label2, IR_XBT_Label3, DCEs["IR"].cryptoPairs["XBT-" + secondaryCurrencyCode], "IR");
+                updateLabels(IR_ETH_Label2, IR_ETH_Label3, DCEs["IR"].cryptoPairs["ETH-" + secondaryCurrencyCode], "IR");
+                updateLabels(IR_BCH_Label2, IR_BCH_Label3, DCEs["IR"].cryptoPairs["BCH-" + secondaryCurrencyCode], "IR");
+                updateLabels(IR_LTC_Label2, IR_LTC_Label3, DCEs["IR"].cryptoPairs["LTC-" + secondaryCurrencyCode], "IR");
             }
             else APIDown(IR_GroupBox);
 

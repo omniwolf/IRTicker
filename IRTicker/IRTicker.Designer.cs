@@ -30,16 +30,20 @@
             this.folderDialogTextbox = new System.Windows.Forms.TextBox();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
+            this.LoadingPanel = new System.Windows.Forms.Panel();
+            this.GIFLabel = new System.Windows.Forms.Label();
             this.fiatInvert_checkBox = new System.Windows.Forms.CheckBox();
             this.InvertFiatLabel = new System.Windows.Forms.Label();
             this.SettingsOKButton = new System.Windows.Forms.Button();
             this.FolderLabel = new System.Windows.Forms.Label();
-            this.LoadingPanel = new System.Windows.Forms.Panel();
-            this.GIFLabel = new System.Windows.Forms.Label();
             this.Main = new System.Windows.Forms.Panel();
             this.BFX_GroupBox = new System.Windows.Forms.GroupBox();
+            this.BFX_LTC_Label3 = new System.Windows.Forms.Label();
+            this.BFX_BCH_Label3 = new System.Windows.Forms.Label();
             this.BFX_XBT_Label2 = new System.Windows.Forms.Label();
+            this.BFX_ETH_Label3 = new System.Windows.Forms.Label();
             this.BFX_ETH_Label2 = new System.Windows.Forms.Label();
+            this.BFX_XBT_Label3 = new System.Windows.Forms.Label();
             this.BFX_BCH_Label2 = new System.Windows.Forms.Label();
             this.BFX_LTC_Label2 = new System.Windows.Forms.Label();
             this.BFX_LTC_Label1 = new System.Windows.Forms.Label();
@@ -57,8 +61,12 @@
             this.NZD_Label1 = new System.Windows.Forms.Label();
             this.AUD_Label1 = new System.Windows.Forms.Label();
             this.GDAX_GroupBox = new System.Windows.Forms.GroupBox();
+            this.GDAX_LTC_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_BCH_Label3 = new System.Windows.Forms.Label();
             this.GDAX_XBT_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_ETH_Label3 = new System.Windows.Forms.Label();
             this.GDAX_ETH_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_XBT_Label3 = new System.Windows.Forms.Label();
             this.GDAX_BCH_Label2 = new System.Windows.Forms.Label();
             this.GDAX_LTC_Label2 = new System.Windows.Forms.Label();
             this.GDAX_LTC_Label1 = new System.Windows.Forms.Label();
@@ -67,8 +75,13 @@
             this.GDAX_XBT_Label1 = new System.Windows.Forms.Label();
             this.SettingsButton = new System.Windows.Forms.Button();
             this.BTCM_GroupBox = new System.Windows.Forms.GroupBox();
+            this.BTCM_XRP_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_LTC_Label3 = new System.Windows.Forms.Label();
             this.BTCM_XRP_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_BCH_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_ETH_Label3 = new System.Windows.Forms.Label();
             this.BTCM_XBT_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_XBT_Label3 = new System.Windows.Forms.Label();
             this.BTCM_XRP_Label1 = new System.Windows.Forms.Label();
             this.BTCM_ETH_Label1 = new System.Windows.Forms.Label();
             this.BTCM_ETH_Label2 = new System.Windows.Forms.Label();
@@ -78,6 +91,10 @@
             this.BTCM_LTC_Label2 = new System.Windows.Forms.Label();
             this.BTCM_LTC_Label1 = new System.Windows.Forms.Label();
             this.IR_GroupBox = new System.Windows.Forms.GroupBox();
+            this.IR_LTC_Label3 = new System.Windows.Forms.Label();
+            this.IR_BCH_Label3 = new System.Windows.Forms.Label();
+            this.IR_ETH_Label3 = new System.Windows.Forms.Label();
+            this.IR_XBT_Label3 = new System.Windows.Forms.Label();
             this.IR_XBT_Label2 = new System.Windows.Forms.Label();
             this.IR_ETH_Label2 = new System.Windows.Forms.Label();
             this.IR_BCH_Label2 = new System.Windows.Forms.Label();
@@ -86,23 +103,6 @@
             this.IR_BCH_Label1 = new System.Windows.Forms.Label();
             this.IR_ETH_Label1 = new System.Windows.Forms.Label();
             this.IR_XBT_Label1 = new System.Windows.Forms.Label();
-            this.IR_XBT_Label3 = new System.Windows.Forms.Label();
-            this.IR_ETH_Label3 = new System.Windows.Forms.Label();
-            this.IR_BCH_Label3 = new System.Windows.Forms.Label();
-            this.IR_LTC_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_LTC_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_BCH_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_ETH_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_XBT_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_XRP_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_LTC_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_BCH_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_ETH_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_XBT_Label3 = new System.Windows.Forms.Label();
-            this.BFX_LTC_Label3 = new System.Windows.Forms.Label();
-            this.BFX_BCH_Label3 = new System.Windows.Forms.Label();
-            this.BFX_ETH_Label3 = new System.Windows.Forms.Label();
-            this.BFX_XBT_Label3 = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -177,6 +177,24 @@
             this.Settings.Size = new System.Drawing.Size(495, 505);
             this.Settings.TabIndex = 4;
             // 
+            // LoadingPanel
+            // 
+            this.LoadingPanel.Controls.Add(this.GIFLabel);
+            this.LoadingPanel.Location = new System.Drawing.Point(0, 0);
+            this.LoadingPanel.Name = "LoadingPanel";
+            this.LoadingPanel.Size = new System.Drawing.Size(492, 572);
+            this.LoadingPanel.TabIndex = 10;
+            // 
+            // GIFLabel
+            // 
+            this.GIFLabel.Image = global::IRTicker.Properties.Resources.scrooge;
+            this.GIFLabel.Location = new System.Drawing.Point(-6, -62);
+            this.GIFLabel.Name = "GIFLabel";
+            this.GIFLabel.Size = new System.Drawing.Size(498, 550);
+            this.GIFLabel.TabIndex = 0;
+            this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
+            this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // fiatInvert_checkBox
             // 
             this.fiatInvert_checkBox.AutoSize = true;
@@ -215,24 +233,6 @@
             this.FolderLabel.TabIndex = 5;
             this.FolderLabel.Text = "Toolbar folder location:";
             // 
-            // LoadingPanel
-            // 
-            this.LoadingPanel.Controls.Add(this.GIFLabel);
-            this.LoadingPanel.Location = new System.Drawing.Point(0, 0);
-            this.LoadingPanel.Name = "LoadingPanel";
-            this.LoadingPanel.Size = new System.Drawing.Size(492, 572);
-            this.LoadingPanel.TabIndex = 10;
-            // 
-            // GIFLabel
-            // 
-            this.GIFLabel.Image = global::IRTicker.Properties.Resources.scrooge;
-            this.GIFLabel.Location = new System.Drawing.Point(-6, -62);
-            this.GIFLabel.Name = "GIFLabel";
-            this.GIFLabel.Size = new System.Drawing.Size(498, 550);
-            this.GIFLabel.TabIndex = 0;
-            this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
-            this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
             // Main
             // 
             this.Main.Controls.Add(this.BFX_GroupBox);
@@ -269,6 +269,24 @@
             this.BFX_GroupBox.Text = "BitFinex";
             this.BFX_GroupBox.Click += new System.EventHandler(this.BFX_GroupBox_Click);
             // 
+            // BFX_LTC_Label3
+            // 
+            this.BFX_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_LTC_Label3.Location = new System.Drawing.Point(131, 87);
+            this.BFX_LTC_Label3.Name = "BFX_LTC_Label3";
+            this.BFX_LTC_Label3.Size = new System.Drawing.Size(75, 13);
+            this.BFX_LTC_Label3.TabIndex = 19;
+            this.BFX_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_BCH_Label3
+            // 
+            this.BFX_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_BCH_Label3.Location = new System.Drawing.Point(131, 67);
+            this.BFX_BCH_Label3.Name = "BFX_BCH_Label3";
+            this.BFX_BCH_Label3.Size = new System.Drawing.Size(75, 13);
+            this.BFX_BCH_Label3.TabIndex = 18;
+            this.BFX_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // BFX_XBT_Label2
             // 
             this.BFX_XBT_Label2.AutoSize = true;
@@ -277,6 +295,15 @@
             this.BFX_XBT_Label2.Size = new System.Drawing.Size(0, 13);
             this.BFX_XBT_Label2.TabIndex = 4;
             // 
+            // BFX_ETH_Label3
+            // 
+            this.BFX_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_ETH_Label3.Location = new System.Drawing.Point(131, 47);
+            this.BFX_ETH_Label3.Name = "BFX_ETH_Label3";
+            this.BFX_ETH_Label3.Size = new System.Drawing.Size(75, 13);
+            this.BFX_ETH_Label3.TabIndex = 17;
+            this.BFX_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // BFX_ETH_Label2
             // 
             this.BFX_ETH_Label2.AutoSize = true;
@@ -284,6 +311,15 @@
             this.BFX_ETH_Label2.Name = "BFX_ETH_Label2";
             this.BFX_ETH_Label2.Size = new System.Drawing.Size(0, 13);
             this.BFX_ETH_Label2.TabIndex = 5;
+            // 
+            // BFX_XBT_Label3
+            // 
+            this.BFX_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_XBT_Label3.Location = new System.Drawing.Point(131, 27);
+            this.BFX_XBT_Label3.Name = "BFX_XBT_Label3";
+            this.BFX_XBT_Label3.Size = new System.Drawing.Size(75, 13);
+            this.BFX_XBT_Label3.TabIndex = 16;
+            this.BFX_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // BFX_BCH_Label2
             // 
@@ -467,6 +503,24 @@
             this.GDAX_GroupBox.Text = "GDAX";
             this.GDAX_GroupBox.Click += new System.EventHandler(this.GDAX_GroupBox_Click);
             // 
+            // GDAX_LTC_Label3
+            // 
+            this.GDAX_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_LTC_Label3.Location = new System.Drawing.Point(126, 87);
+            this.GDAX_LTC_Label3.Name = "GDAX_LTC_Label3";
+            this.GDAX_LTC_Label3.Size = new System.Drawing.Size(81, 13);
+            this.GDAX_LTC_Label3.TabIndex = 15;
+            this.GDAX_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GDAX_BCH_Label3
+            // 
+            this.GDAX_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_BCH_Label3.Location = new System.Drawing.Point(126, 67);
+            this.GDAX_BCH_Label3.Name = "GDAX_BCH_Label3";
+            this.GDAX_BCH_Label3.Size = new System.Drawing.Size(81, 13);
+            this.GDAX_BCH_Label3.TabIndex = 14;
+            this.GDAX_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // GDAX_XBT_Label2
             // 
             this.GDAX_XBT_Label2.AutoSize = true;
@@ -475,6 +529,15 @@
             this.GDAX_XBT_Label2.Size = new System.Drawing.Size(0, 13);
             this.GDAX_XBT_Label2.TabIndex = 4;
             // 
+            // GDAX_ETH_Label3
+            // 
+            this.GDAX_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_ETH_Label3.Location = new System.Drawing.Point(126, 47);
+            this.GDAX_ETH_Label3.Name = "GDAX_ETH_Label3";
+            this.GDAX_ETH_Label3.Size = new System.Drawing.Size(81, 13);
+            this.GDAX_ETH_Label3.TabIndex = 13;
+            this.GDAX_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // GDAX_ETH_Label2
             // 
             this.GDAX_ETH_Label2.AutoSize = true;
@@ -482,6 +545,15 @@
             this.GDAX_ETH_Label2.Name = "GDAX_ETH_Label2";
             this.GDAX_ETH_Label2.Size = new System.Drawing.Size(0, 13);
             this.GDAX_ETH_Label2.TabIndex = 5;
+            // 
+            // GDAX_XBT_Label3
+            // 
+            this.GDAX_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_XBT_Label3.Location = new System.Drawing.Point(126, 27);
+            this.GDAX_XBT_Label3.Name = "GDAX_XBT_Label3";
+            this.GDAX_XBT_Label3.Size = new System.Drawing.Size(81, 13);
+            this.GDAX_XBT_Label3.TabIndex = 12;
+            this.GDAX_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // GDAX_BCH_Label2
             // 
@@ -574,6 +646,24 @@
             this.BTCM_GroupBox.TabStop = false;
             this.BTCM_GroupBox.Text = "BTC Markets";
             // 
+            // BTCM_XRP_Label3
+            // 
+            this.BTCM_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BTCM_XRP_Label3.Location = new System.Drawing.Point(128, 103);
+            this.BTCM_XRP_Label3.Name = "BTCM_XRP_Label3";
+            this.BTCM_XRP_Label3.Size = new System.Drawing.Size(78, 13);
+            this.BTCM_XRP_Label3.TabIndex = 16;
+            this.BTCM_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BTCM_LTC_Label3
+            // 
+            this.BTCM_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BTCM_LTC_Label3.Location = new System.Drawing.Point(128, 83);
+            this.BTCM_LTC_Label3.Name = "BTCM_LTC_Label3";
+            this.BTCM_LTC_Label3.Size = new System.Drawing.Size(78, 13);
+            this.BTCM_LTC_Label3.TabIndex = 15;
+            this.BTCM_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // BTCM_XRP_Label2
             // 
             this.BTCM_XRP_Label2.AutoSize = true;
@@ -582,6 +672,24 @@
             this.BTCM_XRP_Label2.Size = new System.Drawing.Size(0, 13);
             this.BTCM_XRP_Label2.TabIndex = 9;
             // 
+            // BTCM_BCH_Label3
+            // 
+            this.BTCM_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BTCM_BCH_Label3.Location = new System.Drawing.Point(128, 63);
+            this.BTCM_BCH_Label3.Name = "BTCM_BCH_Label3";
+            this.BTCM_BCH_Label3.Size = new System.Drawing.Size(78, 13);
+            this.BTCM_BCH_Label3.TabIndex = 14;
+            this.BTCM_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BTCM_ETH_Label3
+            // 
+            this.BTCM_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BTCM_ETH_Label3.Location = new System.Drawing.Point(128, 43);
+            this.BTCM_ETH_Label3.Name = "BTCM_ETH_Label3";
+            this.BTCM_ETH_Label3.Size = new System.Drawing.Size(78, 13);
+            this.BTCM_ETH_Label3.TabIndex = 13;
+            this.BTCM_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // BTCM_XBT_Label2
             // 
             this.BTCM_XBT_Label2.AutoSize = true;
@@ -589,6 +697,15 @@
             this.BTCM_XBT_Label2.Name = "BTCM_XBT_Label2";
             this.BTCM_XBT_Label2.Size = new System.Drawing.Size(0, 13);
             this.BTCM_XBT_Label2.TabIndex = 12;
+            // 
+            // BTCM_XBT_Label3
+            // 
+            this.BTCM_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BTCM_XBT_Label3.Location = new System.Drawing.Point(128, 23);
+            this.BTCM_XBT_Label3.Name = "BTCM_XBT_Label3";
+            this.BTCM_XBT_Label3.Size = new System.Drawing.Size(78, 13);
+            this.BTCM_XBT_Label3.TabIndex = 12;
+            this.BTCM_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // BTCM_XRP_Label1
             // 
@@ -687,6 +804,42 @@
             this.IR_GroupBox.Text = "Independent Reserve";
             this.IR_GroupBox.Click += new System.EventHandler(this.IR_GroupBox_Click);
             // 
+            // IR_LTC_Label3
+            // 
+            this.IR_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_LTC_Label3.Location = new System.Drawing.Point(105, 83);
+            this.IR_LTC_Label3.Name = "IR_LTC_Label3";
+            this.IR_LTC_Label3.Size = new System.Drawing.Size(102, 13);
+            this.IR_LTC_Label3.TabIndex = 11;
+            this.IR_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // IR_BCH_Label3
+            // 
+            this.IR_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_BCH_Label3.Location = new System.Drawing.Point(105, 63);
+            this.IR_BCH_Label3.Name = "IR_BCH_Label3";
+            this.IR_BCH_Label3.Size = new System.Drawing.Size(102, 13);
+            this.IR_BCH_Label3.TabIndex = 10;
+            this.IR_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // IR_ETH_Label3
+            // 
+            this.IR_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_ETH_Label3.Location = new System.Drawing.Point(105, 43);
+            this.IR_ETH_Label3.Name = "IR_ETH_Label3";
+            this.IR_ETH_Label3.Size = new System.Drawing.Size(102, 13);
+            this.IR_ETH_Label3.TabIndex = 9;
+            this.IR_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // IR_XBT_Label3
+            // 
+            this.IR_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_XBT_Label3.Location = new System.Drawing.Point(105, 23);
+            this.IR_XBT_Label3.Name = "IR_XBT_Label3";
+            this.IR_XBT_Label3.Size = new System.Drawing.Size(102, 13);
+            this.IR_XBT_Label3.TabIndex = 8;
+            this.IR_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // IR_XBT_Label2
             // 
             this.IR_XBT_Label2.AutoSize = true;
@@ -758,159 +911,6 @@
             this.IR_XBT_Label1.Size = new System.Drawing.Size(35, 13);
             this.IR_XBT_Label1.TabIndex = 0;
             this.IR_XBT_Label1.Text = "XBT:";
-            // 
-            // IR_XBT_Label3
-            // 
-            this.IR_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.IR_XBT_Label3.Location = new System.Drawing.Point(123, 23);
-            this.IR_XBT_Label3.Name = "IR_XBT_Label3";
-            this.IR_XBT_Label3.Size = new System.Drawing.Size(84, 11);
-            this.IR_XBT_Label3.TabIndex = 8;
-            this.IR_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // IR_ETH_Label3
-            // 
-            this.IR_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.IR_ETH_Label3.Location = new System.Drawing.Point(123, 43);
-            this.IR_ETH_Label3.Name = "IR_ETH_Label3";
-            this.IR_ETH_Label3.Size = new System.Drawing.Size(84, 13);
-            this.IR_ETH_Label3.TabIndex = 9;
-            this.IR_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // IR_BCH_Label3
-            // 
-            this.IR_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.IR_BCH_Label3.Location = new System.Drawing.Point(123, 63);
-            this.IR_BCH_Label3.Name = "IR_BCH_Label3";
-            this.IR_BCH_Label3.Size = new System.Drawing.Size(84, 13);
-            this.IR_BCH_Label3.TabIndex = 10;
-            this.IR_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // IR_LTC_Label3
-            // 
-            this.IR_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.IR_LTC_Label3.Location = new System.Drawing.Point(123, 83);
-            this.IR_LTC_Label3.Name = "IR_LTC_Label3";
-            this.IR_LTC_Label3.Size = new System.Drawing.Size(84, 13);
-            this.IR_LTC_Label3.TabIndex = 11;
-            this.IR_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BTCM_LTC_Label3
-            // 
-            this.BTCM_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BTCM_LTC_Label3.Location = new System.Drawing.Point(128, 83);
-            this.BTCM_LTC_Label3.Name = "BTCM_LTC_Label3";
-            this.BTCM_LTC_Label3.Size = new System.Drawing.Size(78, 13);
-            this.BTCM_LTC_Label3.TabIndex = 15;
-            this.BTCM_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BTCM_BCH_Label3
-            // 
-            this.BTCM_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BTCM_BCH_Label3.Location = new System.Drawing.Point(128, 63);
-            this.BTCM_BCH_Label3.Name = "BTCM_BCH_Label3";
-            this.BTCM_BCH_Label3.Size = new System.Drawing.Size(78, 13);
-            this.BTCM_BCH_Label3.TabIndex = 14;
-            this.BTCM_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BTCM_ETH_Label3
-            // 
-            this.BTCM_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BTCM_ETH_Label3.Location = new System.Drawing.Point(128, 43);
-            this.BTCM_ETH_Label3.Name = "BTCM_ETH_Label3";
-            this.BTCM_ETH_Label3.Size = new System.Drawing.Size(78, 13);
-            this.BTCM_ETH_Label3.TabIndex = 13;
-            this.BTCM_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BTCM_XBT_Label3
-            // 
-            this.BTCM_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BTCM_XBT_Label3.Location = new System.Drawing.Point(128, 23);
-            this.BTCM_XBT_Label3.Name = "BTCM_XBT_Label3";
-            this.BTCM_XBT_Label3.Size = new System.Drawing.Size(78, 13);
-            this.BTCM_XBT_Label3.TabIndex = 12;
-            this.BTCM_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BTCM_XRP_Label3
-            // 
-            this.BTCM_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BTCM_XRP_Label3.Location = new System.Drawing.Point(128, 103);
-            this.BTCM_XRP_Label3.Name = "BTCM_XRP_Label3";
-            this.BTCM_XRP_Label3.Size = new System.Drawing.Size(78, 13);
-            this.BTCM_XRP_Label3.TabIndex = 16;
-            this.BTCM_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GDAX_LTC_Label3
-            // 
-            this.GDAX_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.GDAX_LTC_Label3.Location = new System.Drawing.Point(126, 87);
-            this.GDAX_LTC_Label3.Name = "GDAX_LTC_Label3";
-            this.GDAX_LTC_Label3.Size = new System.Drawing.Size(81, 13);
-            this.GDAX_LTC_Label3.TabIndex = 15;
-            this.GDAX_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GDAX_BCH_Label3
-            // 
-            this.GDAX_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.GDAX_BCH_Label3.Location = new System.Drawing.Point(126, 67);
-            this.GDAX_BCH_Label3.Name = "GDAX_BCH_Label3";
-            this.GDAX_BCH_Label3.Size = new System.Drawing.Size(81, 13);
-            this.GDAX_BCH_Label3.TabIndex = 14;
-            this.GDAX_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GDAX_ETH_Label3
-            // 
-            this.GDAX_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.GDAX_ETH_Label3.Location = new System.Drawing.Point(126, 47);
-            this.GDAX_ETH_Label3.Name = "GDAX_ETH_Label3";
-            this.GDAX_ETH_Label3.Size = new System.Drawing.Size(81, 13);
-            this.GDAX_ETH_Label3.TabIndex = 13;
-            this.GDAX_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GDAX_XBT_Label3
-            // 
-            this.GDAX_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.GDAX_XBT_Label3.Location = new System.Drawing.Point(126, 27);
-            this.GDAX_XBT_Label3.Name = "GDAX_XBT_Label3";
-            this.GDAX_XBT_Label3.Size = new System.Drawing.Size(81, 13);
-            this.GDAX_XBT_Label3.TabIndex = 12;
-            this.GDAX_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BFX_LTC_Label3
-            // 
-            this.BFX_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_LTC_Label3.Location = new System.Drawing.Point(131, 87);
-            this.BFX_LTC_Label3.Name = "BFX_LTC_Label3";
-            this.BFX_LTC_Label3.Size = new System.Drawing.Size(75, 13);
-            this.BFX_LTC_Label3.TabIndex = 19;
-            this.BFX_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BFX_BCH_Label3
-            // 
-            this.BFX_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_BCH_Label3.Location = new System.Drawing.Point(131, 67);
-            this.BFX_BCH_Label3.Name = "BFX_BCH_Label3";
-            this.BFX_BCH_Label3.Size = new System.Drawing.Size(75, 13);
-            this.BFX_BCH_Label3.TabIndex = 18;
-            this.BFX_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BFX_ETH_Label3
-            // 
-            this.BFX_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_ETH_Label3.Location = new System.Drawing.Point(131, 47);
-            this.BFX_ETH_Label3.Name = "BFX_ETH_Label3";
-            this.BFX_ETH_Label3.Size = new System.Drawing.Size(75, 13);
-            this.BFX_ETH_Label3.TabIndex = 17;
-            this.BFX_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BFX_XBT_Label3
-            // 
-            this.BFX_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_XBT_Label3.Location = new System.Drawing.Point(131, 27);
-            this.BFX_XBT_Label3.Name = "BFX_XBT_Label3";
-            this.BFX_XBT_Label3.Size = new System.Drawing.Size(75, 13);
-            this.BFX_XBT_Label3.TabIndex = 16;
-            this.BFX_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // IRTicker
             // 

@@ -139,6 +139,23 @@ namespace IRTicker {
             }
         }
 
+        public List<Tuple<DateTime, double>> getCryptoHistory(string crypto) {
+            switch (crypto) {
+                case "XBT":
+                    return XBTHistory;
+                case "ETH":
+                    return ETHHistory;
+                case "BCH":
+                    return BCHHistory;
+                case "LTC":
+                    return LTCHistory;
+                case "XRP":
+                    return XRPHistory;
+                default:
+                    return null;
+            }
+        }
+
         // this is the class that is used for all DCEs. It is based on IR's JSON.
         public class MarketSummary {
 
