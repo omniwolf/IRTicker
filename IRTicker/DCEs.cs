@@ -12,19 +12,46 @@ namespace IRTicker {
         private string _secondaryCodesStr;
         private int _chosenPrimaryCurrency = 0;
         private int _chosenSecondaryCurrency = 0;
+        private Dictionary<string, List<Tuple<DateTime, double>>> priceHistory = new Dictionary<string, List<Tuple<DateTime, double>>>();
+
         public Dictionary<string, MarketSummary> cryptoPairs;
-        public List<Tuple<DateTime, double>> XBTHistory = new List<Tuple<DateTime, double>>();
-        public List<Tuple<DateTime, double>> ETHHistory = new List<Tuple<DateTime, double>>();
-        public List<Tuple<DateTime, double>> BCHHistory = new List<Tuple<DateTime, double>>();
-        public List<Tuple<DateTime, double>> LTCHistory = new List<Tuple<DateTime, double>>();
-        public List<Tuple<DateTime, double>> XRPHistory = new List<Tuple<DateTime, double>>();
 
         // constructor
         public DCE() {
             cryptoPairs = new Dictionary<string, MarketSummary>();
         }
 
-        public int chosenPrimaryCurrency {
+        // "Online" if everything is fine, anything else will cause the UI to display this string in the DCE group box text
+        public string CurrentDCEStatus { get; set; }
+
+        public List<Tuple<DateTime, double>> GetPriceList(string pair) {
+            if (priceHistory.ContainsKey(pair)) {
+                return priceHistory[pair];
+            }
+            else {
+                return new List<Tuple<DateTime, double>>();
+            }
+        }
+
+        public void CryptoPairsAdd(string pair, MarketSummary mSummary) {
+            // ok here want to add it to the cryptopairs dictionary, but we also want to add the last price to a list so we can see trends
+            pair = pair.ToUpper();
+            if (cryptoPairs.ContainsKey(pair)) {  // we need to delete this entry if it exists because we're relpacing it with updated data
+                cryptoPairs.Remove(pair);
+            }
+
+            cryptoPairs.Add(pair, mSummary);
+
+            if (!priceHistory.ContainsKey(pair)) {  // if this crypto/fiat pair hasn't come up before, create a new empty dictionary kvp
+                priceHistory.Add(pair, new List<Tuple<DateTime, double>>());
+            }
+            priceHistory[pair].Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));  // add the time and price to the kvp's value list
+        }
+
+        /////////////////////////////////////////////////////////
+        ////////////////      CURRENCIES      ///////////////////
+        /////////////////////////////////////////////////////////
+        public int ChosenPrimaryCurrency {
             get {
                 return _chosenPrimaryCurrency;
             }
@@ -33,7 +60,7 @@ namespace IRTicker {
             }
         }
 
-        public int chosenSecondaryCurrency {
+        public int ChosenSecondaryCurrency {
             get {
                 return _chosenSecondaryCurrency;
             }
@@ -45,7 +72,7 @@ namespace IRTicker {
         /// <summary>
         /// Crypto, needs to take codes as comma separated string with quotation marks around each symbol, eg "\"XBT\",\"BCH\",\"ETH\""
         /// </summary>
-        public string primaryCurrencyCodes {
+        public string PrimaryCurrencyCodes {
             get {
                 return _primaryCodesStr;
             }
@@ -54,18 +81,18 @@ namespace IRTicker {
             }
         }
 
-        public string currentPrimaryCurrency {
+        public string CurrentPrimaryCurrency {
             get {
-                return primaryCurrencyList[_chosenPrimaryCurrency];
+                return PrimaryCurrencyList[_chosenPrimaryCurrency];
             }
         }
 
-        public List<string> primaryCurrencyList {
+        public List<string> PrimaryCurrencyList {
             get {
                 List<string> codesList = new List<string>();
                 string[] codess = _primaryCodesStr.Split(',');
                 foreach(string cc in codess) {
-                    string cc2 = Utilities.trimEnds(cc);
+                    string cc2 = Utilities.TrimEnds(cc);
                     codesList.Add(cc2);
                 }
                 return codesList;
@@ -75,7 +102,7 @@ namespace IRTicker {
         /// <summary>
         /// Fiat, needs to take codes as comma separated string with quotation marks around each symbol, eg "\"AUD\",\"USD\",\"NZD\""
         /// </summary>
-        public string secondaryCurrencyCodes {
+        public string SecondaryCurrencyCodes {
             get {
                 return _secondaryCodesStr;
             }
@@ -84,29 +111,29 @@ namespace IRTicker {
             }
         }
 
-        public List<string> secondaryCurrencyList {
+        public List<string> SecondaryCurrencyList {
             get {
                 List<string> codesList = new List<string>();
                 string[] codess = _secondaryCodesStr.Split(',');
                 foreach(string cc in codess) {
-                    string cc2 = Utilities.trimEnds(cc);
+                    string cc2 = Utilities.TrimEnds(cc);
                     codesList.Add(cc2);
                 }
                 return codesList;
             }
         }
 
-        public string currentSecondaryCurrency {
+        public string CurrentSecondaryCurrency {
             get {
-                return secondaryCurrencyList[_chosenSecondaryCurrency];
+                return SecondaryCurrencyList[_chosenSecondaryCurrency];
             }
         }
 
         /// <summary>
         /// This moves the chosenSecondaryCurrency value to the next one (or to the first if we're on the last one)
         /// </summary>
-        public void nextSecondaryCurrency() {
-            if (_chosenSecondaryCurrency == secondaryCurrencyList.Count - 1) {
+        public void NextSecondaryCurrency() {
+            if (_chosenSecondaryCurrency == SecondaryCurrencyList.Count - 1) {
                 _chosenSecondaryCurrency = 0;
             }
             else {
@@ -114,50 +141,18 @@ namespace IRTicker {
             }
         }
 
-        public Dictionary<string, products_GDAX> exchangeProducts { get; set; }
+        public Dictionary<string, products_GDAX> ExchangeProducts { get; set; }
 
-        public void crytoPairsAdd(string pair, MarketSummary mSummary) {
-            // ok here want to add it to the cryptopairs dictionary, but we also want to add the last price to a list so we can see trends
-            cryptoPairs.Add(pair, mSummary);
 
-            switch (pair.Substring(0, 2)) {
-                case "XBT":
-                    XBTHistory.Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));
-                    break;
-                case "ETH":
-                    ETHHistory.Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));
-                    break;
-                case "BCH":
-                    BCHHistory.Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));
-                    break;
-                case "LTC":
-                    LTCHistory.Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));
-                    break;
-                case "XRP":
-                    LTCHistory.Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));
-                    break;
-            }
-        }
-
-        public List<Tuple<DateTime, double>> getCryptoHistory(string crypto) {
-            switch (crypto) {
-                case "XBT":
-                    return XBTHistory;
-                case "ETH":
-                    return ETHHistory;
-                case "BCH":
-                    return BCHHistory;
-                case "LTC":
-                    return LTCHistory;
-                case "XRP":
-                    return XRPHistory;
-                default:
-                    return null;
-            }
-        }
+        /////////////////////////////////////////////////////////
+        //////////////      JSON STUFF     //////////////////////
+        /////////////////////////////////////////////////////////
 
         // this is the class that is used for all DCEs. It is based on IR's JSON.
         public class MarketSummary {
+
+            private string _PrimaryCurrencyCode;
+            private string _SecondaryCurrencyCode;
 
             public double DayHighestPrice { get; set; }
             public double DayLowestPrice { get; set; }
@@ -170,11 +165,25 @@ namespace IRTicker {
             /// <summary>
             /// crypto
             /// </summary>
-            public string PrimaryCurrencyCode { get; set; }  // crypto
+            public string PrimaryCurrencyCode {
+                get {
+                    return _PrimaryCurrencyCode.ToUpper();
+                }
+                set {
+                    _PrimaryCurrencyCode = value;
+                }  // crypto
+            }
             /// <summary>
             /// fiat
             /// </summary>
-            public string SecondaryCurrencyCode { get; set; }  // fiat
+            public string SecondaryCurrencyCode {
+                get {
+                    return _SecondaryCurrencyCode.ToUpper();
+                }
+                set {
+                    _SecondaryCurrencyCode = value;
+                }
+            } // fiat
             public string CreatedTimestampUTC { get; set; }
 
             public double spread {

@@ -12,13 +12,13 @@ namespace IRTicker {
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string trimEnds(string value) {
+        public static string TrimEnds(string value) {
             value = value.Remove(0, 1);
             return value.Remove(value.Length - 1, 1);
         }
 
         // this list will be sorted from earliest time to latest time
-        public static Color priceColour(List<Tuple<DateTime, double>> priceList) {
+        public static Color PriceColour(List<Tuple<DateTime, double>> priceList) {
 
             // if we don't have enough data, just go black.
             if (priceList == null) return Color.Black;
