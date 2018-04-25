@@ -104,6 +104,7 @@
             this.IR_BCH_Label1 = new System.Windows.Forms.Label();
             this.IR_ETH_Label1 = new System.Windows.Forms.Label();
             this.IR_XBT_Label1 = new System.Windows.Forms.Label();
+            this.VersionLabel = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -120,9 +121,10 @@
             this.refreshFrequencyTextbox.Location = new System.Drawing.Point(383, 50);
             this.refreshFrequencyTextbox.Mask = "00000";
             this.refreshFrequencyTextbox.Name = "refreshFrequencyTextbox";
+            this.refreshFrequencyTextbox.PromptChar = ' ';
             this.refreshFrequencyTextbox.Size = new System.Drawing.Size(68, 32);
             this.refreshFrequencyTextbox.TabIndex = 0;
-            this.refreshFrequencyTextbox.Text = "10";
+            this.refreshFrequencyTextbox.Text = "20";
             this.refreshFrequencyTextbox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.refreshFrequencyTextbox.ValidatingType = typeof(int);
             this.refreshFrequencyTextbox.TextChanged += new System.EventHandler(this.RefreshFrequencyTextbox_TextChanged);
@@ -132,12 +134,13 @@
             this.refreshFrequencyLabel.AutoSize = true;
             this.refreshFrequencyLabel.Location = new System.Drawing.Point(19, 57);
             this.refreshFrequencyLabel.Name = "refreshFrequencyLabel";
-            this.refreshFrequencyLabel.Size = new System.Drawing.Size(126, 26);
+            this.refreshFrequencyLabel.Size = new System.Drawing.Size(223, 13);
             this.refreshFrequencyLabel.TabIndex = 1;
-            this.refreshFrequencyLabel.Text = "How fast should the \r\napp refresh (in seconds)?";
+            this.refreshFrequencyLabel.Text = "How fast should the app refresh (in seconds)?";
             // 
             // folderDialogButton
             // 
+            this.folderDialogButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.folderDialogButton.Location = new System.Drawing.Point(310, 221);
             this.folderDialogButton.Name = "folderDialogButton";
             this.folderDialogButton.Size = new System.Drawing.Size(141, 31);
@@ -164,6 +167,8 @@
             // 
             // Settings
             // 
+            this.Settings.BackColor = System.Drawing.Color.White;
+            this.Settings.Controls.Add(this.VersionLabel);
             this.Settings.Controls.Add(this.fiatInvert_checkBox);
             this.Settings.Controls.Add(this.InvertFiatLabel);
             this.Settings.Controls.Add(this.SettingsOKButton);
@@ -172,7 +177,7 @@
             this.Settings.Controls.Add(this.folderDialogTextbox);
             this.Settings.Controls.Add(this.refreshFrequencyTextbox);
             this.Settings.Controls.Add(this.folderDialogButton);
-            this.Settings.Location = new System.Drawing.Point(-3, -1);
+            this.Settings.Location = new System.Drawing.Point(0, 0);
             this.Settings.Name = "Settings";
             this.Settings.Size = new System.Drawing.Size(495, 505);
             this.Settings.TabIndex = 4;
@@ -198,6 +203,7 @@
             // 
             // SettingsOKButton
             // 
+            this.SettingsOKButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SettingsOKButton.Location = new System.Drawing.Point(410, 458);
             this.SettingsOKButton.Name = "SettingsOKButton";
             this.SettingsOKButton.Size = new System.Drawing.Size(75, 23);
@@ -631,7 +637,7 @@
             // SettingsButton
             // 
             this.SettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsButton.Location = new System.Drawing.Point(407, 457);
+            this.SettingsButton.Location = new System.Drawing.Point(410, 458);
             this.SettingsButton.Name = "SettingsButton";
             this.SettingsButton.Size = new System.Drawing.Size(75, 23);
             this.SettingsButton.TabIndex = 2;
@@ -948,6 +954,14 @@
             this.IR_XBT_Label1.TabIndex = 0;
             this.IR_XBT_Label1.Text = "XBT:";
             // 
+            // VersionLabel
+            // 
+            this.VersionLabel.AutoSize = true;
+            this.VersionLabel.Location = new System.Drawing.Point(16, 463);
+            this.VersionLabel.Name = "VersionLabel";
+            this.VersionLabel.Size = new System.Drawing.Size(0, 13);
+            this.VersionLabel.TabIndex = 11;
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1061,6 +1075,7 @@
         private System.Windows.Forms.Label IR_BCH_Label3;
         private System.Windows.Forms.Label IR_ETH_Label3;
         private System.Windows.Forms.Label IR_XBT_Label3;
+        private System.Windows.Forms.Label VersionLabel;
     }
 }
 

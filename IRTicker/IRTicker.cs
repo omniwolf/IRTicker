@@ -77,6 +77,8 @@ namespace IRTicker {
             fiatInvert_checkBox.Checked = Properties.Settings.Default.FiatInverse;
             refreshFrequencyTextbox.Text = Properties.Settings.Default.RefreshFreq.ToString(); ;
 
+            VersionLabel.Text = "IR Ticker version " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
             pollingThread.RunWorkerAsync();
         }
 
