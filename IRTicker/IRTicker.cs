@@ -116,7 +116,7 @@ namespace IRTicker {
         // takes a website httpsResonse.StatusCode and returns a friendly string
         private string WebsiteError(string errorCode) {
             if (errorCode.ToUpper().Contains("429")) return "Rate limited";
-            else if (errorCode.ToUpper().Contains("GatewayTimeout")) return "API failure";
+            else if (errorCode.ToUpper().Contains("GatewayTimeout") || errorCode.ToUpper().Contains("ServiceUnavailable")) return "API failure";
             else if (string.IsNullOrEmpty(errorCode)) return "Network error";
             else {
                 MessageBox.Show("Unknown failure: " + errorCode, "Show this to Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
