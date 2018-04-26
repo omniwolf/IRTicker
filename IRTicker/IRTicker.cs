@@ -14,9 +14,9 @@ using Newtonsoft.Json;
 using System.Windows.Controls;
 
 // todo:
-// change the colour of the numbers - red if the price has generally dropped over the last 5 minutes (?), green if it's risen
-// maybe align the spread text so it's not dependent on the size of the price text
-// add "inverted" to the fiat box so we know if the invert tickbox is selected or not
+
+// create a thing where you type in say "50" bitcoins, and the app looks at the order book and works out what the average price would be to fill that order.  buy/sell?
+// de-prioritise BCH and LTC from BitFinex to help with rate limiting
 
 
 namespace IRTicker {
