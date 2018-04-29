@@ -10,15 +10,15 @@ namespace IRTicker {
         // not used
         private string _primaryCodesStr;
         private string _secondaryCodesStr;
-        private int _chosenPrimaryCurrency = 0;
-        private int _chosenSecondaryCurrency = 0;
         private Dictionary<string, List<Tuple<DateTime, double>>> priceHistory = new Dictionary<string, List<Tuple<DateTime, double>>>();
 
         public Dictionary<string, MarketSummary> cryptoPairs;
+        public Dictionary<string, OrderBook> orderBooks;  // string format is eg "XBT-AUD" - caps with a dash
 
         // constructor
         public DCE() {
             cryptoPairs = new Dictionary<string, MarketSummary>();
+            orderBooks = new Dictionary<string, OrderBook>();
         }
 
         // "Online" if everything is fine, anything else will cause the UI to display this string in the DCE group box text
@@ -36,11 +36,12 @@ namespace IRTicker {
         public void CryptoPairsAdd(string pair, MarketSummary mSummary) {
             // ok here want to add it to the cryptopairs dictionary, but we also want to add the last price to a list so we can see trends
             pair = pair.ToUpper();
-            if (cryptoPairs.ContainsKey(pair)) {  // we need to delete this entry if it exists because we're relpacing it with updated data
+            // can delete this (hopefully) as cyptoPair[pair] = mSummary does an add or update automatically.  no need to remove.
+            /*if (cryptoPairs.ContainsKey(pair)) {  // we need to delete this entry if it exists because we're relpacing it with updated data
                 cryptoPairs.Remove(pair);
-            }
+            }*/
 
-            cryptoPairs.Add(pair, mSummary);
+            cryptoPairs[pair] = mSummary;
 
             if (!priceHistory.ContainsKey(pair)) {  // if this crypto/fiat pair hasn't come up before, create a new empty dictionary kvp
                 priceHistory.Add(pair, new List<Tuple<DateTime, double>>());
@@ -48,26 +49,18 @@ namespace IRTicker {
             priceHistory[pair].Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));  // add the time and price to the kvp's value list
         }
 
+        public bool GetAverageCoinPrice { get; set; } = false;
+
+        public string BuySell { get; set; }
+        public string NumCoinsStr { get; set; } = "";
+        public string CryptoCombo { get; set; } = "";
+
         /////////////////////////////////////////////////////////
         ////////////////      CURRENCIES      ///////////////////
         /////////////////////////////////////////////////////////
-        public int ChosenPrimaryCurrency {
-            get {
-                return _chosenPrimaryCurrency;
-            }
-            set {
-                _chosenPrimaryCurrency = value;
-            }
-        }
 
-        public int ChosenSecondaryCurrency {
-            get {
-                return _chosenSecondaryCurrency;
-            }
-            set {
-                _chosenSecondaryCurrency = value;
-            }
-        }
+        //private int ChosenPrimaryCurrency { get; set; } = 0;
+        private int ChosenSecondaryCurrency { get; set; } = 0;
 
         /// <summary>
         /// Crypto, needs to take codes as comma separated string with quotation marks around each symbol, eg "\"XBT\",\"BCH\",\"ETH\""
@@ -81,11 +74,11 @@ namespace IRTicker {
             }
         }
 
-        public string CurrentPrimaryCurrency {
+        /*public string CurrentPrimaryCurrency {
             get {
-                return PrimaryCurrencyList[_chosenPrimaryCurrency];
+                return PrimaryCurrencyList[ChosenPrimaryCurrency];
             }
-        }
+        }*/
 
         public List<string> PrimaryCurrencyList {
             get {
@@ -125,7 +118,7 @@ namespace IRTicker {
 
         public string CurrentSecondaryCurrency {
             get {
-                return SecondaryCurrencyList[_chosenSecondaryCurrency];
+                return SecondaryCurrencyList[ChosenSecondaryCurrency];
             }
         }
 
@@ -133,11 +126,11 @@ namespace IRTicker {
         /// This moves the chosenSecondaryCurrency value to the next one (or to the first if we're on the last one)
         /// </summary>
         public void NextSecondaryCurrency() {
-            if (_chosenSecondaryCurrency == SecondaryCurrencyList.Count - 1) {
-                _chosenSecondaryCurrency = 0;
+            if (ChosenSecondaryCurrency == SecondaryCurrencyList.Count - 1) {
+                ChosenSecondaryCurrency = 0;
             }
             else {
-                _chosenSecondaryCurrency++;
+                ChosenSecondaryCurrency++;
             }
         }
 
@@ -262,6 +255,20 @@ namespace IRTicker {
             public string volume { get; set; }
             public string timestamp { get; set; }
         }
-      
+
+        public class Order {
+            public string OrderType { get; set; }
+            public double Price { get; set; }
+            public double Volume { get; set; }
+        }
+
+        public class OrderBook {
+            public List<Order> BuyOrders { get; set; }
+            public List<Order> SellOrders { get; set; }
+            public string PrimaryCurrencyCode { get; set; }
+            public string SecondaryCurrencyCode { get; set; }
+            public DateTime CreatedTimestampUtc { get; set; }
+        }
+
     }
 }
