@@ -985,6 +985,7 @@
             this.IR_NumCoinsTextBox.TabIndex = 13;
             this.IR_NumCoinsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.IR_NumCoinsTextBox.ValidatingType = typeof(int);
+            this.IR_NumCoinsTextBox.TextChanged += new System.EventHandler(this.IR_NumCoinsTextBox_TextChanged);
             // 
             // IR_BuySellComboBox
             // 
@@ -998,6 +999,7 @@
             this.IR_BuySellComboBox.Size = new System.Drawing.Size(58, 21);
             this.IR_BuySellComboBox.TabIndex = 12;
             this.IR_BuySellComboBox.DropDown += new System.EventHandler(this.buySellComboBox_DropDown);
+            this.IR_BuySellComboBox.SelectedIndexChanged += new System.EventHandler(this.IR_BuySellComboBox_SelectedIndexChanged);
             // 
             // IR_XBT_Label2
             // 
@@ -1039,7 +1041,7 @@
             // IR_LTC_Label3
             // 
             this.IR_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.IR_LTC_Label3.Location = new System.Drawing.Point(105, 92);
+            this.IR_LTC_Label3.Location = new System.Drawing.Point(105, 83);
             this.IR_LTC_Label3.Name = "IR_LTC_Label3";
             this.IR_LTC_Label3.Size = new System.Drawing.Size(102, 13);
             this.IR_LTC_Label3.TabIndex = 11;
@@ -1049,7 +1051,7 @@
             // IR_BCH_Label3
             // 
             this.IR_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.IR_BCH_Label3.Location = new System.Drawing.Point(105, 72);
+            this.IR_BCH_Label3.Location = new System.Drawing.Point(105, 63);
             this.IR_BCH_Label3.Name = "IR_BCH_Label3";
             this.IR_BCH_Label3.Size = new System.Drawing.Size(102, 13);
             this.IR_BCH_Label3.TabIndex = 10;
@@ -1059,7 +1061,7 @@
             // IR_ETH_Label3
             // 
             this.IR_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.IR_ETH_Label3.Location = new System.Drawing.Point(105, 52);
+            this.IR_ETH_Label3.Location = new System.Drawing.Point(105, 43);
             this.IR_ETH_Label3.Name = "IR_ETH_Label3";
             this.IR_ETH_Label3.Size = new System.Drawing.Size(102, 13);
             this.IR_ETH_Label3.TabIndex = 9;
@@ -1069,7 +1071,7 @@
             // IR_XBT_Label3
             // 
             this.IR_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.IR_XBT_Label3.Location = new System.Drawing.Point(105, 32);
+            this.IR_XBT_Label3.Location = new System.Drawing.Point(105, 23);
             this.IR_XBT_Label3.Name = "IR_XBT_Label3";
             this.IR_XBT_Label3.Size = new System.Drawing.Size(102, 13);
             this.IR_XBT_Label3.TabIndex = 8;

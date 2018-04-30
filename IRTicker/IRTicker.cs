@@ -437,11 +437,11 @@ namespace IRTicker {
                 if(IR_NetworkAvailable) {
                     foreach (string primaryCode in DCEs["IR"].PrimaryCurrencyList) {
                         // if there's no crypto selected in the drop down or there's no number of coins entered, then just pull the market summary
-                        string cryptoCombo, numCoinsStr;
+                        /*string cryptoCombo, numCoinsStr;
                         this.Invoke((Action)(() => cryptoCombo = IR_CryptoComboBox.SelectedItem.ToString()));
-                        this.Invoke((Action)(() => numCoinsStr = IR_NumCoinsTextBox.Text));
+                        this.Invoke((Action)(() => numCoinsStr = IR_NumCoinsTextBox.Text));*/
 
-                        Debug.Print("invoked cryptocombo: " + cryptoCombo + " and numcoinstr: " + numCoinsStr);
+                        Debug.Print("invoked cryptocombo: " + DCEs["IR"].CryptoCombo + " and numcoinstr: " + DCEs["IR"].NumCoinsStr);
                         if (DCEs["IR"].CryptoCombo != primaryCode || string.IsNullOrEmpty(DCEs["IR"].NumCoinsStr)) {
                             Debug.Print("we decided to get the price");
                             ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency);
@@ -566,8 +566,9 @@ namespace IRTicker {
 
             if (!String.IsNullOrEmpty(numCoins.Text) && cryptoCombo.SelectedItem.ToString() == mSummary.PrimaryCurrencyCode) {
                 spreadLabel.Visible = false;  // not using that here
-                priceLabel.Text = DetermineAveragePrice(mSummary, "IR", buySellCombo.SelectedItem.ToString(), numCoins.Text);
+                priceLabel.Text = DetermineAveragePrice(mSummary, dExchange, buySellCombo.SelectedItem.ToString(), numCoins.Text);
                 priceLabel.BackColor = Color.Yellow;
+                priceLabel.ForeColor = Color.Black;
 
             }
             else {  // just display the pair price
@@ -575,6 +576,7 @@ namespace IRTicker {
                 spreadLabel.Text = "(Spread: " + mSummary.spread.ToString("0.##") + ")";
                 priceLabel.ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(mSummary.PrimaryCurrencyCode + "-" + mSummary.SecondaryCurrencyCode));
                 priceLabel.BackColor = Color.White;
+                spreadLabel.Visible = true;  // it will be invisible if we pulled order book stuff.  we are not displaying order book, so show it again.
             }
         }
 
@@ -589,17 +591,20 @@ namespace IRTicker {
 
                 double coinCounter = 0;  // we add to this counter until it reaches the numCoinsTextBox (coins) value
                 double weightedAverage = 0;
+                bool gracefulFinish = false;  // this only gets set to true if the order book has enough coins in it to handle the number of inputted coins.  If it doesn't (ie the foreach completes without us having counted the inputted coins), then we throw a warning message
                 foreach (DCE.Order order in orderSide) {
                     coinCounter += order.Volume;
                     if (coinCounter > coins) {  // ok we are on the last value we need to look at.  need to truncate.
                         double usedCoinsInThisOrder = order.Volume - (coinCounter - coins);  // this is how many coins in this order would be required
                         weightedAverage += (usedCoinsInThisOrder / coins) * order.Price;
+                        gracefulFinish = true;
                         break;  // we have finished filling the hypothetical order
                     }
                     else {  // this whole order is required
                         weightedAverage += (order.Volume / coins) * order.Price;
                     }
                 }
+                if (!gracefulFinish) MessageBox.Show("You requested " + coins + " coins, but the order book's entire volume (that the API returned to us) had only " + coinCounter + " coins in it.  So, the displayed average price will be less than reality, but you probably fat fingered how many coins?", "Order book too small for that number of coins", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return "Average price: " + weightedAverage.ToString("### ###.##");
             }
             else {
@@ -618,32 +623,32 @@ namespace IRTicker {
 
                 if (IR_CryptoComboBox.SelectedIndex != 0 && !string.IsNullOrEmpty(IR_NumCoinsTextBox.Text)) {
                     IR_CryptoComboBox.Enabled = IR_BuySellComboBox.Enabled = IR_NumCoinsTextBox.Enabled = false;
-                    DCEs["IR"].BuySell = IR_BuySellComboBox.SelectedItem.ToString();
+                    /*DCEs["IR"].BuySell = IR_BuySellComboBox.SelectedItem.ToString();
                     DCEs["IR"].NumCoinsStr = IR_NumCoinsTextBox.Text;
-                    DCEs["IR"].CryptoCombo = IR_CryptoComboBox.SelectedItem.ToString();
+                    DCEs["IR"].CryptoCombo = IR_CryptoComboBox.SelectedItem.ToString();*/
                 }
-                else DCEs["IR"].BuySell = DCEs["IR"].NumCoinsStr = DCEs["IR"].CryptoCombo = "";
+                //else DCEs["IR"].BuySell = DCEs["IR"].NumCoinsStr = DCEs["IR"].CryptoCombo = "";
                 if (BTCM_CryptoComboBox.SelectedIndex != 0 && !string.IsNullOrEmpty(BTCM_NumCoinsTextBox.Text)) {
                     BTCM_CryptoComboBox.Enabled = BTCM_BuySellComboBox.Enabled = BTCM_NumCoinsTextBox.Enabled = false;
-                    DCEs["BTCM"].BuySell = BTCM_BuySellComboBox.SelectedItem.ToString();
+                    /*DCEs["BTCM"].BuySell = BTCM_BuySellComboBox.SelectedItem.ToString();
                     DCEs["BTCM"].NumCoinsStr = BTCM_NumCoinsTextBox.Text;
-                    DCEs["BTCM"].CryptoCombo = BTCM_CryptoComboBox.SelectedItem.ToString();
+                    DCEs["BTCM"].CryptoCombo = BTCM_CryptoComboBox.SelectedItem.ToString();*/
                 }
-                else DCEs["BTCM"].BuySell = DCEs["BTCM"].NumCoinsStr = DCEs["BTCM"].CryptoCombo = "";
+                //else DCEs["BTCM"].BuySell = DCEs["BTCM"].NumCoinsStr = DCEs["BTCM"].CryptoCombo = "";
                 if (GDAX_CryptoComboBox.SelectedIndex != 0 && !string.IsNullOrEmpty(GDAX_NumCoinsTextBox.Text)) {
                     GDAX_CryptoComboBox.Enabled = GDAX_BuySellComboBox.Enabled = GDAX_NumCoinsTextBox.Enabled = false;
-                    DCEs["GDAX"].BuySell = GDAX_BuySellComboBox.SelectedItem.ToString();
+                    /*DCEs["GDAX"].BuySell = GDAX_BuySellComboBox.SelectedItem.ToString();
                     DCEs["GDAX"].NumCoinsStr = GDAX_NumCoinsTextBox.Text;
-                    DCEs["GDAX"].CryptoCombo = GDAX_CryptoComboBox.SelectedItem.ToString();
+                    DCEs["GDAX"].CryptoCombo = GDAX_CryptoComboBox.SelectedItem.ToString();*/
                 }
-                else DCEs["GDAX"].BuySell = DCEs["GDAX"].NumCoinsStr = DCEs["GDAX"].CryptoCombo = "";
+                //else DCEs["GDAX"].BuySell = DCEs["GDAX"].NumCoinsStr = DCEs["GDAX"].CryptoCombo = "";
                 if (BFX_CryptoComboBox.SelectedIndex != 0 && !string.IsNullOrEmpty(BFX_NumCoinsTextBox.Text)) {
                     BFX_CryptoComboBox.Enabled = BFX_BuySellComboBox.Enabled = BFX_NumCoinsTextBox.Enabled = false;
-                    DCEs["BFX"].BuySell = BFX_BuySellComboBox.SelectedItem.ToString();
+                    /*DCEs["BFX"].BuySell = BFX_BuySellComboBox.SelectedItem.ToString();
                     DCEs["BFX"].NumCoinsStr = BFX_NumCoinsTextBox.Text;
-                    DCEs["BFX"].CryptoCombo = BFX_CryptoComboBox.SelectedItem.ToString();
+                    DCEs["BFX"].CryptoCombo = BFX_CryptoComboBox.SelectedItem.ToString();*/
                 }
-                else DCEs["BFX"].BuySell = DCEs["BFX"].NumCoinsStr = DCEs["BFX"].CryptoCombo = "";
+                //else DCEs["BFX"].BuySell = DCEs["BFX"].NumCoinsStr = DCEs["BFX"].CryptoCombo = "";
                 return;
             }
 
@@ -1049,6 +1054,7 @@ namespace IRTicker {
             /*else {  // the user has chosen the blank option again, so let's not try and pull the order book
                 DCEs["IR"].GetAverageCoinPrice = false;
             }*/
+            DCEs["IR"].CryptoCombo = IR_CryptoComboBox.SelectedItem.ToString();
         }
 
         private void IR_XBT_Label2_Click(object sender, EventArgs e) {
@@ -1057,6 +1063,15 @@ namespace IRTicker {
                 IR_CryptoComboBox.SelectedIndex = 0; // select the blank entry
                 IR_XBT_Label2.ForeColor = Color.Gray;
             }
+        }
+
+        private void IR_BuySellComboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            DCEs["IR"].BuySell = IR_BuySellComboBox.SelectedItem.ToString();
+            //Debug.Print("set by")
+        }
+
+        private void IR_NumCoinsTextBox_TextChanged(object sender, EventArgs e) {
+            DCEs["IR"].NumCoinsStr = IR_NumCoinsTextBox.Text; 
         }
     }
 }
