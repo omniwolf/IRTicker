@@ -773,7 +773,7 @@ namespace IRTicker {
 
         private string DetermineAveragePrice(DCE.MarketSummary mSummary, string dExchange) {
 
-            if (!DCEs[dExchange].orderBooks.ContainsKey(mSummary.pair)) return "Failed to download order book from API";
+            if (!DCEs[dExchange].orderBooks.ContainsKey(mSummary.pair)) return "Failed to pull order book from API";
 
             // work out the average and set it to the label
             List<DCE.Order> orderSide;
