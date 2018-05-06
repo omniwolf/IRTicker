@@ -49,8 +49,6 @@ namespace IRTicker {
             priceHistory[pair].Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));  // add the time and price to the kvp's value list
         }
 
-        public bool GetAverageCoinPrice { get; set; } = false;
-
         public string BuySell { get; set; }
         public string NumCoinsStr { get; set; } = "";
         public string CryptoCombo { get; set; } = "";
@@ -58,6 +56,8 @@ namespace IRTicker {
         /////////////////////////////////////////////////////////
         ////////////////      CURRENCIES      ///////////////////
         /////////////////////////////////////////////////////////
+
+        public bool ChangedSecondaryCurrency { get; set; } = true;
 
         //private int ChosenPrimaryCurrency { get; set; } = 0;
         private int ChosenSecondaryCurrency { get; set; } = 0;
@@ -184,6 +184,12 @@ namespace IRTicker {
                     return CurrentLowestOfferPrice - CurrentHighestBidPrice;
                 }
             }
+
+            public string pair {
+                get {
+                    return PrimaryCurrencyCode + "-" + SecondaryCurrencyCode;
+                }
+            }
         }
 
         // this is the class used to deserialise BTC Market's market summary data
@@ -257,6 +263,13 @@ namespace IRTicker {
         }
 
         public class Order {
+
+            public Order(string _orderType, double _price, double _volume) {
+                OrderType = _orderType;
+                Price = _price;
+                Volume = _volume;
+            }
+
             public string OrderType { get; set; }
             public double Price { get; set; }
             public double Volume { get; set; }
@@ -268,7 +281,25 @@ namespace IRTicker {
             public string PrimaryCurrencyCode { get; set; }
             public string SecondaryCurrencyCode { get; set; }
             public DateTime CreatedTimestampUtc { get; set; }
+
+            public OrderBook() {
+                BuyOrders = new List<Order>();
+                SellOrders = new List<Order>();
+            }
         }
 
+        public class OrderBook_BTCM {
+            public string currency { get; set; }
+            public string instrument { get; set; }
+            public int timestamp { get; set; }
+            public List<List<double>> asks { get; set; }
+            public List<List<double>> bids { get; set; }
+        }
+
+        public class OrderBook_GDAX {
+            public long sequence { get; set; }
+            public List<List<string>> bids { get; set; }
+            public List<List<string>> asks { get; set; }
+        }
     }
 }
