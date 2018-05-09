@@ -16,10 +16,13 @@ namespace IRTicker {
         public Dictionary<string, OrderBook> orderBooks;  // string format is eg "XBT-AUD" - caps with a dash
 
         // constructor
-        public DCE() {
+        public DCE(string _friendlyName) {
             cryptoPairs = new Dictionary<string, MarketSummary>();
             orderBooks = new Dictionary<string, OrderBook>();
+            FriendlyName = _friendlyName;
         }
+
+        public string FriendlyName { get; }
 
         // "Online" if everything is fine, anything else will cause the UI to display this string in the DCE group box text
         public string CurrentDCEStatus { get; set; }

@@ -36,6 +36,8 @@ namespace IRTicker {
         private Dictionary<string, UIControls> UIControls_Dict;
         private List<string> Exchanges;
         private string cryptoDir = "";
+        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP" };  // we don't poll the shit coins as often to help with rate limiting
+        private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
 
         public IRTicker() {
             InitializeComponent();
@@ -60,12 +62,13 @@ namespace IRTicker {
             DCEs = new Dictionary<string, DCE> {
 
                 // seed the DCEs dictionary with empty DCEs for the DCEs we will be interrogating
-                { "IR", new DCE() },
-                { "BTCM", new DCE() },
-                { "GDAX", new DCE() },
-                { "BFX", new DCE() }
+                { "IR", new DCE("Independent Reserve") },
+                { "BTCM", new DCE("BTC Markets") },
+                { "GDAX", new DCE("GDAX") },
+                { "BFX", new DCE("BitFinex") }
             };
 
+            // BTCM and BFX have no APIs that let you download the currency pairs, so just set them manually
             DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\"";
             DCEs["BTCM"].SecondaryCurrencyCodes = "\"AUD\"";
 
@@ -571,6 +574,7 @@ namespace IRTicker {
 
         private void PollingThread_DoWork(object sender, DoWorkEventArgs e) {
             bool firstRun = true;
+            int loopCount = 0;  // we only want to ask the API about BCH/LTC much less, so we keep track of how many times we loop so we only call the LTC/BCH every 3rd loop maybe
             do {
 
                 if (pollingThread.CancellationPending) {  // need to check here if cancelled.  we don't actulaly need to cancel here, but if we don't, we'll pull all the (correct) data from the
@@ -607,9 +611,9 @@ namespace IRTicker {
                 if(IR_NetworkAvailable) {
                     foreach (string primaryCode in DCEs["IR"].PrimaryCurrencyList) {
                         // if there's no crypto selected in the drop down or there's no number of coins entered, then just pull the market summary
-
-                        ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency);
-
+                        if (loopCount == 0 || shitCoins.Contains(primaryCode)) {
+                            ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency);
+                        }
                         if (DCEs["IR"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["IR"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
                             GetIROrderBook(primaryCode);
                         }
@@ -619,7 +623,9 @@ namespace IRTicker {
                 //////// BTC Markets /////////
 
                 foreach (string primaryCode in DCEs["BTCM"].PrimaryCurrencyList) {
-                    ParseDCE_BTCM(primaryCode, DCEs["BTCM"].CurrentSecondaryCurrency);
+                    if (loopCount == 0 || shitCoins.Contains(primaryCode)) {
+                        ParseDCE_BTCM(primaryCode, DCEs["BTCM"].CurrentSecondaryCurrency);
+                    }
 
                     if (DCEs["BTCM"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["BTCM"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
                         GetBTCMOrderBook(primaryCode);
@@ -640,26 +646,11 @@ namespace IRTicker {
                 if(GDAX_NetworkAvailable) {
                     foreach(string primaryCode in DCEs["GDAX"].PrimaryCurrencyList) {
                         if(DCEs["GDAX"].ExchangeProducts.ContainsKey(primaryCode + "-" + DCEs["GDAX"].CurrentSecondaryCurrency)) {
-                            ParseDCE_GDAX(primaryCode, DCEs["GDAX"].CurrentSecondaryCurrency);
+                            if (loopCount == 0 || shitCoins.Contains(primaryCode)) {
+                                Debug.Print("loopCount = " + loopCount + " primaryCoin = " + (shitCoins.Contains(primaryCode) ? "shitcoin" : "legitCoin"));
+                                ParseDCE_GDAX(primaryCode, DCEs["GDAX"].CurrentSecondaryCurrency);
+                            }
                         }
-                        // why fake it?  i think we just don't add.
-                        /*else {  // ok i guess we need to fake it.
-                            DCE.MarketSummary mSummary = new DCE.MarketSummary();
-                            mSummary.CreatedTimestampUTC = "";
-                            mSummary.CurrentHighestBidPrice = 0;
-                            mSummary.CurrentLowestOfferPrice = -1;  // so the spread is -1
-                            mSummary.DayAvgPrice = 0;
-                            mSummary.DayHighestPrice = 0;
-                            mSummary.DayLowestPrice = 0;
-                            mSummary.DayVolume = 0;
-                            mSummary.DayVolumeInSecondaryCurrency = 0;
-                            mSummary.LastPrice = -1;
-                            mSummary.PrimaryCurrencyCode = primaryCode;
-                            mSummary.SecondaryCurrencyCode = DCEs["GDAX"].CurrentSecondaryCurrency;
-
-                            DCEs["GDAX"].CryptoPairsAdd(primaryCode + "-" + DCEs["GDAX"].CurrentSecondaryCurrency, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
-                        }*/
-
                         if (DCEs["GDAX"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["GDAX"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
                             Debug.Print("aww yea getting order book");
                             GetGDAXOrderBook(primaryCode);
@@ -677,24 +668,10 @@ namespace IRTicker {
                 if (BFX_NetworkAvailable) {
                     foreach(string primaryCode in DCEs["BFX"].PrimaryCurrencyList) {
                         if(DCEs["BFX"].ExchangeProducts.ContainsKey(primaryCode + "-" + DCEs["BFX"].CurrentSecondaryCurrency)) {
-                            ParseDCE_BFX(primaryCode, DCEs["BFX"].CurrentSecondaryCurrency);
+                            if (loopCount == 0 || shitCoins.Contains(primaryCode)) {
+                                ParseDCE_BFX(primaryCode, DCEs["BFX"].CurrentSecondaryCurrency);
+                            }
                         }
-                        /*else {  // ok i guess we need to fake it.
-                            DCE.MarketSummary mSummary = new DCE.MarketSummary();
-                            mSummary.CreatedTimestampUTC = "";
-                            mSummary.CurrentHighestBidPrice = 0;
-                            mSummary.CurrentLowestOfferPrice = -1;  // so the spread is -1
-                            mSummary.DayAvgPrice = 0;
-                            mSummary.DayHighestPrice = 0;
-                            mSummary.DayLowestPrice = 0;
-                            mSummary.DayVolume = 0;
-                            mSummary.DayVolumeInSecondaryCurrency = 0;
-                            mSummary.LastPrice = -1;
-                            mSummary.PrimaryCurrencyCode = primaryCode;
-                            mSummary.SecondaryCurrencyCode = DCEs["BFX"].CurrentSecondaryCurrency;
-
-                            DCEs["BFX"].CryptoPairsAdd(primaryCode + "-" + DCEs["BFX"].CurrentSecondaryCurrency, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
-                        }*/
                     }
                 }
 
@@ -725,18 +702,16 @@ namespace IRTicker {
                 }
 
                 // only set firstRun to false if we have managed to connect to all APIs.  If we haven't, we need to make sure we hit all APIs (as some are skipped when firstRun == false) before setting to false
-                /*if (IR_NetworkAvailable && BTCM_NetworkAvailable && GDAX_NetworkAvailable)*/ firstRun = false;
+                if (IR_NetworkAvailable && BTCM_NetworkAvailable && GDAX_NetworkAvailable) firstRun = false;
                 // some API calls we only do once, but without that data we cannot continue.  the second we have API issues, we need to keep calling these "call once" APIs until the API is back up and running, this way when it does come back we can be sure we have this vital data
                 if(!IR_NetworkAvailable || !BTCM_NetworkAvailable || !GDAX_NetworkAvailable || !BFX_NetworkAvailable) firstRun = true;  // only problem with bunching all the APIs together like this: if one fails but another is fine, we'll be forever calling the good APIs "call once" end point.  this is wasteful and may get us blocked for being spammy
+                loopCount++;
+                if (loopCount >= shitCoinPollRate) loopCount = 0;  // reset it, it's time we poll the shit coins again
 
             } while(true);  // polling is lyfe
         }
 
-        //private void UpdateLabels(System.Windows.Forms.Label priceLabel, System.Windows.Forms.Label spreadLabel, DCE.MarketSummary mSummary, string dExchange,
-        //     System.Windows.Forms.ComboBox buySellCombo, System.Windows.Forms.MaskedTextBox numCoins, System.Windows.Forms.ComboBox cryptoCombo) {
         private void UpdateLabels(string dExchange) { 
-            // need to work out here how we update the label. orderbook or market summary?  maybe the DCE object can decide?
-
             // first we run through all the labels and reset them.  The label writing process only writes to labes of pairs that exist, so we first need to set them back in case they don't exist
             foreach (KeyValuePair<string, System.Windows.Forms.Label> UICobj in UIControls_Dict[dExchange].Label_Dict) {
                 if (UICobj.Key.EndsWith("_Price")) {
@@ -799,7 +774,6 @@ namespace IRTicker {
                 }
                 if (!gracefulFinish) {
                     //MessageBox.Show("You requested " + coins + " coins, but the order book's entire volume (that the API returned to us) had only " + coinCounter + " coins in it.  So, the displayed average price will be less than reality, but you probably fat fingered how many coins?", dExchange + "'s order book too small for that number of coins", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    //return "Not enough volume returned from the order book!";
                     return "Order book only has " + coinCounter.ToString("### ###.##").Trim() + " " + mSummary.PrimaryCurrencyCode;
                 }
                 return "Average price: " + weightedAverage.ToString("### ###.##").Trim() + " " + mSummary.PrimaryCurrencyCode;
@@ -854,33 +828,28 @@ namespace IRTicker {
                 secondaryCurrencyCode = DCEs["IR"].CurrentSecondaryCurrency;
                 //Debug.Print("secondary currency number is " + DCEs["IR"].chosenSecondaryCurrency + " and this is " + DCEs["IR"].currentSecondaryCurrency);
                 IR_GroupBox.ForeColor = Color.Black;
-                IR_GroupBox.Text = "Independent Reserve (fiat pair: " + secondaryCurrencyCode + ")";
+                IR_GroupBox.Text = DCEs["IR"].FriendlyName + " (fiat pair: " + secondaryCurrencyCode + ")";
 
                 UpdateLabels("IR");
-                /*UpdateLabels(IR_XBT_Label2, IR_XBT_Label3, DCEs["IR"].cryptoPairs["XBT-" + secondaryCurrencyCode], "IR", IR_BuySellComboBox, IR_NumCoinsTextBox, IR_CryptoComboBox);
-                UpdateLabels(IR_ETH_Label2, IR_ETH_Label3, DCEs["IR"].cryptoPairs["ETH-" + secondaryCurrencyCode], "IR", IR_BuySellComboBox, IR_NumCoinsTextBox, IR_CryptoComboBox);
-                UpdateLabels(IR_BCH_Label2, IR_BCH_Label3, DCEs["IR"].cryptoPairs["BCH-" + secondaryCurrencyCode], "IR", IR_BuySellComboBox, IR_NumCoinsTextBox, IR_CryptoComboBox);
-                UpdateLabels(IR_LTC_Label2, IR_LTC_Label3, DCEs["IR"].cryptoPairs["LTC-" + secondaryCurrencyCode], "IR", IR_BuySellComboBox, IR_NumCoinsTextBox, IR_CryptoComboBox);*/
             }
             else APIDown(IR_GroupBox, "IR");
 
+            /////////////////////////////////////
+            ////////////    BTCM    /////////////
+            /////////////////////////////////////
             if (BTCM_NetworkAvailable) {
                 if (BTCM_CryptoComboBox.Items.Count <= 1) PopulateCryptoComboBox("BTCM");
                 secondaryCurrencyCode = DCEs["BTCM"].CurrentSecondaryCurrency;
                 BTCM_GroupBox.ForeColor = Color.Black;
-                BTCM_GroupBox.Text = "BTC Markets (fiat pair: " + secondaryCurrencyCode + ")";
+                BTCM_GroupBox.Text = DCEs["BTCM"].FriendlyName + " (fiat pair: " + secondaryCurrencyCode + ")";
 
                 UpdateLabels("BTCM");
-                /*UpdateLabels(BTCM_XBT_Label2, BTCM_XBT_Label3, DCEs["BTCM"].cryptoPairs["XBT-" + secondaryCurrencyCode], "BTCM", BTCM_BuySellComboBox, BTCM_NumCoinsTextBox, BTCM_CryptoComboBox);
-                UpdateLabels(BTCM_ETH_Label2, BTCM_ETH_Label3, DCEs["BTCM"].cryptoPairs["ETH-" + secondaryCurrencyCode], "BTCM", BTCM_BuySellComboBox, BTCM_NumCoinsTextBox, BTCM_CryptoComboBox);
-                UpdateLabels(BTCM_BCH_Label2, BTCM_BCH_Label3, DCEs["BTCM"].cryptoPairs["BCH-" + secondaryCurrencyCode], "BTCM", BTCM_BuySellComboBox, BTCM_NumCoinsTextBox, BTCM_CryptoComboBox);
-                UpdateLabels(BTCM_LTC_Label2, BTCM_LTC_Label3, DCEs["BTCM"].cryptoPairs["LTC-" + secondaryCurrencyCode], "BTCM", BTCM_BuySellComboBox, BTCM_NumCoinsTextBox, BTCM_CryptoComboBox);
-                UpdateLabels(BTCM_XRP_Label2, BTCM_XRP_Label3, DCEs["BTCM"].cryptoPairs["XRP-" + secondaryCurrencyCode], "BTCM", BTCM_BuySellComboBox, BTCM_NumCoinsTextBox, BTCM_CryptoComboBox);*/
-
             }
             else APIDown(BTCM_GroupBox, "BTCM");
 
-
+            /////////////////////////////////////
+            ////////////    GDAX    /////////////
+            /////////////////////////////////////
             if (GDAX_NetworkAvailable) {
                 if (DCEs["GDAX"].ChangedSecondaryCurrency) {
                     PopulateCryptoComboBox("GDAX");  // need to re-populate this as it dynamically only populates the comboxbox with cryptos that the current fiat currency has a pair with
@@ -888,45 +857,15 @@ namespace IRTicker {
                 }
                 secondaryCurrencyCode = DCEs["GDAX"].CurrentSecondaryCurrency;
                 GDAX_GroupBox.ForeColor = Color.Black;
-                GDAX_GroupBox.Text = "GDAX (fiat pair: " + secondaryCurrencyCode + ")";
+                GDAX_GroupBox.Text = DCEs["GDAX"].FriendlyName + " (fiat pair: " + secondaryCurrencyCode + ")";
 
                 UpdateLabels("GDAX");
-
-                /*// GDAX doesn't have all pairs, so we need to check first.  if we didn't do these ifs, the label would just be "-1" which is also fine.. but i already did the coding so might as well leave it
-                if (DCEs["GDAX"].ExchangeProducts.ContainsKey("XBT-" + secondaryCurrencyCode)) {
-                    //GDAX_XBT_Label2.Text = DCEs["GDAX"].cryptoPairs["XBT-" + secondaryCurrencyCode].LastPrice.ToString() + " (Spread: " + DCEs["GDAX"].cryptoPairs["XBT-" + secondaryCurrencyCode].spread.ToString("0.##") + ")";
-                    UpdateLabels(GDAX_XBT_Label2, GDAX_XBT_Label3, DCEs["GDAX"].cryptoPairs["XBT-" + secondaryCurrencyCode], "GDAX", GDAX_BuySellComboBox, GDAX_NumCoinsTextBox, GDAX_CryptoComboBox);
-                }
-                else {
-                    GDAX_XBT_Label2.Text = "<no currency pair>";
-                }
-
-                if (DCEs["GDAX"].ExchangeProducts.ContainsKey("ETH-" + secondaryCurrencyCode)) {
-                    //GDAX_ETH_Label2.Text = DCEs["GDAX"].cryptoPairs["ETH-" + secondaryCurrencyCode].LastPrice.ToString() + " (Spread: " + DCEs["GDAX"].cryptoPairs["ETH-" + secondaryCurrencyCode].spread.ToString("0.##") + ")";
-                    UpdateLabels(GDAX_ETH_Label2, GDAX_ETH_Label3, DCEs["GDAX"].cryptoPairs["ETH-" + secondaryCurrencyCode], "GDAX", GDAX_BuySellComboBox, GDAX_NumCoinsTextBox, GDAX_CryptoComboBox);
-                }
-                else {
-                    GDAX_ETH_Label2.Text = "<no currency pair>";
-                }
-
-                if (DCEs["GDAX"].ExchangeProducts.ContainsKey("BCH-" + secondaryCurrencyCode)) {
-                    //GDAX_BCH_Label2.Text = DCEs["GDAX"].cryptoPairs["BCH-" + secondaryCurrencyCode].LastPrice.ToString() + " (Spread: " + DCEs["GDAX"].cryptoPairs["BCH-" + secondaryCurrencyCode].spread.ToString("0.##") + ")";
-                    UpdateLabels(GDAX_BCH_Label2, GDAX_BCH_Label3, DCEs["GDAX"].cryptoPairs["BCH-" + secondaryCurrencyCode], "GDAX", GDAX_BuySellComboBox, GDAX_NumCoinsTextBox, GDAX_CryptoComboBox);
-                }
-                else {
-                    GDAX_BCH_Label2.Text = "<no currency pair>";
-                }
-
-                if (DCEs["GDAX"].ExchangeProducts.ContainsKey("LTC-" + secondaryCurrencyCode)) {
-                    //GDAX_LTC_Label2.Text = DCEs["GDAX"].cryptoPairs["LTC-" + secondaryCurrencyCode].LastPrice.ToString() + " (Spread: " + DCEs["GDAX"].cryptoPairs["LTC-" + secondaryCurrencyCode].spread.ToString("0.##") + ")";
-                    UpdateLabels(GDAX_LTC_Label2, GDAX_LTC_Label3, DCEs["GDAX"].cryptoPairs["LTC-" + secondaryCurrencyCode], "GDAX", GDAX_BuySellComboBox, GDAX_NumCoinsTextBox, GDAX_CryptoComboBox);
-                }
-                else {
-                    GDAX_LTC_Label2.Text = "<no currency pair>";
-                }*/
             }
             else APIDown(GDAX_GroupBox, "GDAX");
 
+            /////////////////////////////////////
+            ////////////    BFX     /////////////
+            /////////////////////////////////////
             if (BFX_NetworkAvailable) {
 
                 if (DCEs["BFX"].ChangedSecondaryCurrency) {
@@ -935,37 +874,9 @@ namespace IRTicker {
                 }
                 secondaryCurrencyCode = DCEs["BFX"].CurrentSecondaryCurrency;
                 BFX_GroupBox.ForeColor = Color.Black;
-                BFX_GroupBox.Text = "BitFinex (fiat pair: " + secondaryCurrencyCode + ")";
+                BFX_GroupBox.Text = DCEs["BFX"].FriendlyName + " (fiat pair: " + secondaryCurrencyCode + ")";
 
                 UpdateLabels("BFX");
-                // GDAX doesn't have all pairs, so we need to check first.  if we didn't do these ifs, the label would just be "-1" which is also fine.. but i already did the coding so might as well leave it
-                /*if (DCEs["BFX"].ExchangeProducts.ContainsKey("XBT-" + secondaryCurrencyCode)) {
-                    UpdateLabels(BFX_XBT_Label2, BFX_XBT_Label3, DCEs["BFX"].cryptoPairs["XBT-" + secondaryCurrencyCode], "BFX", BFX_BuySellComboBox, BFX_NumCoinsTextBox, BFX_CryptoComboBox);
-                }
-                else {
-                    BFX_XBT_Label2.Text = "<no currency pair>";
-                }
-
-                if (DCEs["BFX"].ExchangeProducts.ContainsKey("ETH-" + secondaryCurrencyCode)) {
-                    UpdateLabels(BFX_ETH_Label2, BFX_ETH_Label3, DCEs["BFX"].cryptoPairs["ETH-" + secondaryCurrencyCode], "BFX", BFX_BuySellComboBox, BFX_NumCoinsTextBox, BFX_CryptoComboBox);
-                }
-                else {
-                    BFX_ETH_Label2.Text = "<no currency pair>";
-                }
-
-                if (DCEs["BFX"].ExchangeProducts.ContainsKey("BCH-" + secondaryCurrencyCode)) {
-                    UpdateLabels(BFX_BCH_Label2, BFX_BCH_Label3, DCEs["BFX"].cryptoPairs["BCH-" + secondaryCurrencyCode], "BFX", BFX_BuySellComboBox, BFX_NumCoinsTextBox, BFX_CryptoComboBox);
-                }
-                else {
-                    BFX_BCH_Label2.Text = "<no currency pair>";
-                }
-
-                if (DCEs["BFX"].ExchangeProducts.ContainsKey("LTC-" + secondaryCurrencyCode)) {
-                    UpdateLabels(BFX_LTC_Label2, BFX_LTC_Label3, DCEs["BFX"].cryptoPairs["LTC-" + secondaryCurrencyCode], "BFX", BFX_BuySellComboBox, BFX_NumCoinsTextBox, BFX_CryptoComboBox);
-                }
-                else {
-                    BFX_LTC_Label2.Text = "<no currency pair>";
-                }*/
             }
             else APIDown(BFX_GroupBox, "BFX");
 
@@ -973,7 +884,7 @@ namespace IRTicker {
             IR_CryptoComboBox.Enabled = IR_BuySellComboBox.Enabled = IR_NumCoinsTextBox.Enabled = true;
             BTCM_CryptoComboBox.Enabled = BTCM_BuySellComboBox.Enabled = BTCM_NumCoinsTextBox.Enabled = true;
             GDAX_CryptoComboBox.Enabled = GDAX_BuySellComboBox.Enabled = GDAX_NumCoinsTextBox.Enabled = true;
-            //BFX_CryptoComboBox.Enabled = BFX_BuySellComboBox.Enabled = BFX_NumCoinsTextBox.Enabled = true;
+            //BFX_CryptoComboBox.Enabled = BFX_BuySellComboBox.Enabled = BFX_NumCoinsTextBox.Enabled = true;  // we don't do BFX order book.
 
             if (OER_NetworkAvailable) {
                 PrintFiat();  // i outsourced updating the fiat UI we do it when loading for the first time, and also when the user clicks the fiat_groupBox.  it doesn't realy need to be done each poll as we only pull fiat once.. but meh
@@ -1048,6 +959,7 @@ namespace IRTicker {
             }
         }
 
+        // when they close the app, rename the crypto dirs to blah - old.  this way if they user happens to check the toolbar thing they'll know they're not being updated anymore
         private void IRTicker_Closing(object sender, FormClosingEventArgs e) {
             try {
                 string[] cryptoDirs = Directory.GetDirectories(cryptoDir);
@@ -1103,46 +1015,27 @@ namespace IRTicker {
             }
         }
 
-        private void IR_GroupBox_Click(object sender, EventArgs e) {
-            if (IR_NetworkAvailable) {
-                DCEs["IR"].NextSecondaryCurrency();
+        private void GroupBox_Click(string dExchange) {
+            DCEs[dExchange].NextSecondaryCurrency();
+            UIControls_Dict[dExchange].dExchange_GB.ForeColor = Color.Gray;
+            UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")";
+            UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex = 0;
+            UIControls_Dict[dExchange].AvgPrice_Crypto.Enabled = false;
+            pollingThread.CancelAsync();
+            ColourDCETags(Controls, dExchange);
+            DCEs[dExchange].ChangedSecondaryCurrency = true;
+        }
 
-                IR_GroupBox.ForeColor = Color.Gray;
-                ColourDCETags(Controls, "IR");
-                IR_GroupBox.Text = "Independent Reserve (fiat pair: " + DCEs["IR"].CurrentSecondaryCurrency + ")";
-                pollingThread.CancelAsync();
-                IR_CryptoComboBox.SelectedIndex = 0;
-                IR_CryptoComboBox.Enabled = false;
-                DCEs["IR"].ChangedSecondaryCurrency = true;
-            }
+        private void IR_GroupBox_Click(object sender, EventArgs e) {
+            if (IR_NetworkAvailable) GroupBox_Click("IR");
         }
 
         private void GDAX_GroupBox_Click(object sender, EventArgs e) {
-            if (GDAX_NetworkAvailable) {
-                DCEs["GDAX"].NextSecondaryCurrency();
-
-                GDAX_GroupBox.ForeColor = Color.Gray;
-                ColourDCETags(Controls, "GDAX");
-                GDAX_GroupBox.Text = "GDAX (fiat pair: " + DCEs["GDAX"].CurrentSecondaryCurrency + ")";
-                pollingThread.CancelAsync();
-                GDAX_CryptoComboBox.SelectedIndex = 0;
-                GDAX_CryptoComboBox.Enabled = false;
-                DCEs["GDAX"].ChangedSecondaryCurrency = true;
-            }
+            if (GDAX_NetworkAvailable) GroupBox_Click("GDAX");
         }
 
         private void BFX_GroupBox_Click(object sender, EventArgs e) {
-            if (BFX_NetworkAvailable) {
-                DCEs["BFX"].NextSecondaryCurrency();
-
-                BFX_GroupBox.ForeColor = Color.Gray;
-                ColourDCETags(Controls, "BFX");
-                BFX_GroupBox.Text = "BitFinex (fiat pair: " + DCEs["BFX"].CurrentSecondaryCurrency + ")";
-                pollingThread.CancelAsync();
-                BFX_CryptoComboBox.SelectedIndex = 0;
-                BFX_CryptoComboBox.Enabled = false;
-                DCEs["BFX"].ChangedSecondaryCurrency = true;
-            }
+            if (BFX_NetworkAvailable) GroupBox_Click("BFX");
         }
 
         private void Fiat_GroupBox_Click(object sender, EventArgs e) {
@@ -1192,21 +1085,7 @@ namespace IRTicker {
                 return;
             }
             else {
-                switch (dExchange) {
-                    case "IR":
-                        gb.Text = "Independent Reserve - " + DCEs[dExchange].CurrentDCEStatus;
-                        break;
-                    case "BTCM":
-                        gb.Text = "BTC Markets - " + DCEs[dExchange].CurrentDCEStatus;
-                        break;
-                    case "GDAX":
-                        gb.Text = "GDAX - " + DCEs[dExchange].CurrentDCEStatus;
-                        break;
-                    case "BFX":
-                        gb.Text = "BitFinex - " + DCEs[dExchange].CurrentDCEStatus;
-                        break;
-                }
-
+                gb.Text = DCEs[dExchange].FriendlyName + " - " + DCEs[dExchange].CurrentDCEStatus;
                 gb.ForeColor = Color.Gray;
 
                 // because we manually change the colour of the price labels, we need to manually change them here

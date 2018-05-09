@@ -833,7 +833,7 @@
             this.BTCM_GroupBox.Controls.Add(this.BTCM_XBT_Label1);
             this.BTCM_GroupBox.Controls.Add(this.BTCM_BCH_Label1);
             this.BTCM_GroupBox.Controls.Add(this.BTCM_LTC_Label1);
-            this.BTCM_GroupBox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.BTCM_GroupBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_GroupBox.ForeColor = System.Drawing.Color.Gray;
             this.BTCM_GroupBox.Location = new System.Drawing.Point(260, 13);
             this.BTCM_GroupBox.Name = "BTCM_GroupBox";
