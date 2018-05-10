@@ -776,7 +776,7 @@ namespace IRTicker {
                     //MessageBox.Show("You requested " + coins + " coins, but the order book's entire volume (that the API returned to us) had only " + coinCounter + " coins in it.  So, the displayed average price will be less than reality, but you probably fat fingered how many coins?", dExchange + "'s order book too small for that number of coins", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return "Order book only has " + coinCounter.ToString("### ###.##").Trim() + " " + mSummary.PrimaryCurrencyCode;
                 }
-                return "Average price: " + weightedAverage.ToString("### ###.##").Trim() + " " + mSummary.PrimaryCurrencyCode;
+                return "Average price for " + mSummary.PrimaryCurrencyCode + ": " + weightedAverage.ToString("### ###.##").Trim();
             }
             else {
                 MessageBox.Show("Could not convert num coins to a number.  how? num = " + UIControls_Dict[dExchange].AvgPrice_NumCoins.Text, "Show this to Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
