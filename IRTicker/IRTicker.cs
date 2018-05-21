@@ -15,8 +15,9 @@ using System.Windows.Controls;
 
 // todo:
 
-// create a thing where you type in say "50" bitcoins, and the app looks at the order book and works out what the average price would be to fill that order.  buy/sell?
-// de-prioritise BCH and LTC from BitFinex to help with rate limiting
+// implement coinspot
+// hover text over the last price should show the best bid and offer price
+// de-prioritise BCH and LTC from BitFinex to help with rate limiting - needs more work... maybe look to see if there's a private API that doesn't get rate limited?
 
 
 namespace IRTicker {
