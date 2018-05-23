@@ -15,8 +15,9 @@ using System.Windows.Controls;
 
 // todo:
 
-// create a thing where you type in say "50" bitcoins, and the app looks at the order book and works out what the average price would be to fill that order.  buy/sell?
-// de-prioritise BCH and LTC from BitFinex to help with rate limiting
+// implement coinspot
+// hover text over the last price should show the best bid and offer price
+// de-prioritise BCH and LTC from BitFinex to help with rate limiting - needs more work... maybe look to see if there's a private API that doesn't get rate limited?
 
 
 namespace IRTicker {
@@ -893,7 +894,7 @@ namespace IRTicker {
                     //MessageBox.Show("You requested " + coins + " coins, but the order book's entire volume (that the API returned to us) had only " + coinCounter + " coins in it.  So, the displayed average price will be less than reality, but you probably fat fingered how many coins?", dExchange + "'s order book too small for that number of coins", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return "Order book only has " + coinCounter.ToString("### ###.##").Trim() + " " + mSummary.PrimaryCurrencyCode;
                 }
-                return "Average price: " + weightedAverage.ToString("### ###.##").Trim() + " " + mSummary.PrimaryCurrencyCode;
+                return "Average price for " + mSummary.PrimaryCurrencyCode + ": " + weightedAverage.ToString("### ###.##").Trim();
             }
             else {
                 MessageBox.Show("Could not convert num coins to a number.  how? num = " + UIControls_Dict[dExchange].AvgPrice_NumCoins.Text, "Show this to Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
