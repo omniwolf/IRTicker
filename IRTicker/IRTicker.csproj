@@ -24,8 +24,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>1</ApplicationRevision>
-    <ApplicationVersion>2.4.1.%2a</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>2.5.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -129,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ir_eagel_transparent___small_Oe3_icon.ico" />
+    <None Include="Resources\endlessXBT.gif" />
     <None Include="Resources\bcc.gif" />
   </ItemGroup>
   <ItemGroup>

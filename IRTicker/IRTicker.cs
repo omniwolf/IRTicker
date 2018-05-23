@@ -931,7 +931,7 @@ namespace IRTicker {
 
                 foreach (string dExchange in Exchanges) {
                     // if they have filled in the order book controls, then disable them while we work it out
-                    if (UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex != 0 && !string.IsNullOrEmpty(UIControls_Dict[exch].AvgPrice_NumCoins.Text)) {
+                    if (UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex != 0 && !string.IsNullOrEmpty(UIControls_Dict[dExchange].AvgPrice_NumCoins.Text)) {
                         UIControls_Dict[dExchange].AvgPrice_Crypto.Enabled = false;
                         UIControls_Dict[dExchange].AvgPrice_BuySell.Enabled = false;
                         UIControls_Dict[dExchange].AvgPrice_NumCoins.Enabled = false;
