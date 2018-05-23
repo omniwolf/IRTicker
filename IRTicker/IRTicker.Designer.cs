@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
@@ -31,6 +32,8 @@
             this.folderDialogTextbox = new System.Windows.Forms.TextBox();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
+            this.LoadingPanel = new System.Windows.Forms.Panel();
+            this.GIFLabel = new System.Windows.Forms.Label();
             this.EnableGDAXLevel3_CheckBox = new System.Windows.Forms.CheckBox();
             this.EnableGDAXLevel3 = new System.Windows.Forms.Label();
             this.VersionLabel = new System.Windows.Forms.Label();
@@ -38,8 +41,24 @@
             this.InvertFiatLabel = new System.Windows.Forms.Label();
             this.SettingsOKButton = new System.Windows.Forms.Button();
             this.FolderLabel = new System.Windows.Forms.Label();
-            this.LoadingPanel = new System.Windows.Forms.Panel();
             this.Main = new System.Windows.Forms.Panel();
+            this.CSPT_GroupBox = new System.Windows.Forms.GroupBox();
+            this.CSPT_AvgPrice_Label = new System.Windows.Forms.Label();
+            this.CSPT_CryptoComboBox = new System.Windows.Forms.ComboBox();
+            this.CSPT_NumCoinsTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.CSPT_BuySellComboBox = new System.Windows.Forms.ComboBox();
+            this.CSPT_XBT_Label2 = new System.Windows.Forms.Label();
+            this.CSPT_ETH_Label2 = new System.Windows.Forms.Label();
+            this.CSPT_DOGE_Label2 = new System.Windows.Forms.Label();
+            this.CSPT_LTC_Label2 = new System.Windows.Forms.Label();
+            this.CSPT_LTC_Label3 = new System.Windows.Forms.Label();
+            this.CSPT_DOGE_Label3 = new System.Windows.Forms.Label();
+            this.CSPT_ETH_Label3 = new System.Windows.Forms.Label();
+            this.CSPT_XBT_Label3 = new System.Windows.Forms.Label();
+            this.CSPT_LTC_Label1 = new System.Windows.Forms.Label();
+            this.CSPT_DOGE_Label1 = new System.Windows.Forms.Label();
+            this.CSPT_ETH_Label1 = new System.Windows.Forms.Label();
+            this.CSPT_XBT_Label1 = new System.Windows.Forms.Label();
             this.BFX_GroupBox = new System.Windows.Forms.GroupBox();
             this.BFX_AvgPrice_Label = new System.Windows.Forms.Label();
             this.BFX_CryptoComboBox = new System.Windows.Forms.ComboBox();
@@ -122,10 +141,31 @@
             this.IR_BCH_Label1 = new System.Windows.Forms.Label();
             this.IR_ETH_Label1 = new System.Windows.Forms.Label();
             this.IR_XBT_Label1 = new System.Windows.Forms.Label();
-            this.GIFLabel = new System.Windows.Forms.Label();
+            this.IR_XBT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.IR_ETH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.IR_BCH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.IR_LTC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BTCM_XBT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BTCM_ETH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BTCM_BCH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BTCM_LTC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BTCM_XRP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.GDAX_XBT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.GDAX_ETH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.GDAX_BCH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.GDAX_LTC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BFX_XBT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BFX_ETH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BFX_BCH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BFX_LTC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.CSPT_XBT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.CSPT_ETH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.CSPT_DOGE_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.CSPT_LTC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
+            this.CSPT_GroupBox.SuspendLayout();
             this.BFX_GroupBox.SuspendLayout();
             this.fiat_GroupBox.SuspendLayout();
             this.GDAX_GroupBox.SuspendLayout();
@@ -186,6 +226,7 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
+            this.Settings.Controls.Add(this.LoadingPanel);
             this.Settings.Controls.Add(this.EnableGDAXLevel3_CheckBox);
             this.Settings.Controls.Add(this.EnableGDAXLevel3);
             this.Settings.Controls.Add(this.VersionLabel);
@@ -199,8 +240,26 @@
             this.Settings.Controls.Add(this.folderDialogButton);
             this.Settings.Location = new System.Drawing.Point(0, 0);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(495, 505);
+            this.Settings.Size = new System.Drawing.Size(495, 555);
             this.Settings.TabIndex = 4;
+            // 
+            // LoadingPanel
+            // 
+            this.LoadingPanel.Controls.Add(this.GIFLabel);
+            this.LoadingPanel.Location = new System.Drawing.Point(0, 0);
+            this.LoadingPanel.Name = "LoadingPanel";
+            this.LoadingPanel.Size = new System.Drawing.Size(492, 555);
+            this.LoadingPanel.TabIndex = 10;
+            // 
+            // GIFLabel
+            // 
+            this.GIFLabel.Image = global::IRTicker.Properties.Resources.bcc;
+            this.GIFLabel.Location = new System.Drawing.Point(-119, -12);
+            this.GIFLabel.Name = "GIFLabel";
+            this.GIFLabel.Size = new System.Drawing.Size(725, 590);
+            this.GIFLabel.TabIndex = 0;
+            this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
+            this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // EnableGDAXLevel3_CheckBox
             // 
@@ -253,7 +312,7 @@
             // SettingsOKButton
             // 
             this.SettingsOKButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsOKButton.Location = new System.Drawing.Point(410, 458);
+            this.SettingsOKButton.Location = new System.Drawing.Point(414, 522);
             this.SettingsOKButton.Name = "SettingsOKButton";
             this.SettingsOKButton.Size = new System.Drawing.Size(75, 23);
             this.SettingsOKButton.TabIndex = 4;
@@ -270,17 +329,10 @@
             this.FolderLabel.TabIndex = 5;
             this.FolderLabel.Text = "Toolbar folder location:";
             // 
-            // LoadingPanel
-            // 
-            this.LoadingPanel.Controls.Add(this.GIFLabel);
-            this.LoadingPanel.Location = new System.Drawing.Point(0, 0);
-            this.LoadingPanel.Name = "LoadingPanel";
-            this.LoadingPanel.Size = new System.Drawing.Size(492, 572);
-            this.LoadingPanel.TabIndex = 10;
-            // 
             // Main
             // 
             this.Main.BackColor = System.Drawing.Color.White;
+            this.Main.Controls.Add(this.CSPT_GroupBox);
             this.Main.Controls.Add(this.BFX_GroupBox);
             this.Main.Controls.Add(this.fiat_GroupBox);
             this.Main.Controls.Add(this.GDAX_GroupBox);
@@ -289,8 +341,210 @@
             this.Main.Controls.Add(this.IR_GroupBox);
             this.Main.Location = new System.Drawing.Point(0, 0);
             this.Main.Name = "Main";
-            this.Main.Size = new System.Drawing.Size(492, 487);
+            this.Main.Size = new System.Drawing.Size(492, 590);
             this.Main.TabIndex = 5;
+            // 
+            // CSPT_GroupBox
+            // 
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_AvgPrice_Label);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_CryptoComboBox);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_NumCoinsTextBox);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_BuySellComboBox);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_XBT_Label2);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_ETH_Label2);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_DOGE_Label2);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_LTC_Label2);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_LTC_Label3);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_DOGE_Label3);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_ETH_Label3);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_XBT_Label3);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_LTC_Label1);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_DOGE_Label1);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_ETH_Label1);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_XBT_Label1);
+            this.CSPT_GroupBox.Cursor = System.Windows.Forms.Cursors.Default;
+            this.CSPT_GroupBox.ForeColor = System.Drawing.Color.Gray;
+            this.CSPT_GroupBox.Location = new System.Drawing.Point(19, 395);
+            this.CSPT_GroupBox.Name = "CSPT_GroupBox";
+            this.CSPT_GroupBox.Size = new System.Drawing.Size(217, 182);
+            this.CSPT_GroupBox.TabIndex = 16;
+            this.CSPT_GroupBox.TabStop = false;
+            this.CSPT_GroupBox.Text = "CoinSpot";
+            // 
+            // CSPT_AvgPrice_Label
+            // 
+            this.CSPT_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
+            this.CSPT_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CSPT_AvgPrice_Label.Location = new System.Drawing.Point(6, 121);
+            this.CSPT_AvgPrice_Label.Name = "CSPT_AvgPrice_Label";
+            this.CSPT_AvgPrice_Label.Size = new System.Drawing.Size(205, 16);
+            this.CSPT_AvgPrice_Label.TabIndex = 15;
+            // 
+            // CSPT_CryptoComboBox
+            // 
+            this.CSPT_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CSPT_CryptoComboBox.Enabled = false;
+            this.CSPT_CryptoComboBox.Location = new System.Drawing.Point(149, 151);
+            this.CSPT_CryptoComboBox.Name = "CSPT_CryptoComboBox";
+            this.CSPT_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
+            this.CSPT_CryptoComboBox.TabIndex = 14;
+            // 
+            // CSPT_NumCoinsTextBox
+            // 
+            this.CSPT_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_NumCoinsTextBox.Enabled = false;
+            this.CSPT_NumCoinsTextBox.Location = new System.Drawing.Point(73, 151);
+            this.CSPT_NumCoinsTextBox.Mask = "00000";
+            this.CSPT_NumCoinsTextBox.Name = "CSPT_NumCoinsTextBox";
+            this.CSPT_NumCoinsTextBox.PromptChar = ' ';
+            this.CSPT_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
+            this.CSPT_NumCoinsTextBox.TabIndex = 13;
+            this.CSPT_NumCoinsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.CSPT_NumCoinsTextBox.ValidatingType = typeof(int);
+            // 
+            // CSPT_BuySellComboBox
+            // 
+            this.CSPT_BuySellComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_BuySellComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CSPT_BuySellComboBox.Enabled = false;
+            this.CSPT_BuySellComboBox.FormattingEnabled = true;
+            this.CSPT_BuySellComboBox.Items.AddRange(new object[] {
+            "Buy",
+            "Sell"});
+            this.CSPT_BuySellComboBox.Location = new System.Drawing.Point(9, 151);
+            this.CSPT_BuySellComboBox.Name = "CSPT_BuySellComboBox";
+            this.CSPT_BuySellComboBox.Size = new System.Drawing.Size(58, 21);
+            this.CSPT_BuySellComboBox.TabIndex = 12;
+            // 
+            // CSPT_XBT_Label2
+            // 
+            this.CSPT_XBT_Label2.AutoSize = true;
+            this.CSPT_XBT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_XBT_Label2.Location = new System.Drawing.Point(56, 23);
+            this.CSPT_XBT_Label2.Name = "CSPT_XBT_Label2";
+            this.CSPT_XBT_Label2.Size = new System.Drawing.Size(0, 13);
+            this.CSPT_XBT_Label2.TabIndex = 4;
+            this.CSPT_XBT_Label2.Tag = "IR";
+            // 
+            // CSPT_ETH_Label2
+            // 
+            this.CSPT_ETH_Label2.AutoSize = true;
+            this.CSPT_ETH_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_ETH_Label2.Location = new System.Drawing.Point(56, 43);
+            this.CSPT_ETH_Label2.Name = "CSPT_ETH_Label2";
+            this.CSPT_ETH_Label2.Size = new System.Drawing.Size(0, 13);
+            this.CSPT_ETH_Label2.TabIndex = 5;
+            this.CSPT_ETH_Label2.Tag = "IR";
+            // 
+            // CSPT_DOGE_Label2
+            // 
+            this.CSPT_DOGE_Label2.AutoSize = true;
+            this.CSPT_DOGE_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_DOGE_Label2.Location = new System.Drawing.Point(56, 63);
+            this.CSPT_DOGE_Label2.Name = "CSPT_DOGE_Label2";
+            this.CSPT_DOGE_Label2.Size = new System.Drawing.Size(0, 13);
+            this.CSPT_DOGE_Label2.TabIndex = 6;
+            this.CSPT_DOGE_Label2.Tag = "IR";
+            // 
+            // CSPT_LTC_Label2
+            // 
+            this.CSPT_LTC_Label2.AutoSize = true;
+            this.CSPT_LTC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_LTC_Label2.Location = new System.Drawing.Point(56, 83);
+            this.CSPT_LTC_Label2.Name = "CSPT_LTC_Label2";
+            this.CSPT_LTC_Label2.Size = new System.Drawing.Size(0, 13);
+            this.CSPT_LTC_Label2.TabIndex = 7;
+            this.CSPT_LTC_Label2.Tag = "IR";
+            // 
+            // CSPT_LTC_Label3
+            // 
+            this.CSPT_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.CSPT_LTC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_LTC_Label3.Location = new System.Drawing.Point(105, 83);
+            this.CSPT_LTC_Label3.Name = "CSPT_LTC_Label3";
+            this.CSPT_LTC_Label3.Size = new System.Drawing.Size(102, 13);
+            this.CSPT_LTC_Label3.TabIndex = 11;
+            this.CSPT_LTC_Label3.Tag = "";
+            this.CSPT_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // CSPT_DOGE_Label3
+            // 
+            this.CSPT_DOGE_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.CSPT_DOGE_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_DOGE_Label3.Location = new System.Drawing.Point(105, 63);
+            this.CSPT_DOGE_Label3.Name = "CSPT_DOGE_Label3";
+            this.CSPT_DOGE_Label3.Size = new System.Drawing.Size(102, 13);
+            this.CSPT_DOGE_Label3.TabIndex = 10;
+            this.CSPT_DOGE_Label3.Tag = "";
+            this.CSPT_DOGE_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // CSPT_ETH_Label3
+            // 
+            this.CSPT_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.CSPT_ETH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_ETH_Label3.Location = new System.Drawing.Point(105, 43);
+            this.CSPT_ETH_Label3.Name = "CSPT_ETH_Label3";
+            this.CSPT_ETH_Label3.Size = new System.Drawing.Size(102, 13);
+            this.CSPT_ETH_Label3.TabIndex = 9;
+            this.CSPT_ETH_Label3.Tag = "";
+            this.CSPT_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // CSPT_XBT_Label3
+            // 
+            this.CSPT_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.CSPT_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_XBT_Label3.Location = new System.Drawing.Point(105, 23);
+            this.CSPT_XBT_Label3.Name = "CSPT_XBT_Label3";
+            this.CSPT_XBT_Label3.Size = new System.Drawing.Size(102, 13);
+            this.CSPT_XBT_Label3.TabIndex = 8;
+            this.CSPT_XBT_Label3.Tag = "";
+            this.CSPT_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // CSPT_LTC_Label1
+            // 
+            this.CSPT_LTC_Label1.AutoSize = true;
+            this.CSPT_LTC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_LTC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CSPT_LTC_Label1.Location = new System.Drawing.Point(6, 83);
+            this.CSPT_LTC_Label1.Name = "CSPT_LTC_Label1";
+            this.CSPT_LTC_Label1.Size = new System.Drawing.Size(34, 13);
+            this.CSPT_LTC_Label1.TabIndex = 3;
+            this.CSPT_LTC_Label1.Text = "LTC:";
+            // 
+            // CSPT_DOGE_Label1
+            // 
+            this.CSPT_DOGE_Label1.AutoSize = true;
+            this.CSPT_DOGE_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_DOGE_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CSPT_DOGE_Label1.Location = new System.Drawing.Point(6, 63);
+            this.CSPT_DOGE_Label1.Name = "CSPT_DOGE_Label1";
+            this.CSPT_DOGE_Label1.Size = new System.Drawing.Size(46, 13);
+            this.CSPT_DOGE_Label1.TabIndex = 2;
+            this.CSPT_DOGE_Label1.Text = "DOGE:";
+            // 
+            // CSPT_ETH_Label1
+            // 
+            this.CSPT_ETH_Label1.AutoSize = true;
+            this.CSPT_ETH_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_ETH_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CSPT_ETH_Label1.Location = new System.Drawing.Point(6, 43);
+            this.CSPT_ETH_Label1.Name = "CSPT_ETH_Label1";
+            this.CSPT_ETH_Label1.Size = new System.Drawing.Size(36, 13);
+            this.CSPT_ETH_Label1.TabIndex = 1;
+            this.CSPT_ETH_Label1.Text = "ETH:";
+            // 
+            // CSPT_XBT_Label1
+            // 
+            this.CSPT_XBT_Label1.AutoSize = true;
+            this.CSPT_XBT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_XBT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CSPT_XBT_Label1.Location = new System.Drawing.Point(6, 23);
+            this.CSPT_XBT_Label1.Name = "CSPT_XBT_Label1";
+            this.CSPT_XBT_Label1.Size = new System.Drawing.Size(35, 13);
+            this.CSPT_XBT_Label1.TabIndex = 0;
+            this.CSPT_XBT_Label1.Text = "XBT:";
             // 
             // BFX_GroupBox
             // 
@@ -507,9 +761,9 @@
             this.fiat_GroupBox.Controls.Add(this.NZD_Label1);
             this.fiat_GroupBox.Controls.Add(this.AUD_Label1);
             this.fiat_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.fiat_GroupBox.Location = new System.Drawing.Point(19, 394);
+            this.fiat_GroupBox.Location = new System.Drawing.Point(260, 395);
             this.fiat_GroupBox.Name = "fiat_GroupBox";
-            this.fiat_GroupBox.Size = new System.Drawing.Size(371, 87);
+            this.fiat_GroupBox.Size = new System.Drawing.Size(217, 137);
             this.fiat_GroupBox.TabIndex = 9;
             this.fiat_GroupBox.TabStop = false;
             this.fiat_GroupBox.Text = "Fiat rates";
@@ -518,7 +772,7 @@
             // fiatRefresh_checkBox
             // 
             this.fiatRefresh_checkBox.AutoSize = true;
-            this.fiatRefresh_checkBox.Location = new System.Drawing.Point(9, 62);
+            this.fiatRefresh_checkBox.Location = new System.Drawing.Point(10, 114);
             this.fiatRefresh_checkBox.Name = "fiatRefresh_checkBox";
             this.fiatRefresh_checkBox.Size = new System.Drawing.Size(143, 17);
             this.fiatRefresh_checkBox.TabIndex = 9;
@@ -529,7 +783,7 @@
             // USD_Label2
             // 
             this.USD_Label2.AutoSize = true;
-            this.USD_Label2.Location = new System.Drawing.Point(246, 42);
+            this.USD_Label2.Location = new System.Drawing.Point(58, 82);
             this.USD_Label2.Name = "USD_Label2";
             this.USD_Label2.Size = new System.Drawing.Size(0, 13);
             this.USD_Label2.TabIndex = 8;
@@ -538,7 +792,7 @@
             // 
             this.USD_Label1.AutoSize = true;
             this.USD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.USD_Label1.Location = new System.Drawing.Point(196, 42);
+            this.USD_Label1.Location = new System.Drawing.Point(8, 83);
             this.USD_Label1.Name = "USD_Label1";
             this.USD_Label1.Size = new System.Drawing.Size(37, 13);
             this.USD_Label1.TabIndex = 7;
@@ -547,7 +801,7 @@
             // AUD_Label2
             // 
             this.AUD_Label2.AutoSize = true;
-            this.AUD_Label2.Location = new System.Drawing.Point(56, 22);
+            this.AUD_Label2.Location = new System.Drawing.Point(57, 23);
             this.AUD_Label2.Name = "AUD_Label2";
             this.AUD_Label2.Size = new System.Drawing.Size(0, 13);
             this.AUD_Label2.TabIndex = 4;
@@ -555,7 +809,7 @@
             // NZD_Label2
             // 
             this.NZD_Label2.AutoSize = true;
-            this.NZD_Label2.Location = new System.Drawing.Point(56, 42);
+            this.NZD_Label2.Location = new System.Drawing.Point(57, 43);
             this.NZD_Label2.Name = "NZD_Label2";
             this.NZD_Label2.Size = new System.Drawing.Size(0, 13);
             this.NZD_Label2.TabIndex = 5;
@@ -563,7 +817,7 @@
             // EUR_Label2
             // 
             this.EUR_Label2.AutoSize = true;
-            this.EUR_Label2.Location = new System.Drawing.Point(246, 22);
+            this.EUR_Label2.Location = new System.Drawing.Point(58, 62);
             this.EUR_Label2.Name = "EUR_Label2";
             this.EUR_Label2.Size = new System.Drawing.Size(0, 13);
             this.EUR_Label2.TabIndex = 6;
@@ -572,7 +826,7 @@
             // 
             this.EUR_Label1.AutoSize = true;
             this.EUR_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EUR_Label1.Location = new System.Drawing.Point(196, 22);
+            this.EUR_Label1.Location = new System.Drawing.Point(8, 63);
             this.EUR_Label1.Name = "EUR_Label1";
             this.EUR_Label1.Size = new System.Drawing.Size(37, 13);
             this.EUR_Label1.TabIndex = 2;
@@ -582,7 +836,7 @@
             // 
             this.NZD_Label1.AutoSize = true;
             this.NZD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NZD_Label1.Location = new System.Drawing.Point(6, 42);
+            this.NZD_Label1.Location = new System.Drawing.Point(7, 43);
             this.NZD_Label1.Name = "NZD_Label1";
             this.NZD_Label1.Size = new System.Drawing.Size(37, 13);
             this.NZD_Label1.TabIndex = 1;
@@ -592,7 +846,7 @@
             // 
             this.AUD_Label1.AutoSize = true;
             this.AUD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AUD_Label1.Location = new System.Drawing.Point(6, 22);
+            this.AUD_Label1.Location = new System.Drawing.Point(7, 23);
             this.AUD_Label1.Name = "AUD_Label1";
             this.AUD_Label1.Size = new System.Drawing.Size(37, 13);
             this.AUD_Label1.TabIndex = 0;
@@ -804,7 +1058,7 @@
             // SettingsButton
             // 
             this.SettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsButton.Location = new System.Drawing.Point(410, 458);
+            this.SettingsButton.Location = new System.Drawing.Point(410, 561);
             this.SettingsButton.Name = "SettingsButton";
             this.SettingsButton.Size = new System.Drawing.Size(75, 23);
             this.SettingsButton.TabIndex = 2;
@@ -1253,22 +1507,116 @@
             this.IR_XBT_Label1.TabIndex = 0;
             this.IR_XBT_Label1.Text = "XBT:";
             // 
-            // GIFLabel
+            // IR_XBT_PriceTT
             // 
-            this.GIFLabel.Image = global::IRTicker.Properties.Resources.bcc;
-            this.GIFLabel.Location = new System.Drawing.Point(-119, -12);
-            this.GIFLabel.Name = "GIFLabel";
-            this.GIFLabel.Size = new System.Drawing.Size(725, 512);
-            this.GIFLabel.TabIndex = 0;
-            this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
-            this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.IR_XBT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.IR_XBT_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // IR_ETH_PriceTT
+            // 
+            this.IR_ETH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.IR_ETH_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // IR_BCH_PriceTT
+            // 
+            this.IR_BCH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.IR_BCH_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // IR_LTC_PriceTT
+            // 
+            this.IR_LTC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.IR_LTC_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // BTCM_XBT_PriceTT
+            // 
+            this.BTCM_XBT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BTCM_XBT_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // BTCM_ETH_PriceTT
+            // 
+            this.BTCM_ETH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BTCM_ETH_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // BTCM_BCH_PriceTT
+            // 
+            this.BTCM_BCH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BTCM_BCH_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // BTCM_LTC_PriceTT
+            // 
+            this.BTCM_LTC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BTCM_LTC_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // BTCM_XRP_PriceTT
+            // 
+            this.BTCM_XRP_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BTCM_XRP_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // GDAX_XBT_PriceTT
+            // 
+            this.GDAX_XBT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.GDAX_XBT_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // GDAX_ETH_PriceTT
+            // 
+            this.GDAX_ETH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.GDAX_ETH_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // GDAX_BCH_PriceTT
+            // 
+            this.GDAX_BCH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.GDAX_BCH_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // GDAX_LTC_PriceTT
+            // 
+            this.GDAX_LTC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.GDAX_LTC_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // BFX_XBT_PriceTT
+            // 
+            this.BFX_XBT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BFX_XBT_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // BFX_ETH_PriceTT
+            // 
+            this.BFX_ETH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BFX_ETH_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // BFX_BCH_PriceTT
+            // 
+            this.BFX_BCH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BFX_BCH_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // BFX_LTC_PriceTT
+            // 
+            this.BFX_LTC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BFX_LTC_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // CSPT_XBT_PriceTT
+            // 
+            this.CSPT_XBT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.CSPT_XBT_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // CSPT_ETH_PriceTT
+            // 
+            this.CSPT_ETH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.CSPT_ETH_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // CSPT_DOGE_PriceTT
+            // 
+            this.CSPT_DOGE_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.CSPT_DOGE_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // CSPT_LTC_PriceTT
+            // 
+            this.CSPT_LTC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.CSPT_LTC_PriceTT.ToolTipTitle = "Spread details";
             // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(494, 489);
-            this.Controls.Add(this.LoadingPanel);
+            this.ClientSize = new System.Drawing.Size(494, 590);
             this.Controls.Add(this.Main);
             this.Controls.Add(this.Settings);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -1282,6 +1630,8 @@
             this.Settings.PerformLayout();
             this.LoadingPanel.ResumeLayout(false);
             this.Main.ResumeLayout(false);
+            this.CSPT_GroupBox.ResumeLayout(false);
+            this.CSPT_GroupBox.PerformLayout();
             this.BFX_GroupBox.ResumeLayout(false);
             this.BFX_GroupBox.PerformLayout();
             this.fiat_GroupBox.ResumeLayout(false);
@@ -1397,6 +1747,44 @@
         private System.Windows.Forms.Label IR_AvgPrice_Label;
         private System.Windows.Forms.CheckBox EnableGDAXLevel3_CheckBox;
         private System.Windows.Forms.Label EnableGDAXLevel3;
+        private System.Windows.Forms.GroupBox CSPT_GroupBox;
+        private System.Windows.Forms.Label CSPT_AvgPrice_Label;
+        private System.Windows.Forms.ComboBox CSPT_CryptoComboBox;
+        private System.Windows.Forms.MaskedTextBox CSPT_NumCoinsTextBox;
+        private System.Windows.Forms.ComboBox CSPT_BuySellComboBox;
+        private System.Windows.Forms.Label CSPT_XBT_Label2;
+        private System.Windows.Forms.Label CSPT_ETH_Label2;
+        private System.Windows.Forms.Label CSPT_DOGE_Label2;
+        private System.Windows.Forms.Label CSPT_LTC_Label2;
+        private System.Windows.Forms.Label CSPT_LTC_Label3;
+        private System.Windows.Forms.Label CSPT_DOGE_Label3;
+        private System.Windows.Forms.Label CSPT_ETH_Label3;
+        private System.Windows.Forms.Label CSPT_XBT_Label3;
+        private System.Windows.Forms.Label CSPT_LTC_Label1;
+        private System.Windows.Forms.Label CSPT_DOGE_Label1;
+        private System.Windows.Forms.Label CSPT_ETH_Label1;
+        private System.Windows.Forms.Label CSPT_XBT_Label1;
+        private System.Windows.Forms.ToolTip IR_XBT_PriceTT;
+        private System.Windows.Forms.ToolTip IR_ETH_PriceTT;
+        private System.Windows.Forms.ToolTip IR_BCH_PriceTT;
+        private System.Windows.Forms.ToolTip IR_LTC_PriceTT;
+        private System.Windows.Forms.ToolTip BTCM_XBT_PriceTT;
+        private System.Windows.Forms.ToolTip BTCM_ETH_PriceTT;
+        private System.Windows.Forms.ToolTip BTCM_BCH_PriceTT;
+        private System.Windows.Forms.ToolTip BTCM_LTC_PriceTT;
+        private System.Windows.Forms.ToolTip BTCM_XRP_PriceTT;
+        private System.Windows.Forms.ToolTip GDAX_XBT_PriceTT;
+        private System.Windows.Forms.ToolTip GDAX_ETH_PriceTT;
+        private System.Windows.Forms.ToolTip GDAX_BCH_PriceTT;
+        private System.Windows.Forms.ToolTip GDAX_LTC_PriceTT;
+        private System.Windows.Forms.ToolTip BFX_XBT_PriceTT;
+        private System.Windows.Forms.ToolTip BFX_ETH_PriceTT;
+        private System.Windows.Forms.ToolTip BFX_BCH_PriceTT;
+        private System.Windows.Forms.ToolTip BFX_LTC_PriceTT;
+        private System.Windows.Forms.ToolTip CSPT_XBT_PriceTT;
+        private System.Windows.Forms.ToolTip CSPT_ETH_PriceTT;
+        private System.Windows.Forms.ToolTip CSPT_DOGE_PriceTT;
+        private System.Windows.Forms.ToolTip CSPT_LTC_PriceTT;
     }
 }
 

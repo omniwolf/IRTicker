@@ -80,7 +80,16 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UIControls.cs" />
+    <Compile Include="DCEControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DCEControl.Designer.cs">
+      <DependentUpon>DCEControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities.cs" />
+    <EmbeddedResource Include="DCEControl.resx">
+      <DependentUpon>DCEControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="IRTicker.resx">
       <DependentUpon>IRTicker.cs</DependentUpon>
     </EmbeddedResource>

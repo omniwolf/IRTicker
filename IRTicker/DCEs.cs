@@ -24,6 +24,10 @@ namespace IRTicker {
 
         public string FriendlyName { get; }
 
+        public bool NetworkAvailable { get; set; } = true;
+
+        public bool HasStaticData { get; set; } = false;  // this will be false until we can pull the DCE static data (eg currency pairs, etc - data that will never change in a session).  Once true always true for a session.
+
         // "Online" if everything is fine, anything else will cause the UI to display this string in the DCE group box text
         public string CurrentDCEStatus { get; set; }
 
@@ -263,6 +267,38 @@ namespace IRTicker {
             public string high { get; set; }
             public string volume { get; set; }
             public string timestamp { get; set; }
+        }
+
+        public class Crypto_CSPT {
+            public string bid { get; set; }
+            public string ask { get; set; }
+            public string last { get; set; }
+            public string ticker { get; set; }  // manually set as the ticker, eg btc or eth
+        }
+
+        public class Prices_CSPT {
+            public Crypto_CSPT btc { get; set; }
+            public Crypto_CSPT ltc { get; set; }
+            public Crypto_CSPT doge { get; set; }
+            public Crypto_CSPT eth { get; set; }
+
+            // create a list of the coins so we can iterate through them in the main code.
+            public List<Crypto_CSPT> cryptoList = new List<Crypto_CSPT>();
+            public void CreateCryptoList() {
+                cryptoList.Add(btc);
+                cryptoList.Add(ltc);
+                cryptoList.Add(doge);
+                cryptoList.Add(eth);
+                btc.ticker = "XBT";
+                ltc.ticker = "LTC";
+                doge.ticker = "DOGE";
+                eth.ticker = "ETH";
+            }
+        }
+
+        public class MarketSummary_CSPT {
+            public string status { get; set; }
+            public Prices_CSPT prices { get; set; }
         }
 
         public class Order {
