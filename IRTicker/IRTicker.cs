@@ -856,7 +856,7 @@ namespace IRTicker {
                     }
 
                     // update tool tips.
-                    UIControls_Dict[dExchange].ToolTip_Dict[pairObj.Value.PrimaryCurrencyCode + "_PriceTT"].SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"], "Best bid: " + pairObj.Value.CurrentHighestBidPrice + System.Environment.NewLine + "Best offer: " + pairObj.Value.CurrentLowestOfferPrice);
+                    UIControls_Dict[dExchange].ToolTip_Dict[pairObj.Value.PrimaryCurrencyCode + "_PriceTT"].SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], "Best bid: " + pairObj.Value.CurrentHighestBidPrice + System.Environment.NewLine + "Best offer: " + pairObj.Value.CurrentLowestOfferPrice);
                 }
                 else Debug.Print("Pair don't exist, pairObj.Value.SecondaryCurrencyCode: " + pairObj.Value.SecondaryCurrencyCode);  // ETH seems to be the only pair displaying for coinspot.. why?  need to debug.
             }
