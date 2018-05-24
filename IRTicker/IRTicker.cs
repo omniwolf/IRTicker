@@ -376,28 +376,27 @@ namespace IRTicker {
 
             string sendMessage = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"BTCUSD\"}";
 
-            using (var ws = new WebSocket("wss://api.bitfinex.com/ws")) {
+            WebSocket ws = new WebSocket("wss://api.bitfinex.com/ws");
 
+            ws.OnMessage += (sender, e) => 
+                Debug.Print("Laputa says: " + e.Data);
 
-                ws.OnMessage += (sender, e) => 
-                  Debug.Print("Laputa says: " + e.Data);
-
-                ws.OnOpen += (sender, e) => {
-                    Debug.Print("ws onopen");
-                    ws.Send(sendMessage);
-                };
-
-                ws.OnError += (sender, e) => {
-                    Debug.Print("ws onerror");
-                };
-
-                ws.OnClose += (sender, e) => {
-                    //Debug.Print("ws onclose");
-                };
-
-                ws.Connect();
+            ws.OnOpen += (sender, e) => {
+                Debug.Print("ws onopen");
                 ws.Send(sendMessage);
-            }
+            };
+
+            ws.OnError += (sender, e) => {
+                Debug.Print("ws onerror");
+            };
+
+            ws.OnClose += (sender, e) => {
+                //Debug.Print("ws onclose");
+            };
+
+            ws.Connect();
+            ws.Send(sendMessage);
+            
 
             //ClientWebSocket wss = new WebSocket("wss://api.bitfinex.com/ws");
             
