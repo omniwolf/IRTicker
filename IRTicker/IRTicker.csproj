@@ -90,6 +90,7 @@
       <DependentUpon>DCEControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Utilities.cs" />
+    <Compile Include="WebSocketsConnect.cs" />
     <EmbeddedResource Include="DCEControl.resx">
       <DependentUpon>DCEControl.cs</DependentUpon>
     </EmbeddedResource>

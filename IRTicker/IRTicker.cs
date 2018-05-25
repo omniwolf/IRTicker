@@ -36,6 +36,7 @@ namespace IRTicker {
         private string cryptoDir = "";
         private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "DOGE" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
+        private WebSocketsConnect wSocketConnect;
 
         public IRTicker() {
             InitializeComponent();
@@ -79,6 +80,8 @@ namespace IRTicker {
             DCEs["CSPT"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"DOGE\",\"LTC\"";
             DCEs["CSPT"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["CSPT"].HasStaticData = true;  // we don't poll for static data, so just say we have it.
+
+            wSocketConnect = new WebSocketsConnect(DCEs);
 
             InitialiseUIControls();
 
@@ -374,39 +377,9 @@ namespace IRTicker {
 
         private void ParseDCE_BFX(string crypto, string fiat) {
 
-            string sendMessage = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"BTCUSD\"}";
-
-            WebSocket ws = new WebSocket("wss://api.bitfinex.com/ws");
-
-            ws.OnMessage += (sender, e) => 
-                Debug.Print("Laputa says: " + e.Data);
-
-            ws.OnOpen += (sender, e) => {
-                Debug.Print("ws onopen");
-                ws.Send(sendMessage);
-            };
-
-            ws.OnError += (sender, e) => {
-                Debug.Print("ws onerror");
-            };
-
-            ws.OnClose += (sender, e) => {
-                //Debug.Print("ws onclose");
-            };
-
-            ws.Connect();
-            ws.Send(sendMessage);
             
 
-            //ClientWebSocket wss = new WebSocket("wss://api.bitfinex.com/ws");
-            
-
-
-
-
-
-
-            Tuple<bool, string> marketSummary = Get("https://api.bitfinex.com/v1/pubticker/" + (crypto == "XBT" ? "BTC" : crypto) + fiat);
+            /*Tuple<bool, string> marketSummary = Get("https://api.bitfinex.com/v1/pubticker/" + (crypto == "XBT" ? "BTC" : crypto) + fiat);
             if (!marketSummary.Item1) {
                 DCEs["BFX"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
                 DCEs["BFX"].NetworkAvailable = false;
@@ -451,8 +424,9 @@ namespace IRTicker {
                 mSummary.CreatedTimestampUTC = mSummary_BFX.timestamp;
 
                 DCEs["BFX"].CryptoPairsAdd(crypto + "-" + fiat, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
+                
                 DCEs["BFX"].NetworkAvailable = true;
-            }
+            }*/
         }
 
         private void ParseDCE_CSPT(string fiat) {
@@ -589,6 +563,7 @@ namespace IRTicker {
         }
 
         private void GetBFXProducts() {
+
             Tuple<bool, string> products = Get("https://api.bitfinex.com/v1/symbols_details");
             if (!products.Item1) {
                 DCEs["BFX"].CurrentDCEStatus = WebsiteError(products.Item2);
@@ -616,6 +591,12 @@ namespace IRTicker {
                 }
                 DCEs["BFX"].ExchangeProducts = productDictionary;
                 DCEs["BFX"].NetworkAvailable = true;
+
+                foreach (string primaryCode in DCEs["BFX"].PrimaryCurrencyList) {
+                    if (DCEs["BFX"].ExchangeProducts.ContainsKey(primaryCode + "-" + DCEs["BFX"].CurrentSecondaryCurrency)) {
+                        wSocketConnect.WebSocket_Connect("BFX", primaryCode, DCEs["BFX"].CurrentSecondaryCurrency);
+                    }
+                }
             }
         }
 
@@ -892,7 +873,7 @@ namespace IRTicker {
                     // update tool tips.
                     UIControls_Dict[dExchange].ToolTip_Dict[pairObj.Value.PrimaryCurrencyCode + "_PriceTT"].SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], "Best bid: " + pairObj.Value.CurrentHighestBidPrice + System.Environment.NewLine + "Best offer: " + pairObj.Value.CurrentLowestOfferPrice);
                 }
-                else Debug.Print("Pair don't exist, pairObj.Value.SecondaryCurrencyCode: " + pairObj.Value.SecondaryCurrencyCode);  // ETH seems to be the only pair displaying for coinspot.. why?  need to debug.
+                else Debug.Print("Pair don't exist, pairObj.Value.SecondaryCurrencyCode: " + pairObj.Value.SecondaryCurrencyCode);
             }
             if (!avgPriceSet) UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Gray;  // any text there is now a poll old, so gray it out so the user knows it's stale.
             UIControls_Dict[dExchange].AvgPrice_Crypto.Enabled = true;  // we disable it if they change the fiat currency as we need to re-populate the crypto combo box first
