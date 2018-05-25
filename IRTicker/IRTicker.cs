@@ -278,7 +278,7 @@ namespace IRTicker {
         // takes a website httpsResonse.StatusCode and returns a friendly string
         private string WebsiteError(string errorCode) {
             if (errorCode.Contains("429")) return "Rate limited";
-            else if (errorCode.ToUpper().Contains("GATEWAYTIMEOU") || errorCode.ToUpper().Contains("SERVICEUNAVAILABLE")) return "API failure";
+            else if (errorCode.ToUpper().Contains("GATEWAYTIMEOUT") || errorCode.ToUpper().Contains("SERVICEUNAVAILABLE") || errorCode.ToUpper().Contains("BADGATEWAY")) return "API failure";
             else if (string.IsNullOrEmpty(errorCode)) return "Network error";
             else if (errorCode.ToUpper().Contains("BADREQUEST") || errorCode.ToUpper().Contains("NOTFOUND")) return "Bad request";
             else {
