@@ -33,6 +33,7 @@
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
             this.LoadingPanel = new System.Windows.Forms.Panel();
+            this.GIFLabel = new System.Windows.Forms.Label();
             this.EnableGDAXLevel3_CheckBox = new System.Windows.Forms.CheckBox();
             this.EnableGDAXLevel3 = new System.Windows.Forms.Label();
             this.VersionLabel = new System.Windows.Forms.Label();
@@ -161,7 +162,6 @@
             this.CSPT_ETH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.CSPT_DOGE_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.CSPT_LTC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.GIFLabel = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -226,6 +226,7 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
+            this.Settings.Controls.Add(this.LoadingPanel);
             this.Settings.Controls.Add(this.EnableGDAXLevel3_CheckBox);
             this.Settings.Controls.Add(this.EnableGDAXLevel3);
             this.Settings.Controls.Add(this.VersionLabel);
@@ -249,6 +250,16 @@
             this.LoadingPanel.Name = "LoadingPanel";
             this.LoadingPanel.Size = new System.Drawing.Size(492, 590);
             this.LoadingPanel.TabIndex = 10;
+            // 
+            // GIFLabel
+            // 
+            this.GIFLabel.Image = global::IRTicker.Properties.Resources.endlessXBT;
+            this.GIFLabel.Location = new System.Drawing.Point(0, 0);
+            this.GIFLabel.Name = "GIFLabel";
+            this.GIFLabel.Size = new System.Drawing.Size(495, 672);
+            this.GIFLabel.TabIndex = 0;
+            this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
+            this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // EnableGDAXLevel3_CheckBox
             // 
@@ -1601,22 +1612,11 @@
             this.CSPT_LTC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.CSPT_LTC_PriceTT.ToolTipTitle = "Spread details";
             // 
-            // GIFLabel
-            // 
-            this.GIFLabel.Image = global::IRTicker.Properties.Resources.endlessXBT;
-            this.GIFLabel.Location = new System.Drawing.Point(0, 0);
-            this.GIFLabel.Name = "GIFLabel";
-            this.GIFLabel.Size = new System.Drawing.Size(495, 672);
-            this.GIFLabel.TabIndex = 0;
-            this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
-            this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(494, 590);
-            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Main);
             this.Controls.Add(this.Settings);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

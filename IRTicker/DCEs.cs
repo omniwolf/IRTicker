@@ -12,7 +12,7 @@ namespace IRTicker {
         private string _secondaryCodesStr;
         private Dictionary<string, List<Tuple<DateTime, double>>> priceHistory = new Dictionary<string, List<Tuple<DateTime, double>>>();
 
-        public Dictionary<string, MarketSummary> cryptoPairs;
+        private Dictionary<string, MarketSummary> cryptoPairs;
         public Dictionary<string, OrderBook> orderBooks;  // string format is eg "XBT-AUD" - caps with a dash
 
         // constructor
@@ -40,14 +40,15 @@ namespace IRTicker {
             }
         }
 
+
+        /// <summary>
+        /// pair is format "XBT-AUD"
+        /// </summary>
+        /// <param name="pair"></param>
+        /// <param name="mSummary"></param>
         public void CryptoPairsAdd(string pair, MarketSummary mSummary) {
             // ok here want to add it to the cryptopairs dictionary, but we also want to add the last price to a list so we can see trends
             pair = pair.ToUpper();
-            // can delete this (hopefully) as cyptoPair[pair] = mSummary does an add or update automatically.  no need to remove.
-            /*if (cryptoPairs.ContainsKey(pair)) {  // we need to delete this entry if it exists because we're relpacing it with updated data
-                cryptoPairs.Remove(pair);
-            }*/
-
             cryptoPairs[pair] = mSummary;
 
             if (!priceHistory.ContainsKey(pair)) {  // if this crypto/fiat pair hasn't come up before, create a new empty dictionary kvp
@@ -56,9 +57,15 @@ namespace IRTicker {
             priceHistory[pair].Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));  // add the time and price to the kvp's value list
         }
 
+        // returns a copy of the dictionary so we can mess with it without fear of reproach
+        public Dictionary<string, MarketSummary> GetCryptoPairs() {
+            return new Dictionary<string, MarketSummary>(cryptoPairs);
+        }
+
         public string BuySell { get; set; }
         public string NumCoinsStr { get; set; } = "";
         public string CryptoCombo { get; set; } = "";
+
 
         /////////////////////////////////////////////////////////
         ////////////////      CURRENCIES      ///////////////////

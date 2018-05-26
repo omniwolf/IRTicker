@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WebSocketSharp;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using System.ComponentModel;
 
 
 namespace IRTicker {
@@ -14,10 +15,12 @@ namespace IRTicker {
         private Dictionary<string, DCE> DCEs;
         private WebSocket wSocket_BFX;
         private WebSocket wSocket_GDAX;
-        private Dictionary<string, Subscribed_BFX> channel_Dict_BFX = new Dictionary<string, Subscribed_BFX>();
+        public Dictionary<string, Subscribed_BFX> channel_Dict_BFX = new Dictionary<string, Subscribed_BFX>();  // string is a string version of the channel ID
+        private BackgroundWorker pollingThread;
 
-        public WebSocketsConnect(Dictionary<string, DCE> _DCEs) {
+        public WebSocketsConnect(Dictionary<string, DCE> _DCEs, BackgroundWorker _pollingThread) {
             DCEs = _DCEs;
+            pollingThread = _pollingThread;
 
             // BFX
             wSocket_BFX = new WebSocket("wss://api.bitfinex.com/ws");
@@ -34,6 +37,12 @@ namespace IRTicker {
 
             wSocket_BFX.OnError += (sender, e) => {
                 Debug.Print("ws onerror - bfx");
+                wSocket_BFX.Close();
+                DCEs["BFX"].NetworkAvailable = false;
+                DCEs["BFX"].CurrentDCEStatus = "Socket error";
+                DCEs["BFX"].HasStaticData = false;
+                pollingThread.ReportProgress(52);  // 52 is error
+                wSocket_BFX.Connect();
             };
 
             wSocket_BFX.OnClose += (sender, e) => {
@@ -45,12 +54,14 @@ namespace IRTicker {
             // GDAX ?
         }
 
-        public void WebSocket_Connect(string dExchange, string crypto, string fiat) {
+        public void WebSocket_Subscribe(string dExchange, string crypto, string fiat) {
             switch (dExchange) {
                 case "BFX":
-                    if (crypto == "XBT") crypto = "BTC";
-                    string channel = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"" + crypto + fiat + "\"}";
-                    wSocket_BFX.Send(channel);
+                    if (wSocket_BFX.IsAlive) {
+                        if (crypto == "XBT") crypto = "BTC";
+                        string channel = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"" + crypto + fiat + "\"}";
+                        wSocket_BFX.Send(channel);
+                    }
 
                     break;
                 case "GDAX":
@@ -63,12 +74,30 @@ namespace IRTicker {
             switch (dExchange) {
                 case "BFX":
                     wSocket_BFX.Close();
+                    wSocket_BFX.Connect();
                     break;
             }
         }
 
-        public void Unsubscribe_BFX(string channelID) {
-            wSocket_BFX.Send("{\"event\":\"unsubscribe\",\"chanId\":\"" + channelID + "\"");
+        // after calling this sub, please remove the KVP of the channel you're unsubscribing from from the channel_Dict_BFX dictionary
+        public void Unsubscribe_BFX(int channelID) {
+            try {
+                if (wSocket_BFX.IsAlive) {
+                    wSocket_BFX.Send("{\"event\":\"unsubscribe\",\"chanId\":\"" + channelID.ToString() + "\"}");
+                }
+            }
+            catch (Exception ex) {
+                Debug.Print("Exception when trying to unsubscribe - can't trust the .IsAlive property of the socket :( - " + ex.ToString());
+            }
+            //Debug.Print("just unsubscribed from " + channelID.ToString());
+        }
+
+        public void RemoveChannels(List<string> channelsToDelete) {
+            foreach (string chans in channelsToDelete) channel_Dict_BFX.Remove(chans);
+        }
+
+        public Dictionary<string, Subscribed_BFX> GetChannelsDictionary_BFX() {
+            return new Dictionary<string, Subscribed_BFX>(channel_Dict_BFX);
         }
 
         /* BFX format:
@@ -85,7 +114,7 @@ namespace IRTicker {
             HIGH 	            float 	Daily high
             LOW 	            float 	Daily low*/
         private void MessageRX_BFX(string message) {
-            Debug.Print("BFX stream: " + message);
+            //Debug.Print("BFX stream: " + message);
 
             if (message.StartsWith("{")) {  // it's JSON, let's parse it as such
                 if (message.Contains("\"event\":\"info\"")) {  // kinda like a header, we don't really care about this line.  it might look like this: {"event":"info","version":1.1,"platform":{"status":1}}
@@ -97,9 +126,23 @@ namespace IRTicker {
                     Subscribed_BFX subscription = new Subscribed_BFX();
                     subscription = JsonConvert.DeserializeObject<Subscribed_BFX>(message);
                     channel_Dict_BFX[subscription.chanId.ToString()] = subscription;  // update or add
+                    Debug.Print("subscribed to " + subscription.chanId.ToString());
                 }
                 else if (message.Contains("\"event\":\"error\"")) {  // uh oh we done bad.  could look like this: {"channel":"ticker","pair":"BTCUSD","event":"error","msg":"subscribe: dup","code":10301}
                     Debug.Print("Error from BFX socket: " + message);
+                    // so i guess at this stage we want to try again
+                    wSocket_BFX.Close();
+                    DCEs["BFX"].CurrentDCEStatus = "API response error";
+                    DCEs["BFX"].NetworkAvailable = false;
+                    DCEs["BFX"].HasStaticData = false;
+                    pollingThread.ReportProgress(52);  // 52 is error
+                    wSocket_BFX.Connect();
+                }
+                else if (message.Contains("unsubscribed")) {
+                    //Debug.Print("UNSUBSCRIBED!  message: " + message);
+                }
+                else {
+                    Debug.Print("rand message from sockets: " + message);
                 }
             }
             else if (message.StartsWith("[")) {  // is this how I tell if it's real socket data?  seems dodgy
@@ -145,6 +188,9 @@ namespace IRTicker {
 
                         // market summary should be complete now
                         DCEs["BFX"].CryptoPairsAdd(channel_Dict_BFX[streamParts[0]].pairDash, mSummary);
+                        Debug.Print("just received pair: " + mSummary.pair + ", and chanID is: " + streamParts[0]);
+                        if (DCEs["BFX"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(51, mSummary);  // only update the UI for pairs we care about
+                        
                     }
                 }
                 else Debug.Print("weird.. BFX socket sent us a channel ID we don't have in the dict? - " + message);
@@ -153,11 +199,8 @@ namespace IRTicker {
         }
 
 
-
-
         public class Subscribed_BFX {
             private string _pair;
-            private string _pairDash;
 
             public string @event { get; set; }
             public string channel { get; set; }
