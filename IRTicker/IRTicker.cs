@@ -561,6 +561,17 @@ namespace IRTicker {
             }
         }
 
+        private void SubscribeTickerSocket_GDAX() {
+            // subscribe to all the pairs
+            foreach (string secondaryCode in DCEs["GDAX"].SecondaryCurrencyList) {
+                foreach (string primaryCode in DCEs["GDAX"].PrimaryCurrencyList) {
+                    if (DCEs["GDAX"].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
+                        wSocketConnect.WebSocket_Subscribe("GDAX", primaryCode, secondaryCode);
+                    }
+                }
+            }
+        }
+
         private void GetIROrderBook(string crypto) {
             Tuple<bool, string> orderBookTpl = Get("https://api.independentreserve.com/Public/GetOrderBook?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + DCEs["IR"].CurrentSecondaryCurrency);
             if (orderBookTpl.Item1) {
@@ -725,6 +736,8 @@ namespace IRTicker {
                         DCEs["GDAX"].PrimaryCurrencyCodes = gdax_currencies[0];
                         DCEs["GDAX"].SecondaryCurrencyCodes = gdax_currencies[1];
                         DCEs["GDAX"].HasStaticData = true;  // we got here with the network up?  then we got the static data!
+                        Debug.Print("calling gdax sockets sub");
+                        SubscribeTickerSocket_GDAX();
                     }
                 }
 
@@ -932,9 +945,16 @@ namespace IRTicker {
             if (reportType == 51) {  // 51 is BFX update labels
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
                 UpdateLabels_Pair("BFX", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
+                return;
             }
             else if (reportType == 52) {  // 52 is error in the response or API.   either way, we disconnect and start again.
                 APIDown(UIControls_Dict["BFX"].dExchange_GB, "BFX");
+                return;
+            }
+            else if (reportType == 61) {  // update GDAX
+                DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
+                UpdateLabels_Pair("GDAX", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
+                return;
             }
 
             LoadingPanel.Visible = false;

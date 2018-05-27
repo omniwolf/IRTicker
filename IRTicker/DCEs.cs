@@ -234,9 +234,17 @@ namespace IRTicker {
                 }
             }
 
+            
+            /// <summary>
+            /// setting this must be in "crypto-fiat" format
+            /// </summary>
             public string pair {
                 get {
                     return PrimaryCurrencyCode + "-" + SecondaryCurrencyCode;
+                }
+                set {
+                    PrimaryCurrencyCode = value.Substring(0, value.IndexOf('-'));
+                    SecondaryCurrencyCode = value.Substring(value.IndexOf('-') + 1, value.Length - value.IndexOf('-') - 1);
                 }
             }
         }

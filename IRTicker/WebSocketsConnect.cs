@@ -51,7 +51,35 @@ namespace IRTicker {
             wSocket_BFX.Connect();
 
 
-            // GDAX ?
+            // GDAX
+            wSocket_GDAX = new WebSocket("wss://ws-feed.gdax.com");
+
+            wSocket_GDAX.OnMessage += (sender, e) => {
+                if (e.IsText) {
+                    MessageRX_GDAX(e.Data);
+                    //Debug.Print("GDAX SOCKET: " + e.Data);
+                }
+                else Debug.Print("GDAX ws stream is not text?? - " + e.RawData.ToString());
+            };
+
+            wSocket_GDAX.OnOpen += (sender, e) => {
+                Debug.Print("ws onopen - gdax");
+            };
+
+            wSocket_GDAX.OnError += (sender, e) => {
+                Debug.Print("ws onerror - gdax");
+                wSocket_GDAX.Close();
+                DCEs["GDAX"].NetworkAvailable = false;
+                DCEs["GDAX"].CurrentDCEStatus = "Socket error";
+                DCEs["GDAX"].HasStaticData = false;
+                pollingThread.ReportProgress(62);  // 62 is GDAX error
+                wSocket_GDAX.Connect();
+            };
+
+            wSocket_GDAX.OnClose += (sender, e) => {
+                //Debug.Print("ws onclose");
+            };
+            wSocket_GDAX.Connect();
         }
 
         public void WebSocket_Subscribe(string dExchange, string crypto, string fiat) {
@@ -65,7 +93,11 @@ namespace IRTicker {
 
                     break;
                 case "GDAX":
-
+                    if (wSocket_GDAX.IsAlive) {
+                        if (crypto == "XBT") crypto = "BTC";
+                        string channel = "{\"type\": \"subscribe\", \"channels\": [{\"name\": \"ticker\", \"product_ids\": [\""+ crypto + "-" + fiat + "\"] } ] }";
+                        wSocket_GDAX.Send(channel);
+                    }
                     break;
             }
         }
@@ -98,6 +130,59 @@ namespace IRTicker {
 
         public Dictionary<string, Subscribed_BFX> GetChannelsDictionary_BFX() {
             return new Dictionary<string, Subscribed_BFX>(channel_Dict_BFX);
+        }
+
+        private void MessageRX_GDAX(string message) {
+
+            if (message.Contains("\"type\":\"ticker\"")) {
+                Ticker_GDAX tickerStream = new Ticker_GDAX();
+                tickerStream = JsonConvert.DeserializeObject<Ticker_GDAX>(message);
+
+                // now we convert it into a classic MarketSummary obj, and add it to cryptopairs
+                DCE.MarketSummary mSummary = new DCE.MarketSummary();
+
+                // make it all XBT
+                if (tickerStream.product_id.ToUpper().StartsWith("BTC")) tickerStream.product_id = tickerStream.product_id.Replace(tickerStream.product_id.Substring(0, 3), "XBT");
+
+                mSummary.pair = tickerStream.product_id.ToUpper();
+                if (double.TryParse(tickerStream.price, out double price)) {
+                    mSummary.LastPrice = price;
+                }
+                else Debug.Print("");
+
+                if (double.TryParse(tickerStream.volume_24h, out double vol)) {
+                    mSummary.DayVolume = vol;
+                }
+                else Debug.Print("");
+
+                if (double.TryParse(tickerStream.low_24h, out double low)) {
+                    mSummary.DayLowestPrice = low;
+                }
+                else Debug.Print("");
+
+                if (double.TryParse(tickerStream.high_24h, out double high)) {
+                    mSummary.DayHighestPrice = high;
+                }
+                else Debug.Print("");
+
+                if (double.TryParse(tickerStream.best_bid, out double bid)) {
+                    mSummary.CurrentHighestBidPrice = bid;
+                }
+                else Debug.Print("");
+
+                if (double.TryParse(tickerStream.best_ask, out double offer)) {
+                    mSummary.CurrentLowestOfferPrice = offer;
+                }
+                Debug.Print("");
+
+                mSummary.CreatedTimestampUTC = tickerStream.time.ToString("o");
+
+                // market summary should be complete now
+                DCEs["GDAX"].CryptoPairsAdd(mSummary.pair, mSummary);
+                
+                if (DCEs["GDAX"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(61, mSummary);  // only update the UI for pairs we care about
+
+            }
         }
 
         /* BFX format:
@@ -233,7 +318,22 @@ namespace IRTicker {
             }
         }
 
-
-
+        public class Ticker_GDAX {
+            public string type { get; set; }
+            public long sequence { get; set; }
+            public string product_id { get; set; }
+            public string price { get; set; }
+            public string open_24h { get; set; }
+            public string volume_24h { get; set; }
+            public string low_24h { get; set; }
+            public string high_24h { get; set; }
+            public string volume_30d { get; set; }
+            public string best_bid { get; set; }
+            public string best_ask { get; set; }
+            public string side { get; set; }
+            public DateTime time { get; set; }
+            public int trade_id { get; set; }
+            public string last_size { get; set; }
+        }
     }
 }
