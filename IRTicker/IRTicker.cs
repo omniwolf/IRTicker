@@ -16,10 +16,8 @@ using WebSocketSharp;
 
 // todo:
 
-// implement coinspot
-// hover text over the last price should show the best bid and offer price
-// de-prioritise BCH and LTC from BitFinex to help with rate limiting - needs more work... maybe look to see if there's a private API that doesn't get rate limited?
-
+// websockets for order book pulling
+// websockets for GDAX
 
 namespace IRTicker {
     public partial class IRTicker : Form {
@@ -793,7 +791,10 @@ namespace IRTicker {
             } while(true);  // polling is lyfe
         }
 
-        private void UpdateLabels(string dExchange) { 
+        private void UpdateLabels(string dExchange) {
+            // get the copy of the cryptoPairs dictionary.  this is an expensive operation, so do it up here before we reset the labels
+            Dictionary<string, DCE.MarketSummary> cPairs = DCEs[dExchange].GetCryptoPairs();
+
             // first we run through all the labels and reset them.  The label writing process only writes to labes of pairs that exist, so we first need to set them back in case they don't exist
             foreach (KeyValuePair<string, System.Windows.Forms.Label> UICobj in UIControls_Dict[dExchange].Label_Dict) {
                 if (UICobj.Key.EndsWith("_Price")) {
@@ -806,7 +807,7 @@ namespace IRTicker {
 
             // here we run through each available pair in the DCE object, and populate the corresponding labels with the info
             bool avgPriceSet = false;
-            foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in DCEs[dExchange].GetCryptoPairs()) {
+            foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in cPairs) {
                 // i guess we need to filter out the wrong pairs, also don't try and update labels that are -1 (-1 means they're a fake entry)
                 if (pairObj.Value.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency && pairObj.Value.LastPrice >= 0) {
                     string formatString = "### ##0.##";
@@ -941,6 +942,7 @@ namespace IRTicker {
             // update the UI
 
             // here we iterate through the exchanges and update their group boxes and labels
+
             foreach (string dExchange in Exchanges) {
                 if (dExchange == "BFX") continue;  // socket exchanges don't go here
                 if (DCEs[dExchange].NetworkAvailable) {

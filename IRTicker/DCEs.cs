@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
+using System.Diagnostics;
 
 namespace IRTicker {
     class DCE {
 
-        // not used
+        private bool lockReadCryptoPairs = false;
+        private bool lockWriteCryptoPairs = false;
+
         private string _primaryCodesStr;
         private string _secondaryCodesStr;
         private Dictionary<string, List<Tuple<DateTime, double>>> priceHistory = new Dictionary<string, List<Tuple<DateTime, double>>>();
@@ -33,7 +37,7 @@ namespace IRTicker {
 
         public List<Tuple<DateTime, double>> GetPriceList(string pair) {
             if (priceHistory.ContainsKey(pair)) {
-                return priceHistory[pair];
+                return new List<Tuple<DateTime, double>>(priceHistory[pair]);
             }
             else {
                 return new List<Tuple<DateTime, double>>();
@@ -43,23 +47,54 @@ namespace IRTicker {
 
         /// <summary>
         /// pair is format "XBT-AUD"
+        /// Note - this needs to be called from a non UI thread as we put a wait in it so we're not trying to add to it while we're reading it
         /// </summary>
         /// <param name="pair"></param>
         /// <param name="mSummary"></param>
         public void CryptoPairsAdd(string pair, MarketSummary mSummary) {
+            do {
+                if (lockReadCryptoPairs) {
+                    Debug.Print("sleeping before a cPairs write");
+                    Thread.Sleep(1000);
+                }
+                else {
+                    //Debug.Print("LOCK - about to write");
+                    lockWriteCryptoPairs = true;
+                    break;
+                }
+            } while (true);
+
             // ok here want to add it to the cryptopairs dictionary, but we also want to add the last price to a list so we can see trends
             pair = pair.ToUpper();
             cryptoPairs[pair] = mSummary;
+            lockWriteCryptoPairs = false;
 
             if (!priceHistory.ContainsKey(pair)) {  // if this crypto/fiat pair hasn't come up before, create a new empty dictionary kvp
                 priceHistory.Add(pair, new List<Tuple<DateTime, double>>());
             }
             priceHistory[pair].Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));  // add the time and price to the kvp's value list
+            //Debug.Print("LOCK - finished writing");
         }
 
         // returns a copy of the dictionary so we can mess with it without fear of reproach
         public Dictionary<string, MarketSummary> GetCryptoPairs() {
-            return new Dictionary<string, MarketSummary>(cryptoPairs);
+            // i'm a coding noob. this is the only way i could figure to stop the cryptoPairs dictionary from being written to while i made a copy of it
+            do {
+                if (lockWriteCryptoPairs) {
+                    Debug.Print("sleeping before a cPairs READ");
+                    Thread.Sleep(1000);
+                }
+                else {
+                    //Debug.Print("LOCK - about to read");
+                    lockReadCryptoPairs = true;
+                    break;
+                }
+            } while (true);
+
+            Dictionary<string, MarketSummary> cPairs = new Dictionary<string, MarketSummary>(cryptoPairs);
+            lockReadCryptoPairs = false;
+            //Debug.Print("LOCK - finished reading");
+            return cPairs;
         }
 
         public string BuySell { get; set; }

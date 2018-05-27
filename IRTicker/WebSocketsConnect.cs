@@ -126,7 +126,7 @@ namespace IRTicker {
                     Subscribed_BFX subscription = new Subscribed_BFX();
                     subscription = JsonConvert.DeserializeObject<Subscribed_BFX>(message);
                     channel_Dict_BFX[subscription.chanId.ToString()] = subscription;  // update or add
-                    Debug.Print("subscribed to " + subscription.chanId.ToString());
+                    //Debug.Print("subscribed to " + subscription.chanId.ToString());
                 }
                 else if (message.Contains("\"event\":\"error\"")) {  // uh oh we done bad.  could look like this: {"channel":"ticker","pair":"BTCUSD","event":"error","msg":"subscribe: dup","code":10301}
                     Debug.Print("Error from BFX socket: " + message);
@@ -188,7 +188,7 @@ namespace IRTicker {
 
                         // market summary should be complete now
                         DCEs["BFX"].CryptoPairsAdd(channel_Dict_BFX[streamParts[0]].pairDash, mSummary);
-                        Debug.Print("just received pair: " + mSummary.pair + ", and chanID is: " + streamParts[0]);
+                        //Debug.Print("just received pair: " + mSummary.pair + ", and chanID is: " + streamParts[0]);
                         if (DCEs["BFX"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(51, mSummary);  // only update the UI for pairs we care about
                         
                     }
