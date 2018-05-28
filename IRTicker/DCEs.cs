@@ -52,7 +52,7 @@ namespace IRTicker {
         /// <param name="pair"></param>
         /// <param name="mSummary"></param>
         public void CryptoPairsAdd(string pair, MarketSummary mSummary) {
-            do {
+            /*do {
                 if (lockReadCryptoPairs) {
                     Debug.Print("sleeping before a cPairs write");
                     Thread.Sleep(1000);
@@ -62,11 +62,13 @@ namespace IRTicker {
                     lockWriteCryptoPairs = true;
                     break;
                 }
-            } while (true);
+            } while (true);*/
 
             // ok here want to add it to the cryptopairs dictionary, but we also want to add the last price to a list so we can see trends
             pair = pair.ToUpper();
-            cryptoPairs[pair] = mSummary;
+            lock (cryptoPairs) {
+                cryptoPairs[pair] = mSummary;
+            }
             lockWriteCryptoPairs = false;
 
             if (!priceHistory.ContainsKey(pair)) {  // if this crypto/fiat pair hasn't come up before, create a new empty dictionary kvp
@@ -79,7 +81,7 @@ namespace IRTicker {
         // returns a copy of the dictionary so we can mess with it without fear of reproach
         public Dictionary<string, MarketSummary> GetCryptoPairs() {
             // i'm a coding noob. this is the only way i could figure to stop the cryptoPairs dictionary from being written to while i made a copy of it
-            do {
+            /*do {
                 if (lockWriteCryptoPairs) {
                     Debug.Print("sleeping before a cPairs READ");
                     Thread.Sleep(1000);
@@ -89,9 +91,12 @@ namespace IRTicker {
                     lockReadCryptoPairs = true;
                     break;
                 }
-            } while (true);
+            } while (true);*/
 
-            Dictionary<string, MarketSummary> cPairs = new Dictionary<string, MarketSummary>(cryptoPairs);
+            Dictionary<string, MarketSummary> cPairs;
+            lock (cryptoPairs) {
+                 cPairs = new Dictionary<string, MarketSummary>(cryptoPairs);
+            }
             lockReadCryptoPairs = false;
             //Debug.Print("LOCK - finished reading");
             return cPairs;

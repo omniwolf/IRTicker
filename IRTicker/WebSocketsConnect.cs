@@ -148,32 +148,32 @@ namespace IRTicker {
                 if (double.TryParse(tickerStream.price, out double price)) {
                     mSummary.LastPrice = price;
                 }
-                else Debug.Print("Error GDAX sockets - couldn't convert price" + tickerStream.price);
+                else Debug.Print("Error GDAX sockets - couldn't convert price: " + tickerStream.price);
 
                 if (double.TryParse(tickerStream.volume_24h, out double vol)) {
                     mSummary.DayVolume = vol;
                 }
-                else Debug.Print("Error GDAX sockets - couldn't convert volume" + tickerStream.volume_24h);
+                else Debug.Print("Error GDAX sockets - couldn't convert volume: " + tickerStream.volume_24h);
 
                 if (double.TryParse(tickerStream.low_24h, out double low)) {
                     mSummary.DayLowestPrice = low;
                 }
-                else Debug.Print("Error GDAX sockets - couldn't convert low" + tickerStream.low_24h);
+                else Debug.Print("Error GDAX sockets - couldn't convert low: " + tickerStream.low_24h);
 
                 if (double.TryParse(tickerStream.high_24h, out double high)) {
                     mSummary.DayHighestPrice = high;
                 }
-                else Debug.Print("Error GDAX sockets - couldn't convert high" + tickerStream.high_24h);
+                else Debug.Print("Error GDAX sockets - couldn't convert high: " + tickerStream.high_24h);
 
                 if (double.TryParse(tickerStream.best_bid, out double bid)) {
                     mSummary.CurrentHighestBidPrice = bid;
                 }
-                else Debug.Print("Error GDAX sockets - couldn't convert bid" + tickerStream.best_bid);
+                else Debug.Print("Error GDAX sockets - couldn't convert bid: " + tickerStream.best_bid);
 
                 if (double.TryParse(tickerStream.best_ask, out double offer)) {
                     mSummary.CurrentLowestOfferPrice = offer;
                 }
-                Debug.Print("Error GDAX sockets - couldn't convert ask" + tickerStream.best_ask);
+                else Debug.Print("Error GDAX sockets - couldn't convert ask: " + tickerStream.best_ask);
 
                 mSummary.CreatedTimestampUTC = tickerStream.time.ToString("o");
 

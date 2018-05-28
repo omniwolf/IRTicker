@@ -743,12 +743,12 @@ namespace IRTicker {
 
                 if (DCEs["GDAX"].NetworkAvailable) {
                     foreach (string primaryCode in DCEs["GDAX"].PrimaryCurrencyList) {
-                        if (DCEs["GDAX"].ExchangeProducts.ContainsKey(primaryCode + "-" + DCEs["GDAX"].CurrentSecondaryCurrency)) {
+                        /*if (DCEs["GDAX"].ExchangeProducts.ContainsKey(primaryCode + "-" + DCEs["GDAX"].CurrentSecondaryCurrency)) {
                             if (loopCount == 0 || shitCoins.Contains(primaryCode)) {
                                 //Debug.Print("loopCount = " + loopCount + " primaryCoin = " + (shitCoins.Contains(primaryCode) ? "shitcoin" : "legitCoin"));
                                 ParseDCE_GDAX(primaryCode, DCEs["GDAX"].CurrentSecondaryCurrency);
                             }
-                        }
+                        }*/
                         if (DCEs["GDAX"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["GDAX"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
                             Debug.Print("aww yea getting order book");
                             GetGDAXOrderBook(primaryCode);
@@ -818,6 +818,8 @@ namespace IRTicker {
                 }
             }
 
+            var aoeu = Stopwatch.StartNew();
+
             // here we run through each available pair in the DCE object, and populate the corresponding labels with the info
             bool avgPriceSet = false;
             foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in cPairs) {
@@ -846,6 +848,8 @@ namespace IRTicker {
                 }
                 else Debug.Print("Pair don't exist, pairObj.Value.SecondaryCurrencyCode: " + pairObj.Value.SecondaryCurrencyCode);
             }
+
+            Debug.Print("time taken to update label: " + aoeu.Elapsed.TotalMilliseconds);
             if (!avgPriceSet) UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Gray;  // any text there is now a poll old, so gray it out so the user knows it's stale.
             UIControls_Dict[dExchange].AvgPrice_Crypto.Enabled = true;  // we disable it if they change the fiat currency as we need to re-populate the crypto combo box first
         }
