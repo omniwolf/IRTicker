@@ -16,13 +16,14 @@ using WebSocketSharp;
 
 // todo:
 
-// websockets for order book pulling
+// websockets for order book pulling - is this actually required?  i think REST for this works.
 // websockets for GDAX
+// record data for IR BTC spread
 
 namespace IRTicker {
     public partial class IRTicker : Form {
         private const String APP_ID = "Nikola.IRTicker";
-        private const int minRefreshFrequency = 20;
+        private const int minRefreshFrequency = 10;
 
         private Dictionary<string, DCE> DCEs;  // the master dictionary that holds all the data we pull from all the crypto APIs
         private CE.MarketSummary_OER fiatRates;  // as we only have one fiat source, just hold the market summary class directly
@@ -38,6 +39,8 @@ namespace IRTicker {
 
         public IRTicker() {
             InitializeComponent();
+
+            if (refreshFrequencyTextbox.Text == "1") refreshFrequencyTextbox.Text = minRefreshFrequency.ToString();
 
             //cryptoDir = @"C:\ntemp\Crypto\";
             cryptoDir = Path.Combine(System.IO.Path.GetTempPath(), @"Crypto\");
@@ -968,7 +971,7 @@ namespace IRTicker {
             // here we iterate through the exchanges and update their group boxes and labels
 
             foreach (string dExchange in Exchanges) {
-                if (dExchange == "BFX") continue;  // socket exchanges don't go here
+                if (dExchange == "BFX" || dExchange == "GDAX") continue;  // socket exchanges don't go here
                 if (DCEs[dExchange].NetworkAvailable) {
                     if (DCEs[dExchange].ChangedSecondaryCurrency) {
                         PopulateCryptoComboBox(dExchange);  // need to re-populate this as it dynamically only populates the comboxbox with cryptos that the current fiat currency has a pair with
@@ -982,83 +985,6 @@ namespace IRTicker {
                 }
                 else APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);
             }
-
-            /////////////////////////////////////
-            ////////////     IR     /////////////
-            /////////////////////////////////////
-            /*if (DCEs["IR"].NetworkAvailable) {
-                if (DCEs["IR"].ChangedSecondaryCurrency) {
-                    PopulateCryptoComboBox("IR");  // need to re-populate this as it dynamically only populates the comboxbox with cryptos that the current fiat currency has a pair with
-                    DCEs["IR"].ChangedSecondaryCurrency = false;
-                }
-
-                secondaryCurrencyCode = DCEs["IR"].CurrentSecondaryCurrency;
-                //Debug.Print("secondary currency number is " + DCEs["IR"].chosenSecondaryCurrency + " and this is " + DCEs["IR"].currentSecondaryCurrency);
-                IR_GroupBox.ForeColor = Color.Black;
-                IR_GroupBox.Text = DCEs["IR"].FriendlyName + " (fiat pair: " + secondaryCurrencyCode + ")";
-
-                UpdateLabels("IR");
-            }
-            else APIDown(IR_GroupBox, "IR");
-
-            /////////////////////////////////////
-            ////////////    BTCM    /////////////
-            /////////////////////////////////////
-            if (DCEs["BTCM"].NetworkAvailable) {
-                if (BTCM_CryptoComboBox.Items.Count <= 1) PopulateCryptoComboBox("BTCM");
-                secondaryCurrencyCode = DCEs["BTCM"].CurrentSecondaryCurrency;
-                BTCM_GroupBox.ForeColor = Color.Black;
-                BTCM_GroupBox.Text = DCEs["BTCM"].FriendlyName + " (fiat pair: " + secondaryCurrencyCode + ")";
-
-                UpdateLabels("BTCM");
-            }
-            else APIDown(BTCM_GroupBox, "BTCM");
-
-            /////////////////////////////////////
-            ////////////    GDAX    /////////////
-            /////////////////////////////////////
-            if (DCEs["GDAX"].NetworkAvailable) {
-                if (DCEs["GDAX"].ChangedSecondaryCurrency) {
-                    PopulateCryptoComboBox("GDAX");  // need to re-populate this as it dynamically only populates the comboxbox with cryptos that the current fiat currency has a pair with
-                    DCEs["GDAX"].ChangedSecondaryCurrency = false;
-                }
-                secondaryCurrencyCode = DCEs["GDAX"].CurrentSecondaryCurrency;
-                GDAX_GroupBox.ForeColor = Color.Black;
-                GDAX_GroupBox.Text = DCEs["GDAX"].FriendlyName + " (fiat pair: " + secondaryCurrencyCode + ")";
-
-                UpdateLabels("GDAX");
-            }
-            else APIDown(GDAX_GroupBox, "GDAX");
-
-            /////////////////////////////////////
-            ////////////    BFX     /////////////
-            /////////////////////////////////////
-            if (DCEs["BFX"].NetworkAvailable) {
-
-                if (DCEs["BFX"].ChangedSecondaryCurrency) {
-                    PopulateCryptoComboBox("BFX");  // need to re-populate this as it dynamically only populates the combobox with cryptos that the current fiat currency has a pair with
-                    DCEs["BFX"].ChangedSecondaryCurrency = false;
-                }
-                secondaryCurrencyCode = DCEs["BFX"].CurrentSecondaryCurrency;
-                BFX_GroupBox.ForeColor = Color.Black;
-                BFX_GroupBox.Text = DCEs["BFX"].FriendlyName + " (fiat pair: " + secondaryCurrencyCode + ")";
-
-                UpdateLabels("BFX");
-            }
-            else APIDown(BFX_GroupBox, "BFX");
-
-            /////////////////////////////////////
-            ////////////  CoinSpot  /////////////
-            /////////////////////////////////////
-            if (DCEs["CSPT"].NetworkAvailable) {
-
-                secondaryCurrencyCode = DCEs["CSPT"].CurrentSecondaryCurrency;
-                CSPT_GroupBox.ForeColor = Color.Black;
-                BTCM_GroupBox.Text = DCEs["CSPT"].FriendlyName + " (fiat pair: " + secondaryCurrencyCode + ")";
-
-                UpdateLabels("CSPT");
-            }
-            else APIDown(BFX_GroupBox, "CSPT");*/
 
             // we have updated all the prices, if the average price controls are disabled, we can enable them now
             IR_CryptoComboBox.Enabled = IR_BuySellComboBox.Enabled = IR_NumCoinsTextBox.Enabled = true;
@@ -1217,7 +1143,20 @@ namespace IRTicker {
         }
 
         private void GDAX_GroupBox_Click(object sender, EventArgs e) {
-            if (DCEs["GDAX"].NetworkAvailable) GroupBox_Click("GDAX");
+            if (DCEs["GDAX"].HasStaticData) {
+                GroupBox_Click("GDAX");
+                UIControls_Dict["GDAX"].dExchange_GB.ForeColor = Color.Black;
+                // change the UI to the new fiat base
+                UpdateLabels("GDAX");
+
+                // we have a new fiat currency.  if there are any pairs not available, update the UI.
+                foreach (string crypto in DCEs["GDAX"].PrimaryCurrencyList) {
+                    if (!DCEs["GDAX"].ExchangeProducts.ContainsKey(crypto + "-" + DCEs["GDAX"].CurrentSecondaryCurrency)) {
+                        UIControls_Dict["GDAX"].Label_Dict[crypto + "_Price"].Text = "<no currency pair>";
+                        UIControls_Dict["GDAX"].Label_Dict[crypto + "_Spread"].Text = "";
+                    }
+                }
+            }
         }
 
         private void BFX_GroupBox_Click(object sender, EventArgs e) {

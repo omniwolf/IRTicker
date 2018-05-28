@@ -182,7 +182,7 @@
             this.refreshFrequencyTextbox.PromptChar = ' ';
             this.refreshFrequencyTextbox.Size = new System.Drawing.Size(68, 32);
             this.refreshFrequencyTextbox.TabIndex = 0;
-            this.refreshFrequencyTextbox.Text = "20";
+            this.refreshFrequencyTextbox.Text = "1";
             this.refreshFrequencyTextbox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.refreshFrequencyTextbox.ValidatingType = typeof(int);
             this.refreshFrequencyTextbox.TextChanged += new System.EventHandler(this.RefreshFrequencyTextbox_TextChanged);
