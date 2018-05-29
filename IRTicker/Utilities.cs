@@ -25,27 +25,29 @@ namespace IRTicker {
             if (priceList.Count < 5) return Color.Black;
             if (priceList.Last().Item1 - priceList.First().Item1 < TimeSpan.FromMinutes(5)) return Color.Black;
 
-            foreach (Tuple<DateTime, double> pricePoint in priceList) {
-                if (pricePoint.Item1 >= DateTime.Now - TimeSpan.FromMinutes(5)) {
-                    double lastPrice = priceList.Last().Item2;
-                    if(lastPrice > pricePoint.Item2 * 1.01) {
-                        // colour dark green
-                        return Color.Lime;
-                    }
-                    else if (lastPrice > pricePoint.Item2 * 1.005) {
-                        // colour light green etc
-                        return Color.PaleGreen;
-                    }
-                    else if (lastPrice < pricePoint.Item2 * 0.99) {
-                        // colur red
-                        return Color.Red;
-                    }
-                    else if (lastPrice < pricePoint.Item2 * 0.995) {
-                        // colour light red
-                        return Color.LightCoral;
-                    }
-                    else {  // anything between 99.5% and 100.5% is not much movement, so we say black.
-                        return Color.Black;
+            lock (priceList) {
+                foreach (Tuple<DateTime, double> pricePoint in priceList) {
+                    if (pricePoint.Item1 >= DateTime.Now - TimeSpan.FromMinutes(5)) {
+                        double lastPrice = priceList.Last().Item2;
+                        if (lastPrice > pricePoint.Item2 * 1.01) {
+                            // colour dark green
+                            return Color.Lime;
+                        }
+                        else if (lastPrice > pricePoint.Item2 * 1.005) {
+                            // colour light green etc
+                            return Color.PaleGreen;
+                        }
+                        else if (lastPrice < pricePoint.Item2 * 0.99) {
+                            // colur red
+                            return Color.Red;
+                        }
+                        else if (lastPrice < pricePoint.Item2 * 0.995) {
+                            // colour light red
+                            return Color.LightCoral;
+                        }
+                        else {  // anything between 99.5% and 100.5% is not much movement, so we say black.
+                            return Color.Black;
+                        }
                     }
                 }
             }

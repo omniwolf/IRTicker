@@ -36,6 +36,8 @@ namespace IRTicker {
         public ToolTip XRP_PriceTT { get; set; }
         public ToolTip DOGE_PriceTT { get; set; }
 
+        public ToolTip AvgPriceTT { get; set; }
+
         public Label XBT_Spread { get; set; }
         public Label ETH_Spread { get; set; }
         public Label BCH_Spread { get; set; }
@@ -83,6 +85,8 @@ namespace IRTicker {
             if (LTC_PriceTT != null) ToolTip_Dict.Add("LTC_PriceTT", LTC_PriceTT);
             if (XRP_PriceTT != null) ToolTip_Dict.Add("XRP_PriceTT", XRP_PriceTT);
             if (DOGE_PriceTT != null) ToolTip_Dict.Add("DOGE_PriceTT", DOGE_PriceTT);
+
+            if (AvgPriceTT != null) ToolTip_Dict.Add("AvgPriceTT", AvgPriceTT);
         }
     }
 }

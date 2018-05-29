@@ -162,6 +162,11 @@
             this.CSPT_ETH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.CSPT_DOGE_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.CSPT_LTC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.IR_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BTCM_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.GDAX_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BFX_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.CSPT_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -1612,6 +1617,31 @@
             this.CSPT_LTC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.CSPT_LTC_PriceTT.ToolTipTitle = "Spread details";
             // 
+            // IR_AvgPriceTT
+            // 
+            this.IR_AvgPriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.IR_AvgPriceTT.ToolTipTitle = "Average price details";
+            // 
+            // BTCM_AvgPriceTT
+            // 
+            this.BTCM_AvgPriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BTCM_AvgPriceTT.ToolTipTitle = "Average price details";
+            // 
+            // GDAX_AvgPriceTT
+            // 
+            this.GDAX_AvgPriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.GDAX_AvgPriceTT.ToolTipTitle = "Average price details";
+            // 
+            // BFX_AvgPriceTT
+            // 
+            this.BFX_AvgPriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BFX_AvgPriceTT.ToolTipTitle = "Average price details";
+            // 
+            // CSPT_AvgPriceTT
+            // 
+            this.CSPT_AvgPriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.CSPT_AvgPriceTT.ToolTipTitle = "Average price details";
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1785,6 +1815,11 @@
         private System.Windows.Forms.ToolTip CSPT_ETH_PriceTT;
         private System.Windows.Forms.ToolTip CSPT_DOGE_PriceTT;
         private System.Windows.Forms.ToolTip CSPT_LTC_PriceTT;
+        private System.Windows.Forms.ToolTip IR_AvgPriceTT;
+        private System.Windows.Forms.ToolTip BTCM_AvgPriceTT;
+        private System.Windows.Forms.ToolTip GDAX_AvgPriceTT;
+        private System.Windows.Forms.ToolTip BFX_AvgPriceTT;
+        private System.Windows.Forms.ToolTip CSPT_AvgPriceTT;
     }
 }
 

@@ -59,7 +59,9 @@ namespace IRTicker {
             if (!priceHistory.ContainsKey(pair)) {  // if this crypto/fiat pair hasn't come up before, create a new empty dictionary kvp
                 priceHistory.TryAdd(pair, new List<Tuple<DateTime, double>>());
             }
-            priceHistory[pair].Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));  // add the time and price to the kvp's value list
+            lock (priceHistory[pair]) {
+                priceHistory[pair].Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));  // add the time and price to the kvp's value list
+            }
         }
 
         // returns a copy of the dictionary so we can mess with it without fear of reproach
@@ -80,7 +82,7 @@ namespace IRTicker {
         ////////////////      CURRENCIES      ///////////////////
         /////////////////////////////////////////////////////////
 
-        public bool ChangedSecondaryCurrency { get; set; } = true;
+        public bool ChangedSecondaryCurrency { get; set; } = true;  // used for avg price stuff
 
         //private int ChosenPrimaryCurrency { get; set; } = 0;
         private int ChosenSecondaryCurrency { get; set; } = 0;
