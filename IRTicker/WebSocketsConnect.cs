@@ -181,7 +181,19 @@ namespace IRTicker {
                 DCEs["GDAX"].CryptoPairsAdd(mSummary.pair, mSummary);
                 
                 if (DCEs["GDAX"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(41, mSummary);  // only update the UI for pairs we care about
-
+            }
+            else if (message.Contains("\"type\": \"error\"")) {
+                Debug.Print("Error from GDAX socket: " + message);
+                // so i guess at this stage we want to try again
+                wSocket_GDAX.Close();
+                DCEs["GDAX"].CurrentDCEStatus = "API response error";
+                DCEs["GDAX"].NetworkAvailable = false;
+                DCEs["GDAX"].HasStaticData = false;
+                pollingThread.ReportProgress(42, "GDAX");  // ?2 is error
+                wSocket_GDAX.Connect();
+            }
+            else {
+                Debug.Print("rando message from GDAX sockets: " + message);
             }
         }
 
@@ -220,14 +232,14 @@ namespace IRTicker {
                     DCEs["BFX"].CurrentDCEStatus = "API response error";
                     DCEs["BFX"].NetworkAvailable = false;
                     DCEs["BFX"].HasStaticData = false;
-                    pollingThread.ReportProgress(52);  // 52 is error
+                    pollingThread.ReportProgress(42, "BFX");  // 52 is error
                     wSocket_BFX.Connect();
                 }
                 else if (message.Contains("unsubscribed")) {
                     //Debug.Print("UNSUBSCRIBED!  message: " + message);
                 }
                 else {
-                    Debug.Print("rand message from sockets: " + message);
+                    Debug.Print("rando message from BFX sockets: " + message);
                 }
             }
             else if (message.StartsWith("[")) {  // is this how I tell if it's real socket data?  seems dodgy

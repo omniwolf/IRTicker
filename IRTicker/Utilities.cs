@@ -64,5 +64,17 @@ namespace IRTicker {
             string secondary = pair.Substring(pair.IndexOf('-') + 1, pair.Length - pair.IndexOf('-') - 1);
             return new Tuple<string, string>(primary, secondary);
         }
+
+        public static void ColourDCETags(System.Windows.Forms.Control.ControlCollection controls, string dExchange) {
+            foreach (System.Windows.Forms.Control ctrl in controls) {
+                if (ctrl.Tag != null)
+                    if ((string)ctrl.Tag == dExchange) {
+                        ctrl.ForeColor = Color.Gray;
+                    }
+
+                if (ctrl.HasChildren)
+                    ColourDCETags(ctrl.Controls, dExchange); //Recursively check all children controls as well; ie groupboxes or tabpages
+            }
+        }
     }
 }

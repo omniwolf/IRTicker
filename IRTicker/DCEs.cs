@@ -79,6 +79,10 @@ namespace IRTicker {
         public string NumCoinsStr { get; set; } = "";
         public string CryptoCombo { get; set; } = "";
 
+        public void RemoveOrderBook(string pair) {
+            if (orderBooks.ContainsKey(pair)) orderBooks.Remove(pair);
+        }
+
 
         /////////////////////////////////////////////////////////
         ////////////////      CURRENCIES      ///////////////////
@@ -157,6 +161,26 @@ namespace IRTicker {
         /// string is pair with dash eg XBT-AUD, products_GDAX has all sorts of pair info
         /// </summary>
         public Dictionary<string, products_GDAX> ExchangeProducts { get; set; } = new Dictionary<string, products_GDAX>();
+
+        /// <summary>
+        /// returns a list of dash pairs (XBT-AUD) that both the app and exchange supports
+        /// Can only be used if ExchangeProducts has been populated.
+        /// </summary>
+        /// <param name="cryptoList"></param>
+        /// <param name="fiatList"></param>
+        /// <param name="dExchange"></param>
+        /// <returns></returns>
+        public List<string> UsablePairs() {
+            List<string> usablePairs = new List<string>();
+            foreach (string crypto in PrimaryCurrencyList) {
+                foreach (string fiat in SecondaryCurrencyList) {
+                    if (ExchangeProducts.ContainsKey(crypto + "-" + fiat)) {
+                        usablePairs.Add(crypto + "-" + fiat);
+                    }
+                }
+            }
+            return usablePairs;
+        }
 
 
         /////////////////////////////////////////////////////////
@@ -269,6 +293,12 @@ namespace IRTicker {
             public bool post_only { get; set; }
             public bool limit_only { get; set; }
             public bool cancel_only { get; set; }
+
+            public products_GDAX() { }  // default constructor
+            public products_GDAX(string _id) {  // overload it to allow the setting of the id (pair)
+                id = _id;
+            }
+
         }
 
         public class products_BFX {
@@ -363,6 +393,17 @@ namespace IRTicker {
             public long sequence { get; set; }
             public List<List<string>> bids { get; set; }
             public List<List<string>> asks { get; set; }
+        }
+
+        public class BidAsk_BFX {
+            public string price { get; set; }
+            public string amount { get; set; }
+            public string timestamp { get; set; }
+        }
+
+        public class OrderBook_BFX {
+            public List<BidAsk_BFX> bids { get; set; }
+            public List<BidAsk_BFX> asks { get; set; }
         }
     }
 }
