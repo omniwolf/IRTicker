@@ -54,6 +54,15 @@ namespace IRTicker {
             return Color.Black;
         }
 
-
+        /// <summary>
+        /// takes a pair with a - separater like XBT-AUD, and returns a tuple (string, string) of each currency.  item1 in the tuple is what's before the '-', item2 is what's after.
+        /// </summary>
+        /// <param name="pair"></param>
+        /// <returns></returns>
+        public static Tuple<string, string> SplitPair(string pair) {
+            string primary = pair.Substring(0, pair.IndexOf('-'));
+            string secondary = pair.Substring(pair.IndexOf('-') + 1, pair.Length - pair.IndexOf('-') - 1);
+            return new Tuple<string, string>(primary, secondary);
+        }
     }
 }

@@ -210,6 +210,10 @@ namespace IRTicker {
             UIControls_Dict["BFX"].LTC_Price = BFX_LTC_Label2;
             UIControls_Dict["BFX"].LTC_Spread = BFX_LTC_Label3;
             UIControls_Dict["BFX"].LTC_PriceTT = BFX_LTC_PriceTT;
+            UIControls_Dict["BFX"].XRP_Label = BFX_XRP_Label1;
+            UIControls_Dict["BFX"].XRP_Price = BFX_XRP_Label2;
+            UIControls_Dict["BFX"].XRP_Spread = BFX_XRP_Label3;
+            UIControls_Dict["BFX"].XRP_PriceTT = BFX_XRP_PriceTT;
             UIControls_Dict["BFX"].AvgPrice_BuySell = BFX_BuySellComboBox;
             UIControls_Dict["BFX"].AvgPrice_NumCoins = BFX_NumCoinsTextBox;
             UIControls_Dict["BFX"].AvgPrice_Crypto = BFX_CryptoComboBox;
@@ -557,6 +561,17 @@ namespace IRTicker {
             }
         }
 
+        private List<string> BuildUsablePairs(List<string> cryptoList, List<string> fiatList, string dExchange) {
+            List<string> usablePairs = new List<string>();
+            foreach (string crypto in cryptoList) {
+                foreach (string fiat in fiatList) {
+                    if (DCEs[dExchange].ExchangeProducts.ContainsKey(crypto + "-" + fiat)) {
+                        usablePairs.Add(crypto + "-" + fiat);
+                    }
+                }
+            }
+        }
+
         private void SubscribeTickerSocket_BFX() {
             // subscribe to all the pairs
             foreach (string secondaryCode in DCEs["BFX"].SecondaryCurrencyList) {
@@ -649,13 +664,22 @@ namespace IRTicker {
             UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Add("");  // add an empty option as the first one so it can be selected when we need to "reset"
             UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex = 0;
 
-            Dictionary<string, DCE.MarketSummary> cPairs = DCEs[dExchange].GetCryptoPairs();
+            //Dictionary<string, DCE.products_GDAX> exchangeProducts = DCEs[dExchange].ExchangeProducts;
 
-            foreach (string crypto in DCEs[dExchange].PrimaryCurrencyList) {
-                if (cPairs.ContainsKey(crypto + "-" + DCEs[dExchange].CurrentSecondaryCurrency) && // let's make sure the market summary exists
+            foreach (string fiat in DCEs[dExchange].SecondaryCurrencyList) {
+                foreach (string crypto in DCEs[dExchange].PrimaryCurrencyList) {
+                    //foreach (string crypto in DCEs[dExchange].PrimaryCurrencyList) {
+                    Tuple<string, string> pair = Utilities.SplitPair(product.Key);
+                    if (pair.Item2 == DCEs[dExchange].CurrentSecondaryCurrency) {
+                        UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Add(pair.Item1);
+                    }
+                }
+
+
+                /*if (cPairs.ContainsKey(crypto + "-" + DCEs[dExchange].CurrentSecondaryCurrency) && // let's make sure the market summary exists
                     cPairs[crypto + "-" + DCEs[dExchange].CurrentSecondaryCurrency].LastPrice != -1) {  // and it's not a fake entry
                     UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Add(crypto);
-                }
+                }*/
             }
             if (UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Count < 1) {
                 MessageBox.Show("Error - no primary currencies from " + dExchange + "?", "Show this to Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -744,6 +768,7 @@ namespace IRTicker {
                         DCEs["GDAX"].SecondaryCurrencyCodes = gdax_currencies[1];
                         Debug.Print("calling gdax sockets sub");
                         SubscribeTickerSocket_GDAX();
+                        pollingThread.ReportProgress(44);
                     }
                 }
 
@@ -769,7 +794,7 @@ namespace IRTicker {
 
                     // update average price label
                     //UIControls_Dict["GDAX"].AvgPrice_Crypto.SelectedItem.ToString() == mSummary.PrimaryCurrencyCode) {  // not sure what this check was about??
-                    pollingThread.ReportProgress(63);  // 
+                    pollingThread.ReportProgress(43);  // display order book
 
                 }
                 else DCEs["GDAX"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
@@ -779,6 +804,7 @@ namespace IRTicker {
 
                 if (!DCEs["BFX"].HasStaticData) {
                     GetBFXProducts();  // pulls bfx pairs, and starts the websockets connection
+                    pollingThread.ReportProgress(54);  // populate crypto drop down
                     //if (DCEs["BFX"].NetworkAvailable) DCEs["BFX"].HasStaticData = true;  // we got here with the network up?  then we got the static data!
                 }
 
@@ -922,6 +948,7 @@ namespace IRTicker {
 
                 double coinCounter = 0;  // we add to this counter until it reaches the numCoinsTextBox (coins) value
                 double weightedAverage = 0;
+                double totalCost = 0;
                 int orderCount = 0;
                 bool gracefulFinish = false;  // this only gets set to true if the order book has enough coins in it to handle the number of inputted coins.  If it doesn't (ie the foreach completes without us having counted the inputted coins), then we throw a warning message
                 foreach (DCE.Order order in orderSide) {
@@ -929,14 +956,16 @@ namespace IRTicker {
                     coinCounter += order.Volume;
                     if (coinCounter > coins) {  // ok we are on the last value we need to look at.  need to truncate.
                         double usedCoinsInThisOrder = order.Volume - (coinCounter - coins);  // this is how many coins in this order would be required
+                        totalCost += usedCoinsInThisOrder * order.Price;
                         weightedAverage += (usedCoinsInThisOrder / coins) * order.Price;
                         gracefulFinish = true;
-                        string tTip = "Max price paid: " + order.Price.ToString("### ##0.##") + System.Environment.NewLine + "Orders required to fill: " + orderCount;
+                        string tTip = "Max price paid: " + order.Price.ToString("### ##0.##") + System.Environment.NewLine + "Orders required to fill: " + orderCount + System.Environment.NewLine + "Total fiat cost: " + totalCost.ToString("### ##0.##");
                         UIControls_Dict[dExchange].AvgPriceTT.SetToolTip(UIControls_Dict[dExchange].AvgPrice, tTip);
                         break;  // we have finished filling the hypothetical order
                     }
                     else {  // this whole order is required
                         weightedAverage += (order.Volume / coins) * order.Price;
+                        totalCost += order.Volume * order.Price;
                     }
                 }
                 if (!gracefulFinish) {
@@ -977,18 +1006,33 @@ namespace IRTicker {
                 APIDown(UIControls_Dict["BFX"].dExchange_GB, "BFX");
                 return;
             }
-            else if (reportType == 61) {  // update GDAX
+            else if (reportType == 53) {  // 53 is order book stuff for bfx
+                UIControls_Dict["GDAX"].AvgPrice.Text = DetermineAveragePrice(DCEs["GDAX"].CryptoCombo, DCEs["GDAX"].CurrentSecondaryCurrency, "GDAX");
+                UIControls_Dict["GDAX"].AvgPrice.ForeColor = Color.Black;
+                UIControls_Dict["GDAX"].AvgPrice_Crypto.SelectedIndex = 0;  // reset this so we don't pull the order book every time.
+                return;
+            }
+            else if (reportType == 54) {  // should only be called once per session - if we don't do this the crypto combo box is empty until we change secondary currencies
+                PopulateCryptoComboBox("BFX");
+                return;
+            }
+
+
+            else if (reportType == 41) {  // update GDAX
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
                 UpdateLabels_Pair("GDAX", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
                 return;
             }
-            else if (reportType == 63) {  // 63 is order book stuff for gdax
+            else if (reportType == 43) {  // 43 is order book stuff for gdax
                 UIControls_Dict["GDAX"].AvgPrice.Text = DetermineAveragePrice(DCEs["GDAX"].CryptoCombo, DCEs["GDAX"].CurrentSecondaryCurrency, "GDAX");
                 UIControls_Dict["GDAX"].AvgPrice.ForeColor = Color.Black;
                 UIControls_Dict["GDAX"].AvgPrice_Crypto.SelectedIndex = 0;  // reset this so we don't pull the order book every time.
+                return;
             }
-
-            LoadingPanel.Visible = false;
+            else if (reportType == 44) {  // should only be called once per session - if we don't do this the crypto combo box is empty until we change secondary currencies
+                PopulateCryptoComboBox("GDAX");
+                return;
+            }
 
             // update the UI
 
@@ -1000,6 +1044,9 @@ namespace IRTicker {
                         PopulateCryptoComboBox(dExchange);  // need to re-populate this as it dynamically only populates the comboxbox with cryptos that the current fiat currency has a pair with
                         DCEs[dExchange].ChangedSecondaryCurrency = false;
                     }
+                    else UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Gray;  // any text there is now a poll old, so gray it out so the user knows it's stale.
+
+                    if (!DCEs[dExchange].HasStaticData) APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);
                     continue;
                 }
                 if (DCEs[dExchange].NetworkAvailable) {
@@ -1033,8 +1080,9 @@ namespace IRTicker {
                 }
             }
 
+            LoadingPanel.Visible = false;  // OK, all UI data is written, let's remove the loading panel.
 
-            if(!DCEs["IR"].NetworkAvailable) return;  // at this point everything else needs IR data.  no point in continuing if there is none.
+            if (!DCEs["IR"].NetworkAvailable) return;  // at this point everything else needs IR data.  no point in continuing if there is none.
 
             Dictionary<string, DCE.MarketSummary> cPairs = DCEs["IR"].GetCryptoPairs();
 

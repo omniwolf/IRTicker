@@ -167,6 +167,10 @@
             this.GDAX_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BFX_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.CSPT_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BFX_XRP_Label2 = new System.Windows.Forms.Label();
+            this.BFX_XRP_Label3 = new System.Windows.Forms.Label();
+            this.BFX_XRP_Label1 = new System.Windows.Forms.Label();
+            this.BFX_XRP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -553,7 +557,10 @@
             // 
             // BFX_GroupBox
             // 
+            this.BFX_GroupBox.Controls.Add(this.BFX_XRP_Label2);
             this.BFX_GroupBox.Controls.Add(this.BFX_AvgPrice_Label);
+            this.BFX_GroupBox.Controls.Add(this.BFX_XRP_Label3);
+            this.BFX_GroupBox.Controls.Add(this.BFX_XRP_Label1);
             this.BFX_GroupBox.Controls.Add(this.BFX_CryptoComboBox);
             this.BFX_GroupBox.Controls.Add(this.BFX_NumCoinsTextBox);
             this.BFX_GroupBox.Controls.Add(this.BFX_XBT_Label2);
@@ -1642,6 +1649,44 @@
             this.CSPT_AvgPriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.CSPT_AvgPriceTT.ToolTipTitle = "Average price details";
             // 
+            // BFX_XRP_Label2
+            // 
+            this.BFX_XRP_Label2.AutoSize = true;
+            this.BFX_XRP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XRP_Label2.Location = new System.Drawing.Point(58, 103);
+            this.BFX_XRP_Label2.Name = "BFX_XRP_Label2";
+            this.BFX_XRP_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_XRP_Label2.TabIndex = 19;
+            this.BFX_XRP_Label2.Tag = "BTCM";
+            // 
+            // BFX_XRP_Label3
+            // 
+            this.BFX_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XRP_Label3.Location = new System.Drawing.Point(108, 103);
+            this.BFX_XRP_Label3.Name = "BFX_XRP_Label3";
+            this.BFX_XRP_Label3.Size = new System.Drawing.Size(102, 13);
+            this.BFX_XRP_Label3.TabIndex = 20;
+            this.BFX_XRP_Label3.Tag = "";
+            this.BFX_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_XRP_Label1
+            // 
+            this.BFX_XRP_Label1.AutoSize = true;
+            this.BFX_XRP_Label1.BackColor = System.Drawing.Color.White;
+            this.BFX_XRP_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XRP_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_XRP_Label1.Location = new System.Drawing.Point(8, 103);
+            this.BFX_XRP_Label1.Name = "BFX_XRP_Label1";
+            this.BFX_XRP_Label1.Size = new System.Drawing.Size(36, 13);
+            this.BFX_XRP_Label1.TabIndex = 18;
+            this.BFX_XRP_Label1.Text = "XRP:";
+            // 
+            // BFX_XRP_PriceTT
+            // 
+            this.BFX_XRP_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BFX_XRP_PriceTT.ToolTipTitle = "Spread details";
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1820,6 +1865,10 @@
         private System.Windows.Forms.ToolTip GDAX_AvgPriceTT;
         private System.Windows.Forms.ToolTip BFX_AvgPriceTT;
         private System.Windows.Forms.ToolTip CSPT_AvgPriceTT;
+        private System.Windows.Forms.Label BFX_XRP_Label2;
+        private System.Windows.Forms.Label BFX_XRP_Label3;
+        private System.Windows.Forms.Label BFX_XRP_Label1;
+        private System.Windows.Forms.ToolTip BFX_XRP_PriceTT;
     }
 }
 

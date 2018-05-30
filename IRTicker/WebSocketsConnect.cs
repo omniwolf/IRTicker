@@ -180,7 +180,7 @@ namespace IRTicker {
                 // market summary should be complete now
                 DCEs["GDAX"].CryptoPairsAdd(mSummary.pair, mSummary);
                 
-                if (DCEs["GDAX"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(61, mSummary);  // only update the UI for pairs we care about
+                if (DCEs["GDAX"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(41, mSummary);  // only update the UI for pairs we care about
 
             }
         }

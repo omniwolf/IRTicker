@@ -28,6 +28,7 @@ namespace IRTicker {
         public bool NetworkAvailable { get; set; } = true;
 
         public bool HasStaticData { get; set; } = false;  // this will be false until we can pull the DCE static data (eg currency pairs, etc - data that will never change in a session).  Once true always true for a session.
+        public bool HasDynamicData { get; set; } = false; // set to true once we have received our first socket data
 
         // "Online" if everything is fine, anything else will cause the UI to display this string in the DCE group box text
         public string CurrentDCEStatus { get; set; }
@@ -55,6 +56,7 @@ namespace IRTicker {
             lock (cryptoPairs) {
                 cryptoPairs[pair] = mSummary;
             }
+            HasDynamicData = true;
 
             if (!priceHistory.ContainsKey(pair)) {  // if this crypto/fiat pair hasn't come up before, create a new empty dictionary kvp
                 priceHistory.TryAdd(pair, new List<Tuple<DateTime, double>>());
@@ -83,8 +85,6 @@ namespace IRTicker {
         /////////////////////////////////////////////////////////
 
         public bool ChangedSecondaryCurrency { get; set; } = true;  // used for avg price stuff
-
-        //private int ChosenPrimaryCurrency { get; set; } = 0;
         private int ChosenSecondaryCurrency { get; set; } = 0;
 
         /// <summary>
@@ -98,12 +98,6 @@ namespace IRTicker {
                 _primaryCodesStr = value.ToUpper();
             }
         }
-
-        /*public string CurrentPrimaryCurrency {
-            get {
-                return PrimaryCurrencyList[ChosenPrimaryCurrency];
-            }
-        }*/
 
         public List<string> PrimaryCurrencyList {
             get {
@@ -159,7 +153,10 @@ namespace IRTicker {
             }
         }
 
-        public Dictionary<string, products_GDAX> ExchangeProducts { get; set; }
+        /// <summary>
+        /// string is pair with dash eg XBT-AUD, products_GDAX has all sorts of pair info
+        /// </summary>
+        public Dictionary<string, products_GDAX> ExchangeProducts { get; set; } = new Dictionary<string, products_GDAX>();
 
 
         /////////////////////////////////////////////////////////
@@ -219,8 +216,9 @@ namespace IRTicker {
                     return PrimaryCurrencyCode + "-" + SecondaryCurrencyCode;
                 }
                 set {
-                    PrimaryCurrencyCode = value.Substring(0, value.IndexOf('-'));
-                    SecondaryCurrencyCode = value.Substring(value.IndexOf('-') + 1, value.Length - value.IndexOf('-') - 1);
+                    Tuple<string, string> pairs = Utilities.SplitPair(value);
+                    PrimaryCurrencyCode = pairs.Item1;
+                    SecondaryCurrencyCode = pairs.Item2;
                 }
             }
         }
