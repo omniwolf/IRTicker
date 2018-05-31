@@ -1428,5 +1428,20 @@ namespace IRTicker {
         private void BFX_CryptoComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             DCEs["BFX"].CryptoCombo = BFX_CryptoComboBox.SelectedItem.ToString();
         }
+
+        private void button1_Click(object sender, EventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["IR"].GetSpreadHistory()["XBT" + DCEs["IR"].CurrentSecondaryCurrency]);
+            SGForm.Show();
+        }
+
+        private void IR_XBT_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["IR"].GetSpreadHistory()["XBT-" + DCEs["IR"].CurrentSecondaryCurrency]);
+            SGForm.Show();
+        }
+
+        private void GDAX_XBT_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["GDAX"].GetSpreadHistory()["XBT-" + DCEs["GDAX"].CurrentSecondaryCurrency]);
+            SGForm.Show();
+        }
     }
 }

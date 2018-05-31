@@ -32,7 +32,6 @@
             this.folderDialogTextbox = new System.Windows.Forms.TextBox();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
-            this.LoadingPanel = new System.Windows.Forms.Panel();
             this.EnableGDAXLevel3_CheckBox = new System.Windows.Forms.CheckBox();
             this.EnableGDAXLevel3 = new System.Windows.Forms.Label();
             this.VersionLabel = new System.Windows.Forms.Label();
@@ -40,6 +39,8 @@
             this.InvertFiatLabel = new System.Windows.Forms.Label();
             this.SettingsOKButton = new System.Windows.Forms.Button();
             this.FolderLabel = new System.Windows.Forms.Label();
+            this.LoadingPanel = new System.Windows.Forms.Panel();
+            this.GIFLabel = new System.Windows.Forms.Label();
             this.Main = new System.Windows.Forms.Panel();
             this.CSPT_GroupBox = new System.Windows.Forms.GroupBox();
             this.CSPT_AvgPrice_Label = new System.Windows.Forms.Label();
@@ -170,7 +171,7 @@
             this.BFX_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.CSPT_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BFX_XRP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.GIFLabel = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -235,6 +236,7 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
+            this.Settings.Controls.Add(this.button1);
             this.Settings.Controls.Add(this.EnableGDAXLevel3_CheckBox);
             this.Settings.Controls.Add(this.EnableGDAXLevel3);
             this.Settings.Controls.Add(this.VersionLabel);
@@ -250,14 +252,6 @@
             this.Settings.Name = "Settings";
             this.Settings.Size = new System.Drawing.Size(495, 590);
             this.Settings.TabIndex = 4;
-            // 
-            // LoadingPanel
-            // 
-            this.LoadingPanel.Controls.Add(this.GIFLabel);
-            this.LoadingPanel.Location = new System.Drawing.Point(0, 0);
-            this.LoadingPanel.Name = "LoadingPanel";
-            this.LoadingPanel.Size = new System.Drawing.Size(492, 590);
-            this.LoadingPanel.TabIndex = 10;
             // 
             // EnableGDAXLevel3_CheckBox
             // 
@@ -328,6 +322,24 @@
             this.FolderLabel.Size = new System.Drawing.Size(115, 13);
             this.FolderLabel.TabIndex = 5;
             this.FolderLabel.Text = "Toolbar folder location:";
+            // 
+            // LoadingPanel
+            // 
+            this.LoadingPanel.Controls.Add(this.GIFLabel);
+            this.LoadingPanel.Location = new System.Drawing.Point(0, 0);
+            this.LoadingPanel.Name = "LoadingPanel";
+            this.LoadingPanel.Size = new System.Drawing.Size(492, 590);
+            this.LoadingPanel.TabIndex = 10;
+            // 
+            // GIFLabel
+            // 
+            this.GIFLabel.Image = global::IRTicker.Properties.Resources.rollerdown;
+            this.GIFLabel.Location = new System.Drawing.Point(0, 0);
+            this.GIFLabel.Name = "GIFLabel";
+            this.GIFLabel.Size = new System.Drawing.Size(495, 672);
+            this.GIFLabel.TabIndex = 0;
+            this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
+            this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // Main
             // 
@@ -1046,6 +1058,7 @@
             this.GDAX_XBT_Label3.TabIndex = 12;
             this.GDAX_XBT_Label3.Tag = "";
             this.GDAX_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.GDAX_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GDAX_XBT_Label3_MouseDoubleClick);
             // 
             // GDAX_LTC_Label1
             // 
@@ -1498,6 +1511,7 @@
             this.IR_XBT_Label3.TabIndex = 8;
             this.IR_XBT_Label3.Tag = "";
             this.IR_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.IR_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.IR_XBT_Label3_MouseDoubleClick);
             // 
             // IR_LTC_Label1
             // 
@@ -1678,24 +1692,24 @@
             this.BFX_XRP_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.BFX_XRP_PriceTT.ToolTipTitle = "Spread details";
             // 
-            // GIFLabel
+            // button1
             // 
-            this.GIFLabel.Image = global::IRTicker.Properties.Resources.rollerdown;
-            this.GIFLabel.Location = new System.Drawing.Point(0, 0);
-            this.GIFLabel.Name = "GIFLabel";
-            this.GIFLabel.Size = new System.Drawing.Size(495, 672);
-            this.GIFLabel.TabIndex = 0;
-            this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
-            this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.button1.Location = new System.Drawing.Point(380, 420);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 14;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(494, 590);
-            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Main);
             this.Controls.Add(this.Settings);
+            this.Controls.Add(this.LoadingPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -1871,6 +1885,7 @@
         private System.Windows.Forms.Label BFX_XRP_Label3;
         private System.Windows.Forms.Label BFX_XRP_Label1;
         private System.Windows.Forms.ToolTip BFX_XRP_PriceTT;
+        private System.Windows.Forms.Button button1;
     }
 }
 

@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Diagnostics;
 using System.Collections.Concurrent;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace IRTicker {
-    class DCE {
+    public class DCE {
         private string _primaryCodesStr;
         private string _secondaryCodesStr;
         private ConcurrentDictionary<string, List<Tuple<DateTime, double>>> priceHistory = new ConcurrentDictionary<string, List<Tuple<DateTime, double>>>();
+        private ConcurrentDictionary<string, List<DataPoint>> spreadHistory = new ConcurrentDictionary<string, List<DataPoint>>();
 
         private Dictionary<string, MarketSummary> cryptoPairs;
         public Dictionary<string, OrderBook> orderBooks;  // string format is eg "XBT-AUD" - caps with a dash
@@ -43,6 +45,12 @@ namespace IRTicker {
             }
         }
 
+        public ConcurrentDictionary<string, List<DataPoint>> GetSpreadHistory() {
+            lock (spreadHistory) {
+                return new ConcurrentDictionary<string, List<DataPoint>>(spreadHistory);
+            }
+        }
+
 
         /// <summary>
         /// pair is format "XBT-AUD"
@@ -63,6 +71,10 @@ namespace IRTicker {
             }
             lock (priceHistory[pair]) {
                 priceHistory[pair].Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));  // add the time and price to the kvp's value list
+            }
+            if (!spreadHistory.ContainsKey(pair)) spreadHistory.TryAdd(pair, new List<DataPoint>());
+            lock (spreadHistory) {
+                spreadHistory[pair].Add(new DataPoint(DateTime.Now.ToOADate(), mSummary.spread));
             }
         }
 
