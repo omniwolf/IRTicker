@@ -1779,9 +1779,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(494, 590);
-            this.Controls.Add(this.Settings);
             this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Main);
+            this.Controls.Add(this.Settings);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
