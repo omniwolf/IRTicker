@@ -32,6 +32,11 @@
             this.folderDialogTextbox = new System.Windows.Forms.TextBox();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
+            this.ExportSummarised_Checkbox = new System.Windows.Forms.CheckBox();
+            this.ExportSummarised_Label = new System.Windows.Forms.Label();
+            this.ExportFull_Checkbox = new System.Windows.Forms.CheckBox();
+            this.ExportFull_Label = new System.Windows.Forms.Label();
+            this.Help_Button = new System.Windows.Forms.Button();
             this.EnableGDAXLevel3_CheckBox = new System.Windows.Forms.CheckBox();
             this.EnableGDAXLevel3 = new System.Windows.Forms.Label();
             this.VersionLabel = new System.Windows.Forms.Label();
@@ -40,7 +45,6 @@
             this.SettingsOKButton = new System.Windows.Forms.Button();
             this.FolderLabel = new System.Windows.Forms.Label();
             this.LoadingPanel = new System.Windows.Forms.Panel();
-            this.GIFLabel = new System.Windows.Forms.Label();
             this.Main = new System.Windows.Forms.Panel();
             this.CSPT_GroupBox = new System.Windows.Forms.GroupBox();
             this.CSPT_AvgPrice_Label = new System.Windows.Forms.Label();
@@ -171,7 +175,7 @@
             this.BFX_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.CSPT_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BFX_XRP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.button1 = new System.Windows.Forms.Button();
+            this.GIFLabel = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -236,7 +240,11 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
-            this.Settings.Controls.Add(this.button1);
+            this.Settings.Controls.Add(this.ExportSummarised_Checkbox);
+            this.Settings.Controls.Add(this.ExportSummarised_Label);
+            this.Settings.Controls.Add(this.ExportFull_Checkbox);
+            this.Settings.Controls.Add(this.ExportFull_Label);
+            this.Settings.Controls.Add(this.Help_Button);
             this.Settings.Controls.Add(this.EnableGDAXLevel3_CheckBox);
             this.Settings.Controls.Add(this.EnableGDAXLevel3);
             this.Settings.Controls.Add(this.VersionLabel);
@@ -252,6 +260,60 @@
             this.Settings.Name = "Settings";
             this.Settings.Size = new System.Drawing.Size(495, 590);
             this.Settings.TabIndex = 4;
+            // 
+            // ExportSummarised_Checkbox
+            // 
+            this.ExportSummarised_Checkbox.AccessibleName = "";
+            this.ExportSummarised_Checkbox.AutoSize = true;
+            this.ExportSummarised_Checkbox.Location = new System.Drawing.Point(436, 387);
+            this.ExportSummarised_Checkbox.Name = "ExportSummarised_Checkbox";
+            this.ExportSummarised_Checkbox.Size = new System.Drawing.Size(15, 14);
+            this.ExportSummarised_Checkbox.TabIndex = 18;
+            this.ExportSummarised_Checkbox.UseVisualStyleBackColor = true;
+            this.ExportSummarised_Checkbox.CheckedChanged += new System.EventHandler(this.ExportSummarised_Checkbox_CheckedChanged);
+            // 
+            // ExportSummarised_Label
+            // 
+            this.ExportSummarised_Label.AccessibleName = "";
+            this.ExportSummarised_Label.AutoSize = true;
+            this.ExportSummarised_Label.Location = new System.Drawing.Point(19, 387);
+            this.ExportSummarised_Label.Name = "ExportSummarised_Label";
+            this.ExportSummarised_Label.Size = new System.Drawing.Size(263, 26);
+            this.ExportSummarised_Label.TabIndex = 17;
+            this.ExportSummarised_Label.Text = "Export summary spread data?\r\nWill be saved to the G:\\IR\\IRTicker\\<your username>";
+            // 
+            // ExportFull_Checkbox
+            // 
+            this.ExportFull_Checkbox.AccessibleName = "";
+            this.ExportFull_Checkbox.AutoSize = true;
+            this.ExportFull_Checkbox.Location = new System.Drawing.Point(436, 341);
+            this.ExportFull_Checkbox.Name = "ExportFull_Checkbox";
+            this.ExportFull_Checkbox.Size = new System.Drawing.Size(15, 14);
+            this.ExportFull_Checkbox.TabIndex = 16;
+            this.ExportFull_Checkbox.UseVisualStyleBackColor = true;
+            this.ExportFull_Checkbox.CheckedChanged += new System.EventHandler(this.ExportFull_Checkbox_CheckedChanged);
+            // 
+            // ExportFull_Label
+            // 
+            this.ExportFull_Label.AccessibleName = "";
+            this.ExportFull_Label.AutoSize = true;
+            this.ExportFull_Label.Location = new System.Drawing.Point(19, 341);
+            this.ExportFull_Label.Name = "ExportFull_Label";
+            this.ExportFull_Label.Size = new System.Drawing.Size(263, 26);
+            this.ExportFull_Label.TabIndex = 15;
+            this.ExportFull_Label.Text = "Export full spread history automatically?\r\nWill be saved to the local machine\'s D" +
+    "ocuments library";
+            // 
+            // Help_Button
+            // 
+            this.Help_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Help_Button.Location = new System.Drawing.Point(410, 532);
+            this.Help_Button.Name = "Help_Button";
+            this.Help_Button.Size = new System.Drawing.Size(75, 23);
+            this.Help_Button.TabIndex = 14;
+            this.Help_Button.Text = "Help";
+            this.Help_Button.UseVisualStyleBackColor = true;
+            this.Help_Button.Click += new System.EventHandler(this.Help_Button_Click);
             // 
             // EnableGDAXLevel3_CheckBox
             // 
@@ -330,16 +392,6 @@
             this.LoadingPanel.Name = "LoadingPanel";
             this.LoadingPanel.Size = new System.Drawing.Size(492, 590);
             this.LoadingPanel.TabIndex = 10;
-            // 
-            // GIFLabel
-            // 
-            this.GIFLabel.Image = global::IRTicker.Properties.Resources.rollerdown;
-            this.GIFLabel.Location = new System.Drawing.Point(0, 0);
-            this.GIFLabel.Name = "GIFLabel";
-            this.GIFLabel.Size = new System.Drawing.Size(495, 672);
-            this.GIFLabel.TabIndex = 0;
-            this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
-            this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // Main
             // 
@@ -480,6 +532,7 @@
             this.CSPT_LTC_Label3.TabIndex = 11;
             this.CSPT_LTC_Label3.Tag = "";
             this.CSPT_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.CSPT_LTC_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_LTC_Label3_MouseDoubleClick);
             // 
             // CSPT_DOGE_Label3
             // 
@@ -491,6 +544,7 @@
             this.CSPT_DOGE_Label3.TabIndex = 10;
             this.CSPT_DOGE_Label3.Tag = "";
             this.CSPT_DOGE_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.CSPT_DOGE_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_DOGE_Label3_MouseDoubleClick);
             // 
             // CSPT_ETH_Label3
             // 
@@ -502,6 +556,7 @@
             this.CSPT_ETH_Label3.TabIndex = 9;
             this.CSPT_ETH_Label3.Tag = "";
             this.CSPT_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.CSPT_ETH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_ETH_Label3_MouseDoubleClick);
             // 
             // CSPT_XBT_Label3
             // 
@@ -513,6 +568,7 @@
             this.CSPT_XBT_Label3.TabIndex = 8;
             this.CSPT_XBT_Label3.Tag = "";
             this.CSPT_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.CSPT_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_XBT_Label3_MouseDoubleClick);
             // 
             // CSPT_LTC_Label1
             // 
@@ -619,6 +675,7 @@
             this.BFX_XRP_Label3.TabIndex = 20;
             this.BFX_XRP_Label3.Tag = "";
             this.BFX_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BFX_XRP_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_XRP_Label3_MouseDoubleClick);
             // 
             // BFX_XRP_Label1
             // 
@@ -719,6 +776,7 @@
             this.BFX_BCH_Label3.TabIndex = 18;
             this.BFX_BCH_Label3.Tag = "";
             this.BFX_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BFX_BCH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_BCH_Label3_MouseDoubleClick);
             // 
             // BFX_LTC_Label3
             // 
@@ -730,6 +788,7 @@
             this.BFX_LTC_Label3.TabIndex = 19;
             this.BFX_LTC_Label3.Tag = "";
             this.BFX_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BFX_LTC_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_LTC_Label3_MouseDoubleClick);
             // 
             // BFX_ETH_Label3
             // 
@@ -741,6 +800,7 @@
             this.BFX_ETH_Label3.TabIndex = 17;
             this.BFX_ETH_Label3.Tag = "";
             this.BFX_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BFX_ETH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_ETH_Label3_MouseDoubleClick);
             // 
             // BFX_XBT_Label3
             // 
@@ -752,6 +812,7 @@
             this.BFX_XBT_Label3.TabIndex = 16;
             this.BFX_XBT_Label3.Tag = "";
             this.BFX_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BFX_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_XBT_Label3_MouseDoubleClick);
             // 
             // BFX_LTC_Label1
             // 
@@ -1025,6 +1086,7 @@
             this.GDAX_LTC_Label3.TabIndex = 15;
             this.GDAX_LTC_Label3.Tag = "";
             this.GDAX_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.GDAX_LTC_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GDAX_LTC_Label3_MouseDoubleClick);
             // 
             // GDAX_BCH_Label3
             // 
@@ -1036,6 +1098,7 @@
             this.GDAX_BCH_Label3.TabIndex = 14;
             this.GDAX_BCH_Label3.Tag = "";
             this.GDAX_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.GDAX_BCH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GDAX_BCH_Label3_MouseDoubleClick);
             // 
             // GDAX_ETH_Label3
             // 
@@ -1047,6 +1110,7 @@
             this.GDAX_ETH_Label3.TabIndex = 13;
             this.GDAX_ETH_Label3.Tag = "";
             this.GDAX_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.GDAX_ETH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GDAX_ETH_Label3_MouseDoubleClick);
             // 
             // GDAX_XBT_Label3
             // 
@@ -1252,6 +1316,7 @@
             this.BTCM_XRP_Label3.TabIndex = 16;
             this.BTCM_XRP_Label3.Tag = "";
             this.BTCM_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BTCM_XRP_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BTCM_XRP_Label3_MouseDoubleClick);
             // 
             // BTCM_LTC_Label3
             // 
@@ -1263,6 +1328,7 @@
             this.BTCM_LTC_Label3.TabIndex = 15;
             this.BTCM_LTC_Label3.Tag = "";
             this.BTCM_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BTCM_LTC_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BTCM_LTC_Label3_MouseDoubleClick);
             // 
             // BTCM_BCH_Label3
             // 
@@ -1274,6 +1340,7 @@
             this.BTCM_BCH_Label3.TabIndex = 14;
             this.BTCM_BCH_Label3.Tag = "";
             this.BTCM_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BTCM_BCH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BTCM_BCH_Label3_MouseDoubleClick);
             // 
             // BTCM_ETH_Label3
             // 
@@ -1285,6 +1352,7 @@
             this.BTCM_ETH_Label3.TabIndex = 13;
             this.BTCM_ETH_Label3.Tag = "";
             this.BTCM_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BTCM_ETH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BTCM_ETH_Label3_MouseDoubleClick);
             // 
             // BTCM_XBT_Label3
             // 
@@ -1296,6 +1364,7 @@
             this.BTCM_XBT_Label3.TabIndex = 12;
             this.BTCM_XBT_Label3.Tag = "";
             this.BTCM_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BTCM_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BTCM_XBT_Label3_MouseDoubleClick);
             // 
             // BTCM_XRP_Label1
             // 
@@ -1478,6 +1547,7 @@
             this.IR_LTC_Label3.TabIndex = 11;
             this.IR_LTC_Label3.Tag = "";
             this.IR_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.IR_LTC_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.IR_LTC_Label3_MouseDoubleClick);
             // 
             // IR_BCH_Label3
             // 
@@ -1489,6 +1559,7 @@
             this.IR_BCH_Label3.TabIndex = 10;
             this.IR_BCH_Label3.Tag = "";
             this.IR_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.IR_BCH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.IR_BCH_Label3_MouseDoubleClick);
             // 
             // IR_ETH_Label3
             // 
@@ -1500,6 +1571,7 @@
             this.IR_ETH_Label3.TabIndex = 9;
             this.IR_ETH_Label3.Tag = "";
             this.IR_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.IR_ETH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.IR_ETH_Label3_MouseDoubleClick);
             // 
             // IR_XBT_Label3
             // 
@@ -1692,27 +1764,30 @@
             this.BFX_XRP_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.BFX_XRP_PriceTT.ToolTipTitle = "Spread details";
             // 
-            // button1
+            // GIFLabel
             // 
-            this.button1.Location = new System.Drawing.Point(380, 420);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 14;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.GIFLabel.Image = ((System.Drawing.Image)(resources.GetObject("GIFLabel.Image")));
+            this.GIFLabel.Location = new System.Drawing.Point(0, 0);
+            this.GIFLabel.Name = "GIFLabel";
+            this.GIFLabel.Size = new System.Drawing.Size(495, 644);
+            this.GIFLabel.TabIndex = 0;
+            this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
+            this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(494, 590);
+            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Main);
             this.Controls.Add(this.Settings);
-            this.Controls.Add(this.LoadingPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(510, 629);
+            this.MinimumSize = new System.Drawing.Size(510, 629);
             this.Name = "IRTicker";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "IR Ticker";
@@ -1885,7 +1960,11 @@
         private System.Windows.Forms.Label BFX_XRP_Label3;
         private System.Windows.Forms.Label BFX_XRP_Label1;
         private System.Windows.Forms.ToolTip BFX_XRP_PriceTT;
-        private System.Windows.Forms.Button button1;
+        public System.Windows.Forms.Button Help_Button;
+        private System.Windows.Forms.CheckBox ExportSummarised_Checkbox;
+        private System.Windows.Forms.Label ExportSummarised_Label;
+        private System.Windows.Forms.CheckBox ExportFull_Checkbox;
+        private System.Windows.Forms.Label ExportFull_Label;
     }
 }
 

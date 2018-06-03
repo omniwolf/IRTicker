@@ -63,26 +63,6 @@ namespace IRTicker.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap bcc {
-            get {
-                object obj = ResourceManager.GetObject("bcc", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap endlessXBT {
-            get {
-                object obj = ResourceManager.GetObject("endlessXBT", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap IR_Eagel_Transparent___small {
             get {
                 object obj = ResourceManager.GetObject("IR_Eagel_Transparent___small", resourceCulture);
@@ -93,9 +73,9 @@ namespace IRTicker.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap rollerdown {
+        internal static System.Drawing.Bitmap mario {
             get {
-                object obj = ResourceManager.GetObject("rollerdown", resourceCulture);
+                object obj = ResourceManager.GetObject("mario", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

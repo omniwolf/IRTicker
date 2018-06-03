@@ -12,13 +12,12 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using System.Windows.Controls;
-using WebSocketSharp;
+using System.Collections.Concurrent;
+using System.Windows.Forms.DataVisualization.Charting;
+
 
 // todo:
 
-// websockets for order book pulling - is this actually required?  i think REST for this works.
-// websockets for GDAX
-// record data for IR BTC spread
 
 namespace IRTicker {
     public partial class IRTicker : Form {
@@ -36,6 +35,8 @@ namespace IRTicker {
         private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "DOGE" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
+
+        public ConcurrentDictionary<string, SpreadGraph> SpreadGraph_Dict = new ConcurrentDictionary<string, SpreadGraph>();  // needs to be public because it gets accessed from the graphs object
 
         public IRTicker() {
             InitializeComponent();
@@ -62,11 +63,11 @@ namespace IRTicker {
             DCEs = new Dictionary<string, DCE> {
 
                 // seed the DCEs dictionary with empty DCEs for the DCEs we will be interrogating
-                { "IR", new DCE("Independent Reserve") },
-                { "BTCM", new DCE("BTC Markets") },
-                { "GDAX", new DCE("GDAX") },
-                { "BFX", new DCE("BitFinex") },
-                { "CSPT", new DCE("CoinSpot") }
+                { "IR", new DCE("IR", "Independent Reserve") },
+                { "BTCM", new DCE("BTCM", "BTC Markets") },
+                { "GDAX", new DCE("GDAX", "GDAX") },
+                { "BFX", new DCE("BFX", "BitFinex") },
+                { "CSPT", new DCE("CSPT", "CoinSpot") }
             };
 
             // BTCM, BFX, and CSPT have no APIs that let you download the currency pairs, so just set them manually
@@ -347,47 +348,6 @@ namespace IRTicker {
             }
         }
 
-        /*private void ParseDCE_GDAX(string crypto, string fiat) {
-            Tuple<bool, string> marketSummary = Get("https://api.gdax.com/products/" + (crypto == "XBT" ? "BTC" : crypto) + "-" + fiat + "/ticker");
-            if (!marketSummary.Item1) {
-                DCEs["GDAX"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
-                DCEs["GDAX"].NetworkAvailable = false;
-            }
-            else {
-                DCE.MarketSummary_GDAX mSummary_GDAX = JsonConvert.DeserializeObject<DCE.MarketSummary_GDAX>(marketSummary.Item2);
-
-                DCE.MarketSummary mSummary = new DCE.MarketSummary();
-
-                if(double.TryParse(mSummary_GDAX.price, out double temp)) {
-                    mSummary.LastPrice = temp;
-                }
-                else Debug.Print("Could not convert GDAX price: " + mSummary_GDAX.price);
-
-                if(double.TryParse(mSummary_GDAX.bid, out temp)) {
-                    mSummary.CurrentHighestBidPrice = temp;
-                }
-                else Debug.Print("Could not convert GDAX price: " + mSummary_GDAX.bid);
-
-                if(double.TryParse(mSummary_GDAX.ask, out temp)) {
-                    mSummary.CurrentLowestOfferPrice = temp;
-                }
-                else Debug.Print("Could not convert GDAX price: " + mSummary_GDAX.ask);
-
-                if(double.TryParse(mSummary_GDAX.volume, out temp)) {
-                    mSummary.DayVolume = temp;
-                }
-                else Debug.Print("Could not convert GDAX price: " + mSummary_GDAX.volume);
-
-                mSummary.PrimaryCurrencyCode = crypto;
-                mSummary.SecondaryCurrencyCode = fiat;
-                mSummary.CreatedTimestampUTC = mSummary_GDAX.time;
-
-                DCEs["GDAX"].CryptoPairsAdd(crypto + "-" + fiat, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
-                DCEs["GDAX"].NetworkAvailable = true;
-                DCEs["GDAX"].CurrentDCEStatus = "Online";
-            }
-        }
-        */
         private void ParseDCE_CSPT(string fiat) {
             Tuple<bool, string> marketSummary = Get("https://www.coinspot.com.au/pubapi/latest");
             if (!marketSummary.Item1) {
@@ -686,24 +646,6 @@ namespace IRTicker {
             UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Add("");  // add an empty option as the first one so it can be selected when we need to "reset"
             UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex = 0;
 
-            //Dictionary<string, DCE.products_GDAX> exchangeProducts = DCEs[dExchange].ExchangeProducts;
-
-            /*foreach (string fiat in DCEs[dExchange].SecondaryCurrencyList) {
-                foreach (string crypto in DCEs[dExchange].PrimaryCurrencyList) {
-                    //foreach (string crypto in DCEs[dExchange].PrimaryCurrencyList) {
-                    //Tuple<string, string> pair = Utilities.SplitPair(product.Key);
-                    if (fiat == DCEs[dExchange].CurrentSecondaryCurrency) {
-                        UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Add(crypto);
-                    }
-                }*/
-
-
-                /*if (cPairs.ContainsKey(crypto + "-" + DCEs[dExchange].CurrentSecondaryCurrency) && // let's make sure the market summary exists
-                    cPairs[crypto + "-" + DCEs[dExchange].CurrentSecondaryCurrency].LastPrice != -1) {  // and it's not a fake entry
-                    UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Add(crypto);
-                }*/
-            //}
-
             foreach (string pair in DCEs[dExchange].UsablePairs()) {
                 Tuple<string, string> splitPair = Utilities.SplitPair(pair);
                 if (splitPair.Item2 == DCEs[dExchange].CurrentSecondaryCurrency) {
@@ -770,7 +712,7 @@ namespace IRTicker {
                 if (DCEs["IR"].NetworkAvailable) {
                     foreach (string primaryCode in DCEs["IR"].PrimaryCurrencyList) {
                         // if there's no crypto selected in the drop down or there's no number of coins entered, then just pull the market summary
-                        if (loopCount == 0 || shitCoins.Contains(primaryCode)) {
+                        if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
                             ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency);
                         }
                         if (DCEs["IR"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["IR"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
@@ -793,7 +735,7 @@ namespace IRTicker {
 
                 if (DCEs["BTCM"].NetworkAvailable) {
                     foreach (string primaryCode in DCEs["BTCM"].PrimaryCurrencyList) {
-                        if (loopCount == 0 || shitCoins.Contains(primaryCode)) {
+                        if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
                             ParseDCE_BTCM(primaryCode, DCEs["BTCM"].CurrentSecondaryCurrency);
                         }
 
@@ -818,22 +760,6 @@ namespace IRTicker {
                         pollingThread.ReportProgress(44);
                     }
                 }
-
-                /*if (DCEs["GDAX"].NetworkAvailable) {
-                    foreach (string primaryCode in DCEs["GDAX"].PrimaryCurrencyList) {
-                        if (DCEs["GDAX"].ExchangeProducts.ContainsKey(primaryCode + "-" + DCEs["GDAX"].CurrentSecondaryCurrency)) {
-                            if (loopCount == 0 || shitCoins.Contains(primaryCode)) {
-                                //Debug.Print("loopCount = " + loopCount + " primaryCoin = " + (shitCoins.Contains(primaryCode) ? "shitcoin" : "legitCoin"));
-                                ParseDCE_GDAX(primaryCode, DCEs["GDAX"].CurrentSecondaryCurrency);
-                            }
-                        }
-                        if (DCEs["GDAX"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["GDAX"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
-                            Debug.Print("aww yea getting order book");
-                            GetGDAXOrderBook(primaryCode);
-                        }
-                    }
-                }*/
-
                 else DCEs["GDAX"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
 
 
@@ -891,7 +817,11 @@ namespace IRTicker {
                 }
 
                 loopCount++;
-                if (loopCount >= shitCoinPollRate) loopCount = 0;  // reset it, it's time we poll the shit coins again
+                if (loopCount >= shitCoinPollRate) {
+                    loopCount = 0;  // reset it, it's time we poll the shit coins again
+                    if (Properties.Settings.Default.ExportFull) WriteSpreadHistory();  // OK it's been 30 secs, let's write what we have
+                    if (Properties.Settings.Default.ExportSummarised) WriteSpreadHistoryCompressed();
+                }
 
             } while(true);  // polling is lyfe
         }
@@ -921,17 +851,6 @@ namespace IRTicker {
                     UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(pairObj.Key));
 
                     UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = "(Spread: " + pairObj.Value.spread.ToString(formatString) + ")";
-                    //Debug.Print("ABOUT TO CHECK ORDER BOOK STUFF:");
-                    //Debug.Print("---num coins = " + UIControls_Dict[dExchange].AvgPrice_NumCoins.Text + " avgprice_crypto = " + (UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedItem == null ? "null" : UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedItem.ToString()));
-
-                    // update average price label
-                    /*if (!String.IsNullOrEmpty(UIControls_Dict[dExchange].AvgPrice_NumCoins.Text) && UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedItem != null &&  // need to check this before trying to evaluate it
-                        UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedItem.ToString() == pairObj.Value.PrimaryCurrencyCode) {
-                        UIControls_Dict[dExchange].AvgPrice.Text = DetermineAveragePrice(pairObj.Value.PrimaryCurrencyCode, pairObj.Value.SecondaryCurrencyCode, dExchange);
-                        UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Black;
-                        UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex = 0;  // reset this so we don't pull the order book every time.
-                        avgPriceSet = true;
-                    }*/
 
                     // update tool tips.
                     UIControls_Dict[dExchange].ToolTip_Dict[pairObj.Value.PrimaryCurrencyCode + "_PriceTT"].SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], "Best bid: " + pairObj.Value.CurrentHighestBidPrice + System.Environment.NewLine + "Best offer: " + pairObj.Value.CurrentLowestOfferPrice);
@@ -1189,11 +1108,16 @@ namespace IRTicker {
                 // TODO: Handle the exception that has been thrown
                 MessageBox.Show("renaming folders went bad: " + ex.ToString());
             }
+
+            foreach (KeyValuePair<string, SpreadGraph> sGraph in SpreadGraph_Dict) sGraph.Value.Redraw();  // update the graph
         }
 
         private void PollingThread_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
             if(e.Cancelled) {  // if it was cancelled, we start it up again.  The only reason it would be cancelled is if the user chooses a different secondary currency.
                 pollingThread.RunWorkerAsync(); // we need to cancel to make sure we haven't already pulled the old currency from the API
+            }
+            else {
+                Debug.Print("POLL stopped!! why?? " + e.Result + " " + e.Error + " " + e.ToString());
             }
         }
 
@@ -1274,11 +1198,13 @@ namespace IRTicker {
             if (DCEs["GDAX"].HasStaticData) {
                 GroupBox_Click("GDAX");
                 UIControls_Dict["GDAX"].dExchange_GB.ForeColor = Color.Black;
-                // change the UI to the new fiat base
-                UpdateLabels("GDAX");
+                // need to force a label update, otherwise they'll stay grey <no currency> until the next update comes through
+                foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in DCEs["GDAX"].GetCryptoPairs()) {
+                    UpdateLabels_Pair("GDAX", pairObj.Value.PrimaryCurrencyCode, pairObj.Value.SecondaryCurrencyCode);
+                }
 
-                // we have a new fiat currency.  if there are any pairs not available, update the UI.
-                foreach (string crypto in DCEs["GDAX"].PrimaryCurrencyList) {
+                    // we have a new fiat currency.  if there are any pairs not available, update the UI.
+                    foreach (string crypto in DCEs["GDAX"].PrimaryCurrencyList) {
                     if (!DCEs["GDAX"].ExchangeProducts.ContainsKey(crypto + "-" + DCEs["GDAX"].CurrentSecondaryCurrency)) {
                         UIControls_Dict["GDAX"].Label_Dict[crypto + "_Price"].Text = "<no currency pair>";
                         UIControls_Dict["GDAX"].Label_Dict[crypto + "_Spread"].Text = "";
@@ -1291,8 +1217,10 @@ namespace IRTicker {
             if (DCEs["BFX"].HasStaticData) {
                 GroupBox_Click("BFX");
                 UIControls_Dict["BFX"].dExchange_GB.ForeColor = Color.Black;
-                // change the UI to the new fiat base
-                UpdateLabels("BFX");
+                // need to force a label update, otherwise they'll stay grey <no currency> until the next update comes through
+                foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in DCEs["BFX"].GetCryptoPairs()) {
+                    UpdateLabels_Pair("BFX", pairObj.Value.PrimaryCurrencyCode, pairObj.Value.SecondaryCurrencyCode);
+                }
 
                 // we have a new fiat currency.  if there are any pairs not available, update the UI.
                 foreach (string crypto in DCEs["BFX"].PrimaryCurrencyList) {
@@ -1356,6 +1284,54 @@ namespace IRTicker {
 
                 // because we manually change the colour of the price labels, we need to manually change them here
                 Utilities.ColourDCETags(Controls, dExchange);
+            }
+        }
+
+        private void WriteSpreadHistory() {
+
+            StreamWriter dataWriter;
+            string dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\IRTicker spread history data\\";
+            if (!Directory.Exists(dataFolder)) Directory.CreateDirectory(dataFolder);  // create it if it doesn't exist
+
+            try {
+                foreach (KeyValuePair<string, DCE> Exchange in DCEs) {  // spin through all the exchanges
+                    foreach (KeyValuePair<string, List<DataPoint>> spreadHistory in Exchange.Value.GetSpreadHistoryCSV()) {  // spin through all the pairs of this exchange
+                        dataWriter = new StreamWriter(dataFolder + Exchange.Value.CodeName + "-" + spreadHistory.Key + ".csv", append: true);
+                        foreach (DataPoint dp in spreadHistory.Value) {  // spin through all the NEW data points in this pair
+                            dataWriter.WriteLine(string.Join(",", dp.XValue.ToString(), dp.YValues[0].ToString()));
+                        }
+                        dataWriter.Close();
+                    }
+                }
+            }
+            catch (Exception ex) {
+                Debug.Print("Error writing to file: " + ex.ToString());
+            }
+        }
+
+        // this one only writes the spread as it sees it every 30 seconds or so.. to reduce the CSV file size.
+        private void WriteSpreadHistoryCompressed() {
+
+            string baseFolder = "G:\\IR\\IRTicker\\Spread history data\\";
+            if (!Directory.Exists(baseFolder)) {
+                Debug.Print("Cannot write spread history info - base folder not accessible or doesn't exist");
+                return;
+            }
+
+            string dataFolder = baseFolder + Environment.UserName + "\\";
+            if (!Directory.Exists(dataFolder)) Directory.CreateDirectory(dataFolder);  // create it if it doesn't exist
+            StreamWriter dataWriter;
+            try {
+                foreach (KeyValuePair<string, DCE> Exchange in DCEs) {  // spin through all the exchanges
+                    foreach (KeyValuePair<string, DCE.MarketSummary> spreadHistory in Exchange.Value.GetCryptoPairs()) {  // spin through all the pairs of this exchange
+                        dataWriter = new StreamWriter(dataFolder + Exchange.Value.CodeName + "-" + spreadHistory.Key + " - compressed.csv", append: true);
+                        dataWriter.WriteLine(string.Join(",", DateTime.Now.ToOADate(), spreadHistory.Value.spread));
+                        dataWriter.Close();
+                    }
+                }
+            }
+            catch (Exception ex) {
+                Debug.Print("Error writing to file: " + ex.ToString());
             }
         }
 
@@ -1429,19 +1405,150 @@ namespace IRTicker {
             DCEs["BFX"].CryptoCombo = BFX_CryptoComboBox.SelectedItem.ToString();
         }
 
-        private void button1_Click(object sender, EventArgs e) {
-            SpreadGraph SGForm = new SpreadGraph(DCEs["IR"].GetSpreadHistory()["XBT" + DCEs["IR"].CurrentSecondaryCurrency]);
-            SGForm.Show();
-        }
-
         private void IR_XBT_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
-            SpreadGraph SGForm = new SpreadGraph(DCEs["IR"].GetSpreadHistory()["XBT-" + DCEs["IR"].CurrentSecondaryCurrency]);
+            SpreadGraph SGForm = new SpreadGraph(DCEs["IR"], "XBT-" + DCEs["IR"].CurrentSecondaryCurrency, this);
             SGForm.Show();
+            SpreadGraph_Dict.TryAdd("IR-XBT-" + DCEs["IR"].CurrentSecondaryCurrency, SGForm);
         }
 
         private void GDAX_XBT_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
-            SpreadGraph SGForm = new SpreadGraph(DCEs["GDAX"].GetSpreadHistory()["XBT-" + DCEs["GDAX"].CurrentSecondaryCurrency]);
+            SpreadGraph SGForm = new SpreadGraph(DCEs["GDAX"], "XBT-" + DCEs["GDAX"].CurrentSecondaryCurrency, this);
             SGForm.Show();
+            SpreadGraph_Dict.TryAdd("GDAX-XBT-" + DCEs["GDAX"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void IR_ETH_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["IR"], "ETH-" + DCEs["IR"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("IR-ETH-" + DCEs["IR"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void IR_BCH_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["IR"], "BCH-" + DCEs["IR"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("IR-BCH-" + DCEs["IR"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void IR_LTC_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["IR"], "LTC-" + DCEs["IR"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("IR-LTC-" + DCEs["IR"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void BTCM_XBT_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["BTCM"], "XBT-" + DCEs["BTCM"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("BTCM-XBT-" + DCEs["BTCM"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void BTCM_ETH_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["BTCM"], "ETH-" + DCEs["BTCM"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("BTCM-ETH-" + DCEs["BTCM"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void BTCM_BCH_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["BTCM"], "BCH-" + DCEs["BTCM"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("BTCM-BCH-" + DCEs["BTCM"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void BTCM_LTC_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["BTCM"], "LTC-" + DCEs["BTCM"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("BTCM-LTC-" + DCEs["BTCM"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void BTCM_XRP_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["BTCM"], "XRP-" + DCEs["BTCM"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("BTCM-XRP-" + DCEs["BTCM"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void GDAX_ETH_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["GDAX"], "ETH-" + DCEs["GDAX"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("GDAX-ETH-" + DCEs["GDAX"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void GDAX_BCH_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["GDAX"], "BCH-" + DCEs["GDAX"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("GDAX-BCH-" + DCEs["GDAX"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void GDAX_LTC_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["GDAX"], "LTC-" + DCEs["GDAX"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("GDAX-LTC-" + DCEs["GDAX"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void BFX_XBT_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["BFX"], "XBT-" + DCEs["BFX"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("BFX-XBT-" + DCEs["BFX"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void BFX_ETH_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["BFX"], "ETH-" + DCEs["BFX"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("BFX-ETH-" + DCEs["BFX"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void BFX_BCH_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["BFX"], "BCH-" + DCEs["BFX"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("BFX-BCH-" + DCEs["BFX"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void BFX_LTC_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["BFX"], "LTC-" + DCEs["BFX"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("BFX-LTC-" + DCEs["BFX"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void BFX_XRP_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["BFX"], "XRP-" + DCEs["BFX"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("BFX-XRP-" + DCEs["BFX"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void CSPT_XBT_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["CSPT"], "XBT-" + DCEs["CSPT"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("CSPT-XBT-" + DCEs["CSPT"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void CSPT_ETH_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["CSPT"], "ETH-" + DCEs["CSPT"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("CSPT-ETH-" + DCEs["CSPT"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void CSPT_DOGE_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["CSPT"], "DOGE-" + DCEs["CSPT"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("CSPT-DOGE-" + DCEs["CSPT"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void CSPT_LTC_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["CSPT"], "LTC-" + DCEs["CSPT"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("CSPT-LTC-" + DCEs["CSPT"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void Help_Button_Click(object sender, EventArgs e) {
+            Help helpForm = new Help(this);
+            helpForm.Show();
+            Help_Button.Enabled = false;
+        }
+
+        private void ExportFull_Checkbox_CheckedChanged(object sender, EventArgs e) {
+            Properties.Settings.Default.ExportFull = ExportFull_Checkbox.Checked;
+        }
+
+        private void ExportSummarised_Checkbox_CheckedChanged(object sender, EventArgs e) {
+            Properties.Settings.Default.ExportSummarised = ExportSummarised_Checkbox.Checked;
         }
     }
 }

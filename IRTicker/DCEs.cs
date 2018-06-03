@@ -14,23 +14,27 @@ namespace IRTicker {
         private string _secondaryCodesStr;
         private ConcurrentDictionary<string, List<Tuple<DateTime, double>>> priceHistory = new ConcurrentDictionary<string, List<Tuple<DateTime, double>>>();
         private ConcurrentDictionary<string, List<DataPoint>> spreadHistory = new ConcurrentDictionary<string, List<DataPoint>>();
+        private ConcurrentDictionary<string, List<DataPoint>> spreadHistoryCSV = new ConcurrentDictionary<string, List<DataPoint>>();
 
         private Dictionary<string, MarketSummary> cryptoPairs;
         public Dictionary<string, OrderBook> orderBooks;  // string format is eg "XBT-AUD" - caps with a dash
 
         // constructor
-        public DCE(string _friendlyName) {
+        public DCE(string _codeName, string _friendlyName) {
             cryptoPairs = new Dictionary<string, MarketSummary>();
             orderBooks = new Dictionary<string, OrderBook>();
+            CodeName = _codeName;
             FriendlyName = _friendlyName;
         }
+
+        public string CodeName { get; }
 
         public string FriendlyName { get; }
 
         public bool NetworkAvailable { get; set; } = true;
 
         public bool HasStaticData { get; set; } = false;  // this will be false until we can pull the DCE static data (eg currency pairs, etc - data that will never change in a session).  Once true always true for a session.
-        public bool HasDynamicData { get; set; } = false; // set to true once we have received our first socket data
+        //public bool HasDynamicData { get; set; } = false; // set to true once we have received our first socket data
 
         // "Online" if everything is fine, anything else will cause the UI to display this string in the DCE group box text
         public string CurrentDCEStatus { get; set; }
@@ -51,6 +55,15 @@ namespace IRTicker {
             }
         }
 
+        // we clear this one every time we use it so it's only new data
+        public ConcurrentDictionary<string, List<DataPoint>> GetSpreadHistoryCSV() {
+            lock (spreadHistoryCSV) {
+                ConcurrentDictionary<string, List<DataPoint>> sprd = new ConcurrentDictionary<string, List<DataPoint>>(spreadHistoryCSV);
+                spreadHistoryCSV.Clear();
+                return sprd;
+            }
+        }
+
 
         /// <summary>
         /// pair is format "XBT-AUD"
@@ -64,17 +77,21 @@ namespace IRTicker {
             lock (cryptoPairs) {
                 cryptoPairs[pair] = mSummary;
             }
-            HasDynamicData = true;
 
             if (!priceHistory.ContainsKey(pair)) {  // if this crypto/fiat pair hasn't come up before, create a new empty dictionary kvp
                 priceHistory.TryAdd(pair, new List<Tuple<DateTime, double>>());
             }
-            lock (priceHistory[pair]) {
+            lock (priceHistory[pair]) {  // we're locking on the List, not the ConcurrentDictionary
                 priceHistory[pair].Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));  // add the time and price to the kvp's value list
             }
-            if (!spreadHistory.ContainsKey(pair)) spreadHistory.TryAdd(pair, new List<DataPoint>());
+            
             lock (spreadHistory) {
+                if (!spreadHistory.ContainsKey(pair)) spreadHistory.TryAdd(pair, new List<DataPoint>());
                 spreadHistory[pair].Add(new DataPoint(DateTime.Now.ToOADate(), mSummary.spread));
+            }
+            lock (spreadHistoryCSV) {
+                if (!spreadHistoryCSV.ContainsKey(pair)) spreadHistoryCSV.TryAdd(pair, new List<DataPoint>());
+                spreadHistoryCSV[pair].Add(new DataPoint(DateTime.Now.ToOADate(), mSummary.spread));
             }
         }
 

@@ -25,6 +25,7 @@
         private void InitializeComponent() {
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.SpreadChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             ((System.ComponentModel.ISupportInitialize)(this.SpreadChart)).BeginInit();
             this.SuspendLayout();
@@ -42,7 +43,6 @@
             this.SpreadChart.Name = "SpreadChart";
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.IsValueShownAsLabel = true;
             series1.LabelFormat = "### ##0.##";
             series1.Name = "Series1";
             series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
@@ -50,6 +50,9 @@
             this.SpreadChart.Size = new System.Drawing.Size(804, 455);
             this.SpreadChart.TabIndex = 0;
             this.SpreadChart.Text = "chart1";
+            title1.Name = "Title1";
+            title1.Text = "Spread";
+            this.SpreadChart.Titles.Add(title1);
             // 
             // SpreadGraph
             // 
@@ -59,6 +62,7 @@
             this.Controls.Add(this.SpreadChart);
             this.Name = "SpreadGraph";
             this.Text = "SpreadGraph";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SpreadGraph_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.SpreadChart)).EndInit();
             this.ResumeLayout(false);
 

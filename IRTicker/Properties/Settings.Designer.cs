@@ -46,5 +46,29 @@ namespace IRTicker.Properties {
                 this["RefreshFreq"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ExportFull {
+            get {
+                return ((bool)(this["ExportFull"]));
+            }
+            set {
+                this["ExportFull"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ExportSummarised {
+            get {
+                return ((bool)(this["ExportSummarised"]));
+            }
+            set {
+                this["ExportSummarised"] = value;
+            }
+        }
     }
 }
