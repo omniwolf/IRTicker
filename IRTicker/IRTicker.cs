@@ -43,14 +43,17 @@ namespace IRTicker {
 
             if (refreshFrequencyTextbox.Text == "1") refreshFrequencyTextbox.Text = minRefreshFrequency.ToString();  // design time default is 1, we set to our actual min
 
-            cryptoDir = Path.Combine(System.IO.Path.GetTempPath(), @"Crypto\");
+            if (string.IsNullOrEmpty(Properties.Settings.Default.ToolbarFolder)) {
+                cryptoDir = Path.Combine(System.IO.Path.GetTempPath(), @"Crypto\");
+            }
+            else {
+                cryptoDir = Properties.Settings.Default.ToolbarFolder;
+            }
 
 
             if (!Directory.Exists(cryptoDir)) {
                 Directory.CreateDirectory(cryptoDir);
             }
-
-            folderDialogTextbox.Text = cryptoDir;
 
             Exchanges = new List<string> {
                 { "IR" },
@@ -93,7 +96,11 @@ namespace IRTicker {
             else Properties.Settings.Default.RefreshFreq = minRefreshFrequency.ToString();
 
             fiatInvert_checkBox.Checked = Properties.Settings.Default.FiatInverse;
-            refreshFrequencyTextbox.Text = Properties.Settings.Default.RefreshFreq.ToString(); ;
+            refreshFrequencyTextbox.Text = Properties.Settings.Default.RefreshFreq.ToString();
+            folderDialogTextbox.Text = cryptoDir;
+            EnableGDAXLevel3_CheckBox.Checked = Properties.Settings.Default.FullGDAXOB;
+            ExportFull_Checkbox.Checked = Properties.Settings.Default.ExportFull;
+            ExportSummarised_Checkbox.Checked = Properties.Settings.Default.ExportSummarised;
 
             VersionLabel.Text = "IR Ticker version " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
@@ -305,7 +312,7 @@ namespace IRTicker {
             DialogResult result = toolbarFolder.ShowDialog();
             if(result == DialogResult.OK) {
                 cryptoDir = toolbarFolder.SelectedPath;
-                folderDialogTextbox.Text = cryptoDir;
+                folderDialogTextbox.Text = Properties.Settings.Default.ToolbarFolder = cryptoDir;
             }
         }
 

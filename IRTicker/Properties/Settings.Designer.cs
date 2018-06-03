@@ -70,5 +70,29 @@ namespace IRTicker.Properties {
                 this["ExportSummarised"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool FullGDAXOB {
+            get {
+                return ((bool)(this["FullGDAXOB"]));
+            }
+            set {
+                this["FullGDAXOB"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ToolbarFolder {
+            get {
+                return ((string)(this["ToolbarFolder"]));
+            }
+            set {
+                this["ToolbarFolder"] = value;
+            }
+        }
     }
 }
