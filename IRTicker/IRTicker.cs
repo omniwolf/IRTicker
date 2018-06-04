@@ -94,6 +94,7 @@ namespace IRTicker {
                 if (freq < minRefreshFrequency) Properties.Settings.Default.RefreshFreq = minRefreshFrequency.ToString();
             }
             else Properties.Settings.Default.RefreshFreq = minRefreshFrequency.ToString();
+            Properties.Settings.Default.Save();
 
             fiatInvert_checkBox.Checked = Properties.Settings.Default.FiatInverse;
             refreshFrequencyTextbox.Text = Properties.Settings.Default.RefreshFreq.ToString();
@@ -313,6 +314,7 @@ namespace IRTicker {
             if(result == DialogResult.OK) {
                 cryptoDir = toolbarFolder.SelectedPath;
                 folderDialogTextbox.Text = Properties.Settings.Default.ToolbarFolder = cryptoDir;
+                Properties.Settings.Default.Save();
             }
         }
 
@@ -1319,7 +1321,7 @@ namespace IRTicker {
         // this one only writes the spread as it sees it every 30 seconds or so.. to reduce the CSV file size.
         private void WriteSpreadHistoryCompressed() {
 
-            string baseFolder = "G:\\IR\\IRTicker\\Spread history data\\";
+            string baseFolder = "G:\\My Drive\\IR\\IRTicker\\Spread history data\\";
             if (!Directory.Exists(baseFolder)) {
                 Debug.Print("Cannot write spread history info - base folder not accessible or doesn't exist");
                 return;
@@ -1552,10 +1554,12 @@ namespace IRTicker {
 
         private void ExportFull_Checkbox_CheckedChanged(object sender, EventArgs e) {
             Properties.Settings.Default.ExportFull = ExportFull_Checkbox.Checked;
+            Properties.Settings.Default.Save();
         }
 
         private void ExportSummarised_Checkbox_CheckedChanged(object sender, EventArgs e) {
             Properties.Settings.Default.ExportSummarised = ExportSummarised_Checkbox.Checked;
+            Properties.Settings.Default.Save();
         }
     }
 }
