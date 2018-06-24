@@ -45,6 +45,7 @@
             this.InvertFiatLabel = new System.Windows.Forms.Label();
             this.SettingsOKButton = new System.Windows.Forms.Button();
             this.FolderLabel = new System.Windows.Forms.Label();
+            this.LoadingPanel = new System.Windows.Forms.Panel();
             this.Main = new System.Windows.Forms.Panel();
             this.fiat_GroupBox = new System.Windows.Forms.GroupBox();
             this.fiatRefresh_checkBox = new System.Windows.Forms.CheckBox();
@@ -380,7 +381,7 @@
             this.SettingsOKButton.Name = "SettingsOKButton";
             this.SettingsOKButton.Size = new System.Drawing.Size(75, 23);
             this.SettingsOKButton.TabIndex = 4;
-            this.SettingsOKButton.Text = "OK";
+            this.SettingsOKButton.Text = "Close";
             this.SettingsOKButton.UseVisualStyleBackColor = true;
             this.SettingsOKButton.Click += new System.EventHandler(this.SettingsOKButton_Click);
             // 
