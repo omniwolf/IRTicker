@@ -645,7 +645,7 @@ namespace IRTicker {
             UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex = 0;
 
             foreach (string pair in DCEs[dExchange].UsablePairs()) {
-                Tuple<string, string> splitPair = Utilities.SplitPair(pair);
+                Tuple<string, string> splitPair = Utilities.SplitPair(pair);  // splits "XBT-AUD" into a tuple ("XBT","AUD")
                 if (splitPair.Item2 == DCEs[dExchange].CurrentSecondaryCurrency) {
                     UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Add(splitPair.Item1);
                 }
@@ -1193,8 +1193,7 @@ namespace IRTicker {
             UIControls_Dict[dExchange].dExchange_GB.ForeColor = Color.Gray;
             UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")";
 
-            if (UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Count > 0) UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex = 0;
-            UIControls_Dict[dExchange].AvgPrice_Crypto.Enabled = false;
+            if (UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Count > 0) UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex = 0;  // reset the selection to blank
 
             Utilities.ColourDCETags(Controls, dExchange);
             DCEs[dExchange].ChangedSecondaryCurrency = true;
@@ -1203,6 +1202,7 @@ namespace IRTicker {
         private void IR_GroupBox_Click(object sender, EventArgs e) {
             if (DCEs["IR"].NetworkAvailable) {
                 GroupBox_Click("IR");
+                UIControls_Dict["IR"].AvgPrice_Crypto.Enabled = false;  // disable it while we work out the new available cryptos
                 pollingThread.CancelAsync();  // cancel the poll so we don't try and download data for the wrong base currency
             }
         }
@@ -1216,13 +1216,14 @@ namespace IRTicker {
                     UpdateLabels_Pair("GDAX", pairObj.Value.PrimaryCurrencyCode, pairObj.Value.SecondaryCurrencyCode);
                 }
 
-                    // we have a new fiat currency.  if there are any pairs not available, update the UI.
-                    foreach (string crypto in DCEs["GDAX"].PrimaryCurrencyList) {
+                // we have a new fiat currency.  if there are any pairs not available, update the UI.
+                foreach (string crypto in DCEs["GDAX"].PrimaryCurrencyList) {
                     if (!DCEs["GDAX"].ExchangeProducts.ContainsKey(crypto + "-" + DCEs["GDAX"].CurrentSecondaryCurrency)) {
                         UIControls_Dict["GDAX"].Label_Dict[crypto + "_Price"].Text = "<no currency pair>";
                         UIControls_Dict["GDAX"].Label_Dict[crypto + "_Spread"].Text = "";
                     }
                 }
+                PopulateCryptoComboBox("GDAX");
             }
         }
 
@@ -1242,6 +1243,7 @@ namespace IRTicker {
                         UIControls_Dict["BFX"].Label_Dict[crypto + "_Spread"].Text = "";
                     }
                 }
+                PopulateCryptoComboBox("BFX");
             }
         }
 
