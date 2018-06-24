@@ -68,7 +68,7 @@ namespace IRTicker {
                 // seed the DCEs dictionary with empty DCEs for the DCEs we will be interrogating
                 { "IR", new DCE("IR", "Independent Reserve") },
                 { "BTCM", new DCE("BTCM", "BTC Markets") },
-                { "GDAX", new DCE("GDAX", "GDAX") },
+                { "GDAX", new DCE("GDAX", "Coinbase Pro") },
                 { "BFX", new DCE("BFX", "BitFinex") },
                 { "CSPT", new DCE("CSPT", "CoinSpot") }
             };
@@ -424,7 +424,7 @@ namespace IRTicker {
 
         // pulls from the /currencies API
         private string[] GetGDAXCurrencies() {
-            Tuple<bool, string> currencies = Get("https://api.gdax.com/currencies");
+            Tuple<bool, string> currencies = Get("https://api.pro.coinbase.com/currencies");
             if (!currencies.Item1) {
                 DCEs["GDAX"].CurrentDCEStatus = WebsiteError(currencies.Item2);
                 DCEs["GDAX"].NetworkAvailable = false;
@@ -468,7 +468,7 @@ namespace IRTicker {
         }
 
         private void GetGDAXProducts() {
-            Tuple<bool, string> products = Get("https://api.gdax.com/products");
+            Tuple<bool, string> products = Get("https://api.pro.coinbase.com/products");
             if (!products.Item1) {
                 DCEs["GDAX"].CurrentDCEStatus = WebsiteError(products.Item2);
                 DCEs["GDAX"].NetworkAvailable = false;
@@ -524,27 +524,16 @@ namespace IRTicker {
                 //DCEs["BFX"].NetworkAvailable = true;
                 DCEs["BFX"].HasStaticData = true;
                 DCEs["BFX"].CurrentDCEStatus = "Online";
-                SubscribeTickerSocket_BFX();
+                SubscribeTickerSocket("BFX");
             }
         }
 
-        private void SubscribeTickerSocket_BFX() {
+        public void SubscribeTickerSocket(string dExchange) {
             // subscribe to all the pairs
-            foreach (string secondaryCode in DCEs["BFX"].SecondaryCurrencyList) {
-                foreach (string primaryCode in DCEs["BFX"].PrimaryCurrencyList) {
-                    if (DCEs["BFX"].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                        wSocketConnect.WebSocket_Subscribe("BFX", primaryCode, secondaryCode);
-                    }
-                }
-            }
-        }
-
-        private void SubscribeTickerSocket_GDAX() {
-            // subscribe to all the pairs
-            foreach (string secondaryCode in DCEs["GDAX"].SecondaryCurrencyList) {
-                foreach (string primaryCode in DCEs["GDAX"].PrimaryCurrencyList) {
-                    if (DCEs["GDAX"].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                        wSocketConnect.WebSocket_Subscribe("GDAX", primaryCode, secondaryCode);
+            foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
+                foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                    if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
+                        wSocketConnect.WebSocket_Subscribe(dExchange, primaryCode, secondaryCode);
                     }
                 }
             }
@@ -582,7 +571,7 @@ namespace IRTicker {
         }
 
         private void GetGDAXOrderBook(string crypto) {
-            Tuple<bool, string> orderBookTpl = Get("https://api.gdax.com/products/" + (crypto == "XBT" ? "BTC" : crypto) + "-" + DCEs["GDAX"].CurrentSecondaryCurrency + "/book?level=" + (EnableGDAXLevel3_CheckBox.Checked ? "3" : "2"));
+            Tuple<bool, string> orderBookTpl = Get("https://api.pro.coinbase.com/products/" + (crypto == "XBT" ? "BTC" : crypto) + "-" + DCEs["GDAX"].CurrentSecondaryCurrency + "/book?level=" + (EnableGDAXLevel3_CheckBox.Checked ? "3" : "2"));
             if (orderBookTpl.Item1) {
                 DCE.OrderBook_GDAX orderBook_GDAX = JsonConvert.DeserializeObject<DCE.OrderBook_GDAX>(orderBookTpl.Item2);
 
@@ -678,7 +667,7 @@ namespace IRTicker {
 
                 pollingThread.ReportProgress(2);  // we need to lock the average price controls here so they user doesn't change them while the data is getting pulled
 
-                Debug.Print("Begin API poll");
+                //Debug.Print("Begin API poll");
 
 
                 ////// IR ///////
@@ -763,11 +752,24 @@ namespace IRTicker {
                         DCEs["GDAX"].PrimaryCurrencyCodes = gdax_currencies[0];
                         DCEs["GDAX"].SecondaryCurrencyCodes = gdax_currencies[1];
                         Debug.Print("calling gdax sockets sub");
-                        SubscribeTickerSocket_GDAX();
+                        SubscribeTickerSocket("GDAX");
                         pollingThread.ReportProgress(44);
                     }
                 }
                 else DCEs["GDAX"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
+
+                if (loopCount == 0) {
+                    if (wSocketConnect.IsSocketAlive("BFX")) { } //Debug.Print("GDAX");
+                    else {
+                        Debug.Print("BFX ded, reconnecting");
+                        wSocketConnect.WebSocket_Reconnect("BFX");
+                    }
+                    if (wSocketConnect.IsSocketAlive("GDAX")) { } //Debug.Print("GDAX");
+                    else {
+                        Debug.Print("GDAX ded, reconnecting");
+                        wSocketConnect.WebSocket_Reconnect("GDAX");
+                    }
+                }
 
 
                 //////// BitFinex /////////
@@ -1192,13 +1194,15 @@ namespace IRTicker {
             if (UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Count > 0) UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex = 0;
             UIControls_Dict[dExchange].AvgPrice_Crypto.Enabled = false;
 
-            pollingThread.CancelAsync();
             Utilities.ColourDCETags(Controls, dExchange);
             DCEs[dExchange].ChangedSecondaryCurrency = true;
         }
 
         private void IR_GroupBox_Click(object sender, EventArgs e) {
-            if (DCEs["IR"].NetworkAvailable) GroupBox_Click("IR");
+            if (DCEs["IR"].NetworkAvailable) {
+                GroupBox_Click("IR");
+                pollingThread.CancelAsync();  // cancel the poll so we don't try and download data for the wrong base currency
+            }
         }
 
         private void GDAX_GroupBox_Click(object sender, EventArgs e) {

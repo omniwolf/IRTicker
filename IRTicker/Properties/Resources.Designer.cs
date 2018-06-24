@@ -63,9 +63,39 @@ namespace IRTicker.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap bfx_faded {
+            get {
+                object obj = ResourceManager.GetObject("bfx_faded", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap coinspot_faded {
+            get {
+                object obj = ResourceManager.GetObject("coinspot_faded", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap IR_Eagel_Transparent___small {
             get {
                 object obj = ResourceManager.GetObject("IR_Eagel_Transparent___small", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IR_Eagel_Transparent___small_faded {
+            get {
+                object obj = ResourceManager.GetObject("IR_Eagel_Transparent___small_faded", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -46,13 +46,14 @@ namespace IRTicker {
             };
 
             wSocket_BFX.OnClose += (sender, e) => {
-                //Debug.Print("ws onclose");
+                Debug.Print("BFX stream closed... should be preceeded by some ded thingo " + DateTime.Now.ToString());
+                //WebSocket_Reconnect("BFX");
             };
             wSocket_BFX.Connect();
 
 
             // GDAX
-            wSocket_GDAX = new WebSocket("wss://ws-feed.gdax.com");
+            wSocket_GDAX = new WebSocket("wss://ws-feed.pro.coinbase.com");
 
             wSocket_GDAX.OnMessage += (sender, e) => {
                 if (e.IsText) {
@@ -67,7 +68,7 @@ namespace IRTicker {
             };
 
             wSocket_GDAX.OnError += (sender, e) => {
-                Debug.Print("ws onerror - gdax");
+                Debug.Print("ws onerror - gdax - " + DateTime.Now.ToString());
                 wSocket_GDAX.Close();
                 DCEs["GDAX"].NetworkAvailable = false;
                 DCEs["GDAX"].CurrentDCEStatus = "Socket error";
@@ -77,7 +78,8 @@ namespace IRTicker {
             };
 
             wSocket_GDAX.OnClose += (sender, e) => {
-                //Debug.Print("ws onclose");
+                Debug.Print("GDAX stream was closed.. should be because we disconnected on purpose. preceeded by ded?  " + DateTime.Now.ToString());
+                //WebSocket_Disconnect("GDAX");
             };
             wSocket_GDAX.Connect();
         }
@@ -102,12 +104,26 @@ namespace IRTicker {
             }
         }
 
-        public void WebSocket_Disconect(string dExchange) {
+        public void WebSocket_Reconnect(string dExchange) {
             switch (dExchange) {
                 case "BFX":
                     wSocket_BFX.Close();
                     wSocket_BFX.Connect();
+
                     break;
+                case "GDAX":
+                    wSocket_GDAX.Close();
+                    wSocket_GDAX.Connect();
+                    break;
+            }
+
+            //re-subscribe?
+            foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
+                foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                    if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
+                        WebSocket_Subscribe(dExchange, primaryCode, secondaryCode);
+                    }
+                }
             }
         }
 
@@ -195,6 +211,20 @@ namespace IRTicker {
             else {
                 Debug.Print("rando message from GDAX sockets: " + message);
             }
+        }
+
+        public bool IsSocketAlive(string dExchange) {
+
+            switch (dExchange) {
+                case "BFX":
+                    if (wSocket_BFX.IsAlive) return true;
+                    return false;
+                case "GDAX":
+                    if (wSocket_GDAX.IsAlive) return true;
+                    return false;
+            }
+            Debug.Print("Sockets, checking a socket alive, we have reached the end without returning.  we never should.");
+            return false;
         }
 
         /* BFX format:
