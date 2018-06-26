@@ -1377,47 +1377,70 @@ namespace IRTicker {
 
         private void IR_BuySellComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             DCEs["IR"].BuySell = IR_BuySellComboBox.SelectedItem.ToString();
-            //Debug.Print("set by")
+            IR_AvgPrice_Label.Text = "";
         }
 
         private void IR_NumCoinsTextBox_TextChanged(object sender, EventArgs e) {
-            DCEs["IR"].NumCoinsStr = IR_NumCoinsTextBox.Text; 
+            DCEs["IR"].NumCoinsStr = IR_NumCoinsTextBox.Text;
+            IR_AvgPrice_Label.Text = "";
+        }
+
+        private void IR_CryptoComboBox_DropDown(object sender, EventArgs e) {
+            IR_AvgPrice_Label.Text = "";
         }
 
         private void BTCM_BuySellComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             DCEs["BTCM"].BuySell = BTCM_BuySellComboBox.SelectedItem.ToString();
+            BTCM_AvgPrice_Label.Text = "";
         }
 
         private void BTCM_NumCoinsTextBox_TextChanged(object sender, EventArgs e) {
             DCEs["BTCM"].NumCoinsStr = BTCM_NumCoinsTextBox.Text;
+            BTCM_AvgPrice_Label.Text = "";
         }
 
         private void BTCM_CryptoComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             DCEs["BTCM"].CryptoCombo = BTCM_CryptoComboBox.SelectedItem.ToString();
         }
 
+        private void BTCM_CryptoComboBox_DropDown(object sender, EventArgs e) {
+            BTCM_AvgPrice_Label.Text = "";
+        }
+
         private void GDAX_BuySellComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             DCEs["GDAX"].BuySell = GDAX_BuySellComboBox.SelectedItem.ToString();
+            GDAX_AvgPrice_Label.Text = "";
         }
 
         private void GDAX_NumCoinsTextBox_TextChanged(object sender, EventArgs e) {
             DCEs["GDAX"].NumCoinsStr = GDAX_NumCoinsTextBox.Text;
+            GDAX_AvgPrice_Label.Text = "";
         }
 
         private void GDAX_CryptoComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             DCEs["GDAX"].CryptoCombo = GDAX_CryptoComboBox.SelectedItem.ToString();
         }
 
+        private void GDAX_CryptoComboBox_DropDown(object sender, EventArgs e) {
+            GDAX_AvgPrice_Label.Text = "";
+        }
+
         private void BFX_BuySellComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             DCEs["BFX"].BuySell = BFX_BuySellComboBox.SelectedItem.ToString();
+            BFX_AvgPrice_Label.Text = "";
         }
 
         private void BFX_NumCoinsTextBox_TextChanged(object sender, EventArgs e) {
             DCEs["BFX"].NumCoinsStr = BFX_NumCoinsTextBox.Text;
+            BFX_AvgPrice_Label.Text = "";
         }
 
         private void BFX_CryptoComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             DCEs["BFX"].CryptoCombo = BFX_CryptoComboBox.SelectedItem.ToString();
+        }
+
+        private void BFX_CryptoComboBox_DropDown(object sender, EventArgs e) {
+            BFX_AvgPrice_Label.Text = "";
         }
 
         private void IR_XBT_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
