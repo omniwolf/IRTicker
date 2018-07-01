@@ -861,6 +861,14 @@ namespace IRTicker {
                     UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].Text = pairObj.Value.LastPrice.ToString(formatString).Trim();
                     UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(pairObj.Key));
 
+                    // if there's a colour, make the font bold.  otherwise not bold.
+                    if (UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].ForeColor != Color.Black) {
+                        UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].Font = new Font(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].Font, FontStyle.Bold);
+                    }
+                    else {
+                        UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].Font = new Font(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].Font, FontStyle.Regular);
+                    }
+
                     UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = "(Spread: " + pairObj.Value.spread.ToString(formatString) + ")";
 
                     // update tool tips.

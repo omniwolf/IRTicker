@@ -31,11 +31,13 @@ namespace IRTicker {
                         double lastPrice = priceList.Last().Item2;
                         if (lastPrice > pricePoint.Item2 * 1.01) {
                             // colour dark green
-                            return Color.Lime;
+                            //return Color.Lime;
+                            return Color.ForestGreen;
                         }
                         else if (lastPrice > pricePoint.Item2 * 1.005) {
                             // colour light green etc
-                            return Color.PaleGreen;
+                            //return Color.PaleGreen;
+                            return Color.LimeGreen;
                         }
                         else if (lastPrice < pricePoint.Item2 * 0.99) {
                             // colur red
