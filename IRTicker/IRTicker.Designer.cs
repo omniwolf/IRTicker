@@ -390,7 +390,7 @@
             this.LoadingPanel.Controls.Add(this.GIFLabel);
             this.LoadingPanel.Location = new System.Drawing.Point(0, 0);
             this.LoadingPanel.Name = "LoadingPanel";
-            this.LoadingPanel.Size = new System.Drawing.Size(492, 590);
+            this.LoadingPanel.Size = new System.Drawing.Size(495, 590);
             this.LoadingPanel.TabIndex = 10;
             // 
             // GIFLabel
