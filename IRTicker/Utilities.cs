@@ -32,12 +32,12 @@ namespace IRTicker {
                         if (lastPrice > pricePoint.Item2 * 1.01) {
                             // colour dark green
                             //return Color.Lime;
-                            return Color.ForestGreen;
+                            return Color.Lime;
                         }
                         else if (lastPrice > pricePoint.Item2 * 1.005) {
                             // colour light green etc
                             //return Color.PaleGreen;
-                            return Color.LimeGreen;
+                            return Color.MediumAquamarine;
                         }
                         else if (lastPrice < pricePoint.Item2 * 0.99) {
                             // colur red
