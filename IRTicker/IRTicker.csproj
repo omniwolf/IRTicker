@@ -25,7 +25,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.1.1.%2a</ApplicationVersion>
+    <ApplicationVersion>3.2.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -147,10 +147,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ir_eagel_transparent___small_Oe3_icon.ico" />
+    <None Include="Resources\gravity.gif" />
+    <None Include="Resources\gwave.gif" />
     <None Include="Resources\bfx-faded.png" />
     <None Include="Resources\coinspot-faded.png" />
     <None Include="Resources\IR Eagel Transparent - small-faded.png" />
-    <None Include="Resources\mario.gif" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

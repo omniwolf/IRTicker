@@ -124,13 +124,16 @@
   <data name="IR_Eagel_Transparent___small_faded" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\IR Eagel Transparent - small-faded.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="mario" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\mario.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="coinspot_faded" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\coinspot-faded.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="bfx_faded" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\bfx-faded.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="gravity" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gravity.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="gwave" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gwave.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

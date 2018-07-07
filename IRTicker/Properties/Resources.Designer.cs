@@ -83,6 +83,26 @@ namespace IRTicker.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap gravity {
+            get {
+                object obj = ResourceManager.GetObject("gravity", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap gwave {
+            get {
+                object obj = ResourceManager.GetObject("gwave", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap IR_Eagel_Transparent___small {
             get {
                 object obj = ResourceManager.GetObject("IR_Eagel_Transparent___small", resourceCulture);
@@ -96,16 +116,6 @@ namespace IRTicker.Properties {
         internal static System.Drawing.Bitmap IR_Eagel_Transparent___small_faded {
             get {
                 object obj = ResourceManager.GetObject("IR_Eagel_Transparent___small_faded", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap mario {
-            get {
-                object obj = ResourceManager.GetObject("mario", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

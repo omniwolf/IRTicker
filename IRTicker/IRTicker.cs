@@ -140,6 +140,10 @@ namespace IRTicker {
             UIControls_Dict["IR"].LTC_Price = IR_LTC_Label2;
             UIControls_Dict["IR"].LTC_Spread = IR_LTC_Label3;
             UIControls_Dict["IR"].LTC_PriceTT = IR_LTC_PriceTT;
+            UIControls_Dict["IR"].XRP_Label = IR_XRP_Label1;
+            UIControls_Dict["IR"].XRP_Price = IR_XRP_Label2;
+            UIControls_Dict["IR"].XRP_Spread = IR_XRP_Label3;
+            UIControls_Dict["IR"].XRP_PriceTT = IR_XRP_PriceTT;
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
             UIControls_Dict["IR"].AvgPrice_Crypto = IR_CryptoComboBox;
@@ -965,10 +969,10 @@ namespace IRTicker {
                 }
                 if (!gracefulFinish) {
                     //MessageBox.Show("You requested " + coins + " coins, but the order book's entire volume (that the API returned to us) had only " + coinCounter + " coins in it.  So, the displayed average price will be less than reality, but you probably fat fingered how many coins?", dExchange + "'s order book too small for that number of coins", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return "Order book only has " + coinCounter.ToString("### ###.##").Trim() + " " + crypto;
+                    return "Order book only has " + coinCounter.ToString("### ##0.##").Trim() + " " + crypto;
                 }
                 DCEs[dExchange].RemoveOrderBook(pair);  // need to remove once we've used - there's the possibility that the next orderbook API pull fails, then the code will just use the existing order book
-                return "Average price for " + crypto + ": " + weightedAverage.ToString("### ###.##").Trim();
+                return "Average price for " + crypto + ": " + weightedAverage.ToString("### ##0.##").Trim();
             }
             else {
                 MessageBox.Show("Could not convert num coins to a number.  how? num = " + UIControls_Dict[dExchange].AvgPrice_NumCoins.Text, "Show this to Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1605,6 +1609,35 @@ namespace IRTicker {
         private void ExportSummarised_Checkbox_CheckedChanged(object sender, EventArgs e) {
             Properties.Settings.Default.ExportSummarised = ExportSummarised_Checkbox.Checked;
             Properties.Settings.Default.Save();
+        }
+
+        // this sub sets the cursor position to the far right when control enters the num coins masked text box
+        // if the cursor is anywhere else, it limits the amount of characters you can type in the box.  really annoying.
+        private void PositionCursorInMaskedTextBox(MaskedTextBox mtb) {
+            if (mtb == null) return;
+
+            int pos = mtb.SelectionStart;
+
+            if (pos > mtb.Text.Length)
+                pos = mtb.Text.Length;
+
+            BeginInvoke((MethodInvoker)delegate () { mtb.Select(mtb.Text.Length, 0); });
+        }
+
+        private void IR_NumCoinsTextBox_Enter(object sender, EventArgs e) {
+            PositionCursorInMaskedTextBox((MaskedTextBox)sender);
+        }
+
+        private void BTCM_NumCoinsTextBox_Enter(object sender, EventArgs e) {
+            PositionCursorInMaskedTextBox((MaskedTextBox)sender);
+        }
+
+        private void GDAX_NumCoinsTextBox_Enter(object sender, EventArgs e) {
+            PositionCursorInMaskedTextBox((MaskedTextBox)sender);
+        }
+
+        private void BFX_NumCoinsTextBox_Enter(object sender, EventArgs e) {
+            PositionCursorInMaskedTextBox((MaskedTextBox)sender);
         }
     }
 }
