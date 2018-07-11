@@ -1493,6 +1493,12 @@ namespace IRTicker {
             SpreadGraph_Dict.TryAdd("IR-LTC-" + DCEs["IR"].CurrentSecondaryCurrency, SGForm);
         }
 
+        private void IR_XRP_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["IR"], "XRP-" + DCEs["IR"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("IR-XRP-" + DCEs["IR"].CurrentSecondaryCurrency, SGForm);
+        }
+
         private void BTCM_XBT_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
             SpreadGraph SGForm = new SpreadGraph(DCEs["BTCM"], "XBT-" + DCEs["BTCM"].CurrentSecondaryCurrency, this);
             SGForm.Show();
