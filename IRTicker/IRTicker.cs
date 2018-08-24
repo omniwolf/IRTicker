@@ -864,7 +864,9 @@ namespace IRTicker {
                 // i guess we need to filter out the wrong pairs, also don't try and update labels that are -1 (-1 means they're a fake entry)
                 if (pairObj.Value.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency && pairObj.Value.LastPrice >= 0) {
                     string formatString = "### ##0.##";
-                    if (pairObj.Value.LastPrice < 10 || pairObj.Value.spread < 10) formatString = "0.#####";  // some coins are so shit, they're worth less than a cent.  Need different formatting for this.
+                    string formatStringSpread = "### ##0.##";
+                    if (pairObj.Value.LastPrice < 10) formatString = "0.#####";  // some coins are so shit, they're worth less than a cent.  Need different formatting for this.  ORRR the spread is so amazingly small we need more decimal places
+                    if (pairObj.Value.spread < 10) formatStringSpread = "0.#####";
                     UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].Text = pairObj.Value.LastPrice.ToString(formatString).Trim();
                     UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(pairObj.Key));
 
@@ -876,7 +878,7 @@ namespace IRTicker {
                         UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].Font = new Font(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].Font, FontStyle.Regular);
                     }
 
-                    UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = "(Spread: " + pairObj.Value.spread.ToString(formatString) + ")";
+                    UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = "(Spread: " + pairObj.Value.spread.ToString(formatStringSpread) + ")";
 
                     // update tool tips.
                     UIControls_Dict[dExchange].ToolTip_Dict[pairObj.Value.PrimaryCurrencyCode + "_PriceTT"].SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], "Best bid: " + pairObj.Value.CurrentHighestBidPrice + System.Environment.NewLine + "Best offer: " + pairObj.Value.CurrentLowestOfferPrice);
@@ -908,7 +910,9 @@ namespace IRTicker {
                 UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")";
 
                 string formatString = "### ##0.##";
-                if (mSummary.LastPrice < 10 || mSummary.spread < 10) formatString = "0.#####";  // some coins are so shit, they're worth less than a cent.  Need different formatting for this.  ORRR the spread is so amazingly small we need more decimal places
+                string formatStringSpread = "### ##0.##";
+                if (mSummary.LastPrice < 10) formatString = "0.#####";  // some coins are so shit, they're worth less than a cent.  Need different formatting for this.  ORRR the spread is so amazingly small we need more decimal places
+                if (mSummary.spread < 10) formatStringSpread = "0.#####";
                 UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"].Text = mSummary.LastPrice.ToString(formatString).Trim();
                 UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"].ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(crypto + "-" + fiat));
 
@@ -920,7 +924,7 @@ namespace IRTicker {
                     UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"].Font = new Font(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"].Font, FontStyle.Regular);
                 }
 
-                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = "(Spread: " + mSummary.spread.ToString(formatString) + ")";
+                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = "(Spread: " + mSummary.spread.ToString(formatStringSpread) + ")";
                 //Debug.Print("ABOUT TO CHECK ORDER BOOK STUFF:");
                 //Debug.Print("---num coins = " + UIControls_Dict[dExchange].AvgPrice_NumCoins.Text + " avgprice_crypto = " + (UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedItem == null ? "null" : UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedItem.ToString()));
 

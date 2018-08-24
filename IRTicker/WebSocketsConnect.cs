@@ -73,7 +73,7 @@ namespace IRTicker {
                 DCEs["GDAX"].NetworkAvailable = false;
                 DCEs["GDAX"].CurrentDCEStatus = "Socket error";
                 DCEs["GDAX"].HasStaticData = false;
-                pollingThread.ReportProgress(62);  // 62 is GDAX error
+                pollingThread.ReportProgress(42);  // 62 is GDAX error
                 wSocket_GDAX.Connect();
             };
 
