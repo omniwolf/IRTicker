@@ -863,10 +863,10 @@ namespace IRTicker {
             foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in cPairs) {
                 // i guess we need to filter out the wrong pairs, also don't try and update labels that are -1 (-1 means they're a fake entry)
                 if (pairObj.Value.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency && pairObj.Value.LastPrice >= 0) {
-                    string formatString = "### ##0.##";
-                    string formatStringSpread = "### ##0.##";
-                    if (pairObj.Value.LastPrice < 10) formatString = "0.#####";  // some coins are so shit, they're worth less than a cent.  Need different formatting for this.  ORRR the spread is so amazingly small we need more decimal places
-                    if (pairObj.Value.spread < 10) formatStringSpread = "0.#####";
+                    string formatString = "### ##0.00";
+                    string formatStringSpread = "### ##0.00";
+                    if (pairObj.Value.LastPrice < 10) formatString = "0.00###";  // some coins are so shit, they're worth less than a cent.  Need different formatting for this.  ORRR the spread is so amazingly small we need more decimal places
+                    if (pairObj.Value.spread < 10) formatStringSpread = "0.00###";
                     UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].Text = pairObj.Value.LastPrice.ToString(formatString).Trim();
                     UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(pairObj.Key));
 
@@ -909,10 +909,10 @@ namespace IRTicker {
                 UIControls_Dict[dExchange].dExchange_GB.ForeColor = Color.Black;
                 UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")";
 
-                string formatString = "### ##0.##";
-                string formatStringSpread = "### ##0.##";
-                if (mSummary.LastPrice < 10) formatString = "0.#####";  // some coins are so shit, they're worth less than a cent.  Need different formatting for this.  ORRR the spread is so amazingly small we need more decimal places
-                if (mSummary.spread < 10) formatStringSpread = "0.#####";
+                string formatString = "### ##0.00";
+                string formatStringSpread = "### ##0.00";
+                if (mSummary.LastPrice < 10) formatString = "0.00###";  // some coins are so shit, they're worth less than a cent.  Need different formatting for this.  ORRR the spread is so amazingly small we need more decimal places
+                if (mSummary.spread < 10) formatStringSpread = "0.00###";
                 UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"].Text = mSummary.LastPrice.ToString(formatString).Trim();
                 UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"].ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(crypto + "-" + fiat));
 
