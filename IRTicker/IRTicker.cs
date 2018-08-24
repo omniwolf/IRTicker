@@ -1004,14 +1004,15 @@ namespace IRTicker {
                 return;
             }
 
+            else if (reportType == 12) {  // 12 is error in the response or API.   either way, we disconnect and start again.
+                string dExchange = (string)e.UserState;
+                APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);
+                return;
+            }
+
             else if (reportType == 41) {  // update GDAX
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
                 UpdateLabels_Pair("GDAX", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
-                return;
-            }
-            else if (reportType == 42) {  // 42 is error in the response or API.   either way, we disconnect and start again.
-                string dExchange = (string)e.UserState;
-                APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);
                 return;
             }
             else if (reportType == 43) {  // 43 is order book stuff for gdax

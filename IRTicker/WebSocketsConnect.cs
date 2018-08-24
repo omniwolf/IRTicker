@@ -41,7 +41,7 @@ namespace IRTicker {
                 DCEs["BFX"].NetworkAvailable = false;
                 DCEs["BFX"].CurrentDCEStatus = "Socket error";
                 DCEs["BFX"].HasStaticData = false;
-                pollingThread.ReportProgress(52);  // 52 is error
+                pollingThread.ReportProgress(12, "BFX");  // 12 is error
                 wSocket_BFX.Connect();
             };
 
@@ -73,7 +73,7 @@ namespace IRTicker {
                 DCEs["GDAX"].NetworkAvailable = false;
                 DCEs["GDAX"].CurrentDCEStatus = "Socket error";
                 DCEs["GDAX"].HasStaticData = false;
-                pollingThread.ReportProgress(42);  // 62 is GDAX error
+                pollingThread.ReportProgress(12, "GDAX");  // 12 is error
                 wSocket_GDAX.Connect();
             };
 
@@ -205,7 +205,7 @@ namespace IRTicker {
                 DCEs["GDAX"].CurrentDCEStatus = "API response error";
                 DCEs["GDAX"].NetworkAvailable = false;
                 DCEs["GDAX"].HasStaticData = false;
-                pollingThread.ReportProgress(42, "GDAX");  // ?2 is error
+                pollingThread.ReportProgress(12, "GDAX");  // ?2 is error
                 wSocket_GDAX.Connect();
             }
             else {
@@ -262,7 +262,7 @@ namespace IRTicker {
                     DCEs["BFX"].CurrentDCEStatus = "API response error";
                     DCEs["BFX"].NetworkAvailable = false;
                     DCEs["BFX"].HasStaticData = false;
-                    pollingThread.ReportProgress(42, "BFX");  // 52 is error
+                    pollingThread.ReportProgress(12, "BFX");  // 12 is error
                     wSocket_BFX.Connect();
                 }
                 else if (message.Contains("unsubscribed")) {
