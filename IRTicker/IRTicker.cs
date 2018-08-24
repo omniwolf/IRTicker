@@ -81,6 +81,9 @@ namespace IRTicker {
             DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\"";
             DCEs["BFX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
+            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\"";
+            DCEs["GDAX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
+
             DCEs["CSPT"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"DOGE\",\"LTC\"";
             DCEs["CSPT"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["CSPT"].HasStaticData = true;  // we don't poll for static data, so just say we have it.
@@ -752,11 +755,11 @@ namespace IRTicker {
                 //////// GDAX ///////
 
                 if (!DCEs["GDAX"].HasStaticData) {  // should only call this onec per session                    
-                    string[] gdax_currencies = GetGDAXCurrencies();  // this is dangerous.  Currently GDAX only supports the cryptos we show, but if it suddenly supports a new one we don't, then it'll be part of the primaryCurrencyList.  
+                    //string[] gdax_currencies = GetGDAXCurrencies();  // this is dangerous.  Currently GDAX only supports the cryptos we show, but if it suddenly supports a new one we don't, then it'll be part of the primaryCurrencyList.    Correct!  they added ETC, so now i just build this statically.
                     GetGDAXProducts();
                     if (DCEs["GDAX"].HasStaticData) {
-                        DCEs["GDAX"].PrimaryCurrencyCodes = gdax_currencies[0];
-                        DCEs["GDAX"].SecondaryCurrencyCodes = gdax_currencies[1];
+                        //DCEs["GDAX"].PrimaryCurrencyCodes = gdax_currencies[0];
+                        //DCEs["GDAX"].SecondaryCurrencyCodes = gdax_currencies[1];
                         Debug.Print("calling gdax sockets sub");
                         SubscribeTickerSocket("GDAX");
                         pollingThread.ReportProgress(44);
