@@ -76,7 +76,7 @@ namespace IRTicker {
             // BTCM, BFX, and CSPT have no APIs that let you download the currency pairs, so just set them manually
             DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\"";
             DCEs["BTCM"].SecondaryCurrencyCodes = "\"AUD\"";
-            DCEs["BTCM"].HasStaticData = true;  // we don't poll for static data, so just say we have it.
+            DCEs["BTCM"].HasStaticData = false;  // want to set this to false so we run the subscribe code once.
 
             DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\"";
             DCEs["BFX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
@@ -730,19 +730,11 @@ namespace IRTicker {
 
                 //////// BTC Markets /////////
 
-                Dictionary<string, DCE.products_GDAX> productDictionary_BTCM = new Dictionary<string, DCE.products_GDAX>();
-                foreach (string crypto in DCEs["BTCM"].PrimaryCurrencyList) {
-                    foreach (string fiat in DCEs["BTCM"].SecondaryCurrencyList) {
-                        productDictionary_BTCM.Add(crypto + "-" + fiat, new DCE.products_GDAX(crypto + "-" + fiat));
-                    }
-                }
-                DCEs["BTCM"].ExchangeProducts = productDictionary_BTCM;
-
                 if (DCEs["BTCM"].NetworkAvailable) {
                     foreach (string primaryCode in DCEs["BTCM"].PrimaryCurrencyList) {
-                        if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
+                        /*if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
                             ParseDCE_BTCM(primaryCode, DCEs["BTCM"].CurrentSecondaryCurrency);
-                        }
+                        }*/  // using sockets now hopefully
 
                         if (DCEs["BTCM"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["BTCM"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
                             GetBTCMOrderBook(primaryCode);
@@ -751,10 +743,31 @@ namespace IRTicker {
                 }
                 else DCEs["BTCM"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
 
+                // everything in here only happens once per session
+                if (!DCEs["BTCM"].HasStaticData) {
+
+                    Dictionary<string, DCE.products_GDAX> productDictionary_BTCM = new Dictionary<string, DCE.products_GDAX>();
+                    foreach (string crypto in DCEs["BTCM"].PrimaryCurrencyList) {
+                        foreach (string fiat in DCEs["BTCM"].SecondaryCurrencyList) {
+                            productDictionary_BTCM.Add(crypto + "-" + fiat, new DCE.products_GDAX(crypto + "-" + fiat));
+                        }
+                    }
+                    DCEs["BTCM"].ExchangeProducts = productDictionary_BTCM;
+
+                    // we do one connection to the REST API because it can take some time for sockets to populate all the pairs.
+                    foreach (string primaryCode in DCEs["BTCM"].PrimaryCurrencyList) {
+                        ParseDCE_BTCM(primaryCode, DCEs["BTCM"].CurrentSecondaryCurrency);
+                    }
+                    
+                    SubscribeTickerSocket("BTCM");
+                    pollingThread.ReportProgress(34);
+                    DCEs["BTCM"].HasStaticData = true;
+                }
+
 
                 //////// GDAX ///////
 
-                if (!DCEs["GDAX"].HasStaticData) {  // should only call this onec per session                    
+                if (!DCEs["GDAX"].HasStaticData) {  // should only call this onec per session
                     //string[] gdax_currencies = GetGDAXCurrencies();  // this is dangerous.  Currently GDAX only supports the cryptos we show, but if it suddenly supports a new one we don't, then it'll be part of the primaryCurrencyList.    Correct!  they added ETC, so now i just build this statically.
                     GetGDAXProducts();
                     if (DCEs["GDAX"].HasStaticData) {
@@ -768,6 +781,11 @@ namespace IRTicker {
                 else DCEs["GDAX"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
 
                 if (loopCount == 0) {
+                    /*if (wSocketConnect.IsSocketAlive("BTCM")) { } //Debug.Print("GDAX");
+                    else {
+                        //Debug.Print("BTCM ded, reconnecting");
+                        //wSocketConnect.WebSocket_Reconnect("BTCM");
+                    }*/ // sockets doesn't have this "isAlive" functionality i don't think.  I'll just rely on a disconnected event being fired.
                     if (wSocketConnect.IsSocketAlive("BFX")) { } //Debug.Print("GDAX");
                     else {
                         Debug.Print("BFX ded, reconnecting");
@@ -946,9 +964,12 @@ namespace IRTicker {
             if (!DCEs[dExchange].orderBooks.ContainsKey(pair)) return "Failed to pull order book from API";
 
             // work out the average and set it to the label
-            List<DCE.Order> orderSide;
-            if (UIControls_Dict[dExchange].AvgPrice_BuySell.SelectedItem.ToString() == "Buy") orderSide = DCEs[dExchange].orderBooks[pair].SellOrders;
-            else orderSide = DCEs[dExchange].orderBooks[pair].BuyOrders;
+            List<DCE.Order> orderBook;
+            string orderSide = "Buy";
+            if (UIControls_Dict[dExchange].AvgPrice_BuySell.SelectedItem.ToString() == "Sell") orderSide = "Sell";
+
+            if (orderSide == "Buy") orderBook = DCEs[dExchange].orderBooks[pair].SellOrders;  // because we're buying from the sell orders
+            else orderBook = DCEs[dExchange].orderBooks[pair].BuyOrders;  // selling to the buy orders
 
             if (double.TryParse(UIControls_Dict[dExchange].AvgPrice_NumCoins.Text, out double coins)) {
 
@@ -957,7 +978,7 @@ namespace IRTicker {
                 double totalCost = 0;
                 int orderCount = 0;
                 bool gracefulFinish = false;  // this only gets set to true if the order book has enough coins in it to handle the number of inputted coins.  If it doesn't (ie the foreach completes without us having counted the inputted coins), then we throw a warning message
-                foreach (DCE.Order order in orderSide) {
+                foreach (DCE.Order order in orderBook) {
                     orderCount++;
                     coinCounter += order.Volume;
                     if (coinCounter > coins) {  // ok we are on the last value we need to look at.  need to truncate.
@@ -965,7 +986,7 @@ namespace IRTicker {
                         totalCost += usedCoinsInThisOrder * order.Price;
                         weightedAverage += (usedCoinsInThisOrder / coins) * order.Price;
                         gracefulFinish = true;
-                        string tTip = "Max price paid: " + order.Price.ToString("### ##0.##") + System.Environment.NewLine + "Orders required to fill: " + orderCount + System.Environment.NewLine + "Total fiat cost: " + totalCost.ToString("### ### ##0.##");
+                        string tTip = (orderSide == "Buy" ? "Max" : "Min") + " price paid: " + order.Price.ToString("### ##0.##") + System.Environment.NewLine + "Orders required to fill: " + orderCount + System.Environment.NewLine + "Total fiat cost: " + totalCost.ToString("### ### ##0.##");
                         UIControls_Dict[dExchange].AvgPriceTT.SetToolTip(UIControls_Dict[dExchange].AvgPrice, tTip);
                         break;  // we have finished filling the hypothetical order
                     }
@@ -1007,6 +1028,17 @@ namespace IRTicker {
             else if (reportType == 12) {  // 12 is error in the response or API.   either way, we disconnect and start again.
                 string dExchange = (string)e.UserState;
                 APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);
+                return;
+            }
+
+            else if (reportType == 31) {  // update BTCM
+                DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
+                UpdateLabels_Pair("BTCM", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
+                return;
+            }
+            else if (reportType == 34) {  // should only be called once per session - if we don't do this the crypto combo box is empty until we change secondary currencies
+                PopulateCryptoComboBox("BTCM");
+                UpdateLabels("BTCM");  // we have pulled the BTCM data from the REST API, so let's display it.
                 return;
             }
 

@@ -262,7 +262,7 @@ namespace IRTicker {
 
             
             /// <summary>
-            /// setting this must be in "crypto-fiat" format
+            /// setting this must be in "crypto-fiat" format.  You only have to set this if you haven't set the primary and secondary individually.
             /// </summary>
             public string pair {
                 get {

@@ -7,20 +7,80 @@ using WebSocketSharp;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using System.ComponentModel;
+using Quobject.SocketIoClientDotNet.Client;
 
 
 namespace IRTicker {
     class WebSocketsConnect {
 
         private Dictionary<string, DCE> DCEs;
-        private WebSocket wSocket_BFX;
-        private WebSocket wSocket_GDAX;
+        private WebSocket wSocket_BFX, wSocket_GDAX;
+        private Socket socket_BTCM;
         public Dictionary<string, Subscribed_BFX> channel_Dict_BFX = new Dictionary<string, Subscribed_BFX>();  // string is a string version of the channel ID
         private BackgroundWorker pollingThread;
 
         public WebSocketsConnect(Dictionary<string, DCE> _DCEs, BackgroundWorker _pollingThread) {
             DCEs = _DCEs;
             pollingThread = _pollingThread;
+
+            // BTCM
+
+            IO.Options op = new IO.Options();
+            op.Secure = true;
+            op.Upgrade = false;
+            op.Transports = System.Collections.Immutable.ImmutableList.Create("websocket");
+
+
+            Debug.Print("starting btcm socket...");
+            socket_BTCM = IO.Socket("https://socket.btcmarkets.net", op);
+            socket_BTCM.On(Socket.EVENT_CONNECT, () =>
+            {
+                Debug.Print("connecting to btcm channel...");
+                //socket_BTCM.Emit("join", "Ticker-BTCMarkets-BTC-AUD");
+
+            });
+
+            socket_BTCM.On("newTicker", (data) =>
+            {
+                MessageRX_BTCM(data.ToString());
+            });
+
+            socket_BTCM.On(Socket.EVENT_ERROR, (e) => {
+                Debug.Print("ws onerror - btcm");
+                socket_BTCM.Close();
+                DCEs["BTCM"].NetworkAvailable = false;
+                DCEs["BTCM"].CurrentDCEStatus = "Socket error";
+                DCEs["BTCM"].HasStaticData = false;
+                pollingThread.ReportProgress(12, "BTCM");  // 12 is error
+                WebSocket_Reconnect("BTCM");
+            });
+
+            socket_BTCM.On(Socket.EVENT_CONNECT_ERROR, (e) => {
+                Debug.Print("ws connection error - btcm");
+                socket_BTCM.Close();
+                DCEs["BTCM"].NetworkAvailable = false;
+                DCEs["BTCM"].CurrentDCEStatus = "Socket connection error";
+                DCEs["BTCM"].HasStaticData = false;
+                pollingThread.ReportProgress(12, "BTCM");  // 12 is error
+                WebSocket_Reconnect("BTCM");
+            });
+
+            socket_BTCM.On(Socket.EVENT_CONNECT_TIMEOUT, (e) => {
+                Debug.Print("ws connection timeout - btcm");
+                socket_BTCM.Close();
+                DCEs["BTCM"].NetworkAvailable = false;
+                DCEs["BTCM"].CurrentDCEStatus = "Socket timeout";
+                DCEs["BTCM"].HasStaticData = false;
+                pollingThread.ReportProgress(12, "BTCM");  // 12 is error
+                WebSocket_Reconnect("BTCM");
+            });
+
+            socket_BTCM.On(Socket.EVENT_DISCONNECT, () => {
+                // aww shit
+                socket_BTCM.Open();
+                WebSocket_Reconnect("BTCM");
+            });
+
 
             // BFX
             wSocket_BFX = new WebSocket("wss://api.bitfinex.com/ws");
@@ -42,13 +102,13 @@ namespace IRTicker {
                 DCEs["BFX"].CurrentDCEStatus = "Socket error";
                 DCEs["BFX"].HasStaticData = false;
                 pollingThread.ReportProgress(12, "BFX");  // 12 is error
-                wSocket_BFX.Connect();
+                WebSocket_Reconnect("BFX");
             };
 
             wSocket_BFX.OnClose += (sender, e) => {
                 Debug.Print("BFX stream closed... should be preceeded by some ded thingo " + DateTime.Now.ToString());
                 //WebSocket_Reconnect("BFX");
-            };
+            }; 
             wSocket_BFX.Connect();
 
 
@@ -74,7 +134,7 @@ namespace IRTicker {
                 DCEs["GDAX"].CurrentDCEStatus = "Socket error";
                 DCEs["GDAX"].HasStaticData = false;
                 pollingThread.ReportProgress(12, "GDAX");  // 12 is error
-                wSocket_GDAX.Connect();
+                WebSocket_Reconnect("GDAX");
             };
 
             wSocket_GDAX.OnClose += (sender, e) => {
@@ -85,11 +145,19 @@ namespace IRTicker {
         }
 
         public void WebSocket_Subscribe(string dExchange, string crypto, string fiat) {
+            string channel = "";
             switch (dExchange) {
+                case "BTCM":
+                    Debug.Print("trying to subscribe to BTCM " + crypto);
+
+                    if (crypto == "XBT") crypto = "BTC";
+                    socket_BTCM.Emit("join", "Ticker-BTCMarkets-" + crypto + "-" + fiat);
+
+                    break;
                 case "BFX":
                     if (wSocket_BFX.IsAlive) {
                         if (crypto == "XBT") crypto = "BTC";
-                        string channel = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"" + crypto + fiat + "\"}";
+                         channel = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"" + crypto + fiat + "\"}";
                         wSocket_BFX.Send(channel);
                     }
 
@@ -97,7 +165,7 @@ namespace IRTicker {
                 case "GDAX":
                     if (wSocket_GDAX.IsAlive) {
                         if (crypto == "XBT") crypto = "BTC";
-                        string channel = "{\"type\": \"subscribe\", \"channels\": [{\"name\": \"ticker\", \"product_ids\": [\""+ crypto + "-" + fiat + "\"] } ] }";
+                         channel = "{\"type\": \"subscribe\", \"channels\": [{\"name\": \"ticker\", \"product_ids\": [\""+ crypto + "-" + fiat + "\"] } ] }";
                         wSocket_GDAX.Send(channel);
                     }
                     break;
@@ -106,6 +174,10 @@ namespace IRTicker {
 
         public void WebSocket_Reconnect(string dExchange) {
             switch (dExchange) {
+                case "BTCM":
+                    socket_BTCM.Close();
+                    socket_BTCM.Connect();
+                    break;
                 case "BFX":
                     wSocket_BFX.Close();
                     wSocket_BFX.Connect();
@@ -147,6 +219,48 @@ namespace IRTicker {
         public Dictionary<string, Subscribed_BFX> GetChannelsDictionary_BFX() {
             return new Dictionary<string, Subscribed_BFX>(channel_Dict_BFX);
         }
+
+        /* Sample socket data:
+         * {
+         *      "volume24h": 21357294294,
+         *      "bestBid": 964871000000,
+         *      "bestAsk": 965578000000,
+         *      "lastPrice": 965600000000,
+         *      "timestamp": 1535538694373,
+         *      "snapshotId": 1535538694373000,
+         *      "marketId": 2001,
+         *      "currency": "AUD",
+         *      "instrument": "BTC"
+         * }
+         */
+        private void MessageRX_BTCM(string message) {
+            Debug.Print("BTCM STREAM: " + message);
+
+            Ticker_BTCM tickerStream = new Ticker_BTCM();
+            tickerStream = JsonConvert.DeserializeObject<Ticker_BTCM>(message);
+
+            DCE.MarketSummary mSummary = new DCE.MarketSummary();
+
+            if (tickerStream.instrument.ToUpper().StartsWith("BTC")) tickerStream.instrument = tickerStream.instrument.Replace(tickerStream.instrument.Substring(0, 3), "XBT");
+            mSummary.DayVolume = tickerStream.volume24h / 1000000000;  // 1 trillion
+            mSummary.CurrentHighestBidPrice = tickerStream.bestBid / 100000000; // 100 million
+            mSummary.CurrentLowestOfferPrice = tickerStream.bestAsk / 100000000;  // 100 mil
+            mSummary.LastPrice = tickerStream.lastPrice / 100000000;  // 100 mil
+
+            DateTimeOffset DTO = DateTimeOffset.FromUnixTimeMilliseconds(tickerStream.timestamp);
+            mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
+            Debug.Print("BTCM date: " + mSummary.CreatedTimestampUTC);
+
+            mSummary.SecondaryCurrencyCode = tickerStream.currency;
+            mSummary.PrimaryCurrencyCode = tickerStream.instrument;
+
+            // market summary should be complete now
+            DCEs["BTCM"].CryptoPairsAdd(mSummary.pair, mSummary);
+
+            if (DCEs["BTCM"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(31, mSummary);  // only update the UI for pairs we care about
+
+        }
+
 
         private void MessageRX_GDAX(string message) {
 
@@ -213,6 +327,11 @@ namespace IRTicker {
             }
         }
 
+        /// <summary>
+        /// Do not assume any exchange can be handled here... BTCM cannot for example.  Only call this method with specific known good DCEs
+        /// </summary>
+        /// <param name="dExchange"></param>
+        /// <returns></returns>
         public bool IsSocketAlive(string dExchange) {
 
             switch (dExchange) {
@@ -223,7 +342,7 @@ namespace IRTicker {
                     if (wSocket_GDAX.IsAlive) return true;
                     return false;
             }
-            Debug.Print("Sockets, checking a socket alive, we have reached the end without returning.  we never should.");
+            Debug.Print("Sockets, checking a socket alive, we have reached the end without returning.  we never should.  DCE: " + dExchange);
             return false;
         }
 
@@ -325,6 +444,18 @@ namespace IRTicker {
             else Debug.Print("BFX message from socket starts with something weird?? - " + message);
         }
 
+
+        public class Ticker_BTCM {
+            public double volume24h { get; set; }  // needs to be divided by 1 000 000 000 yes 1 trillion.  ffs
+            public double bestBid { get; set; }
+            public double bestAsk { get; set; }
+            public double lastPrice { get; set; }  // this and the 2 above need to be divided by 100 million to get the price.  
+            public long timestamp { get; set; }  // milliseconds
+            public double snapshotId { get; set; }
+            public double marketId { get; set; }
+            public string currency { get; set; }
+            public string instrument { get; set; }
+        }
 
         public class Subscribed_BFX {
             private string _pair;
