@@ -832,6 +832,12 @@ namespace IRTicker {
 
                 pollingThread.ReportProgress(1);
 
+                if (DCEs["BTCM"].CryptoCombo != "" && !string.IsNullOrEmpty(DCEs["BTCM"].NumCoinsStr) && DCEs["BTCM"].HasStaticData) {  // we have a crypto selected and coins entered, let's get the order book for them
+                    pollingThread.ReportProgress(2);  // OK let's lock the fields down
+                    GetBTCMOrderBook(DCEs["BTCM"].CryptoCombo);
+                    pollingThread.ReportProgress(33);  // display order book
+                }
+
                 if (DCEs["GDAX"].CryptoCombo != "" && !string.IsNullOrEmpty(DCEs["GDAX"].NumCoinsStr) && DCEs["GDAX"].HasStaticData) {  // we have a crypto selected and coins entered, let's get the order book for them
                     pollingThread.ReportProgress(2);  // OK let's lock the fields down
                     GetGDAXOrderBook(DCEs["GDAX"].CryptoCombo);
@@ -1036,6 +1042,13 @@ namespace IRTicker {
                 UpdateLabels_Pair("BTCM", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
                 return;
             }
+            else if (reportType == 33) {  // 33 is order book stuff for btcm
+                UIControls_Dict["BTCM"].AvgPrice.Text = DetermineAveragePrice(DCEs["BTCM"].CryptoCombo, DCEs["BTCM"].CurrentSecondaryCurrency, "BTCM");
+                UIControls_Dict["BTCM"].AvgPrice.ForeColor = Color.Black;
+                UIControls_Dict["BTCM"].AvgPrice_Crypto.SelectedIndex = 0;  // reset this so we don't pull the order book every time.
+                BTCM_CryptoComboBox.Enabled = BTCM_BuySellComboBox.Enabled = BTCM_NumCoinsTextBox.Enabled = true;
+                return;
+            }
             else if (reportType == 34) {  // should only be called once per session - if we don't do this the crypto combo box is empty until we change secondary currencies
                 PopulateCryptoComboBox("BTCM");
                 UpdateLabels("BTCM");  // we have pulled the BTCM data from the REST API, so let's display it.
@@ -1081,7 +1094,7 @@ namespace IRTicker {
             // here we iterate through the exchanges and update their group boxes and labels
 
             foreach (string dExchange in Exchanges) {
-                if (dExchange == "BFX" || dExchange == "GDAX") {  // for sockets we don't update labels or change colours.  that happens on demand.
+                if (dExchange == "BFX" || dExchange == "GDAX" || dExchange == "BTCM") {  // for sockets we don't update labels or change colours.  that happens on demand.
                     if (DCEs[dExchange].HasStaticData && DCEs[dExchange].ChangedSecondaryCurrency) {
                         PopulateCryptoComboBox(dExchange);  // need to re-populate this as it dynamically only populates the comboxbox with cryptos that the current fiat currency has a pair with
                         DCEs[dExchange].ChangedSecondaryCurrency = false;

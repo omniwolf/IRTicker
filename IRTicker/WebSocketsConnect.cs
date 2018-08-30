@@ -77,7 +77,7 @@ namespace IRTicker {
 
             socket_BTCM.On(Socket.EVENT_DISCONNECT, () => {
                 // aww shit
-                socket_BTCM.Open();
+                Debug.Print("BTCM socket disconnected.  reconnecting...");
                 WebSocket_Reconnect("BTCM");
             });
 
@@ -148,7 +148,7 @@ namespace IRTicker {
             string channel = "";
             switch (dExchange) {
                 case "BTCM":
-                    Debug.Print("trying to subscribe to BTCM " + crypto);
+                    //Debug.Print("trying to subscribe to BTCM " + crypto);
 
                     if (crypto == "XBT") crypto = "BTC";
                     socket_BTCM.Emit("join", "Ticker-BTCMarkets-" + crypto + "-" + fiat);
@@ -234,7 +234,7 @@ namespace IRTicker {
          * }
          */
         private void MessageRX_BTCM(string message) {
-            Debug.Print("BTCM STREAM: " + message);
+            //Debug.Print("BTCM STREAM: " + message);
 
             Ticker_BTCM tickerStream = new Ticker_BTCM();
             tickerStream = JsonConvert.DeserializeObject<Ticker_BTCM>(message);
@@ -249,7 +249,6 @@ namespace IRTicker {
 
             DateTimeOffset DTO = DateTimeOffset.FromUnixTimeMilliseconds(tickerStream.timestamp);
             mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
-            Debug.Print("BTCM date: " + mSummary.CreatedTimestampUTC);
 
             mSummary.SecondaryCurrencyCode = tickerStream.currency;
             mSummary.PrimaryCurrencyCode = tickerStream.instrument;
@@ -257,8 +256,8 @@ namespace IRTicker {
             // market summary should be complete now
             DCEs["BTCM"].CryptoPairsAdd(mSummary.pair, mSummary);
 
+            // BTCM only has one secondary currency, so it will always be hit.  keep this here in case they get more i guess.
             if (DCEs["BTCM"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(31, mSummary);  // only update the UI for pairs we care about
-
         }
 
 
