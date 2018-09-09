@@ -134,7 +134,7 @@
             this.BTCM_LTC_Label1 = new System.Windows.Forms.Label();
             this.IR_GroupBox = new System.Windows.Forms.GroupBox();
             this.IR_XRP_Label2 = new System.Windows.Forms.Label();
-            this.IR_XRP_Label3 = new System.Windows.Forms.Label();
+            this.IR_ZRX_Label3 = new System.Windows.Forms.Label();
             this.IR_XRP_Label1 = new System.Windows.Forms.Label();
             this.IR_AvgPrice_Label = new System.Windows.Forms.Label();
             this.IR_CryptoComboBox = new System.Windows.Forms.ComboBox();
@@ -181,23 +181,47 @@
             this.BFX_XRP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.IR_XRP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.OTCHelper = new System.Windows.Forms.Panel();
-            this.CryptoChooser_ComboBox = new System.Windows.Forms.ComboBox();
-            this.CashInput_MaskedTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.MarketBuyCrypto_Label = new System.Windows.Forms.Label();
-            this.StepPrice_Label1 = new System.Windows.Forms.Label();
-            this.StepVolume_Label1 = new System.Windows.Forms.Label();
-            this.StepPrice_Label2 = new System.Windows.Forms.Label();
-            this.StepVolume_Label2 = new System.Windows.Forms.Label();
-            this.StepVolume_Label3 = new System.Windows.Forms.Label();
-            this.StepPrice_Label3 = new System.Windows.Forms.Label();
-            this.StepPrice_Label4 = new System.Windows.Forms.Label();
-            this.StepVolume_Label4 = new System.Windows.Forms.Label();
-            this.StepPrice_Label5 = new System.Windows.Forms.Label();
-            this.StepVolume_Label5 = new System.Windows.Forms.Label();
-            this.StepPrice_Label6 = new System.Windows.Forms.Label();
-            this.StepVolume_Label6 = new System.Windows.Forms.Label();
-            this.StepPrice_Label7 = new System.Windows.Forms.Label();
             this.StepVolume_Label7 = new System.Windows.Forms.Label();
+            this.StepPrice_Label7 = new System.Windows.Forms.Label();
+            this.StepVolume_Label6 = new System.Windows.Forms.Label();
+            this.StepPrice_Label6 = new System.Windows.Forms.Label();
+            this.StepVolume_Label5 = new System.Windows.Forms.Label();
+            this.StepPrice_Label5 = new System.Windows.Forms.Label();
+            this.StepVolume_Label4 = new System.Windows.Forms.Label();
+            this.StepPrice_Label4 = new System.Windows.Forms.Label();
+            this.StepPrice_Label3 = new System.Windows.Forms.Label();
+            this.StepVolume_Label3 = new System.Windows.Forms.Label();
+            this.StepVolume_Label2 = new System.Windows.Forms.Label();
+            this.StepPrice_Label2 = new System.Windows.Forms.Label();
+            this.StepVolume_Label1 = new System.Windows.Forms.Label();
+            this.StepPrice_Label1 = new System.Windows.Forms.Label();
+            this.MarketBuyCrypto_Label = new System.Windows.Forms.Label();
+            this.CashInput_MaskedTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.CryptoChooser_ComboBox = new System.Windows.Forms.ComboBox();
+            this.IR_ZRX_Label2 = new System.Windows.Forms.Label();
+            this.IR_ZRX_Label1 = new System.Windows.Forms.Label();
+            this.IR_OMG_Label2 = new System.Windows.Forms.Label();
+            this.IR_OMG_Label3 = new System.Windows.Forms.Label();
+            this.IR_XRP_Label3 = new System.Windows.Forms.Label();
+            this.IR_OMG_Label1 = new System.Windows.Forms.Label();
+            this.CSPT_XRP_Label2 = new System.Windows.Forms.Label();
+            this.CSPT_XRP_Label3 = new System.Windows.Forms.Label();
+            this.CSPT_XRP_Label1 = new System.Windows.Forms.Label();
+            this.BFX_ZRX_Label2 = new System.Windows.Forms.Label();
+            this.BFX_ZRX_Label1 = new System.Windows.Forms.Label();
+            this.BFX_OMG_Label2 = new System.Windows.Forms.Label();
+            this.BFX_OMG_Label3 = new System.Windows.Forms.Label();
+            this.BFX_ZRX_Label3 = new System.Windows.Forms.Label();
+            this.BFX_OMG_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_OMG_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_OMG_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_OMG_Label1 = new System.Windows.Forms.Label();
+            this.IR_OMG_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.IR_ZRX_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BTCM_OMG_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BFX_OMG_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BFX_ZRX_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.CSPT_XRP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -281,7 +305,7 @@
             this.Settings.Controls.Add(this.folderDialogButton);
             this.Settings.Location = new System.Drawing.Point(0, 0);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(495, 590);
+            this.Settings.Size = new System.Drawing.Size(495, 613);
             this.Settings.TabIndex = 4;
             // 
             // ExportSummarised_Checkbox
@@ -330,7 +354,7 @@
             // Help_Button
             // 
             this.Help_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Help_Button.Location = new System.Drawing.Point(410, 532);
+            this.Help_Button.Location = new System.Drawing.Point(410, 552);
             this.Help_Button.Name = "Help_Button";
             this.Help_Button.Size = new System.Drawing.Size(75, 23);
             this.Help_Button.TabIndex = 14;
@@ -358,8 +382,8 @@
             this.EnableGDAXLevel3.Name = "EnableGDAXLevel3";
             this.EnableGDAXLevel3.Size = new System.Drawing.Size(241, 39);
             this.EnableGDAXLevel3.TabIndex = 12;
-            this.EnableGDAXLevel3.Text = "Pull full GDAX order book?\r\n(Not recommended if you\'re doing lots of average \r\nco" +
-    "in price checks - you will be rate limited)";
+            this.EnableGDAXLevel3.Text = "Pull full Coinbase Pro order book?\r\n(Not recommended if you\'re doing lots of aver" +
+    "age \r\ncoin price checks - you will be rate limited)";
             // 
             // VersionLabel
             // 
@@ -391,7 +415,7 @@
             // SettingsOKButton
             // 
             this.SettingsOKButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsOKButton.Location = new System.Drawing.Point(410, 561);
+            this.SettingsOKButton.Location = new System.Drawing.Point(410, 581);
             this.SettingsOKButton.Name = "SettingsOKButton";
             this.SettingsOKButton.Size = new System.Drawing.Size(75, 23);
             this.SettingsOKButton.TabIndex = 4;
@@ -413,7 +437,7 @@
             this.LoadingPanel.Controls.Add(this.GIFLabel);
             this.LoadingPanel.Location = new System.Drawing.Point(0, 0);
             this.LoadingPanel.Name = "LoadingPanel";
-            this.LoadingPanel.Size = new System.Drawing.Size(495, 590);
+            this.LoadingPanel.Size = new System.Drawing.Size(495, 613);
             this.LoadingPanel.TabIndex = 10;
             // 
             // GIFLabel
@@ -421,7 +445,7 @@
             this.GIFLabel.Image = global::IRTicker.Properties.Resources.gravity;
             this.GIFLabel.Location = new System.Drawing.Point(0, 0);
             this.GIFLabel.Name = "GIFLabel";
-            this.GIFLabel.Size = new System.Drawing.Size(495, 590);
+            this.GIFLabel.Size = new System.Drawing.Size(495, 613);
             this.GIFLabel.TabIndex = 0;
             this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
             this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -429,22 +453,25 @@
             // Main
             // 
             this.Main.BackColor = System.Drawing.Color.White;
+            this.Main.Controls.Add(this.BTCM_GroupBox);
             this.Main.Controls.Add(this.CSPT_GroupBox);
             this.Main.Controls.Add(this.BFX_GroupBox);
             this.Main.Controls.Add(this.fiat_GroupBox);
-            this.Main.Controls.Add(this.GDAX_GroupBox);
             this.Main.Controls.Add(this.SettingsButton);
-            this.Main.Controls.Add(this.BTCM_GroupBox);
             this.Main.Controls.Add(this.IR_GroupBox);
+            this.Main.Controls.Add(this.GDAX_GroupBox);
             this.Main.Location = new System.Drawing.Point(0, 0);
             this.Main.Name = "Main";
-            this.Main.Size = new System.Drawing.Size(495, 590);
+            this.Main.Size = new System.Drawing.Size(495, 613);
             this.Main.TabIndex = 5;
             // 
             // CSPT_GroupBox
             // 
             this.CSPT_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.coinspot_faded;
             this.CSPT_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_XRP_Label2);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_XRP_Label3);
+            this.CSPT_GroupBox.Controls.Add(this.CSPT_XRP_Label1);
             this.CSPT_GroupBox.Controls.Add(this.CSPT_AvgPrice_Label);
             this.CSPT_GroupBox.Controls.Add(this.CSPT_CryptoComboBox);
             this.CSPT_GroupBox.Controls.Add(this.CSPT_NumCoinsTextBox);
@@ -463,7 +490,7 @@
             this.CSPT_GroupBox.Controls.Add(this.CSPT_XBT_Label1);
             this.CSPT_GroupBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.CSPT_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.CSPT_GroupBox.Location = new System.Drawing.Point(19, 395);
+            this.CSPT_GroupBox.Location = new System.Drawing.Point(19, 411);
             this.CSPT_GroupBox.Name = "CSPT_GroupBox";
             this.CSPT_GroupBox.Size = new System.Drawing.Size(217, 182);
             this.CSPT_GroupBox.TabIndex = 16;
@@ -665,8 +692,13 @@
             // 
             this.BFX_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.bfx_faded;
             this.BFX_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.BFX_GroupBox.Controls.Add(this.BFX_ZRX_Label2);
+            this.BFX_GroupBox.Controls.Add(this.BFX_ZRX_Label1);
+            this.BFX_GroupBox.Controls.Add(this.BFX_OMG_Label2);
+            this.BFX_GroupBox.Controls.Add(this.BFX_OMG_Label3);
+            this.BFX_GroupBox.Controls.Add(this.BFX_ZRX_Label3);
+            this.BFX_GroupBox.Controls.Add(this.BFX_OMG_Label1);
             this.BFX_GroupBox.Controls.Add(this.BFX_XRP_Label2);
-            this.BFX_GroupBox.Controls.Add(this.BFX_AvgPrice_Label);
             this.BFX_GroupBox.Controls.Add(this.BFX_XRP_Label3);
             this.BFX_GroupBox.Controls.Add(this.BFX_XRP_Label1);
             this.BFX_GroupBox.Controls.Add(this.BFX_CryptoComboBox);
@@ -684,11 +716,12 @@
             this.BFX_GroupBox.Controls.Add(this.BFX_BCH_Label1);
             this.BFX_GroupBox.Controls.Add(this.BFX_ETH_Label1);
             this.BFX_GroupBox.Controls.Add(this.BFX_XBT_Label1);
+            this.BFX_GroupBox.Controls.Add(this.BFX_AvgPrice_Label);
             this.BFX_GroupBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.BFX_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.BFX_GroupBox.Location = new System.Drawing.Point(260, 204);
+            this.BFX_GroupBox.Location = new System.Drawing.Point(260, 218);
             this.BFX_GroupBox.Name = "BFX_GroupBox";
-            this.BFX_GroupBox.Size = new System.Drawing.Size(217, 182);
+            this.BFX_GroupBox.Size = new System.Drawing.Size(217, 220);
             this.BFX_GroupBox.TabIndex = 9;
             this.BFX_GroupBox.TabStop = false;
             this.BFX_GroupBox.Text = "BitFinex";
@@ -710,7 +743,7 @@
             this.BFX_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
             this.BFX_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BFX_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_AvgPrice_Label.Location = new System.Drawing.Point(6, 121);
+            this.BFX_AvgPrice_Label.Location = new System.Drawing.Point(6, 161);
             this.BFX_AvgPrice_Label.Name = "BFX_AvgPrice_Label";
             this.BFX_AvgPrice_Label.Size = new System.Drawing.Size(205, 16);
             this.BFX_AvgPrice_Label.TabIndex = 19;
@@ -720,7 +753,7 @@
             this.BFX_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.BFX_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BFX_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_XRP_Label3.Location = new System.Drawing.Point(106, 103);
+            this.BFX_XRP_Label3.Location = new System.Drawing.Point(106, 123);
             this.BFX_XRP_Label3.Name = "BFX_XRP_Label3";
             this.BFX_XRP_Label3.Size = new System.Drawing.Size(102, 13);
             this.BFX_XRP_Label3.TabIndex = 20;
@@ -744,7 +777,7 @@
             // 
             this.BFX_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BFX_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.BFX_CryptoComboBox.Location = new System.Drawing.Point(150, 150);
+            this.BFX_CryptoComboBox.Location = new System.Drawing.Point(150, 190);
             this.BFX_CryptoComboBox.Name = "BFX_CryptoComboBox";
             this.BFX_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
             this.BFX_CryptoComboBox.TabIndex = 20;
@@ -754,7 +787,7 @@
             // BFX_NumCoinsTextBox
             // 
             this.BFX_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_NumCoinsTextBox.Location = new System.Drawing.Point(74, 150);
+            this.BFX_NumCoinsTextBox.Location = new System.Drawing.Point(74, 190);
             this.BFX_NumCoinsTextBox.Mask = "00000000";
             this.BFX_NumCoinsTextBox.Name = "BFX_NumCoinsTextBox";
             this.BFX_NumCoinsTextBox.PromptChar = ' ';
@@ -784,7 +817,7 @@
             this.BFX_BuySellComboBox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.BFX_BuySellComboBox.Location = new System.Drawing.Point(10, 150);
+            this.BFX_BuySellComboBox.Location = new System.Drawing.Point(10, 190);
             this.BFX_BuySellComboBox.Name = "BFX_BuySellComboBox";
             this.BFX_BuySellComboBox.Size = new System.Drawing.Size(58, 21);
             this.BFX_BuySellComboBox.TabIndex = 18;
@@ -935,9 +968,9 @@
             this.fiat_GroupBox.Controls.Add(this.NZD_Label1);
             this.fiat_GroupBox.Controls.Add(this.AUD_Label1);
             this.fiat_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.fiat_GroupBox.Location = new System.Drawing.Point(260, 395);
+            this.fiat_GroupBox.Location = new System.Drawing.Point(260, 442);
             this.fiat_GroupBox.Name = "fiat_GroupBox";
-            this.fiat_GroupBox.Size = new System.Drawing.Size(217, 137);
+            this.fiat_GroupBox.Size = new System.Drawing.Size(217, 131);
             this.fiat_GroupBox.TabIndex = 9;
             this.fiat_GroupBox.TabStop = false;
             this.fiat_GroupBox.Text = "Fiat rates";
@@ -946,7 +979,7 @@
             // fiatRefresh_checkBox
             // 
             this.fiatRefresh_checkBox.AutoSize = true;
-            this.fiatRefresh_checkBox.Location = new System.Drawing.Point(10, 114);
+            this.fiatRefresh_checkBox.Location = new System.Drawing.Point(10, 107);
             this.fiatRefresh_checkBox.Name = "fiatRefresh_checkBox";
             this.fiatRefresh_checkBox.Size = new System.Drawing.Size(143, 17);
             this.fiatRefresh_checkBox.TabIndex = 9;
@@ -1046,9 +1079,9 @@
             this.GDAX_GroupBox.Controls.Add(this.GDAX_XBT_Label1);
             this.GDAX_GroupBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.GDAX_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.GDAX_GroupBox.Location = new System.Drawing.Point(19, 204);
+            this.GDAX_GroupBox.Location = new System.Drawing.Point(19, 239);
             this.GDAX_GroupBox.Name = "GDAX_GroupBox";
-            this.GDAX_GroupBox.Size = new System.Drawing.Size(217, 182);
+            this.GDAX_GroupBox.Size = new System.Drawing.Size(217, 162);
             this.GDAX_GroupBox.TabIndex = 8;
             this.GDAX_GroupBox.TabStop = false;
             this.GDAX_GroupBox.Text = "Coinbase Pro";
@@ -1059,7 +1092,7 @@
             this.GDAX_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
             this.GDAX_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_AvgPrice_Label.Location = new System.Drawing.Point(6, 121);
+            this.GDAX_AvgPrice_Label.Location = new System.Drawing.Point(6, 101);
             this.GDAX_AvgPrice_Label.Name = "GDAX_AvgPrice_Label";
             this.GDAX_AvgPrice_Label.Size = new System.Drawing.Size(205, 16);
             this.GDAX_AvgPrice_Label.TabIndex = 18;
@@ -1068,7 +1101,7 @@
             // 
             this.GDAX_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.GDAX_CryptoComboBox.Location = new System.Drawing.Point(149, 151);
+            this.GDAX_CryptoComboBox.Location = new System.Drawing.Point(149, 131);
             this.GDAX_CryptoComboBox.Name = "GDAX_CryptoComboBox";
             this.GDAX_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
             this.GDAX_CryptoComboBox.TabIndex = 17;
@@ -1078,7 +1111,7 @@
             // GDAX_NumCoinsTextBox
             // 
             this.GDAX_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_NumCoinsTextBox.Location = new System.Drawing.Point(73, 151);
+            this.GDAX_NumCoinsTextBox.Location = new System.Drawing.Point(73, 131);
             this.GDAX_NumCoinsTextBox.Mask = "00000000";
             this.GDAX_NumCoinsTextBox.Name = "GDAX_NumCoinsTextBox";
             this.GDAX_NumCoinsTextBox.PromptChar = ' ';
@@ -1107,7 +1140,7 @@
             this.GDAX_BuySellComboBox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.GDAX_BuySellComboBox.Location = new System.Drawing.Point(9, 151);
+            this.GDAX_BuySellComboBox.Location = new System.Drawing.Point(9, 131);
             this.GDAX_BuySellComboBox.Name = "GDAX_BuySellComboBox";
             this.GDAX_BuySellComboBox.Size = new System.Drawing.Size(58, 21);
             this.GDAX_BuySellComboBox.TabIndex = 15;
@@ -1238,7 +1271,7 @@
             // SettingsButton
             // 
             this.SettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsButton.Location = new System.Drawing.Point(410, 561);
+            this.SettingsButton.Location = new System.Drawing.Point(410, 582);
             this.SettingsButton.Name = "SettingsButton";
             this.SettingsButton.Size = new System.Drawing.Size(75, 23);
             this.SettingsButton.TabIndex = 2;
@@ -1248,6 +1281,9 @@
             // 
             // BTCM_GroupBox
             // 
+            this.BTCM_GroupBox.Controls.Add(this.BTCM_OMG_Label2);
+            this.BTCM_GroupBox.Controls.Add(this.BTCM_OMG_Label3);
+            this.BTCM_GroupBox.Controls.Add(this.BTCM_OMG_Label1);
             this.BTCM_GroupBox.Controls.Add(this.BTCM_AvgPrice_Label);
             this.BTCM_GroupBox.Controls.Add(this.BTCM_CryptoComboBox);
             this.BTCM_GroupBox.Controls.Add(this.BTCM_NumCoinsTextBox);
@@ -1271,7 +1307,7 @@
             this.BTCM_GroupBox.ForeColor = System.Drawing.Color.Gray;
             this.BTCM_GroupBox.Location = new System.Drawing.Point(260, 13);
             this.BTCM_GroupBox.Name = "BTCM_GroupBox";
-            this.BTCM_GroupBox.Size = new System.Drawing.Size(217, 182);
+            this.BTCM_GroupBox.Size = new System.Drawing.Size(217, 200);
             this.BTCM_GroupBox.TabIndex = 1;
             this.BTCM_GroupBox.TabStop = false;
             this.BTCM_GroupBox.Text = "BTC Markets";
@@ -1281,7 +1317,7 @@
             this.BTCM_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
             this.BTCM_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_AvgPrice_Label.Location = new System.Drawing.Point(6, 121);
+            this.BTCM_AvgPrice_Label.Location = new System.Drawing.Point(6, 143);
             this.BTCM_AvgPrice_Label.Name = "BTCM_AvgPrice_Label";
             this.BTCM_AvgPrice_Label.Size = new System.Drawing.Size(205, 16);
             this.BTCM_AvgPrice_Label.TabIndex = 16;
@@ -1290,7 +1326,7 @@
             // 
             this.BTCM_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.BTCM_CryptoComboBox.Location = new System.Drawing.Point(150, 151);
+            this.BTCM_CryptoComboBox.Location = new System.Drawing.Point(150, 171);
             this.BTCM_CryptoComboBox.Name = "BTCM_CryptoComboBox";
             this.BTCM_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
             this.BTCM_CryptoComboBox.TabIndex = 17;
@@ -1300,7 +1336,7 @@
             // BTCM_NumCoinsTextBox
             // 
             this.BTCM_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_NumCoinsTextBox.Location = new System.Drawing.Point(74, 151);
+            this.BTCM_NumCoinsTextBox.Location = new System.Drawing.Point(74, 171);
             this.BTCM_NumCoinsTextBox.Mask = "00000000";
             this.BTCM_NumCoinsTextBox.Name = "BTCM_NumCoinsTextBox";
             this.BTCM_NumCoinsTextBox.PromptChar = ' ';
@@ -1330,7 +1366,7 @@
             this.BTCM_BuySellComboBox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.BTCM_BuySellComboBox.Location = new System.Drawing.Point(10, 151);
+            this.BTCM_BuySellComboBox.Location = new System.Drawing.Point(10, 171);
             this.BTCM_BuySellComboBox.Name = "BTCM_BuySellComboBox";
             this.BTCM_BuySellComboBox.Size = new System.Drawing.Size(58, 21);
             this.BTCM_BuySellComboBox.TabIndex = 15;
@@ -1509,8 +1545,14 @@
             // 
             this.IR_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.IR_Eagel_Transparent___small_faded;
             this.IR_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.IR_GroupBox.Controls.Add(this.IR_XRP_Label2);
+            this.IR_GroupBox.Controls.Add(this.IR_ZRX_Label2);
+            this.IR_GroupBox.Controls.Add(this.IR_ZRX_Label1);
+            this.IR_GroupBox.Controls.Add(this.IR_OMG_Label2);
+            this.IR_GroupBox.Controls.Add(this.IR_OMG_Label3);
             this.IR_GroupBox.Controls.Add(this.IR_XRP_Label3);
+            this.IR_GroupBox.Controls.Add(this.IR_OMG_Label1);
+            this.IR_GroupBox.Controls.Add(this.IR_XRP_Label2);
+            this.IR_GroupBox.Controls.Add(this.IR_ZRX_Label3);
             this.IR_GroupBox.Controls.Add(this.IR_XRP_Label1);
             this.IR_GroupBox.Controls.Add(this.IR_AvgPrice_Label);
             this.IR_GroupBox.Controls.Add(this.IR_CryptoComboBox);
@@ -1532,7 +1574,7 @@
             this.IR_GroupBox.ForeColor = System.Drawing.Color.Gray;
             this.IR_GroupBox.Location = new System.Drawing.Point(19, 13);
             this.IR_GroupBox.Name = "IR_GroupBox";
-            this.IR_GroupBox.Size = new System.Drawing.Size(217, 182);
+            this.IR_GroupBox.Size = new System.Drawing.Size(217, 220);
             this.IR_GroupBox.TabIndex = 0;
             this.IR_GroupBox.TabStop = false;
             this.IR_GroupBox.Text = "Independent Reserve";
@@ -1549,18 +1591,18 @@
             this.IR_XRP_Label2.TabIndex = 17;
             this.IR_XRP_Label2.Tag = "IR";
             // 
-            // IR_XRP_Label3
+            // IR_ZRX_Label3
             // 
-            this.IR_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.IR_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IR_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_XRP_Label3.Location = new System.Drawing.Point(105, 103);
-            this.IR_XRP_Label3.Name = "IR_XRP_Label3";
-            this.IR_XRP_Label3.Size = new System.Drawing.Size(102, 13);
-            this.IR_XRP_Label3.TabIndex = 18;
-            this.IR_XRP_Label3.Tag = "";
-            this.IR_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.IR_XRP_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.IR_XRP_Label3_MouseDoubleClick);
+            this.IR_ZRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_ZRX_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.IR_ZRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_ZRX_Label3.Location = new System.Drawing.Point(105, 143);
+            this.IR_ZRX_Label3.Name = "IR_ZRX_Label3";
+            this.IR_ZRX_Label3.Size = new System.Drawing.Size(102, 13);
+            this.IR_ZRX_Label3.TabIndex = 18;
+            this.IR_ZRX_Label3.Tag = "";
+            this.IR_ZRX_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.IR_ZRX_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.IR_XRP_Label3_MouseDoubleClick);
             // 
             // IR_XRP_Label1
             // 
@@ -1579,7 +1621,7 @@
             this.IR_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
             this.IR_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_AvgPrice_Label.Location = new System.Drawing.Point(6, 121);
+            this.IR_AvgPrice_Label.Location = new System.Drawing.Point(6, 161);
             this.IR_AvgPrice_Label.Name = "IR_AvgPrice_Label";
             this.IR_AvgPrice_Label.Size = new System.Drawing.Size(205, 16);
             this.IR_AvgPrice_Label.TabIndex = 15;
@@ -1588,7 +1630,7 @@
             // 
             this.IR_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.IR_CryptoComboBox.Location = new System.Drawing.Point(149, 151);
+            this.IR_CryptoComboBox.Location = new System.Drawing.Point(149, 191);
             this.IR_CryptoComboBox.Name = "IR_CryptoComboBox";
             this.IR_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
             this.IR_CryptoComboBox.TabIndex = 14;
@@ -1598,7 +1640,7 @@
             // IR_NumCoinsTextBox
             // 
             this.IR_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_NumCoinsTextBox.Location = new System.Drawing.Point(73, 151);
+            this.IR_NumCoinsTextBox.Location = new System.Drawing.Point(73, 191);
             this.IR_NumCoinsTextBox.Mask = "00000000";
             this.IR_NumCoinsTextBox.Name = "IR_NumCoinsTextBox";
             this.IR_NumCoinsTextBox.PromptChar = ' ';
@@ -1617,7 +1659,7 @@
             this.IR_BuySellComboBox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.IR_BuySellComboBox.Location = new System.Drawing.Point(9, 151);
+            this.IR_BuySellComboBox.Location = new System.Drawing.Point(9, 191);
             this.IR_BuySellComboBox.Name = "IR_BuySellComboBox";
             this.IR_BuySellComboBox.Size = new System.Drawing.Size(58, 21);
             this.IR_BuySellComboBox.TabIndex = 12;
@@ -1931,137 +1973,14 @@
             this.OTCHelper.Size = new System.Drawing.Size(495, 590);
             this.OTCHelper.TabIndex = 1;
             // 
-            // CryptoChooser_ComboBox
+            // StepVolume_Label7
             // 
-            this.CryptoChooser_ComboBox.FormattingEnabled = true;
-            this.CryptoChooser_ComboBox.Location = new System.Drawing.Point(41, 36);
-            this.CryptoChooser_ComboBox.Name = "CryptoChooser_ComboBox";
-            this.CryptoChooser_ComboBox.Size = new System.Drawing.Size(121, 21);
-            this.CryptoChooser_ComboBox.TabIndex = 0;
-            // 
-            // CashInput_MaskedTextBox
-            // 
-            this.CashInput_MaskedTextBox.Location = new System.Drawing.Point(200, 37);
-            this.CashInput_MaskedTextBox.Name = "CashInput_MaskedTextBox";
-            this.CashInput_MaskedTextBox.Size = new System.Drawing.Size(100, 20);
-            this.CashInput_MaskedTextBox.TabIndex = 1;
-            // 
-            // MarketBuyCrypto_Label
-            // 
-            this.MarketBuyCrypto_Label.AutoSize = true;
-            this.MarketBuyCrypto_Label.Location = new System.Drawing.Point(325, 43);
-            this.MarketBuyCrypto_Label.Name = "MarketBuyCrypto_Label";
-            this.MarketBuyCrypto_Label.Size = new System.Drawing.Size(35, 13);
-            this.MarketBuyCrypto_Label.TabIndex = 2;
-            this.MarketBuyCrypto_Label.Text = "label1";
-            // 
-            // StepPrice_Label1
-            // 
-            this.StepPrice_Label1.AutoSize = true;
-            this.StepPrice_Label1.Location = new System.Drawing.Point(51, 116);
-            this.StepPrice_Label1.Name = "StepPrice_Label1";
-            this.StepPrice_Label1.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label1.TabIndex = 3;
-            this.StepPrice_Label1.Text = "label1";
-            // 
-            // StepVolume_Label1
-            // 
-            this.StepVolume_Label1.AutoSize = true;
-            this.StepVolume_Label1.Location = new System.Drawing.Point(136, 116);
-            this.StepVolume_Label1.Name = "StepVolume_Label1";
-            this.StepVolume_Label1.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label1.TabIndex = 4;
-            this.StepVolume_Label1.Text = "label1";
-            // 
-            // StepPrice_Label2
-            // 
-            this.StepPrice_Label2.AutoSize = true;
-            this.StepPrice_Label2.Location = new System.Drawing.Point(51, 150);
-            this.StepPrice_Label2.Name = "StepPrice_Label2";
-            this.StepPrice_Label2.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label2.TabIndex = 5;
-            this.StepPrice_Label2.Text = "label1";
-            // 
-            // StepVolume_Label2
-            // 
-            this.StepVolume_Label2.AutoSize = true;
-            this.StepVolume_Label2.Location = new System.Drawing.Point(136, 150);
-            this.StepVolume_Label2.Name = "StepVolume_Label2";
-            this.StepVolume_Label2.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label2.TabIndex = 6;
-            this.StepVolume_Label2.Text = "label1";
-            // 
-            // StepVolume_Label3
-            // 
-            this.StepVolume_Label3.AutoSize = true;
-            this.StepVolume_Label3.Location = new System.Drawing.Point(136, 182);
-            this.StepVolume_Label3.Name = "StepVolume_Label3";
-            this.StepVolume_Label3.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label3.TabIndex = 7;
-            this.StepVolume_Label3.Text = "label1";
-            // 
-            // StepPrice_Label3
-            // 
-            this.StepPrice_Label3.AutoSize = true;
-            this.StepPrice_Label3.Location = new System.Drawing.Point(51, 182);
-            this.StepPrice_Label3.Name = "StepPrice_Label3";
-            this.StepPrice_Label3.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label3.TabIndex = 8;
-            this.StepPrice_Label3.Text = "label1";
-            // 
-            // StepPrice_Label4
-            // 
-            this.StepPrice_Label4.AutoSize = true;
-            this.StepPrice_Label4.Location = new System.Drawing.Point(51, 214);
-            this.StepPrice_Label4.Name = "StepPrice_Label4";
-            this.StepPrice_Label4.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label4.TabIndex = 9;
-            this.StepPrice_Label4.Text = "label1";
-            // 
-            // StepVolume_Label4
-            // 
-            this.StepVolume_Label4.AutoSize = true;
-            this.StepVolume_Label4.Location = new System.Drawing.Point(136, 214);
-            this.StepVolume_Label4.Name = "StepVolume_Label4";
-            this.StepVolume_Label4.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label4.TabIndex = 10;
-            this.StepVolume_Label4.Text = "label1";
-            // 
-            // StepPrice_Label5
-            // 
-            this.StepPrice_Label5.AutoSize = true;
-            this.StepPrice_Label5.Location = new System.Drawing.Point(51, 240);
-            this.StepPrice_Label5.Name = "StepPrice_Label5";
-            this.StepPrice_Label5.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label5.TabIndex = 11;
-            this.StepPrice_Label5.Text = "label1";
-            // 
-            // StepVolume_Label5
-            // 
-            this.StepVolume_Label5.AutoSize = true;
-            this.StepVolume_Label5.Location = new System.Drawing.Point(136, 240);
-            this.StepVolume_Label5.Name = "StepVolume_Label5";
-            this.StepVolume_Label5.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label5.TabIndex = 12;
-            this.StepVolume_Label5.Text = "label1";
-            // 
-            // StepPrice_Label6
-            // 
-            this.StepPrice_Label6.AutoSize = true;
-            this.StepPrice_Label6.Location = new System.Drawing.Point(51, 274);
-            this.StepPrice_Label6.Name = "StepPrice_Label6";
-            this.StepPrice_Label6.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label6.TabIndex = 13;
-            this.StepPrice_Label6.Text = "label1";
-            // 
-            // StepVolume_Label6
-            // 
-            this.StepVolume_Label6.AutoSize = true;
-            this.StepVolume_Label6.Location = new System.Drawing.Point(136, 274);
-            this.StepVolume_Label6.Name = "StepVolume_Label6";
-            this.StepVolume_Label6.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label6.TabIndex = 14;
-            this.StepVolume_Label6.Text = "label1";
+            this.StepVolume_Label7.AutoSize = true;
+            this.StepVolume_Label7.Location = new System.Drawing.Point(136, 312);
+            this.StepVolume_Label7.Name = "StepVolume_Label7";
+            this.StepVolume_Label7.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label7.TabIndex = 16;
+            this.StepVolume_Label7.Text = "label1";
             // 
             // StepPrice_Label7
             // 
@@ -2072,20 +1991,383 @@
             this.StepPrice_Label7.TabIndex = 15;
             this.StepPrice_Label7.Text = "label1";
             // 
-            // StepVolume_Label7
+            // StepVolume_Label6
             // 
-            this.StepVolume_Label7.AutoSize = true;
-            this.StepVolume_Label7.Location = new System.Drawing.Point(136, 312);
-            this.StepVolume_Label7.Name = "StepVolume_Label7";
-            this.StepVolume_Label7.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label7.TabIndex = 16;
-            this.StepVolume_Label7.Text = "label1";
+            this.StepVolume_Label6.AutoSize = true;
+            this.StepVolume_Label6.Location = new System.Drawing.Point(136, 274);
+            this.StepVolume_Label6.Name = "StepVolume_Label6";
+            this.StepVolume_Label6.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label6.TabIndex = 14;
+            this.StepVolume_Label6.Text = "label1";
+            // 
+            // StepPrice_Label6
+            // 
+            this.StepPrice_Label6.AutoSize = true;
+            this.StepPrice_Label6.Location = new System.Drawing.Point(51, 274);
+            this.StepPrice_Label6.Name = "StepPrice_Label6";
+            this.StepPrice_Label6.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label6.TabIndex = 13;
+            this.StepPrice_Label6.Text = "label1";
+            // 
+            // StepVolume_Label5
+            // 
+            this.StepVolume_Label5.AutoSize = true;
+            this.StepVolume_Label5.Location = new System.Drawing.Point(136, 240);
+            this.StepVolume_Label5.Name = "StepVolume_Label5";
+            this.StepVolume_Label5.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label5.TabIndex = 12;
+            this.StepVolume_Label5.Text = "label1";
+            // 
+            // StepPrice_Label5
+            // 
+            this.StepPrice_Label5.AutoSize = true;
+            this.StepPrice_Label5.Location = new System.Drawing.Point(51, 240);
+            this.StepPrice_Label5.Name = "StepPrice_Label5";
+            this.StepPrice_Label5.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label5.TabIndex = 11;
+            this.StepPrice_Label5.Text = "label1";
+            // 
+            // StepVolume_Label4
+            // 
+            this.StepVolume_Label4.AutoSize = true;
+            this.StepVolume_Label4.Location = new System.Drawing.Point(136, 214);
+            this.StepVolume_Label4.Name = "StepVolume_Label4";
+            this.StepVolume_Label4.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label4.TabIndex = 10;
+            this.StepVolume_Label4.Text = "label1";
+            // 
+            // StepPrice_Label4
+            // 
+            this.StepPrice_Label4.AutoSize = true;
+            this.StepPrice_Label4.Location = new System.Drawing.Point(51, 214);
+            this.StepPrice_Label4.Name = "StepPrice_Label4";
+            this.StepPrice_Label4.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label4.TabIndex = 9;
+            this.StepPrice_Label4.Text = "label1";
+            // 
+            // StepPrice_Label3
+            // 
+            this.StepPrice_Label3.AutoSize = true;
+            this.StepPrice_Label3.Location = new System.Drawing.Point(51, 182);
+            this.StepPrice_Label3.Name = "StepPrice_Label3";
+            this.StepPrice_Label3.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label3.TabIndex = 8;
+            this.StepPrice_Label3.Text = "label1";
+            // 
+            // StepVolume_Label3
+            // 
+            this.StepVolume_Label3.AutoSize = true;
+            this.StepVolume_Label3.Location = new System.Drawing.Point(136, 182);
+            this.StepVolume_Label3.Name = "StepVolume_Label3";
+            this.StepVolume_Label3.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label3.TabIndex = 7;
+            this.StepVolume_Label3.Text = "label1";
+            // 
+            // StepVolume_Label2
+            // 
+            this.StepVolume_Label2.AutoSize = true;
+            this.StepVolume_Label2.Location = new System.Drawing.Point(136, 150);
+            this.StepVolume_Label2.Name = "StepVolume_Label2";
+            this.StepVolume_Label2.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label2.TabIndex = 6;
+            this.StepVolume_Label2.Text = "label1";
+            // 
+            // StepPrice_Label2
+            // 
+            this.StepPrice_Label2.AutoSize = true;
+            this.StepPrice_Label2.Location = new System.Drawing.Point(51, 150);
+            this.StepPrice_Label2.Name = "StepPrice_Label2";
+            this.StepPrice_Label2.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label2.TabIndex = 5;
+            this.StepPrice_Label2.Text = "label1";
+            // 
+            // StepVolume_Label1
+            // 
+            this.StepVolume_Label1.AutoSize = true;
+            this.StepVolume_Label1.Location = new System.Drawing.Point(136, 116);
+            this.StepVolume_Label1.Name = "StepVolume_Label1";
+            this.StepVolume_Label1.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label1.TabIndex = 4;
+            this.StepVolume_Label1.Text = "label1";
+            // 
+            // StepPrice_Label1
+            // 
+            this.StepPrice_Label1.AutoSize = true;
+            this.StepPrice_Label1.Location = new System.Drawing.Point(51, 116);
+            this.StepPrice_Label1.Name = "StepPrice_Label1";
+            this.StepPrice_Label1.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label1.TabIndex = 3;
+            this.StepPrice_Label1.Text = "label1";
+            // 
+            // MarketBuyCrypto_Label
+            // 
+            this.MarketBuyCrypto_Label.AutoSize = true;
+            this.MarketBuyCrypto_Label.Location = new System.Drawing.Point(325, 43);
+            this.MarketBuyCrypto_Label.Name = "MarketBuyCrypto_Label";
+            this.MarketBuyCrypto_Label.Size = new System.Drawing.Size(35, 13);
+            this.MarketBuyCrypto_Label.TabIndex = 2;
+            this.MarketBuyCrypto_Label.Text = "label1";
+            // 
+            // CashInput_MaskedTextBox
+            // 
+            this.CashInput_MaskedTextBox.Location = new System.Drawing.Point(200, 37);
+            this.CashInput_MaskedTextBox.Name = "CashInput_MaskedTextBox";
+            this.CashInput_MaskedTextBox.Size = new System.Drawing.Size(100, 20);
+            this.CashInput_MaskedTextBox.TabIndex = 1;
+            // 
+            // CryptoChooser_ComboBox
+            // 
+            this.CryptoChooser_ComboBox.FormattingEnabled = true;
+            this.CryptoChooser_ComboBox.Location = new System.Drawing.Point(41, 36);
+            this.CryptoChooser_ComboBox.Name = "CryptoChooser_ComboBox";
+            this.CryptoChooser_ComboBox.Size = new System.Drawing.Size(121, 21);
+            this.CryptoChooser_ComboBox.TabIndex = 0;
+            // 
+            // IR_ZRX_Label2
+            // 
+            this.IR_ZRX_Label2.AutoSize = true;
+            this.IR_ZRX_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.IR_ZRX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_ZRX_Label2.Location = new System.Drawing.Point(56, 143);
+            this.IR_ZRX_Label2.Name = "IR_ZRX_Label2";
+            this.IR_ZRX_Label2.Size = new System.Drawing.Size(0, 13);
+            this.IR_ZRX_Label2.TabIndex = 24;
+            this.IR_ZRX_Label2.Tag = "IR";
+            // 
+            // IR_ZRX_Label1
+            // 
+            this.IR_ZRX_Label1.AutoSize = true;
+            this.IR_ZRX_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.IR_ZRX_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_ZRX_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_ZRX_Label1.Location = new System.Drawing.Point(6, 143);
+            this.IR_ZRX_Label1.Name = "IR_ZRX_Label1";
+            this.IR_ZRX_Label1.Size = new System.Drawing.Size(36, 13);
+            this.IR_ZRX_Label1.TabIndex = 23;
+            this.IR_ZRX_Label1.Text = "ZRX:";
+            // 
+            // IR_OMG_Label2
+            // 
+            this.IR_OMG_Label2.AutoSize = true;
+            this.IR_OMG_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.IR_OMG_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_OMG_Label2.Location = new System.Drawing.Point(56, 123);
+            this.IR_OMG_Label2.Name = "IR_OMG_Label2";
+            this.IR_OMG_Label2.Size = new System.Drawing.Size(0, 13);
+            this.IR_OMG_Label2.TabIndex = 20;
+            this.IR_OMG_Label2.Tag = "IR";
+            // 
+            // IR_OMG_Label3
+            // 
+            this.IR_OMG_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_OMG_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.IR_OMG_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_OMG_Label3.Location = new System.Drawing.Point(105, 123);
+            this.IR_OMG_Label3.Name = "IR_OMG_Label3";
+            this.IR_OMG_Label3.Size = new System.Drawing.Size(102, 13);
+            this.IR_OMG_Label3.TabIndex = 22;
+            this.IR_OMG_Label3.Tag = "";
+            this.IR_OMG_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // IR_XRP_Label3
+            // 
+            this.IR_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.IR_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_XRP_Label3.Location = new System.Drawing.Point(105, 103);
+            this.IR_XRP_Label3.Name = "IR_XRP_Label3";
+            this.IR_XRP_Label3.Size = new System.Drawing.Size(102, 13);
+            this.IR_XRP_Label3.TabIndex = 21;
+            this.IR_XRP_Label3.Tag = "";
+            this.IR_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // IR_OMG_Label1
+            // 
+            this.IR_OMG_Label1.AutoSize = true;
+            this.IR_OMG_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.IR_OMG_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_OMG_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_OMG_Label1.Location = new System.Drawing.Point(6, 123);
+            this.IR_OMG_Label1.Name = "IR_OMG_Label1";
+            this.IR_OMG_Label1.Size = new System.Drawing.Size(39, 13);
+            this.IR_OMG_Label1.TabIndex = 19;
+            this.IR_OMG_Label1.Text = "OMG:";
+            // 
+            // CSPT_XRP_Label2
+            // 
+            this.CSPT_XRP_Label2.AutoSize = true;
+            this.CSPT_XRP_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.CSPT_XRP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_XRP_Label2.Location = new System.Drawing.Point(56, 103);
+            this.CSPT_XRP_Label2.Name = "CSPT_XRP_Label2";
+            this.CSPT_XRP_Label2.Size = new System.Drawing.Size(0, 13);
+            this.CSPT_XRP_Label2.TabIndex = 17;
+            this.CSPT_XRP_Label2.Tag = "CSPT";
+            // 
+            // CSPT_XRP_Label3
+            // 
+            this.CSPT_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.CSPT_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.CSPT_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_XRP_Label3.Location = new System.Drawing.Point(105, 103);
+            this.CSPT_XRP_Label3.Name = "CSPT_XRP_Label3";
+            this.CSPT_XRP_Label3.Size = new System.Drawing.Size(102, 13);
+            this.CSPT_XRP_Label3.TabIndex = 18;
+            this.CSPT_XRP_Label3.Tag = "";
+            this.CSPT_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // CSPT_XRP_Label1
+            // 
+            this.CSPT_XRP_Label1.AutoSize = true;
+            this.CSPT_XRP_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.CSPT_XRP_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.CSPT_XRP_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CSPT_XRP_Label1.Location = new System.Drawing.Point(6, 103);
+            this.CSPT_XRP_Label1.Name = "CSPT_XRP_Label1";
+            this.CSPT_XRP_Label1.Size = new System.Drawing.Size(36, 13);
+            this.CSPT_XRP_Label1.TabIndex = 16;
+            this.CSPT_XRP_Label1.Text = "XRP:";
+            // 
+            // BFX_ZRX_Label2
+            // 
+            this.BFX_ZRX_Label2.AutoSize = true;
+            this.BFX_ZRX_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_ZRX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_ZRX_Label2.Location = new System.Drawing.Point(56, 143);
+            this.BFX_ZRX_Label2.Name = "BFX_ZRX_Label2";
+            this.BFX_ZRX_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_ZRX_Label2.TabIndex = 25;
+            this.BFX_ZRX_Label2.Tag = "BFX";
+            // 
+            // BFX_ZRX_Label1
+            // 
+            this.BFX_ZRX_Label1.AutoSize = true;
+            this.BFX_ZRX_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_ZRX_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_ZRX_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_ZRX_Label1.Location = new System.Drawing.Point(6, 143);
+            this.BFX_ZRX_Label1.Name = "BFX_ZRX_Label1";
+            this.BFX_ZRX_Label1.Size = new System.Drawing.Size(36, 13);
+            this.BFX_ZRX_Label1.TabIndex = 23;
+            this.BFX_ZRX_Label1.Text = "ZRX:";
+            // 
+            // BFX_OMG_Label2
+            // 
+            this.BFX_OMG_Label2.AutoSize = true;
+            this.BFX_OMG_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_OMG_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_OMG_Label2.Location = new System.Drawing.Point(56, 123);
+            this.BFX_OMG_Label2.Name = "BFX_OMG_Label2";
+            this.BFX_OMG_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_OMG_Label2.TabIndex = 22;
+            this.BFX_OMG_Label2.Tag = "BFX";
+            // 
+            // BFX_OMG_Label3
+            // 
+            this.BFX_OMG_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_OMG_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_OMG_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_OMG_Label3.Location = new System.Drawing.Point(106, 103);
+            this.BFX_OMG_Label3.Name = "BFX_OMG_Label3";
+            this.BFX_OMG_Label3.Size = new System.Drawing.Size(102, 13);
+            this.BFX_OMG_Label3.TabIndex = 24;
+            this.BFX_OMG_Label3.Tag = "";
+            this.BFX_OMG_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_ZRX_Label3
+            // 
+            this.BFX_ZRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_ZRX_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_ZRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_ZRX_Label3.Location = new System.Drawing.Point(106, 142);
+            this.BFX_ZRX_Label3.Name = "BFX_ZRX_Label3";
+            this.BFX_ZRX_Label3.Size = new System.Drawing.Size(102, 13);
+            this.BFX_ZRX_Label3.TabIndex = 26;
+            this.BFX_ZRX_Label3.Tag = "";
+            this.BFX_ZRX_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_OMG_Label1
+            // 
+            this.BFX_OMG_Label1.AutoSize = true;
+            this.BFX_OMG_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_OMG_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_OMG_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_OMG_Label1.Location = new System.Drawing.Point(6, 123);
+            this.BFX_OMG_Label1.Name = "BFX_OMG_Label1";
+            this.BFX_OMG_Label1.Size = new System.Drawing.Size(39, 13);
+            this.BFX_OMG_Label1.TabIndex = 21;
+            this.BFX_OMG_Label1.Text = "OMG:";
+            // 
+            // BTCM_OMG_Label2
+            // 
+            this.BTCM_OMG_Label2.AutoSize = true;
+            this.BTCM_OMG_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_OMG_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_OMG_Label2.Location = new System.Drawing.Point(56, 123);
+            this.BTCM_OMG_Label2.Name = "BTCM_OMG_Label2";
+            this.BTCM_OMG_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BTCM_OMG_Label2.TabIndex = 19;
+            this.BTCM_OMG_Label2.Tag = "BTCM";
+            // 
+            // BTCM_OMG_Label3
+            // 
+            this.BTCM_OMG_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BTCM_OMG_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_OMG_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_OMG_Label3.Location = new System.Drawing.Point(106, 123);
+            this.BTCM_OMG_Label3.Name = "BTCM_OMG_Label3";
+            this.BTCM_OMG_Label3.Size = new System.Drawing.Size(102, 13);
+            this.BTCM_OMG_Label3.TabIndex = 20;
+            this.BTCM_OMG_Label3.Tag = "";
+            this.BTCM_OMG_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BTCM_OMG_Label1
+            // 
+            this.BTCM_OMG_Label1.AutoSize = true;
+            this.BTCM_OMG_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_OMG_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_OMG_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_OMG_Label1.Location = new System.Drawing.Point(6, 123);
+            this.BTCM_OMG_Label1.Name = "BTCM_OMG_Label1";
+            this.BTCM_OMG_Label1.Size = new System.Drawing.Size(39, 13);
+            this.BTCM_OMG_Label1.TabIndex = 18;
+            this.BTCM_OMG_Label1.Text = "OMG:";
+            // 
+            // IR_OMG_PriceTT
+            // 
+            this.IR_OMG_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.IR_OMG_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // IR_ZRX_PriceTT
+            // 
+            this.IR_ZRX_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.IR_ZRX_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // BTCM_OMG_PriceTT
+            // 
+            this.BTCM_OMG_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BTCM_OMG_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // BFX_OMG_PriceTT
+            // 
+            this.BFX_OMG_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BFX_OMG_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // BFX_ZRX_PriceTT
+            // 
+            this.BFX_ZRX_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BFX_ZRX_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // CSPT_XRP_PriceTT
+            // 
+            this.CSPT_XRP_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.CSPT_XRP_PriceTT.ToolTipTitle = "Spread details";
             // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(494, 590);
+            this.ClientSize = new System.Drawing.Size(494, 611);
             this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Main);
             this.Controls.Add(this.Settings);
@@ -2094,8 +2376,8 @@
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(510, 629);
-            this.MinimumSize = new System.Drawing.Size(510, 629);
+            this.MaximumSize = new System.Drawing.Size(510, 650);
+            this.MinimumSize = new System.Drawing.Size(510, 650);
             this.Name = "IRTicker";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "IR Ticker";
@@ -2276,7 +2558,7 @@
         private System.Windows.Forms.CheckBox ExportFull_Checkbox;
         private System.Windows.Forms.Label ExportFull_Label;
         private System.Windows.Forms.Label IR_XRP_Label2;
-        private System.Windows.Forms.Label IR_XRP_Label3;
+        private System.Windows.Forms.Label IR_ZRX_Label3;
         private System.Windows.Forms.Label IR_XRP_Label1;
         private System.Windows.Forms.ToolTip IR_XRP_PriceTT;
         private System.Windows.Forms.Panel OTCHelper;
@@ -2297,6 +2579,30 @@
         private System.Windows.Forms.Label MarketBuyCrypto_Label;
         private System.Windows.Forms.MaskedTextBox CashInput_MaskedTextBox;
         private System.Windows.Forms.ComboBox CryptoChooser_ComboBox;
+        private System.Windows.Forms.Label BTCM_OMG_Label2;
+        private System.Windows.Forms.Label BTCM_OMG_Label3;
+        private System.Windows.Forms.Label BTCM_OMG_Label1;
+        private System.Windows.Forms.Label CSPT_XRP_Label2;
+        private System.Windows.Forms.Label CSPT_XRP_Label3;
+        private System.Windows.Forms.Label CSPT_XRP_Label1;
+        private System.Windows.Forms.Label BFX_ZRX_Label2;
+        private System.Windows.Forms.Label BFX_ZRX_Label1;
+        private System.Windows.Forms.Label BFX_OMG_Label2;
+        private System.Windows.Forms.Label BFX_OMG_Label3;
+        private System.Windows.Forms.Label BFX_ZRX_Label3;
+        private System.Windows.Forms.Label BFX_OMG_Label1;
+        private System.Windows.Forms.Label IR_ZRX_Label2;
+        private System.Windows.Forms.Label IR_ZRX_Label1;
+        private System.Windows.Forms.Label IR_OMG_Label2;
+        private System.Windows.Forms.Label IR_OMG_Label3;
+        private System.Windows.Forms.Label IR_XRP_Label3;
+        private System.Windows.Forms.Label IR_OMG_Label1;
+        private System.Windows.Forms.ToolTip IR_OMG_PriceTT;
+        private System.Windows.Forms.ToolTip IR_ZRX_PriceTT;
+        private System.Windows.Forms.ToolTip BTCM_OMG_PriceTT;
+        private System.Windows.Forms.ToolTip BFX_OMG_PriceTT;
+        private System.Windows.Forms.ToolTip BFX_ZRX_PriceTT;
+        private System.Windows.Forms.ToolTip CSPT_XRP_PriceTT;
     }
 }
 

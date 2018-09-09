@@ -364,6 +364,7 @@ namespace IRTicker {
             public Crypto_CSPT ltc { get; set; }
             public Crypto_CSPT doge { get; set; }
             public Crypto_CSPT eth { get; set; }
+            public Crypto_CSPT xrp { get; set; }
 
             // create a list of the coins so we can iterate through them in the main code.
             public List<Crypto_CSPT> cryptoList = new List<Crypto_CSPT>();
@@ -372,10 +373,12 @@ namespace IRTicker {
                 cryptoList.Add(ltc);
                 cryptoList.Add(doge);
                 cryptoList.Add(eth);
+                cryptoList.Add(xrp);
                 btc.ticker = "XBT";
                 ltc.ticker = "LTC";
                 doge.ticker = "DOGE";
                 eth.ticker = "ETH";
+                xrp.ticker = "XRP";
             }
         }
 

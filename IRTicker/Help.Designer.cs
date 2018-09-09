@@ -54,13 +54,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 471);
             this.Controls.Add(this.HelpBody_Label);
             this.Controls.Add(this.HelpTitle_Label);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(816, 489);
-            this.MinimumSize = new System.Drawing.Size(816, 489);
+            this.MaximumSize = new System.Drawing.Size(816, 510);
+            this.MinimumSize = new System.Drawing.Size(816, 510);
             this.Name = "Help";
             this.Text = "Help";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Help_FormClosing);

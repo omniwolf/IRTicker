@@ -32,7 +32,7 @@ namespace IRTicker {
         private Dictionary<string, UIControls> UIControls_Dict;
         private List<string> Exchanges;
         private string cryptoDir = "";
-        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "DOGE" };  // we don't poll the shit coins as often to help with rate limiting
+        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "DOGE", "OMG", "ZRX" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
 
@@ -74,17 +74,17 @@ namespace IRTicker {
             };
 
             // BTCM, BFX, and CSPT have no APIs that let you download the currency pairs, so just set them manually
-            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\"";
+            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\"";
             DCEs["BTCM"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["BTCM"].HasStaticData = false;  // want to set this to false so we run the subscribe code once.
 
-            DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\"";
+            DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\"";
             DCEs["BFX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
             DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\"";
             DCEs["GDAX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
-            DCEs["CSPT"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"DOGE\",\"LTC\"";
+            DCEs["CSPT"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"DOGE\",\"LTC\",\"XRP\"";
             DCEs["CSPT"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["CSPT"].HasStaticData = true;  // we don't poll for static data, so just say we have it.
 
@@ -147,6 +147,14 @@ namespace IRTicker {
             UIControls_Dict["IR"].XRP_Price = IR_XRP_Label2;
             UIControls_Dict["IR"].XRP_Spread = IR_XRP_Label3;
             UIControls_Dict["IR"].XRP_PriceTT = IR_XRP_PriceTT;
+            UIControls_Dict["IR"].OMG_Label = IR_OMG_Label1;
+            UIControls_Dict["IR"].OMG_Price = IR_OMG_Label2;
+            UIControls_Dict["IR"].OMG_Spread = IR_OMG_Label3;
+            UIControls_Dict["IR"].OMG_PriceTT = IR_OMG_PriceTT;
+            UIControls_Dict["IR"].ZRX_Label = IR_ZRX_Label1;
+            UIControls_Dict["IR"].ZRX_Price = IR_ZRX_Label2;
+            UIControls_Dict["IR"].ZRX_Spread = IR_ZRX_Label3;
+            UIControls_Dict["IR"].ZRX_PriceTT = IR_ZRX_PriceTT;
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
             UIControls_Dict["IR"].AvgPrice_Crypto = IR_CryptoComboBox;
@@ -176,6 +184,10 @@ namespace IRTicker {
             UIControls_Dict["BTCM"].XRP_Price = BTCM_XRP_Label2;
             UIControls_Dict["BTCM"].XRP_Spread = BTCM_XRP_Label3;
             UIControls_Dict["BTCM"].XRP_PriceTT = BTCM_XRP_PriceTT;
+            UIControls_Dict["BTCM"].OMG_Label = BTCM_OMG_Label1;
+            UIControls_Dict["BTCM"].OMG_Price = BTCM_OMG_Label2;
+            UIControls_Dict["BTCM"].OMG_Spread = BTCM_OMG_Label3;
+            UIControls_Dict["BTCM"].OMG_PriceTT = BTCM_OMG_PriceTT;
             UIControls_Dict["BTCM"].AvgPrice_BuySell = BTCM_BuySellComboBox;
             UIControls_Dict["BTCM"].AvgPrice_NumCoins = BTCM_NumCoinsTextBox;
             UIControls_Dict["BTCM"].AvgPrice_Crypto = BTCM_CryptoComboBox;
@@ -230,6 +242,14 @@ namespace IRTicker {
             UIControls_Dict["BFX"].XRP_Price = BFX_XRP_Label2;
             UIControls_Dict["BFX"].XRP_Spread = BFX_XRP_Label3;
             UIControls_Dict["BFX"].XRP_PriceTT = BFX_XRP_PriceTT;
+            UIControls_Dict["BFX"].OMG_Label = BFX_OMG_Label1;
+            UIControls_Dict["BFX"].OMG_Price = BFX_OMG_Label2;
+            UIControls_Dict["BFX"].OMG_Spread = BFX_OMG_Label3;
+            UIControls_Dict["BFX"].OMG_PriceTT = BFX_OMG_PriceTT;
+            UIControls_Dict["BFX"].ZRX_Label = BFX_ZRX_Label1;
+            UIControls_Dict["BFX"].ZRX_Price = BFX_ZRX_Label2;
+            UIControls_Dict["BFX"].ZRX_Spread = BFX_ZRX_Label3;
+            UIControls_Dict["BFX"].ZRX_PriceTT = BFX_ZRX_PriceTT;
             UIControls_Dict["BFX"].AvgPrice_BuySell = BFX_BuySellComboBox;
             UIControls_Dict["BFX"].AvgPrice_NumCoins = BFX_NumCoinsTextBox;
             UIControls_Dict["BFX"].AvgPrice_Crypto = BFX_CryptoComboBox;
@@ -255,6 +275,10 @@ namespace IRTicker {
             UIControls_Dict["CSPT"].LTC_Price = CSPT_LTC_Label2;
             UIControls_Dict["CSPT"].LTC_Spread = CSPT_LTC_Label3;
             UIControls_Dict["CSPT"].LTC_PriceTT = CSPT_LTC_PriceTT;
+            UIControls_Dict["CSPT"].XRP_Label = CSPT_XRP_Label1;
+            UIControls_Dict["CSPT"].XRP_Price = CSPT_XRP_Label2;
+            UIControls_Dict["CSPT"].XRP_Spread = CSPT_XRP_Label3;
+            UIControls_Dict["CSPT"].XRP_PriceTT = CSPT_XRP_PriceTT;
             UIControls_Dict["CSPT"].AvgPrice_BuySell = CSPT_BuySellComboBox;
             UIControls_Dict["CSPT"].AvgPrice_NumCoins = CSPT_NumCoinsTextBox;
             UIControls_Dict["CSPT"].AvgPrice_Crypto = CSPT_CryptoComboBox;
