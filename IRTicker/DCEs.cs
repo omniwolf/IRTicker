@@ -82,7 +82,7 @@ namespace IRTicker {
                 priceHistory.TryAdd(pair, new List<Tuple<DateTime, double>>());
             }
             lock (priceHistory[pair]) {  // we're locking on the List, not the ConcurrentDictionary
-                priceHistory[pair].Add(new Tuple<DateTime, double>(DateTime.Now, mSummary.LastPrice));  // add the time and price to the kvp's value list
+                priceHistory[pair].Add(new Tuple<DateTime, double>(DateTime.Now, ((mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice) / 2)));  // add the time and price to the kvp's value list
             }
             
             lock (spreadHistory) {

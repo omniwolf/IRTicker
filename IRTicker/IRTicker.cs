@@ -915,7 +915,8 @@ namespace IRTicker {
                     string formatStringSpread = "### ##0.00";
                     if (pairObj.Value.LastPrice < 10) formatString = "0.00###";  // some coins are so shit, they're worth less than a cent.  Need different formatting for this.  ORRR the spread is so amazingly small we need more decimal places
                     if (pairObj.Value.spread < 10) formatStringSpread = "0.00###";
-                    UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].Text = pairObj.Value.LastPrice.ToString(formatString).Trim();
+                    double midPoint = (pairObj.Value.CurrentHighestBidPrice + pairObj.Value.CurrentLowestOfferPrice) / 2;
+                    UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].Text = midPoint.ToString(formatString).Trim();
                     UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(pairObj.Key));
 
                     // if there's a colour, make the font bold.  otherwise not bold.
@@ -961,7 +962,8 @@ namespace IRTicker {
                 string formatStringSpread = "### ##0.00";
                 if (mSummary.LastPrice < 10) formatString = "0.00###";  // some coins are so shit, they're worth less than a cent.  Need different formatting for this.  ORRR the spread is so amazingly small we need more decimal places
                 if (mSummary.spread < 10) formatStringSpread = "0.00###";
-                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"].Text = mSummary.LastPrice.ToString(formatString).Trim();
+                double midPoint = (mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice ) / 2;
+                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"].Text = midPoint.ToString(formatString).Trim();
                 UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"].ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(crypto + "-" + fiat));
 
                 // if there's a colour, make the font bold.  otherwise not bold.
