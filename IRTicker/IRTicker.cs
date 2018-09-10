@@ -1724,5 +1724,41 @@ namespace IRTicker {
         private void BFX_NumCoinsTextBox_Enter(object sender, EventArgs e) {
             PositionCursorInMaskedTextBox((MaskedTextBox)sender);
         }
+
+        private void IR_ZRX_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["IR"], "ZRX-" + DCEs["IR"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("IR-ZRX-" + DCEs["IR"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void IR_OMG_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["IR"], "OMG-" + DCEs["IR"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("IR-OMG-" + DCEs["IR"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void BTCM_OMG_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["BTCM"], "OMG-" + DCEs["BTCM"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("BTCM-OMG-" + DCEs["BTCM"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void BFX_OMG_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["BFX"], "OMG-" + DCEs["BFX"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("BFX-OMG-" + DCEs["BFX"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void BFX_ZRX_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["BFX"], "ZRX-" + DCEs["BFX"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("BFX-ZRX-" + DCEs["BFX"].CurrentSecondaryCurrency, SGForm);
+        }
+
+        private void CSPT_XRP_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["CSPT"], "XRP-" + DCEs["CSPT"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("CSPT-XRP-" + DCEs["CSPT"].CurrentSecondaryCurrency, SGForm);
+        }
     }
 }
