@@ -106,7 +106,7 @@ namespace IRTicker {
             ExportFull_Checkbox.Checked = Properties.Settings.Default.ExportFull;
             ExportSummarised_Checkbox.Checked = Properties.Settings.Default.ExportSummarised;
 
-            VersionLabel.Text = "IR Ticker version " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            VersionLabel.Text = "IR Ticker version " + FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
 
             pollingThread.RunWorkerAsync();
         }

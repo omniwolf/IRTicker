@@ -25,61 +25,7 @@ namespace IRTicker {
 
             // BTCM
 
-            IO.Options op = new IO.Options();
-            op.Secure = true;
-            op.Upgrade = false;
-            op.Transports = System.Collections.Immutable.ImmutableList.Create("websocket");
-
-
-            Debug.Print("starting btcm socket...");
-            socket_BTCM = IO.Socket("https://socket.btcmarkets.net", op);
-            socket_BTCM.On(Socket.EVENT_CONNECT, () =>
-            {
-                Debug.Print("connecting to btcm channel...");
-                //socket_BTCM.Emit("join", "Ticker-BTCMarkets-BTC-AUD");
-
-            });
-
-            socket_BTCM.On("newTicker", (data) =>
-            {
-                MessageRX_BTCM(data.ToString());
-            });
-
-            socket_BTCM.On(Socket.EVENT_ERROR, (e) => {
-                Debug.Print("ws onerror - btcm");
-                socket_BTCM.Close();
-                DCEs["BTCM"].NetworkAvailable = false;
-                DCEs["BTCM"].CurrentDCEStatus = "Socket error";
-                DCEs["BTCM"].HasStaticData = false;
-                pollingThread.ReportProgress(12, "BTCM");  // 12 is error
-                WebSocket_Reconnect("BTCM");
-            });
-
-            socket_BTCM.On(Socket.EVENT_CONNECT_ERROR, (e) => {
-                Debug.Print("ws connection error - btcm");
-                socket_BTCM.Close();
-                DCEs["BTCM"].NetworkAvailable = false;
-                DCEs["BTCM"].CurrentDCEStatus = "Socket connection error";
-                DCEs["BTCM"].HasStaticData = false;
-                pollingThread.ReportProgress(12, "BTCM");  // 12 is error
-                WebSocket_Reconnect("BTCM");
-            });
-
-            socket_BTCM.On(Socket.EVENT_CONNECT_TIMEOUT, (e) => {
-                Debug.Print("ws connection timeout - btcm");
-                socket_BTCM.Close();
-                DCEs["BTCM"].NetworkAvailable = false;
-                DCEs["BTCM"].CurrentDCEStatus = "Socket timeout";
-                DCEs["BTCM"].HasStaticData = false;
-                pollingThread.ReportProgress(12, "BTCM");  // 12 is error
-                WebSocket_Reconnect("BTCM");
-            });
-
-            socket_BTCM.On(Socket.EVENT_DISCONNECT, () => {
-                // aww shit
-                Debug.Print("BTCM socket disconnected.  reconnecting...");
-                WebSocket_Reconnect("BTCM");
-            });
+            BTCM_Connect();
 
 
             // BFX
@@ -172,11 +118,72 @@ namespace IRTicker {
             }
         }
 
+        public void BTCM_Connect() {
+            // BTCM
+
+            IO.Options op = new IO.Options();
+            op.Secure = true;
+            op.Upgrade = false;
+            op.Transports = System.Collections.Immutable.ImmutableList.Create("websocket");
+
+
+            Debug.Print("starting btcm socket...");
+            socket_BTCM = IO.Socket("https://socket.btcmarkets.net", op);
+            socket_BTCM.On(Socket.EVENT_CONNECT, () => {
+                Debug.Print("connecting to btcm channel...");
+                //socket_BTCM.Emit("join", "Ticker-BTCMarkets-BTC-AUD");
+
+            });
+
+            socket_BTCM.On("newTicker", (data) => {
+                MessageRX_BTCM(data.ToString());
+            });
+
+            socket_BTCM.On(Socket.EVENT_ERROR, (e) => {
+                Debug.Print("ws onerror - btcm");
+                socket_BTCM.Close();
+                DCEs["BTCM"].NetworkAvailable = false;
+                DCEs["BTCM"].CurrentDCEStatus = "Socket error";
+                DCEs["BTCM"].HasStaticData = false;
+                pollingThread.ReportProgress(12, "BTCM");  // 12 is error
+                WebSocket_Reconnect("BTCM");
+            });
+
+            socket_BTCM.On(Socket.EVENT_CONNECT_ERROR, (e) => {
+                Debug.Print("ws connection error - btcm");
+                socket_BTCM.Close();
+                DCEs["BTCM"].NetworkAvailable = false;
+                DCEs["BTCM"].CurrentDCEStatus = "Socket connection error";
+                DCEs["BTCM"].HasStaticData = false;
+                pollingThread.ReportProgress(12, "BTCM");  // 12 is error
+                WebSocket_Reconnect("BTCM");
+            });
+
+            socket_BTCM.On(Socket.EVENT_CONNECT_TIMEOUT, (e) => {
+                Debug.Print("ws connection timeout - btcm");
+                socket_BTCM.Close();
+                DCEs["BTCM"].NetworkAvailable = false;
+                DCEs["BTCM"].CurrentDCEStatus = "Socket timeout";
+                DCEs["BTCM"].HasStaticData = false;
+                pollingThread.ReportProgress(12, "BTCM");  // 12 is error
+                WebSocket_Reconnect("BTCM");
+            });
+
+            socket_BTCM.On(Socket.EVENT_DISCONNECT, () => {
+                // aww shit
+                Debug.Print("BTCM socket disconnected.  reconnecting...");
+                WebSocket_Reconnect("BTCM");
+            });
+        }
+
         public void WebSocket_Reconnect(string dExchange) {
             switch (dExchange) {
                 case "BTCM":
                     socket_BTCM.Close();
-                    socket_BTCM.Connect();
+
+                    // i think with sockets we need to do a full reconnect?
+                    BTCM_Connect();
+
                     break;
                 case "BFX":
                     wSocket_BFX.Close();
