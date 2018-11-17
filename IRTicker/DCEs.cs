@@ -15,6 +15,7 @@ namespace IRTicker {
         private ConcurrentDictionary<string, List<Tuple<DateTime, double>>> priceHistory = new ConcurrentDictionary<string, List<Tuple<DateTime, double>>>();
         private ConcurrentDictionary<string, List<DataPoint>> spreadHistory = new ConcurrentDictionary<string, List<DataPoint>>();
         private ConcurrentDictionary<string, List<DataPoint>> spreadHistoryCSV = new ConcurrentDictionary<string, List<DataPoint>>();
+        private SortedList<double, OrderBook_IR> fullOrderBook_IR = new SortedList<double, OrderBook_IR>();
 
         private Dictionary<string, MarketSummary> cryptoPairs;
         public Dictionary<string, OrderBook> orderBooks;  // string format is eg "XBT-AUD" - caps with a dash
@@ -213,6 +214,24 @@ namespace IRTicker {
 
 
         /////////////////////////////////////////////////////////
+        //////////////      IR Order Book    ////////////////////
+        /////////////////////////////////////////////////////////
+
+        public void IR_NewOrder(OrderBook_IR ob) {
+
+            if (fullOrderBook_IR.Values.Any(ss => ss.OrderGuid == ob.OrderGuid)) {
+                Debug.Print("IR orderbook: strange, the new order guid already exists in our orderbook list? - " + ob.OrderGuid);
+                Debug.Print("IR orderbook deleting duplicate order...");
+                //fullOrderBook_IR.Remove(fullOrderBook_IR.Values.Remove(sss => sss;)
+            }
+
+            fullOrderBook_IR.Add(ob.Price, ob);
+        }
+
+
+
+
+        /////////////////////////////////////////////////////////
         //////////////      JSON STUFF     //////////////////////
         /////////////////////////////////////////////////////////
 
@@ -225,7 +244,7 @@ namespace IRTicker {
             public double DayHighestPrice { get; set; }
             public double DayLowestPrice { get; set; }
             public double DayAvgPrice { get; set; }
-            public double DayVolume { get; set; }
+            public double DayVolumeXbt { get; set; }
             public double DayVolumeInSecondaryCurrency { get; set; }
             public double CurrentLowestOfferPrice { get; set; }
             public double CurrentHighestBidPrice { get; set; }
@@ -257,6 +276,17 @@ namespace IRTicker {
             public double spread {
                 get {
                     return CurrentLowestOfferPrice - CurrentHighestBidPrice;
+                }
+            }
+
+            // whoops, originally called this property "DayVolume" when it should have been "DayVolumeXbt".  I coded everywhere to "DayVolume", so I've just
+            // added in this redirect so they both work :/
+            public double DayVolume {
+                get {
+                    return DayVolumeXbt;
+                }
+                set {
+                    DayVolumeXbt = value;
                 }
             }
 
@@ -436,6 +466,14 @@ namespace IRTicker {
         public class OrderBook_BFX {
             public List<BidAsk_BFX> bids { get; set; }
             public List<BidAsk_BFX> asks { get; set; }
+        }
+
+        public class OrderBook_IR {
+            public string OrderGuid { get; set; }
+            public string Pair { get; set; }
+            public double Price { get; set; }
+            public string OrderType { get; set; }
+            public double Volume { get; set; }
         }
     }
 }

@@ -121,12 +121,6 @@
   <data name="IR_Eagel_Transparent___small" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\IR Eagel Transparent - small.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="IR_Eagel_Transparent___small_faded" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\IR Eagel Transparent - small-faded.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="coinspot_faded" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\coinspot-faded.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="bfx_faded" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\bfx-faded.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -135,5 +129,14 @@
   </data>
   <data name="gwave" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gwave.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="coinspot_faded2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\coinspot-faded2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IR_Eagel_Transparent___small_faded2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IR Eagel Transparent - small-faded2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="rainbow_space_bricks_jpg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\rainbow-space-bricks.jpg.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

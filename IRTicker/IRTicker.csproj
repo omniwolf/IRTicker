@@ -24,8 +24,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>3</ApplicationRevision>
-    <ApplicationVersion>3.4.0.%2a</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>3.5.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -196,11 +196,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ir_eagel_transparent___small_Oe3_icon.ico" />
+    <None Include="Resources\rainbow-space-bricks.jpg.gif" />
+    <None Include="Resources\coinspot-faded2.png" />
+    <None Include="Resources\IR Eagel Transparent - small-faded2.png" />
     <None Include="Resources\gravity.gif" />
     <None Include="Resources\gwave.gif" />
     <None Include="Resources\bfx-faded.png" />
-    <None Include="Resources\coinspot-faded.png" />
-    <None Include="Resources\IR Eagel Transparent - small-faded.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

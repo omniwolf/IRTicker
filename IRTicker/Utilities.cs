@@ -70,7 +70,7 @@ namespace IRTicker {
         public static void ColourDCETags(System.Windows.Forms.Control.ControlCollection controls, string dExchange) {
             foreach (System.Windows.Forms.Control ctrl in controls) {
                 if (ctrl.Tag != null)
-                    if ((string)ctrl.Tag == dExchange) {
+                    if (ctrl.Tag.ToString().Contains(dExchange)) {
                         ctrl.ForeColor = Color.Gray;
                     }
 

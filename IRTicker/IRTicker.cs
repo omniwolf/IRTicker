@@ -81,7 +81,7 @@ namespace IRTicker {
             DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\"";
             DCEs["BFX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
-            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\"";
+            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\"";
             DCEs["GDAX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
             DCEs["CSPT"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"DOGE\",\"LTC\",\"XRP\"";
@@ -213,6 +213,10 @@ namespace IRTicker {
             UIControls_Dict["GDAX"].LTC_Price = GDAX_LTC_Label2;
             UIControls_Dict["GDAX"].LTC_Spread = GDAX_LTC_Label3;
             UIControls_Dict["GDAX"].LTC_PriceTT = GDAX_LTC_PriceTT;
+            UIControls_Dict["GDAX"].ZRX_Label = GDAX_ZRX_Label1;
+            UIControls_Dict["GDAX"].ZRX_Price = GDAX_ZRX_Label2;
+            UIControls_Dict["GDAX"].ZRX_Spread = GDAX_ZRX_Label3;
+            UIControls_Dict["GDAX"].ZRX_PriceTT = GDAX_ZRX_PriceTT;
             UIControls_Dict["GDAX"].AvgPrice_BuySell = GDAX_BuySellComboBox;
             UIControls_Dict["GDAX"].AvgPrice_NumCoins = GDAX_NumCoinsTextBox;
             UIControls_Dict["GDAX"].AvgPrice_Crypto = GDAX_CryptoComboBox;
@@ -542,6 +546,9 @@ namespace IRTicker {
                     if (prod.pair.StartsWith("btc")) {  // first make btc into xbt
                         prod.pair = prod.pair.Replace("btc", "XBT");
                     }
+                    if (prod.pair.StartsWith("bab")) {
+                        prod.pair = prod.pair.Replace("bab", "BCH");
+                    }
 
                     // next we need to do a manual conversion.
                     DCE.products_GDAX prod_gdax = new DCE.products_GDAX();
@@ -581,7 +588,7 @@ namespace IRTicker {
         }
 
         private void GetBTCMOrderBook(string crypto) {
-            Tuple<bool, string> orderBookTpl = Get("https://api.btcmarkets.net/market/" + (crypto == "XBT" ? "BTC" : crypto) + "/" + DCEs["BTCM"].CurrentSecondaryCurrency + "/orderbook");
+            Tuple<bool, string> orderBookTpl = Get("https://api.btcmarkets.net/market/" + (crypto == "XBT" ? "BTC" : crypto == "BCH" ? "BCHABC" : crypto) + "/" + DCEs["BTCM"].CurrentSecondaryCurrency + "/orderbook");
             if (orderBookTpl.Item1) { 
                 DCE.OrderBook_BTCM orderBook_BTCM = JsonConvert.DeserializeObject<DCE.OrderBook_BTCM>(orderBookTpl.Item2);
 
@@ -637,7 +644,7 @@ namespace IRTicker {
         }
 
         private void GetBFXOrderBook(string crypto) {
-            Tuple<bool, string> orderBookTpl = Get("https://api.bitfinex.com/v1/book/" + (crypto == "XBT" ? "BTC" : crypto) + DCEs["BFX"].CurrentSecondaryCurrency + "?limit_bids=200&limit_asks=200");
+            Tuple<bool, string> orderBookTpl = Get("https://api.bitfinex.com/v1/book/" + (crypto == "XBT" ? "BTC" : crypto == "BCH" ? "BAB" : crypto) + DCEs["BFX"].CurrentSecondaryCurrency + "?limit_bids=200&limit_asks=200");
             if (orderBookTpl.Item1) {
                 DCE.OrderBook_BFX orderBook_BFX = JsonConvert.DeserializeObject<DCE.OrderBook_BFX>(orderBookTpl.Item2);
 
@@ -735,6 +742,8 @@ namespace IRTicker {
                             }
                         }
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
+
+                        //SubscribeTickerSocket("IR");
                     }
                 }
 
@@ -805,11 +814,6 @@ namespace IRTicker {
                 else DCEs["GDAX"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
 
                 if (loopCount == 0) {
-                    /*if (wSocketConnect.IsSocketAlive("BTCM")) { } //Debug.Print("GDAX");
-                    else {
-                        //Debug.Print("BTCM ded, reconnecting");
-                        //wSocketConnect.WebSocket_Reconnect("BTCM");
-                    }*/ // sockets doesn't have this "isAlive" functionality i don't think.  I'll just rely on a disconnected event being fired.
                     if (wSocketConnect.IsSocketAlive("BFX")) { } //Debug.Print("GDAX");
                     else {
                         Debug.Print("BFX ded, reconnecting");
@@ -820,6 +824,10 @@ namespace IRTicker {
                         Debug.Print("GDAX ded, reconnecting");
                         wSocketConnect.WebSocket_Reconnect("GDAX");
                     }
+                    /*if (!wSocketConnect.IsSocketAlive("IR")) {
+                        Debug.Print("IR ded, reconnecting");
+                        wSocketConnect.WebSocket_Reconnect("IR");
+                    }*/
                 }
 
 
@@ -913,21 +921,40 @@ namespace IRTicker {
                 if (pairObj.Value.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency && pairObj.Value.LastPrice >= 0) {
                     string formatString = "### ##0.00";
                     string formatStringSpread = "### ##0.00";
+                    string formatStringVol = "##0.00";
                     if (pairObj.Value.LastPrice < 10) formatString = "0.00###";  // some coins are so shit, they're worth less than a cent.  Need different formatting for this.  ORRR the spread is so amazingly small we need more decimal places
                     if (pairObj.Value.spread < 10) formatStringSpread = "0.00###";
+                    if (pairObj.Value.DayVolume >= 1000) formatStringVol = "### ##0.00";
+                    if (pairObj.Value.DayVolume >= 1000000) formatStringVol = "### ### ##0.00";
                     double midPoint = (pairObj.Value.CurrentHighestBidPrice + pairObj.Value.CurrentLowestOfferPrice) / 2;
-                    UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].Text = midPoint.ToString(formatString).Trim();
-                    UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(pairObj.Key));
 
-                    // if there's a colour, make the font bold.  otherwise not bold.
-                    if (UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].ForeColor != Color.Black) {
-                        UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].Font = new Font(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].Font, FontStyle.Bold);
+                    // we use this price label so often and it's so much text to access it, i want to just create a quick variable to make the code easier to read
+                    System.Windows.Forms.Label tempPrice = UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"];
+                    tempPrice.Text = midPoint.ToString(formatString).Trim();
+                    tempPrice.ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(pairObj.Key));
+
+                    // if there's a colour, make the font bigger.  otherwise not bigger.
+                    if (tempPrice.ForeColor != Color.Black) {
+                        tempPrice.Font = new Font(tempPrice.Font.FontFamily, 10f, FontStyle.Bold);
+
+                        // this next bit is crazy.  When we change the size of the text, it seems to drop down a couple of pixels.  I don't know why, the label just looks lower
+                        // so to fix it I push the label up 2 pixels.  But I need to keep track of whether I have already pushed the label up or not, so I use the tag property
+                        if (!tempPrice.Tag.ToString().Contains("emphasised")) {
+                            tempPrice.Location = new Point(tempPrice.Location.X, tempPrice.Location.Y - 3);
+                            if (!tempPrice.Tag.ToString().EndsWith(",")) tempPrice.Tag = tempPrice.Tag + ",";
+                            tempPrice.Tag = tempPrice.Tag + "emphasised";
+                        }
                     }
                     else {
-                        UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].Font = new Font(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"].Font, FontStyle.Regular);
+                        tempPrice.Font = new Font(tempPrice.Font.FontFamily, 8.25f, FontStyle.Bold);
+
+                        if (tempPrice.Tag.ToString().Contains("emphasised")) {  // coming down off a high, if we were emphasised, but we're now not, we need to drop the label 2 pixels
+                            tempPrice.Location = new Point(tempPrice.Location.X, tempPrice.Location.Y + 3);
+                            tempPrice.Tag = tempPrice.Tag.ToString().Replace("emphasised", "");
+                        }
                     }
 
-                    UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = "(Spread: " + pairObj.Value.spread.ToString(formatStringSpread) + ")";
+                    UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = pairObj.Value.spread.ToString(formatStringSpread) + ((pairObj.Value.DayVolume == 0) ? "" : " / " + pairObj.Value.DayVolume.ToString(formatStringVol));
 
                     // update tool tips.
                     UIControls_Dict[dExchange].ToolTip_Dict[pairObj.Value.PrimaryCurrencyCode + "_PriceTT"].SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], "Best bid: " + pairObj.Value.CurrentHighestBidPrice + System.Environment.NewLine + "Best offer: " + pairObj.Value.CurrentLowestOfferPrice);
@@ -955,26 +982,48 @@ namespace IRTicker {
             if (mSummary.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency && mSummary.LastPrice >= 0) {
 
                 // we have a legit pair we're about to update.  if the groupBox is grey, let's black it.
-                UIControls_Dict[dExchange].dExchange_GB.ForeColor = Color.Black;
+                GroupBoxAndLabelColourActive(dExchange);
                 UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")";
 
                 string formatString = "### ##0.00";
                 string formatStringSpread = "### ##0.00";
+                string formatStringVol = "##0.00";
+
                 if (mSummary.LastPrice < 10) formatString = "0.00###";  // some coins are so shit, they're worth less than a cent.  Need different formatting for this.  ORRR the spread is so amazingly small we need more decimal places
                 if (mSummary.spread < 10) formatStringSpread = "0.00###";
-                double midPoint = (mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice ) / 2;
-                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"].Text = midPoint.ToString(formatString).Trim();
-                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"].ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(crypto + "-" + fiat));
+                if (mSummary.DayVolume >= 1000) formatStringVol = "### ##0.00";
+                if (mSummary.DayVolume >= 1000000) formatStringVol = "### ### ##0.00";
 
-                // if there's a colour, make the font bold.  otherwise not bold.
-                if (UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"].ForeColor != Color.Black) {
-                    UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"].Font = new Font(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"].Font, FontStyle.Bold);
+                double midPoint = (mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice ) / 2;
+
+                System.Windows.Forms.Label tempPrice = UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"];
+
+                tempPrice.Text = midPoint.ToString(formatString).Trim();
+                tempPrice.ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(crypto + "-" + fiat));
+
+
+                // if there's a colour, make the font bigger.  otherwise not bigger.
+                if (tempPrice.ForeColor != Color.Black) {
+                    tempPrice.Font = new Font(tempPrice.Font.FontFamily, 10f, FontStyle.Bold);
+
+                    // this next bit is crazy.  When we change the size of the text, it seems to drop down a couple of pixels.  I don't know why, the label just looks lower
+                    // so to fix it I push the label up 2 pixels.  But I need to keep track of whether I have already pushed the label up or not, so I use the tag property
+                    if (!tempPrice.Tag.ToString().Contains("emphasised")) {
+                        tempPrice.Location = new Point(tempPrice.Location.X, tempPrice.Location.Y - 3);
+                        if (!tempPrice.Tag.ToString().EndsWith(",")) tempPrice.Tag = tempPrice.Tag + ",";
+                        tempPrice.Tag = tempPrice.Tag + "emphasised";
+                    }
                 }
                 else {
-                    UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"].Font = new Font(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"].Font, FontStyle.Regular);
+                    tempPrice.Font = new Font(tempPrice.Font.FontFamily, 8.25f, FontStyle.Bold);
+
+                    if (tempPrice.Tag.ToString().Contains("emphasised")) {
+                        tempPrice.Location = new Point(tempPrice.Location.X, tempPrice.Location.Y + 3);
+                        tempPrice.Tag = tempPrice.Tag.ToString().Replace("emphasised", "");
+                    }
                 }
 
-                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = "(Spread: " + mSummary.spread.ToString(formatStringSpread) + ")";
+                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = mSummary.spread.ToString(formatStringSpread) + ((mSummary.DayVolume == 0) ? "" : " / " + mSummary.DayVolume.ToString(formatStringVol));
                 //Debug.Print("ABOUT TO CHECK ORDER BOOK STUFF:");
                 //Debug.Print("---num coins = " + UIControls_Dict[dExchange].AvgPrice_NumCoins.Text + " avgprice_crypto = " + (UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedItem == null ? "null" : UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedItem.ToString()));
 
@@ -1063,6 +1112,23 @@ namespace IRTicker {
                 return;
             }
 
+            if (reportType == 21) {  // 21 is IR update labels
+                DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
+                UpdateLabels_Pair("IR", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
+                return;
+            }
+            else if (reportType == 23) {  // 23 is order book stuff for ir - not currently working. (or required?)
+                UIControls_Dict["IR"].AvgPrice.Text = DetermineAveragePrice(DCEs["IR"].CryptoCombo, DCEs["IR"].CurrentSecondaryCurrency, "IR");
+                UIControls_Dict["IR"].AvgPrice.ForeColor = Color.Black;
+                UIControls_Dict["IR"].AvgPrice_Crypto.SelectedIndex = 0;  // reset this so we don't pull the order book every time.
+                IR_CryptoComboBox.Enabled = IR_BuySellComboBox.Enabled = IR_NumCoinsTextBox.Enabled = true;
+                return;
+            }
+            else if (reportType == 24) {  // should only be called once per session - if we don't do this the crypto combo box is empty until we change secondary currencies
+                PopulateCryptoComboBox("IR");
+                return;
+            }
+
             else if (reportType == 31) {  // update BTCM
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
                 UpdateLabels_Pair("BTCM", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
@@ -1120,7 +1186,7 @@ namespace IRTicker {
             // here we iterate through the exchanges and update their group boxes and labels
 
             foreach (string dExchange in Exchanges) {
-                if (dExchange == "BFX" || dExchange == "GDAX" || dExchange == "BTCM") {  // for sockets we don't update labels or change colours.  that happens on demand.
+                if (dExchange == "BFX" || dExchange == "GDAX" || dExchange == "BTCM" /*|| dExchange == "IR"*/) {  // for sockets we don't update labels or change colours.  that happens on demand.
                     if (DCEs[dExchange].HasStaticData && DCEs[dExchange].ChangedSecondaryCurrency) {
                         PopulateCryptoComboBox(dExchange);  // need to re-populate this as it dynamically only populates the comboxbox with cryptos that the current fiat currency has a pair with
                         DCEs[dExchange].ChangedSecondaryCurrency = false;
@@ -1136,7 +1202,8 @@ namespace IRTicker {
                         DCEs[dExchange].ChangedSecondaryCurrency = false;
                     }
 
-                    UIControls_Dict[dExchange].dExchange_GB.ForeColor = Color.Black;
+                    GroupBoxAndLabelColourActive(dExchange);
+
                     UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")";
 
                     UpdateLabels(dExchange);
@@ -1287,6 +1354,40 @@ namespace IRTicker {
             }
         }
 
+        // call this sub when the group box has good data and we need to make sure it's not greyed out.  this will
+        // set the group box to black and the crypto labels to their exchange colour
+        private void GroupBoxAndLabelColourActive(string dExchange) {
+            Color fColour;
+            switch (dExchange) {
+                case "IR":
+                    fColour = Color.RoyalBlue;
+                    break;
+                case "BTCM":
+                    fColour = Color.OliveDrab;
+                    break;
+                case "GDAX":
+                    fColour = Color.DodgerBlue;
+                    break;
+                case "BFX":
+                    fColour = Color.DarkGreen;
+                    break;
+                case "CSPT":
+                    fColour = Color.DarkTurquoise;
+                    break;
+                default:
+                    fColour = Color.Black;
+                    break;
+            }
+
+            UIControls_Dict[dExchange].dExchange_GB.ForeColor = Color.Black;
+
+            foreach (KeyValuePair<string, System.Windows.Forms.Label> UICobj in UIControls_Dict[dExchange].Label_Dict) {
+                if (UICobj.Key.EndsWith("_Label")) {
+                    UICobj.Value.ForeColor = fColour;
+                }
+            }
+        }
+
         private void GroupBox_Click(string dExchange) {
             DCEs[dExchange].NextSecondaryCurrency();
             UIControls_Dict[dExchange].dExchange_GB.ForeColor = Color.Gray;
@@ -1309,7 +1410,7 @@ namespace IRTicker {
         private void GDAX_GroupBox_Click(object sender, EventArgs e) {
             if (DCEs["GDAX"].HasStaticData) {
                 GroupBox_Click("GDAX");
-                UIControls_Dict["GDAX"].dExchange_GB.ForeColor = Color.Black;
+                GroupBoxAndLabelColourActive("GDAX");
                 // need to force a label update, otherwise they'll stay grey <no currency> until the next update comes through
                 foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in DCEs["GDAX"].GetCryptoPairs()) {
                     UpdateLabels_Pair("GDAX", pairObj.Value.PrimaryCurrencyCode, pairObj.Value.SecondaryCurrencyCode);
@@ -1329,7 +1430,7 @@ namespace IRTicker {
         private void BFX_GroupBox_Click(object sender, EventArgs e) {
             if (DCEs["BFX"].HasStaticData) {
                 GroupBox_Click("BFX");
-                UIControls_Dict["BFX"].dExchange_GB.ForeColor = Color.Black;
+                GroupBoxAndLabelColourActive("BFX");
                 // need to force a label update, otherwise they'll stay grey <no currency> until the next update comes through
                 foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in DCEs["BFX"].GetCryptoPairs()) {
                     UpdateLabels_Pair("BFX", pairObj.Value.PrimaryCurrencyCode, pairObj.Value.SecondaryCurrencyCode);

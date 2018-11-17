@@ -14,14 +14,45 @@ namespace IRTicker {
     class WebSocketsConnect {
 
         private Dictionary<string, DCE> DCEs;
-        private WebSocket wSocket_BFX, wSocket_GDAX;
+        private WebSocket wSocket_BFX, wSocket_GDAX, wSocket_IR;
         private Socket socket_BTCM;
         public Dictionary<string, Subscribed_BFX> channel_Dict_BFX = new Dictionary<string, Subscribed_BFX>();  // string is a string version of the channel ID
         private BackgroundWorker pollingThread;
 
+        // constructor
         public WebSocketsConnect(Dictionary<string, DCE> _DCEs, BackgroundWorker _pollingThread) {
             DCEs = _DCEs;
             pollingThread = _pollingThread;
+
+            // IR
+            /*wSocket_IR = new WebSocket("wss://websockets.independentreserve.com");
+            wSocket_IR.OnMessage += (sender, e) => {
+                if (e.IsText) {
+                    //MessageRX_IR(e.Data);
+                    Debug.Print(DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("HH:mm:ss") + " - IR sockets: " + e.Data);
+                    MessageRX_IR(e.Data);
+                }
+                else Debug.Print("IR ws stream is not text?? - " + e.RawData.ToString());
+            };
+
+            wSocket_IR.OnOpen += (sender, e) => {
+                Debug.Print("ws onopen - IR");
+            };
+
+            wSocket_IR.OnError += (sender, e) => {
+                Debug.Print("ws onerror - IR");
+                wSocket_IR.Close();
+                DCEs["IR"].NetworkAvailable = false;
+                DCEs["IR"].CurrentDCEStatus = "Socket error";
+                DCEs["IR"].HasStaticData = false;
+                pollingThread.ReportProgress(12, "IR");  // 12 is error
+                WebSocket_Reconnect("IR");
+            };
+
+            wSocket_IR.OnClose += (sender, e) => {
+                Debug.Print("IR stream closed... should be preceeded by some ded thingo " + DateTime.Now.ToString());
+            };
+            wSocket_IR.Connect();*/
 
             // BTCM
 
@@ -93,17 +124,22 @@ namespace IRTicker {
         public void WebSocket_Subscribe(string dExchange, string crypto, string fiat) {
             string channel = "";
             switch (dExchange) {
+                case "IR":
+                    wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\"]} ");
+                    break;
                 case "BTCM":
                     //Debug.Print("trying to subscribe to BTCM " + crypto);
 
                     if (crypto == "XBT") crypto = "BTC";
+                    if (crypto == "BCH") crypto = "BCHABC";
                     socket_BTCM.Emit("join", "Ticker-BTCMarkets-" + crypto + "-" + fiat);
 
                     break;
                 case "BFX":
                     if (wSocket_BFX.IsAlive) {
                         if (crypto == "XBT") crypto = "BTC";
-                         channel = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"" + crypto + fiat + "\"}";
+                        if (crypto == "BCH") crypto = "BAB";
+                        channel = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"" + crypto + fiat + "\"}";
                         wSocket_BFX.Send(channel);
                     }
 
@@ -178,17 +214,17 @@ namespace IRTicker {
 
         public void WebSocket_Reconnect(string dExchange) {
             switch (dExchange) {
+                case "IR":
+                    wSocket_IR.Close();
+                    wSocket_IR.Connect();
+                    break;
                 case "BTCM":
                     socket_BTCM.Close();
-
-                    // i think with sockets we need to do a full reconnect?
-                    BTCM_Connect();
-
+                    BTCM_Connect();  // with sockets.io we need to start from scratch
                     break;
                 case "BFX":
                     wSocket_BFX.Close();
                     wSocket_BFX.Connect();
-
                     break;
                 case "GDAX":
                     wSocket_GDAX.Close();
@@ -228,6 +264,35 @@ namespace IRTicker {
         }
 
         /* Sample socket data:
+        {
+        "Event":"Trade",
+        "Channel":"ticker-xbt-aud",
+        "Nonce":1,
+        "Data":{
+            "TradeGuid":"c5bde544-d8ae-4e38-9e90-405a3f93b6d6",
+            "TradeDate":"2009-01-03T18:15:05.9321664+00:00",
+            "Volume":50.0,
+            "Price":10270.0,
+            "Pair":"xbt-aud",
+            "BidGuid":"ebbeca4b-7148-4230-ad8f-833a3ccf35c2",
+            "OfferGuid":"ad5ece89-083b-49fc-8bc1-bdb7482a9b9a",
+            "Side":"Buy"
+                }
+        }*/
+        private void MessageRX_IR(string message) {
+            Ticker_IR tickerStream = new Ticker_IR();
+            tickerStream = JsonConvert.DeserializeObject<Ticker_IR>(message);
+
+            // now we convert it into a classic MarketSummary obj, and add it to cryptopairs
+            DCE.MarketSummary mSummary = new DCE.MarketSummary();
+
+            mSummary.CreatedTimestampUTC = tickerStream.Data.TradeDate;
+            //mSummary.CurrentHighestBidPrice = tickerStream.Data.   // need to finish this later i guess?
+
+        }
+
+
+        /* Sample socket data:
          * {
          *      "volume24h": 21357294294,
          *      "bestBid": 964871000000,
@@ -249,7 +314,8 @@ namespace IRTicker {
             DCE.MarketSummary mSummary = new DCE.MarketSummary();
 
             if (tickerStream.instrument.ToUpper().StartsWith("BTC")) tickerStream.instrument = tickerStream.instrument.Replace(tickerStream.instrument.Substring(0, 3), "XBT");
-            mSummary.DayVolume = tickerStream.volume24h / 1000000000;  // 1 trillion
+            if (tickerStream.instrument.ToUpper().StartsWith("BCHABC")) tickerStream.instrument = tickerStream.instrument.Replace(tickerStream.instrument.Substring(0, 6), "BCH");
+            mSummary.DayVolume = tickerStream.volume24h / 100000000;  // 100 million
             mSummary.CurrentHighestBidPrice = tickerStream.bestBid / 100000000; // 100 million
             mSummary.CurrentLowestOfferPrice = tickerStream.bestAsk / 100000000;  // 100 mil
             mSummary.LastPrice = tickerStream.lastPrice / 100000000;  // 100 mil
@@ -341,6 +407,9 @@ namespace IRTicker {
         public bool IsSocketAlive(string dExchange) {
 
             switch (dExchange) {
+                case "IR":
+                    if (wSocket_IR.IsAlive) return true;
+                    return false;
                 case "BFX":
                     if (wSocket_BFX.IsAlive) return true;
                     return false;
@@ -378,7 +447,7 @@ namespace IRTicker {
                     Subscribed_BFX subscription = new Subscribed_BFX();
                     subscription = JsonConvert.DeserializeObject<Subscribed_BFX>(message);
                     channel_Dict_BFX[subscription.chanId.ToString()] = subscription;  // update or add
-                    //Debug.Print("subscribed to " + subscription.chanId.ToString());
+                    Debug.Print("subscribed to " + subscription.chanId.ToString() + " which is " + subscription.pair);
                 }
                 else if (message.Contains("\"event\":\"error\"")) {  // uh oh we done bad.  could look like this: {"channel":"ticker","pair":"BTCUSD","event":"error","msg":"subscribe: dup","code":10301}
                     Debug.Print("Error from BFX socket: " + message);
@@ -398,6 +467,7 @@ namespace IRTicker {
                 }
             }
             else if (message.StartsWith("[")) {  // is this how I tell if it's real socket data?  seems dodgy
+                //Debug.Print("BFX MESSAGE: " + message);
                 message = Utilities.TrimEnds(message);  // remove the [ ] characters from the ends
                 string[] streamParts = message.Split(',');
                 if (channel_Dict_BFX.ContainsKey(streamParts[0])) {
@@ -450,6 +520,23 @@ namespace IRTicker {
             else Debug.Print("BFX message from socket starts with something weird?? - " + message);
         }
 
+        public class Data_IR_Ticker {
+            public string TradeGuid { get; set; }
+            public string TradeDate { get; set; }
+            public double Volume { get; set; }
+            public double Price { get; set; }
+            public string Pair { get; set; }
+            public string BidGuid { get; set; }
+            public string OfferGuid { get; set; }
+            public string Side { get; set; }
+        }
+
+        public class Ticker_IR {
+            public string Event { get; set; }
+            public string Channel { get; set; }
+            public int Nonce { get; set; }
+            public Data_IR_Ticker Data { get; set; }
+        }
 
         public class Ticker_BTCM {
             public double volume24h { get; set; }  // needs to be divided by 1 000 000 000 yes 1 trillion.  ffs
@@ -471,11 +558,20 @@ namespace IRTicker {
             public int chanId { get; set; }
             public string pair {
                 get {
-                    return _pair;
+                    if (_pair.StartsWith("BTC")) {
+                        return _pair.Replace("BTC", "XBT");
+                    }
+                    if (_pair.StartsWith("BAB")) {
+                        return _pair.Replace("BAB", "BCH");
+                    }
+                    else return _pair;
                 }
                 set {
                     if (value.StartsWith("BTC")) {
                         _pair = value.Replace("BTC", "XBT");
+                    }
+                    if (value.StartsWith("BAB")) {
+                        _pair = value.Replace("BAB", "BCH");
                     }
                     else _pair = value;
                 }
@@ -483,14 +579,22 @@ namespace IRTicker {
 
             public string pairDash {
                 get {
-                    if (_pair.Length == 6) {
-                        return _pair.Substring(0, 3) + "-" + _pair.Substring(3, 3);
+                    string __pair = _pair;
+                    if (_pair.StartsWith("BTC")) {
+                        __pair = _pair.Replace("BTC", "XBT");
                     }
-                    else if (_pair.Length == 7) {  // laaammmeee  actually just looked at the BFX spec and all pairs are 6 characters.  will leave this in anyawy, but it shouldn't ever come to it
-                        return _pair.Substring(0, 4) + "-" + _pair.Substring(4, 3);
+                    if (_pair.StartsWith("BAB")) {
+                        __pair = _pair.Replace("BAB", "BCH");
+                    }
+
+                    if (__pair.Length == 6) {
+                        return __pair.Substring(0, 3) + "-" + __pair.Substring(3, 3);
+                    }
+                    else if (__pair.Length == 7) {  // laaammmeee  actually just looked at the BFX spec and all pairs are 6 characters.  will leave this in anyawy, but it shouldn't ever come to it
+                        return __pair.Substring(0, 4) + "-" + __pair.Substring(4, 3);
                     }
                     else {
-                        Debug.Print("We have a pair from the BFX socket that isn't 3 or 4 chars?  howww - " + _pair);
+                        Debug.Print("We have a pair from the BFX socket that isn't 3 or 4 chars?  howww - " + __pair);
                         return "";
                     }
                 }
