@@ -18,7 +18,7 @@ namespace IRTicker {
         }
 
         // this list will be sorted from earliest time to latest time
-        public static Color PriceColour(List<Tuple<DateTime, double>> priceList) {
+        public static Color PriceColour(List<Tuple<DateTime, decimal>> priceList) {
 
             // if we don't have enough data, just go black.
             if (priceList == null) return Color.Black;
@@ -26,24 +26,24 @@ namespace IRTicker {
             if (priceList.Last().Item1 - priceList.First().Item1 < TimeSpan.FromMinutes(5)) return Color.Black;
 
             lock (priceList) {
-                foreach (Tuple<DateTime, double> pricePoint in priceList) {
+                foreach (Tuple<DateTime, decimal> pricePoint in priceList) {
                     if (pricePoint.Item1 >= DateTime.Now - TimeSpan.FromMinutes(5)) {
-                        double lastPrice = priceList.Last().Item2;
-                        if (lastPrice > pricePoint.Item2 * 1.01) {
+                        decimal lastPrice = priceList.Last().Item2;
+                        if (lastPrice > pricePoint.Item2 * 1.01m) {
                             // colour dark green
                             //return Color.Lime;
                             return Color.Lime;
                         }
-                        else if (lastPrice > pricePoint.Item2 * 1.005) {
+                        else if (lastPrice > pricePoint.Item2 * 1.005m) {
                             // colour light green etc
                             //return Color.PaleGreen;
                             return Color.MediumAquamarine;
                         }
-                        else if (lastPrice < pricePoint.Item2 * 0.99) {
+                        else if (lastPrice < pricePoint.Item2 * 0.99m) {
                             // colur red
                             return Color.Red;
                         }
-                        else if (lastPrice < pricePoint.Item2 * 0.995) {
+                        else if (lastPrice < pricePoint.Item2 * 0.995m) {
                             // colour light red
                             return Color.LightCoral;
                         }

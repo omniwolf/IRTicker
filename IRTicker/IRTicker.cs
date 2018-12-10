@@ -363,6 +363,10 @@ namespace IRTicker {
             else {
                 DCEs["IR"].NetworkAvailable = true;
                 DCE.MarketSummary mSummary = JsonConvert.DeserializeObject<DCE.MarketSummary>(marketSummary.Item2);
+                // i get the spread info from websockets now, don't want REST messing up my data
+                mSummary.CurrentHighestBidPrice = 0;
+                mSummary.CurrentLowestOfferPrice = 0;
+                mSummary.CreatedTimestampUTC = "";
                 DCEs["IR"].CryptoPairsAdd(crypto + "-" + fiat, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
                 DCEs["IR"].CurrentDCEStatus = "Online";
             }
@@ -412,17 +416,17 @@ namespace IRTicker {
                 mSummary_CSPT.prices.CreateCryptoList();
                 foreach (DCE.Crypto_CSPT cryptoResponse in mSummary_CSPT.prices.cryptoList) {
                     mSummary = new DCE.MarketSummary();
-                    if (double.TryParse(cryptoResponse.last, out double temp)) {
+                    if (decimal.TryParse(cryptoResponse.last, out decimal temp)) {
                         mSummary.LastPrice = temp;
                     }
                     else Debug.Print("Could not convert CSPT price: " + cryptoResponse.last);
 
-                    if (double.TryParse(cryptoResponse.bid, out temp)) {
+                    if (decimal.TryParse(cryptoResponse.bid, out temp)) {
                         mSummary.CurrentHighestBidPrice = temp;
                     }
                     else Debug.Print("Could not convert CSPT price: " + cryptoResponse.bid);
 
-                    if (double.TryParse(cryptoResponse.ask, out temp)) {
+                    if (decimal.TryParse(cryptoResponse.ask, out temp)) {
                         mSummary.CurrentLowestOfferPrice = temp;
                     }
                     else Debug.Print("Could not convert CSPT price: " + cryptoResponse.ask);
@@ -579,11 +583,23 @@ namespace IRTicker {
             }
         }
 
-        private void GetIROrderBook(string crypto) {
-            Tuple<bool, string> orderBookTpl = Get("https://api.independentreserve.com/Public/GetOrderBook?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + DCEs["IR"].CurrentSecondaryCurrency);
+        private void GetIROrderBook(string crypto, string fiat) {
+            Tuple<bool, string> orderBookTpl = Get("https://api.independentreserve.com/Public/GetAllOrders?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
             if (orderBookTpl.Item1) {
                 DCE.OrderBook orderBook = JsonConvert.DeserializeObject<DCE.OrderBook>(orderBookTpl.Item2);
-                DCEs["IR"].orderBooks[crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency] = orderBook;
+                DCEs["IR"].orderBooks[crypto + "-" + fiat] = orderBook;
+
+                // next we need to convert this orderbook into a sortedList of OrderBook_IR objects
+                DCEs["IR"].InitialiseOrderBook_IR(crypto + "-" + fiat);
+
+                // report this to the UI so we have initial values
+                if (DCEs["IR"].CurrentSecondaryCurrency == fiat) {
+                    DCE.MarketSummary mSummary = DCEs["IR"].GetCryptoPairs()[crypto + "-" + fiat];
+                    pollingThread.ReportProgress(21, mSummary);
+                }
+
+
+                Debug.Print("IR OB done");
             }
         }
 
@@ -599,12 +615,12 @@ namespace IRTicker {
                 DateTimeOffset timeTemp = DateTimeOffset.FromUnixTimeSeconds(orderBook_BTCM.timestamp);  // convert from epoch
                 oBook.CreatedTimestampUtc = timeTemp.UtcDateTime;
 
-                foreach (List<double> ask in orderBook_BTCM.asks) {
-                    oBook.SellOrders.Add(new DCE.Order("LimitSell", ask[0], ask[1]));
+                foreach (List<decimal> ask in orderBook_BTCM.asks) {
+                    oBook.SellOrders.Add(new DCE.Order("LimitSell", ask[0], ask[1], ""));
                 }
 
-                foreach (List<double> bid in orderBook_BTCM.bids) {
-                    oBook.BuyOrders.Add(new DCE.Order("LimitBuy", bid[0], bid[1]));
+                foreach (List<decimal> bid in orderBook_BTCM.bids) {
+                    oBook.BuyOrders.Add(new DCE.Order("LimitBuy", bid[0], bid[1], ""));
                 }
                 DCEs["BTCM"].orderBooks[crypto + "-" + DCEs["BTCM"].CurrentSecondaryCurrency] = oBook;
             }
@@ -621,9 +637,9 @@ namespace IRTicker {
                 oBook.SecondaryCurrencyCode = DCEs["GDAX"].CurrentSecondaryCurrency;
 
                 foreach (List<string> ask in orderBook_GDAX.asks) {
-                    if (double.TryParse(ask[0], out double price)) {
-                        if (double.TryParse(ask[1], out double volume)) {
-                            oBook.SellOrders.Add(new DCE.Order("LimitSell", price, volume));
+                    if (decimal.TryParse(ask[0], out decimal price)) {
+                        if (decimal.TryParse(ask[1], out decimal volume)) {
+                            oBook.SellOrders.Add(new DCE.Order("LimitSell", price, volume, ask[2]));
                         }
                         else MessageBox.Show("Could not convert GDAX order book ask volume to a double: " + ask[1], "Show Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -631,9 +647,9 @@ namespace IRTicker {
                 }
 
                 foreach (List<string> bid in orderBook_GDAX.bids) {
-                    if (double.TryParse(bid[0], out double price)) {
-                        if (double.TryParse(bid[1], out double volume)) {
-                            oBook.BuyOrders.Add(new DCE.Order("LimitBuy", price, volume));
+                    if (decimal.TryParse(bid[0], out decimal price)) {
+                        if (decimal.TryParse(bid[1], out decimal volume)) {
+                            oBook.BuyOrders.Add(new DCE.Order("LimitBuy", price, volume, bid[2]));
                         }
                         else MessageBox.Show("Could not convert GDAX order book bid volume to a double: " + bid[1], "Show Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -654,9 +670,9 @@ namespace IRTicker {
                 oBook.SecondaryCurrencyCode = DCEs["BFX"].CurrentSecondaryCurrency;
 
                 foreach (DCE.BidAsk_BFX ask in orderBook_BFX.asks) {
-                    if (double.TryParse(ask.price, out double price)) {
-                        if (double.TryParse(ask.amount, out double volume)) {
-                            oBook.SellOrders.Add(new DCE.Order("LimitSell", price, volume));
+                    if (decimal.TryParse(ask.price, out decimal price)) {
+                        if (decimal.TryParse(ask.amount, out decimal volume)) {
+                            oBook.SellOrders.Add(new DCE.Order("LimitSell", price, volume, ""));
                         }
                         else MessageBox.Show("Could not convert BFX order book ask volume to a double: " + ask.amount, "Show Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -664,9 +680,9 @@ namespace IRTicker {
                 }
 
                 foreach (DCE.BidAsk_BFX bid in orderBook_BFX.bids) {
-                    if (double.TryParse(bid.price, out double price)) {
-                        if (double.TryParse(bid.amount, out double volume)) {
-                            oBook.BuyOrders.Add(new DCE.Order("LimitBuy", price, volume));
+                    if (decimal.TryParse(bid.price, out decimal price)) {
+                        if (decimal.TryParse(bid.amount, out decimal volume)) {
+                            oBook.BuyOrders.Add(new DCE.Order("LimitBuy", price, volume, ""));
                         }
                         else MessageBox.Show("Could not convert BFX order book bid volume to a double: " + bid.amount, "Show Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -739,11 +755,13 @@ namespace IRTicker {
                         foreach (string crypto in DCEs["IR"].PrimaryCurrencyList) {
                             foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
                                 productDictionary_IR.Add(crypto + "-" + fiat, new DCE.products_GDAX(crypto + "-" + fiat));
+                                Debug.Print("IR - pulling order book: " + crypto + "-" + fiat);
+                                GetIROrderBook(crypto, fiat);  // while we're spinning through all the pairs, let's grab their order books too.
                             }
                         }
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
-
-                        //SubscribeTickerSocket("IR");
+                        
+                        SubscribeTickerSocket("IR");
                     }
                 }
 
@@ -754,7 +772,7 @@ namespace IRTicker {
                             ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency);
                         }
                         if (DCEs["IR"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["IR"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
-                            GetIROrderBook(primaryCode);
+                            //GetIROrderBook(primaryCode, );
                         }
                     }
                 }
@@ -926,7 +944,7 @@ namespace IRTicker {
                     if (pairObj.Value.spread < 10) formatStringSpread = "0.00###";
                     if (pairObj.Value.DayVolume >= 1000) formatStringVol = "### ##0.00";
                     if (pairObj.Value.DayVolume >= 1000000) formatStringVol = "### ### ##0.00";
-                    double midPoint = (pairObj.Value.CurrentHighestBidPrice + pairObj.Value.CurrentLowestOfferPrice) / 2;
+                    decimal midPoint = (pairObj.Value.CurrentHighestBidPrice + pairObj.Value.CurrentLowestOfferPrice) / 2;
 
                     // we use this price label so often and it's so much text to access it, i want to just create a quick variable to make the code easier to read
                     System.Windows.Forms.Label tempPrice = UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"];
@@ -994,7 +1012,7 @@ namespace IRTicker {
                 if (mSummary.DayVolume >= 1000) formatStringVol = "### ##0.00";
                 if (mSummary.DayVolume >= 1000000) formatStringVol = "### ### ##0.00";
 
-                double midPoint = (mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice ) / 2;
+                decimal midPoint = (mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice ) / 2;
 
                 System.Windows.Forms.Label tempPrice = UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"];
 
@@ -1052,18 +1070,18 @@ namespace IRTicker {
             if (orderSide == "Buy") orderBook = DCEs[dExchange].orderBooks[pair].SellOrders;  // because we're buying from the sell orders
             else orderBook = DCEs[dExchange].orderBooks[pair].BuyOrders;  // selling to the buy orders
 
-            if (double.TryParse(UIControls_Dict[dExchange].AvgPrice_NumCoins.Text, out double coins)) {
+            if (decimal.TryParse(UIControls_Dict[dExchange].AvgPrice_NumCoins.Text, out decimal coins)) {
 
-                double coinCounter = 0;  // we add to this counter until it reaches the numCoinsTextBox (coins) value
-                double weightedAverage = 0;
-                double totalCost = 0;
+                decimal coinCounter = 0;  // we add to this counter until it reaches the numCoinsTextBox (coins) value
+                decimal weightedAverage = 0;
+                decimal totalCost = 0;
                 int orderCount = 0;
                 bool gracefulFinish = false;  // this only gets set to true if the order book has enough coins in it to handle the number of inputted coins.  If it doesn't (ie the foreach completes without us having counted the inputted coins), then we throw a warning message
                 foreach (DCE.Order order in orderBook) {
                     orderCount++;
                     coinCounter += order.Volume;
                     if (coinCounter > coins) {  // ok we are on the last value we need to look at.  need to truncate.
-                        double usedCoinsInThisOrder = order.Volume - (coinCounter - coins);  // this is how many coins in this order would be required
+                        decimal usedCoinsInThisOrder = order.Volume - (coinCounter - coins);  // this is how many coins in this order would be required
                         totalCost += usedCoinsInThisOrder * order.Price;
                         weightedAverage += (usedCoinsInThisOrder / coins) * order.Price;
                         gracefulFinish = true;

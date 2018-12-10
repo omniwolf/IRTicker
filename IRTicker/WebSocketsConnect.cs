@@ -25,11 +25,10 @@ namespace IRTicker {
             pollingThread = _pollingThread;
 
             // IR
-            /*wSocket_IR = new WebSocket("wss://websockets.independentreserve.com");
+            wSocket_IR = new WebSocket("wss://websockets.independentreserve.com");
             wSocket_IR.OnMessage += (sender, e) => {
                 if (e.IsText) {
-                    //MessageRX_IR(e.Data);
-                    Debug.Print(DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("HH:mm:ss") + " - IR sockets: " + e.Data);
+                    //Debug.Print(DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("HH:mm:ss") + " - IR sockets: " + e.Data);
                     MessageRX_IR(e.Data);
                 }
                 else Debug.Print("IR ws stream is not text?? - " + e.RawData.ToString());
@@ -52,8 +51,8 @@ namespace IRTicker {
             wSocket_IR.OnClose += (sender, e) => {
                 Debug.Print("IR stream closed... should be preceeded by some ded thingo " + DateTime.Now.ToString());
             };
-            wSocket_IR.Connect();*/
-
+            wSocket_IR.Connect();
+            
             // BTCM
 
             BTCM_Connect();
@@ -125,7 +124,9 @@ namespace IRTicker {
             string channel = "";
             switch (dExchange) {
                 case "IR":
-                    wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\"]} ");
+                    //Debug.Print("subscrbe IR: " + "{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\", \"" + "\"orderbook-" + crypto + "-" + fiat + "\"]} ");
+                    //wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\", \"orderbook-" + crypto + "-" + fiat + "\"]} ");
+                    wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"orderbook-" + crypto + "-" + fiat + "\"]} ");
                     break;
                 case "BTCM":
                     //Debug.Print("trying to subscribe to BTCM " + crypto);
@@ -280,13 +281,49 @@ namespace IRTicker {
                 }
         }*/
         private void MessageRX_IR(string message) {
+            if (message.Contains("\"Event\":\"Subscriptions\"")) {
+                // ignore the subscriptions event.  it breaks parsing too :/
+                return;
+            }
+            if (message.Contains("OrderChanged")) {
+                //Debug.Print("IR order change: " + message);
+            }
             Ticker_IR tickerStream = new Ticker_IR();
             tickerStream = JsonConvert.DeserializeObject<Ticker_IR>(message);
 
             // now we convert it into a classic MarketSummary obj, and add it to cryptopairs
-            DCE.MarketSummary mSummary = new DCE.MarketSummary();
 
-            mSummary.CreatedTimestampUTC = tickerStream.Data.TradeDate;
+            switch (tickerStream.Event) {
+                case "Heartbeat":
+                    // do nothing.  Maybe we could get a timestamp and check that we're receiving regular heartbeats?  something for later
+                    Debug.Print("IR HB");
+                    break;
+                case "Trade":
+                    DCE.OrderBook_IR obIR = new DCE.OrderBook_IR();
+                    //tickerStream.
+                    break;
+                case "NewOrder":
+                    /*Debug.Print("IR new: " + message);
+                    break;*/
+                case "OrderChanged":
+                case "OrderCanceled":
+                    // if this OrderBookEvent_IR function returns true, it means the event we just received made changes to the spread.  let's update the UI.
+                    if (DCEs["IR"].OrderBookEvent_IR(tickerStream.Event, tickerStream.Data)) {
+                        // create an mSummary object, and report it with code 21
+                        // first need to find out what pair this event is talking about.
+                        Tuple<string, string> eventPair = Utilities.SplitPair(tickerStream.Data.Pair.ToUpper());
+
+                        // next we need to pull the mSummary object out of the cryptoPairs array :/
+                        //Debug.Print("spread changing event: " + message);
+                        if (DCEs["IR"].CurrentSecondaryCurrency == eventPair.Item2.ToUpper()) {
+                            DCE.MarketSummary mSummary = DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()];
+                            pollingThread.ReportProgress(21, mSummary);
+                        }
+
+                    }
+                    break;
+            }
+
             //mSummary.CurrentHighestBidPrice = tickerStream.Data.   // need to finish this later i guess?
 
         }
@@ -347,32 +384,32 @@ namespace IRTicker {
                 if (tickerStream.product_id.ToUpper().StartsWith("BTC")) tickerStream.product_id = tickerStream.product_id.Replace(tickerStream.product_id.Substring(0, 3), "XBT");
 
                 mSummary.pair = tickerStream.product_id.ToUpper();
-                if (double.TryParse(tickerStream.price, out double price)) {
+                if (decimal.TryParse(tickerStream.price, out decimal price)) {
                     mSummary.LastPrice = price;
                 }
                 else Debug.Print("Error GDAX sockets - couldn't convert price: " + tickerStream.price);
 
-                if (double.TryParse(tickerStream.volume_24h, out double vol)) {
+                if (decimal.TryParse(tickerStream.volume_24h, out decimal vol)) {
                     mSummary.DayVolume = vol;
                 }
                 else Debug.Print("Error GDAX sockets - couldn't convert volume: " + tickerStream.volume_24h);
 
-                if (double.TryParse(tickerStream.low_24h, out double low)) {
+                if (decimal.TryParse(tickerStream.low_24h, out decimal low)) {
                     mSummary.DayLowestPrice = low;
                 }
                 else Debug.Print("Error GDAX sockets - couldn't convert low: " + tickerStream.low_24h);
 
-                if (double.TryParse(tickerStream.high_24h, out double high)) {
+                if (decimal.TryParse(tickerStream.high_24h, out decimal high)) {
                     mSummary.DayHighestPrice = high;
                 }
                 else Debug.Print("Error GDAX sockets - couldn't convert high: " + tickerStream.high_24h);
 
-                if (double.TryParse(tickerStream.best_bid, out double bid)) {
+                if (decimal.TryParse(tickerStream.best_bid, out decimal bid)) {
                     mSummary.CurrentHighestBidPrice = bid;
                 }
                 else Debug.Print("Error GDAX sockets - couldn't convert bid: " + tickerStream.best_bid);
 
-                if (double.TryParse(tickerStream.best_ask, out double offer)) {
+                if (decimal.TryParse(tickerStream.best_ask, out decimal offer)) {
                     mSummary.CurrentLowestOfferPrice = offer;
                 }
                 else Debug.Print("Error GDAX sockets - couldn't convert ask: " + tickerStream.best_ask);
@@ -447,7 +484,7 @@ namespace IRTicker {
                     Subscribed_BFX subscription = new Subscribed_BFX();
                     subscription = JsonConvert.DeserializeObject<Subscribed_BFX>(message);
                     channel_Dict_BFX[subscription.chanId.ToString()] = subscription;  // update or add
-                    Debug.Print("subscribed to " + subscription.chanId.ToString() + " which is " + subscription.pair);
+                    //Debug.Print("subscribed to " + subscription.chanId.ToString() + " which is " + subscription.pair);
                 }
                 else if (message.Contains("\"event\":\"error\"")) {  // uh oh we done bad.  could look like this: {"channel":"ticker","pair":"BTCUSD","event":"error","msg":"subscribe: dup","code":10301}
                     Debug.Print("Error from BFX socket: " + message);
@@ -477,7 +514,7 @@ namespace IRTicker {
                         mSummary.PrimaryCurrencyCode = channel_Dict_BFX[streamParts[0]].pair.Substring(0, 3);
                         mSummary.SecondaryCurrencyCode = channel_Dict_BFX[streamParts[0]].pair.Substring(3, 3);
                         do {
-                            if (double.TryParse(streamParts[partCount], out double result)) {
+                            if (decimal.TryParse(streamParts[partCount], out decimal result)) {
                                 switch (partCount) {
                                     case 1:  // BID
                                         mSummary.CurrentHighestBidPrice = result;
@@ -523,8 +560,8 @@ namespace IRTicker {
         public class Data_IR_Ticker {
             public string TradeGuid { get; set; }
             public string TradeDate { get; set; }
-            public double Volume { get; set; }
-            public double Price { get; set; }
+            public decimal Volume { get; set; }
+            public decimal Price { get; set; }
             public string Pair { get; set; }
             public string BidGuid { get; set; }
             public string OfferGuid { get; set; }
@@ -535,14 +572,14 @@ namespace IRTicker {
             public string Event { get; set; }
             public string Channel { get; set; }
             public int Nonce { get; set; }
-            public Data_IR_Ticker Data { get; set; }
+            public DCE.OrderBook_IR Data { get; set; }
         }
 
         public class Ticker_BTCM {
-            public double volume24h { get; set; }  // needs to be divided by 1 000 000 000 yes 1 trillion.  ffs
-            public double bestBid { get; set; }
-            public double bestAsk { get; set; }
-            public double lastPrice { get; set; }  // this and the 2 above need to be divided by 100 million to get the price.  
+            public decimal volume24h { get; set; }  // needs to be divided by 100 000 000 yes 100 million.  ffs
+            public decimal bestBid { get; set; }
+            public decimal bestAsk { get; set; }
+            public decimal lastPrice { get; set; }  // this and the 2 above need to be divided by 100 million to get the price.  
             public long timestamp { get; set; }  // milliseconds
             public double snapshotId { get; set; }
             public double marketId { get; set; }

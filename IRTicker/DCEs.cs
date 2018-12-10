@@ -12,10 +12,13 @@ namespace IRTicker {
     public class DCE {
         private string _primaryCodesStr;
         private string _secondaryCodesStr;
-        private ConcurrentDictionary<string, List<Tuple<DateTime, double>>> priceHistory = new ConcurrentDictionary<string, List<Tuple<DateTime, double>>>();
+        private ConcurrentDictionary<string, List<Tuple<DateTime, decimal>>> priceHistory = new ConcurrentDictionary<string, List<Tuple<DateTime, decimal>>>();
         private ConcurrentDictionary<string, List<DataPoint>> spreadHistory = new ConcurrentDictionary<string, List<DataPoint>>();
         private ConcurrentDictionary<string, List<DataPoint>> spreadHistoryCSV = new ConcurrentDictionary<string, List<DataPoint>>();
-        private SortedList<double, OrderBook_IR> fullOrderBook_IR = new SortedList<double, OrderBook_IR>();
+        private ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> OfferOrderBook_IR = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();  // outer decimal is price, inner decimal is guid
+        private ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> BidOrderBook_IR = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();
+        // this next thing is hectic.  a dictionry of tuples.  The key is the crypto pair, the tuple in the order books (bid,offer) (which is represented by a dictionary (price) of dictionaries (order guids)
+        private ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>> IR_OBs = new ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>>();
 
         private Dictionary<string, MarketSummary> cryptoPairs;
         public Dictionary<string, OrderBook> orderBooks;  // string format is eg "XBT-AUD" - caps with a dash
@@ -27,7 +30,7 @@ namespace IRTicker {
             CodeName = _codeName;
             FriendlyName = _friendlyName;
         }
-
+        
         public string CodeName { get; }
 
         public string FriendlyName { get; }
@@ -40,13 +43,13 @@ namespace IRTicker {
         // "Online" if everything is fine, anything else will cause the UI to display this string in the DCE group box text
         public string CurrentDCEStatus { get; set; }
 
-        public List<Tuple<DateTime, double>> GetPriceList(string pair) {
+        public List<Tuple<DateTime, decimal>> GetPriceList(string pair) {
             if (priceHistory.ContainsKey(pair)) {
-                priceHistory.TryGetValue(pair, out List<Tuple<DateTime, double>> result);
+                priceHistory.TryGetValue(pair, out List<Tuple<DateTime, decimal>> result);
                 return result;
             }
             else {
-                return new List<Tuple<DateTime, double>>();
+                return new List<Tuple<DateTime, decimal>>();
             }
         }
 
@@ -76,23 +79,40 @@ namespace IRTicker {
             // ok here want to add it to the cryptopairs dictionary, but we also want to add the last price to a list so we can see trends
             pair = pair.ToUpper();
             lock (cryptoPairs) {
-                cryptoPairs[pair] = mSummary;
+                // if the pair already exists, we need to update it.  if not, we create a new entry.
+                if (cryptoPairs.ContainsKey(pair)) {
+                    // if the mSummary object that's been sent to us has properties that are 0, then don't update cryptoPair element
+                    if (mSummary.CreatedTimestampUTC != "") cryptoPairs[pair].CreatedTimestampUTC = mSummary.CreatedTimestampUTC;
+                    if (mSummary.CurrentHighestBidPrice != 0) cryptoPairs[pair].CurrentHighestBidPrice = mSummary.CurrentHighestBidPrice;
+                    if (mSummary.CurrentLowestOfferPrice != 0) cryptoPairs[pair].CurrentLowestOfferPrice = mSummary.CurrentLowestOfferPrice;
+                    if (mSummary.DayAvgPrice != 0) cryptoPairs[pair].DayAvgPrice = mSummary.DayAvgPrice;
+                    if (mSummary.DayHighestPrice != 0) cryptoPairs[pair].DayHighestPrice = mSummary.DayHighestPrice;
+                    if (mSummary.DayLowestPrice != 0) cryptoPairs[pair].DayLowestPrice = mSummary.DayLowestPrice;
+                    if (mSummary.DayVolume != 0) cryptoPairs[pair].DayVolume = mSummary.DayVolume;
+                    if (mSummary.DayVolumeInSecondaryCurrency != 0) cryptoPairs[pair].DayVolumeInSecondaryCurrency = mSummary.DayVolumeInSecondaryCurrency;
+                    if (mSummary.DayVolumeXbt != 0) cryptoPairs[pair].DayVolumeXbt = mSummary.DayVolumeXbt;
+                    if (mSummary.LastPrice != 0) cryptoPairs[pair].LastPrice = mSummary.LastPrice;
+                }
+                else {  // new element
+                    cryptoPairs[pair] = mSummary;
+                }
+
             }
 
             if (!priceHistory.ContainsKey(pair)) {  // if this crypto/fiat pair hasn't come up before, create a new empty dictionary kvp
-                priceHistory.TryAdd(pair, new List<Tuple<DateTime, double>>());
+                priceHistory.TryAdd(pair, new List<Tuple<DateTime, decimal>>());
             }
             lock (priceHistory[pair]) {  // we're locking on the List, not the ConcurrentDictionary
-                priceHistory[pair].Add(new Tuple<DateTime, double>(DateTime.Now, ((mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice) / 2)));  // add the time and price to the kvp's value list
+                priceHistory[pair].Add(new Tuple<DateTime, decimal>(DateTime.Now, ((mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice) / 2)));  // add the time and price to the kvp's value list
             }
             
             lock (spreadHistory) {
                 if (!spreadHistory.ContainsKey(pair)) spreadHistory.TryAdd(pair, new List<DataPoint>());
-                spreadHistory[pair].Add(new DataPoint(DateTime.Now.ToOADate(), mSummary.spread));
+                spreadHistory[pair].Add(new DataPoint(DateTime.Now.ToOADate(), (double)mSummary.spread));
             }
             lock (spreadHistoryCSV) {
                 if (!spreadHistoryCSV.ContainsKey(pair)) spreadHistoryCSV.TryAdd(pair, new List<DataPoint>());
-                spreadHistoryCSV[pair].Add(new DataPoint(DateTime.Now.ToOADate(), mSummary.spread));
+                spreadHistoryCSV[pair].Add(new DataPoint(DateTime.Now.ToOADate(), (double)mSummary.spread));
             }
         }
 
@@ -217,15 +237,213 @@ namespace IRTicker {
         //////////////      IR Order Book    ////////////////////
         /////////////////////////////////////////////////////////
 
-        public void IR_NewOrder(OrderBook_IR ob) {
+        // this gets called when we receive an order book change/add/remove. 
+        public bool OrderBookEvent_IR(string eventStr, OrderBook_IR order) {
 
-            if (fullOrderBook_IR.Values.Any(ss => ss.OrderGuid == ob.OrderGuid)) {
-                Debug.Print("IR orderbook: strange, the new order guid already exists in our orderbook list? - " + ob.OrderGuid);
-                Debug.Print("IR orderbook deleting duplicate order...");
-                //fullOrderBook_IR.Remove(fullOrderBook_IR.Values.Remove(sss => sss;)
+            // before we do anything, take a copy of the first elements of each order book.  If these change, then the spread has changed and we need to update the UI
+            bool OrderWillChangeSpread = false;
+
+            ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> OB_IR;  // an order will only ever be a limit or a bid, so sort it out up top to reduce code duplication
+            ConcurrentDictionary<string, OrderBook_IR> TopOrder;
+            switch (order.OrderType) {
+                case "LimitBid":
+                    OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
+                    TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max()];
+                    break;
+                case "LimitOffer":
+                    OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
+                    TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min()];
+
+                    break;
+                default:
+                    Debug.Print("IR ws - a new order that wasn't a bid or offer was sent to us? " + order.OrderType);
+                    return false;
             }
 
-            fullOrderBook_IR.Add(ob.Price, ob);
+            // if it's the first order, so this changes the spread
+            // i need to discover this up here, because if the event is a OrderChanged (with vol of 0) or OrderCanceled then I delete the orderbook_IR object, so i have nothing to compare to. 
+
+            
+
+            //foreach (OrderBook_IR Price in OB_IR.First().Value){
+                if (eventStr == "OrderChanged" && TopOrder.ContainsKey(order.OrderGuid) && order.Volume == 0) {
+                    // this is a spread changing event... do something?
+                    OrderWillChangeSpread = true;
+
+                if (order.Pair.ToUpper() == "ETH-AUD") {
+
+                    Debug.Print("a changed ETHAUD order will change the spread - " + order.Price);
+                }
+                //break;
+            }
+                else if (eventStr == "NewOrder" && order.OrderType == "LimitBid" && order.Price > TopOrder.First().Value.Price) { // pick the "First()" one just arbitrary - all elements of this dictionary have the same price
+                    // spread changing order
+                    OrderWillChangeSpread = true;
+
+                if (order.Pair.ToUpper() == "ETH-AUD") {
+
+                    Debug.Print("a new offer ETHAUD order will change the spread - " + order.Price);
+                }
+                //break;
+            }
+                else if (eventStr == "NewOrder" && order.OrderType == "LimitOffer" && order.Price < TopOrder.First().Value.Price) {
+                    // spread changing order
+                    OrderWillChangeSpread = true;
+
+                if (order.Pair.ToUpper() == "ETH-AUD") {
+
+                    Debug.Print("a new buy ETHAUD order will change the spread - " + order.Price);
+                }
+                //break;
+            }
+                else if (eventStr == "OrderCanceled" && TopOrder.ContainsKey(order.OrderGuid) && TopOrder.Count == 1) {  // if the cancelled order is at the top, and it's the only one at that price, spread will change.
+                if (order.Pair.ToUpper() == "ETH-AUD") {
+
+                    Debug.Print("a canceled ETHAUD order will change the spread");
+                }
+                OrderWillChangeSpread = true;
+            }
+            //}
+
+            // here we actually adjust the order book in accordance with the event we just received
+            switch (eventStr) {
+                case "NewOrder":
+
+                    if (OB_IR.ContainsKey(order.Price)) {  // this is a new order at an existing price step in the OB
+                        if (OB_IR[order.Price].ContainsKey(order.OrderGuid)) {
+                            //Debug.Print("weird, trying to add a new order, but the guid is already in the dictionary?? - " + order.OrderGuid);
+                            //break;
+                        }
+
+                        OB_IR[order.Price].TryAdd(order.OrderGuid, order);
+                        //Debug.Print("New order existing price - " + order.Price);
+                    }
+                    else {  // this is a new price
+                        ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
+                        tempCD.TryAdd(order.OrderGuid, order);
+                        OB_IR.TryAdd(order.Price, tempCD);
+                        //Debug.Print("New order new price - " + order.Price);
+                    }
+                    break;
+
+                case "OrderChanged":
+
+                    // Roman had an idea here where I maintain 2 dictionaries, one where the key is the price and one where the key is the guid.  find the guid; find the price.
+                    foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> Price in OB_IR) {
+
+                        if (Price.Value.ContainsKey(order.OrderGuid)) {  // we found the needle in the haystack :/   
+                            if (order.Volume == 0) {  // this means the order was fully filled, let's remove the order.
+                                if (Price.Value.Count > 1) Price.Value.TryRemove(order.OrderGuid, out OrderBook_IR ignore);  // more than one order at this price
+                                else OB_IR.TryRemove(order.Price, out ConcurrentDictionary<string, OrderBook_IR> ignore);  // only one order at this price, we delete the whole cDictionary entry.
+                                //Debug.Print("Filled order and price - " + order.Price);
+                            }
+                            else {  // just need to update the order
+                                Price.Value[order.OrderGuid].Volume = order.Volume;
+                                //Debug.Print("Filled order - " + order.Price);
+                            }
+                            break;  // break out of the foreach
+                        }
+                    }
+                    break;
+
+                case "OrderCanceled":
+                    decimal cancelledPrice = 0;
+                    foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> Price in OB_IR) {
+
+                        if (Price.Value.ContainsKey(order.OrderGuid)) {
+                            if (Price.Value.Count > 1) Price.Value.TryRemove(order.OrderGuid, out OrderBook_IR ignore);  // more than one order at this price
+                            else {
+                                // we found the price, and it's the only one.   let's break out of this loop and then remove the element from OB_IR
+                                cancelledPrice = Price.Key;
+                                if (order.Pair.ToUpper() == "ETH-AUD") {
+                                    Debug.Print("IR ETHAUD canceled order - just tried to remove the outer dictionary element as this was the only order at this price - " + Price.Key);
+                                }
+                            }
+                            //Debug.Print("Order cancelled - " + order.OrderGuid);
+                            break;  // break out of the foreach
+                        }
+                    }
+
+                    if (cancelledPrice > 0) {
+                        OB_IR.TryRemove(cancelledPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore);  // only one order at this price, we delete the whole cDictionary entry.
+                    }
+
+                    break;
+            }
+
+            // if this order has changed the spread, then let's update the cryptoPairs dictionary
+            //foreach (OrderBook_IR PriceOrder in OB_IR.First().Value) {
+                if (OrderWillChangeSpread) {
+                    DateTimeOffset DTO = DateTimeOffset.Now;
+                    MarketSummary mSummary = new MarketSummary();
+                    mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
+                mSummary.CurrentHighestBidPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
+                    mSummary.CurrentLowestOfferPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
+                mSummary.pair = order.Pair.ToUpper();
+                    CryptoPairsAdd(order.Pair.ToUpper(), mSummary);
+
+                    return true;
+                }
+            //}
+            return false;
+        }
+
+        // this should be called once we have the orderbooks variable populated.  this method will split the orderbooks object into
+        // 2 sorted lists BidOrderBook_IR and OfferOrderBook_IR
+        public void InitialiseOrderBook_IR(string pair) {  // !!!!!!!!!!!!!! need to probably change all adds to TryAdd to make sure they're safe, work out how to handle duplicate adds
+
+            // fix this.  need to create new dictionaries and whatevs when a pair we haven't seen before comes along
+            if (!IR_OBs.ContainsKey(pair)) {
+                // OK if it doesn't contain this pair, we have to create some shiz
+
+                ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> tempbuy = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();
+                ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> tempsell = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();
+
+                Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>> tempTup = new Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>(tempbuy, tempsell);
+                IR_OBs.TryAdd(pair, tempTup);
+            }
+
+            ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> bidOB = IR_OBs[pair].Item1;
+            ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> offerOB = IR_OBs[pair].Item2;
+
+            // buy orders first.  
+            //lock (BidOrderBook_IR) {
+                foreach (Order order in orderBooks[pair].BuyOrders) {
+                    //OrderBookEvent_IR("NewOrder", new DCE.OrderBook_IR(order.Guid, crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency, order.Price, "LimitBid", order.Volume));
+                    if (bidOB.ContainsKey(order.Price)) {  // this price already has order(s)
+                        bidOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
+                    }
+                    else {  // new price, create the dictionary
+                        ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
+                        tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
+                    bidOB.TryAdd(order.Price, tempCD);
+                    }
+                }
+            //}
+
+            // now sell orders
+            // buy orders first.  
+            //lock (OfferOrderBook_IR) {
+                foreach (Order order in orderBooks[pair].SellOrders) {
+                    if (offerOB.ContainsKey(order.Price)) {
+                        offerOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
+                    }
+                    else {
+                    ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
+                    tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
+                    offerOB.TryAdd(order.Price, tempCD);
+                    }
+                }
+
+                // order books for this pair have been created, now we get the spread and put it in the cryptoPairs dictionary
+            DateTimeOffset DTO = DateTimeOffset.Now;
+            MarketSummary mSummary = new MarketSummary();
+            mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
+            mSummary.CurrentHighestBidPrice = bidOB.Keys.Max();
+            mSummary.CurrentLowestOfferPrice = offerOB.Keys.Min();
+            mSummary.pair = pair;
+            CryptoPairsAdd(pair, mSummary);
+            //}
         }
 
 
@@ -241,14 +459,14 @@ namespace IRTicker {
             private string _PrimaryCurrencyCode;
             private string _SecondaryCurrencyCode;
 
-            public double DayHighestPrice { get; set; }
-            public double DayLowestPrice { get; set; }
-            public double DayAvgPrice { get; set; }
-            public double DayVolumeXbt { get; set; }
-            public double DayVolumeInSecondaryCurrency { get; set; }
-            public double CurrentLowestOfferPrice { get; set; }
-            public double CurrentHighestBidPrice { get; set; }
-            public double LastPrice { get; set; }
+            public decimal DayHighestPrice { get; set; }
+            public decimal DayLowestPrice { get; set; }
+            public decimal DayAvgPrice { get; set; }
+            public decimal DayVolumeXbt { get; set; }
+            public decimal DayVolumeInSecondaryCurrency { get; set; }
+            public decimal CurrentLowestOfferPrice { get; set; }
+            public decimal CurrentHighestBidPrice { get; set; }
+            public decimal LastPrice { get; set; }
             /// <summary>
             /// crypto
             /// </summary>
@@ -273,7 +491,7 @@ namespace IRTicker {
             } // fiat
             public string CreatedTimestampUTC { get; set; }
 
-            public double spread {
+            public decimal spread {
                 get {
                     return CurrentLowestOfferPrice - CurrentHighestBidPrice;
                 }
@@ -281,7 +499,7 @@ namespace IRTicker {
 
             // whoops, originally called this property "DayVolume" when it should have been "DayVolumeXbt".  I coded everywhere to "DayVolume", so I've just
             // added in this redirect so they both work :/
-            public double DayVolume {
+            public decimal DayVolume {
                 get {
                     return DayVolumeXbt;
                 }
@@ -308,13 +526,13 @@ namespace IRTicker {
 
         // this is the class used to deserialise BTC Market's market summary data
         public class MarketSummary_BTCM {
-            public double bestBid { get; set; }
-            public double bestAsk { get; set; }
-            public double lastPrice { get; set; }
+            public decimal bestBid { get; set; }
+            public decimal bestAsk { get; set; }
+            public decimal lastPrice { get; set; }
             public string currency { get; set; }  // fiat currency
             public string instrument { get; set; }  // cryptocurrency
             public double timestamp { get; set; }
-            public double volume24h { get; set; }
+            public decimal volume24h { get; set; }
         }
 
         public class MarketSummary_GDAX {
@@ -419,16 +637,18 @@ namespace IRTicker {
 
         public class Order {
 
-            public Order(string _orderType, double _price, double _volume) {
+            public Order(string _orderType, decimal _price, decimal _volume, string _guid) {
                 OrderType = _orderType;
                 Price = _price;
                 Volume = _volume;
+                Guid = _guid;
             }
 
             public string OrderType { get; set; }
-            public double Price { get; set; }
-            public double Volume { get; set; }
-        }
+            public decimal Price { get; set; }
+            public decimal Volume { get; set; }
+            public string Guid { get; set; }
+        }   
 
         public class OrderBook {
             public List<Order> BuyOrders { get; set; }
@@ -447,8 +667,8 @@ namespace IRTicker {
             public string currency { get; set; }
             public string instrument { get; set; }
             public int timestamp { get; set; }
-            public List<List<double>> asks { get; set; }
-            public List<List<double>> bids { get; set; }
+            public List<List<decimal>> asks { get; set; }
+            public List<List<decimal>> bids { get; set; }
         }
 
         public class OrderBook_GDAX {
@@ -471,9 +691,24 @@ namespace IRTicker {
         public class OrderBook_IR {
             public string OrderGuid { get; set; }
             public string Pair { get; set; }
-            public double Price { get; set; }
+            public decimal Price { get; set; }
             public string OrderType { get; set; }
-            public double Volume { get; set; }
+            public decimal Volume { get; set; }
+
+            public OrderBook_IR(string _orderGuid, string _pair, decimal _price, string _orderType, decimal _volume) {
+                OrderGuid = _orderGuid;
+                Pair = _pair;
+                Price = _price;
+                OrderType = _orderType;
+                Volume = _volume;
+            }
+            public OrderBook_IR() { }
+        }
+    }
+
+    class DescComparer<T> : IComparer<T> {
+        public int Compare(T x, T y) {
+            return Comparer<T>.Default.Compare(y, x);
         }
     }
 }
