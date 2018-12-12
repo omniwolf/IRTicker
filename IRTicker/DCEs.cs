@@ -256,8 +256,24 @@ namespace IRTicker {
 
                     break;
                 default:
-                    Debug.Print("IR ws - a new order that wasn't a bid or offer was sent to us? " + order.OrderType);
-                    return false;
+
+                    // ok this is a market order i guess, which probably means it's an orderchanged event
+                    if (eventStr == "OrderChanged") {
+                        if (order.OrderType.EndsWith("Bid")) {
+                            OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
+                            TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max()];
+                        }
+                        else {
+                            OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
+                            TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min()];
+                        }
+                    }
+                    else {
+                        Debug.Print("IR ws - a new order that wasn't a bid or offer was sent to us? " + order.OrderType + " price: " + order.Price);
+                        return false;
+                    }
+                    break;
+                    //return false;
             }
 
             // if it's the first order, so this changes the spread
@@ -272,7 +288,7 @@ namespace IRTicker {
 
                 if (order.Pair.ToUpper() == "ETH-AUD") {
 
-                    Debug.Print("a changed ETHAUD order will change the spread - " + order.Price);
+                    Debug.Print("a changed ETHAUD order will change the spread - " + order.OrderType);
                 }
                 //break;
             }
@@ -282,7 +298,7 @@ namespace IRTicker {
 
                 if (order.Pair.ToUpper() == "ETH-AUD") {
 
-                    Debug.Print("a new offer ETHAUD order will change the spread - " + order.Price);
+                    //Debug.Print("a new offer ETHAUD order will change the spread - " + order.Price);
                 }
                 //break;
             }
@@ -292,14 +308,14 @@ namespace IRTicker {
 
                 if (order.Pair.ToUpper() == "ETH-AUD") {
 
-                    Debug.Print("a new buy ETHAUD order will change the spread - " + order.Price);
+                    //Debug.Print("a new buy ETHAUD order will change the spread - " + order.Price);
                 }
                 //break;
             }
                 else if (eventStr == "OrderCanceled" && TopOrder.ContainsKey(order.OrderGuid) && TopOrder.Count == 1) {  // if the cancelled order is at the top, and it's the only one at that price, spread will change.
                 if (order.Pair.ToUpper() == "ETH-AUD") {
 
-                    Debug.Print("a canceled ETHAUD order will change the spread");
+                    Debug.Print("a canceled ETHAUD order will change the spread - " + TopOrder.First().Value.Price);
                 }
                 OrderWillChangeSpread = true;
             }
@@ -334,7 +350,7 @@ namespace IRTicker {
                         if (Price.Value.ContainsKey(order.OrderGuid)) {  // we found the needle in the haystack :/   
                             if (order.Volume == 0) {  // this means the order was fully filled, let's remove the order.
                                 if (Price.Value.Count > 1) Price.Value.TryRemove(order.OrderGuid, out OrderBook_IR ignore);  // more than one order at this price
-                                else OB_IR.TryRemove(order.Price, out ConcurrentDictionary<string, OrderBook_IR> ignore);  // only one order at this price, we delete the whole cDictionary entry.
+                                else OB_IR.TryRemove(Price.Key, out ConcurrentDictionary<string, OrderBook_IR> ignore);  // only one order at this price, we delete the whole cDictionary entry.
                                 //Debug.Print("Filled order and price - " + order.Price);
                             }
                             else {  // just need to update the order
@@ -356,7 +372,7 @@ namespace IRTicker {
                                 // we found the price, and it's the only one.   let's break out of this loop and then remove the element from OB_IR
                                 cancelledPrice = Price.Key;
                                 if (order.Pair.ToUpper() == "ETH-AUD") {
-                                    Debug.Print("IR ETHAUD canceled order - just tried to remove the outer dictionary element as this was the only order at this price - " + Price.Key);
+                                    //Debug.Print("IR ETHAUD canceled order - just tried to remove the outer dictionary element as this was the only order at this price - " + Price.Key);
                                 }
                             }
                             //Debug.Print("Order cancelled - " + order.OrderGuid);
