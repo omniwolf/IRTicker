@@ -260,10 +260,16 @@ namespace IRTicker {
                     // ok this is a market order i guess, which probably means it's an orderchanged event
                     if (eventStr == "OrderChanged") {
                         if (order.OrderType.EndsWith("Bid")) {
+                            if (order.Pair.ToUpper() == "ETH-AUD") {
+                                Debug.Print("ETH bid order changed");
+                            }
                             OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
                             TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max()];
                         }
                         else {
+                            if (order.Pair.ToUpper() == "ETH-AUD") {
+                                Debug.Print("ETH offer order changed");
+                            }
                             OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
                             TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min()];
                         }
