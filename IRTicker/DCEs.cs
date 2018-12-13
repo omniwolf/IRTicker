@@ -23,6 +23,9 @@ namespace IRTicker {
         private Dictionary<string, MarketSummary> cryptoPairs;
         public Dictionary<string, OrderBook> orderBooks;  // string format is eg "XBT-AUD" - caps with a dash
 
+        // channel nonces
+        public ConcurrentDictionary<string, int> channelNonce = new ConcurrentDictionary<string, int>();
+
         // constructor
         public DCE(string _codeName, string _friendlyName) {
             cryptoPairs = new Dictionary<string, MarketSummary>();
