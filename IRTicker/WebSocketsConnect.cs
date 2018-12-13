@@ -127,6 +127,7 @@ namespace IRTicker {
                     //Debug.Print("subscrbe IR: " + "{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\", \"" + "\"orderbook-" + crypto + "-" + fiat + "\"]} ");
                     //wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\", \"orderbook-" + crypto + "-" + fiat + "\"]} ");
                     wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"orderbook-" + crypto + "-" + fiat + "\"]} ");
+                    DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = 0;  // initialise the nonce dictionary
                     break;
                 case "BTCM":
                     //Debug.Print("trying to subscribe to BTCM " + crypto);
@@ -281,7 +282,7 @@ namespace IRTicker {
                 }
         }*/
         private void MessageRX_IR(string message) {
-            if (message.Contains("\"Event\":\"Subscriptions\"")) {
+            if (message.Contains("\"Event\":\"Subscriptions\"") || message.Contains("\"Event\":\"Heartbeat\"")) {
                 // ignore the subscriptions event.  it breaks parsing too :/
                 return;
             }
@@ -291,11 +292,21 @@ namespace IRTicker {
             Ticker_IR tickerStream = new Ticker_IR();
             tickerStream = JsonConvert.DeserializeObject<Ticker_IR>(message);
 
+            // Nonce work.  make sure the nonce is sequential
+            if (DCEs["IR"].channelNonce[tickerStream.Channel.ToUpper()] > 0) {  // 0 means we have never seen a nonce for this channel
+                if (DCEs["IR"].channelNonce[tickerStream.Channel.ToUpper()] + 1 != tickerStream.Nonce) {  // why not??
+                    Debug.Print("NONCE ERROR: " + tickerStream.Channel + ", old nonce: " + DCEs["IR"].channelNonce[tickerStream.Channel.ToUpper()] + ", new nonce: " + tickerStream.Nonce);
+                }
+            }
+            DCEs["IR"].channelNonce[tickerStream.Channel.ToUpper()] = tickerStream.Nonce;  // regardless of whether it was in sequence, update it.
+
             // now we convert it into a classic MarketSummary obj, and add it to cryptopairs
 
             switch (tickerStream.Event) {
                 case "Heartbeat":
                     // do nothing.  Maybe we could get a timestamp and check that we're receiving regular heartbeats?  something for later
+                    // this shouldn't get hit anymore, we filter it out above.  This means every event that gets below the first IF of the function above 
+                    // will have a nonce.  if we decide later we want to use the heartbeat, will have to only check nonces for OB or ticker channels
                     Debug.Print("IR HB");
                     break;
                 case "Trade":
