@@ -7,6 +7,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Collections.Concurrent;
 using System.Windows.Forms.DataVisualization.Charting;
+using Newtonsoft.Json;
 
 namespace IRTicker {
     public class DCE {
@@ -18,13 +19,15 @@ namespace IRTicker {
         private ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> OfferOrderBook_IR = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();  // outer decimal is price, inner decimal is guid
         private ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> BidOrderBook_IR = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();
         // this next thing is hectic.  a dictionry of tuples.  The key is the crypto pair, the tuple in the order books (bid,offer) (which is represented by a dictionary (price) of dictionaries (order guids)
-        private ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>> IR_OBs = new ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>>();
+        public ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>> IR_OBs = new ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>>();
 
         private Dictionary<string, MarketSummary> cryptoPairs;
         public Dictionary<string, OrderBook> orderBooks;  // string format is eg "XBT-AUD" - caps with a dash
 
         // channel nonces
         public ConcurrentDictionary<string, int> channelNonce = new ConcurrentDictionary<string, int>();
+        public ConcurrentDictionary<string, bool> nonceErrorTracker = new ConcurrentDictionary<string, bool>();  // false means no error.  false is good.
+        public ConcurrentDictionary<string, bool> OBResetFlag = new ConcurrentDictionary<string, bool>();  // if true, we need to dump OB and get a new one once nonce has settled down
 
         // constructor
         public DCE(string _codeName, string _friendlyName) {
@@ -469,6 +472,20 @@ namespace IRTicker {
             mSummary.pair = pair;
             CryptoPairsAdd(pair, mSummary);
             //}
+        }
+
+        public void GetIROrderBook(string crypto, string fiat) {
+            Tuple<bool, string> orderBookTpl = Utilities.Get("https://api.independentreserve.com/Public/GetAllOrders?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
+            if (orderBookTpl.Item1) {
+                DCE.OrderBook orderBook = JsonConvert.DeserializeObject<DCE.OrderBook>(orderBookTpl.Item2);
+                orderBooks[crypto + "-" + fiat] = orderBook;
+
+                // next we need to convert this orderbook into a concurrent dictionary of OrderBook_IR objects
+                // so yeah.. the "orderBook" object doesn't really get used anymore.  it's just like a staging area
+                InitialiseOrderBook_IR(crypto + "-" + fiat);
+
+                Debug.Print("IR OB " + crypto + fiat + " done");
+            }
         }
 
 

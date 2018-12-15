@@ -8,6 +8,8 @@ using System.Diagnostics;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using Quobject.SocketIoClientDotNet.Client;
+using System.Collections.Concurrent;
+
 
 
 namespace IRTicker {
@@ -127,7 +129,8 @@ namespace IRTicker {
                     //Debug.Print("subscrbe IR: " + "{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\", \"" + "\"orderbook-" + crypto + "-" + fiat + "\"]} ");
                     //wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\", \"orderbook-" + crypto + "-" + fiat + "\"]} ");
                     wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"orderbook-" + crypto + "-" + fiat + "\"]} ");
-                    DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = 0;  // initialise the nonce dictionary
+                    DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto.ToUpper() + "-" + fiat).ToUpper()] = 0;  // initialise the nonce dictionary
+                    DCEs[dExchange].nonceErrorTracker[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = DCEs[dExchange].OBResetFlag[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = false;  // false means no error, no need to dump OB
                     break;
                 case "BTCM":
                     //Debug.Print("trying to subscribe to BTCM " + crypto);
@@ -296,9 +299,33 @@ namespace IRTicker {
             if (DCEs["IR"].channelNonce[tickerStream.Channel.ToUpper()] > 0) {  // 0 means we have never seen a nonce for this channel
                 if (DCEs["IR"].channelNonce[tickerStream.Channel.ToUpper()] + 1 != tickerStream.Nonce) {  // why not??
                     Debug.Print("NONCE ERROR: " + tickerStream.Channel + ", old nonce: " + DCEs["IR"].channelNonce[tickerStream.Channel.ToUpper()] + ", new nonce: " + tickerStream.Nonce);
+                    DCEs["IR"].nonceErrorTracker[tickerStream.Channel.ToUpper()] = DCEs["IR"].OBResetFlag[tickerStream.Channel.ToUpper()] = true;
+
+                    // delete OB and re-download it, would be good to wait until the nonce stops throwing errors
                 }
+                else DCEs["IR"].nonceErrorTracker[tickerStream.Channel.ToUpper()] = false;
             }
             DCEs["IR"].channelNonce[tickerStream.Channel.ToUpper()] = tickerStream.Nonce;  // regardless of whether it was in sequence, update it.
+
+            // do we need to dump the OB?
+            // if the nonceErrorTracker is true, this means the nonce has recovered from an error run.  if the OBResetFlag is true, it means we need to dump the OB.
+            // because the nonce has settled down, we can now "safely" dump the OB and start again.
+            if (!DCEs["IR"].nonceErrorTracker[tickerStream.Channel.ToUpper()] && DCEs["IR"].OBResetFlag[tickerStream.Channel.ToUpper()]) {
+
+
+                wSocket_IR.Close();  // don't do this, we need to unsubscribe from JUST the channel!
+
+
+
+                // now need to dump the OBs.  but they're private DCE dictionaries.  need to decide if i make them public or write some DCE method.
+                DCEs["IR"].IR_OBs.TryRemove(tickerStream.Data.Pair.ToUpper(), out Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> ignore);
+
+                ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> tempbuy = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>();
+                ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> tempsell = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>();
+                Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> tempTup = new Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>(tempbuy, tempsell);
+                DCEs["IR"].IR_OBs.TryAdd(tickerStream.Data.Pair.ToUpper(), tempTup);
+
+            }
 
             // now we convert it into a classic MarketSummary obj, and add it to cryptopairs
 

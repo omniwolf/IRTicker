@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Net;
+using System.IO;
+using System.Diagnostics;
 
 namespace IRTicker {
     class Utilities {
@@ -76,6 +79,43 @@ namespace IRTicker {
 
                 if (ctrl.HasChildren)
                     ColourDCETags(ctrl.Controls, dExchange); //Recursively check all children controls as well; ie groupboxes or tabpages
+            }
+        }
+
+        public static Tuple<bool, string> Get(string uri) {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+            request.UserAgent = "IRTicker";
+
+            try {
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (Stream stream = response.GetResponseStream())
+                using (StreamReader reader = new StreamReader(stream)) {
+                    string result = reader.ReadToEnd();
+
+                    // annoying
+                    if (result.StartsWith("{\"success\":false")) {
+                        return new Tuple<bool, string>(false, "BadRequest");
+                    }
+                    return new Tuple<bool, string>(true, result);
+                }
+            }
+            catch (WebException e) {
+                string returnStr = "";
+                if (e.Response != null) {
+                    using (WebResponse response = e.Response) {
+                        HttpWebResponse httpResponse = (HttpWebResponse)response;
+                        Debug.Print("Error code: {0}", httpResponse.StatusCode);
+                        using (Stream data = response.GetResponseStream())
+                        using (var reader = new StreamReader(data)) {
+                            returnStr = reader.ReadToEnd();
+                            Debug.Print(returnStr);
+                            returnStr = httpResponse.StatusCode.ToString();
+                        }
+                    }
+                }
+                //MessageBox.Show("Error connecting to URL: " + uri, "Network error", MessageBoxButtons.OK);
+                return new Tuple<bool, string>(false, returnStr);
             }
         }
     }

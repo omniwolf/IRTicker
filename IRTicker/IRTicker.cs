@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Net;
 using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
@@ -295,43 +294,6 @@ namespace IRTicker {
             }
         }
 
-        private Tuple<bool, string> Get(string uri) {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
-            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-            request.UserAgent = "IRTicker";
-
-            try {
-                using(HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                using(Stream stream = response.GetResponseStream())
-                using(StreamReader reader = new StreamReader(stream)) {
-                    string result = reader.ReadToEnd();
-
-                    // annoying
-                    if (result.StartsWith("{\"success\":false")) {
-                        return new Tuple<bool, string>(false, "BadRequest");
-                    }
-                    return new Tuple<bool, string>(true, result);
-                }
-            }
-            catch(WebException e) {
-                string returnStr = "";
-                if(e.Response != null) {
-                    using(WebResponse response = e.Response) {
-                        HttpWebResponse httpResponse = (HttpWebResponse)response;
-                        Debug.Print("Error code: {0}", httpResponse.StatusCode);
-                        using(Stream data = response.GetResponseStream())
-                        using(var reader = new StreamReader(data)) {
-                            returnStr = reader.ReadToEnd();
-                            Debug.Print(returnStr);
-                            returnStr = httpResponse.StatusCode.ToString();
-                        }
-                    }
-                }
-                //MessageBox.Show("Error connecting to URL: " + uri, "Network error", MessageBoxButtons.OK);
-                return new Tuple<bool, string>(false, returnStr);
-            }
-        }
-
         // takes a website httpsResonse.StatusCode and returns a friendly string
         private string WebsiteError(string errorCode) {
             if (errorCode.Contains("429")) return "Rate limited";
@@ -355,7 +317,7 @@ namespace IRTicker {
 
         // this grabs data from the API, creates a MarketSummary object, and pops it in the cryptoPairs dictionary
         private void ParseDCE_IR(string crypto, string fiat) {
-            Tuple<bool, string> marketSummary = Get("https://api.independentreserve.com/Public/GetMarketSummary?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
+            Tuple<bool, string> marketSummary = Utilities.Get("https://api.independentreserve.com/Public/GetMarketSummary?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
             if (!marketSummary.Item1) {
                 DCEs["IR"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
                 DCEs["IR"].NetworkAvailable = false;
@@ -373,7 +335,7 @@ namespace IRTicker {
         }
 
         private void ParseDCE_BTCM(string crypto, string fiat) {
-            Tuple<bool, string> marketSummary = Get("https://api.btcmarkets.net/market/" + (crypto == "XBT" ? "BTC" : crypto) + "/" + fiat + "/tick");
+            Tuple<bool, string> marketSummary = Utilities.Get("https://api.btcmarkets.net/market/" + (crypto == "XBT" ? "BTC" : crypto) + "/" + fiat + "/tick");
             if(!marketSummary.Item1) {
                 DCEs["BTCM"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
                 DCEs["BTCM"].NetworkAvailable = false;
@@ -397,7 +359,7 @@ namespace IRTicker {
         }
 
         private void ParseDCE_CSPT(string fiat) {
-            Tuple<bool, string> marketSummary = Get("https://www.coinspot.com.au/pubapi/latest");
+            Tuple<bool, string> marketSummary = Utilities.Get("https://www.coinspot.com.au/pubapi/latest");
             if (!marketSummary.Item1) {
                 DCEs["CSPT"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
                 DCEs["CSPT"].NetworkAvailable = false;
@@ -442,7 +404,7 @@ namespace IRTicker {
         }
 
         private void ParseFiat_Fixer(string baseSymbol, string symbols) {
-            Tuple<bool, string> fxRates = Get("http://data.fixer.io/api/latest?access_key=3424408462ff94cfa5be1e61d92b6ca4&base=" + baseSymbol + "&symbols=" + symbols);
+            Tuple<bool, string> fxRates = Utilities.Get("http://data.fixer.io/api/latest?access_key=3424408462ff94cfa5be1e61d92b6ca4&base=" + baseSymbol + "&symbols=" + symbols);
             if (!fxRates.Item1) {
                 //OER_NetworkAvailable = false;
             }
@@ -453,7 +415,7 @@ namespace IRTicker {
 
         private void ParseFiat_OER(string baseSymbol, string symbols) {
             Debug.Print("pulling fiat");
-            Tuple<bool, string> fxRates = Get("https://openexchangerates.org/api/latest.json?app_id=33bde25e96a6447da4a54d490ca650f2&base=" + baseSymbol + "&symbols=" + symbols + "&prettyprint=false&show_alternative=false");
+            Tuple<bool, string> fxRates = Utilities.Get("https://openexchangerates.org/api/latest.json?app_id=33bde25e96a6447da4a54d490ca650f2&base=" + baseSymbol + "&symbols=" + symbols + "&prettyprint=false&show_alternative=false");
             if(!fxRates.Item1) {
                 OER_NetworkAvailable = false;
             }
@@ -465,7 +427,7 @@ namespace IRTicker {
 
         // pulls from the /currencies API
         private string[] GetGDAXCurrencies() {
-            Tuple<bool, string> currencies = Get("https://api.pro.coinbase.com/currencies");
+            Tuple<bool, string> currencies = Utilities.Get("https://api.pro.coinbase.com/currencies");
             if (!currencies.Item1) {
                 DCEs["GDAX"].CurrentDCEStatus = WebsiteError(currencies.Item2);
                 DCEs["GDAX"].NetworkAvailable = false;
@@ -509,7 +471,7 @@ namespace IRTicker {
         }
 
         private void GetGDAXProducts() {
-            Tuple<bool, string> products = Get("https://api.pro.coinbase.com/products");
+            Tuple<bool, string> products = Utilities.Get("https://api.pro.coinbase.com/products");
             if (!products.Item1) {
                 DCEs["GDAX"].CurrentDCEStatus = WebsiteError(products.Item2);
                 DCEs["GDAX"].NetworkAvailable = false;
@@ -536,7 +498,7 @@ namespace IRTicker {
 
         private void GetBFXProducts() {
 
-            Tuple<bool, string> products = Get("https://api.bitfinex.com/v1/symbols_details");
+            Tuple<bool, string> products = Utilities.Get("https://api.bitfinex.com/v1/symbols_details");
             if (!products.Item1) {
                 DCEs["BFX"].CurrentDCEStatus = WebsiteError(products.Item2);
                 //DCEs["BFX"].NetworkAvailable = false;
@@ -583,28 +545,8 @@ namespace IRTicker {
             }
         }
 
-        private void GetIROrderBook(string crypto, string fiat) {
-            Tuple<bool, string> orderBookTpl = Get("https://api.independentreserve.com/Public/GetAllOrders?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
-            if (orderBookTpl.Item1) {
-                DCE.OrderBook orderBook = JsonConvert.DeserializeObject<DCE.OrderBook>(orderBookTpl.Item2);
-                DCEs["IR"].orderBooks[crypto + "-" + fiat] = orderBook;
-
-                // next we need to convert this orderbook into a sortedList of OrderBook_IR objects
-                DCEs["IR"].InitialiseOrderBook_IR(crypto + "-" + fiat);
-
-                // report this to the UI so we have initial values
-                if (DCEs["IR"].CurrentSecondaryCurrency == fiat) {
-                    DCE.MarketSummary mSummary = DCEs["IR"].GetCryptoPairs()[crypto + "-" + fiat];
-                    pollingThread.ReportProgress(21, mSummary);
-                }
-
-
-                Debug.Print("IR OB done");
-            }
-        }
-
         private void GetBTCMOrderBook(string crypto) {
-            Tuple<bool, string> orderBookTpl = Get("https://api.btcmarkets.net/market/" + (crypto == "XBT" ? "BTC" : crypto == "BCH" ? "BCHABC" : crypto) + "/" + DCEs["BTCM"].CurrentSecondaryCurrency + "/orderbook");
+            Tuple<bool, string> orderBookTpl = Utilities.Get("https://api.btcmarkets.net/market/" + (crypto == "XBT" ? "BTC" : crypto == "BCH" ? "BCHABC" : crypto) + "/" + DCEs["BTCM"].CurrentSecondaryCurrency + "/orderbook");
             if (orderBookTpl.Item1) { 
                 DCE.OrderBook_BTCM orderBook_BTCM = JsonConvert.DeserializeObject<DCE.OrderBook_BTCM>(orderBookTpl.Item2);
 
@@ -627,7 +569,7 @@ namespace IRTicker {
         }
 
         private void GetGDAXOrderBook(string crypto) {
-            Tuple<bool, string> orderBookTpl = Get("https://api.pro.coinbase.com/products/" + (crypto == "XBT" ? "BTC" : crypto) + "-" + DCEs["GDAX"].CurrentSecondaryCurrency + "/book?level=" + (EnableGDAXLevel3_CheckBox.Checked ? "3" : "2"));
+            Tuple<bool, string> orderBookTpl = Utilities.Get("https://api.pro.coinbase.com/products/" + (crypto == "XBT" ? "BTC" : crypto) + "-" + DCEs["GDAX"].CurrentSecondaryCurrency + "/book?level=" + (EnableGDAXLevel3_CheckBox.Checked ? "3" : "2"));
             if (orderBookTpl.Item1) {
                 DCE.OrderBook_GDAX orderBook_GDAX = JsonConvert.DeserializeObject<DCE.OrderBook_GDAX>(orderBookTpl.Item2);
 
@@ -660,7 +602,7 @@ namespace IRTicker {
         }
 
         private void GetBFXOrderBook(string crypto) {
-            Tuple<bool, string> orderBookTpl = Get("https://api.bitfinex.com/v1/book/" + (crypto == "XBT" ? "BTC" : crypto == "BCH" ? "BAB" : crypto) + DCEs["BFX"].CurrentSecondaryCurrency + "?limit_bids=200&limit_asks=200");
+            Tuple<bool, string> orderBookTpl = Utilities.Get("https://api.bitfinex.com/v1/book/" + (crypto == "XBT" ? "BTC" : crypto == "BCH" ? "BAB" : crypto) + DCEs["BFX"].CurrentSecondaryCurrency + "?limit_bids=200&limit_asks=200");
             if (orderBookTpl.Item1) {
                 DCE.OrderBook_BFX orderBook_BFX = JsonConvert.DeserializeObject<DCE.OrderBook_BFX>(orderBookTpl.Item2);
 
@@ -728,7 +670,7 @@ namespace IRTicker {
 
                 ////// IR ///////
                 if(!DCEs["IR"].HasStaticData) {  // only pull the currencies once per session as these are essentially static
-                    Tuple<bool, string> primaryCurrencyCodesTpl = Get("https://api.independentreserve.com/Public/GetValidPrimaryCurrencyCodes");
+                    Tuple<bool, string> primaryCurrencyCodesTpl = Utilities.Get("https://api.independentreserve.com/Public/GetValidPrimaryCurrencyCodes");
                     if (!primaryCurrencyCodesTpl.Item1) {
                         DCEs["IR"].CurrentDCEStatus = WebsiteError(primaryCurrencyCodesTpl.Item2);
                         DCEs["IR"].NetworkAvailable = false;
@@ -739,7 +681,7 @@ namespace IRTicker {
                         DCEs["IR"].PrimaryCurrencyCodes = Utilities.TrimEnds(primaryCurrencyCodesTpl.Item2);
                     }
 
-                    Tuple<bool, string> secondaryCurrencyCodesTpl = Get("https://api.independentreserve.com/Public/GetValidSecondaryCurrencyCodes");
+                    Tuple<bool, string> secondaryCurrencyCodesTpl = Utilities.Get("https://api.independentreserve.com/Public/GetValidSecondaryCurrencyCodes");
                     if (!secondaryCurrencyCodesTpl.Item1) {
                         DCEs["IR"].CurrentDCEStatus = WebsiteError(secondaryCurrencyCodesTpl.Item2);
                         DCEs["IR"].NetworkAvailable = false;
@@ -756,7 +698,10 @@ namespace IRTicker {
                             foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
                                 productDictionary_IR.Add(crypto + "-" + fiat, new DCE.products_GDAX(crypto + "-" + fiat));
                                 Debug.Print("IR - pulling order book: " + crypto + "-" + fiat);
-                                GetIROrderBook(crypto, fiat);  // while we're spinning through all the pairs, let's grab their order books too.
+                                DCEs["IR"].GetIROrderBook(crypto, fiat);  // while we're spinning through all the pairs, let's grab their order books too.
+                                if (DCEs["IR"].CurrentSecondaryCurrency == fiat) {  // now we have the latest OB, let's alert the UI to update if we're looking at the currently visible secondary currency
+                                    pollingThread.ReportProgress(21, DCEs["IR"].GetCryptoPairs()[crypto + "-" + fiat]);
+                                }
                             }
                         }
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
