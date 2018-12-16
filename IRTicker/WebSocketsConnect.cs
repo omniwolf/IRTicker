@@ -313,18 +313,22 @@ namespace IRTicker {
             if (!DCEs["IR"].nonceErrorTracker[tickerStream.Channel.ToUpper()] && DCEs["IR"].OBResetFlag[tickerStream.Channel.ToUpper()]) {
 
 
-                wSocket_IR.Close();  // don't do this, we need to unsubscribe from JUST the channel!
-
-
+                //wSocket_IR.Close();  // don't do this, we need to unsubscribe from JUST the channel!
+                wSocket_IR.Send("{\"Event\":\"Unsubscribe\",\"Data\":[\"" + tickerStream.Channel + "\"]} ");
 
                 // now need to dump the OBs.  but they're private DCE dictionaries.  need to decide if i make them public or write some DCE method.
-                DCEs["IR"].IR_OBs.TryRemove(tickerStream.Data.Pair.ToUpper(), out Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> ignore);
+                DCEs["IR"].IR_OBs.TryRemove(tickerStream.Data.Pair.ToUpper(), out Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> ignore);                  
 
                 ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> tempbuy = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>();
                 ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> tempsell = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>();
                 Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> tempTup = new Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>(tempbuy, tempsell);
                 DCEs["IR"].IR_OBs.TryAdd(tickerStream.Data.Pair.ToUpper(), tempTup);
 
+                // now subscribe back to the channel
+                Tuple<string, string> pairTup = Utilities.SplitPair(tickerStream.Data.Pair);
+                WebSocket_Subscribe("IR", pairTup.Item1, pairTup.Item2);
+
+                return;  // no need to interpret the rest of the event, we starting fresh on this orderbook.
             }
 
             // now we convert it into a classic MarketSummary obj, and add it to cryptopairs
