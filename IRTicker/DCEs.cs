@@ -420,8 +420,10 @@ namespace IRTicker {
         // 2 sorted lists BidOrderBook_IR and OfferOrderBook_IR
         public void InitialiseOrderBook_IR(string pair) {  // !!!!!!!!!!!!!! need to probably change all adds to TryAdd to make sure they're safe, work out how to handle duplicate adds
 
+            pair = pair.ToUpper();  // always uppercase
+
             // fix this.  need to create new dictionaries and whatevs when a pair we haven't seen before comes along
-            if (!IR_OBs.ContainsKey(pair)) {
+            if (!IR_OBs.ContainsKey(pair.ToUpper())) {
                 // OK if it doesn't contain this pair, we have to create some shiz
 
                 ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> tempbuy = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();
