@@ -40,6 +40,12 @@ namespace IRTicker {
         public IRTicker() {
             InitializeComponent();
 
+            Debug.Print("");
+            Debug.Print("----------------");
+            Debug.Print("IR TICKER BEGINS");
+            Debug.Print("----------------");
+            Debug.Print("");
+
             if (refreshFrequencyTextbox.Text == "1") refreshFrequencyTextbox.Text = minRefreshFrequency.ToString();  // design time default is 1, we set to our actual min
 
             if (string.IsNullOrEmpty(Properties.Settings.Default.ToolbarFolder)) {
@@ -787,10 +793,10 @@ namespace IRTicker {
                         Debug.Print("GDAX ded, reconnecting");
                         wSocketConnect.WebSocket_Reconnect("GDAX");
                     }
-                    /*if (!wSocketConnect.IsSocketAlive("IR")) {
+                    if (!wSocketConnect.IsSocketAlive("IR")) {
                         Debug.Print("IR ded, reconnecting");
                         wSocketConnect.WebSocket_Reconnect("IR");
-                    }*/
+                    }
                 }
 
 
@@ -920,7 +926,7 @@ namespace IRTicker {
                     UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = pairObj.Value.spread.ToString(formatStringSpread) + ((pairObj.Value.DayVolume == 0) ? "" : " / " + pairObj.Value.DayVolume.ToString(formatStringVol));
 
                     // update tool tips.
-                    UIControls_Dict[dExchange].ToolTip_Dict[pairObj.Value.PrimaryCurrencyCode + "_PriceTT"].SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], "Best bid: " + pairObj.Value.CurrentHighestBidPrice + System.Environment.NewLine + "Best offer: " + pairObj.Value.CurrentLowestOfferPrice);
+                    UIControls_Dict[dExchange].ToolTip_Dict[pairObj.Value.PrimaryCurrencyCode + "_PriceTT"].SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], "Best bid: " + pairObj.Value.CurrentHighestBidPrice.ToString(formatString) + System.Environment.NewLine + "Best offer: " + pairObj.Value.CurrentLowestOfferPrice.ToString(formatString));
                 }
                 //else Debug.Print("Pair don't exist, pairObj.Value.SecondaryCurrencyCode: " + pairObj.Value.SecondaryCurrencyCode);
             }
@@ -957,7 +963,7 @@ namespace IRTicker {
                 if (mSummary.DayVolume >= 1000) formatStringVol = "### ##0.00";
                 if (mSummary.DayVolume >= 1000000) formatStringVol = "### ### ##0.00";
 
-                decimal midPoint = (mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice ) / 2;
+                decimal midPoint = (mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice ) / 2;  // we don't use last price anymore, instead the midpoint of the spread
 
                 System.Windows.Forms.Label tempPrice = UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"];
 
@@ -996,7 +1002,7 @@ namespace IRTicker {
                 }
 
                 // update tool tips.
-                UIControls_Dict[dExchange].ToolTip_Dict[mSummary.PrimaryCurrencyCode + "_PriceTT"].SetToolTip(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"], "Best bid: " + mSummary.CurrentHighestBidPrice + System.Environment.NewLine + "Best offer: " + mSummary.CurrentLowestOfferPrice);
+                UIControls_Dict[dExchange].ToolTip_Dict[mSummary.PrimaryCurrencyCode + "_PriceTT"].SetToolTip(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"], "Best bid: " + mSummary.CurrentHighestBidPrice.ToString(formatString) + System.Environment.NewLine + "Best offer: " + mSummary.CurrentLowestOfferPrice.ToString(formatString));
             }
             else Debug.Print("Pair2 don't exist, pairObj.Value.SecondaryCurrencyCode: " + mSummary.SecondaryCurrencyCode);
         }
@@ -1149,9 +1155,10 @@ namespace IRTicker {
             // here we iterate through the exchanges and update their group boxes and labels
 
             foreach (string dExchange in Exchanges) {
-                if (dExchange == "BFX" || dExchange == "GDAX" || dExchange == "BTCM" /*|| dExchange == "IR"*/) {  // for sockets we don't update labels or change colours.  that happens on demand.
+                if (dExchange == "BFX" || dExchange == "GDAX" || dExchange == "BTCM" || dExchange == "IR") {  // for sockets we don't update labels or change colours.  that happens on demand.
                     if (DCEs[dExchange].HasStaticData && DCEs[dExchange].ChangedSecondaryCurrency) {
-                        PopulateCryptoComboBox(dExchange);  // need to re-populate this as it dynamically only populates the comboxbox with cryptos that the current fiat currency has a pair with
+                        // don't think we need to do this next line - we do it in the groupbox_click() sub
+                        //PopulateCryptoComboBox(dExchange);  // need to re-populate this as it dynamically only populates the comboxbox with cryptos that the current fiat currency has a pair with
                         DCEs[dExchange].ChangedSecondaryCurrency = false;
                     }
                     else UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Gray;  // any text there is now a poll old, so gray it out so the user knows it's stale.
@@ -1363,10 +1370,15 @@ namespace IRTicker {
         }
 
         private void IR_GroupBox_Click(object sender, EventArgs e) {
-            if (DCEs["IR"].NetworkAvailable) {
+            if (DCEs["IR"].HasStaticData) {
                 GroupBox_Click("IR");
-                UIControls_Dict["IR"].AvgPrice_Crypto.Enabled = false;  // disable it while we work out the new available cryptos
-                pollingThread.CancelAsync();  // cancel the poll so we don't try and download data for the wrong base currency
+                GroupBoxAndLabelColourActive("IR");
+                // need to force a label update, otherwise they'll stay grey <no currency> until the next update comes through
+                foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in DCEs["IR"].GetCryptoPairs()) {
+                    UpdateLabels_Pair("IR", pairObj.Value.PrimaryCurrencyCode, pairObj.Value.SecondaryCurrencyCode);
+                }
+
+                PopulateCryptoComboBox("IR");
             }
         }
 

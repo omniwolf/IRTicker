@@ -24,10 +24,11 @@ namespace IRTicker {
         private Dictionary<string, MarketSummary> cryptoPairs;
         public Dictionary<string, OrderBook> orderBooks;  // string format is eg "XBT-AUD" - caps with a dash
 
-        // channel nonces
+        // websocket stuff
         public ConcurrentDictionary<string, int> channelNonce = new ConcurrentDictionary<string, int>();
         public ConcurrentDictionary<string, bool> nonceErrorTracker = new ConcurrentDictionary<string, bool>();  // false means no error.  false is good.
         public ConcurrentDictionary<string, bool> OBResetFlag = new ConcurrentDictionary<string, bool>();  // if true, we need to dump OB and get a new one once nonce has settled down
+        public DateTime HeartBeat = new DateTime(2000, 1, 1);  // set it way in the past.  use this as an initialisation value
 
         // constructor
         public DCE(string _codeName, string _friendlyName) {
@@ -50,8 +51,8 @@ namespace IRTicker {
         public string CurrentDCEStatus { get; set; }
 
         public List<Tuple<DateTime, decimal>> GetPriceList(string pair) {
-            if (priceHistory.ContainsKey(pair)) {
-                priceHistory.TryGetValue(pair, out List<Tuple<DateTime, decimal>> result);
+            if (priceHistory.ContainsKey(pair.ToUpper())) {
+                priceHistory.TryGetValue(pair.ToUpper(), out List<Tuple<DateTime, decimal>> result);
                 return result;
             }
             else {
@@ -98,6 +99,12 @@ namespace IRTicker {
                     if (mSummary.DayVolumeInSecondaryCurrency != 0) cryptoPairs[pair].DayVolumeInSecondaryCurrency = mSummary.DayVolumeInSecondaryCurrency;
                     if (mSummary.DayVolumeXbt != 0) cryptoPairs[pair].DayVolumeXbt = mSummary.DayVolumeXbt;
                     if (mSummary.LastPrice != 0) cryptoPairs[pair].LastPrice = mSummary.LastPrice;
+
+                    // these 3 will be 0 or "" if the mSummary object has come from a REST pull
+                    // if the data comes from a REST pull, then we just take the latest bid/offer/timestamp deets as they'll likely be more up to date than what comes through REST
+                    if (mSummary.CurrentHighestBidPrice == 0) mSummary.CurrentHighestBidPrice = cryptoPairs[pair].CurrentHighestBidPrice;
+                    if (mSummary.CurrentLowestOfferPrice == 0) mSummary.CurrentLowestOfferPrice = cryptoPairs[pair].CurrentLowestOfferPrice;
+                    if (mSummary.CreatedTimestampUTC == "") mSummary.CreatedTimestampUTC = cryptoPairs[pair].CreatedTimestampUTC;
                 }
                 else {  // new element
                     cryptoPairs[pair] = mSummary;
@@ -105,11 +112,19 @@ namespace IRTicker {
 
             }
 
+            if (CodeName == "IR") {
+                // do nothing
+                ;
+            }
+
             if (!priceHistory.ContainsKey(pair)) {  // if this crypto/fiat pair hasn't come up before, create a new empty dictionary kvp
                 priceHistory.TryAdd(pair, new List<Tuple<DateTime, decimal>>());
             }
             lock (priceHistory[pair]) {  // we're locking on the List, not the ConcurrentDictionary
                 priceHistory[pair].Add(new Tuple<DateTime, decimal>(DateTime.Now, ((mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice) / 2)));  // add the time and price to the kvp's value list
+                if (CodeName == "IR" && pair == "XBT-AUD" && priceHistory[pair].Last().Item2 == 0) {
+                    ;
+                }
             }
             
             lock (spreadHistory) {
@@ -267,21 +282,21 @@ namespace IRTicker {
                     if (eventStr == "OrderChanged") {
                         if (order.OrderType.EndsWith("Bid")) {
                             if (order.Pair.ToUpper() == "ETH-AUD") {
-                                Debug.Print("ETH bid order changed");
+                                //Debug.Print("ETH bid order changed");
                             }
                             OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
                             TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max()];
                         }
                         else {
                             if (order.Pair.ToUpper() == "ETH-AUD") {
-                                Debug.Print("ETH offer order changed");
+                                //Debug.Print("ETH offer order changed");
                             }
                             OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
                             TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min()];
                         }
                     }
                     else {
-                        Debug.Print("IR ws - a new order that wasn't a bid or offer was sent to us? " + order.OrderType + " price: " + order.Price);
+                        Debug.Print("IR ws - a new order that wasn't a bid or offer was sent to us? " + order.OrderType + " price: " + order.Price + " event: " + eventStr);
                         return false;
                     }
                     break;
@@ -300,7 +315,7 @@ namespace IRTicker {
 
                 if (order.Pair.ToUpper() == "ETH-AUD") {
 
-                    Debug.Print("a changed ETHAUD order will change the spread - " + order.OrderType);
+                    //Debug.Print("a changed ETHAUD order will change the spread - " + order.OrderType);
                 }
                 //break;
             }
@@ -327,7 +342,7 @@ namespace IRTicker {
                 else if (eventStr == "OrderCanceled" && TopOrder.ContainsKey(order.OrderGuid) && TopOrder.Count == 1) {  // if the cancelled order is at the top, and it's the only one at that price, spread will change.
                 if (order.Pair.ToUpper() == "ETH-AUD") {
 
-                    Debug.Print("a canceled ETHAUD order will change the spread - " + TopOrder.First().Value.Price);
+                    //Debug.Print("a canceled ETHAUD order will change the spread - " + TopOrder.First().Value.Price);
                 }
                 OrderWillChangeSpread = true;
             }
@@ -486,7 +501,7 @@ namespace IRTicker {
                 // so yeah.. the "orderBook" object doesn't really get used anymore.  it's just like a staging area
                 InitialiseOrderBook_IR(crypto + "-" + fiat);
 
-                Debug.Print("IR OB " + crypto + fiat + " done");
+                Debug.Print(DateTime.Now.ToString() + " IR OB " + crypto + fiat + " done");
             }
         }
 
