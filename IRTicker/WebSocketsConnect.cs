@@ -220,19 +220,28 @@ namespace IRTicker {
         public void WebSocket_Reconnect(string dExchange) {
             switch (dExchange) {
                 case "IR":
-                    wSocket_IR.Close();
+                    
+                    if (wSocket_IR.IsAlive) {
+                        Debug.Print("IR - websockets is alive, closing websocket");
+                        wSocket_IR.Close();
+                        Debug.Print("IR - closed websocket");
+                    }
 
                     // clean out all the OBs
-                    DCEs["IR"].IR_OBs = new ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>>();
+                    //DCEs[dExchange].IR_OBs = new ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>>();
+                    DCEs[dExchange].IR_OBs.Clear();
+                    Debug.Print(dExchange + " - cleared the order book dictionary, IR_OBs size: " + DCEs["IR"].IR_OBs.Count);
 
                     // re-populate the OBs using REST
+                    Debug.Print(dExchange + " - building new REST OBs");
                     foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
                         foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
                             if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                                DCEs["IR"].GetIROrderBook(primaryCode, secondaryCode);
+                                DCEs[dExchange].GetIROrderBook(primaryCode, secondaryCode);
                             }
                         }
                     }
+                    Debug.Print("Rest OBs built.  IR_OBs size: " + DCEs[dExchange].IR_OBs.Count + ".  Reconnecting to websockets...");
 
                     wSocket_IR.Connect();
                     break;
@@ -251,6 +260,7 @@ namespace IRTicker {
             }
 
             //re-subscribe?
+            Debug.Print(dExchange + " - re-subscribing to all pairs...");
             foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
                 foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
                     if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
@@ -383,7 +393,7 @@ namespace IRTicker {
                         // next we need to pull the mSummary object out of the cryptoPairs array :/
                         //Debug.Print("spread changing event: " + message);
                         if (DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()].spread < 0) {
-                            Debug.Print(DateTime.Now + " IR websockets has failed, and the spread is below 0.  Restarting :(");
+                            Debug.Print(DateTime.Now + " IR websockets has failed, and the spread is below 0.  Restarting :(  bid: " + DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()].CurrentHighestBidPrice + " and offer: " + DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()].CurrentLowestOfferPrice);
                             WebSocket_Reconnect("IR");
                             return;
                         }
