@@ -218,9 +218,10 @@ namespace IRTicker {
         }
 
         public void WebSocket_Reconnect(string dExchange) {
+            Debug.Print("WebSocket_Reconnect for " + dExchange);
             switch (dExchange) {
                 case "IR":
-                    
+                    Debug.Print("switched to IR");
                     if (wSocket_IR.IsAlive) {
                         Debug.Print("IR - websockets is alive, closing websocket");
                         wSocket_IR.Close();
@@ -229,6 +230,7 @@ namespace IRTicker {
 
                     // clean out all the OBs
                     //DCEs[dExchange].IR_OBs = new ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>>();
+                    Debug.Print(DateTime.Now + " IR - About to .clear the IR_OBs");
                     DCEs[dExchange].IR_OBs.Clear();
                     Debug.Print(dExchange + " - cleared the order book dictionary, IR_OBs size: " + DCEs["IR"].IR_OBs.Count);
 
@@ -367,6 +369,16 @@ namespace IRTicker {
             }
 
             // now we convert it into a classic MarketSummary obj, and add it to cryptopairs
+
+            if (!DCEs["IR"].IR_OBs.ContainsKey(tickerStream.Data.Pair.ToUpper())) {
+                Debug.Print(DateTime.Now.ToString() + " IR - receieved an event we don't have a pair for (" + tickerStream.Data.Pair + "), will grab it");
+
+                Tuple<string, string> tempTup = Utilities.SplitPair(tickerStream.Data.Pair);
+
+                DCEs["IR"].GetIROrderBook(tempTup.Item1, tempTup.Item2);
+                WebSocket_Subscribe("IR", tempTup.Item1, tempTup.Item2);
+                return;
+            }
 
             switch (tickerStream.Event) {
                 case "Heartbeat":

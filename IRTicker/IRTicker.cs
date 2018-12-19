@@ -793,7 +793,7 @@ namespace IRTicker {
                         Debug.Print("GDAX ded, reconnecting");
                         wSocketConnect.WebSocket_Reconnect("GDAX");
                     }
-                    if (!wSocketConnect.IsSocketAlive("IR")) {
+                    if (!wSocketConnect.IsSocketAlive("IR")) {  // do i need to add some logic here to make sure we're not currently in the reconnect process if this code happens to get hit when we are reconnecting?
                         Debug.Print("IR ded, reconnecting");
                         wSocketConnect.WebSocket_Reconnect("IR");
                     }
