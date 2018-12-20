@@ -27,33 +27,7 @@ namespace IRTicker {
             pollingThread = _pollingThread;
 
             // IR
-            wSocket_IR = new WebSocket("wss://websockets.independentreserve.com");
-            wSocket_IR.OnMessage += (sender, e) => {
-                if (e.IsText) {
-                    //Debug.Print(DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("HH:mm:ss") + " - IR sockets: " + e.Data);
-                    MessageRX_IR(e.Data);
-                }
-                else Debug.Print("IR ws stream is not text?? - " + e.RawData.ToString());
-            };
-
-            wSocket_IR.OnOpen += (sender, e) => {
-                Debug.Print("ws onopen - IR");
-            };
-
-            wSocket_IR.OnError += (sender, e) => {
-                Debug.Print("ws onerror - IR");
-                wSocket_IR.Close();
-                DCEs["IR"].NetworkAvailable = false;
-                DCEs["IR"].CurrentDCEStatus = "Socket error";
-                DCEs["IR"].HasStaticData = false;
-                pollingThread.ReportProgress(12, "IR");  // 12 is error
-                WebSocket_Reconnect("IR");
-            };
-
-            wSocket_IR.OnClose += (sender, e) => {
-                Debug.Print("IR stream closed... should be preceeded by some ded thingo " + DateTime.Now.ToString());
-            };
-            wSocket_IR.Connect();
+            IR_Connect();
             
             // BTCM
 
@@ -159,6 +133,38 @@ namespace IRTicker {
             }
         }
 
+        public void IR_Connect() {
+            wSocket_IR = new WebSocket("wss://websockets.independentreserve.com");
+            wSocket_IR.OnMessage += (sender, e) => {
+                if (e.IsText) {
+                    //Debug.Print(DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("HH:mm:ss") + " - IR sockets: " + e.Data);
+                    MessageRX_IR(e.Data);
+                }
+                else Debug.Print("IR ws stream is not text?? - " + e.RawData.ToString());
+            };
+
+            wSocket_IR.OnOpen += (sender, e) => {
+                Debug.Print("ws onopen - IR");
+            };
+
+            wSocket_IR.OnError += (sender, e) => {
+                Debug.Print("ws onerror - IR");
+                wSocket_IR.Close();
+                DCEs["IR"].NetworkAvailable = false;
+                DCEs["IR"].CurrentDCEStatus = "Socket error";
+                //DCEs["IR"].HasStaticData = false;  // i don't think we should ever set this to false... once we have the static data that's all we need.
+                pollingThread.ReportProgress(12, "IR");  // 12 is error
+                //WebSocket_Reconnect("IR");
+                DCEs["IR"].socketsReset = true;
+            };
+
+            wSocket_IR.OnClose += (sender, e) => {
+                Debug.Print(DateTime.Now + " IR stream closed... should be preceeded by some ded thingo " + DateTime.Now.ToString());
+            };
+
+            wSocket_IR.Connect();
+        }
+
         public void BTCM_Connect() {
             // BTCM
 
@@ -185,7 +191,7 @@ namespace IRTicker {
                 socket_BTCM.Close();
                 DCEs["BTCM"].NetworkAvailable = false;
                 DCEs["BTCM"].CurrentDCEStatus = "Socket error";
-                DCEs["BTCM"].HasStaticData = false;
+                //DCEs["BTCM"].HasStaticData = false;
                 pollingThread.ReportProgress(12, "BTCM");  // 12 is error
                 WebSocket_Reconnect("BTCM");
             });
@@ -195,7 +201,7 @@ namespace IRTicker {
                 socket_BTCM.Close();
                 DCEs["BTCM"].NetworkAvailable = false;
                 DCEs["BTCM"].CurrentDCEStatus = "Socket connection error";
-                DCEs["BTCM"].HasStaticData = false;
+                //DCEs["BTCM"].HasStaticData = false;
                 pollingThread.ReportProgress(12, "BTCM");  // 12 is error
                 WebSocket_Reconnect("BTCM");
             });
@@ -205,7 +211,7 @@ namespace IRTicker {
                 socket_BTCM.Close();
                 DCEs["BTCM"].NetworkAvailable = false;
                 DCEs["BTCM"].CurrentDCEStatus = "Socket timeout";
-                DCEs["BTCM"].HasStaticData = false;
+                //DCEs["BTCM"].HasStaticData = false;
                 pollingThread.ReportProgress(12, "BTCM");  // 12 is error
                 WebSocket_Reconnect("BTCM");
             });
@@ -228,6 +234,8 @@ namespace IRTicker {
                         Debug.Print("IR - closed websocket");
                     }
 
+                    IR_Connect();  // create all the sockets stuff again from scratch :/
+                    DCEs["IR"].HeartBeat = DateTime.Now;
                     // clean out all the OBs
                     //DCEs[dExchange].IR_OBs = new ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>>();
                     Debug.Print(DateTime.Now + " IR - About to .clear the IR_OBs");
@@ -245,7 +253,7 @@ namespace IRTicker {
                     }
                     Debug.Print("Rest OBs built.  IR_OBs size: " + DCEs[dExchange].IR_OBs.Count + ".  Reconnecting to websockets...");
 
-                    wSocket_IR.Connect();
+                    //wSocket_IR.Connect();
                     break;
                 case "BTCM":
                     socket_BTCM.Close();
@@ -320,9 +328,11 @@ namespace IRTicker {
                 if (DCEs["IR"].HeartBeat.Year != 2000 && DCEs["IR"].HeartBeat + TimeSpan.FromSeconds(80) < DateTime.Now) {  // should be every 60 secs, but give it 20 secs leeway 
                     // ok we have lost the heartbeat.  close the socket re-download all OBs, then open the socket and re-subscribe to all channels
                     Debug.Print(DateTime.Now + " IR websockts hasn't received a heartbeat in over 80 seconds.  Starting fresh...");
-                    WebSocket_Reconnect("IR");
+                    //WebSocket_Reconnect("IR");
+                    DCEs["IR"].socketsReset = true;
                     return;
                 }
+                Debug.Print(DateTime.Now + " IR - legit heartbeat");
                 DCEs["IR"].HeartBeat = DateTime.Now;
                 return;
             }
@@ -406,7 +416,8 @@ namespace IRTicker {
                         //Debug.Print("spread changing event: " + message);
                         if (DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()].spread < 0) {
                             Debug.Print(DateTime.Now + " IR websockets has failed, and the spread is below 0.  Restarting :(  bid: " + DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()].CurrentHighestBidPrice + " and offer: " + DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()].CurrentLowestOfferPrice);
-                            WebSocket_Reconnect("IR");
+                            //WebSocket_Reconnect("IR");
+                            DCEs["IR"].socketsReset = true;
                             return;
                         }
                         if (DCEs["IR"].CurrentSecondaryCurrency == eventPair.Item2.ToUpper()) {
@@ -521,7 +532,7 @@ namespace IRTicker {
                 wSocket_GDAX.Close();
                 DCEs["GDAX"].CurrentDCEStatus = "API response error";
                 DCEs["GDAX"].NetworkAvailable = false;
-                DCEs["GDAX"].HasStaticData = false;
+                //DCEs["GDAX"].HasStaticData = false;
                 pollingThread.ReportProgress(12, "GDAX");  // ?2 is error
                 wSocket_GDAX.Connect();
             }
@@ -586,7 +597,7 @@ namespace IRTicker {
                     wSocket_BFX.Close();
                     DCEs["BFX"].CurrentDCEStatus = "API response error";
                     DCEs["BFX"].NetworkAvailable = false;
-                    DCEs["BFX"].HasStaticData = false;
+                    //DCEs["BFX"].HasStaticData = false;
                     pollingThread.ReportProgress(12, "BFX");  // 12 is error
                     wSocket_BFX.Connect();
                 }

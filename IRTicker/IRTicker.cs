@@ -729,6 +729,13 @@ namespace IRTicker {
                 }
                 else DCEs["IR"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
 
+                if (DCEs["IR"].socketsReset) {
+                    // ok we need to reset the socket.
+                    Debug.Print(DateTime.Now + " IR - restarting sockets from backgroundWorker");
+                    wSocketConnect.WebSocket_Reconnect("IR");
+                    DCEs["IR"].socketsReset = false;
+                }
+
 
                 //////// BTC Markets /////////
 
@@ -794,8 +801,8 @@ namespace IRTicker {
                         wSocketConnect.WebSocket_Reconnect("GDAX");
                     }
                     if (!wSocketConnect.IsSocketAlive("IR")) {  // do i need to add some logic here to make sure we're not currently in the reconnect process if this code happens to get hit when we are reconnecting?
-                        Debug.Print("IR ded, reconnecting");
-                        wSocketConnect.WebSocket_Reconnect("IR");
+                        Debug.Print("IR ded, reconnecting at next poll");
+                        DCEs["IR"].socketsReset = true;
                     }
                 }
 
