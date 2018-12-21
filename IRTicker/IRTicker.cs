@@ -729,6 +729,12 @@ namespace IRTicker {
                 }
                 else DCEs["IR"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
 
+                if (DCEs["IR"].HeartBeat + TimeSpan.FromSeconds(100) < DateTime.Now) {
+                    // we haven't received a heartbeat in 80 seconds..
+                    Debug.Print(DateTime.Now + " IR - haven't received any messages via sockets in 100 seconds.  reconnecting..");
+                    DCEs["IR"].socketsReset = true;
+                }
+
                 if (DCEs["IR"].socketsReset) {
                     // ok we need to reset the socket.
                     Debug.Print(DateTime.Now + " IR - restarting sockets from backgroundWorker");

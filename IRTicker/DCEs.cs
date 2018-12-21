@@ -354,10 +354,10 @@ namespace IRTicker {
                 case "NewOrder":
 
                     if (OB_IR.ContainsKey(order.Price)) {  // this is a new order at an existing price step in the OB
-                        if (OB_IR[order.Price].ContainsKey(order.OrderGuid)) {
+                        //if (OB_IR[order.Price].ContainsKey(order.OrderGuid)) {
                             //Debug.Print("weird, trying to add a new order, but the guid is already in the dictionary?? - " + order.OrderGuid);
                             //break;
-                        }
+                        //}
 
                         OB_IR[order.Price].TryAdd(order.OrderGuid, order);
                         //Debug.Print("New order existing price - " + order.Price);
@@ -370,7 +370,7 @@ namespace IRTicker {
                     }
                     break;
 
-                case "OrderChanged":
+                case "OrderChanged":  // i think i need to work on this section.
 
                     // Roman had an idea here where I maintain 2 dictionaries, one where the key is the price and one where the key is the guid.  find the guid; find the price.
                     foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> Price in OB_IR) {

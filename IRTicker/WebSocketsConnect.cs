@@ -320,22 +320,23 @@ namespace IRTicker {
         private void MessageRX_IR(string message) {
             if (message.Contains("\"Event\":\"Subscriptions\"")) {
                 // ignore the subscriptions event.  it breaks parsing too :/
+                Debug.Print("IGNORING - " + message);
                 return;
             }
 
             if (message.Contains("\"Event\":\"Heartbeat\"")) {
                 // let's keep track of this.
-                if (DCEs["IR"].HeartBeat.Year != 2000 && DCEs["IR"].HeartBeat + TimeSpan.FromSeconds(80) < DateTime.Now) {  // should be every 60 secs, but give it 20 secs leeway 
+                /*if (DCEs["IR"].HeartBeat.Year != 2000 && DCEs["IR"].HeartBeat + TimeSpan.FromSeconds(80) < DateTime.Now) {  // should be every 60 secs, but give it 20 secs leeway 
                     // ok we have lost the heartbeat.  close the socket re-download all OBs, then open the socket and re-subscribe to all channels
                     Debug.Print(DateTime.Now + " IR websockts hasn't received a heartbeat in over 80 seconds.  Starting fresh...");
                     //WebSocket_Reconnect("IR");
                     DCEs["IR"].socketsReset = true;
                     return;
-                }
+                }*/
                 Debug.Print(DateTime.Now + " IR - legit heartbeat");
-                DCEs["IR"].HeartBeat = DateTime.Now;
                 return;
             }
+            DCEs["IR"].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
 
             if (message.Contains("OrderChanged")) {
                 //Debug.Print("IR order change: " + message);
@@ -351,7 +352,7 @@ namespace IRTicker {
 
                     // delete OB and re-download it, would be good to wait until the nonce stops throwing errors
                 }
-                else DCEs["IR"].nonceErrorTracker[tickerStream.Channel.ToUpper()] = false;
+                else DCEs["IR"].nonceErrorTracker[tickerStream.Channel.ToUpper()] = false;  // if this is false and we're setting it again to false, fine - normal operation.  If this was true and we're now setting it to false, this means that we had some nonce errors but they seem to have settled down, and we can now dump and reconnect
             }
             DCEs["IR"].channelNonce[tickerStream.Channel.ToUpper()] = tickerStream.Nonce;  // regardless of whether it was in sequence, update it.
 
@@ -365,7 +366,7 @@ namespace IRTicker {
                 //wSocket_IR.Close();  // don't do this, we need to unsubscribe from JUST the channel!
                 wSocket_IR.Send("{\"Event\":\"Unsubscribe\",\"Data\":[\"" + tickerStream.Channel + "\"]} ");
 
-                // now need to dump the OBs.  but they're private DCE dictionaries.  need to decide if i make them public or write some DCE method.
+                // now need to dump the OBs. 
                 DCEs["IR"].IR_OBs.TryRemove(tickerStream.Data.Pair.ToUpper(), out Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> ignore);                  
 
                 // re-populate the OB using REST
@@ -415,10 +416,10 @@ namespace IRTicker {
                         // next we need to pull the mSummary object out of the cryptoPairs array :/
                         //Debug.Print("spread changing event: " + message);
                         if (DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()].spread < 0) {
-                            Debug.Print(DateTime.Now + " IR websockets has failed, and the spread is below 0.  Restarting :(  bid: " + DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()].CurrentHighestBidPrice + " and offer: " + DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()].CurrentLowestOfferPrice);
+                            Debug.Print(DateTime.Now + " IR spread (" + tickerStream.Data.Pair + ") is " + DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()].spread + " :(  bid: " + DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()].CurrentHighestBidPrice + " and offer: " + DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()].CurrentLowestOfferPrice);
                             //WebSocket_Reconnect("IR");
-                            DCEs["IR"].socketsReset = true;
-                            return;
+                            //DCEs["IR"].socketsReset = true;
+                            //return;
                         }
                         if (DCEs["IR"].CurrentSecondaryCurrency == eventPair.Item2.ToUpper()) {
                             DCE.MarketSummary mSummary = DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()];
