@@ -102,9 +102,12 @@ namespace IRTicker {
                 case "IR":
                     //Debug.Print("subscrbe IR: " + "{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\", \"" + "\"orderbook-" + crypto + "-" + fiat + "\"]} ");
                     //wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\", \"orderbook-" + crypto + "-" + fiat + "\"]} ");
-                    wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"orderbook-" + crypto + "-" + fiat + "\"]} ");
-                    DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = 0;  // initialise the nonce dictionary
-                    DCEs[dExchange].nonceErrorTracker[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = DCEs[dExchange].OBResetFlag[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = false;  // false means no error, no need to dump OB
+                    if (wSocket_IR.IsAlive) {
+                        wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"orderbook-" + crypto + "-" + fiat + "\"]} ");
+                        DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = 0;  // initialise the nonce dictionary
+                        DCEs[dExchange].nonceErrorTracker[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = DCEs[dExchange].OBResetFlag[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = false;  // false means no error, no need to dump OB
+                    }
+                    else DCEs["IR"].socketsReset = true;
                     break;
                 case "BTCM":
                     //Debug.Print("trying to subscribe to BTCM " + crypto);
@@ -337,7 +340,7 @@ namespace IRTicker {
                 return;
             }
             DCEs["IR"].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
-
+             
             if (message.Contains("OrderChanged")) {
                 //Debug.Print("IR order change: " + message);
             }
@@ -363,18 +366,22 @@ namespace IRTicker {
 
                 DCEs["IR"].OBResetFlag[tickerStream.Channel.ToUpper()] = false;
 
-                //wSocket_IR.Close();  // don't do this, we need to unsubscribe from JUST the channel!
-                wSocket_IR.Send("{\"Event\":\"Unsubscribe\",\"Data\":[\"" + tickerStream.Channel + "\"]} ");
+                if (wSocket_IR.IsAlive) {
 
-                // now need to dump the OBs. 
-                DCEs["IR"].IR_OBs.TryRemove(tickerStream.Data.Pair.ToUpper(), out Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> ignore);                  
+                    //wSocket_IR.Close();  // don't do this, we need to unsubscribe from JUST the channel!
+                    wSocket_IR.Send("{\"Event\":\"Unsubscribe\",\"Data\":[\"" + tickerStream.Channel + "\"]} ");
 
-                // re-populate the OB using REST
-                Tuple<string, string> pairTup = Utilities.SplitPair(tickerStream.Data.Pair);
-                DCEs["IR"].GetIROrderBook(pairTup.Item1, pairTup.Item2);
+                    // now need to dump the OBs. 
+                    DCEs["IR"].IR_OBs.TryRemove(tickerStream.Data.Pair.ToUpper(), out Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> ignore);
 
-                // now subscribe back to the channel
-                WebSocket_Subscribe("IR", pairTup.Item1, pairTup.Item2);
+                    // re-populate the OB using REST
+                    Tuple<string, string> pairTup = Utilities.SplitPair(tickerStream.Data.Pair);
+                    DCEs["IR"].GetIROrderBook(pairTup.Item1, pairTup.Item2);
+
+                    // now subscribe back to the channel
+                    WebSocket_Subscribe("IR", pairTup.Item1, pairTup.Item2);
+                }
+                else DCEs["IR"].socketsReset = true;
 
                 return;  // no need to interpret the rest of the event, we starting fresh on this orderbook.
             }

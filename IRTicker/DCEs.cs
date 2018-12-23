@@ -267,14 +267,17 @@ namespace IRTicker {
 
             ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> OB_IR;  // an order will only ever be a limit or a bid, so sort it out up top to reduce code duplication
             ConcurrentDictionary<string, OrderBook_IR> TopOrder;
+            Decimal TopPrice;  // this will be the price of the order we're looking at.  Have to grab it separarely as the API doesn't tell it to us depending on the event :(
             switch (order.OrderType) {
                 case "LimitBid":
                     OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
-                    TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max()];
+                    TopPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
+                    TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[TopPrice];
                     break;
                 case "LimitOffer":
                     OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
-                    TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min()];
+                    TopPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
+                    TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[TopPrice];
 
                     break;
                 default:
@@ -286,14 +289,16 @@ namespace IRTicker {
                                 //Debug.Print("ETH bid order changed");
                             }
                             OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
-                            TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max()];
+                            TopPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
+                            TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[TopPrice];
                         }
                         else {
                             if (order.Pair.ToUpper() == "ETH-AUD") {
                                 //Debug.Print("ETH offer order changed");
                             }
                             OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
-                            TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min()];
+                            TopPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
+                            TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[TopPrice];
                         }
                     }
                     else {
@@ -310,17 +315,17 @@ namespace IRTicker {
             
 
             //foreach (OrderBook_IR Price in OB_IR.First().Value){
-                if (eventStr == "OrderChanged" && TopOrder.ContainsKey(order.OrderGuid) && order.Volume == 0) {
+                if (eventStr == "OrderChanged" && TopOrder.ContainsKey(order.OrderGuid) && order.Volume == 0 && TopOrder.Count == 1) {
                     // this is a spread changing event... do something?
                     OrderWillChangeSpread = true;
 
-                if (order.Pair.ToUpper() == "ETH-AUD") {
+                    if (order.Pair.ToUpper() == "ETH-AUD") {
 
                     //Debug.Print("a changed ETHAUD order will change the spread - " + order.OrderType);
-                }
+                    }
                 //break;
-            }
-                else if (eventStr == "NewOrder" && order.OrderType == "LimitBid" && order.Price > TopOrder.First().Value.Price) { // pick the "First()" one just arbitrary - all elements of this dictionary have the same price
+                }
+                else if (eventStr == "NewOrder" && order.OrderType == "LimitBid" && order.Price > TopPrice) { // pick the "First()" one just arbitrary - all elements of this dictionary have the same price
                     // spread changing order
                     OrderWillChangeSpread = true;
 
@@ -330,14 +335,14 @@ namespace IRTicker {
                 }
                 //break;
             }
-                else if (eventStr == "NewOrder" && order.OrderType == "LimitOffer" && order.Price < TopOrder.First().Value.Price) {
+                else if (eventStr == "NewOrder" && order.OrderType == "LimitOffer" && order.Price < TopPrice) {
                     // spread changing order
                     OrderWillChangeSpread = true;
 
-                if (order.Pair.ToUpper() == "ETH-AUD") {
+                //if (order.Pair.ToUpper() == "ETH-AUD") {
 
                     //Debug.Print("a new buy ETHAUD order will change the spread - " + order.Price);
-                }
+                //}
                 //break;
             }
                 else if (eventStr == "OrderCanceled" && TopOrder.ContainsKey(order.OrderGuid) && TopOrder.Count == 1) {  // if the cancelled order is at the top, and it's the only one at that price, spread will change.
@@ -351,7 +356,7 @@ namespace IRTicker {
 
             // here we actually adjust the order book in accordance with the event we just received
             switch (eventStr) {
-                case "NewOrder":
+                case "NewOrder":  // API should send us OrderGuid, Pair, Price, OrderType, Volume
 
                     if (OB_IR.ContainsKey(order.Price)) {  // this is a new order at an existing price step in the OB
                         //if (OB_IR[order.Price].ContainsKey(order.OrderGuid)) {
@@ -370,10 +375,17 @@ namespace IRTicker {
                     }
                     break;
 
-                case "OrderChanged":  // i think i need to work on this section.
+                case "OrderChanged":  // API should send us OrderGuid, Pair, OrderType, Volume
 
+                    Debug.Print(DateTime.Now + " IR - order changed, pair: " + order.Pair + ", type: " + order.OrderType + ", volume: " + order.Volume);
                     // Roman had an idea here where I maintain 2 dictionaries, one where the key is the price and one where the key is the guid.  find the guid; find the price.
-                    foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> Price in OB_IR) {
+
+                    if (TopOrder.ContainsKey(order.OrderGuid) && order.Volume == 0) {  // ok this change order is top level
+                        if (TopOrder.Count > 1) TopOrder.TryRemove(order.OrderGuid, out OrderBook_IR ignore);  // more than one order at this price
+                        else OB_IR.TryRemove(TopPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore);  // only one order at this price, we delete the whole cDictionary entry.
+                    }
+
+                    /*foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> Price in OB_IR) {
 
                         if (Price.Value.ContainsKey(order.OrderGuid)) {  // we found the needle in the haystack :/   
                             if (order.Volume == 0) {  // this means the order was fully filled, let's remove the order.
@@ -387,21 +399,21 @@ namespace IRTicker {
                             }
                             break;  // break out of the foreach
                         }
-                    }
+                    }*/
                     break;
 
-                case "OrderCanceled":
+                case "OrderCanceled":  // API should send us OrderGuid, Pair, OrderType
                     decimal cancelledPrice = 0;
-                    foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> Price in OB_IR) {
+                    foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> Price in OB_IR) {  // this might be too inefficient.  might have to do Roman's idea
 
                         if (Price.Value.ContainsKey(order.OrderGuid)) {
                             if (Price.Value.Count > 1) Price.Value.TryRemove(order.OrderGuid, out OrderBook_IR ignore);  // more than one order at this price
                             else {
                                 // we found the price, and it's the only one.   let's break out of this loop and then remove the element from OB_IR
                                 cancelledPrice = Price.Key;
-                                if (order.Pair.ToUpper() == "ETH-AUD") {
+                                //if (order.Pair.ToUpper() == "ETH-AUD") {
                                     //Debug.Print("IR ETHAUD canceled order - just tried to remove the outer dictionary element as this was the only order at this price - " + Price.Key);
-                                }
+                                //}
                             }
                             //Debug.Print("Order cancelled - " + order.OrderGuid);
                             break;  // break out of the foreach
@@ -425,6 +437,7 @@ namespace IRTicker {
                     mSummary.CurrentLowestOfferPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
                 mSummary.pair = order.Pair.ToUpper();
                     CryptoPairsAdd(order.Pair.ToUpper(), mSummary);
+                Debug.Print("OCE: " + order.Pair + " " + eventStr + " " + mSummary.CurrentHighestBidPrice + " " + mSummary.CurrentLowestOfferPrice);
 
                     return true;
                 }
