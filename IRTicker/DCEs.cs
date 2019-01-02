@@ -16,8 +16,8 @@ namespace IRTicker {
         private ConcurrentDictionary<string, List<Tuple<DateTime, decimal>>> priceHistory = new ConcurrentDictionary<string, List<Tuple<DateTime, decimal>>>();
         private ConcurrentDictionary<string, List<DataPoint>> spreadHistory = new ConcurrentDictionary<string, List<DataPoint>>();
         private ConcurrentDictionary<string, List<DataPoint>> spreadHistoryCSV = new ConcurrentDictionary<string, List<DataPoint>>();
-        private ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> OfferOrderBook_IR = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();  // outer decimal is price, inner decimal is guid
-        private ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> BidOrderBook_IR = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();
+        //private ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> OfferOrderBook_IR = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();  // outer decimal is price, inner decimal is guid
+        //private ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> BidOrderBook_IR = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();
         // this next thing is hectic.  a dictionry of tuples.  The key is the crypto pair, the tuple in the order books (bid,offer) (which is represented by a dictionary (price) of dictionaries (order guids)
         public ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>> IR_OBs = new ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>>();
 

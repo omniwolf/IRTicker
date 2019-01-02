@@ -37,8 +37,12 @@ namespace IRTicker {
 
         public ConcurrentDictionary<string, SpreadGraph> SpreadGraph_Dict = new ConcurrentDictionary<string, SpreadGraph>();  // needs to be public because it gets accessed from the graphs object
 
+        OBview obv = new OBview();
+
         public IRTicker() {
             InitializeComponent();
+
+            obv.Show();
 
             Debug.Print("");
             Debug.Print("----------------");
@@ -1097,6 +1101,7 @@ namespace IRTicker {
             if (reportType == 21) {  // 21 is IR update labels
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
                 UpdateLabels_Pair("IR", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
+                if (mSummary.pair == "XBT-AUD") obv.UpdateOBs(DCEs["IR"].IR_OBs);  // update the debug window
                 return;
             }
             else if (reportType == 23) {  // 23 is order book stuff for ir - not currently working. (or required?)
