@@ -415,14 +415,14 @@ namespace IRTicker {
                 case "OrderChanged":
                 case "OrderCanceled":
 
-                    if (tickerStream.Event == "OrderCanceled" && tickerStream.Data.Pair.ToUpper() == "XBT-AUD") {
+                    if (tickerStream.Event == "OrderChanged" && tickerStream.Data.Volume == 0 && tickerStream.Data.Pair.ToUpper() == "XBT-AUD") {
                         bool foundCancelled = false;
-                        Debug.Print("EVENT cancelled, worknig out price...");
+                        Debug.Print("EVENT changed, worknig out price...");
                         if (tickerStream.Data.OrderType.ToUpper().EndsWith("BID")) {
                             var BidOrders = DCEs["IR"].IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1;
                             foreach (var PriceLevel in BidOrders) {
                                 if (PriceLevel.Value.ContainsKey(tickerStream.Data.OrderGuid)) {
-                                    Debug.Print("EVENT cancelled: " + PriceLevel.Key);
+                                    Debug.Print("EVENT changed: " + PriceLevel.Key);
                                     foundCancelled = true;
                                 }
                             }
@@ -431,13 +431,13 @@ namespace IRTicker {
                             var OfferOrders = DCEs["IR"].IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2;
                             foreach (var PriceLevel in OfferOrders) {
                                 if (PriceLevel.Value.ContainsKey(tickerStream.Data.OrderGuid)) {
-                                    Debug.Print("EVENT cancelled: " + PriceLevel.Key);
+                                    Debug.Print("EVENT changed: " + PriceLevel.Key);
                                     foundCancelled = true;
                                 }
                             }
                         }
                         if (!foundCancelled) {
-                            Debug.Print("we have a cancelled order, but can't find it in either orderbook? " + tickerStream.Data.OrderGuid + " " + tickerStream.Data.OrderType);
+                            Debug.Print("we have a changed to 0 order, but can't find it in either orderbook? " + tickerStream.Data.OrderGuid + " " + tickerStream.Data.OrderType);
                         }
                     }
 

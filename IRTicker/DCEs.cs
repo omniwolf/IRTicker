@@ -386,6 +386,19 @@ namespace IRTicker {
                         else OB_IR.TryRemove(TopPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore);  // only one order at this price, we delete the whole cDictionary entry.
                     }*/
 
+                    // OK I think  (roman yet to confirm) that if we get a market order and the volume is 0, then we just remove the top order.  hopefully the top price
+                    // doesn't have multiple orders in it.. let's alert if we discover this
+                    if (order.OrderType.ToUpper().StartsWith("MARKET") && order.Volume == 0) {
+                        if (TopOrder.Count > 1) {
+                            Debug.Print("market order with vol 0, there are multiple top orders!");
+                        }
+                        else {
+                            Debug.Print("market order with vol 0, only 1 top order");
+                        }
+                        OB_IR.TryRemove(TopPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore); // just trash the first order
+                        break;
+                    }
+
                     foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> Price in OB_IR) {  // IR_OB is a one sided order book for the current pair
 
                         if (Price.Value.ContainsKey(order.OrderGuid)) {  // we found the needle in the haystack :/   

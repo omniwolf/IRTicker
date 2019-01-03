@@ -36,6 +36,7 @@
             this.ETHBidsTextBox = new System.Windows.Forms.RichTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.OBProgress = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // BidsTextBox
@@ -106,11 +107,22 @@
             this.label4.TabIndex = 7;
             this.label4.Text = "ETH-AUD";
             // 
+            // OBProgress
+            // 
+            this.OBProgress.AutoSize = true;
+            this.OBProgress.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OBProgress.Location = new System.Drawing.Point(391, 105);
+            this.OBProgress.Name = "OBProgress";
+            this.OBProgress.Size = new System.Drawing.Size(32, 31);
+            this.OBProgress.TabIndex = 8;
+            this.OBProgress.Text = "--";
+            // 
             // OBview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(455, 450);
+            this.Controls.Add(this.OBProgress);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.ETHOffersTextBox);
@@ -136,5 +148,6 @@
         private System.Windows.Forms.RichTextBox ETHBidsTextBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        public System.Windows.Forms.Label OBProgress;
     }
 }

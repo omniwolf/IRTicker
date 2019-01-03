@@ -1075,6 +1075,26 @@ namespace IRTicker {
             return "";
         }
 
+        private void OBProgressNext() {
+            switch (obv.OBProgress.Text) {
+                case "--":
+                    obv.OBProgress.Text = "\\";
+                    break;
+                case "\\":
+                    obv.OBProgress.Text = "|";
+                    break;
+                case "|":
+                    obv.OBProgress.Text = "/";
+                    break;
+                case "/":
+                    obv.OBProgress.Text = "--";
+                    break;
+                default:
+                    obv.OBProgress.Text = "--";
+                    break;
+            }
+        }
+
         private void PollingThread_ReportProgress(object sender, ProgressChangedEventArgs e) {
 
             int reportType = e.ProgressPercentage;
@@ -1100,8 +1120,10 @@ namespace IRTicker {
 
             if (reportType == 21) {  // 21 is IR update labels
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
+                OBProgressNext();
                 UpdateLabels_Pair("IR", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
                 if (mSummary.pair == "XBT-AUD" || mSummary.pair == "ETH-AUD") obv.UpdateOBs(DCEs["IR"].IR_OBs, mSummary.pair.ToUpper());  // update the debug window
+
                 return;
             }
             else if (reportType == 23) {  // 23 is order book stuff for ir - not currently working. (or required?)
@@ -1116,6 +1138,7 @@ namespace IRTicker {
                 return;
             }
             if (reportType == 25) {  // 25 is for updating ob view
+                OBProgressNext();
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
                 if (mSummary.pair == "XBT-AUD" || mSummary.pair == "ETH-AUD") obv.UpdateOBs(DCEs["IR"].IR_OBs, mSummary.pair.ToUpper());  // update the debug window
                 return;
