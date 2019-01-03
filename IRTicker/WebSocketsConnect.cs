@@ -414,6 +414,34 @@ namespace IRTicker {
                     break;*/
                 case "OrderChanged":
                 case "OrderCanceled":
+
+                    if (tickerStream.Event == "OrderCanceled" && tickerStream.Data.Pair.ToUpper() == "XBT-AUD") {
+                        bool foundCancelled = false;
+                        Debug.Print("EVENT cancelled, worknig out price...");
+                        if (tickerStream.Data.OrderType.ToUpper().EndsWith("BID")) {
+                            var BidOrders = DCEs["IR"].IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1;
+                            foreach (var PriceLevel in BidOrders) {
+                                if (PriceLevel.Value.ContainsKey(tickerStream.Data.OrderGuid)) {
+                                    Debug.Print("EVENT cancelled: " + PriceLevel.Key);
+                                    foundCancelled = true;
+                                }
+                            }
+                        }
+                        else {
+                            var OfferOrders = DCEs["IR"].IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2;
+                            foreach (var PriceLevel in OfferOrders) {
+                                if (PriceLevel.Value.ContainsKey(tickerStream.Data.OrderGuid)) {
+                                    Debug.Print("EVENT cancelled: " + PriceLevel.Key);
+                                    foundCancelled = true;
+                                }
+                            }
+                        }
+                        if (!foundCancelled) {
+                            Debug.Print("we have a cancelled order, but can't find it in either orderbook? " + tickerStream.Data.OrderGuid + " " + tickerStream.Data.OrderType);
+                        }
+                    }
+
+
                     // if this OrderBookEvent_IR function returns true, it means the event we just received made changes to the spread.  let's update the UI.
                     if (DCEs["IR"].OrderBookEvent_IR(tickerStream.Event, tickerStream.Data)) {
                         // create an mSummary object, and report it with code 21
@@ -432,7 +460,10 @@ namespace IRTicker {
                             DCE.MarketSummary mSummary = DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()];
                             pollingThread.ReportProgress(21, mSummary);
                         }
-
+                        else {
+                            DCE.MarketSummary mSummary = DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()];
+                            pollingThread.ReportProgress(25, mSummary);
+                        }
                     }
                     break;
             }

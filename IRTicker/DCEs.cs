@@ -377,15 +377,16 @@ namespace IRTicker {
 
                 case "OrderChanged":  // API should send us OrderGuid, Pair, OrderType, Volume
 
-                    Debug.Print(DateTime.Now + " IR - order changed, pair: " + order.Pair + ", type: " + order.OrderType + ", volume: " + order.Volume);
+                    //Debug.Print(DateTime.Now + " IR - order changed, pair: " + order.Pair + ", type: " + order.OrderType + ", volume: " + order.Volume);
                     // Roman had an idea here where I maintain 2 dictionaries, one where the key is the price and one where the key is the guid.  find the guid; find the price.
 
-                    if (TopOrder.ContainsKey(order.OrderGuid) && order.Volume == 0) {  // ok this change order is top level
+                    // this was a bad idea, we only remove orders if they're the top?  so dumb.
+                    /*if (TopOrder.ContainsKey(order.OrderGuid) && order.Volume == 0) {  // ok this change order is top level
                         if (TopOrder.Count > 1) TopOrder.TryRemove(order.OrderGuid, out OrderBook_IR ignore);  // more than one order at this price
                         else OB_IR.TryRemove(TopPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore);  // only one order at this price, we delete the whole cDictionary entry.
-                    }
+                    }*/
 
-                    /*foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> Price in OB_IR) {
+                    foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> Price in OB_IR) {  // IR_OB is a one sided order book for the current pair
 
                         if (Price.Value.ContainsKey(order.OrderGuid)) {  // we found the needle in the haystack :/   
                             if (order.Volume == 0) {  // this means the order was fully filled, let's remove the order.
@@ -399,7 +400,7 @@ namespace IRTicker {
                             }
                             break;  // break out of the foreach
                         }
-                    }*/
+                    }
                     break;
 
                 case "OrderCanceled":  // API should send us OrderGuid, Pair, OrderType
@@ -437,7 +438,7 @@ namespace IRTicker {
                     mSummary.CurrentLowestOfferPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
                 mSummary.pair = order.Pair.ToUpper();
                     CryptoPairsAdd(order.Pair.ToUpper(), mSummary);
-                Debug.Print("OCE: " + order.Pair + " " + eventStr + " " + mSummary.CurrentHighestBidPrice + " " + mSummary.CurrentLowestOfferPrice);
+                //Debug.Print("OCE: " + order.Pair + " " + eventStr + " " + mSummary.CurrentHighestBidPrice + " " + mSummary.CurrentLowestOfferPrice);
 
                     return true;
                 }

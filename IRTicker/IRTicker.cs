@@ -1101,7 +1101,7 @@ namespace IRTicker {
             if (reportType == 21) {  // 21 is IR update labels
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
                 UpdateLabels_Pair("IR", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
-                if (mSummary.pair == "XBT-AUD") obv.UpdateOBs(DCEs["IR"].IR_OBs);  // update the debug window
+                if (mSummary.pair == "XBT-AUD" || mSummary.pair == "ETH-AUD") obv.UpdateOBs(DCEs["IR"].IR_OBs, mSummary.pair.ToUpper());  // update the debug window
                 return;
             }
             else if (reportType == 23) {  // 23 is order book stuff for ir - not currently working. (or required?)
@@ -1113,6 +1113,11 @@ namespace IRTicker {
             }
             else if (reportType == 24) {  // should only be called once per session - if we don't do this the crypto combo box is empty until we change secondary currencies
                 PopulateCryptoComboBox("IR");
+                return;
+            }
+            if (reportType == 25) {  // 25 is for updating ob view
+                DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
+                if (mSummary.pair == "XBT-AUD" || mSummary.pair == "ETH-AUD") obv.UpdateOBs(DCEs["IR"].IR_OBs, mSummary.pair.ToUpper());  // update the debug window
                 return;
             }
 

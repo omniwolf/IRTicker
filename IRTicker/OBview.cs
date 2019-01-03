@@ -20,30 +20,32 @@ namespace IRTicker
             InitializeComponent();
         }
 
-        public void UpdateOBs(ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>> IR_OBs)
+        public void UpdateOBs(ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>> IR_OBs, string pair)
         {
+            var Bids_Ordered = IR_OBs[pair].Item1.OrderByDescending(i => i.Key);
 
-            BidsTextBox.Clear();
-            OffersTextBox.Clear();
+            RichTextBox BidsTB = ((pair == "XBT-AUD") ? BidsTextBox : ETHBidsTextBox);
+            RichTextBox OffersTB = ((pair == "XBT-AUD") ? OffersTextBox : ETHOffersTextBox);
 
-            var Bids_Ordered = IR_OBs["XBT-AUD"].Item1.OrderByDescending(i => i.Key);
+            BidsTB.Clear();
+            OffersTB.Clear();
+
             int count = 0;
             foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> bid in Bids_Ordered)
             {
-                BidsTextBox.Text = BidsTextBox.Text + Environment.NewLine + bid.Key;
+                BidsTB.Text = BidsTB.Text + Environment.NewLine + bid.Key;
                 count++;
                 if (count > 20) break;
             }
 
-            var Offers_Ordered = IR_OBs["XBT-AUD"].Item2.OrderBy(i => i.Key);
+            var Offers_Ordered = IR_OBs[pair].Item2.OrderBy(i => i.Key);
             count = 0;
             foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> offer in Offers_Ordered)
             {
-                OffersTextBox.Text = OffersTextBox.Text + Environment.NewLine + offer.Key;
+                OffersTB.Text = OffersTB.Text + Environment.NewLine + offer.Key;
                 count++;
                 if (count > 20) break;
             }
         }
     }
-
 }
