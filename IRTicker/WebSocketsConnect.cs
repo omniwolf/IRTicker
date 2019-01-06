@@ -415,29 +415,32 @@ namespace IRTicker {
                 case "OrderChanged":
                 case "OrderCanceled":
 
-                    if (tickerStream.Event == "OrderChanged" && tickerStream.Data.Volume == 0 && tickerStream.Data.Pair.ToUpper() == "XBT-AUD") {
+                    if (((tickerStream.Event == "OrderChanged" && tickerStream.Data.Volume == 0) || (tickerStream.Event == "OrderCanceled")) && tickerStream.Data.Pair.ToUpper() == "XBT-AUD") {
                         bool foundCancelled = false;
-                        Debug.Print("EVENT changed, worknig out price...");
+                        //Debug.Print("EVENT changed, worknig out price...");
                         if (tickerStream.Data.OrderType.ToUpper().EndsWith("BID")) {
-                            var BidOrders = DCEs["IR"].IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1;
-                            foreach (var PriceLevel in BidOrders) {
-                                if (PriceLevel.Value.ContainsKey(tickerStream.Data.OrderGuid)) {
-                                    Debug.Print("EVENT changed: " + PriceLevel.Key);
+                                                       
+                            //var BidOrders = DCEs["IR"].IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1;
+                            //foreach (var PriceLevel in BidOrders) {
+                                //if (PriceLevel.Value.ContainsKey(tickerStream.Data.OrderGuid)) {
+                                if (DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1.ContainsKey(tickerStream.Data.OrderGuid)) { 
+                                    Debug.Print(DateTime.Now.ToString() + " | EVENT " + tickerStream.Event + ": " + DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1[tickerStream.Data.OrderGuid]);
                                     foundCancelled = true;
                                 }
-                            }
+                            //}
                         }
                         else {
-                            var OfferOrders = DCEs["IR"].IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2;
-                            foreach (var PriceLevel in OfferOrders) {
-                                if (PriceLevel.Value.ContainsKey(tickerStream.Data.OrderGuid)) {
-                                    Debug.Print("EVENT changed: " + PriceLevel.Key);
-                                    foundCancelled = true;
+                            //var OfferOrders = DCEs["IR"].IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2;
+                           // foreach (var PriceLevel in OfferOrders) {
+                                //if (PriceLevel.Value.ContainsKey(tickerStream.Data.OrderGuid)) {
+                                if (DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2.ContainsKey(tickerStream.Data.OrderGuid)) { 
+                                    Debug.Print(DateTime.Now.ToString() + " | EVENT " + tickerStream.Event + ": " + DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2[tickerStream.Data.OrderGuid]);
+                                foundCancelled = true;
                                 }
-                            }
+                            
                         }
                         if (!foundCancelled) {
-                            Debug.Print("we have a changed to 0 order, but can't find it in either orderbook? " + tickerStream.Data.OrderGuid + " " + tickerStream.Data.OrderType);
+                            Debug.Print("we have a " + tickerStream.Event + " order, but can't find it in either orderbook? " + tickerStream.Data.OrderGuid + " " + tickerStream.Data.OrderType);
                         }
                     }
 

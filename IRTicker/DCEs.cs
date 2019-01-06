@@ -20,6 +20,8 @@ namespace IRTicker {
         //private ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> BidOrderBook_IR = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();
         // this next thing is hectic.  a dictionry of tuples.  The key is the crypto pair, the tuple in the order books (bid,offer) (which is represented by a dictionary (price) of dictionaries (order guids)
         public ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>> IR_OBs = new ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>>();
+        // this next one is a dictionary of orderGuids, where the value is the price.  we can find the price here rather than iterating through the above dictionary.
+        public ConcurrentDictionary<string, Tuple<ConcurrentDictionary<string, decimal>, ConcurrentDictionary<string, decimal>>> OrderGuid_IR_OBs = new ConcurrentDictionary<string, Tuple<ConcurrentDictionary<string, decimal>, ConcurrentDictionary<string, decimal>>>();
 
         private Dictionary<string, MarketSummary> cryptoPairs;
         public Dictionary<string, OrderBook> orderBooks;  // string format is eg "XBT-AUD" - caps with a dash
@@ -266,16 +268,19 @@ namespace IRTicker {
             bool OrderWillChangeSpread = false;
 
             ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> OB_IR;  // an order will only ever be a limit or a bid, so sort it out up top to reduce code duplication
+            ConcurrentDictionary<string, decimal> Order_OB_IR;  // one side of the Order_IR_OBs dictionary
             ConcurrentDictionary<string, OrderBook_IR> TopOrder;
             Decimal TopPrice;  // this will be the price of the order we're looking at.  Have to grab it separarely as the API doesn't tell it to us depending on the event :(
             switch (order.OrderType) {
                 case "LimitBid":
                     OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
+                    Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item1;
                     TopPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
                     TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[TopPrice];
                     break;
                 case "LimitOffer":
                     OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
+                    Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item2;
                     TopPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
                     TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[TopPrice];
 
@@ -289,6 +294,7 @@ namespace IRTicker {
                                 //Debug.Print("ETH bid order changed");
                             }
                             OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
+                            Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item1;
                             TopPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
                             TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[TopPrice];
                         }
@@ -297,6 +303,7 @@ namespace IRTicker {
                                 //Debug.Print("ETH offer order changed");
                             }
                             OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
+                            Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item2;
                             TopPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
                             TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[TopPrice];
                         }
@@ -373,34 +380,53 @@ namespace IRTicker {
                         OB_IR.TryAdd(order.Price, tempCD);
                         //Debug.Print("New order new price - " + order.Price);
                     }
+                    Order_OB_IR.TryAdd(order.OrderGuid, order.Price);
                     break;
 
                 case "OrderChanged":  // API should send us OrderGuid, Pair, OrderType, Volume
 
                     //Debug.Print(DateTime.Now + " IR - order changed, pair: " + order.Pair + ", type: " + order.OrderType + ", volume: " + order.Volume);
                     // Roman had an idea here where I maintain 2 dictionaries, one where the key is the price and one where the key is the guid.  find the guid; find the price.
+                    // OK, i'm trying out Roman's idea
 
-                    // this was a bad idea, we only remove orders if they're the top?  so dumb.
-                    /*if (TopOrder.ContainsKey(order.OrderGuid) && order.Volume == 0) {  // ok this change order is top level
-                        if (TopOrder.Count > 1) TopOrder.TryRemove(order.OrderGuid, out OrderBook_IR ignore);  // more than one order at this price
-                        else OB_IR.TryRemove(TopPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore);  // only one order at this price, we delete the whole cDictionary entry.
-                    }*/
-
-                    // OK I think  (roman yet to confirm) that if we get a market order and the volume is 0, then we just remove the top order.  hopefully the top price
+                    // I think  (roman yet to confirm) that if we get a market order and the volume is 0, then we just remove the top order.  hopefully the top price
                     // doesn't have multiple orders in it.. let's alert if we discover this
-                    if (order.OrderType.ToUpper().StartsWith("MARKET") && order.Volume == 0) {
-                        if (TopOrder.Count > 1) {
-                            Debug.Print("market order with vol 0, there are multiple top orders!");
+                    if (!Order_OB_IR.ContainsKey(order.OrderGuid)) {
+                        if (order.OrderType.ToUpper().StartsWith("MARKET") && order.Volume == 0) {
+                            if (TopOrder.Count > 1 && order.Pair.ToUpper() == "XBT-AUD") {
+                                Debug.Print("xbt-aud market order with vol 0, there are multiple top orders!");
+                            }
+                            else if (TopOrder.Count == 1 && order.Pair.ToUpper() == "XBT-AUD") {
+                                Debug.Print("xbt-aud market order with vol 0, only 1 top order");
+                            }
+                            OB_IR.TryRemove(TopPrice, out ConcurrentDictionary<string, OrderBook_IR> TopPrice_Dict); // just trash the first order
+
+                            // ok here we need to go through the orderGuid dictionary and remove any orders that were in this top price order that we're trashing
+                            foreach (KeyValuePair<string, OrderBook_IR> orderGuid in TopPrice_Dict) { 
+                                Order_OB_IR.TryRemove(orderGuid.Value.OrderGuid, out decimal ignore);
+                            }
                         }
-                        else {
-                            Debug.Print("market order with vol 0, only 1 top order");
+                    }
+                    else if (order.Volume == 0) {  // delete this order from the orderguid dictionary
+                        decimal OrderPrice = Order_OB_IR[order.OrderGuid];
+                        if (OB_IR[OrderPrice].Count > 1) {
+                            OB_IR[OrderPrice].TryRemove(order.OrderGuid, out OrderBook_IR ignore1);
                         }
-                        OB_IR.TryRemove(TopPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore); // just trash the first order
-                        break;
+                        else {  // need to remove the whole outer thang
+                            OB_IR.TryRemove(OrderPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore2);
+                        }
+
+                        Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore);
+
+                    }
+                    else {  // we just need to update the volume in the IR_OBs dictionary, no change to the OrderGuid dictionary
+                        decimal orderPrice = Order_OB_IR[order.OrderGuid];
+                        OB_IR[orderPrice][order.OrderGuid].Volume = order.Volume;
                     }
 
+                    // all of this below is back when we weren't using the second OrderGuid dictionary, can probably be removed..
+                    /*bool foundOrderGuid = false;  // if we don't find the orderGuid, then we can check if it's a market order
                     foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> Price in OB_IR) {  // IR_OB is a one sided order book for the current pair
-
                         if (Price.Value.ContainsKey(order.OrderGuid)) {  // we found the needle in the haystack :/   
                             if (order.Volume == 0) {  // this means the order was fully filled, let's remove the order.
                                 if (Price.Value.Count > 1) Price.Value.TryRemove(order.OrderGuid, out OrderBook_IR ignore);  // more than one order at this price
@@ -411,13 +437,38 @@ namespace IRTicker {
                                 Price.Value[order.OrderGuid].Volume = order.Volume;
                                 //Debug.Print("Filled order - " + order.Price);
                             }
+                            foundOrderGuid = true;
                             break;  // break out of the foreach
                         }
                     }
+
+                    // OK I think  (roman yet to confirm) that if we get a market order and the volume is 0, then we just remove the top order.  hopefully the top price
+                    // doesn't have multiple orders in it.. let's alert if we discover this
+                    if (!foundOrderGuid) {
+                        if (order.OrderType.ToUpper().StartsWith("MARKET") && order.Volume == 0) {
+                            if (TopOrder.Count > 1 && order.Pair.ToUpper() == "XBT-AUD") {
+                                Debug.Print("xbt-aud market order with vol 0, there are multiple top orders!");
+                            }
+                            else if (TopOrder.Count == 1 && order.Pair.ToUpper() == "XBT-AUD") {
+                                Debug.Print("xbt-aud market order with vol 0, only 1 top order");
+                            }
+                            OB_IR.TryRemove(TopPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore); // just trash the first order
+                        }
+                    }*/
                     break;
 
                 case "OrderCanceled":  // API should send us OrderGuid, Pair, OrderType
-                    decimal cancelledPrice = 0;
+                    
+                    decimal OrderPrice2 = Order_OB_IR[order.OrderGuid];
+                    if (OB_IR[OrderPrice2].Count > 1) {
+                        OB_IR[OrderPrice2].TryRemove(order.OrderGuid, out OrderBook_IR ignore);
+                    }
+                    else {  // only one order at this price, remove the whole price level
+                        OB_IR.TryRemove(OrderPrice2, out ConcurrentDictionary<string, OrderBook_IR> ignore);
+                    }
+
+                    // the below was before using the orderGuid dictionary method, can probably be deleted...
+                    /*decimal cancelledPrice = 0;
                     foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> Price in OB_IR) {  // this might be too inefficient.  might have to do Roman's idea
 
                         if (Price.Value.ContainsKey(order.OrderGuid)) {
@@ -436,7 +487,7 @@ namespace IRTicker {
 
                     if (cancelledPrice > 0) {
                         OB_IR.TryRemove(cancelledPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore);  // only one order at this price, we delete the whole cDictionary entry.
-                    }
+                    }*/
 
                     break;
             }
@@ -466,7 +517,7 @@ namespace IRTicker {
             pair = pair.ToUpper();  // always uppercase
 
             // fix this.  need to create new dictionaries and whatevs when a pair we haven't seen before comes along
-            if (!IR_OBs.ContainsKey(pair.ToUpper())) {
+            if (!IR_OBs.ContainsKey(pair)) {
                 // OK if it doesn't contain this pair, we have to create some shiz
 
                 ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> tempbuy = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();
@@ -474,39 +525,47 @@ namespace IRTicker {
 
                 Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>> tempTup = new Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>(tempbuy, tempsell);
                 IR_OBs.TryAdd(pair, tempTup);
+
+                ConcurrentDictionary<string, decimal> tempGuidBuy = new ConcurrentDictionary<string, decimal>();
+                ConcurrentDictionary<string, decimal> tempGuidSell = new ConcurrentDictionary<string, decimal>();
+
+                Tuple<ConcurrentDictionary<string, decimal>, ConcurrentDictionary<string, decimal>> tempGuidTup = new Tuple<ConcurrentDictionary<string, decimal>, ConcurrentDictionary<string, decimal>>(tempGuidBuy, tempGuidSell);
+                OrderGuid_IR_OBs.TryAdd(pair, tempGuidTup);
             }
 
             ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> bidOB = IR_OBs[pair].Item1;
             ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> offerOB = IR_OBs[pair].Item2;
 
+            ConcurrentDictionary<string, decimal> bidGuidOB = OrderGuid_IR_OBs[pair].Item1;
+            ConcurrentDictionary<string, decimal> offerGuidOB = OrderGuid_IR_OBs[pair].Item2;
+
             // buy orders first.  
-            //lock (BidOrderBook_IR) {
-                foreach (Order order in orderBooks[pair].BuyOrders) {
-                    //OrderBookEvent_IR("NewOrder", new DCE.OrderBook_IR(order.Guid, crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency, order.Price, "LimitBid", order.Volume));
-                    if (bidOB.ContainsKey(order.Price)) {  // this price already has order(s)
-                        bidOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
-                    }
-                    else {  // new price, create the dictionary
-                        ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
-                        tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
-                    bidOB.TryAdd(order.Price, tempCD);
-                    }
+            foreach (Order order in orderBooks[pair].BuyOrders) {
+                //OrderBookEvent_IR("NewOrder", new DCE.OrderBook_IR(order.Guid, crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency, order.Price, "LimitBid", order.Volume));
+                if (bidOB.ContainsKey(order.Price)) {  // this price already has order(s)
+                    bidOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
                 }
-            //}
+                else {  // new price, create the dictionary
+                    ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
+                    tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
+                    bidOB.TryAdd(order.Price, tempCD);
+                }
+                bidGuidOB.TryAdd(order.Guid, order.Price);
+            }
+
 
             // now sell orders
-            // buy orders first.  
-            //lock (OfferOrderBook_IR) {
-                foreach (Order order in orderBooks[pair].SellOrders) {
-                    if (offerOB.ContainsKey(order.Price)) {
-                        offerOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
-                    }
-                    else {
+            foreach (Order order in orderBooks[pair].SellOrders) {
+                if (offerOB.ContainsKey(order.Price)) {
+                    offerOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
+                }
+                else {
                     ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
                     tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
                     offerOB.TryAdd(order.Price, tempCD);
-                    }
                 }
+                offerGuidOB.TryAdd(order.Guid, order.Price);
+            }
 
                 // order books for this pair have been created, now we get the spread and put it in the cryptoPairs dictionary
             DateTimeOffset DTO = DateTimeOffset.Now;
