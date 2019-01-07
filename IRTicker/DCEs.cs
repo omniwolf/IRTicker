@@ -406,6 +406,14 @@ namespace IRTicker {
                                 Order_OB_IR.TryRemove(orderGuid.Value.OrderGuid, out decimal ignore);
                             }
                         }
+                        else {
+                            Debug.Print(DateTime.Now.ToString() + " | Trying to change event vol, but it doesn't exist in order dictionary");
+                            foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
+                                if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
+                                    Debug.Print("but the other dictionary has it...");
+                                }
+                            }
+                        }
                     }
                     else if (order.Volume == 0) {  // delete this order from the orderguid dictionary
                         decimal OrderPrice = Order_OB_IR[order.OrderGuid];
@@ -458,14 +466,40 @@ namespace IRTicker {
                     break;
 
                 case "OrderCanceled":  // API should send us OrderGuid, Pair, OrderType
-                    
-                    decimal OrderPrice2 = Order_OB_IR[order.OrderGuid];
-                    if (OB_IR[OrderPrice2].Count > 1) {
-                        OB_IR[OrderPrice2].TryRemove(order.OrderGuid, out OrderBook_IR ignore);
+
+                    if (Order_OB_IR.ContainsKey(order.OrderGuid)) {  // getting exceptions where the order doesn't exist in this dictionary?? weird..
+                        decimal OrderPrice2 = Order_OB_IR[order.OrderGuid];
+
+                        if (OB_IR.ContainsKey(OrderPrice2)) {
+
+                            if (OB_IR[OrderPrice2].Count > 1) {
+                                OB_IR[OrderPrice2].TryRemove(order.OrderGuid, out OrderBook_IR ignore);
+                            }
+                            else {  // only one order at this price, remove the whole price level
+                                OB_IR.TryRemove(OrderPrice2, out ConcurrentDictionary<string, OrderBook_IR> ignore);
+                            }
+                            Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore2);
+                        }
+                        else {  //this price level doesn't exist in the price OB??
+                            Debug.Print(DateTime.Now.ToString() + " | The big dictionary is missing a price: + " + OrderPrice2);
+                            Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore2);
+                        }
                     }
-                    else {  // only one order at this price, remove the whole price level
-                        OB_IR.TryRemove(OrderPrice2, out ConcurrentDictionary<string, OrderBook_IR> ignore);
+                    else {  // else we did NOT find the order in the order dictionary.  let's check the main dictionary in case it's there.  if it is remove it.
+                        Debug.Print(DateTime.Now.ToString() + " | Trying to cancel event, but it doesn't exist in order dictionary");
+                        foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
+                            if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
+                                Debug.Print("but the other dictionary has it...");
+                                if (priceLevel.Value.Count > 1) priceLevel.Value.TryRemove(order.OrderGuid, out OrderBook_IR ignore);  // more than one order at this price
+                                else {
+                                    // we found the price, and it's the only one.   let's break out of this loop and then remove the element from OB_IR
+                                    OB_IR.TryRemove(priceLevel.Key, out ConcurrentDictionary<string, OrderBook_IR> ignore);
+                                }
+                                break;
+                            }
+                        }
                     }
+
 
                     // the below was before using the orderGuid dictionary method, can probably be deleted...
                     /*decimal cancelledPrice = 0;
