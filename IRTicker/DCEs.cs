@@ -416,20 +416,47 @@ namespace IRTicker {
                         }
                     }
                     else if (order.Volume == 0) {  // delete this order from the orderguid dictionary
-                        decimal OrderPrice = Order_OB_IR[order.OrderGuid];
-                        if (OB_IR[OrderPrice].Count > 1) {
-                            OB_IR[OrderPrice].TryRemove(order.OrderGuid, out OrderBook_IR ignore1);
-                        }
-                        else {  // need to remove the whole outer thang
-                            OB_IR.TryRemove(OrderPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore2);
-                        }
+                        decimal OrderPrice = Order_OB_IR[order.OrderGuid];  // we have checked above, the orderGuid is defo in this dictionary
+                        if (OB_IR.ContainsKey(OrderPrice)) {
+                            if (OB_IR[OrderPrice].Count > 1) {
+                                OB_IR[OrderPrice].TryRemove(order.OrderGuid, out OrderBook_IR ignore1);
+                            }
+                            else {  // need to remove the whole outer thang
+                                OB_IR.TryRemove(OrderPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore2);
+                            }
 
-                        Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore);
+                            Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore);
+                        }
+                        else {  // big dictionary don't contain this price
+                            Debug.Print(DateTime.Now.ToString() + " | Trying to set vol = 0 on an order, but big dictionary don't contain this price (" + OrderPrice + "). will manually search...");
+                            foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
+                                if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
+                                    Debug.Print("Manual search was successful! the price in this bad boy was: " + priceLevel.Value[order.OrderGuid].Price);
+                                    if (priceLevel.Value.Count > 1) {
+                                        priceLevel.Value.TryRemove(order.OrderGuid, out OrderBook_IR ignore);
+                                    }
+                                    else {
+                                        OB_IR.TryRemove(priceLevel.Key, out ConcurrentDictionary<string, OrderBook_IR> ignore);
+                                    }
+                                }
+                            }
+
+                        }
 
                     }
                     else {  // we just need to update the volume in the IR_OBs dictionary, no change to the OrderGuid dictionary
                         decimal orderPrice = Order_OB_IR[order.OrderGuid];
-                        OB_IR[orderPrice][order.OrderGuid].Volume = order.Volume;
+                        if (OB_IR.ContainsKey(orderPrice)) {
+                            if (OB_IR[orderPrice].ContainsKey(order.OrderGuid)) {
+                                OB_IR[orderPrice][order.OrderGuid].Volume = order.Volume;
+                            }
+                            else {
+                                Debug.Print(DateTime.Now.ToString() + " | Trying to update vol to a non-zero value, but can't find the orderGuid at the price: " + orderPrice);
+                            }
+                        }
+                        else {
+                            Debug.Print(DateTime.Now.ToString() + " | trying to update vol to a non-zero value, but can't find the price in the big dictionary: " + orderPrice);
+                        }
                     }
 
                     // all of this below is back when we weren't using the second OrderGuid dictionary, can probably be removed..

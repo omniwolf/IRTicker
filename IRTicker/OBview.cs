@@ -40,6 +40,8 @@ namespace IRTicker
                 if (count > 20) break;
             }
 
+            if (!IR_OBs.ContainsKey("XBT-AUD") || !IR_OBs.ContainsKey("ETH-AUD")) return;  // only try and update when we have a key..
+
             var Offers_Ordered = IR_OBs[pair].Item2.OrderBy(i => i.Key).ToArray();
             count = 0;
             foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> offer in Offers_Ordered)
