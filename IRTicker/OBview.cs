@@ -20,35 +20,31 @@ namespace IRTicker
             InitializeComponent();
         }
 
-        public void UpdateOBs(ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>> IR_OBs, string pair)
+        public void UpdateOBs(Dictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>> IR_OBs, string pair)
         {
-            if (!IR_OBs.ContainsKey("XBT-AUD") || !IR_OBs.ContainsKey("ETH-AUD")) return;  // only try and update when we have a key..
-
-            var Bids_Ordered = IR_OBs[pair].Item1.OrderByDescending(i => i.Key).ToArray();
-
             RichTextBox BidsTB = ((pair == "XBT-AUD") ? BidsTextBox : ETHBidsTextBox);
             RichTextBox OffersTB = ((pair == "XBT-AUD") ? OffersTextBox : ETHOffersTextBox);
 
-            BidsTB.Clear();
-            OffersTB.Clear();
-
-            int count = 0;
-            foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> bid in Bids_Ordered)
-            {
-                BidsTB.Text = BidsTB.Text + Environment.NewLine + bid.Key;
-                count++;
-                if (count > 20) break;
-            }
+            if (!IR_OBs.ContainsKey("XBT-AUD") || !IR_OBs.ContainsKey("ETH-AUD")) return;  // only try and update when we have a key..
+            WriteOBView(IR_OBs[pair].Item1.OrderByDescending(i => i.Key), BidsTB);
 
             if (!IR_OBs.ContainsKey("XBT-AUD") || !IR_OBs.ContainsKey("ETH-AUD")) return;  // only try and update when we have a key..
+            WriteOBView(IR_OBs[pair].Item2.OrderBy(i => i.Key), OffersTB);
+        }
 
-            var Offers_Ordered = IR_OBs[pair].Item2.OrderBy(i => i.Key).ToArray();
-            count = 0;
-            foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> offer in Offers_Ordered)
-            {
-                OffersTB.Text = OffersTB.Text + Environment.NewLine + offer.Key;
+        private void WriteOBView(IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> OrderBook, RichTextBox RTB) {
+            RTB.Clear();
+            decimal RunningVol = 0;
+            int count = 0;
+            foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> PriceLevel in OrderBook) {
+                decimal IndividualVol = 0;
+                foreach (var order in PriceLevel.Value) {
+                    IndividualVol += order.Value.Volume;
+                }
+                RunningVol += IndividualVol;
+                RTB.Text += PriceLevel.Key.ToString("####0.00") + "  |  " + IndividualVol.ToString("#######0.00000000") + "  |  " + RunningVol.ToString("#######0.00000000") + Environment.NewLine;
                 count++;
-                if (count > 20) break;
+                if (count > 10) break;
             }
         }
     }

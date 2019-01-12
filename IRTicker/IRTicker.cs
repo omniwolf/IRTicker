@@ -1123,7 +1123,7 @@ namespace IRTicker {
                 UpdateLabels_Pair("IR", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
                 if (mSummary.pair == "XBT-AUD" || mSummary.pair == "ETH-AUD") {
                     OBProgressNext();
-                    obv.UpdateOBs(DCEs["IR"].IR_OBs, mSummary.pair.ToUpper());  // update the debug window
+                    obv.UpdateOBs(DCEs["IR"].IR_OBs.ToDictionary(x => x.Key, y => y.Value), mSummary.pair.ToUpper());  // update the debug window
                 }
                 return;
             }
@@ -1142,7 +1142,7 @@ namespace IRTicker {
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
                 if (mSummary.pair == "XBT-AUD" || mSummary.pair == "ETH-AUD") {
                     OBProgressNext();
-                    obv.UpdateOBs(DCEs["IR"].IR_OBs, mSummary.pair.ToUpper());  // update the debug window
+                    obv.UpdateOBs(DCEs["IR"].IR_OBs.ToDictionary(x => x.Key, y => y.Value), mSummary.pair.ToUpper());  // update the debug window
                 }
                 return;
             }

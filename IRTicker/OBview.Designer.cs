@@ -41,17 +41,22 @@
             // 
             // BidsTextBox
             // 
+            this.BidsTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BidsTextBox.Location = new System.Drawing.Point(80, 39);
             this.BidsTextBox.Name = "BidsTextBox";
-            this.BidsTextBox.Size = new System.Drawing.Size(119, 192);
+            this.BidsTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.BidsTextBox.Size = new System.Drawing.Size(251, 192);
             this.BidsTextBox.TabIndex = 0;
-            this.BidsTextBox.Text = "";
+            this.BidsTextBox.Text = "1234.54  |  0.01570000  |  0.01570000\n6545.59  |  1.24600000  | 1.2557000\n6545.64" +
+    "  |  40.326\n6987.58  |  3.31\n9871.45  |  0.13354978\n123\n123\n132\n123\n123\n123";
             // 
             // OffersTextBox
             // 
-            this.OffersTextBox.Location = new System.Drawing.Point(242, 39);
+            this.OffersTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OffersTextBox.Location = new System.Drawing.Point(374, 39);
             this.OffersTextBox.Name = "OffersTextBox";
-            this.OffersTextBox.Size = new System.Drawing.Size(119, 192);
+            this.OffersTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.OffersTextBox.Size = new System.Drawing.Size(251, 192);
             this.OffersTextBox.TabIndex = 1;
             this.OffersTextBox.Text = "";
             // 
@@ -67,7 +72,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(283, 9);
+            this.label2.Location = new System.Drawing.Point(444, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(35, 13);
             this.label2.TabIndex = 3;
@@ -75,17 +80,21 @@
             // 
             // ETHOffersTextBox
             // 
-            this.ETHOffersTextBox.Location = new System.Drawing.Point(242, 246);
+            this.ETHOffersTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ETHOffersTextBox.Location = new System.Drawing.Point(374, 246);
             this.ETHOffersTextBox.Name = "ETHOffersTextBox";
-            this.ETHOffersTextBox.Size = new System.Drawing.Size(119, 192);
+            this.ETHOffersTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.ETHOffersTextBox.Size = new System.Drawing.Size(251, 192);
             this.ETHOffersTextBox.TabIndex = 5;
             this.ETHOffersTextBox.Text = "";
             // 
             // ETHBidsTextBox
             // 
+            this.ETHBidsTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ETHBidsTextBox.Location = new System.Drawing.Point(80, 246);
             this.ETHBidsTextBox.Name = "ETHBidsTextBox";
-            this.ETHBidsTextBox.Size = new System.Drawing.Size(119, 192);
+            this.ETHBidsTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
+            this.ETHBidsTextBox.Size = new System.Drawing.Size(251, 192);
             this.ETHBidsTextBox.TabIndex = 4;
             this.ETHBidsTextBox.Text = "";
             // 
@@ -111,7 +120,7 @@
             // 
             this.OBProgress.AutoSize = true;
             this.OBProgress.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OBProgress.Location = new System.Drawing.Point(391, 105);
+            this.OBProgress.Location = new System.Drawing.Point(17, 219);
             this.OBProgress.Name = "OBProgress";
             this.OBProgress.Size = new System.Drawing.Size(32, 31);
             this.OBProgress.TabIndex = 8;
@@ -121,7 +130,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(455, 450);
+            this.ClientSize = new System.Drawing.Size(637, 450);
             this.Controls.Add(this.OBProgress);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
