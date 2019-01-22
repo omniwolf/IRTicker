@@ -20,16 +20,21 @@ namespace IRTicker
             InitializeComponent();
         }
 
-        public void UpdateOBs(Dictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>> IR_OBs, string pair)
+        public void UpdateOBs(KeyValuePair<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>>[] IR_OBs, string pair)
         {
             RichTextBox BidsTB = ((pair == "XBT-AUD") ? BidsTextBox : ETHBidsTextBox);
             RichTextBox OffersTB = ((pair == "XBT-AUD") ? OffersTextBox : ETHOffersTextBox);
 
-            if (!IR_OBs.ContainsKey("XBT-AUD") || !IR_OBs.ContainsKey("ETH-AUD")) return;  // only try and update when we have a key..
-            WriteOBView(IR_OBs[pair].Item1.OrderByDescending(i => i.Key), BidsTB);
+            for (int i = 0; i < IR_OBs.Count(); i++) {
 
-            if (!IR_OBs.ContainsKey("XBT-AUD") || !IR_OBs.ContainsKey("ETH-AUD")) return;  // only try and update when we have a key..
-            WriteOBView(IR_OBs[pair].Item2.OrderBy(i => i.Key), OffersTB);
+                if (IR_OBs[i].Key == pair) {
+                    //if (!IR_OBs.ContainsKey("XBT-AUD") || !IR_OBs.ContainsKey("ETH-AUD")) return;  // only try and update when we have a key..
+                    WriteOBView(IR_OBs[i].Value.Item1.OrderByDescending(k => k.Key), BidsTB);
+
+                    //if (!IR_OBs.ContainsKey("XBT-AUD") || !IR_OBs.ContainsKey("ETH-AUD")) return;  // only try and update when we have a key..
+                    WriteOBView(IR_OBs[i].Value.Item2.OrderBy(k => k.Key), OffersTB);
+                }
+            }
         }
 
         private void WriteOBView(IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> OrderBook, RichTextBox RTB) {
@@ -39,6 +44,7 @@ namespace IRTicker
             foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> PriceLevel in OrderBook) {
                 decimal IndividualVol = 0;
                 foreach (var order in PriceLevel.Value) {
+                    if (PriceLevel.Key == 0) continue;
                     IndividualVol += order.Value.Volume;
                 }
                 RunningVol += IndividualVol;
