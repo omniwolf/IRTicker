@@ -164,6 +164,10 @@ namespace IRTicker {
             UIControls_Dict["IR"].ZRX_Price = IR_ZRX_Label2;
             UIControls_Dict["IR"].ZRX_Spread = IR_ZRX_Label3;
             UIControls_Dict["IR"].ZRX_PriceTT = IR_ZRX_PriceTT;
+            UIControls_Dict["IR"].PLA_Label = IR_PLA_Label1;
+            UIControls_Dict["IR"].PLA_Price = IR_PLA_Label2;
+            UIControls_Dict["IR"].PLA_Spread = IR_PLA_Label3;
+            UIControls_Dict["IR"].PLA_PriceTT = IR_PLA_PriceTT;
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
             UIControls_Dict["IR"].AvgPrice_Crypto = IR_CryptoComboBox;
