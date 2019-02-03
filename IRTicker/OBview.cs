@@ -20,12 +20,14 @@ namespace IRTicker
             InitializeComponent();
         }
 
-        public void UpdateOBs(KeyValuePair<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>>[] IR_OBs, string pair)
-        {
+//        public void UpdateOBs(KeyValuePair<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>>[] IR_OBs, string pair)
+        public void UpdateOBs(KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] buySide, 
+            KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] sellSide, string pair) {
+
             RichTextBox BidsTB = ((pair == "XBT-AUD") ? BidsTextBox : ETHBidsTextBox);
             RichTextBox OffersTB = ((pair == "XBT-AUD") ? OffersTextBox : ETHOffersTextBox);
 
-            for (int i = 0; i < IR_OBs.Count(); i++) {
+            /*for (int i = 0; i < IR_OBs.Count(); i++) {
 
                 if (IR_OBs[i].Key == pair) {
                     //if (!IR_OBs.ContainsKey("XBT-AUD") || !IR_OBs.ContainsKey("ETH-AUD")) return;  // only try and update when we have a key..
@@ -34,7 +36,10 @@ namespace IRTicker
                     //if (!IR_OBs.ContainsKey("XBT-AUD") || !IR_OBs.ContainsKey("ETH-AUD")) return;  // only try and update when we have a key..
                     WriteOBView(IR_OBs[i].Value.Item2.OrderBy(k => k.Key), OffersTB);
                 }
-            }
+            }*/
+
+            WriteOBView(buySide.OrderByDescending(k => k.Key), BidsTB);
+            WriteOBView(sellSide.OrderBy(j => j.Key), OffersTB);
         }
 
         private void WriteOBView(IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> OrderBook, RichTextBox RTB) {

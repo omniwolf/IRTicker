@@ -363,7 +363,7 @@ namespace IRTicker {
             // if the nonceErrorTracker is true, this means the nonce has recovered from an error run.  if the OBResetFlag is true, it means we need to dump the OB.
             // because the nonce has settled down, we can now "safely" dump the OB and start again.
             if (!DCEs["IR"].nonceErrorTracker[tickerStream.Channel.ToUpper()] && DCEs["IR"].OBResetFlag[tickerStream.Channel.ToUpper()]) {
-
+                Debug.Print("NONCE - we have recovered from an error in " + tickerStream.Channel + ", time to dump and restart");
                 DCEs["IR"].OBResetFlag[tickerStream.Channel.ToUpper()] = false;
 
                 if (wSocket_IR.IsAlive) {
@@ -391,11 +391,11 @@ namespace IRTicker {
             if (!DCEs["IR"].IR_OBs.ContainsKey(tickerStream.Data.Pair.ToUpper())) {
                 Debug.Print(DateTime.Now.ToString() + " IR - receieved an event we don't have a pair for (" + tickerStream.Data.Pair + "), will grab it");
 
-                Tuple<string, string> tempTup = Utilities.SplitPair(tickerStream.Data.Pair);
+                Tuple<string, string> tempTup = Utilities.SplitPair(tickerStream.Data.Pair.ToUpper());
 
                 DCEs["IR"].GetIROrderBook(tempTup.Item1, tempTup.Item2);
-                WebSocket_Subscribe("IR", tempTup.Item1, tempTup.Item2);
-                return;
+                //WebSocket_Subscribe("IR", tempTup.Item1, tempTup.Item2);
+                //return;
             }
 
             switch (tickerStream.Event) {
@@ -415,6 +415,7 @@ namespace IRTicker {
                 case "OrderChanged":
                 case "OrderCanceled":
 
+                    // this if block is pure debugging
                     if (((tickerStream.Event == "OrderChanged" && tickerStream.Data.Volume == 0) || (tickerStream.Event == "OrderCanceled")) && tickerStream.Data.Pair.ToUpper() == "XBT-AUD") {
                         bool foundCancelled = false;
                         //Debug.Print("EVENT changed, worknig out price...");

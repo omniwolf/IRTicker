@@ -604,7 +604,10 @@ namespace IRTicker {
             foreach (Order order in orderBooks[pair].BuyOrders) {
                 //OrderBookEvent_IR("NewOrder", new DCE.OrderBook_IR(order.Guid, crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency, order.Price, "LimitBid", order.Volume));
                 if (bidOB.ContainsKey(order.Price)) {  // this price already has order(s)
-                    bidOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
+                    if (!bidOB[order.Price].ContainsKey(order.Guid)) {  // it's possible that the dictionary already has this order because we're starting websockets before we pull the REST OB
+                        bidOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
+                    }
+                    else continue;  // we don't want to try and add this guid to the bidGuid OB, so move on
                 }
                 else {  // new price, create the dictionary
                     ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
@@ -618,7 +621,10 @@ namespace IRTicker {
             // now sell orders
             foreach (Order order in orderBooks[pair].SellOrders) {
                 if (offerOB.ContainsKey(order.Price)) {
-                    offerOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
+                    if (!offerOB[order.Price].ContainsKey(order.Guid)) {
+                        offerOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
+                    }
+                    else continue;
                 }
                 else {
                     ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();

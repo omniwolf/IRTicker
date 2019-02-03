@@ -711,11 +711,9 @@ namespace IRTicker {
                         foreach (string crypto in DCEs["IR"].PrimaryCurrencyList) {
                             foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
                                 productDictionary_IR.Add(crypto + "-" + fiat, new DCE.products_GDAX(crypto + "-" + fiat));
-                                Debug.Print("IR - pulling order book: " + crypto + "-" + fiat);
-                                DCEs["IR"].GetIROrderBook(crypto, fiat);  // while we're spinning through all the pairs, let's grab their order books too.
-                                if (DCEs["IR"].CurrentSecondaryCurrency == fiat) {  // now we have the latest OB, let's alert the UI to update if we're looking at the currently visible secondary currency
-                                    pollingThread.ReportProgress(21, DCEs["IR"].GetCryptoPairs()[crypto + "-" + fiat]);
-                                }
+                                // don't pull OB here, we get it during  websockets
+                                //Debug.Print("IR - pulling order book: " + crypto + "-" + fiat);
+                                //DCEs["IR"].GetIROrderBook(crypto, fiat);  // while we're spinning through all the pairs, let's grab their order books too.
                             }
                         }
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
@@ -729,6 +727,7 @@ namespace IRTicker {
                         // if there's no crypto selected in the drop down or there's no number of coins entered, then just pull the market summary
                         if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
                             ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency);
+                            pollingThread.ReportProgress(21, DCEs["IR"].GetCryptoPairs()[primaryCode + "-" + DCEs["IR"].CurrentSecondaryCurrency]);
                         }
                         if (DCEs["IR"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["IR"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
                             //GetIROrderBook(primaryCode, );
@@ -1125,9 +1124,11 @@ namespace IRTicker {
             if (reportType == 21) {  // 21 is IR update labels
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
                 UpdateLabels_Pair("IR", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
-                if ((mSummary.pair == "XBT-AUD" || mSummary.pair == "ETH-AUD") && (DCEs["IR"].IR_OBs.ContainsKey("XBT-AUD") || DCEs["IR"].IR_OBs.ContainsKey("ETH-AUD"))) {
+                if ((mSummary.pair == "XBT-AUD" || mSummary.pair == "ETH-AUD") && (DCEs["IR"].IR_OBs.ContainsKey(mSummary.pair.ToUpper()))) {
                     OBProgressNext();
-                    obv.UpdateOBs(DCEs["IR"].IR_OBs.ToArray(), mSummary.pair.ToUpper());  // update the debug window
+                    KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] buySide = DCEs["IR"].IR_OBs[mSummary.pair].Item1.ToArray();
+                    KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] sellSide = DCEs["IR"].IR_OBs[mSummary.pair].Item2.ToArray();
+                    obv.UpdateOBs(buySide, sellSide, mSummary.pair.ToUpper());  // update the debug window
                 }
                 return;
             }
@@ -1146,7 +1147,9 @@ namespace IRTicker {
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
                 if (mSummary.pair == "XBT-AUD" || mSummary.pair == "ETH-AUD") {
                     OBProgressNext();
-                    obv.UpdateOBs(DCEs["IR"].IR_OBs.ToArray(), mSummary.pair.ToUpper());  // update the debug window
+                    KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] buySide = DCEs["IR"].IR_OBs[mSummary.pair].Item1.ToArray();
+                    KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] sellSide = DCEs["IR"].IR_OBs[mSummary.pair].Item2.ToArray();
+                    obv.UpdateOBs(buySide, sellSide, mSummary.pair.ToUpper());  // update the debug window
                 }
                 return;
             }
