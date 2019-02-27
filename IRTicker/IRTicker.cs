@@ -90,7 +90,7 @@ namespace IRTicker {
             DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\"";
             DCEs["BFX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
-            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\"";
+            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\",\"XRP\"";
             DCEs["GDAX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
             DCEs["CSPT"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"DOGE\",\"LTC\",\"XRP\"";
@@ -230,6 +230,10 @@ namespace IRTicker {
             UIControls_Dict["GDAX"].ZRX_Price = GDAX_ZRX_Label2;
             UIControls_Dict["GDAX"].ZRX_Spread = GDAX_ZRX_Label3;
             UIControls_Dict["GDAX"].ZRX_PriceTT = GDAX_ZRX_PriceTT;
+            UIControls_Dict["GDAX"].XRP_Label = GDAX_XRP_Label1;
+            UIControls_Dict["GDAX"].XRP_Price = GDAX_XRP_Label2;
+            UIControls_Dict["GDAX"].XRP_Spread = GDAX_XRP_Label3;
+            UIControls_Dict["GDAX"].XRP_PriceTT = GDAX_XRP_PriceTT;
             UIControls_Dict["GDAX"].AvgPrice_BuySell = GDAX_BuySellComboBox;
             UIControls_Dict["GDAX"].AvgPrice_NumCoins = GDAX_NumCoinsTextBox;
             UIControls_Dict["GDAX"].AvgPrice_Crypto = GDAX_CryptoComboBox;

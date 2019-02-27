@@ -73,6 +73,26 @@ namespace IRTicker.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap btcm3 {
+            get {
+                object obj = ResourceManager.GetObject("btcm3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap coinbasepro_logo3 {
+            get {
+                object obj = ResourceManager.GetObject("coinbasepro_logo3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap coinspot_faded2 {
             get {
                 object obj = ResourceManager.GetObject("coinspot_faded2", resourceCulture);
