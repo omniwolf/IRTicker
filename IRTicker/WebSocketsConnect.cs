@@ -416,7 +416,7 @@ namespace IRTicker {
                 case "OrderCanceled":
 
                     // this if block is pure debugging
-                    if (((tickerStream.Event == "OrderChanged" && tickerStream.Data.Volume == 0) || (tickerStream.Event == "OrderCanceled")) && tickerStream.Data.Pair.ToUpper() == "XBT-AUD") {
+                    if (((tickerStream.Event == "OrderChanged" && tickerStream.Data.Volume == 0) || (tickerStream.Event == "OrderCanceled")) && tickerStream.Data.Pair.ToUpper() == "PLA-AUD") {
                         bool foundCancelled = false;
                         //Debug.Print("EVENT changed, worknig out price...");
                         if (tickerStream.Data.OrderType.ToUpper().EndsWith("BID")) {
@@ -436,7 +436,7 @@ namespace IRTicker {
                                 //if (PriceLevel.Value.ContainsKey(tickerStream.Data.OrderGuid)) {
                                 if (DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2.ContainsKey(tickerStream.Data.OrderGuid)) { 
                                     Debug.Print(DateTime.Now.ToString() + " | EVENT " + tickerStream.Event + ": " + DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2[tickerStream.Data.OrderGuid]);
-                                foundCancelled = true;
+                                    foundCancelled = true;
                                 }
                             
                         }

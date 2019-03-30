@@ -20,7 +20,7 @@ namespace IRTicker {
         public Label BCH_Label { get; set; }
         public Label LTC_Label { get; set; }
         public Label XRP_Label { get; set; }
-        public Label DOGE_Label { get; set; }
+        public Label EOS_Label { get; set; }
         public Label OMG_Label { get; set; }
         public Label ZRX_Label { get; set; }
         public Label PLA_Label { get; set; }
@@ -30,7 +30,7 @@ namespace IRTicker {
         public Label BCH_Price { get; set; }
         public Label LTC_Price { get; set; }
         public Label XRP_Price { get; set; }
-        public Label DOGE_Price { get; set; }
+        public Label EOS_Price { get; set; }
         public Label OMG_Price { get; set; }
         public Label ZRX_Price { get; set; }
         public Label PLA_Price { get; set; }
@@ -40,7 +40,7 @@ namespace IRTicker {
         public ToolTip BCH_PriceTT { get; set; }
         public ToolTip LTC_PriceTT { get; set; }
         public ToolTip XRP_PriceTT { get; set; }
-        public ToolTip DOGE_PriceTT { get; set; }
+        public ToolTip EOS_PriceTT { get; set; }
         public ToolTip OMG_PriceTT { get; set; }
         public ToolTip ZRX_PriceTT { get; set; }
         public ToolTip PLA_PriceTT { get; set; }
@@ -52,7 +52,7 @@ namespace IRTicker {
         public Label BCH_Spread { get; set; }
         public Label LTC_Spread { get; set; }
         public Label XRP_Spread { get; set; }
-        public Label DOGE_Spread { get; set; }
+        public Label EOS_Spread { get; set; }
         public Label OMG_Spread { get; set; }
         public Label ZRX_Spread { get; set; }
         public Label PLA_Spread { get; set; }
@@ -73,7 +73,7 @@ namespace IRTicker {
             Label_Dict.Add("LTC_Label", LTC_Label);
             if (XRP_Label != null) Label_Dict.Add("XRP_Label", XRP_Label);
             if (BCH_Label != null) Label_Dict.Add("BCH_Label", BCH_Label);
-            if (DOGE_Label != null) Label_Dict.Add("DOGE_Label", DOGE_Label);
+            if (EOS_Label != null) Label_Dict.Add("EOS_Label", EOS_Label);
             if (OMG_Label != null) Label_Dict.Add("OMG_Label", OMG_Label);
             if (ZRX_Label != null) Label_Dict.Add("ZRX_Label", ZRX_Label);
             if (PLA_Label != null) Label_Dict.Add("PLA_Label", PLA_Label);
@@ -83,7 +83,7 @@ namespace IRTicker {
             Label_Dict.Add("LTC_Price", LTC_Price);
             if (XRP_Price != null) Label_Dict.Add("XRP_Price", XRP_Price);
             if (BCH_Price != null) Label_Dict.Add("BCH_Price", BCH_Price);
-            if (DOGE_Price != null) Label_Dict.Add("DOGE_Price", DOGE_Price);
+            if (EOS_Price != null) Label_Dict.Add("EOS_Price", EOS_Price);
             if (OMG_Price != null) Label_Dict.Add("OMG_Price", OMG_Price);
             if (ZRX_Price != null) Label_Dict.Add("ZRX_Price", ZRX_Price);
             if (PLA_Price != null) Label_Dict.Add("PLA_Price", PLA_Price);
@@ -93,7 +93,7 @@ namespace IRTicker {
             Label_Dict.Add("LTC_Spread", LTC_Spread);
             if (XRP_Spread != null) Label_Dict.Add("XRP_Spread", XRP_Spread);
             if (BCH_Spread != null) Label_Dict.Add("BCH_Spread", BCH_Spread);
-            if (DOGE_Spread != null) Label_Dict.Add("DOGE_Spread", DOGE_Spread);
+            if (EOS_Spread != null) Label_Dict.Add("EOS_Spread", EOS_Spread);
             if (OMG_Spread != null) Label_Dict.Add("OMG_Spread", OMG_Spread);
             if (ZRX_Spread != null) Label_Dict.Add("ZRX_Spread", ZRX_Spread);
             if (PLA_Spread != null) Label_Dict.Add("PLA_Spread", PLA_Spread);
@@ -105,7 +105,7 @@ namespace IRTicker {
             if (BCH_PriceTT != null) ToolTip_Dict.Add("BCH_PriceTT", BCH_PriceTT);
             if (LTC_PriceTT != null) ToolTip_Dict.Add("LTC_PriceTT", LTC_PriceTT);
             if (XRP_PriceTT != null) ToolTip_Dict.Add("XRP_PriceTT", XRP_PriceTT);
-            if (DOGE_PriceTT != null) ToolTip_Dict.Add("DOGE_PriceTT", DOGE_PriceTT);
+            if (EOS_PriceTT != null) ToolTip_Dict.Add("EOS_PriceTT", EOS_PriceTT);
             if (OMG_PriceTT != null) ToolTip_Dict.Add("OMG_PriceTT", OMG_PriceTT);
             if (ZRX_PriceTT != null) ToolTip_Dict.Add("ZRX_PriceTT", ZRX_PriceTT);
             if (PLA_PriceTT != null) ToolTip_Dict.Add("PLA_PriceTT", PLA_PriceTT);

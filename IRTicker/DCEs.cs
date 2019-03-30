@@ -559,9 +559,14 @@ namespace IRTicker {
                     DateTimeOffset DTO = DateTimeOffset.Now;
                     MarketSummary mSummary = new MarketSummary();
                     mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
-                mSummary.CurrentHighestBidPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
+                    mSummary.CurrentHighestBidPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
                     mSummary.CurrentLowestOfferPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
-                mSummary.pair = order.Pair.ToUpper();
+                if (mSummary.CurrentHighestBidPrice == 0 && mSummary.CurrentLowestOfferPrice == 0) {  // so i guess this will happen when we haven't pulled the OB yet?
+                    Debug.Print("!! OB's spread was 0, had to use previous cryptoPairs' spread = " + order.Pair);
+                    mSummary.CurrentLowestOfferPrice = cryptoPairs[order.Pair.ToUpper()].CurrentLowestOfferPrice;
+                    mSummary.CurrentHighestBidPrice = cryptoPairs[order.Pair.ToUpper()].CurrentHighestBidPrice;
+                }
+                    mSummary.pair = order.Pair.ToUpper();
                     CryptoPairsAdd(order.Pair.ToUpper(), mSummary);
                 //Debug.Print("OCE: " + order.Pair + " " + eventStr + " " + mSummary.CurrentHighestBidPrice + " " + mSummary.CurrentLowestOfferPrice);
 
@@ -823,21 +828,21 @@ namespace IRTicker {
         public class Prices_CSPT {
             public Crypto_CSPT btc { get; set; }
             public Crypto_CSPT ltc { get; set; }
-            public Crypto_CSPT doge { get; set; }
             public Crypto_CSPT eth { get; set; }
             public Crypto_CSPT xrp { get; set; }
+            public Crypto_CSPT eos { get; set; }
 
             // create a list of the coins so we can iterate through them in the main code.
             public List<Crypto_CSPT> cryptoList = new List<Crypto_CSPT>();
             public void CreateCryptoList() {
                 cryptoList.Add(btc);
                 cryptoList.Add(ltc);
-                cryptoList.Add(doge);
+                cryptoList.Add(eos);
                 cryptoList.Add(eth);
                 cryptoList.Add(xrp);
                 btc.ticker = "XBT";
                 ltc.ticker = "LTC";
-                doge.ticker = "DOGE";
+                eos.ticker = "EOS";
                 eth.ticker = "ETH";
                 xrp.ticker = "XRP";
             }
