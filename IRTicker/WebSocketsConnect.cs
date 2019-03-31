@@ -244,19 +244,6 @@ namespace IRTicker {
                     Debug.Print(DateTime.Now + " IR - About to .clear the IR_OBs");
                     DCEs[dExchange].IR_OBs.Clear();
                     Debug.Print(dExchange + " - cleared the order book dictionary, IR_OBs size: " + DCEs["IR"].IR_OBs.Count);
-
-                    // re-populate the OBs using REST
-                    Debug.Print(dExchange + " - building new REST OBs");
-                    foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
-                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                                DCEs[dExchange].GetIROrderBook(primaryCode, secondaryCode);
-                            }
-                        }
-                    }
-                    Debug.Print("Rest OBs built.  IR_OBs size: " + DCEs[dExchange].IR_OBs.Count + ".  Reconnecting to websockets...");
-
-                    //wSocket_IR.Connect();
                     break;
                 case "BTCM":
                     socket_BTCM.Close();
@@ -280,6 +267,19 @@ namespace IRTicker {
                         WebSocket_Subscribe(dExchange, primaryCode, secondaryCode);
                     }
                 }
+            }
+
+            if (dExchange == "IR") {  // only for IR do we need to grab OBs via REST _after_ we have started the socket machine.  This is to reduce missed events.
+                // re-populate the OBs using REST
+                Debug.Print(dExchange + " - building new REST OBs");
+                foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
+                    foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                        if (DCEs[dExchange].IR_OBs.ContainsKey(primaryCode + "-" + secondaryCode)) {
+                            DCEs[dExchange].GetIROrderBook(primaryCode, secondaryCode);
+                        }
+                    }
+                }
+                Debug.Print("Rest OBs built.  IR_OBs size: " + DCEs[dExchange].IR_OBs.Count);
             }
         }
 

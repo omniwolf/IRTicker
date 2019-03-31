@@ -354,9 +354,14 @@ namespace IRTicker {
             else {
                 DCEs["IR"].NetworkAvailable = true;
                 DCE.MarketSummary mSummary = JsonConvert.DeserializeObject<DCE.MarketSummary>(marketSummary.Item2);
-                // i get the spread info from websockets now, don't want REST messing up my data
-                mSummary.CurrentHighestBidPrice = 0;
-                mSummary.CurrentLowestOfferPrice = 0;
+
+                // This bit is for a) volume (we don't get vol from websockets), and b) if there have been no orders to establish a spread, then the price and spread
+                // stay at 0.  This is 
+                //Dictionary<string, DCE.MarketSummary> cPairs = DCEs["IR"].GetCryptoPairs();
+                //if (cPairs.ContainsKey(mSummary.pair) && cPairs[mSummary.pair].spread == 0) { 
+                    mSummary.CurrentHighestBidPrice = 0;
+                    mSummary.CurrentLowestOfferPrice = 0;
+                //}
                 mSummary.CreatedTimestampUTC = "";
                 DCEs["IR"].CryptoPairsAdd(crypto + "-" + fiat, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
                 DCEs["IR"].CurrentDCEStatus = "Online";
@@ -734,6 +739,15 @@ namespace IRTicker {
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
                         
                         SubscribeTickerSocket("IR");
+
+                        // OK we have initialised the websockets, now let's get the REST OB so hopefully we don't miss things.
+                        foreach (string crypto in DCEs["IR"].PrimaryCurrencyList) {
+                            foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
+                                if (!DCEs["IR"].IR_OBs.ContainsKey(crypto + "-" + fiat)) {  // only pull the OB if we haven't already
+                                    DCEs["IR"].GetIROrderBook(crypto, fiat);
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -744,9 +758,9 @@ namespace IRTicker {
                             ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency);
                             pollingThread.ReportProgress(21, DCEs["IR"].GetCryptoPairs()[primaryCode + "-" + DCEs["IR"].CurrentSecondaryCurrency]);
                         }
-                        if (DCEs["IR"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["IR"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
+                        //if (DCEs["IR"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["IR"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
                             //GetIROrderBook(primaryCode, );
-                        }
+                        //}
                     }
                 }
                 else DCEs["IR"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
@@ -999,10 +1013,6 @@ namespace IRTicker {
                 if (mSummary.DayVolume >= 1000000) formatStringVol = "### ### ##0.00";
 
                 decimal midPoint = (mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice ) / 2;  // we don't use last price anymore, instead the midpoint of the spread
-
-                if (mSummary.pair == "PLA-AUD") {
-                    Debug.Print("we should be writing PLA..");
-                }
 
                 System.Windows.Forms.Label tempPrice = UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"];
 

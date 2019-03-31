@@ -561,11 +561,12 @@ namespace IRTicker {
                     mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
                     mSummary.CurrentHighestBidPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
                     mSummary.CurrentLowestOfferPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
-                if (mSummary.CurrentHighestBidPrice == 0 && mSummary.CurrentLowestOfferPrice == 0) {  // so i guess this will happen when we haven't pulled the OB yet?
-                    Debug.Print("!! OB's spread was 0, had to use previous cryptoPairs' spread = " + order.Pair);
+                // should be able to delete this commented block, don't think it's needed anymore
+                /*if (mSummary.CurrentHighestBidPrice == 0 && mSummary.CurrentLowestOfferPrice == 0) {  // so i guess this will happen when we haven't pulled the OB yet?
+                    Debug.Print("------------- OB's spread was 0, had to use previous cryptoPairs' spread = " + order.Pair);
                     mSummary.CurrentLowestOfferPrice = cryptoPairs[order.Pair.ToUpper()].CurrentLowestOfferPrice;
                     mSummary.CurrentHighestBidPrice = cryptoPairs[order.Pair.ToUpper()].CurrentHighestBidPrice;
-                }
+                }*/
                     mSummary.pair = order.Pair.ToUpper();
                     CryptoPairsAdd(order.Pair.ToUpper(), mSummary);
                 //Debug.Print("OCE: " + order.Pair + " " + eventStr + " " + mSummary.CurrentHighestBidPrice + " " + mSummary.CurrentLowestOfferPrice);
