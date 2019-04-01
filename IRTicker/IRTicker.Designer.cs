@@ -91,6 +91,9 @@
             this.CSPT_ETH_Label1 = new System.Windows.Forms.Label();
             this.CSPT_XBT_Label1 = new System.Windows.Forms.Label();
             this.BFX_GroupBox = new System.Windows.Forms.GroupBox();
+            this.BFX_EOS_Label2 = new System.Windows.Forms.Label();
+            this.BFX_EOS_Label3 = new System.Windows.Forms.Label();
+            this.BFX_EOS_Label1 = new System.Windows.Forms.Label();
             this.BFX_ZRX_Label2 = new System.Windows.Forms.Label();
             this.BFX_ZRX_Label1 = new System.Windows.Forms.Label();
             this.BFX_OMG_Label2 = new System.Windows.Forms.Label();
@@ -128,6 +131,9 @@
             this.AUD_Label1 = new System.Windows.Forms.Label();
             this.SettingsButton = new System.Windows.Forms.Button();
             this.IR_GroupBox = new System.Windows.Forms.GroupBox();
+            this.IR_EOS_Label2 = new System.Windows.Forms.Label();
+            this.IR_EOS_Label3 = new System.Windows.Forms.Label();
+            this.IR_EOS_Label1 = new System.Windows.Forms.Label();
             this.IR_PLA_Label2 = new System.Windows.Forms.Label();
             this.IR_PLA_Label1 = new System.Windows.Forms.Label();
             this.IR_PLA_Label3 = new System.Windows.Forms.Label();
@@ -235,14 +241,9 @@
             this.GDAX_ZRX_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.IR_PLA_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.GDAX_XRP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_EOS_Label2 = new System.Windows.Forms.Label();
-            this.IR_EOS_Label3 = new System.Windows.Forms.Label();
-            this.IR_EOS_Label1 = new System.Windows.Forms.Label();
-            this.BFX_EOS_Label2 = new System.Windows.Forms.Label();
-            this.BFX_EOS_Label3 = new System.Windows.Forms.Label();
-            this.BFX_EOS_Label1 = new System.Windows.Forms.Label();
             this.IR_EOS_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BFX_EOS_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.IR_Reset_Button = new System.Windows.Forms.Button();
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -1100,6 +1101,42 @@
             this.BFX_GroupBox.Text = "BitFinex";
             this.BFX_GroupBox.Click += new System.EventHandler(this.BFX_GroupBox_Click);
             // 
+            // BFX_EOS_Label2
+            // 
+            this.BFX_EOS_Label2.AutoSize = true;
+            this.BFX_EOS_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_EOS_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_EOS_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_EOS_Label2.Location = new System.Drawing.Point(45, 83);
+            this.BFX_EOS_Label2.Name = "BFX_EOS_Label2";
+            this.BFX_EOS_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_EOS_Label2.TabIndex = 28;
+            this.BFX_EOS_Label2.Tag = "BFX";
+            // 
+            // BFX_EOS_Label3
+            // 
+            this.BFX_EOS_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_EOS_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_EOS_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_EOS_Label3.Location = new System.Drawing.Point(119, 83);
+            this.BFX_EOS_Label3.Name = "BFX_EOS_Label3";
+            this.BFX_EOS_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_EOS_Label3.TabIndex = 29;
+            this.BFX_EOS_Label3.Tag = "";
+            this.BFX_EOS_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_EOS_Label1
+            // 
+            this.BFX_EOS_Label1.AutoSize = true;
+            this.BFX_EOS_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_EOS_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_EOS_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_EOS_Label1.Location = new System.Drawing.Point(6, 83);
+            this.BFX_EOS_Label1.Name = "BFX_EOS_Label1";
+            this.BFX_EOS_Label1.Size = new System.Drawing.Size(36, 13);
+            this.BFX_EOS_Label1.TabIndex = 27;
+            this.BFX_EOS_Label1.Text = "EOS:";
+            // 
             // BFX_ZRX_Label2
             // 
             this.BFX_ZRX_Label2.AutoSize = true;
@@ -1526,6 +1563,7 @@
             // 
             this.IR_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.IR_Eagel_Transparent___small_faded2;
             this.IR_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.IR_GroupBox.Controls.Add(this.IR_Reset_Button);
             this.IR_GroupBox.Controls.Add(this.IR_EOS_Label2);
             this.IR_GroupBox.Controls.Add(this.IR_EOS_Label3);
             this.IR_GroupBox.Controls.Add(this.IR_EOS_Label1);
@@ -1567,6 +1605,45 @@
             this.IR_GroupBox.TabStop = false;
             this.IR_GroupBox.Text = "Independent Reserve";
             this.IR_GroupBox.Click += new System.EventHandler(this.IR_GroupBox_Click);
+            // 
+            // IR_EOS_Label2
+            // 
+            this.IR_EOS_Label2.AutoSize = true;
+            this.IR_EOS_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.IR_EOS_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_EOS_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_EOS_Label2.Location = new System.Drawing.Point(45, 89);
+            this.IR_EOS_Label2.Name = "IR_EOS_Label2";
+            this.IR_EOS_Label2.Size = new System.Drawing.Size(0, 13);
+            this.IR_EOS_Label2.TabIndex = 30;
+            this.IR_EOS_Label2.Tag = "IR";
+            this.IR_EOS_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IR_EOS_Label3
+            // 
+            this.IR_EOS_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_EOS_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.IR_EOS_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_EOS_Label3.Location = new System.Drawing.Point(119, 89);
+            this.IR_EOS_Label3.Name = "IR_EOS_Label3";
+            this.IR_EOS_Label3.Size = new System.Drawing.Size(134, 13);
+            this.IR_EOS_Label3.TabIndex = 31;
+            this.IR_EOS_Label3.Tag = "";
+            this.IR_EOS_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // IR_EOS_Label1
+            // 
+            this.IR_EOS_Label1.AutoSize = true;
+            this.IR_EOS_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.IR_EOS_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_EOS_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_EOS_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.IR_EOS_Label1.Location = new System.Drawing.Point(6, 89);
+            this.IR_EOS_Label1.Name = "IR_EOS_Label1";
+            this.IR_EOS_Label1.Size = new System.Drawing.Size(36, 13);
+            this.IR_EOS_Label1.TabIndex = 29;
+            this.IR_EOS_Label1.Text = "EOS:";
+            this.IR_EOS_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // IR_PLA_Label2
             // 
@@ -1744,7 +1821,7 @@
             this.IR_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IR_AvgPrice_Label.Location = new System.Drawing.Point(6, 207);
             this.IR_AvgPrice_Label.Name = "IR_AvgPrice_Label";
-            this.IR_AvgPrice_Label.Size = new System.Drawing.Size(251, 16);
+            this.IR_AvgPrice_Label.Size = new System.Drawing.Size(194, 16);
             this.IR_AvgPrice_Label.TabIndex = 15;
             // 
             // IR_CryptoComboBox
@@ -2610,81 +2687,6 @@
             this.GDAX_XRP_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.GDAX_XRP_PriceTT.ToolTipTitle = "Spread details";
             // 
-            // IR_EOS_Label2
-            // 
-            this.IR_EOS_Label2.AutoSize = true;
-            this.IR_EOS_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IR_EOS_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_EOS_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_EOS_Label2.Location = new System.Drawing.Point(45, 89);
-            this.IR_EOS_Label2.Name = "IR_EOS_Label2";
-            this.IR_EOS_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IR_EOS_Label2.TabIndex = 30;
-            this.IR_EOS_Label2.Tag = "IR";
-            this.IR_EOS_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IR_EOS_Label3
-            // 
-            this.IR_EOS_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.IR_EOS_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IR_EOS_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_EOS_Label3.Location = new System.Drawing.Point(119, 89);
-            this.IR_EOS_Label3.Name = "IR_EOS_Label3";
-            this.IR_EOS_Label3.Size = new System.Drawing.Size(134, 13);
-            this.IR_EOS_Label3.TabIndex = 31;
-            this.IR_EOS_Label3.Tag = "";
-            this.IR_EOS_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // IR_EOS_Label1
-            // 
-            this.IR_EOS_Label1.AutoSize = true;
-            this.IR_EOS_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IR_EOS_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_EOS_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_EOS_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IR_EOS_Label1.Location = new System.Drawing.Point(6, 89);
-            this.IR_EOS_Label1.Name = "IR_EOS_Label1";
-            this.IR_EOS_Label1.Size = new System.Drawing.Size(36, 13);
-            this.IR_EOS_Label1.TabIndex = 29;
-            this.IR_EOS_Label1.Text = "EOS:";
-            this.IR_EOS_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // BFX_EOS_Label2
-            // 
-            this.BFX_EOS_Label2.AutoSize = true;
-            this.BFX_EOS_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_EOS_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_EOS_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_EOS_Label2.Location = new System.Drawing.Point(45, 83);
-            this.BFX_EOS_Label2.Name = "BFX_EOS_Label2";
-            this.BFX_EOS_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_EOS_Label2.TabIndex = 28;
-            this.BFX_EOS_Label2.Tag = "BFX";
-            // 
-            // BFX_EOS_Label3
-            // 
-            this.BFX_EOS_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_EOS_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_EOS_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_EOS_Label3.Location = new System.Drawing.Point(119, 83);
-            this.BFX_EOS_Label3.Name = "BFX_EOS_Label3";
-            this.BFX_EOS_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_EOS_Label3.TabIndex = 29;
-            this.BFX_EOS_Label3.Tag = "";
-            this.BFX_EOS_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BFX_EOS_Label1
-            // 
-            this.BFX_EOS_Label1.AutoSize = true;
-            this.BFX_EOS_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_EOS_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_EOS_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_EOS_Label1.Location = new System.Drawing.Point(6, 83);
-            this.BFX_EOS_Label1.Name = "BFX_EOS_Label1";
-            this.BFX_EOS_Label1.Size = new System.Drawing.Size(36, 13);
-            this.BFX_EOS_Label1.TabIndex = 27;
-            this.BFX_EOS_Label1.Text = "EOS:";
-            // 
             // IR_EOS_PriceTT
             // 
             this.IR_EOS_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
@@ -2694,6 +2696,18 @@
             // 
             this.BFX_EOS_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.BFX_EOS_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // IR_Reset_Button
+            // 
+            this.IR_Reset_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_Reset_Button.ForeColor = System.Drawing.Color.Black;
+            this.IR_Reset_Button.Location = new System.Drawing.Point(207, 206);
+            this.IR_Reset_Button.Name = "IR_Reset_Button";
+            this.IR_Reset_Button.Size = new System.Drawing.Size(44, 17);
+            this.IR_Reset_Button.TabIndex = 32;
+            this.IR_Reset_Button.Text = "Reset";
+            this.IR_Reset_Button.UseVisualStyleBackColor = true;
+            this.IR_Reset_Button.Click += new System.EventHandler(this.IR_Reset_Button_Click);
             // 
             // IRTicker
             // 
@@ -2956,6 +2970,7 @@
         private System.Windows.Forms.Label IR_EOS_Label1;
         private System.Windows.Forms.ToolTip IR_EOS_PriceTT;
         private System.Windows.Forms.ToolTip BFX_EOS_PriceTT;
+        private System.Windows.Forms.Button IR_Reset_Button;
     }
 }
 
