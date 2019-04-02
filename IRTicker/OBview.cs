@@ -27,19 +27,25 @@ namespace IRTicker
             RichTextBox BidsTB = ((pair == "XBT-AUD") ? BidsTextBox : ETHBidsTextBox);
             RichTextBox OffersTB = ((pair == "XBT-AUD") ? OffersTextBox : ETHOffersTextBox);
 
-            /*for (int i = 0; i < IR_OBs.Count(); i++) {
+            IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> Buy_OrderBook = buySide.OrderByDescending(k => k.Key);
+            IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> Sell_OrderBook = sellSide.OrderBy(j => j.Key);
 
-                if (IR_OBs[i].Key == pair) {
-                    //if (!IR_OBs.ContainsKey("XBT-AUD") || !IR_OBs.ContainsKey("ETH-AUD")) return;  // only try and update when we have a key..
-                    WriteOBView(IR_OBs[i].Value.Item1.OrderByDescending(k => k.Key), BidsTB);
-
-                    //if (!IR_OBs.ContainsKey("XBT-AUD") || !IR_OBs.ContainsKey("ETH-AUD")) return;  // only try and update when we have a key..
-                    WriteOBView(IR_OBs[i].Value.Item2.OrderBy(k => k.Key), OffersTB);
+            if (pair == "XBT-AUD") {
+                BidTopGuid_InputBox.Text = "";  // blank it first
+                ConcurrentDictionary<string, DCE.OrderBook_IR> topPrice = Buy_OrderBook.First().Value;  // get the top price
+                foreach(KeyValuePair<string, DCE.OrderBook_IR> price in topPrice) {
+                    BidTopGuid_InputBox.Text += price.Value.OrderGuid + ", ";  // append each order at this top price
                 }
-            }*/
 
-            WriteOBView(buySide.OrderByDescending(k => k.Key), BidsTB);
-            WriteOBView(sellSide.OrderBy(j => j.Key), OffersTB);
+                OfferTopGuid_InputBox.Text = "";  // blank it first
+                topPrice = Sell_OrderBook.First().Value;  // get the top price
+                foreach (KeyValuePair<string, DCE.OrderBook_IR> price in topPrice) {
+                    OfferTopGuid_InputBox.Text += price.Value.OrderGuid + ", ";  // append each order at this top price
+                }
+            }
+
+            WriteOBView(Buy_OrderBook, BidsTB);
+            WriteOBView(Sell_OrderBook, OffersTB);
         }
 
         private void WriteOBView(IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> OrderBook, RichTextBox RTB) {

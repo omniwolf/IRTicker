@@ -37,6 +37,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.OBProgress = new System.Windows.Forms.Label();
+            this.BidTopGuid_InputBox = new System.Windows.Forms.RichTextBox();
+            this.OfferTopGuid_InputBox = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // BidsTextBox
@@ -63,7 +65,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(117, 9);
+            this.label1.Location = new System.Drawing.Point(47, 44);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(27, 13);
             this.label1.TabIndex = 2;
@@ -72,7 +74,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(444, 9);
+            this.label2.Location = new System.Drawing.Point(337, 44);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(35, 13);
             this.label2.TabIndex = 3;
@@ -126,11 +128,29 @@
             this.OBProgress.TabIndex = 8;
             this.OBProgress.Text = "--";
             // 
+            // BidTopGuid_InputBox
+            // 
+            this.BidTopGuid_InputBox.Location = new System.Drawing.Point(80, 12);
+            this.BidTopGuid_InputBox.Name = "BidTopGuid_InputBox";
+            this.BidTopGuid_InputBox.Size = new System.Drawing.Size(251, 21);
+            this.BidTopGuid_InputBox.TabIndex = 9;
+            this.BidTopGuid_InputBox.Text = "";
+            // 
+            // OfferTopGuid_InputBox
+            // 
+            this.OfferTopGuid_InputBox.Location = new System.Drawing.Point(374, 12);
+            this.OfferTopGuid_InputBox.Name = "OfferTopGuid_InputBox";
+            this.OfferTopGuid_InputBox.Size = new System.Drawing.Size(251, 21);
+            this.OfferTopGuid_InputBox.TabIndex = 10;
+            this.OfferTopGuid_InputBox.Text = "";
+            // 
             // OBview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(637, 450);
+            this.Controls.Add(this.OfferTopGuid_InputBox);
+            this.Controls.Add(this.BidTopGuid_InputBox);
             this.Controls.Add(this.OBProgress);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -158,5 +178,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         public System.Windows.Forms.Label OBProgress;
+        private System.Windows.Forms.RichTextBox BidTopGuid_InputBox;
+        private System.Windows.Forms.RichTextBox OfferTopGuid_InputBox;
     }
 }

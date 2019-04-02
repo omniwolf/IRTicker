@@ -493,7 +493,7 @@ namespace IRTicker {
                     break;
 
                 case "OrderCanceled":  // API should send us OrderGuid, Pair, OrderType
-
+                    Debug.Print(DateTime.Now.ToString() + " | ORDER CANCELED: " + order.OrderGuid);
                     if (Order_OB_IR.ContainsKey(order.OrderGuid)) {  // getting exceptions where the order doesn't exist in this dictionary?? weird..
                         decimal OrderPrice2 = Order_OB_IR[order.OrderGuid];
 
