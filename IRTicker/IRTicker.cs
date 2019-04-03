@@ -1107,7 +1107,7 @@ namespace IRTicker {
             return "";
         }
 
-        private void OBProgressNext() {
+        private void OBProgressNext(bool negativeSpread) {
             switch (obv.OBProgress.Text) {
                 case "--":
                     obv.OBProgress.Text = "\\";
@@ -1124,6 +1124,12 @@ namespace IRTicker {
                 default:
                     obv.OBProgress.Text = "--";
                     break;
+            }
+            if (negativeSpread) {
+                obv.OBProgress.ForeColor = Color.Red;
+            }
+            else {
+                obv.OBProgress.ForeColor = Color.Black;
             }
         }
 
@@ -1154,7 +1160,7 @@ namespace IRTicker {
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
                 UpdateLabels_Pair("IR", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
                 if ((mSummary.pair == "XBT-AUD" || mSummary.pair == "ETH-AUD") && (DCEs["IR"].IR_OBs.ContainsKey(mSummary.pair.ToUpper()))) {
-                    OBProgressNext();
+                    OBProgressNext(mSummary.spread < 0);
                     KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] buySide = DCEs["IR"].IR_OBs[mSummary.pair].Item1.ToArray();
                     KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] sellSide = DCEs["IR"].IR_OBs[mSummary.pair].Item2.ToArray();
                     obv.UpdateOBs(buySide, sellSide, mSummary.pair.ToUpper());  // update the debug window
@@ -1175,7 +1181,7 @@ namespace IRTicker {
             if (reportType == 25) {  // 25 is for updating ob view
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
                 if (mSummary.pair == "XBT-AUD" || mSummary.pair == "ETH-AUD") {
-                    OBProgressNext();
+                    OBProgressNext(mSummary.spread < 0);
                     KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] buySide = DCEs["IR"].IR_OBs[mSummary.pair].Item1.ToArray();
                     KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] sellSide = DCEs["IR"].IR_OBs[mSummary.pair].Item2.ToArray();
                     obv.UpdateOBs(buySide, sellSide, mSummary.pair.ToUpper());  // update the debug window
