@@ -24,6 +24,7 @@ namespace IRTicker {
         public Label OMG_Label { get; set; }
         public Label ZRX_Label { get; set; }
         public Label PLA_Label { get; set; }
+        public Label XLM_Label { get; set; }
 
         public Label XBT_Price { get; set; }
         public Label ETH_Price { get; set; }
@@ -34,6 +35,7 @@ namespace IRTicker {
         public Label OMG_Price { get; set; }
         public Label ZRX_Price { get; set; }
         public Label PLA_Price { get; set; }
+        public Label XLM_Price { get; set; }
 
         public ToolTip XBT_PriceTT { get; set; }
         public ToolTip ETH_PriceTT { get; set; }
@@ -44,6 +46,7 @@ namespace IRTicker {
         public ToolTip OMG_PriceTT { get; set; }
         public ToolTip ZRX_PriceTT { get; set; }
         public ToolTip PLA_PriceTT { get; set; }
+        public ToolTip XLM_PriceTT { get; set; }
 
         public ToolTip AvgPriceTT { get; set; }
 
@@ -56,6 +59,7 @@ namespace IRTicker {
         public Label OMG_Spread { get; set; }
         public Label ZRX_Spread { get; set; }
         public Label PLA_Spread { get; set; }
+        public Label XLM_Spread { get; set; }
 
         public ComboBox AvgPrice_BuySell { get; set; }
         public MaskedTextBox AvgPrice_NumCoins { get; set; }
@@ -77,6 +81,7 @@ namespace IRTicker {
             if (OMG_Label != null) Label_Dict.Add("OMG_Label", OMG_Label);
             if (ZRX_Label != null) Label_Dict.Add("ZRX_Label", ZRX_Label);
             if (PLA_Label != null) Label_Dict.Add("PLA_Label", PLA_Label);
+            if (XLM_Label != null) Label_Dict.Add("XLM_Label", XLM_Label);
 
             Label_Dict.Add("XBT_Price", XBT_Price);
             Label_Dict.Add("ETH_Price", ETH_Price);
@@ -87,6 +92,7 @@ namespace IRTicker {
             if (OMG_Price != null) Label_Dict.Add("OMG_Price", OMG_Price);
             if (ZRX_Price != null) Label_Dict.Add("ZRX_Price", ZRX_Price);
             if (PLA_Price != null) Label_Dict.Add("PLA_Price", PLA_Price);
+            if (XLM_Price != null) Label_Dict.Add("XLM_Price", XLM_Price);
 
             Label_Dict.Add("XBT_Spread", XBT_Spread);
             Label_Dict.Add("ETH_Spread", ETH_Spread);
@@ -97,6 +103,7 @@ namespace IRTicker {
             if (OMG_Spread != null) Label_Dict.Add("OMG_Spread", OMG_Spread);
             if (ZRX_Spread != null) Label_Dict.Add("ZRX_Spread", ZRX_Spread);
             if (PLA_Spread != null) Label_Dict.Add("PLA_Spread", PLA_Spread);
+            if (XLM_Spread != null) Label_Dict.Add("XLM_Spread", XLM_Spread);
 
             // ToolTips
             ToolTip_Dict = new Dictionary<string, ToolTip>();
@@ -109,6 +116,7 @@ namespace IRTicker {
             if (OMG_PriceTT != null) ToolTip_Dict.Add("OMG_PriceTT", OMG_PriceTT);
             if (ZRX_PriceTT != null) ToolTip_Dict.Add("ZRX_PriceTT", ZRX_PriceTT);
             if (PLA_PriceTT != null) ToolTip_Dict.Add("PLA_PriceTT", PLA_PriceTT);
+            if (XLM_PriceTT != null) ToolTip_Dict.Add("XLM_PriceTT", XLM_PriceTT);
 
             if (AvgPriceTT != null) ToolTip_Dict.Add("AvgPriceTT", AvgPriceTT);
         }

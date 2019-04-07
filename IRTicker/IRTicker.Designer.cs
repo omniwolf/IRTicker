@@ -131,6 +131,7 @@
             this.AUD_Label1 = new System.Windows.Forms.Label();
             this.SettingsButton = new System.Windows.Forms.Button();
             this.IR_GroupBox = new System.Windows.Forms.GroupBox();
+            this.IR_Reset_Button = new System.Windows.Forms.Button();
             this.IR_EOS_Label2 = new System.Windows.Forms.Label();
             this.IR_EOS_Label3 = new System.Windows.Forms.Label();
             this.IR_EOS_Label1 = new System.Windows.Forms.Label();
@@ -243,7 +244,22 @@
             this.GDAX_XRP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.IR_EOS_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BFX_EOS_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_Reset_Button = new System.Windows.Forms.Button();
+            this.IR_XLM_Label2 = new System.Windows.Forms.Label();
+            this.IR_XLM_Label3 = new System.Windows.Forms.Label();
+            this.IR_XLM_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_XLM_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_XLM_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_XLM_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_XLM_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_XLM_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_XLM_Label1 = new System.Windows.Forms.Label();
+            this.BFX_XLM_Label2 = new System.Windows.Forms.Label();
+            this.BFX_XLM_Label3 = new System.Windows.Forms.Label();
+            this.BFX_XLM_Label1 = new System.Windows.Forms.Label();
+            this.IR_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BTCM_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.GDAX_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BFX_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -486,13 +502,16 @@
             this.Main.Controls.Add(this.GDAX_GroupBox);
             this.Main.Location = new System.Drawing.Point(0, 0);
             this.Main.Name = "Main";
-            this.Main.Size = new System.Drawing.Size(585, 693);
+            this.Main.Size = new System.Drawing.Size(585, 723);
             this.Main.TabIndex = 5;
             // 
             // BTCM_GroupBox
             // 
             this.BTCM_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.btcm3;
             this.BTCM_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.BTCM_GroupBox.Controls.Add(this.BTCM_XLM_Label2);
+            this.BTCM_GroupBox.Controls.Add(this.BTCM_XLM_Label3);
+            this.BTCM_GroupBox.Controls.Add(this.BTCM_XLM_Label1);
             this.BTCM_GroupBox.Controls.Add(this.BTCM_OMG_Label2);
             this.BTCM_GroupBox.Controls.Add(this.BTCM_OMG_Label3);
             this.BTCM_GroupBox.Controls.Add(this.BTCM_OMG_Label1);
@@ -519,7 +538,7 @@
             this.BTCM_GroupBox.ForeColor = System.Drawing.Color.Gray;
             this.BTCM_GroupBox.Location = new System.Drawing.Point(305, 13);
             this.BTCM_GroupBox.Name = "BTCM_GroupBox";
-            this.BTCM_GroupBox.Size = new System.Drawing.Size(262, 200);
+            this.BTCM_GroupBox.Size = new System.Drawing.Size(262, 220);
             this.BTCM_GroupBox.TabIndex = 1;
             this.BTCM_GroupBox.TabStop = false;
             this.BTCM_GroupBox.Text = "BTC Markets";
@@ -530,7 +549,7 @@
             this.BTCM_OMG_Label2.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_OMG_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_OMG_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_OMG_Label2.Location = new System.Drawing.Point(45, 123);
+            this.BTCM_OMG_Label2.Location = new System.Drawing.Point(45, 143);
             this.BTCM_OMG_Label2.Name = "BTCM_OMG_Label2";
             this.BTCM_OMG_Label2.Size = new System.Drawing.Size(0, 13);
             this.BTCM_OMG_Label2.TabIndex = 19;
@@ -541,7 +560,7 @@
             this.BTCM_OMG_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.BTCM_OMG_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_OMG_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_OMG_Label3.Location = new System.Drawing.Point(119, 123);
+            this.BTCM_OMG_Label3.Location = new System.Drawing.Point(119, 143);
             this.BTCM_OMG_Label3.Name = "BTCM_OMG_Label3";
             this.BTCM_OMG_Label3.Size = new System.Drawing.Size(134, 13);
             this.BTCM_OMG_Label3.TabIndex = 20;
@@ -555,7 +574,7 @@
             this.BTCM_OMG_Label1.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_OMG_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_OMG_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_OMG_Label1.Location = new System.Drawing.Point(6, 123);
+            this.BTCM_OMG_Label1.Location = new System.Drawing.Point(6, 143);
             this.BTCM_OMG_Label1.Name = "BTCM_OMG_Label1";
             this.BTCM_OMG_Label1.Size = new System.Drawing.Size(39, 13);
             this.BTCM_OMG_Label1.TabIndex = 18;
@@ -566,7 +585,7 @@
             this.BTCM_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
             this.BTCM_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_AvgPrice_Label.Location = new System.Drawing.Point(6, 143);
+            this.BTCM_AvgPrice_Label.Location = new System.Drawing.Point(6, 163);
             this.BTCM_AvgPrice_Label.Name = "BTCM_AvgPrice_Label";
             this.BTCM_AvgPrice_Label.Size = new System.Drawing.Size(251, 16);
             this.BTCM_AvgPrice_Label.TabIndex = 16;
@@ -575,7 +594,7 @@
             // 
             this.BTCM_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.BTCM_CryptoComboBox.Location = new System.Drawing.Point(194, 171);
+            this.BTCM_CryptoComboBox.Location = new System.Drawing.Point(194, 191);
             this.BTCM_CryptoComboBox.Name = "BTCM_CryptoComboBox";
             this.BTCM_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
             this.BTCM_CryptoComboBox.TabIndex = 17;
@@ -585,7 +604,7 @@
             // BTCM_NumCoinsTextBox
             // 
             this.BTCM_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_NumCoinsTextBox.Location = new System.Drawing.Point(96, 171);
+            this.BTCM_NumCoinsTextBox.Location = new System.Drawing.Point(96, 191);
             this.BTCM_NumCoinsTextBox.Mask = "00000000";
             this.BTCM_NumCoinsTextBox.Name = "BTCM_NumCoinsTextBox";
             this.BTCM_NumCoinsTextBox.PromptChar = ' ';
@@ -616,7 +635,7 @@
             this.BTCM_BuySellComboBox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.BTCM_BuySellComboBox.Location = new System.Drawing.Point(10, 171);
+            this.BTCM_BuySellComboBox.Location = new System.Drawing.Point(10, 191);
             this.BTCM_BuySellComboBox.Name = "BTCM_BuySellComboBox";
             this.BTCM_BuySellComboBox.Size = new System.Drawing.Size(58, 21);
             this.BTCM_BuySellComboBox.TabIndex = 15;
@@ -820,9 +839,9 @@
             this.CSPT_GroupBox.Controls.Add(this.CSPT_XBT_Label1);
             this.CSPT_GroupBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.CSPT_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.CSPT_GroupBox.Location = new System.Drawing.Point(19, 491);
+            this.CSPT_GroupBox.Location = new System.Drawing.Point(305, 517);
             this.CSPT_GroupBox.Name = "CSPT_GroupBox";
-            this.CSPT_GroupBox.Size = new System.Drawing.Size(263, 182);
+            this.CSPT_GroupBox.Size = new System.Drawing.Size(262, 182);
             this.CSPT_GroupBox.TabIndex = 16;
             this.CSPT_GroupBox.TabStop = false;
             this.CSPT_GroupBox.Text = "CoinSpot";
@@ -844,7 +863,7 @@
             this.CSPT_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.CSPT_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
             this.CSPT_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_XRP_Label3.Location = new System.Drawing.Point(119, 43);
+            this.CSPT_XRP_Label3.Location = new System.Drawing.Point(118, 43);
             this.CSPT_XRP_Label3.Name = "CSPT_XRP_Label3";
             this.CSPT_XRP_Label3.Size = new System.Drawing.Size(134, 13);
             this.CSPT_XRP_Label3.TabIndex = 18;
@@ -964,7 +983,7 @@
             this.CSPT_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.CSPT_LTC_Label3.BackColor = System.Drawing.Color.Transparent;
             this.CSPT_LTC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_LTC_Label3.Location = new System.Drawing.Point(119, 103);
+            this.CSPT_LTC_Label3.Location = new System.Drawing.Point(118, 103);
             this.CSPT_LTC_Label3.Name = "CSPT_LTC_Label3";
             this.CSPT_LTC_Label3.Size = new System.Drawing.Size(134, 13);
             this.CSPT_LTC_Label3.TabIndex = 11;
@@ -977,7 +996,7 @@
             this.CSPT_EOS_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.CSPT_EOS_Label3.BackColor = System.Drawing.Color.Transparent;
             this.CSPT_EOS_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_EOS_Label3.Location = new System.Drawing.Point(119, 83);
+            this.CSPT_EOS_Label3.Location = new System.Drawing.Point(118, 83);
             this.CSPT_EOS_Label3.Name = "CSPT_EOS_Label3";
             this.CSPT_EOS_Label3.Size = new System.Drawing.Size(134, 13);
             this.CSPT_EOS_Label3.TabIndex = 10;
@@ -990,7 +1009,7 @@
             this.CSPT_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.CSPT_ETH_Label3.BackColor = System.Drawing.Color.Transparent;
             this.CSPT_ETH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_ETH_Label3.Location = new System.Drawing.Point(119, 63);
+            this.CSPT_ETH_Label3.Location = new System.Drawing.Point(118, 63);
             this.CSPT_ETH_Label3.Name = "CSPT_ETH_Label3";
             this.CSPT_ETH_Label3.Size = new System.Drawing.Size(134, 13);
             this.CSPT_ETH_Label3.TabIndex = 9;
@@ -1003,7 +1022,7 @@
             this.CSPT_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.CSPT_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
             this.CSPT_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_XBT_Label3.Location = new System.Drawing.Point(119, 23);
+            this.CSPT_XBT_Label3.Location = new System.Drawing.Point(118, 23);
             this.CSPT_XBT_Label3.Name = "CSPT_XBT_Label3";
             this.CSPT_XBT_Label3.Size = new System.Drawing.Size(134, 13);
             this.CSPT_XBT_Label3.TabIndex = 8;
@@ -1063,6 +1082,9 @@
             // 
             this.BFX_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.bfx_faded;
             this.BFX_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.BFX_GroupBox.Controls.Add(this.BFX_XLM_Label2);
+            this.BFX_GroupBox.Controls.Add(this.BFX_XLM_Label3);
+            this.BFX_GroupBox.Controls.Add(this.BFX_XLM_Label1);
             this.BFX_GroupBox.Controls.Add(this.BFX_EOS_Label2);
             this.BFX_GroupBox.Controls.Add(this.BFX_EOS_Label3);
             this.BFX_GroupBox.Controls.Add(this.BFX_EOS_Label1);
@@ -1093,9 +1115,9 @@
             this.BFX_GroupBox.Controls.Add(this.BFX_AvgPrice_Label);
             this.BFX_GroupBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.BFX_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.BFX_GroupBox.Location = new System.Drawing.Point(305, 225);
+            this.BFX_GroupBox.Location = new System.Drawing.Point(305, 245);
             this.BFX_GroupBox.Name = "BFX_GroupBox";
-            this.BFX_GroupBox.Size = new System.Drawing.Size(262, 240);
+            this.BFX_GroupBox.Size = new System.Drawing.Size(262, 260);
             this.BFX_GroupBox.TabIndex = 9;
             this.BFX_GroupBox.TabStop = false;
             this.BFX_GroupBox.Text = "BitFinex";
@@ -1143,7 +1165,7 @@
             this.BFX_ZRX_Label2.BackColor = System.Drawing.Color.Transparent;
             this.BFX_ZRX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BFX_ZRX_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_ZRX_Label2.Location = new System.Drawing.Point(45, 163);
+            this.BFX_ZRX_Label2.Location = new System.Drawing.Point(45, 183);
             this.BFX_ZRX_Label2.Name = "BFX_ZRX_Label2";
             this.BFX_ZRX_Label2.Size = new System.Drawing.Size(0, 13);
             this.BFX_ZRX_Label2.TabIndex = 25;
@@ -1155,7 +1177,7 @@
             this.BFX_ZRX_Label1.BackColor = System.Drawing.Color.Transparent;
             this.BFX_ZRX_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BFX_ZRX_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_ZRX_Label1.Location = new System.Drawing.Point(6, 163);
+            this.BFX_ZRX_Label1.Location = new System.Drawing.Point(6, 183);
             this.BFX_ZRX_Label1.Name = "BFX_ZRX_Label1";
             this.BFX_ZRX_Label1.Size = new System.Drawing.Size(36, 13);
             this.BFX_ZRX_Label1.TabIndex = 23;
@@ -1167,7 +1189,7 @@
             this.BFX_OMG_Label2.BackColor = System.Drawing.Color.Transparent;
             this.BFX_OMG_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BFX_OMG_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_OMG_Label2.Location = new System.Drawing.Point(45, 143);
+            this.BFX_OMG_Label2.Location = new System.Drawing.Point(45, 163);
             this.BFX_OMG_Label2.Name = "BFX_OMG_Label2";
             this.BFX_OMG_Label2.Size = new System.Drawing.Size(0, 13);
             this.BFX_OMG_Label2.TabIndex = 22;
@@ -1178,7 +1200,7 @@
             this.BFX_OMG_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.BFX_OMG_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BFX_OMG_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_OMG_Label3.Location = new System.Drawing.Point(119, 143);
+            this.BFX_OMG_Label3.Location = new System.Drawing.Point(119, 163);
             this.BFX_OMG_Label3.Name = "BFX_OMG_Label3";
             this.BFX_OMG_Label3.Size = new System.Drawing.Size(134, 13);
             this.BFX_OMG_Label3.TabIndex = 24;
@@ -1191,7 +1213,7 @@
             this.BFX_ZRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.BFX_ZRX_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BFX_ZRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_ZRX_Label3.Location = new System.Drawing.Point(119, 162);
+            this.BFX_ZRX_Label3.Location = new System.Drawing.Point(119, 182);
             this.BFX_ZRX_Label3.Name = "BFX_ZRX_Label3";
             this.BFX_ZRX_Label3.Size = new System.Drawing.Size(134, 13);
             this.BFX_ZRX_Label3.TabIndex = 26;
@@ -1205,7 +1227,7 @@
             this.BFX_OMG_Label1.BackColor = System.Drawing.Color.Transparent;
             this.BFX_OMG_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BFX_OMG_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_OMG_Label1.Location = new System.Drawing.Point(6, 143);
+            this.BFX_OMG_Label1.Location = new System.Drawing.Point(6, 163);
             this.BFX_OMG_Label1.Name = "BFX_OMG_Label1";
             this.BFX_OMG_Label1.Size = new System.Drawing.Size(39, 13);
             this.BFX_OMG_Label1.TabIndex = 21;
@@ -1252,7 +1274,7 @@
             // 
             this.BFX_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BFX_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.BFX_CryptoComboBox.Location = new System.Drawing.Point(194, 210);
+            this.BFX_CryptoComboBox.Location = new System.Drawing.Point(194, 230);
             this.BFX_CryptoComboBox.Name = "BFX_CryptoComboBox";
             this.BFX_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
             this.BFX_CryptoComboBox.TabIndex = 20;
@@ -1262,7 +1284,7 @@
             // BFX_NumCoinsTextBox
             // 
             this.BFX_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_NumCoinsTextBox.Location = new System.Drawing.Point(96, 210);
+            this.BFX_NumCoinsTextBox.Location = new System.Drawing.Point(96, 230);
             this.BFX_NumCoinsTextBox.Mask = "00000000";
             this.BFX_NumCoinsTextBox.Name = "BFX_NumCoinsTextBox";
             this.BFX_NumCoinsTextBox.PromptChar = ' ';
@@ -1293,7 +1315,7 @@
             this.BFX_BuySellComboBox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.BFX_BuySellComboBox.Location = new System.Drawing.Point(10, 210);
+            this.BFX_BuySellComboBox.Location = new System.Drawing.Point(10, 230);
             this.BFX_BuySellComboBox.Name = "BFX_BuySellComboBox";
             this.BFX_BuySellComboBox.Size = new System.Drawing.Size(58, 21);
             this.BFX_BuySellComboBox.TabIndex = 18;
@@ -1440,7 +1462,7 @@
             this.BFX_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
             this.BFX_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BFX_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_AvgPrice_Label.Location = new System.Drawing.Point(6, 181);
+            this.BFX_AvgPrice_Label.Location = new System.Drawing.Point(6, 201);
             this.BFX_AvgPrice_Label.Name = "BFX_AvgPrice_Label";
             this.BFX_AvgPrice_Label.Size = new System.Drawing.Size(251, 16);
             this.BFX_AvgPrice_Label.TabIndex = 19;
@@ -1457,9 +1479,9 @@
             this.fiat_GroupBox.Controls.Add(this.NZD_Label1);
             this.fiat_GroupBox.Controls.Add(this.AUD_Label1);
             this.fiat_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.fiat_GroupBox.Location = new System.Drawing.Point(305, 477);
+            this.fiat_GroupBox.Location = new System.Drawing.Point(19, 537);
             this.fiat_GroupBox.Name = "fiat_GroupBox";
-            this.fiat_GroupBox.Size = new System.Drawing.Size(262, 131);
+            this.fiat_GroupBox.Size = new System.Drawing.Size(263, 131);
             this.fiat_GroupBox.TabIndex = 9;
             this.fiat_GroupBox.TabStop = false;
             this.fiat_GroupBox.Text = "Fiat rates";
@@ -1551,7 +1573,7 @@
             // SettingsButton
             // 
             this.SettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsButton.Location = new System.Drawing.Point(502, 640);
+            this.SettingsButton.Location = new System.Drawing.Point(207, 686);
             this.SettingsButton.Name = "SettingsButton";
             this.SettingsButton.Size = new System.Drawing.Size(75, 23);
             this.SettingsButton.TabIndex = 2;
@@ -1563,6 +1585,9 @@
             // 
             this.IR_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.IR_Eagel_Transparent___small_faded2;
             this.IR_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.IR_GroupBox.Controls.Add(this.IR_XLM_Label2);
+            this.IR_GroupBox.Controls.Add(this.IR_XLM_Label3);
+            this.IR_GroupBox.Controls.Add(this.IR_XLM_Label1);
             this.IR_GroupBox.Controls.Add(this.IR_Reset_Button);
             this.IR_GroupBox.Controls.Add(this.IR_EOS_Label2);
             this.IR_GroupBox.Controls.Add(this.IR_EOS_Label3);
@@ -1600,11 +1625,23 @@
             this.IR_GroupBox.ForeColor = System.Drawing.Color.Gray;
             this.IR_GroupBox.Location = new System.Drawing.Point(19, 13);
             this.IR_GroupBox.Name = "IR_GroupBox";
-            this.IR_GroupBox.Size = new System.Drawing.Size(263, 263);
+            this.IR_GroupBox.Size = new System.Drawing.Size(263, 283);
             this.IR_GroupBox.TabIndex = 0;
             this.IR_GroupBox.TabStop = false;
             this.IR_GroupBox.Text = "Independent Reserve";
             this.IR_GroupBox.Click += new System.EventHandler(this.IR_GroupBox_Click);
+            // 
+            // IR_Reset_Button
+            // 
+            this.IR_Reset_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_Reset_Button.ForeColor = System.Drawing.Color.Black;
+            this.IR_Reset_Button.Location = new System.Drawing.Point(207, 226);
+            this.IR_Reset_Button.Name = "IR_Reset_Button";
+            this.IR_Reset_Button.Size = new System.Drawing.Size(44, 17);
+            this.IR_Reset_Button.TabIndex = 32;
+            this.IR_Reset_Button.Text = "Reset";
+            this.IR_Reset_Button.UseVisualStyleBackColor = true;
+            this.IR_Reset_Button.Click += new System.EventHandler(this.IR_Reset_Button_Click);
             // 
             // IR_EOS_Label2
             // 
@@ -1651,7 +1688,7 @@
             this.IR_PLA_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_PLA_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_PLA_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_PLA_Label2.Location = new System.Drawing.Point(45, 189);
+            this.IR_PLA_Label2.Location = new System.Drawing.Point(45, 209);
             this.IR_PLA_Label2.Name = "IR_PLA_Label2";
             this.IR_PLA_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_PLA_Label2.TabIndex = 28;
@@ -1665,7 +1702,7 @@
             this.IR_PLA_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_PLA_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IR_PLA_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IR_PLA_Label1.Location = new System.Drawing.Point(6, 189);
+            this.IR_PLA_Label1.Location = new System.Drawing.Point(6, 209);
             this.IR_PLA_Label1.Name = "IR_PLA_Label1";
             this.IR_PLA_Label1.Size = new System.Drawing.Size(34, 13);
             this.IR_PLA_Label1.TabIndex = 27;
@@ -1677,7 +1714,7 @@
             this.IR_PLA_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_PLA_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_PLA_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_PLA_Label3.Location = new System.Drawing.Point(119, 189);
+            this.IR_PLA_Label3.Location = new System.Drawing.Point(119, 209);
             this.IR_PLA_Label3.Name = "IR_PLA_Label3";
             this.IR_PLA_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_PLA_Label3.TabIndex = 26;
@@ -1700,7 +1737,7 @@
             this.IR_ZRX_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_ZRX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_ZRX_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_ZRX_Label2.Location = new System.Drawing.Point(45, 169);
+            this.IR_ZRX_Label2.Location = new System.Drawing.Point(45, 189);
             this.IR_ZRX_Label2.Name = "IR_ZRX_Label2";
             this.IR_ZRX_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_ZRX_Label2.TabIndex = 24;
@@ -1714,7 +1751,7 @@
             this.IR_ZRX_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_ZRX_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IR_ZRX_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IR_ZRX_Label1.Location = new System.Drawing.Point(6, 169);
+            this.IR_ZRX_Label1.Location = new System.Drawing.Point(6, 189);
             this.IR_ZRX_Label1.Name = "IR_ZRX_Label1";
             this.IR_ZRX_Label1.Size = new System.Drawing.Size(36, 13);
             this.IR_ZRX_Label1.TabIndex = 23;
@@ -1727,7 +1764,7 @@
             this.IR_OMG_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_OMG_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_OMG_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_OMG_Label2.Location = new System.Drawing.Point(45, 149);
+            this.IR_OMG_Label2.Location = new System.Drawing.Point(45, 169);
             this.IR_OMG_Label2.Name = "IR_OMG_Label2";
             this.IR_OMG_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_OMG_Label2.TabIndex = 20;
@@ -1739,7 +1776,7 @@
             this.IR_OMG_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_OMG_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_OMG_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_OMG_Label3.Location = new System.Drawing.Point(119, 149);
+            this.IR_OMG_Label3.Location = new System.Drawing.Point(119, 169);
             this.IR_OMG_Label3.Name = "IR_OMG_Label3";
             this.IR_OMG_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_OMG_Label3.TabIndex = 22;
@@ -1767,7 +1804,7 @@
             this.IR_OMG_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_OMG_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IR_OMG_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IR_OMG_Label1.Location = new System.Drawing.Point(6, 149);
+            this.IR_OMG_Label1.Location = new System.Drawing.Point(6, 169);
             this.IR_OMG_Label1.Name = "IR_OMG_Label1";
             this.IR_OMG_Label1.Size = new System.Drawing.Size(39, 13);
             this.IR_OMG_Label1.TabIndex = 19;
@@ -1792,7 +1829,7 @@
             this.IR_ZRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_ZRX_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_ZRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_ZRX_Label3.Location = new System.Drawing.Point(119, 169);
+            this.IR_ZRX_Label3.Location = new System.Drawing.Point(119, 189);
             this.IR_ZRX_Label3.Name = "IR_ZRX_Label3";
             this.IR_ZRX_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_ZRX_Label3.TabIndex = 18;
@@ -1819,7 +1856,7 @@
             this.IR_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
             this.IR_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_AvgPrice_Label.Location = new System.Drawing.Point(6, 207);
+            this.IR_AvgPrice_Label.Location = new System.Drawing.Point(6, 227);
             this.IR_AvgPrice_Label.Name = "IR_AvgPrice_Label";
             this.IR_AvgPrice_Label.Size = new System.Drawing.Size(194, 16);
             this.IR_AvgPrice_Label.TabIndex = 15;
@@ -1828,7 +1865,7 @@
             // 
             this.IR_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.IR_CryptoComboBox.Location = new System.Drawing.Point(193, 234);
+            this.IR_CryptoComboBox.Location = new System.Drawing.Point(193, 254);
             this.IR_CryptoComboBox.Name = "IR_CryptoComboBox";
             this.IR_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
             this.IR_CryptoComboBox.TabIndex = 14;
@@ -1838,7 +1875,7 @@
             // IR_NumCoinsTextBox
             // 
             this.IR_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_NumCoinsTextBox.Location = new System.Drawing.Point(95, 234);
+            this.IR_NumCoinsTextBox.Location = new System.Drawing.Point(95, 254);
             this.IR_NumCoinsTextBox.Mask = "00000000";
             this.IR_NumCoinsTextBox.Name = "IR_NumCoinsTextBox";
             this.IR_NumCoinsTextBox.PromptChar = ' ';
@@ -1857,7 +1894,7 @@
             this.IR_BuySellComboBox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.IR_BuySellComboBox.Location = new System.Drawing.Point(9, 234);
+            this.IR_BuySellComboBox.Location = new System.Drawing.Point(9, 254);
             this.IR_BuySellComboBox.Name = "IR_BuySellComboBox";
             this.IR_BuySellComboBox.Size = new System.Drawing.Size(58, 21);
             this.IR_BuySellComboBox.TabIndex = 12;
@@ -2027,6 +2064,9 @@
             // 
             this.GDAX_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.coinbasepro_logo3;
             this.GDAX_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.GDAX_GroupBox.Controls.Add(this.GDAX_XLM_Label2);
+            this.GDAX_GroupBox.Controls.Add(this.GDAX_XLM_Label3);
+            this.GDAX_GroupBox.Controls.Add(this.GDAX_XLM_Label1);
             this.GDAX_GroupBox.Controls.Add(this.GDAX_XRP_Label2);
             this.GDAX_GroupBox.Controls.Add(this.GDAX_XRP_Label3);
             this.GDAX_GroupBox.Controls.Add(this.GDAX_XRP_Label1);
@@ -2051,9 +2091,9 @@
             this.GDAX_GroupBox.Controls.Add(this.GDAX_XBT_Label1);
             this.GDAX_GroupBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.GDAX_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.GDAX_GroupBox.Location = new System.Drawing.Point(19, 282);
+            this.GDAX_GroupBox.Location = new System.Drawing.Point(19, 302);
             this.GDAX_GroupBox.Name = "GDAX_GroupBox";
-            this.GDAX_GroupBox.Size = new System.Drawing.Size(263, 202);
+            this.GDAX_GroupBox.Size = new System.Drawing.Size(263, 222);
             this.GDAX_GroupBox.TabIndex = 8;
             this.GDAX_GroupBox.TabStop = false;
             this.GDAX_GroupBox.Text = "Coinbase Pro";
@@ -2101,7 +2141,7 @@
             this.GDAX_ZRX_Label2.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ZRX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_ZRX_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_ZRX_Label2.Location = new System.Drawing.Point(45, 123);
+            this.GDAX_ZRX_Label2.Location = new System.Drawing.Point(45, 143);
             this.GDAX_ZRX_Label2.Name = "GDAX_ZRX_Label2";
             this.GDAX_ZRX_Label2.Size = new System.Drawing.Size(0, 13);
             this.GDAX_ZRX_Label2.TabIndex = 20;
@@ -2112,7 +2152,7 @@
             this.GDAX_ZRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_ZRX_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ZRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ZRX_Label3.Location = new System.Drawing.Point(119, 123);
+            this.GDAX_ZRX_Label3.Location = new System.Drawing.Point(119, 143);
             this.GDAX_ZRX_Label3.Name = "GDAX_ZRX_Label3";
             this.GDAX_ZRX_Label3.Size = new System.Drawing.Size(134, 13);
             this.GDAX_ZRX_Label3.TabIndex = 21;
@@ -2125,7 +2165,7 @@
             this.GDAX_ZRX_Label1.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ZRX_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_ZRX_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_ZRX_Label1.Location = new System.Drawing.Point(6, 123);
+            this.GDAX_ZRX_Label1.Location = new System.Drawing.Point(6, 143);
             this.GDAX_ZRX_Label1.Name = "GDAX_ZRX_Label1";
             this.GDAX_ZRX_Label1.Size = new System.Drawing.Size(36, 13);
             this.GDAX_ZRX_Label1.TabIndex = 19;
@@ -2136,7 +2176,7 @@
             this.GDAX_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
             this.GDAX_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_AvgPrice_Label.Location = new System.Drawing.Point(6, 141);
+            this.GDAX_AvgPrice_Label.Location = new System.Drawing.Point(6, 161);
             this.GDAX_AvgPrice_Label.Name = "GDAX_AvgPrice_Label";
             this.GDAX_AvgPrice_Label.Size = new System.Drawing.Size(251, 16);
             this.GDAX_AvgPrice_Label.TabIndex = 18;
@@ -2145,7 +2185,7 @@
             // 
             this.GDAX_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.GDAX_CryptoComboBox.Location = new System.Drawing.Point(193, 171);
+            this.GDAX_CryptoComboBox.Location = new System.Drawing.Point(193, 191);
             this.GDAX_CryptoComboBox.Name = "GDAX_CryptoComboBox";
             this.GDAX_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
             this.GDAX_CryptoComboBox.TabIndex = 17;
@@ -2155,7 +2195,7 @@
             // GDAX_NumCoinsTextBox
             // 
             this.GDAX_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_NumCoinsTextBox.Location = new System.Drawing.Point(95, 171);
+            this.GDAX_NumCoinsTextBox.Location = new System.Drawing.Point(95, 191);
             this.GDAX_NumCoinsTextBox.Mask = "00000000";
             this.GDAX_NumCoinsTextBox.Name = "GDAX_NumCoinsTextBox";
             this.GDAX_NumCoinsTextBox.PromptChar = ' ';
@@ -2186,7 +2226,7 @@
             this.GDAX_BuySellComboBox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.GDAX_BuySellComboBox.Location = new System.Drawing.Point(9, 171);
+            this.GDAX_BuySellComboBox.Location = new System.Drawing.Point(9, 191);
             this.GDAX_BuySellComboBox.Name = "GDAX_BuySellComboBox";
             this.GDAX_BuySellComboBox.Size = new System.Drawing.Size(58, 21);
             this.GDAX_BuySellComboBox.TabIndex = 15;
@@ -2697,23 +2737,178 @@
             this.BFX_EOS_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.BFX_EOS_PriceTT.ToolTipTitle = "Spread details";
             // 
-            // IR_Reset_Button
+            // IR_XLM_Label2
             // 
-            this.IR_Reset_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_Reset_Button.ForeColor = System.Drawing.Color.Black;
-            this.IR_Reset_Button.Location = new System.Drawing.Point(207, 206);
-            this.IR_Reset_Button.Name = "IR_Reset_Button";
-            this.IR_Reset_Button.Size = new System.Drawing.Size(44, 17);
-            this.IR_Reset_Button.TabIndex = 32;
-            this.IR_Reset_Button.Text = "Reset";
-            this.IR_Reset_Button.UseVisualStyleBackColor = true;
-            this.IR_Reset_Button.Click += new System.EventHandler(this.IR_Reset_Button_Click);
+            this.IR_XLM_Label2.AutoSize = true;
+            this.IR_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.IR_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_XLM_Label2.Location = new System.Drawing.Point(45, 149);
+            this.IR_XLM_Label2.Name = "IR_XLM_Label2";
+            this.IR_XLM_Label2.Size = new System.Drawing.Size(0, 13);
+            this.IR_XLM_Label2.TabIndex = 34;
+            this.IR_XLM_Label2.Tag = "IR";
+            this.IR_XLM_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IR_XLM_Label3
+            // 
+            this.IR_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.IR_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_XLM_Label3.Location = new System.Drawing.Point(119, 149);
+            this.IR_XLM_Label3.Name = "IR_XLM_Label3";
+            this.IR_XLM_Label3.Size = new System.Drawing.Size(134, 13);
+            this.IR_XLM_Label3.TabIndex = 35;
+            this.IR_XLM_Label3.Tag = "";
+            this.IR_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // IR_XLM_Label1
+            // 
+            this.IR_XLM_Label1.AutoSize = true;
+            this.IR_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.IR_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_XLM_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.IR_XLM_Label1.Location = new System.Drawing.Point(6, 149);
+            this.IR_XLM_Label1.Name = "IR_XLM_Label1";
+            this.IR_XLM_Label1.Size = new System.Drawing.Size(36, 13);
+            this.IR_XLM_Label1.TabIndex = 33;
+            this.IR_XLM_Label1.Text = "XLM:";
+            this.IR_XLM_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // BTCM_XLM_Label2
+            // 
+            this.BTCM_XLM_Label2.AutoSize = true;
+            this.BTCM_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_XLM_Label2.Location = new System.Drawing.Point(45, 123);
+            this.BTCM_XLM_Label2.Name = "BTCM_XLM_Label2";
+            this.BTCM_XLM_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BTCM_XLM_Label2.TabIndex = 23;
+            this.BTCM_XLM_Label2.Tag = "BTCM";
+            // 
+            // BTCM_XLM_Label3
+            // 
+            this.BTCM_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BTCM_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_XLM_Label3.Location = new System.Drawing.Point(119, 123);
+            this.BTCM_XLM_Label3.Name = "BTCM_XLM_Label3";
+            this.BTCM_XLM_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BTCM_XLM_Label3.TabIndex = 22;
+            this.BTCM_XLM_Label3.Tag = "";
+            this.BTCM_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BTCM_XLM_Label1
+            // 
+            this.BTCM_XLM_Label1.AutoSize = true;
+            this.BTCM_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_XLM_Label1.Location = new System.Drawing.Point(6, 123);
+            this.BTCM_XLM_Label1.Name = "BTCM_XLM_Label1";
+            this.BTCM_XLM_Label1.Size = new System.Drawing.Size(36, 13);
+            this.BTCM_XLM_Label1.TabIndex = 21;
+            this.BTCM_XLM_Label1.Text = "XLM:";
+            // 
+            // GDAX_XLM_Label2
+            // 
+            this.GDAX_XLM_Label2.AutoSize = true;
+            this.GDAX_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_XLM_Label2.Location = new System.Drawing.Point(45, 123);
+            this.GDAX_XLM_Label2.Name = "GDAX_XLM_Label2";
+            this.GDAX_XLM_Label2.Size = new System.Drawing.Size(0, 13);
+            this.GDAX_XLM_Label2.TabIndex = 26;
+            this.GDAX_XLM_Label2.Tag = "GDAX";
+            // 
+            // GDAX_XLM_Label3
+            // 
+            this.GDAX_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_XLM_Label3.Location = new System.Drawing.Point(119, 123);
+            this.GDAX_XLM_Label3.Name = "GDAX_XLM_Label3";
+            this.GDAX_XLM_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_XLM_Label3.TabIndex = 27;
+            this.GDAX_XLM_Label3.Tag = "";
+            this.GDAX_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GDAX_XLM_Label1
+            // 
+            this.GDAX_XLM_Label1.AutoSize = true;
+            this.GDAX_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_XLM_Label1.Location = new System.Drawing.Point(6, 123);
+            this.GDAX_XLM_Label1.Name = "GDAX_XLM_Label1";
+            this.GDAX_XLM_Label1.Size = new System.Drawing.Size(36, 13);
+            this.GDAX_XLM_Label1.TabIndex = 25;
+            this.GDAX_XLM_Label1.Text = "XLM:";
+            // 
+            // BFX_XLM_Label2
+            // 
+            this.BFX_XLM_Label2.AutoSize = true;
+            this.BFX_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_XLM_Label2.Location = new System.Drawing.Point(45, 143);
+            this.BFX_XLM_Label2.Name = "BFX_XLM_Label2";
+            this.BFX_XLM_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_XLM_Label2.TabIndex = 31;
+            this.BFX_XLM_Label2.Tag = "BFX";
+            // 
+            // BFX_XLM_Label3
+            // 
+            this.BFX_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XLM_Label3.Location = new System.Drawing.Point(119, 143);
+            this.BFX_XLM_Label3.Name = "BFX_XLM_Label3";
+            this.BFX_XLM_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_XLM_Label3.TabIndex = 32;
+            this.BFX_XLM_Label3.Tag = "";
+            this.BFX_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_XLM_Label1
+            // 
+            this.BFX_XLM_Label1.AutoSize = true;
+            this.BFX_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_XLM_Label1.Location = new System.Drawing.Point(6, 143);
+            this.BFX_XLM_Label1.Name = "BFX_XLM_Label1";
+            this.BFX_XLM_Label1.Size = new System.Drawing.Size(36, 13);
+            this.BFX_XLM_Label1.TabIndex = 30;
+            this.BFX_XLM_Label1.Text = "XLM:";
+            // 
+            // IR_XLM_PriceTT
+            // 
+            this.IR_XLM_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.IR_XLM_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // BTCM_XLM_PriceTT
+            // 
+            this.BTCM_XLM_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BTCM_XLM_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // GDAX_XLM_PriceTT
+            // 
+            this.GDAX_XLM_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.GDAX_XLM_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // BFX_XLM_PriceTT
+            // 
+            this.BFX_XLM_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.BFX_XLM_PriceTT.ToolTipTitle = "Spread details";
             // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 691);
+            this.ClientSize = new System.Drawing.Size(584, 721);
             this.Controls.Add(this.Main);
             this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Settings);
@@ -2722,8 +2917,8 @@
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(600, 730);
-            this.MinimumSize = new System.Drawing.Size(600, 730);
+            this.MaximumSize = new System.Drawing.Size(600, 760);
+            this.MinimumSize = new System.Drawing.Size(600, 760);
             this.Name = "IRTicker";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "IR Ticker";
@@ -2971,6 +3166,22 @@
         private System.Windows.Forms.ToolTip IR_EOS_PriceTT;
         private System.Windows.Forms.ToolTip BFX_EOS_PriceTT;
         private System.Windows.Forms.Button IR_Reset_Button;
+        private System.Windows.Forms.Label BTCM_XLM_Label2;
+        private System.Windows.Forms.Label BTCM_XLM_Label3;
+        private System.Windows.Forms.Label BTCM_XLM_Label1;
+        private System.Windows.Forms.Label BFX_XLM_Label2;
+        private System.Windows.Forms.Label BFX_XLM_Label3;
+        private System.Windows.Forms.Label BFX_XLM_Label1;
+        private System.Windows.Forms.Label IR_XLM_Label2;
+        private System.Windows.Forms.Label IR_XLM_Label3;
+        private System.Windows.Forms.Label IR_XLM_Label1;
+        private System.Windows.Forms.Label GDAX_XLM_Label2;
+        private System.Windows.Forms.Label GDAX_XLM_Label3;
+        private System.Windows.Forms.Label GDAX_XLM_Label1;
+        private System.Windows.Forms.ToolTip IR_XLM_PriceTT;
+        private System.Windows.Forms.ToolTip BTCM_XLM_PriceTT;
+        private System.Windows.Forms.ToolTip GDAX_XLM_PriceTT;
+        private System.Windows.Forms.ToolTip BFX_XLM_PriceTT;
     }
 }
 
