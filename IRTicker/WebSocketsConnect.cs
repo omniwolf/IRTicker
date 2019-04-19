@@ -425,7 +425,7 @@ namespace IRTicker {
                             //foreach (var PriceLevel in BidOrders) {
                                 //if (PriceLevel.Value.ContainsKey(tickerStream.Data.OrderGuid)) {
                                 if (DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1.ContainsKey(tickerStream.Data.OrderGuid)) { 
-                                    Debug.Print(DateTime.Now.ToString() + " | EVENT " + tickerStream.Event + ": " + DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1[tickerStream.Data.OrderGuid]);
+                                    Debug.Print(DateTime.Now.ToString() + " | EVENT(" + tickerStream.Data.Pair + ") " + tickerStream.Event + ": " + DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1[tickerStream.Data.OrderGuid]);
                                     foundCancelled = true;
                                 }
                             //}
@@ -435,7 +435,7 @@ namespace IRTicker {
                            // foreach (var PriceLevel in OfferOrders) {
                                 //if (PriceLevel.Value.ContainsKey(tickerStream.Data.OrderGuid)) {
                                 if (DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2.ContainsKey(tickerStream.Data.OrderGuid)) { 
-                                    Debug.Print(DateTime.Now.ToString() + " | EVENT " + tickerStream.Event + ": " + DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2[tickerStream.Data.OrderGuid]);
+                                    Debug.Print(DateTime.Now.ToString() + " | EVENT(" + tickerStream.Data.Pair + ") " + tickerStream.Event + ": " + DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2[tickerStream.Data.OrderGuid]);
                                     foundCancelled = true;
                                 }
                             

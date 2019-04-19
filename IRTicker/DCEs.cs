@@ -283,25 +283,17 @@ namespace IRTicker {
                     Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item2;
                     TopPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
                     TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[TopPrice];
-
                     break;
                 default:
-
                     // ok this is a market order i guess, which probably means it's an orderchanged event
                     if (eventStr == "OrderChanged") {
                         if (order.OrderType.EndsWith("Bid")) {
-                            if (order.Pair.ToUpper() == "ETH-AUD") {
-                                //Debug.Print("ETH bid order changed");
-                            }
                             OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
                             Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item1;
                             TopPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
                             TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[TopPrice];
                         }
                         else {
-                            if (order.Pair.ToUpper() == "ETH-AUD") {
-                                //Debug.Print("ETH offer order changed");
-                            }
                             OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
                             Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item2;
                             TopPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
@@ -313,53 +305,29 @@ namespace IRTicker {
                         return false;
                     }
                     break;
-                    //return false;
             }
 
             // if it's the first order, so this changes the spread
             // i need to discover this up here, because if the event is a OrderChanged (with vol of 0) or OrderCanceled then I delete the orderbook_IR object, so i have nothing to compare to. 
 
             
+            if (eventStr == "OrderChanged" && TopOrder.ContainsKey(order.OrderGuid) && order.Volume == 0 && TopOrder.Count == 1) {
+                // this is a spread changing event... do something?
+                OrderWillChangeSpread = true;
 
-            //foreach (OrderBook_IR Price in OB_IR.First().Value){
-                if (eventStr == "OrderChanged" && TopOrder.ContainsKey(order.OrderGuid) && order.Volume == 0 && TopOrder.Count == 1) {
-                    // this is a spread changing event... do something?
-                    OrderWillChangeSpread = true;
-
-                    if (order.Pair.ToUpper() == "ETH-AUD") {
-
-                    //Debug.Print("a changed ETHAUD order will change the spread - " + order.OrderType);
-                    }
-                //break;
-                }
-                else if (eventStr == "NewOrder" && order.OrderType == "LimitBid" && order.Price > TopPrice) { // pick the "First()" one just arbitrary - all elements of this dictionary have the same price
-                    // spread changing order
-                    OrderWillChangeSpread = true;
-
-                if (order.Pair.ToUpper() == "ETH-AUD") {
-
-                    //Debug.Print("a new offer ETHAUD order will change the spread - " + order.Price);
-                }
-                //break;
             }
-                else if (eventStr == "NewOrder" && order.OrderType == "LimitOffer" && order.Price < TopPrice) {
-                    // spread changing order
-                    OrderWillChangeSpread = true;
-
-                //if (order.Pair.ToUpper() == "ETH-AUD") {
-
-                    //Debug.Print("a new buy ETHAUD order will change the spread - " + order.Price);
-                //}
-                //break;
-            }
-                else if (eventStr == "OrderCanceled" && TopOrder.ContainsKey(order.OrderGuid) && TopOrder.Count == 1) {  // if the cancelled order is at the top, and it's the only one at that price, spread will change.
-                if (order.Pair.ToUpper() == "ETH-AUD") {
-
-                    //Debug.Print("a canceled ETHAUD order will change the spread - " + TopOrder.First().Value.Price);
-                }
+            else if (eventStr == "NewOrder" && order.OrderType == "LimitBid" && order.Price > TopPrice) { // pick the "First()" one just arbitrary - all elements of this dictionary have the same price
+                // spread changing order
                 OrderWillChangeSpread = true;
             }
-            //}
+
+            else if (eventStr == "NewOrder" && order.OrderType == "LimitOffer" && order.Price < TopPrice) { 
+                // spread changing order
+                OrderWillChangeSpread = true;
+            }
+            else if (eventStr == "OrderCanceled" && TopOrder.ContainsKey(order.OrderGuid) && TopOrder.Count == 1) {  // if the cancelled order is at the top, and it's the only one at that price, spread will change.
+                OrderWillChangeSpread = true;
+            }
 
             // here we actually adjust the order book in accordance with the event we just received
             switch (eventStr) {
@@ -392,25 +360,25 @@ namespace IRTicker {
                     // I think  (roman yet to confirm) that if we get a market order and the volume is 0, then we just remove the top order.  hopefully the top price
                     // doesn't have multiple orders in it.. let's alert if we discover this
                     if (!Order_OB_IR.ContainsKey(order.OrderGuid)) {
-                        if (order.OrderType.ToUpper().StartsWith("MARKET") && order.Volume == 0) {
+                        if (order.OrderType.ToUpper().StartsWith("MARKET") && order.Volume <= 0) {
                             if (TopOrder.Count > 1 && order.Pair.ToUpper() == "XBT-AUD") {
                                 Debug.Print("xbt-aud market order with vol 0, there are multiple top orders!");
                             }
                             else if (TopOrder.Count == 1 && order.Pair.ToUpper() == "XBT-AUD") {
                                 Debug.Print("xbt-aud market order with vol 0, only 1 top order");
                             }
-                            OB_IR.TryRemove(TopPrice, out ConcurrentDictionary<string, OrderBook_IR> TopPrice_Dict); // just trash the first order
+                            OB_IR.TryRemove(TopPrice, out ConcurrentDictionary<string, OrderBook_IR> TopPrice_Dict); // just trash the first price
 
                             // ok here we need to go through the orderGuid dictionary and remove any orders that were in this top price order that we're trashing
                             foreach (KeyValuePair<string, OrderBook_IR> orderGuid in TopPrice_Dict) { 
-                                Order_OB_IR.TryRemove(orderGuid.Value.OrderGuid, out decimal ignore);
+                                Order_OB_IR.TryRemove(orderGuid.Key, out decimal ignore);
                             }
                         }
-                        else {
-                            Debug.Print(DateTime.Now.ToString() + " | Trying to change event vol, but it doesn't exist in order dictionary");
+                        else {  // else it's not a morket order, or it is, but the volume is > 0
+                            Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to change event vol, but it doesn't exist in order dictionary.  ordertype: " + order.OrderType + " vol: " + order.Volume);
                             foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
                                 if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
-                                    Debug.Print("but the other dictionary has it...");
+                                    Debug.Print("- but the other dictionary has it...");
                                 }
                             }
                         }
@@ -424,11 +392,9 @@ namespace IRTicker {
                             else {  // need to remove the whole outer thang
                                 OB_IR.TryRemove(OrderPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore2);
                             }
-
-                            Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore);
                         }
                         else {  // big dictionary don't contain this price
-                            Debug.Print(DateTime.Now.ToString() + " | Trying to set vol = 0 on an order, but big dictionary don't contain this price (" + OrderPrice + "). will manually search...");
+                            Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to set vol = 0 on an order, but big dictionary don't contain this price (" + OrderPrice + "). will manually search...");
                             foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
                                 if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
                                     Debug.Print("Manual search was successful! the price in this bad boy was: " + priceLevel.Value[order.OrderGuid].Price);
@@ -442,20 +408,20 @@ namespace IRTicker {
                             }
 
                         }
-
+                        Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore3);  // regardless of whether we find the price/order in the OB_IR dict, let's remove it from the order_ob_ir dict
                     }
                     else {  // we just need to update the volume in the IR_OBs dictionary, no change to the OrderGuid dictionary
-                        decimal orderPrice = Order_OB_IR[order.OrderGuid];
+                        decimal orderPrice = Order_OB_IR[order.OrderGuid];  // we have checked above, the orderGuid is defo in this dictionary
                         if (OB_IR.ContainsKey(orderPrice)) {
                             if (OB_IR[orderPrice].ContainsKey(order.OrderGuid)) {
                                 OB_IR[orderPrice][order.OrderGuid].Volume = order.Volume;
                             }
                             else {
-                                Debug.Print(DateTime.Now.ToString() + " | Trying to update vol to a non-zero value, but can't find the orderGuid at the price: " + orderPrice);
+                                Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to update vol to a non-zero value, but can't find the orderGuid at the price: " + orderPrice);
                             }
                         }
                         else {
-                            Debug.Print(DateTime.Now.ToString() + " | trying to update vol to a non-zero value, but can't find the price in the big dictionary: " + orderPrice);
+                            Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") trying to update vol to a non-zero value, but can't find the price in the big dictionary: " + orderPrice);
                         }
                     }
 
@@ -493,7 +459,9 @@ namespace IRTicker {
                     break;
 
                 case "OrderCanceled":  // API should send us OrderGuid, Pair, OrderType
-                    Debug.Print(DateTime.Now.ToString() + " | ORDER CANCELED: " + order.OrderGuid);
+                    if (order.Pair.ToUpper() == "XBT-AUD") {
+                        Debug.Print(DateTime.Now.ToString() + " |                                                                 ORDER CANCELED: " + order.OrderGuid);
+                    }
                     if (Order_OB_IR.ContainsKey(order.OrderGuid)) {  // getting exceptions where the order doesn't exist in this dictionary?? weird..
                         decimal OrderPrice2 = Order_OB_IR[order.OrderGuid];
 
@@ -504,19 +472,18 @@ namespace IRTicker {
                             }
                             else {  // only one order at this price, remove the whole price level
                                 OB_IR.TryRemove(OrderPrice2, out ConcurrentDictionary<string, OrderBook_IR> ignore);
-                            }
-                            Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore2);
+                            }  
                         }
                         else {  //this price level doesn't exist in the price OB??
-                            Debug.Print(DateTime.Now.ToString() + " | The big dictionary is missing a price: + " + OrderPrice2);
-                            Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore2);
+                            Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") The big dictionary is missing a price: + " + OrderPrice2);
                         }
+                        Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore2);
                     }
                     else {  // else we did NOT find the order in the order dictionary.  let's check the main dictionary in case it's there.  if it is remove it.
-                        Debug.Print(DateTime.Now.ToString() + " | Trying to cancel event, but it doesn't exist in order dictionary");
+                        Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to cancel event, but it doesn't exist in order guid dictionary");
                         foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
                             if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
-                                Debug.Print("but the other dictionary has it...");
+                                Debug.Print("- but the other dictionary has it...");
                                 if (priceLevel.Value.Count > 1) priceLevel.Value.TryRemove(order.OrderGuid, out OrderBook_IR ignore);  // more than one order at this price
                                 else {
                                     // we found the price, and it's the only one.   let's break out of this loop and then remove the element from OB_IR
@@ -554,26 +521,24 @@ namespace IRTicker {
             }
 
             // if this order has changed the spread, then let's update the cryptoPairs dictionary
-            //foreach (OrderBook_IR PriceOrder in OB_IR.First().Value) {
-                if (OrderWillChangeSpread) {
-                    DateTimeOffset DTO = DateTimeOffset.Now;
-                    MarketSummary mSummary = new MarketSummary();
-                    mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
-                    mSummary.CurrentHighestBidPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
-                    mSummary.CurrentLowestOfferPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
-                // should be able to delete this commented block, don't think it's needed anymore
-                /*if (mSummary.CurrentHighestBidPrice == 0 && mSummary.CurrentLowestOfferPrice == 0) {  // so i guess this will happen when we haven't pulled the OB yet?
-                    Debug.Print("------------- OB's spread was 0, had to use previous cryptoPairs' spread = " + order.Pair);
-                    mSummary.CurrentLowestOfferPrice = cryptoPairs[order.Pair.ToUpper()].CurrentLowestOfferPrice;
-                    mSummary.CurrentHighestBidPrice = cryptoPairs[order.Pair.ToUpper()].CurrentHighestBidPrice;
-                }*/
-                    mSummary.pair = order.Pair.ToUpper();
-                    CryptoPairsAdd(order.Pair.ToUpper(), mSummary);
-                //Debug.Print("OCE: " + order.Pair + " " + eventStr + " " + mSummary.CurrentHighestBidPrice + " " + mSummary.CurrentLowestOfferPrice);
+            if (OrderWillChangeSpread) {
+                DateTimeOffset DTO = DateTimeOffset.Now;
+                MarketSummary mSummary = new MarketSummary();
+                mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
+                mSummary.CurrentHighestBidPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
+                mSummary.CurrentLowestOfferPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
+            // should be able to delete this commented block, don't think it's needed anymore
+            /*if (mSummary.CurrentHighestBidPrice == 0 && mSummary.CurrentLowestOfferPrice == 0) {  // so i guess this will happen when we haven't pulled the OB yet?
+                Debug.Print("------------- OB's spread was 0, had to use previous cryptoPairs' spread = " + order.Pair);
+                mSummary.CurrentLowestOfferPrice = cryptoPairs[order.Pair.ToUpper()].CurrentLowestOfferPrice;
+                mSummary.CurrentHighestBidPrice = cryptoPairs[order.Pair.ToUpper()].CurrentHighestBidPrice;
+            }*/
+                mSummary.pair = order.Pair.ToUpper();
+                CryptoPairsAdd(order.Pair.ToUpper(), mSummary);
+            //Debug.Print("OCE: " + order.Pair + " " + eventStr + " " + mSummary.CurrentHighestBidPrice + " " + mSummary.CurrentLowestOfferPrice);
 
-                    return true;
-                }
-            //}
+                return true;
+            }
             return false;
         }
 

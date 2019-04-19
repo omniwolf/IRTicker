@@ -48,6 +48,9 @@
             this.GIFLabel = new System.Windows.Forms.Label();
             this.Main = new System.Windows.Forms.Panel();
             this.BTCM_GroupBox = new System.Windows.Forms.GroupBox();
+            this.BTCM_XLM_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_XLM_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_XLM_Label1 = new System.Windows.Forms.Label();
             this.BTCM_OMG_Label2 = new System.Windows.Forms.Label();
             this.BTCM_OMG_Label3 = new System.Windows.Forms.Label();
             this.BTCM_OMG_Label1 = new System.Windows.Forms.Label();
@@ -91,6 +94,9 @@
             this.CSPT_ETH_Label1 = new System.Windows.Forms.Label();
             this.CSPT_XBT_Label1 = new System.Windows.Forms.Label();
             this.BFX_GroupBox = new System.Windows.Forms.GroupBox();
+            this.BFX_XLM_Label2 = new System.Windows.Forms.Label();
+            this.BFX_XLM_Label3 = new System.Windows.Forms.Label();
+            this.BFX_XLM_Label1 = new System.Windows.Forms.Label();
             this.BFX_EOS_Label2 = new System.Windows.Forms.Label();
             this.BFX_EOS_Label3 = new System.Windows.Forms.Label();
             this.BFX_EOS_Label1 = new System.Windows.Forms.Label();
@@ -131,6 +137,9 @@
             this.AUD_Label1 = new System.Windows.Forms.Label();
             this.SettingsButton = new System.Windows.Forms.Button();
             this.IR_GroupBox = new System.Windows.Forms.GroupBox();
+            this.IR_XLM_Label2 = new System.Windows.Forms.Label();
+            this.IR_XLM_Label3 = new System.Windows.Forms.Label();
+            this.IR_XLM_Label1 = new System.Windows.Forms.Label();
             this.IR_Reset_Button = new System.Windows.Forms.Button();
             this.IR_EOS_Label2 = new System.Windows.Forms.Label();
             this.IR_EOS_Label3 = new System.Windows.Forms.Label();
@@ -165,6 +174,9 @@
             this.IR_ETH_Label1 = new System.Windows.Forms.Label();
             this.IR_XBT_Label1 = new System.Windows.Forms.Label();
             this.GDAX_GroupBox = new System.Windows.Forms.GroupBox();
+            this.GDAX_XLM_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_XLM_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_XLM_Label1 = new System.Windows.Forms.Label();
             this.GDAX_XRP_Label2 = new System.Windows.Forms.Label();
             this.GDAX_XRP_Label3 = new System.Windows.Forms.Label();
             this.GDAX_XRP_Label1 = new System.Windows.Forms.Label();
@@ -244,18 +256,6 @@
             this.GDAX_XRP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.IR_EOS_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BFX_EOS_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_XLM_Label2 = new System.Windows.Forms.Label();
-            this.IR_XLM_Label3 = new System.Windows.Forms.Label();
-            this.IR_XLM_Label1 = new System.Windows.Forms.Label();
-            this.BTCM_XLM_Label2 = new System.Windows.Forms.Label();
-            this.BTCM_XLM_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_XLM_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_XLM_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_XLM_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_XLM_Label1 = new System.Windows.Forms.Label();
-            this.BFX_XLM_Label2 = new System.Windows.Forms.Label();
-            this.BFX_XLM_Label3 = new System.Windows.Forms.Label();
-            this.BFX_XLM_Label1 = new System.Windows.Forms.Label();
             this.IR_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BTCM_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.GDAX_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
@@ -542,6 +542,42 @@
             this.BTCM_GroupBox.TabIndex = 1;
             this.BTCM_GroupBox.TabStop = false;
             this.BTCM_GroupBox.Text = "BTC Markets";
+            // 
+            // BTCM_XLM_Label2
+            // 
+            this.BTCM_XLM_Label2.AutoSize = true;
+            this.BTCM_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_XLM_Label2.Location = new System.Drawing.Point(45, 123);
+            this.BTCM_XLM_Label2.Name = "BTCM_XLM_Label2";
+            this.BTCM_XLM_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BTCM_XLM_Label2.TabIndex = 23;
+            this.BTCM_XLM_Label2.Tag = "BTCM";
+            // 
+            // BTCM_XLM_Label3
+            // 
+            this.BTCM_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BTCM_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_XLM_Label3.Location = new System.Drawing.Point(119, 123);
+            this.BTCM_XLM_Label3.Name = "BTCM_XLM_Label3";
+            this.BTCM_XLM_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BTCM_XLM_Label3.TabIndex = 22;
+            this.BTCM_XLM_Label3.Tag = "";
+            this.BTCM_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BTCM_XLM_Label1
+            // 
+            this.BTCM_XLM_Label1.AutoSize = true;
+            this.BTCM_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_XLM_Label1.Location = new System.Drawing.Point(6, 123);
+            this.BTCM_XLM_Label1.Name = "BTCM_XLM_Label1";
+            this.BTCM_XLM_Label1.Size = new System.Drawing.Size(36, 13);
+            this.BTCM_XLM_Label1.TabIndex = 21;
+            this.BTCM_XLM_Label1.Text = "XLM:";
             // 
             // BTCM_OMG_Label2
             // 
@@ -1123,6 +1159,42 @@
             this.BFX_GroupBox.Text = "BitFinex";
             this.BFX_GroupBox.Click += new System.EventHandler(this.BFX_GroupBox_Click);
             // 
+            // BFX_XLM_Label2
+            // 
+            this.BFX_XLM_Label2.AutoSize = true;
+            this.BFX_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_XLM_Label2.Location = new System.Drawing.Point(45, 143);
+            this.BFX_XLM_Label2.Name = "BFX_XLM_Label2";
+            this.BFX_XLM_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_XLM_Label2.TabIndex = 31;
+            this.BFX_XLM_Label2.Tag = "BFX";
+            // 
+            // BFX_XLM_Label3
+            // 
+            this.BFX_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XLM_Label3.Location = new System.Drawing.Point(119, 143);
+            this.BFX_XLM_Label3.Name = "BFX_XLM_Label3";
+            this.BFX_XLM_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_XLM_Label3.TabIndex = 32;
+            this.BFX_XLM_Label3.Tag = "";
+            this.BFX_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_XLM_Label1
+            // 
+            this.BFX_XLM_Label1.AutoSize = true;
+            this.BFX_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_XLM_Label1.Location = new System.Drawing.Point(6, 143);
+            this.BFX_XLM_Label1.Name = "BFX_XLM_Label1";
+            this.BFX_XLM_Label1.Size = new System.Drawing.Size(36, 13);
+            this.BFX_XLM_Label1.TabIndex = 30;
+            this.BFX_XLM_Label1.Text = "XLM:";
+            // 
             // BFX_EOS_Label2
             // 
             this.BFX_EOS_Label2.AutoSize = true;
@@ -1631,6 +1703,45 @@
             this.IR_GroupBox.Text = "Independent Reserve";
             this.IR_GroupBox.Click += new System.EventHandler(this.IR_GroupBox_Click);
             // 
+            // IR_XLM_Label2
+            // 
+            this.IR_XLM_Label2.AutoSize = true;
+            this.IR_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.IR_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_XLM_Label2.Location = new System.Drawing.Point(45, 149);
+            this.IR_XLM_Label2.Name = "IR_XLM_Label2";
+            this.IR_XLM_Label2.Size = new System.Drawing.Size(0, 13);
+            this.IR_XLM_Label2.TabIndex = 34;
+            this.IR_XLM_Label2.Tag = "IR";
+            this.IR_XLM_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IR_XLM_Label3
+            // 
+            this.IR_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.IR_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_XLM_Label3.Location = new System.Drawing.Point(119, 149);
+            this.IR_XLM_Label3.Name = "IR_XLM_Label3";
+            this.IR_XLM_Label3.Size = new System.Drawing.Size(134, 13);
+            this.IR_XLM_Label3.TabIndex = 35;
+            this.IR_XLM_Label3.Tag = "";
+            this.IR_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // IR_XLM_Label1
+            // 
+            this.IR_XLM_Label1.AutoSize = true;
+            this.IR_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.IR_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_XLM_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.IR_XLM_Label1.Location = new System.Drawing.Point(6, 149);
+            this.IR_XLM_Label1.Name = "IR_XLM_Label1";
+            this.IR_XLM_Label1.Size = new System.Drawing.Size(36, 13);
+            this.IR_XLM_Label1.TabIndex = 33;
+            this.IR_XLM_Label1.Text = "XLM:";
+            this.IR_XLM_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
             // IR_Reset_Button
             // 
             this.IR_Reset_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -2099,6 +2210,42 @@
             this.GDAX_GroupBox.Text = "Coinbase Pro";
             this.GDAX_GroupBox.Click += new System.EventHandler(this.GDAX_GroupBox_Click);
             // 
+            // GDAX_XLM_Label2
+            // 
+            this.GDAX_XLM_Label2.AutoSize = true;
+            this.GDAX_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_XLM_Label2.Location = new System.Drawing.Point(45, 123);
+            this.GDAX_XLM_Label2.Name = "GDAX_XLM_Label2";
+            this.GDAX_XLM_Label2.Size = new System.Drawing.Size(0, 13);
+            this.GDAX_XLM_Label2.TabIndex = 26;
+            this.GDAX_XLM_Label2.Tag = "GDAX";
+            // 
+            // GDAX_XLM_Label3
+            // 
+            this.GDAX_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_XLM_Label3.Location = new System.Drawing.Point(119, 113);
+            this.GDAX_XLM_Label3.Name = "GDAX_XLM_Label3";
+            this.GDAX_XLM_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_XLM_Label3.TabIndex = 27;
+            this.GDAX_XLM_Label3.Tag = "";
+            this.GDAX_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GDAX_XLM_Label1
+            // 
+            this.GDAX_XLM_Label1.AutoSize = true;
+            this.GDAX_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_XLM_Label1.Location = new System.Drawing.Point(6, 123);
+            this.GDAX_XLM_Label1.Name = "GDAX_XLM_Label1";
+            this.GDAX_XLM_Label1.Size = new System.Drawing.Size(36, 13);
+            this.GDAX_XLM_Label1.TabIndex = 25;
+            this.GDAX_XLM_Label1.Text = "XLM:";
+            // 
             // GDAX_XRP_Label2
             // 
             this.GDAX_XRP_Label2.AutoSize = true;
@@ -2116,7 +2263,7 @@
             this.GDAX_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XRP_Label3.Location = new System.Drawing.Point(119, 43);
+            this.GDAX_XRP_Label3.Location = new System.Drawing.Point(119, 33);
             this.GDAX_XRP_Label3.Name = "GDAX_XRP_Label3";
             this.GDAX_XRP_Label3.Size = new System.Drawing.Size(134, 13);
             this.GDAX_XRP_Label3.TabIndex = 24;
@@ -2152,7 +2299,7 @@
             this.GDAX_ZRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_ZRX_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ZRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ZRX_Label3.Location = new System.Drawing.Point(119, 143);
+            this.GDAX_ZRX_Label3.Location = new System.Drawing.Point(119, 133);
             this.GDAX_ZRX_Label3.Name = "GDAX_ZRX_Label3";
             this.GDAX_ZRX_Label3.Size = new System.Drawing.Size(134, 13);
             this.GDAX_ZRX_Label3.TabIndex = 21;
@@ -2273,7 +2420,7 @@
             this.GDAX_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_LTC_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_LTC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_LTC_Label3.Location = new System.Drawing.Point(119, 103);
+            this.GDAX_LTC_Label3.Location = new System.Drawing.Point(119, 93);
             this.GDAX_LTC_Label3.Name = "GDAX_LTC_Label3";
             this.GDAX_LTC_Label3.Size = new System.Drawing.Size(134, 13);
             this.GDAX_LTC_Label3.TabIndex = 15;
@@ -2286,7 +2433,7 @@
             this.GDAX_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_BCH_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_BCH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_BCH_Label3.Location = new System.Drawing.Point(119, 83);
+            this.GDAX_BCH_Label3.Location = new System.Drawing.Point(119, 73);
             this.GDAX_BCH_Label3.Name = "GDAX_BCH_Label3";
             this.GDAX_BCH_Label3.Size = new System.Drawing.Size(134, 13);
             this.GDAX_BCH_Label3.TabIndex = 14;
@@ -2299,7 +2446,7 @@
             this.GDAX_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_ETH_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ETH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ETH_Label3.Location = new System.Drawing.Point(119, 63);
+            this.GDAX_ETH_Label3.Location = new System.Drawing.Point(119, 53);
             this.GDAX_ETH_Label3.Name = "GDAX_ETH_Label3";
             this.GDAX_ETH_Label3.Size = new System.Drawing.Size(134, 13);
             this.GDAX_ETH_Label3.TabIndex = 13;
@@ -2312,7 +2459,7 @@
             this.GDAX_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XBT_Label3.Location = new System.Drawing.Point(119, 23);
+            this.GDAX_XBT_Label3.Location = new System.Drawing.Point(119, 13);
             this.GDAX_XBT_Label3.Name = "GDAX_XBT_Label3";
             this.GDAX_XBT_Label3.Size = new System.Drawing.Size(134, 13);
             this.GDAX_XBT_Label3.TabIndex = 12;
@@ -2736,153 +2883,6 @@
             // 
             this.BFX_EOS_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.BFX_EOS_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // IR_XLM_Label2
-            // 
-            this.IR_XLM_Label2.AutoSize = true;
-            this.IR_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IR_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_XLM_Label2.Location = new System.Drawing.Point(45, 149);
-            this.IR_XLM_Label2.Name = "IR_XLM_Label2";
-            this.IR_XLM_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IR_XLM_Label2.TabIndex = 34;
-            this.IR_XLM_Label2.Tag = "IR";
-            this.IR_XLM_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IR_XLM_Label3
-            // 
-            this.IR_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.IR_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IR_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_XLM_Label3.Location = new System.Drawing.Point(119, 149);
-            this.IR_XLM_Label3.Name = "IR_XLM_Label3";
-            this.IR_XLM_Label3.Size = new System.Drawing.Size(134, 13);
-            this.IR_XLM_Label3.TabIndex = 35;
-            this.IR_XLM_Label3.Tag = "";
-            this.IR_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // IR_XLM_Label1
-            // 
-            this.IR_XLM_Label1.AutoSize = true;
-            this.IR_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IR_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_XLM_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IR_XLM_Label1.Location = new System.Drawing.Point(6, 149);
-            this.IR_XLM_Label1.Name = "IR_XLM_Label1";
-            this.IR_XLM_Label1.Size = new System.Drawing.Size(36, 13);
-            this.IR_XLM_Label1.TabIndex = 33;
-            this.IR_XLM_Label1.Text = "XLM:";
-            this.IR_XLM_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // BTCM_XLM_Label2
-            // 
-            this.BTCM_XLM_Label2.AutoSize = true;
-            this.BTCM_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BTCM_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_XLM_Label2.Location = new System.Drawing.Point(45, 123);
-            this.BTCM_XLM_Label2.Name = "BTCM_XLM_Label2";
-            this.BTCM_XLM_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BTCM_XLM_Label2.TabIndex = 23;
-            this.BTCM_XLM_Label2.Tag = "BTCM";
-            // 
-            // BTCM_XLM_Label3
-            // 
-            this.BTCM_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BTCM_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BTCM_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_XLM_Label3.Location = new System.Drawing.Point(119, 123);
-            this.BTCM_XLM_Label3.Name = "BTCM_XLM_Label3";
-            this.BTCM_XLM_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BTCM_XLM_Label3.TabIndex = 22;
-            this.BTCM_XLM_Label3.Tag = "";
-            this.BTCM_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BTCM_XLM_Label1
-            // 
-            this.BTCM_XLM_Label1.AutoSize = true;
-            this.BTCM_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BTCM_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_XLM_Label1.Location = new System.Drawing.Point(6, 123);
-            this.BTCM_XLM_Label1.Name = "BTCM_XLM_Label1";
-            this.BTCM_XLM_Label1.Size = new System.Drawing.Size(36, 13);
-            this.BTCM_XLM_Label1.TabIndex = 21;
-            this.BTCM_XLM_Label1.Text = "XLM:";
-            // 
-            // GDAX_XLM_Label2
-            // 
-            this.GDAX_XLM_Label2.AutoSize = true;
-            this.GDAX_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_XLM_Label2.Location = new System.Drawing.Point(45, 123);
-            this.GDAX_XLM_Label2.Name = "GDAX_XLM_Label2";
-            this.GDAX_XLM_Label2.Size = new System.Drawing.Size(0, 13);
-            this.GDAX_XLM_Label2.TabIndex = 26;
-            this.GDAX_XLM_Label2.Tag = "GDAX";
-            // 
-            // GDAX_XLM_Label3
-            // 
-            this.GDAX_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.GDAX_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XLM_Label3.Location = new System.Drawing.Point(119, 123);
-            this.GDAX_XLM_Label3.Name = "GDAX_XLM_Label3";
-            this.GDAX_XLM_Label3.Size = new System.Drawing.Size(134, 13);
-            this.GDAX_XLM_Label3.TabIndex = 27;
-            this.GDAX_XLM_Label3.Tag = "";
-            this.GDAX_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GDAX_XLM_Label1
-            // 
-            this.GDAX_XLM_Label1.AutoSize = true;
-            this.GDAX_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_XLM_Label1.Location = new System.Drawing.Point(6, 123);
-            this.GDAX_XLM_Label1.Name = "GDAX_XLM_Label1";
-            this.GDAX_XLM_Label1.Size = new System.Drawing.Size(36, 13);
-            this.GDAX_XLM_Label1.TabIndex = 25;
-            this.GDAX_XLM_Label1.Text = "XLM:";
-            // 
-            // BFX_XLM_Label2
-            // 
-            this.BFX_XLM_Label2.AutoSize = true;
-            this.BFX_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_XLM_Label2.Location = new System.Drawing.Point(45, 143);
-            this.BFX_XLM_Label2.Name = "BFX_XLM_Label2";
-            this.BFX_XLM_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_XLM_Label2.TabIndex = 31;
-            this.BFX_XLM_Label2.Tag = "BFX";
-            // 
-            // BFX_XLM_Label3
-            // 
-            this.BFX_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_XLM_Label3.Location = new System.Drawing.Point(119, 143);
-            this.BFX_XLM_Label3.Name = "BFX_XLM_Label3";
-            this.BFX_XLM_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_XLM_Label3.TabIndex = 32;
-            this.BFX_XLM_Label3.Tag = "";
-            this.BFX_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BFX_XLM_Label1
-            // 
-            this.BFX_XLM_Label1.AutoSize = true;
-            this.BFX_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_XLM_Label1.Location = new System.Drawing.Point(6, 143);
-            this.BFX_XLM_Label1.Name = "BFX_XLM_Label1";
-            this.BFX_XLM_Label1.Size = new System.Drawing.Size(36, 13);
-            this.BFX_XLM_Label1.TabIndex = 30;
-            this.BFX_XLM_Label1.Text = "XLM:";
             // 
             // IR_XLM_PriceTT
             // 
