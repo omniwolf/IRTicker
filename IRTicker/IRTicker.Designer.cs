@@ -2227,7 +2227,7 @@
             this.GDAX_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XLM_Label3.Location = new System.Drawing.Point(119, 113);
+            this.GDAX_XLM_Label3.Location = new System.Drawing.Point(119, 123);
             this.GDAX_XLM_Label3.Name = "GDAX_XLM_Label3";
             this.GDAX_XLM_Label3.Size = new System.Drawing.Size(134, 13);
             this.GDAX_XLM_Label3.TabIndex = 27;
@@ -2263,7 +2263,7 @@
             this.GDAX_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XRP_Label3.Location = new System.Drawing.Point(119, 33);
+            this.GDAX_XRP_Label3.Location = new System.Drawing.Point(119, 43);
             this.GDAX_XRP_Label3.Name = "GDAX_XRP_Label3";
             this.GDAX_XRP_Label3.Size = new System.Drawing.Size(134, 13);
             this.GDAX_XRP_Label3.TabIndex = 24;
@@ -2299,7 +2299,7 @@
             this.GDAX_ZRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_ZRX_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ZRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ZRX_Label3.Location = new System.Drawing.Point(119, 133);
+            this.GDAX_ZRX_Label3.Location = new System.Drawing.Point(119, 143);
             this.GDAX_ZRX_Label3.Name = "GDAX_ZRX_Label3";
             this.GDAX_ZRX_Label3.Size = new System.Drawing.Size(134, 13);
             this.GDAX_ZRX_Label3.TabIndex = 21;
@@ -2420,7 +2420,7 @@
             this.GDAX_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_LTC_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_LTC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_LTC_Label3.Location = new System.Drawing.Point(119, 93);
+            this.GDAX_LTC_Label3.Location = new System.Drawing.Point(119, 103);
             this.GDAX_LTC_Label3.Name = "GDAX_LTC_Label3";
             this.GDAX_LTC_Label3.Size = new System.Drawing.Size(134, 13);
             this.GDAX_LTC_Label3.TabIndex = 15;
@@ -2433,7 +2433,7 @@
             this.GDAX_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_BCH_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_BCH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_BCH_Label3.Location = new System.Drawing.Point(119, 73);
+            this.GDAX_BCH_Label3.Location = new System.Drawing.Point(119, 83);
             this.GDAX_BCH_Label3.Name = "GDAX_BCH_Label3";
             this.GDAX_BCH_Label3.Size = new System.Drawing.Size(134, 13);
             this.GDAX_BCH_Label3.TabIndex = 14;
@@ -2446,7 +2446,7 @@
             this.GDAX_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_ETH_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ETH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ETH_Label3.Location = new System.Drawing.Point(119, 53);
+            this.GDAX_ETH_Label3.Location = new System.Drawing.Point(119, 63);
             this.GDAX_ETH_Label3.Name = "GDAX_ETH_Label3";
             this.GDAX_ETH_Label3.Size = new System.Drawing.Size(134, 13);
             this.GDAX_ETH_Label3.TabIndex = 13;
@@ -2459,7 +2459,7 @@
             this.GDAX_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XBT_Label3.Location = new System.Drawing.Point(119, 13);
+            this.GDAX_XBT_Label3.Location = new System.Drawing.Point(119, 23);
             this.GDAX_XBT_Label3.Name = "GDAX_XBT_Label3";
             this.GDAX_XBT_Label3.Size = new System.Drawing.Size(134, 13);
             this.GDAX_XBT_Label3.TabIndex = 12;
