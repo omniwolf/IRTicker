@@ -459,20 +459,27 @@ namespace IRTicker {
                     break;
 
                 case "OrderCanceled":  // API should send us OrderGuid, Pair, OrderType
-                    if (order.Pair.ToUpper() == "XBT-AUD") {
-                        Debug.Print(DateTime.Now.ToString() + " |                                                                 ORDER CANCELED: " + order.OrderGuid);
-                    }
                     if (Order_OB_IR.ContainsKey(order.OrderGuid)) {  // getting exceptions where the order doesn't exist in this dictionary?? weird..
                         decimal OrderPrice2 = Order_OB_IR[order.OrderGuid];
 
                         if (OB_IR.ContainsKey(OrderPrice2)) {
 
+                            if (!OB_IR[OrderPrice2].ContainsKey(order.OrderGuid) && (order.Pair.ToUpper() == "XBT-AUD")) {
+                                Debug.Print(DateTime.Now.ToString() + " | Trying to cancel an order where the guid doesn't exist - " + order.OrderGuid);
+                            }
+
                             if (OB_IR[OrderPrice2].Count > 1) {
                                 OB_IR[OrderPrice2].TryRemove(order.OrderGuid, out OrderBook_IR ignore);
+                                if (order.Pair.ToUpper() == "XBT-AUD") {
+                                    Debug.Print(DateTime.Now.ToString() + " |                                                                 ORDER CANCELED: " + order.OrderGuid + " | others at this price remain, was this: " + ignore.OrderGuid);
+                                }
                             }
                             else {  // only one order at this price, remove the whole price level
                                 OB_IR.TryRemove(OrderPrice2, out ConcurrentDictionary<string, OrderBook_IR> ignore);
-                            }  
+                                if (order.Pair.ToUpper() == "XBT-AUD") {
+                                    Debug.Print(DateTime.Now.ToString() + " |                                                                 ORDER CANCELED: " + order.OrderGuid + " | only one at this price, was this: " + ignore.First().Key);
+                                }
+                            }
                         }
                         else {  //this price level doesn't exist in the price OB??
                             Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") The big dictionary is missing a price: + " + OrderPrice2);
@@ -480,7 +487,7 @@ namespace IRTicker {
                         Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore2);
                     }
                     else {  // else we did NOT find the order in the order dictionary.  let's check the main dictionary in case it's there.  if it is remove it.
-                        Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to cancel event, but it doesn't exist in order guid dictionary");
+                        Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to cancel event, but it doesn't exist in order guid dictionary - " + order.OrderGuid);
                         foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
                             if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
                                 Debug.Print("- but the other dictionary has it...");
@@ -627,6 +634,9 @@ namespace IRTicker {
                 InitialiseOrderBook_IR(crypto + "-" + fiat);
 
                 Debug.Print(DateTime.Now.ToString() + " IR OB " + crypto + fiat + " done");
+            }
+            else {
+                Debug.Print(DateTime.Now.ToString() + " | IR - couldn't download REST OB? - " + crypto + "-" + fiat);
             }
         }
 

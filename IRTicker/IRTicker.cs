@@ -1540,33 +1540,19 @@ namespace IRTicker {
                 fiat_GroupBox.ForeColor = Color.Black;
                 if(!fiatIsUSD) {  // it's USD, but we're changing it to AUD
                     fiat_GroupBox.Text = "Fiat rates (base: AUD" + (fiatInvert_checkBox.Checked ? ", inverted)": ")");
-                    if(fiatInvert_checkBox.Checked) {
-                        USD_Label2.Text = fiatRates.rates.AUD.ToString("0.#####");
-                        NZD_Label2.Text = (1 / ((1 / fiatRates.rates.AUD) * fiatRates.rates.NZD)).ToString("0.#####");
-                        EUR_Label2.Text = (1 / ((1 / fiatRates.rates.AUD) * fiatRates.rates.EUR)).ToString("0.#####");
-                        AUD_Label2.Text = "1";
-                    }
-                    else {
-                        USD_Label2.Text = (1 / fiatRates.rates.AUD).ToString("0.#####");
-                        NZD_Label2.Text = ((1 / fiatRates.rates.AUD) * fiatRates.rates.NZD).ToString("0.#####");
-                        EUR_Label2.Text = ((1 / fiatRates.rates.AUD) * fiatRates.rates.EUR).ToString("0.#####");
-                        AUD_Label2.Text = "1";
-                    }
+
+                    USD_Label2.Text = fiatRates.rates.AUD.ToString("0.#####") + "  |  " + (1 / fiatRates.rates.AUD).ToString("0.#####");
+                    NZD_Label2.Text = (1 / ((1 / fiatRates.rates.AUD) * fiatRates.rates.NZD)).ToString("0.#####") + "  |  " + ((1 / fiatRates.rates.AUD) * fiatRates.rates.NZD).ToString("0.#####");
+                    EUR_Label2.Text = (1 / ((1 / fiatRates.rates.AUD) * fiatRates.rates.EUR)).ToString("0.#####") + "  |  " + ((1 / fiatRates.rates.AUD) * fiatRates.rates.EUR).ToString("0.#####");
+                    AUD_Label2.Text = "1" + "  |  " + "1";
                 }
                 else {  // we're changing it to USD base
                     fiat_GroupBox.Text = "Fiat rates (base: USD" + (fiatInvert_checkBox.Checked ? ", inverted)": ")");
-                    if(fiatInvert_checkBox.Checked) {
-                        AUD_Label2.Text = (1 / fiatRates.rates.AUD).ToString("0.#####");
-                        NZD_Label2.Text = (1 / fiatRates.rates.NZD).ToString("0.#####");
-                        EUR_Label2.Text = (1 / fiatRates.rates.EUR).ToString("0.#####");
-                        USD_Label2.Text = (1 / fiatRates.rates.USD).ToString("0.#####");
-                    }
-                    else {
-                        AUD_Label2.Text = fiatRates.rates.AUD.ToString("0.#####");
-                        NZD_Label2.Text = fiatRates.rates.NZD.ToString("0.#####");
-                        EUR_Label2.Text = fiatRates.rates.EUR.ToString("0.#####");
-                        USD_Label2.Text = fiatRates.rates.USD.ToString("0.#####");
-                    }
+
+                    AUD_Label2.Text = (1 / fiatRates.rates.AUD).ToString("0.#####") + "  |  " + fiatRates.rates.AUD.ToString("0.#####");
+                    NZD_Label2.Text = (1 / fiatRates.rates.NZD).ToString("0.#####") + "  |  " + fiatRates.rates.NZD.ToString("0.#####");
+                    EUR_Label2.Text = (1 / fiatRates.rates.EUR).ToString("0.#####") + "  |  " + fiatRates.rates.EUR.ToString("0.#####");
+                    USD_Label2.Text = (1 / fiatRates.rates.USD).ToString("0.#####") + "  |  " + fiatRates.rates.USD.ToString("0.#####");
                 }
             }
         }
