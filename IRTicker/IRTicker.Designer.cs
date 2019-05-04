@@ -40,8 +40,6 @@
             this.EnableGDAXLevel3_CheckBox = new System.Windows.Forms.CheckBox();
             this.EnableGDAXLevel3 = new System.Windows.Forms.Label();
             this.VersionLabel = new System.Windows.Forms.Label();
-            this.fiatInvert_checkBox = new System.Windows.Forms.CheckBox();
-            this.InvertFiatLabel = new System.Windows.Forms.Label();
             this.SettingsOKButton = new System.Windows.Forms.Button();
             this.FolderLabel = new System.Windows.Forms.Label();
             this.LoadingPanel = new System.Windows.Forms.Panel();
@@ -333,8 +331,6 @@
             this.Settings.Controls.Add(this.EnableGDAXLevel3_CheckBox);
             this.Settings.Controls.Add(this.EnableGDAXLevel3);
             this.Settings.Controls.Add(this.VersionLabel);
-            this.Settings.Controls.Add(this.fiatInvert_checkBox);
-            this.Settings.Controls.Add(this.InvertFiatLabel);
             this.Settings.Controls.Add(this.SettingsOKButton);
             this.Settings.Controls.Add(this.FolderLabel);
             this.Settings.Controls.Add(this.refreshFrequencyLabel);
@@ -343,7 +339,7 @@
             this.Settings.Controls.Add(this.folderDialogButton);
             this.Settings.Location = new System.Drawing.Point(0, 0);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(585, 634);
+            this.Settings.Size = new System.Drawing.Size(585, 723);
             this.Settings.TabIndex = 4;
             // 
             // ExportSummarised_Checkbox
@@ -430,25 +426,6 @@
             this.VersionLabel.Name = "VersionLabel";
             this.VersionLabel.Size = new System.Drawing.Size(0, 13);
             this.VersionLabel.TabIndex = 11;
-            // 
-            // fiatInvert_checkBox
-            // 
-            this.fiatInvert_checkBox.AutoSize = true;
-            this.fiatInvert_checkBox.Location = new System.Drawing.Point(490, 126);
-            this.fiatInvert_checkBox.Name = "fiatInvert_checkBox";
-            this.fiatInvert_checkBox.Size = new System.Drawing.Size(15, 14);
-            this.fiatInvert_checkBox.TabIndex = 10;
-            this.fiatInvert_checkBox.UseVisualStyleBackColor = true;
-            this.fiatInvert_checkBox.CheckedChanged += new System.EventHandler(this.FiatInvert_checkBox_CheckedChanged);
-            // 
-            // InvertFiatLabel
-            // 
-            this.InvertFiatLabel.AutoSize = true;
-            this.InvertFiatLabel.Location = new System.Drawing.Point(73, 126);
-            this.InvertFiatLabel.Name = "InvertFiatLabel";
-            this.InvertFiatLabel.Size = new System.Drawing.Size(91, 13);
-            this.InvertFiatLabel.TabIndex = 6;
-            this.InvertFiatLabel.Text = "Invert fiat fx rates:";
             // 
             // SettingsOKButton
             // 
@@ -2910,8 +2887,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 721);
             this.Controls.Add(this.Main);
-            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Settings);
+            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.OTCHelper);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HelpButton = true;
@@ -2996,7 +2973,6 @@
         private System.Windows.Forms.Label USD_Label2;
         private System.Windows.Forms.Label USD_Label1;
         private System.Windows.Forms.CheckBox fiatRefresh_checkBox;
-        private System.Windows.Forms.CheckBox fiatInvert_checkBox;
         private System.Windows.Forms.Panel LoadingPanel;
         private System.Windows.Forms.Label GIFLabel;
         private System.Windows.Forms.GroupBox BFX_GroupBox;
@@ -3008,7 +2984,6 @@
         private System.Windows.Forms.Label BFX_BCH_Label1;
         private System.Windows.Forms.Label BFX_ETH_Label1;
         private System.Windows.Forms.Label BFX_XBT_Label1;
-        private System.Windows.Forms.Label InvertFiatLabel;
         private System.Windows.Forms.Label FolderLabel;
         private System.Windows.Forms.Label BFX_LTC_Label3;
         private System.Windows.Forms.Label BFX_BCH_Label3;

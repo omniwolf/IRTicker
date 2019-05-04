@@ -1539,7 +1539,7 @@ namespace IRTicker {
             if(fiatRates != null) {
                 fiat_GroupBox.ForeColor = Color.Black;
                 if(!fiatIsUSD) {  // it's USD, but we're changing it to AUD
-                    fiat_GroupBox.Text = "Fiat rates (base: AUD" + (fiatInvert_checkBox.Checked ? ", inverted)": ")");
+                    fiat_GroupBox.Text = "Fiat rates (base: AUD)");
 
                     USD_Label2.Text = fiatRates.rates.AUD.ToString("0.#####") + "  |  " + (1 / fiatRates.rates.AUD).ToString("0.#####");
                     NZD_Label2.Text = (1 / ((1 / fiatRates.rates.AUD) * fiatRates.rates.NZD)).ToString("0.#####") + "  |  " + ((1 / fiatRates.rates.AUD) * fiatRates.rates.NZD).ToString("0.#####");
@@ -1547,7 +1547,7 @@ namespace IRTicker {
                     AUD_Label2.Text = "1" + "  |  " + "1";
                 }
                 else {  // we're changing it to USD base
-                    fiat_GroupBox.Text = "Fiat rates (base: USD" + (fiatInvert_checkBox.Checked ? ", inverted)": ")");
+                    fiat_GroupBox.Text = "Fiat rates (base: USD)");
 
                     AUD_Label2.Text = (1 / fiatRates.rates.AUD).ToString("0.#####") + "  |  " + fiatRates.rates.AUD.ToString("0.#####");
                     NZD_Label2.Text = (1 / fiatRates.rates.NZD).ToString("0.#####") + "  |  " + fiatRates.rates.NZD.ToString("0.#####");
