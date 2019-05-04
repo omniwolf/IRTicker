@@ -111,7 +111,6 @@ namespace IRTicker {
             else Properties.Settings.Default.RefreshFreq = minRefreshFrequency.ToString();
             Properties.Settings.Default.Save();
 
-            fiatInvert_checkBox.Checked = Properties.Settings.Default.FiatInverse;
             refreshFrequencyTextbox.Text = Properties.Settings.Default.RefreshFreq.ToString();
             folderDialogTextbox.Text = cryptoDir;
             EnableGDAXLevel3_CheckBox.Checked = Properties.Settings.Default.FullGDAXOB;
@@ -1539,7 +1538,7 @@ namespace IRTicker {
             if(fiatRates != null) {
                 fiat_GroupBox.ForeColor = Color.Black;
                 if(!fiatIsUSD) {  // it's USD, but we're changing it to AUD
-                    fiat_GroupBox.Text = "Fiat rates (base: AUD)");
+                    fiat_GroupBox.Text = "Fiat rates (base: AUD)";
 
                     USD_Label2.Text = fiatRates.rates.AUD.ToString("0.#####") + "  |  " + (1 / fiatRates.rates.AUD).ToString("0.#####");
                     NZD_Label2.Text = (1 / ((1 / fiatRates.rates.AUD) * fiatRates.rates.NZD)).ToString("0.#####") + "  |  " + ((1 / fiatRates.rates.AUD) * fiatRates.rates.NZD).ToString("0.#####");
@@ -1547,7 +1546,7 @@ namespace IRTicker {
                     AUD_Label2.Text = "1" + "  |  " + "1";
                 }
                 else {  // we're changing it to USD base
-                    fiat_GroupBox.Text = "Fiat rates (base: USD)");
+                    fiat_GroupBox.Text = "Fiat rates (base: USD)";
 
                     AUD_Label2.Text = (1 / fiatRates.rates.AUD).ToString("0.#####") + "  |  " + fiatRates.rates.AUD.ToString("0.#####");
                     NZD_Label2.Text = (1 / fiatRates.rates.NZD).ToString("0.#####") + "  |  " + fiatRates.rates.NZD.ToString("0.#####");
@@ -1624,12 +1623,6 @@ namespace IRTicker {
                 fiatRefresh_checkBox.Text = "FX will be updated next poll";
                 fiatRefresh_checkBox.Enabled = false;
             }
-        }
-
-        private void FiatInvert_checkBox_CheckedChanged(object sender, EventArgs e) {
-            Properties.Settings.Default.FiatInverse = fiatInvert_checkBox.Checked;
-            Properties.Settings.Default.Save();
-            PrintFiat();
         }
 
         private void RefreshFrequencyTextbox_TextChanged(object sender, EventArgs e) {
