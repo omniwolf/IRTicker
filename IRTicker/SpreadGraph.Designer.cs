@@ -36,6 +36,7 @@
             chartArea1.AxisX.MajorGrid.Enabled = false;
             chartArea1.AxisY.IsStartedFromZero = false;
             chartArea1.AxisY.MajorGrid.Enabled = false;
+            chartArea1.AxisY.Minimum = 0D;
             chartArea1.AxisY.Title = "Spread";
             chartArea1.Name = "ChartArea1";
             this.SpreadChart.ChartAreas.Add(chartArea1);

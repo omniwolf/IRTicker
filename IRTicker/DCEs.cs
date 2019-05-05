@@ -152,6 +152,7 @@ namespace IRTicker {
         public string BuySell { get; set; }
         public string NumCoinsStr { get; set; } = "";
         public string CryptoCombo { get; set; } = "";
+        public string CurrencyCombo { get; set; } = "";
 
         public void RemoveOrderBook(string pair) {
             if (orderBooks.ContainsKey(pair)) orderBooks.Remove(pair);

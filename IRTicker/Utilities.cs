@@ -26,13 +26,12 @@ namespace IRTicker {
             // if we don't have enough data, just go black.
             if (priceList == null || priceList.Last() == null || priceList.First() == null || priceList.Last().Item1 == null || priceList.First().Item1 == null) return Color.Black;
             if (priceList.Count < 5) return Color.Black;
-            if (priceList.Last() == null || priceList.First() == null) return Color.Black;  // sometimes first and last returns null even though there's shit loads.  maybe we want to purge this priceList List every now and then...
-            if (priceList.Last().Item1 - priceList.First().Item1 < TimeSpan.FromMinutes(5)) return Color.Black;
+            if (priceList.LastOrDefault().Item1 - priceList.FirstOrDefault().Item1 < TimeSpan.FromMinutes(5)) return Color.Black;
 
             lock (priceList) {
                 foreach (Tuple<DateTime, decimal> pricePoint in priceList) {
                     if (pricePoint.Item1 >= DateTime.Now - TimeSpan.FromMinutes(5)) {
-                        decimal lastPrice = priceList.Last().Item2;
+                        decimal lastPrice = priceList.LastOrDefault().Item2;
                         if (lastPrice > pricePoint.Item2 * 1.01m) {
                             // colour dark green
                             //return Color.Lime;

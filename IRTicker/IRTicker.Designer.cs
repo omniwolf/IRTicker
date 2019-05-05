@@ -258,6 +258,7 @@
             this.BTCM_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.GDAX_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BFX_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.IR_CurrencyBox = new System.Windows.Forms.ComboBox();
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -801,7 +802,7 @@
             this.BTCM_XBT_Label1.Name = "BTCM_XBT_Label1";
             this.BTCM_XBT_Label1.Size = new System.Drawing.Size(35, 13);
             this.BTCM_XBT_Label1.TabIndex = 8;
-            this.BTCM_XBT_Label1.Text = "XBT:";
+            this.BTCM_XBT_Label1.Text = "BTC:";
             // 
             // BTCM_BCH_Label1
             // 
@@ -1089,7 +1090,7 @@
             this.CSPT_XBT_Label1.Name = "CSPT_XBT_Label1";
             this.CSPT_XBT_Label1.Size = new System.Drawing.Size(35, 13);
             this.CSPT_XBT_Label1.TabIndex = 0;
-            this.CSPT_XBT_Label1.Text = "XBT:";
+            this.CSPT_XBT_Label1.Text = "BTC:";
             // 
             // BFX_GroupBox
             // 
@@ -1504,7 +1505,7 @@
             this.BFX_XBT_Label1.Name = "BFX_XBT_Label1";
             this.BFX_XBT_Label1.Size = new System.Drawing.Size(35, 13);
             this.BFX_XBT_Label1.TabIndex = 0;
-            this.BFX_XBT_Label1.Text = "XBT:";
+            this.BFX_XBT_Label1.Text = "BTC:";
             // 
             // BFX_AvgPrice_Label
             // 
@@ -1634,6 +1635,7 @@
             // 
             this.IR_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.IR_Eagel_Transparent___small_faded2;
             this.IR_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.IR_GroupBox.Controls.Add(this.IR_CurrencyBox);
             this.IR_GroupBox.Controls.Add(this.IR_XLM_Label2);
             this.IR_GroupBox.Controls.Add(this.IR_XLM_Label3);
             this.IR_GroupBox.Controls.Add(this.IR_XLM_Label1);
@@ -1963,7 +1965,7 @@
             // IR_NumCoinsTextBox
             // 
             this.IR_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_NumCoinsTextBox.Location = new System.Drawing.Point(95, 254);
+            this.IR_NumCoinsTextBox.Location = new System.Drawing.Point(58, 254);
             this.IR_NumCoinsTextBox.Mask = "00000000";
             this.IR_NumCoinsTextBox.Name = "IR_NumCoinsTextBox";
             this.IR_NumCoinsTextBox.PromptChar = ' ';
@@ -1984,7 +1986,7 @@
             "Sell"});
             this.IR_BuySellComboBox.Location = new System.Drawing.Point(9, 254);
             this.IR_BuySellComboBox.Name = "IR_BuySellComboBox";
-            this.IR_BuySellComboBox.Size = new System.Drawing.Size(58, 21);
+            this.IR_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
             this.IR_BuySellComboBox.TabIndex = 12;
             this.IR_BuySellComboBox.SelectedIndexChanged += new System.EventHandler(this.IR_BuySellComboBox_SelectedIndexChanged);
             // 
@@ -2145,7 +2147,7 @@
             this.IR_XBT_Label1.Name = "IR_XBT_Label1";
             this.IR_XBT_Label1.Size = new System.Drawing.Size(35, 13);
             this.IR_XBT_Label1.TabIndex = 0;
-            this.IR_XBT_Label1.Text = "XBT:";
+            this.IR_XBT_Label1.Text = "BTC:";
             this.IR_XBT_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // GDAX_GroupBox
@@ -2490,7 +2492,7 @@
             this.GDAX_XBT_Label1.Name = "GDAX_XBT_Label1";
             this.GDAX_XBT_Label1.Size = new System.Drawing.Size(35, 13);
             this.GDAX_XBT_Label1.TabIndex = 0;
-            this.GDAX_XBT_Label1.Text = "XBT:";
+            this.GDAX_XBT_Label1.Text = "BTC:";
             // 
             // IR_XBT_PriceTT
             // 
@@ -2881,6 +2883,20 @@
             this.BFX_XLM_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.BFX_XLM_PriceTT.ToolTipTitle = "Spread details";
             // 
+            // IR_CurrencyBox
+            // 
+            this.IR_CurrencyBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_CurrencyBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.IR_CurrencyBox.FormattingEnabled = true;
+            this.IR_CurrencyBox.Items.AddRange(new object[] {
+            "crypto",
+            "fiat"});
+            this.IR_CurrencyBox.Location = new System.Drawing.Point(131, 254);
+            this.IR_CurrencyBox.Name = "IR_CurrencyBox";
+            this.IR_CurrencyBox.Size = new System.Drawing.Size(58, 21);
+            this.IR_CurrencyBox.TabIndex = 36;
+            this.IR_CurrencyBox.SelectedIndexChanged += new System.EventHandler(this.IR_CurrencyBox_SelectedIndexChanged);
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3157,6 +3173,7 @@
         private System.Windows.Forms.ToolTip BTCM_XLM_PriceTT;
         private System.Windows.Forms.ToolTip GDAX_XLM_PriceTT;
         private System.Windows.Forms.ToolTip BFX_XLM_PriceTT;
+        private System.Windows.Forms.ComboBox IR_CurrencyBox;
     }
 }
 

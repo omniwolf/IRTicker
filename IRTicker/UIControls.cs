@@ -64,6 +64,7 @@ namespace IRTicker {
         public ComboBox AvgPrice_BuySell { get; set; }
         public MaskedTextBox AvgPrice_NumCoins { get; set; }
         public ComboBox AvgPrice_Crypto { get; set; }
+        public ComboBox AvgPrice_Currency { get; set; }  // whether or not the coins they're entering are crypto or fiat
 
         public Label AvgPrice { get; set; }
 

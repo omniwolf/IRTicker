@@ -31,7 +31,7 @@ namespace IRTicker {
         private Dictionary<string, UIControls> UIControls_Dict;
         private List<string> Exchanges;
         private string cryptoDir = "";
-        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "PLA" };  // we don't poll the shit coins as often to help with rate limiting
+        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "PLA", "XLM" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
 
@@ -181,6 +181,7 @@ namespace IRTicker {
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
             UIControls_Dict["IR"].AvgPrice_Crypto = IR_CryptoComboBox;
+            UIControls_Dict["IR"].AvgPrice_Currency = IR_CryptoComboBox;
             UIControls_Dict["IR"].AvgPrice = IR_AvgPrice_Label;
             UIControls_Dict["IR"].AvgPriceTT = IR_AvgPriceTT;
 
@@ -897,6 +898,11 @@ namespace IRTicker {
 
                 pollingThread.ReportProgress(1);
 
+                if (DCEs["IR"].CryptoCombo != "" && !string.IsNullOrEmpty(DCEs["IR"].NumCoinsStr) && DCEs["IR"].HasStaticData) {  // we have a crypto selected and coins entered, let's get the order book for them
+                    pollingThread.ReportProgress(2);  // OK let's lock the fields down
+                    pollingThread.ReportProgress(23);  // display order book
+                }
+
                 if (DCEs["BTCM"].CryptoCombo != "" && !string.IsNullOrEmpty(DCEs["BTCM"].NumCoinsStr) && DCEs["BTCM"].HasStaticData) {  // we have a crypto selected and coins entered, let's get the order book for them
                     pollingThread.ReportProgress(2);  // OK let's lock the fields down
                     GetBTCMOrderBook(DCEs["BTCM"].CryptoCombo);
@@ -995,12 +1001,13 @@ namespace IRTicker {
                 //else Debug.Print("Pair don't exist, pairObj.Value.SecondaryCurrencyCode: " + pairObj.Value.SecondaryCurrencyCode);
             }
 
-            if (!String.IsNullOrEmpty(UIControls_Dict[dExchange].AvgPrice_NumCoins.Text) && UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex != 0) {  // need to check this before trying to evaluate it
+            // have commented this out as all exchanges with an order book should be done through reportProgress 23, 33, 43, etc
+            /*if (!String.IsNullOrEmpty(UIControls_Dict[dExchange].AvgPrice_NumCoins.Text) && UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex != 0) {  // need to check this before trying to evaluate it
                 UIControls_Dict[dExchange].AvgPrice.Text = DetermineAveragePrice(DCEs[dExchange].CryptoCombo, DCEs[dExchange].CurrentSecondaryCurrency, dExchange);
                 UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Black;
                 UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex = 0;  // reset this so we don't pull the order book every time.
-            }
-            else UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Gray;  // any text there is now a poll old, so gray it out so the user knows it's stale.
+            }*/
+            /*else*/ UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Gray;  // any text there is now a poll old, so gray it out so the user knows it's stale.
 
             UIControls_Dict[dExchange].AvgPrice_Crypto.Enabled = true;  // we disable it if they change the fiat currency as we need to re-populate the crypto combo box first
         }
@@ -1033,6 +1040,10 @@ namespace IRTicker {
 
                 tempPrice.Text = midPoint.ToString(formatString).Trim();
                 tempPrice.ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(crypto + "-" + fiat));
+                // if we're experiencing nonce errors for this pair, make it gray.
+                if ((DCEs[dExchange].nonceErrorTracker.ContainsKey("ORDERBOOK-" + crypto.ToUpper() + "-" + fiat.ToUpper())) && DCEs[dExchange].nonceErrorTracker["ORDERBOOK-" + crypto.ToUpper() + "-" + fiat.ToUpper()]) {
+                    tempPrice.ForeColor = Color.Gray;
+                }
 
 
                 // if there's a colour, make the font bigger.  otherwise not bigger.
@@ -1071,8 +1082,102 @@ namespace IRTicker {
             else Debug.Print("Pair2 don't exist, pairObj.Value.SecondaryCurrencyCode: " + mSummary.SecondaryCurrencyCode);
         }
 
-        private string DetermineAveragePrice(string crypto, string fiat, string dExchange) {
+        // this works out what the average price of a market order on the OB would be for IR.  We needed to separate this logic from the other exchanges 
+        // because IR's order book is represented very differently (and used constantly)
+        private string DetermineAveragePrice_IR(string crypto, string fiat, string currency) {
+            crypto = crypto.ToUpper();
+            fiat = fiat.ToUpper();
+            string pair = crypto + "-" + fiat;
+            bool fiatSelected = (currency == "fiat" ? true : false);  // if the crypto value is the same as the fiat one, it means that the selected crypto was fiat (ie they chose AUD from the drop avg price dropdown)
 
+            if (!DCEs["IR"].IR_OBs.ContainsKey(pair)) return "No order book for the " + pair + " pair";
+            string orderSide = "Buy";
+            if (UIControls_Dict["IR"].AvgPrice_BuySell.SelectedItem.ToString() == "Sell") orderSide = "Sell";
+
+            // here we grab the buy or sell order book, make a copy, and then sort it
+            IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBook;
+            if (orderSide == "Buy") {
+                KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCEs["IR"].IR_OBs[pair].Item2.ToArray();  // because we're buying from the sell orders
+                orderedBook = arrayBook.OrderBy(k => k.Key);
+                Debug.Print("--- picked the sell side, top order is: " + orderedBook.First().Key);
+            }
+            else {
+                KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCEs["IR"].IR_OBs[pair].Item1.ToArray();  // because we're selling to the buy orders
+                orderedBook = arrayBook.OrderByDescending(k => k.Key);
+                Debug.Print("--- picked the buy side, top order is: " + orderedBook.First().Key);
+            }
+
+            if (decimal.TryParse(UIControls_Dict["IR"].AvgPrice_NumCoins.Text, out decimal coins)) {  // grab the number of coins we want to buy/sell from the DCE object
+                Debug.Print("--- you typed in " + coins + " coins");
+                decimal coinCounter = 0;  // we add to this counter until it reaches the numCoinsTextBox (coins) value
+                decimal weightedAverage = 0;
+                decimal totalCost = 0;  // this will be used to tally fiat if a crypto is selected, and crypto if fiat is selected
+                int orderCount = 0;
+                foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> pricePoint in orderedBook) {
+                    Debug.Print("--- first outside price point (" + pricePoint.Key + "), there are " + pricePoint.Value.Count + " orders at this price to pick through");
+                    foreach (KeyValuePair<string, DCE.OrderBook_IR> subOrder in pricePoint.Value) {
+                        orderCount++;
+                        Debug.Print("--- looking at order " + orderCount);
+                        coinCounter += subOrder.Value.Volume * (fiatSelected ? subOrder.Value.Price : 1);  // if they have selected a fiat currency, we need to multiply by the price
+                        Debug.Print("--- coinCounter is " + coinCounter + " and has just been increased by " + subOrder.Value.Volume + " (coins: " + coins + ")");
+                        if (coinCounter > coins) {
+                            decimal usedCoinsInThisOrder = (subOrder.Value.Volume * (fiatSelected ? subOrder.Value.Price : 1)) - (coinCounter - coins);  // this is how many coins in this order would be required
+                            Debug.Print("--- we're in the final tally up if, we will use " + usedCoinsInThisOrder + "coins from this order");
+                            totalCost += usedCoinsInThisOrder * (fiatSelected ? (1 / subOrder.Value.Price) : subOrder.Value.Price);
+                            Debug.Print("--- total cost is finally " + totalCost + " and the final increase was " + usedCoinsInThisOrder / (fiatSelected ? subOrder.Value.Price : 1));
+                            weightedAverage += (usedCoinsInThisOrder / coins) * subOrder.Value.Price;
+                            string tTip = buildAvgPriceTooltip(orderSide, fiatSelected, subOrder.Value.Price, orderCount, totalCost, crypto);
+                            UIControls_Dict["IR"].AvgPriceTT.SetToolTip(UIControls_Dict["IR"].AvgPrice, tTip);
+                            return "Average price for " + crypto + ": " + (fiatSelected ? "$" : "") + weightedAverage.ToString("### ##0.##").Trim();  // we have finished filling the hypothetical order
+                        }
+                        else {  // this whole sub order is required
+                            weightedAverage += ((subOrder.Value.Volume * (fiatSelected ? subOrder.Value.Price : 1)) / coins) * subOrder.Value.Price;
+                            totalCost += subOrder.Value.Volume * (fiatSelected ? 1 : subOrder.Value.Price);  // if fiat is selected, totalCost var represents total coins
+                            Debug.Print("--- totalCost is now " + totalCost + " and was increased by " + subOrder.Value.Volume * (fiatSelected ? 1 : subOrder.Value.Price));
+                        }
+                    }
+                }
+                return "Order book only has " + (fiatSelected ? "$" : "") + coinCounter.ToString("### ##0.##").Trim() + " " + crypto;
+            }
+            else {
+                MessageBox.Show("Could not convert num coins to a number.  how? num = " + UIControls_Dict["IR"].AvgPrice_NumCoins.Text, "Show this to Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return "";
+        }
+
+        // builds the string in the tool tip.  Depending on what 
+        private string buildAvgPriceTooltip(string buySell, bool fiatSelected, decimal price, int orderCount, decimal finalAmount, string crypto) {
+
+            StringBuilder AvgPrice_TTStr = new StringBuilder();
+            AvgPrice_TTStr.AppendLine((buySell == "Buy" ? "Max" : "Min") + " price paid: " + price.ToString("### ##0.##"));
+            AvgPrice_TTStr.AppendLine("Orders required to fill: " + orderCount);
+            AvgPrice_TTStr.Append("Notional ");
+
+            if (fiatSelected && buySell == "Buy") {
+                AvgPrice_TTStr.Append("coins bought: " + (crypto == "XBT" ? "BTC" : crypto) + " ");
+            }
+            else if (fiatSelected && buySell == "Sell") {
+                AvgPrice_TTStr.Append("coins sold: " + (crypto == "XBT" ? "BTC" : crypto) + " ");
+            }
+            else if (!fiatSelected && buySell == "Buy") {
+                AvgPrice_TTStr.Append("fiat cost: $ ");
+            }
+            else if (!fiatSelected && buySell == "Sell") {
+                AvgPrice_TTStr.Append("fiat received: $ ");
+            }
+
+            string formatString = "##0.##";
+            if (finalAmount > 999) formatString = "### ##0.##";
+            if (finalAmount > 999999) formatString = "### ### ##0.##";
+
+            AvgPrice_TTStr.Append(finalAmount.ToString(formatString));
+            return AvgPrice_TTStr.ToString();
+        }
+
+        private string DetermineAveragePrice(string crypto, string fiat, string dExchange) { 
+
+            crypto = crypto.ToUpper();
+            fiat = fiat.ToUpper();
             string pair = crypto + "-" + fiat;
 
             if (!DCEs[dExchange].orderBooks.ContainsKey(pair)) return "Failed to pull order book from API";
@@ -1183,7 +1288,7 @@ namespace IRTicker {
                 return;
             }
             else if (reportType == 23) {  // 23 is order book stuff for ir - not currently working. (or required?)
-                UIControls_Dict["IR"].AvgPrice.Text = DetermineAveragePrice(DCEs["IR"].CryptoCombo, DCEs["IR"].CurrentSecondaryCurrency, "IR");
+                UIControls_Dict["IR"].AvgPrice.Text = DetermineAveragePrice_IR(DCEs["IR"].CryptoCombo, DCEs["IR"].CurrentSecondaryCurrency, DCEs["IR"].CurrencyCombo);
                 UIControls_Dict["IR"].AvgPrice.ForeColor = Color.Black;
                 UIControls_Dict["IR"].AvgPrice_Crypto.SelectedIndex = 0;  // reset this so we don't pull the order book every time.
                 IR_CryptoComboBox.Enabled = IR_BuySellComboBox.Enabled = IR_NumCoinsTextBox.Enabled = true;
@@ -1481,7 +1586,9 @@ namespace IRTicker {
                 GroupBoxAndLabelColourActive("IR");
                 // need to force a label update, otherwise they'll stay grey <no currency> until the next update comes through
                 foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in DCEs["IR"].GetCryptoPairs()) {
-                    UpdateLabels_Pair("IR", pairObj.Value.PrimaryCurrencyCode, pairObj.Value.SecondaryCurrencyCode);
+                    if (pairObj.Value.SecondaryCurrencyCode == DCEs["IR"].CurrentSecondaryCurrency) {
+                        UpdateLabels_Pair("IR", pairObj.Value.PrimaryCurrencyCode, pairObj.Value.SecondaryCurrencyCode);
+                    }
                 }
 
                 PopulateCryptoComboBox("IR");
@@ -1494,7 +1601,9 @@ namespace IRTicker {
                 GroupBoxAndLabelColourActive("GDAX");
                 // need to force a label update, otherwise they'll stay grey <no currency> until the next update comes through
                 foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in DCEs["GDAX"].GetCryptoPairs()) {
-                    UpdateLabels_Pair("GDAX", pairObj.Value.PrimaryCurrencyCode, pairObj.Value.SecondaryCurrencyCode);
+                    if (pairObj.Value.SecondaryCurrencyCode == DCEs["GDAX"].CurrentSecondaryCurrency) {
+                        UpdateLabels_Pair("GDAX", pairObj.Value.PrimaryCurrencyCode, pairObj.Value.SecondaryCurrencyCode);
+                    }
                 }
 
                 // we have a new fiat currency.  if there are any pairs not available, update the UI.
@@ -1514,7 +1623,9 @@ namespace IRTicker {
                 GroupBoxAndLabelColourActive("BFX");
                 // need to force a label update, otherwise they'll stay grey <no currency> until the next update comes through
                 foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in DCEs["BFX"].GetCryptoPairs()) {
-                    UpdateLabels_Pair("BFX", pairObj.Value.PrimaryCurrencyCode, pairObj.Value.SecondaryCurrencyCode);
+                    if (pairObj.Value.SecondaryCurrencyCode == DCEs["BFX"].CurrentSecondaryCurrency) {
+                        UpdateLabels_Pair("BFX", pairObj.Value.PrimaryCurrencyCode, pairObj.Value.SecondaryCurrencyCode);
+                    }
                 }
 
                 // we have a new fiat currency.  if there are any pairs not available, update the UI.
@@ -1647,6 +1758,11 @@ namespace IRTicker {
         }
 
         private void IR_CryptoComboBox_DropDown(object sender, EventArgs e) {
+            IR_AvgPrice_Label.Text = "";
+        }
+
+        private void IR_CurrencyBox_SelectedIndexChanged(object sender, EventArgs e) {
+            DCEs["IR"].CurrencyCombo = IR_CurrencyBox.SelectedItem.ToString();
             IR_AvgPrice_Label.Text = "";
         }
 
