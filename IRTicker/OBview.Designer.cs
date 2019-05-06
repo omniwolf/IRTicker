@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OBview));
             this.BidsTextBox = new System.Windows.Forms.RichTextBox();
             this.OffersTextBox = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -160,6 +161,8 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.OffersTextBox);
             this.Controls.Add(this.BidsTextBox);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "OBview";
             this.Text = "OBview";
             this.ResumeLayout(false);

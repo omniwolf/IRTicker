@@ -135,6 +135,7 @@
             this.AUD_Label1 = new System.Windows.Forms.Label();
             this.SettingsButton = new System.Windows.Forms.Button();
             this.IR_GroupBox = new System.Windows.Forms.GroupBox();
+            this.IR_CurrencyBox = new System.Windows.Forms.ComboBox();
             this.IR_XLM_Label2 = new System.Windows.Forms.Label();
             this.IR_XLM_Label3 = new System.Windows.Forms.Label();
             this.IR_XLM_Label1 = new System.Windows.Forms.Label();
@@ -258,7 +259,6 @@
             this.BTCM_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.GDAX_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BFX_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_CurrencyBox = new System.Windows.Forms.ComboBox();
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -1682,6 +1682,20 @@
             this.IR_GroupBox.Text = "Independent Reserve";
             this.IR_GroupBox.Click += new System.EventHandler(this.IR_GroupBox_Click);
             // 
+            // IR_CurrencyBox
+            // 
+            this.IR_CurrencyBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_CurrencyBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.IR_CurrencyBox.FormattingEnabled = true;
+            this.IR_CurrencyBox.Items.AddRange(new object[] {
+            "crypto",
+            "fiat"});
+            this.IR_CurrencyBox.Location = new System.Drawing.Point(131, 254);
+            this.IR_CurrencyBox.Name = "IR_CurrencyBox";
+            this.IR_CurrencyBox.Size = new System.Drawing.Size(58, 21);
+            this.IR_CurrencyBox.TabIndex = 36;
+            this.IR_CurrencyBox.SelectedIndexChanged += new System.EventHandler(this.IR_CurrencyBox_SelectedIndexChanged);
+            // 
             // IR_XLM_Label2
             // 
             this.IR_XLM_Label2.AutoSize = true;
@@ -2882,20 +2896,6 @@
             // 
             this.BFX_XLM_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.BFX_XLM_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // IR_CurrencyBox
-            // 
-            this.IR_CurrencyBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_CurrencyBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.IR_CurrencyBox.FormattingEnabled = true;
-            this.IR_CurrencyBox.Items.AddRange(new object[] {
-            "crypto",
-            "fiat"});
-            this.IR_CurrencyBox.Location = new System.Drawing.Point(131, 254);
-            this.IR_CurrencyBox.Name = "IR_CurrencyBox";
-            this.IR_CurrencyBox.Size = new System.Drawing.Size(58, 21);
-            this.IR_CurrencyBox.TabIndex = 36;
-            this.IR_CurrencyBox.SelectedIndexChanged += new System.EventHandler(this.IR_CurrencyBox_SelectedIndexChanged);
             // 
             // IRTicker
             // 

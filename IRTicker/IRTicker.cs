@@ -82,6 +82,9 @@ namespace IRTicker {
                 { "CSPT", new DCE("CSPT", "CoinSpot") }
             };
 
+            DCEs["IR"].CurrencyCombo = "fiat";
+            IR_CurrencyBox.SelectedIndex = 1;
+
             // BTCM, BFX, and CSPT have no APIs that let you download the currency pairs, so just set them manually
             // Actually I'm not sure about the above comment, i think some of them do?  But the main issue is most of them have
             // currencies that we don't want to deal with, so we set the currencies manually here.  IR we want all currencies, so
