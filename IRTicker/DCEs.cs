@@ -472,13 +472,13 @@ namespace IRTicker {
                             if (OB_IR[OrderPrice2].Count > 1) {
                                 OB_IR[OrderPrice2].TryRemove(order.OrderGuid, out OrderBook_IR ignore);
                                 if (order.Pair.ToUpper() == "XBT-AUD") {
-                                    Debug.Print(DateTime.Now.ToString() + " |                                                                 ORDER CANCELED: " + order.OrderGuid + " | others at this price remain, was this: " + ignore.OrderGuid);
+                                    if (ignore != null) Debug.Print(DateTime.Now.ToString() + " |                                                                 ORDER CANCELED: " + order.OrderGuid + " | others at this price remain, was this: " + ignore.OrderGuid);
                                 }
                             }
                             else {  // only one order at this price, remove the whole price level
                                 OB_IR.TryRemove(OrderPrice2, out ConcurrentDictionary<string, OrderBook_IR> ignore);
                                 if (order.Pair.ToUpper() == "XBT-AUD") {
-                                    Debug.Print(DateTime.Now.ToString() + " |                                                                 ORDER CANCELED: " + order.OrderGuid + " | only one at this price, was this: " + ignore.First().Key);
+                                    if (ignore != null) Debug.Print(DateTime.Now.ToString() + " |                                                                 ORDER CANCELED: " + order.OrderGuid + " | only one at this price, was this: " + ignore.First().Key);
                                 }
                             }
                         }
