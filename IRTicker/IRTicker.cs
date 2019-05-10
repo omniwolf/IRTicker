@@ -1016,10 +1016,10 @@ namespace IRTicker {
         }
 
         // Updates labels, but just a specific pair (used for websockets because we get each pair separartely)
-        private void UpdateLabels_Pair(string dExchange, string crypto, string fiat) {
+        private void UpdateLabels_Pair(string dExchange, DCE.MarketSummary mSummary) {
             // first we reset the labels.  The label writing process only writes to labels of pairs that exist, so we first need to set them back in case they don't exist
 
-            DCE.MarketSummary mSummary = DCEs[dExchange].GetCryptoPairs()[crypto + "-" + fiat];
+            //DCE.MarketSummary mSummary = DCEs[dExchange].GetCryptoPairs()[crypto + "-" + fiat];
 
             // i guess we need to filter out the wrong pairs, also don't try and update labels that are -1 (-1 means they're a fake entry)
             if (mSummary.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency && mSummary.LastPrice >= 0) {
@@ -1042,9 +1042,9 @@ namespace IRTicker {
                 System.Windows.Forms.Label tempPrice = UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"];
 
                 tempPrice.Text = midPoint.ToString(formatString).Trim();
-                tempPrice.ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(crypto + "-" + fiat));
+                tempPrice.ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(mSummary.pair));
                 // if we're experiencing nonce errors for this pair, make it gray.
-                if ((DCEs[dExchange].nonceErrorTracker.ContainsKey("ORDERBOOK-" + crypto.ToUpper() + "-" + fiat.ToUpper())) && DCEs[dExchange].nonceErrorTracker["ORDERBOOK-" + crypto.ToUpper() + "-" + fiat.ToUpper()]) {
+                if ((DCEs[dExchange].nonceErrorTracker.ContainsKey("ORDERBOOK-" + mSummary.pair.ToUpper())) && DCEs[dExchange].nonceErrorTracker["ORDERBOOK-" + mSummary.pair.ToUpper()]) {
                     tempPrice.ForeColor = Color.Gray;
                 }
 
@@ -1281,7 +1281,7 @@ namespace IRTicker {
 
             if (reportType == 21) {  // 21 is IR update labels
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
-                UpdateLabels_Pair("IR", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
+                UpdateLabels_Pair("IR", mSummary);
                 if ((mSummary.pair == "XBT-AUD" || mSummary.pair == "ETH-AUD") && (DCEs["IR"].IR_OBs.ContainsKey(mSummary.pair.ToUpper()))) {
                     OBProgressNext(mSummary.spread < 0);
                     KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] buySide = DCEs["IR"].IR_OBs[mSummary.pair].Item1.ToArray();
@@ -1314,7 +1314,7 @@ namespace IRTicker {
 
             else if (reportType == 31) {  // update BTCM
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
-                UpdateLabels_Pair("BTCM", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
+                UpdateLabels_Pair("BTCM", mSummary);
                 return;
             }
             else if (reportType == 33) {  // 33 is order book stuff for btcm
@@ -1332,7 +1332,7 @@ namespace IRTicker {
 
             else if (reportType == 41) {  // update GDAX
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
-                UpdateLabels_Pair("GDAX", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
+                UpdateLabels_Pair("GDAX", mSummary);
                 return;
             }
             else if (reportType == 43) {  // 43 is order book stuff for gdax
@@ -1348,7 +1348,7 @@ namespace IRTicker {
             }
             if (reportType == 51) {  // 51 is BFX update labels
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
-                UpdateLabels_Pair("BFX", mSummary.PrimaryCurrencyCode, mSummary.SecondaryCurrencyCode);
+                UpdateLabels_Pair("BFX", mSummary);
                 return;
             }
             else if (reportType == 53) {  // 53 is order book stuff for bfx
@@ -1590,7 +1590,7 @@ namespace IRTicker {
                 // need to force a label update, otherwise they'll stay grey <no currency> until the next update comes through
                 foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in DCEs["IR"].GetCryptoPairs()) {
                     if (pairObj.Value.SecondaryCurrencyCode == DCEs["IR"].CurrentSecondaryCurrency) {
-                        UpdateLabels_Pair("IR", pairObj.Value.PrimaryCurrencyCode, pairObj.Value.SecondaryCurrencyCode);
+                        UpdateLabels_Pair("IR", pairObj.Value);
                     }
                 }
 
@@ -1605,7 +1605,7 @@ namespace IRTicker {
                 // need to force a label update, otherwise they'll stay grey <no currency> until the next update comes through
                 foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in DCEs["GDAX"].GetCryptoPairs()) {
                     if (pairObj.Value.SecondaryCurrencyCode == DCEs["GDAX"].CurrentSecondaryCurrency) {
-                        UpdateLabels_Pair("GDAX", pairObj.Value.PrimaryCurrencyCode, pairObj.Value.SecondaryCurrencyCode);
+                        UpdateLabels_Pair("GDAX", pairObj.Value);
                     }
                 }
 
@@ -1627,7 +1627,7 @@ namespace IRTicker {
                 // need to force a label update, otherwise they'll stay grey <no currency> until the next update comes through
                 foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in DCEs["BFX"].GetCryptoPairs()) {
                     if (pairObj.Value.SecondaryCurrencyCode == DCEs["BFX"].CurrentSecondaryCurrency) {
-                        UpdateLabels_Pair("BFX", pairObj.Value.PrimaryCurrencyCode, pairObj.Value.SecondaryCurrencyCode);
+                        UpdateLabels_Pair("BFX", pairObj.Value);
                     }
                 }
 
