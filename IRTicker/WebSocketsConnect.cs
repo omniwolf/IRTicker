@@ -228,6 +228,10 @@ namespace IRTicker {
 
         public void WebSocket_Reconnect(string dExchange) {
             Debug.Print("WebSocket_Reconnect for " + dExchange);
+            if (!DCEs[dExchange].HasStaticData) {
+                Debug.Print("Trying to reconnect to " + dExchange + " but there's no static data.  will not.");
+                return;
+            }
             switch (dExchange) {
                 case "IR":
                     Debug.Print("switched to IR");

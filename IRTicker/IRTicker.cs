@@ -768,8 +768,12 @@ namespace IRTicker {
                             }
                         }
                     }
+                    else {
+                        pollingThread.ReportProgress(12, "IR");
+                    }
                 }
 
+                // still need to run this to get volume data
                 if (DCEs["IR"].NetworkAvailable) {
                     foreach (string primaryCode in DCEs["IR"].PrimaryCurrencyList) {
                         // if there's no crypto selected in the drop down or there's no number of coins entered, then just pull the market summary
@@ -783,13 +787,14 @@ namespace IRTicker {
                     }
                 }
                 else DCEs["IR"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
-
+                
                 if (DCEs["IR"].HeartBeat + TimeSpan.FromSeconds(100) < DateTime.Now) {
                     // we haven't received a heartbeat in 80 seconds..
                     Debug.Print(DateTime.Now + " IR - haven't received any messages via sockets in 100 seconds.  reconnecting..");
                     DCEs["IR"].socketsReset = true;
                 }
 
+                // separate this because it's possible to hit this code where the socketsreset == true for some other reason that heartbeat
                 if (DCEs["IR"].socketsReset) {
                     // ok we need to reset the socket.
                     Debug.Print(DateTime.Now + " IR - restarting sockets from backgroundWorker");
@@ -863,6 +868,7 @@ namespace IRTicker {
                     }
                     if (!wSocketConnect.IsSocketAlive("IR")) {  // do i need to add some logic here to make sure we're not currently in the reconnect process if this code happens to get hit when we are reconnecting?
                         Debug.Print("IR ded, reconnecting at next poll");
+                        pollingThread.ReportProgress(12, "IR");
                         DCEs["IR"].socketsReset = true;
                     }
                 }
