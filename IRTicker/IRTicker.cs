@@ -1376,12 +1376,13 @@ namespace IRTicker {
 
             foreach (string dExchange in Exchanges) {
                 if (dExchange == "BFX" || dExchange == "GDAX" || dExchange == "BTCM" || dExchange == "IR") {  // for sockets we don't update labels or change colours.  that happens on demand.
-                    if (DCEs[dExchange].HasStaticData && DCEs[dExchange].ChangedSecondaryCurrency) {
+                    // i don't think we need this code.  we shouldn't set this to false, it's set to false in the updatelabels_pairs(...) code
+                    /*if (DCEs[dExchange].HasStaticData && DCEs[dExchange].ChangedSecondaryCurrency) {
                         // don't think we need to do this next line - we do it in the groupbox_click() sub
                         //PopulateCryptoComboBox(dExchange);  // need to re-populate this as it dynamically only populates the comboxbox with cryptos that the current fiat currency has a pair with
                         DCEs[dExchange].ChangedSecondaryCurrency = false;
-                    }
-                    else UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Gray;  // any text there is now a poll old, so gray it out so the user knows it's stale.
+                    }*/
+                    /*else*/ UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Gray;  // any text there is now a poll old, so gray it out so the user knows it's stale.
 
                     if (!DCEs[dExchange].HasStaticData) APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);
                     continue;
