@@ -31,7 +31,7 @@ namespace IRTicker {
         private Dictionary<string, UIControls> UIControls_Dict;
         private List<string> Exchanges;
         private string cryptoDir = "";
-        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "PLA", "XLM" };  // we don't poll the shit coins as often to help with rate limiting
+        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "PLA", "XLM", "BAT", "REP", "GNT" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
 
@@ -181,6 +181,18 @@ namespace IRTicker {
             UIControls_Dict["IR"].XLM_Price = IR_XLM_Label2;
             UIControls_Dict["IR"].XLM_Spread = IR_XLM_Label3;
             UIControls_Dict["IR"].XLM_PriceTT = IR_XLM_PriceTT;
+            UIControls_Dict["IR"].BAT_Label = IR_BAT_Label1;
+            UIControls_Dict["IR"].BAT_Price = IR_BAT_Label2;
+            UIControls_Dict["IR"].BAT_Spread = IR_BAT_Label3;
+            UIControls_Dict["IR"].BAT_PriceTT = IR_BAT_PriceTT;
+            UIControls_Dict["IR"].REP_Label = IR_REP_Label1;
+            UIControls_Dict["IR"].REP_Price = IR_REP_Label2;
+            UIControls_Dict["IR"].REP_Spread = IR_REP_Label3;
+            UIControls_Dict["IR"].REP_PriceTT = IR_REP_PriceTT;
+            UIControls_Dict["IR"].GNT_Label = IR_GNT_Label1;
+            UIControls_Dict["IR"].GNT_Price = IR_GNT_Label2;
+            UIControls_Dict["IR"].GNT_Spread = IR_GNT_Label3;
+            UIControls_Dict["IR"].GNT_PriceTT = IR_GNT_PriceTT;
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
             UIControls_Dict["IR"].AvgPrice_Crypto = IR_CryptoComboBox;

@@ -259,6 +259,18 @@
             this.BTCM_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.GDAX_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BFX_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.IR_BAT_Label2 = new System.Windows.Forms.Label();
+            this.IR_BAT_Label1 = new System.Windows.Forms.Label();
+            this.IR_BAT_Label3 = new System.Windows.Forms.Label();
+            this.IR_REP_Label2 = new System.Windows.Forms.Label();
+            this.IR_REP_Label1 = new System.Windows.Forms.Label();
+            this.IR_REP_Label3 = new System.Windows.Forms.Label();
+            this.IR_GNT_Label2 = new System.Windows.Forms.Label();
+            this.IR_GNT_Label1 = new System.Windows.Forms.Label();
+            this.IR_GNT_Label3 = new System.Windows.Forms.Label();
+            this.IR_BAT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.IR_REP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.IR_GNT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -480,7 +492,7 @@
             this.Main.Controls.Add(this.GDAX_GroupBox);
             this.Main.Location = new System.Drawing.Point(0, 0);
             this.Main.Name = "Main";
-            this.Main.Size = new System.Drawing.Size(585, 723);
+            this.Main.Size = new System.Drawing.Size(585, 783);
             this.Main.TabIndex = 5;
             // 
             // BTCM_GroupBox
@@ -1529,7 +1541,7 @@
             this.fiat_GroupBox.Controls.Add(this.NZD_Label1);
             this.fiat_GroupBox.Controls.Add(this.AUD_Label1);
             this.fiat_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.fiat_GroupBox.Location = new System.Drawing.Point(19, 537);
+            this.fiat_GroupBox.Location = new System.Drawing.Point(19, 597);
             this.fiat_GroupBox.Name = "fiat_GroupBox";
             this.fiat_GroupBox.Size = new System.Drawing.Size(263, 131);
             this.fiat_GroupBox.TabIndex = 9;
@@ -1623,7 +1635,7 @@
             // SettingsButton
             // 
             this.SettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsButton.Location = new System.Drawing.Point(207, 686);
+            this.SettingsButton.Location = new System.Drawing.Point(207, 746);
             this.SettingsButton.Name = "SettingsButton";
             this.SettingsButton.Size = new System.Drawing.Size(75, 23);
             this.SettingsButton.TabIndex = 2;
@@ -1635,6 +1647,15 @@
             // 
             this.IR_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.IR_Eagel_Transparent___small_faded2;
             this.IR_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.IR_GroupBox.Controls.Add(this.IR_GNT_Label2);
+            this.IR_GroupBox.Controls.Add(this.IR_GNT_Label1);
+            this.IR_GroupBox.Controls.Add(this.IR_GNT_Label3);
+            this.IR_GroupBox.Controls.Add(this.IR_REP_Label2);
+            this.IR_GroupBox.Controls.Add(this.IR_REP_Label1);
+            this.IR_GroupBox.Controls.Add(this.IR_REP_Label3);
+            this.IR_GroupBox.Controls.Add(this.IR_BAT_Label2);
+            this.IR_GroupBox.Controls.Add(this.IR_BAT_Label1);
+            this.IR_GroupBox.Controls.Add(this.IR_BAT_Label3);
             this.IR_GroupBox.Controls.Add(this.IR_CurrencyBox);
             this.IR_GroupBox.Controls.Add(this.IR_XLM_Label2);
             this.IR_GroupBox.Controls.Add(this.IR_XLM_Label3);
@@ -1676,7 +1697,7 @@
             this.IR_GroupBox.ForeColor = System.Drawing.Color.Gray;
             this.IR_GroupBox.Location = new System.Drawing.Point(19, 13);
             this.IR_GroupBox.Name = "IR_GroupBox";
-            this.IR_GroupBox.Size = new System.Drawing.Size(263, 283);
+            this.IR_GroupBox.Size = new System.Drawing.Size(263, 343);
             this.IR_GroupBox.TabIndex = 0;
             this.IR_GroupBox.TabStop = false;
             this.IR_GroupBox.Text = "Independent Reserve";
@@ -1690,7 +1711,7 @@
             this.IR_CurrencyBox.Items.AddRange(new object[] {
             "crypto",
             "fiat"});
-            this.IR_CurrencyBox.Location = new System.Drawing.Point(131, 254);
+            this.IR_CurrencyBox.Location = new System.Drawing.Point(131, 314);
             this.IR_CurrencyBox.Name = "IR_CurrencyBox";
             this.IR_CurrencyBox.Size = new System.Drawing.Size(58, 21);
             this.IR_CurrencyBox.TabIndex = 36;
@@ -1739,7 +1760,7 @@
             // 
             this.IR_Reset_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IR_Reset_Button.ForeColor = System.Drawing.Color.Black;
-            this.IR_Reset_Button.Location = new System.Drawing.Point(207, 226);
+            this.IR_Reset_Button.Location = new System.Drawing.Point(207, 286);
             this.IR_Reset_Button.Name = "IR_Reset_Button";
             this.IR_Reset_Button.Size = new System.Drawing.Size(44, 17);
             this.IR_Reset_Button.TabIndex = 32;
@@ -1960,7 +1981,7 @@
             this.IR_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
             this.IR_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_AvgPrice_Label.Location = new System.Drawing.Point(6, 227);
+            this.IR_AvgPrice_Label.Location = new System.Drawing.Point(6, 287);
             this.IR_AvgPrice_Label.Name = "IR_AvgPrice_Label";
             this.IR_AvgPrice_Label.Size = new System.Drawing.Size(194, 16);
             this.IR_AvgPrice_Label.TabIndex = 15;
@@ -1969,7 +1990,7 @@
             // 
             this.IR_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.IR_CryptoComboBox.Location = new System.Drawing.Point(193, 254);
+            this.IR_CryptoComboBox.Location = new System.Drawing.Point(193, 314);
             this.IR_CryptoComboBox.Name = "IR_CryptoComboBox";
             this.IR_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
             this.IR_CryptoComboBox.TabIndex = 14;
@@ -1979,7 +2000,7 @@
             // IR_NumCoinsTextBox
             // 
             this.IR_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_NumCoinsTextBox.Location = new System.Drawing.Point(58, 254);
+            this.IR_NumCoinsTextBox.Location = new System.Drawing.Point(58, 314);
             this.IR_NumCoinsTextBox.Mask = "00000000";
             this.IR_NumCoinsTextBox.Name = "IR_NumCoinsTextBox";
             this.IR_NumCoinsTextBox.PromptChar = ' ';
@@ -1998,7 +2019,7 @@
             this.IR_BuySellComboBox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.IR_BuySellComboBox.Location = new System.Drawing.Point(9, 254);
+            this.IR_BuySellComboBox.Location = new System.Drawing.Point(9, 314);
             this.IR_BuySellComboBox.Name = "IR_BuySellComboBox";
             this.IR_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
             this.IR_BuySellComboBox.TabIndex = 12;
@@ -2195,7 +2216,7 @@
             this.GDAX_GroupBox.Controls.Add(this.GDAX_XBT_Label1);
             this.GDAX_GroupBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.GDAX_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.GDAX_GroupBox.Location = new System.Drawing.Point(19, 302);
+            this.GDAX_GroupBox.Location = new System.Drawing.Point(19, 362);
             this.GDAX_GroupBox.Name = "GDAX_GroupBox";
             this.GDAX_GroupBox.Size = new System.Drawing.Size(263, 222);
             this.GDAX_GroupBox.TabIndex = 8;
@@ -2897,11 +2918,143 @@
             this.BFX_XLM_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.BFX_XLM_PriceTT.ToolTipTitle = "Spread details";
             // 
+            // IR_BAT_Label2
+            // 
+            this.IR_BAT_Label2.AutoSize = true;
+            this.IR_BAT_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.IR_BAT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_BAT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_BAT_Label2.Location = new System.Drawing.Point(45, 229);
+            this.IR_BAT_Label2.Name = "IR_BAT_Label2";
+            this.IR_BAT_Label2.Size = new System.Drawing.Size(0, 13);
+            this.IR_BAT_Label2.TabIndex = 39;
+            this.IR_BAT_Label2.Tag = "IR";
+            this.IR_BAT_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IR_BAT_Label1
+            // 
+            this.IR_BAT_Label1.AutoSize = true;
+            this.IR_BAT_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.IR_BAT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_BAT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_BAT_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.IR_BAT_Label1.Location = new System.Drawing.Point(6, 229);
+            this.IR_BAT_Label1.Name = "IR_BAT_Label1";
+            this.IR_BAT_Label1.Size = new System.Drawing.Size(35, 13);
+            this.IR_BAT_Label1.TabIndex = 38;
+            this.IR_BAT_Label1.Text = "BAT:";
+            this.IR_BAT_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IR_BAT_Label3
+            // 
+            this.IR_BAT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_BAT_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.IR_BAT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_BAT_Label3.Location = new System.Drawing.Point(119, 229);
+            this.IR_BAT_Label3.Name = "IR_BAT_Label3";
+            this.IR_BAT_Label3.Size = new System.Drawing.Size(134, 13);
+            this.IR_BAT_Label3.TabIndex = 37;
+            this.IR_BAT_Label3.Tag = "";
+            this.IR_BAT_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // IR_REP_Label2
+            // 
+            this.IR_REP_Label2.AutoSize = true;
+            this.IR_REP_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.IR_REP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_REP_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_REP_Label2.Location = new System.Drawing.Point(45, 249);
+            this.IR_REP_Label2.Name = "IR_REP_Label2";
+            this.IR_REP_Label2.Size = new System.Drawing.Size(0, 13);
+            this.IR_REP_Label2.TabIndex = 42;
+            this.IR_REP_Label2.Tag = "IR";
+            this.IR_REP_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IR_REP_Label1
+            // 
+            this.IR_REP_Label1.AutoSize = true;
+            this.IR_REP_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.IR_REP_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_REP_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_REP_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.IR_REP_Label1.Location = new System.Drawing.Point(6, 249);
+            this.IR_REP_Label1.Name = "IR_REP_Label1";
+            this.IR_REP_Label1.Size = new System.Drawing.Size(36, 13);
+            this.IR_REP_Label1.TabIndex = 41;
+            this.IR_REP_Label1.Text = "REP:";
+            this.IR_REP_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IR_REP_Label3
+            // 
+            this.IR_REP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_REP_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.IR_REP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_REP_Label3.Location = new System.Drawing.Point(119, 249);
+            this.IR_REP_Label3.Name = "IR_REP_Label3";
+            this.IR_REP_Label3.Size = new System.Drawing.Size(134, 13);
+            this.IR_REP_Label3.TabIndex = 40;
+            this.IR_REP_Label3.Tag = "";
+            this.IR_REP_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // IR_GNT_Label2
+            // 
+            this.IR_GNT_Label2.AutoSize = true;
+            this.IR_GNT_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.IR_GNT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_GNT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_GNT_Label2.Location = new System.Drawing.Point(45, 269);
+            this.IR_GNT_Label2.Name = "IR_GNT_Label2";
+            this.IR_GNT_Label2.Size = new System.Drawing.Size(0, 13);
+            this.IR_GNT_Label2.TabIndex = 45;
+            this.IR_GNT_Label2.Tag = "IR";
+            this.IR_GNT_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IR_GNT_Label1
+            // 
+            this.IR_GNT_Label1.AutoSize = true;
+            this.IR_GNT_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.IR_GNT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_GNT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_GNT_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.IR_GNT_Label1.Location = new System.Drawing.Point(6, 269);
+            this.IR_GNT_Label1.Name = "IR_GNT_Label1";
+            this.IR_GNT_Label1.Size = new System.Drawing.Size(37, 13);
+            this.IR_GNT_Label1.TabIndex = 44;
+            this.IR_GNT_Label1.Text = "GNT:";
+            this.IR_GNT_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IR_GNT_Label3
+            // 
+            this.IR_GNT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_GNT_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.IR_GNT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_GNT_Label3.Location = new System.Drawing.Point(119, 269);
+            this.IR_GNT_Label3.Name = "IR_GNT_Label3";
+            this.IR_GNT_Label3.Size = new System.Drawing.Size(134, 13);
+            this.IR_GNT_Label3.TabIndex = 43;
+            this.IR_GNT_Label3.Tag = "";
+            this.IR_GNT_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // IR_BAT_PriceTT
+            // 
+            this.IR_BAT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.IR_BAT_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // IR_REP_PriceTT
+            // 
+            this.IR_REP_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.IR_REP_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // IR_GNT_PriceTT
+            // 
+            this.IR_GNT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.IR_GNT_PriceTT.ToolTipTitle = "Spread details";
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 721);
+            this.ClientSize = new System.Drawing.Size(584, 781);
             this.Controls.Add(this.Main);
             this.Controls.Add(this.Settings);
             this.Controls.Add(this.LoadingPanel);
@@ -2910,8 +3063,8 @@
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(600, 760);
-            this.MinimumSize = new System.Drawing.Size(600, 760);
+            this.MaximumSize = new System.Drawing.Size(600, 820);
+            this.MinimumSize = new System.Drawing.Size(600, 820);
             this.Name = "IRTicker";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "IR Ticker";
@@ -3174,6 +3327,18 @@
         private System.Windows.Forms.ToolTip GDAX_XLM_PriceTT;
         private System.Windows.Forms.ToolTip BFX_XLM_PriceTT;
         private System.Windows.Forms.ComboBox IR_CurrencyBox;
+        private System.Windows.Forms.Label IR_GNT_Label2;
+        private System.Windows.Forms.Label IR_GNT_Label1;
+        private System.Windows.Forms.Label IR_GNT_Label3;
+        private System.Windows.Forms.Label IR_REP_Label2;
+        private System.Windows.Forms.Label IR_REP_Label1;
+        private System.Windows.Forms.Label IR_REP_Label3;
+        private System.Windows.Forms.Label IR_BAT_Label2;
+        private System.Windows.Forms.Label IR_BAT_Label1;
+        private System.Windows.Forms.Label IR_BAT_Label3;
+        private System.Windows.Forms.ToolTip IR_BAT_PriceTT;
+        private System.Windows.Forms.ToolTip IR_REP_PriceTT;
+        private System.Windows.Forms.ToolTip IR_GNT_PriceTT;
     }
 }
 

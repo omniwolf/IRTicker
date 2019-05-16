@@ -25,6 +25,9 @@ namespace IRTicker {
         public Label ZRX_Label { get; set; }
         public Label PLA_Label { get; set; }
         public Label XLM_Label { get; set; }
+        public Label BAT_Label { get; set; }
+        public Label REP_Label { get; set; }
+        public Label GNT_Label { get; set; }
 
         public Label XBT_Price { get; set; }
         public Label ETH_Price { get; set; }
@@ -36,6 +39,9 @@ namespace IRTicker {
         public Label ZRX_Price { get; set; }
         public Label PLA_Price { get; set; }
         public Label XLM_Price { get; set; }
+        public Label BAT_Price { get; set; }
+        public Label REP_Price { get; set; }
+        public Label GNT_Price { get; set; }
 
         public ToolTip XBT_PriceTT { get; set; }
         public ToolTip ETH_PriceTT { get; set; }
@@ -47,6 +53,9 @@ namespace IRTicker {
         public ToolTip ZRX_PriceTT { get; set; }
         public ToolTip PLA_PriceTT { get; set; }
         public ToolTip XLM_PriceTT { get; set; }
+        public ToolTip BAT_PriceTT { get; set; }
+        public ToolTip REP_PriceTT { get; set; }
+        public ToolTip GNT_PriceTT { get; set; }
 
         public ToolTip AvgPriceTT { get; set; }
 
@@ -60,6 +69,9 @@ namespace IRTicker {
         public Label ZRX_Spread { get; set; }
         public Label PLA_Spread { get; set; }
         public Label XLM_Spread { get; set; }
+        public Label BAT_Spread { get; set; }
+        public Label REP_Spread { get; set; }
+        public Label GNT_Spread { get; set; }
 
         public ComboBox AvgPrice_BuySell { get; set; }
         public MaskedTextBox AvgPrice_NumCoins { get; set; }
@@ -83,6 +95,9 @@ namespace IRTicker {
             if (ZRX_Label != null) Label_Dict.Add("ZRX_Label", ZRX_Label);
             if (PLA_Label != null) Label_Dict.Add("PLA_Label", PLA_Label);
             if (XLM_Label != null) Label_Dict.Add("XLM_Label", XLM_Label);
+            if (BAT_Label != null) Label_Dict.Add("BAT_Label", BAT_Label);
+            if (REP_Label != null) Label_Dict.Add("REP_Label", REP_Label);
+            if (GNT_Label != null) Label_Dict.Add("GNT_Label", GNT_Label);
 
             Label_Dict.Add("XBT_Price", XBT_Price);
             Label_Dict.Add("ETH_Price", ETH_Price);
@@ -94,6 +109,9 @@ namespace IRTicker {
             if (ZRX_Price != null) Label_Dict.Add("ZRX_Price", ZRX_Price);
             if (PLA_Price != null) Label_Dict.Add("PLA_Price", PLA_Price);
             if (XLM_Price != null) Label_Dict.Add("XLM_Price", XLM_Price);
+            if (BAT_Price != null) Label_Dict.Add("BAT_Price", BAT_Price);
+            if (REP_Price != null) Label_Dict.Add("REP_Price", REP_Price);
+            if (GNT_Price != null) Label_Dict.Add("GNT_Price", GNT_Price);
 
             Label_Dict.Add("XBT_Spread", XBT_Spread);
             Label_Dict.Add("ETH_Spread", ETH_Spread);
@@ -105,6 +123,9 @@ namespace IRTicker {
             if (ZRX_Spread != null) Label_Dict.Add("ZRX_Spread", ZRX_Spread);
             if (PLA_Spread != null) Label_Dict.Add("PLA_Spread", PLA_Spread);
             if (XLM_Spread != null) Label_Dict.Add("XLM_Spread", XLM_Spread);
+            if (BAT_Spread != null) Label_Dict.Add("BAT_Spread", BAT_Spread);
+            if (REP_Spread != null) Label_Dict.Add("REP_Spread", REP_Spread);
+            if (GNT_Spread != null) Label_Dict.Add("GNT_Spread", GNT_Spread);
 
             // ToolTips
             ToolTip_Dict = new Dictionary<string, ToolTip>();
@@ -118,6 +139,9 @@ namespace IRTicker {
             if (ZRX_PriceTT != null) ToolTip_Dict.Add("ZRX_PriceTT", ZRX_PriceTT);
             if (PLA_PriceTT != null) ToolTip_Dict.Add("PLA_PriceTT", PLA_PriceTT);
             if (XLM_PriceTT != null) ToolTip_Dict.Add("XLM_PriceTT", XLM_PriceTT);
+            if (BAT_PriceTT != null) ToolTip_Dict.Add("BAT_PriceTT", BAT_PriceTT);
+            if (REP_PriceTT != null) ToolTip_Dict.Add("REP_PriceTT", REP_PriceTT);
+            if (GNT_PriceTT != null) ToolTip_Dict.Add("GNT_PriceTT", GNT_PriceTT);
 
             if (AvgPriceTT != null) ToolTip_Dict.Add("AvgPriceTT", AvgPriceTT);
         }
