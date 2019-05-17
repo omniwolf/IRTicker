@@ -1301,10 +1301,10 @@ namespace IRTicker {
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
                 UpdateLabels_Pair("IR", mSummary);
                 if ((mSummary.pair == "XBT-AUD" || mSummary.pair == "ETH-AUD") && (DCEs["IR"].IR_OBs.ContainsKey(mSummary.pair.ToUpper()))) {
-                    OBProgressNext(mSummary.spread < 0);
-                    KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] buySide = DCEs["IR"].IR_OBs[mSummary.pair].Item1.ToArray();
-                    KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] sellSide = DCEs["IR"].IR_OBs[mSummary.pair].Item2.ToArray();
+                    KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] buySide = DCEs["IR"].IR_OBs[mSummary.pair.ToUpper()].Item1.ToArray();
+                    KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] sellSide = DCEs["IR"].IR_OBs[mSummary.pair.ToUpper()].Item2.ToArray();
                     obv.UpdateOBs(buySide, sellSide, mSummary.pair.ToUpper());  // update the debug window
+                    OBProgressNext(mSummary.spread < 0);
                 }
                 return;
             }
