@@ -115,18 +115,14 @@ namespace IRTicker {
 
             }
 
-            if (CodeName == "IR") {
-                // do nothing
-                ;
-            }
-
             if (!priceHistory.ContainsKey(pair)) {  // if this crypto/fiat pair hasn't come up before, create a new empty dictionary kvp
                 priceHistory.TryAdd(pair, new List<Tuple<DateTime, decimal>>());
             }
             lock (priceHistory[pair]) {  // we're locking on the List, not the ConcurrentDictionary
                 priceHistory[pair].Add(new Tuple<DateTime, decimal>(DateTime.Now, ((mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice) / 2)));  // add the time and price to the kvp's value list
-                if (CodeName == "IR" && pair == "XBT-AUD" && priceHistory[pair].Last().Item2 == 0) {
-                    ;
+
+                if ((DateTime.Now - TimeSpan.FromMinutes(6)) > priceHistory[pair].FirstOrDefault().Item1) {
+                    priceHistory[pair].RemoveAt(0);  // if we have more than 6 minutes worth of data, remove the first entry
                 }
             }
             
