@@ -24,8 +24,8 @@ namespace IRTicker {
         public static Color PriceColour(List<Tuple<DateTime, decimal>> priceList) {
 
             // if we don't have enough data, just go black.
-            var priceListLast = priceList.Last();
-            var PriceListFirst = priceList.First();
+            var priceListLast = priceList.LastOrDefault();
+            var PriceListFirst = priceList.FirstOrDefault();
             var PriceListLastItem1 = priceListLast.Item1;
             var PriceListFirstItem1 = PriceListFirst.Item1;
 
