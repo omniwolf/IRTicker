@@ -89,14 +89,14 @@ namespace IRTicker {
             // Actually I'm not sure about the above comment, i think some of them do?  But the main issue is most of them have
             // currencies that we don't want to deal with, so we set the currencies manually here.  IR we want all currencies, so
             // we use the API.  This is probably not really smart, as the UI is static, so when new currencies turn up IR breaks.  meh
-            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"XLM\"";
+            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"XLM\",\"BAT\",\"GNT\"";
             DCEs["BTCM"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["BTCM"].HasStaticData = false;  // want to set this to false so we run the subscribe code once.
 
-            DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\",\"EOS\",\"XLM\"";
+            DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\",\"EOS\",\"XLM\",\"BAT\",\"REP\",\"GNT\"";
             DCEs["BFX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
-            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\",\"XRP\",\"XLM\"";
+            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\",\"XRP\",\"XLM\",\"REP\"";
             DCEs["GDAX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
             DCEs["CSPT"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"EOS\",\"LTC\",\"XRP\"";
@@ -231,6 +231,14 @@ namespace IRTicker {
             UIControls_Dict["BTCM"].XLM_Price = BTCM_XLM_Label2;
             UIControls_Dict["BTCM"].XLM_Spread = BTCM_XLM_Label3;
             UIControls_Dict["BTCM"].XLM_PriceTT = BTCM_XLM_PriceTT;
+            UIControls_Dict["BTCM"].BAT_Label = BTCM_BAT_Label1;
+            UIControls_Dict["BTCM"].BAT_Price = BTCM_BAT_Label2;
+            UIControls_Dict["BTCM"].BAT_Spread = BTCM_BAT_Label3;
+            UIControls_Dict["BTCM"].BAT_PriceTT = BTCM_BAT_PriceTT;
+            UIControls_Dict["BTCM"].GNT_Label = BTCM_GNT_Label1;
+            UIControls_Dict["BTCM"].GNT_Price = BTCM_GNT_Label2;
+            UIControls_Dict["BTCM"].GNT_Spread = BTCM_GNT_Label3;
+            UIControls_Dict["BTCM"].GNT_PriceTT = BTCM_GNT_PriceTT;
             UIControls_Dict["BTCM"].AvgPrice_BuySell = BTCM_BuySellComboBox;
             UIControls_Dict["BTCM"].AvgPrice_NumCoins = BTCM_NumCoinsTextBox;
             UIControls_Dict["BTCM"].AvgPrice_Crypto = BTCM_CryptoComboBox;
@@ -268,6 +276,10 @@ namespace IRTicker {
             UIControls_Dict["GDAX"].XLM_Price = GDAX_XLM_Label2;
             UIControls_Dict["GDAX"].XLM_Spread = GDAX_XLM_Label3;
             UIControls_Dict["GDAX"].XLM_PriceTT = GDAX_XLM_PriceTT;
+            UIControls_Dict["GDAX"].REP_Label = GDAX_REP_Label1;
+            UIControls_Dict["GDAX"].REP_Price = GDAX_REP_Label2;
+            UIControls_Dict["GDAX"].REP_Spread = GDAX_REP_Label3;
+            UIControls_Dict["GDAX"].REP_PriceTT = GDAX_REP_PriceTT;
             UIControls_Dict["GDAX"].AvgPrice_BuySell = GDAX_BuySellComboBox;
             UIControls_Dict["GDAX"].AvgPrice_NumCoins = GDAX_NumCoinsTextBox;
             UIControls_Dict["GDAX"].AvgPrice_Crypto = GDAX_CryptoComboBox;
@@ -313,6 +325,18 @@ namespace IRTicker {
             UIControls_Dict["BFX"].XLM_Price = BFX_XLM_Label2;
             UIControls_Dict["BFX"].XLM_Spread = BFX_XLM_Label3;
             UIControls_Dict["BFX"].XLM_PriceTT = BFX_XLM_PriceTT;
+            UIControls_Dict["BFX"].BAT_Label = BFX_BAT_Label1;
+            UIControls_Dict["BFX"].BAT_Price = BFX_BAT_Label2;
+            UIControls_Dict["BFX"].BAT_Spread = BFX_BAT_Label3;
+            UIControls_Dict["BFX"].BAT_PriceTT = BFX_BAT_PriceTT;
+            UIControls_Dict["BFX"].REP_Label = BFX_REP_Label1;
+            UIControls_Dict["BFX"].REP_Price = BFX_REP_Label2;
+            UIControls_Dict["BFX"].REP_Spread = BFX_REP_Label3;
+            UIControls_Dict["BFX"].REP_PriceTT = BFX_REP_PriceTT;
+            UIControls_Dict["BFX"].GNT_Label = BFX_GNT_Label1;
+            UIControls_Dict["BFX"].GNT_Price = BFX_GNT_Label2;
+            UIControls_Dict["BFX"].GNT_Spread = BFX_GNT_Label3;
+            UIControls_Dict["BFX"].GNT_PriceTT = BFX_GNT_PriceTT;
             UIControls_Dict["BFX"].AvgPrice_BuySell = BFX_BuySellComboBox;
             UIControls_Dict["BFX"].AvgPrice_NumCoins = BFX_NumCoinsTextBox;
             UIControls_Dict["BFX"].AvgPrice_Crypto = BFX_CryptoComboBox;
@@ -1332,6 +1356,7 @@ namespace IRTicker {
 
             else if (reportType == 31) {  // update BTCM
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
+
                 UpdateLabels_Pair("BTCM", mSummary);
                 return;
             }

@@ -467,15 +467,15 @@ namespace IRTicker {
 
                             if (OB_IR[OrderPrice2].Count > 1) {
                                 if (!OB_IR[OrderPrice2].TryRemove(order.OrderGuid, out OrderBook_IR ignore)) Debug.Print("!! 1 failed to remove (" + order.Pair + ") " + order.OrderGuid);
-                                if (order.Pair.ToUpper() == "XBT-AUD") {
+                                /*if (order.Pair.ToUpper() == "XBT-AUD") {
                                     if (ignore != null) Debug.Print(DateTime.Now.ToString() + " |                                                                 ORDER CANCELED: " + order.OrderGuid + " | others at this price remain, was this: " + ignore.OrderGuid);
-                                }
+                                }*/
                             }
                             else {  // only one order at this price, remove the whole price level
                                 if (!OB_IR.TryRemove(OrderPrice2, out ConcurrentDictionary<string, OrderBook_IR> ignore)) Debug.Print("!! 2 failed to remove (" + order.Pair + ") " + order.OrderGuid);
-                                if (order.Pair.ToUpper() == "XBT-AUD") {
+                                /*if (order.Pair.ToUpper() == "XBT-AUD") {
                                     if (ignore != null) Debug.Print(DateTime.Now.ToString() + " |                                                                 ORDER CANCELED: " + order.OrderGuid + " | only one at this price, was this: " + ignore.First().Key);
-                                }
+                                }*/
                             }
                         }
                         else {  //this price level doesn't exist in the price OB??
