@@ -27,7 +27,7 @@ namespace IRTicker {
             pollingThread = _pollingThread;
 
             // IR
-            //IR_Connect();
+            IR_Connect();
             
             // BTCM
 
