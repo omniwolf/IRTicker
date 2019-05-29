@@ -16,7 +16,7 @@ namespace IRTicker {
     class WebSocketsConnect {
 
         private Dictionary<string, DCE> DCEs;
-        private WebSocket wSocket_BFX, wSocket_GDAX, wSocket_IR;
+        private WebSocket wSocket_BFX, wSocket_GDAX, wSocket_IR, wSocket_BTCM;
         private Socket socket_BTCM;
         public Dictionary<string, Subscribed_BFX> channel_Dict_BFX = new Dictionary<string, Subscribed_BFX>();  // string is a string version of the channel ID
         private BackgroundWorker pollingThread;
@@ -27,11 +27,11 @@ namespace IRTicker {
             pollingThread = _pollingThread;
 
             // IR
-            IR_Connect();
+            //IR_Connect();
             
             // BTCM
 
-            BTCM_Connect();
+            BTCM_Connect_v2();
 
 
             // BFX
@@ -96,40 +96,79 @@ namespace IRTicker {
             wSocket_GDAX.Connect();
         }
 
-        public void WebSocket_Subscribe(string dExchange, string crypto, string fiat) {
+        public void WebSocket_Subscribe(string dExchange, List<Tuple<string, string>> pairs) {
             string channel = "";
             switch (dExchange) {
                 case "IR":
                     //Debug.Print("subscrbe IR: " + "{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\", \"" + "\"orderbook-" + crypto + "-" + fiat + "\"]} ");
                     //wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\", \"orderbook-" + crypto + "-" + fiat + "\"]} ");
                     if (wSocket_IR.IsAlive) {
-                        wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"orderbook-" + crypto + "-" + fiat + "\"]} ");
-                        DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = 0;  // initialise the nonce dictionary
-                        DCEs[dExchange].nonceErrorTracker[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = DCEs[dExchange].OBResetFlag[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = false;  // false means no error, no need to dump OB
+                        string pairList = "{\"Event\":\"Subscribe\",\"Data\":[";
+                        foreach (Tuple<string, string> pair in pairs) {
+                            string crypto = pair.Item1;
+                            string fiat = pair.Item2;
+                            pairList += "\"orderbook-" + crypto + "-" + fiat + "\", ";
+                            DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = 0;  // initialise the nonce dictionary
+                            DCEs[dExchange].nonceErrorTracker[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = DCEs[dExchange].OBResetFlag[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = false;  // false means no error, no need to dump OB
+                        }
+                        pairList += "]} ";
+                        wSocket_IR.Send(pairList);
+                        //wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"orderbook-" + crypto + "-" + fiat + "\"]} ");
                     }
                     else DCEs["IR"].socketsReset = true;
                     break;
                 case "BTCM":
-                    //Debug.Print("trying to subscribe to BTCM " + crypto);
+                    if (true) {
+                        
+                        string pairList = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\", \"heartbeat\"], \"marketIds\":[";
+                        foreach (Tuple<string, string> pair in pairs) {
+                            string crypto = pair.Item1;
+                            string fiat = pair.Item2;
+                            if (crypto == "XBT") crypto = "BTC";
+                            if (crypto == "BCH") crypto = "BCHABC";
 
-                    if (crypto == "XBT") crypto = "BTC";
-                    if (crypto == "BCH") crypto = "BCHABC";
-                    socket_BTCM.Emit("join", "Ticker-BTCMarkets-" + crypto + "-" + fiat);
+                            pairList += "\"" + crypto + "-" + fiat + "\", ";
+                        }
+                        pairList = pairList.Substring(0, pairList.Length - 2);
+                        pairList += "]}";
+
+                        //pairList = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\"], \"marketIds\":[\"BTC-AUD\"]}";
+                        wSocket_BTCM.Send(pairList);
+                    }
+                    else {
+                        //Debug.Print("trying to subscribe to BTCM " + crypto);
+
+                       /* if (crypto == "XBT") crypto = "BTC";
+                        if (crypto == "BCH") crypto = "BCHABC";
+                        socket_BTCM.Emit("join", "Ticker-BTCMarkets-" + crypto + "-" + fiat);*/
+                    }
 
                     break;
                 case "BFX":
                     if (wSocket_BFX.IsAlive) {
-                        if (crypto == "XBT") crypto = "BTC";
-                        if (crypto == "BCH") crypto = "BAB";
-                        channel = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"" + crypto + fiat + "\"}";
-                        wSocket_BFX.Send(channel);
+                        foreach (Tuple<string, string> pair in pairs) {
+                            string crypto = pair.Item1;
+                            string fiat = pair.Item2;
+
+                            if (crypto == "XBT") crypto = "BTC";
+                            if (crypto == "BCH") crypto = "BAB";
+                            channel = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"" + crypto + fiat + "\"}";
+                            wSocket_BFX.Send(channel);
+                        }
                     }
 
                     break;
                 case "GDAX":
                     if (wSocket_GDAX.IsAlive) {
-                        if (crypto == "XBT") crypto = "BTC";
-                         channel = "{\"type\": \"subscribe\", \"channels\": [{\"name\": \"ticker\", \"product_ids\": [\""+ crypto + "-" + fiat + "\"] } ] }";
+                        channel = "{\"type\": \"subscribe\", \"channels\": [{\"name\": \"ticker\", \"product_ids\":[";
+                        foreach (Tuple<string, string> pair in pairs) {
+                            string crypto = pair.Item1;
+                            string fiat = pair.Item2;
+                            if (crypto == "XBT") crypto = "BTC";
+                            channel += "\"" + crypto + "-" + fiat + "\",";
+                        }
+                        channel = channel.Substring(0, channel.Length - 1);
+                        channel += "] } ] }";
                         wSocket_GDAX.Send(channel);
                     }
                     break;
@@ -226,6 +265,40 @@ namespace IRTicker {
             });
         }
 
+        public void BTCM_Connect_v2() {
+
+            wSocket_BTCM = new WebSocket("wss://socket.btcmarkets.net/v2");
+            wSocket_BTCM.OnMessage += (sender, e) => {
+                //Debug.Print("!!! bTCMv2 got a message: " + e.Data);
+                if (e.IsText) {
+                    //Debug.Print(DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("HH:mm:ss") + " - BTCMv2 sockets: " + e.Data);
+                    MessageRX_BTCMv2(e.Data);
+                }
+                else Debug.Print("BTCMv2 ws stream is not text?? - " + e.RawData.ToString());
+            };
+
+            wSocket_BTCM.OnOpen += (sender, e) => {
+                Debug.Print("ws onopen - BTCMv2");
+            };
+
+            wSocket_BTCM.OnError += (sender, e) => {
+                Debug.Print("ws onerror - BTCMv2");
+                wSocket_BTCM.Close();
+                DCEs["BTCM"].NetworkAvailable = false;
+                DCEs["BTCM"].CurrentDCEStatus = "Socket error";
+                
+                pollingThread.ReportProgress(12, "BTCM");  // 12 is error
+                DCEs["BTCM"].socketsReset = true;
+            };
+
+            wSocket_BTCM.OnClose += (sender, e) => {
+                Debug.Print(DateTime.Now + " BTCMv2 stream closed... should be preceeded by some ded thingo " + DateTime.Now.ToString());
+            };
+
+            wSocket_BTCM.Connect();
+        }
+
+
         public void WebSocket_Reconnect(string dExchange) {
             Debug.Print("WebSocket_Reconnect for " + dExchange);
             if (!DCEs[dExchange].HasStaticData) {
@@ -250,8 +323,8 @@ namespace IRTicker {
                     Debug.Print(dExchange + " - cleared the order book dictionary, IR_OBs size: " + DCEs["IR"].IR_OBs.Count);
                     break;
                 case "BTCM":
-                    socket_BTCM.Close();
-                    BTCM_Connect();  // with sockets.io we need to start from scratch
+                    wSocket_BTCM.Close();
+                    BTCM_Connect_v2();  // with sockets.io we need to start from scratch
                     break;
                 case "BFX":
                     wSocket_BFX.Close();
@@ -265,13 +338,15 @@ namespace IRTicker {
 
             //re-subscribe?
             Debug.Print(dExchange + " - re-subscribing to all pairs...");
+            List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
             foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
                 foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
                     if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                        WebSocket_Subscribe(dExchange, primaryCode, secondaryCode);
+                        pairList.Add(new Tuple<string, string>(primaryCode, secondaryCode));
                     }
                 }
             }
+            WebSocket_Subscribe(dExchange, pairList);
 
             if (dExchange == "IR") {  // only for IR do we need to grab OBs via REST _after_ we have started the socket machine.  This is to reduce missed events.
                 // re-populate the OBs using REST
@@ -380,7 +455,9 @@ namespace IRTicker {
 
                     // now subscribe back to the channel
                     Tuple<string, string> pairTup = Utilities.SplitPair(tickerStream.Data.Pair);
-                    WebSocket_Subscribe("IR", pairTup.Item1, pairTup.Item2);
+                    List<Tuple<string, string>> tempList = new List<Tuple<string, string>>();
+                    tempList.Add(new Tuple<string, string>(pairTup.Item1, pairTup.Item2));
+                    WebSocket_Subscribe("IR", tempList);
 
                     // re-populate the OB using REST
                     DCEs["IR"].GetIROrderBook(pairTup.Item1, pairTup.Item2);
@@ -509,8 +586,9 @@ namespace IRTicker {
             mSummary.CurrentLowestOfferPrice = tickerStream.bestAsk / 100000000;  // 100 mil
             mSummary.LastPrice = tickerStream.lastPrice / 100000000;  // 100 mil
 
-            DateTimeOffset DTO = DateTimeOffset.FromUnixTimeMilliseconds(tickerStream.timestamp);
-            mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
+            // had to comment this out because i changed the Ticker_BTCM class timestame property type
+            //DateTimeOffset DTO = DateTimeOffset.FromUnixTimeMilliseconds(tickerStream.timestamp);
+            //mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
 
             mSummary.SecondaryCurrencyCode = tickerStream.currency;
             mSummary.PrimaryCurrencyCode = tickerStream.instrument;
@@ -520,6 +598,56 @@ namespace IRTicker {
 
             // BTCM only has one secondary currency, so it will always be hit.  keep this here in case they get more i guess.
             if (DCEs["BTCM"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(31, mSummary);  // only update the UI for pairs we care about
+        }
+
+    /// <summary>
+        /// sample tick return payload
+        /// { 
+        ///     marketId: 'BTC-AUD',
+        ///     timestamp: '2019-04-08T18:56:17.405Z',
+        ///     bestBid: '7309.12',
+        ///     bestAsk: '7326.88',
+        ///     lastPrice: '7316.81',
+        ///     volume24h: '299.12936654',
+        ///     messageType: 'tick' 
+        /// }
+    /// </summary>
+    /// <param name="message"></param>
+    private void MessageRX_BTCMv2(string message) {
+            //Debug.Print("BTCM STREAM: " + message);
+
+            if (message.Contains("\"messageType\":\"tick\"")) {    
+                Ticker_BTCM tickerStream = new Ticker_BTCM();
+                tickerStream = JsonConvert.DeserializeObject<Ticker_BTCM>(message);
+
+                DCE.MarketSummary mSummary = new DCE.MarketSummary();
+
+                if (tickerStream.marketId.ToUpper().StartsWith("BTC")) tickerStream.marketId = tickerStream.marketId.Replace(tickerStream.marketId.Substring(0, 3), "XBT");
+                if (tickerStream.marketId.ToUpper().StartsWith("BCHABC")) tickerStream.marketId= tickerStream.marketId.Replace(tickerStream.marketId.Substring(0, 6), "BCH");
+
+                mSummary.DayVolume = tickerStream.volume24h;
+                mSummary.CurrentHighestBidPrice = tickerStream.bestBid;
+                mSummary.CurrentLowestOfferPrice = tickerStream.bestAsk;
+                mSummary.LastPrice = tickerStream.lastPrice;
+
+                mSummary.CreatedTimestampUTC = tickerStream.timestamp;
+                Tuple<string, string> pair = Utilities.SplitPair(tickerStream.marketId);
+                mSummary.SecondaryCurrencyCode = pair.Item2;
+                mSummary.PrimaryCurrencyCode = pair.Item1;
+
+                // market summary should be complete now
+                DCEs["BTCM"].CryptoPairsAdd(mSummary.pair, mSummary);
+
+                // BTCM only has one secondary currency, so it will always be hit.  keep this here in case they get more i guess.
+                if (DCEs["BTCM"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(31, mSummary);  // only update the UI for pairs we care about
+                DCEs["BTCM"].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
+
+            }
+            else if (message.Contains("\"messageType\":\"heartbeat\"")) {
+                // let's keep track of this.
+                Debug.Print(DateTime.Now + "BTCMv2 - legit heartbeat");
+                DCEs["BTCM"].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
+            }
         }
 
 
@@ -598,6 +726,9 @@ namespace IRTicker {
             switch (dExchange) {
                 case "IR":
                     if (wSocket_IR.IsAlive) return true;
+                    return false;
+                case "BTCM":
+                    if (wSocket_BTCM.IsAlive) return true;
                     return false;
                 case "BFX":
                     if (wSocket_BFX.IsAlive) return true;
@@ -732,14 +863,15 @@ namespace IRTicker {
             public decimal bestBid { get; set; }
             public decimal bestAsk { get; set; }
             public decimal lastPrice { get; set; }  // this and the 2 above need to be divided by 100 million to get the price.  
-            public long timestamp { get; set; }  // milliseconds
+            public string timestamp { get; set; }  // for websockets v1 this is a long, for v2 it's a string
             public double snapshotId { get; set; }
-            public double marketId { get; set; }
+            public string marketId { get; set; }
             public string currency { get; set; }
             public string instrument { get; set; }
+            public string messageType { get; set; }
         }
 
-        public class Subscribed_BFX {
+    public class Subscribed_BFX {
             private string _pair;
 
             public string @event { get; set; }

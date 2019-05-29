@@ -424,7 +424,10 @@ namespace IRTicker {
         }
 
         private void ParseDCE_BTCM(string crypto, string fiat) {
-            Tuple<bool, string> marketSummary = Utilities.Get("https://api.btcmarkets.net/market/" + (crypto == "XBT" ? "BTC" : crypto) + "/" + fiat + "/tick");
+            string BTCM_crypto = crypto;
+            if (crypto == "XBT") BTCM_crypto = "BTC";
+            if (crypto == "BCH") BTCM_crypto = "BCHABC";
+            Tuple<bool, string> marketSummary = Utilities.Get("https://api.btcmarkets.net/market/" + BTCM_crypto + "/" + fiat + "/tick");
             if(!marketSummary.Item1) {
                 DCEs["BTCM"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
                 DCEs["BTCM"].NetworkAvailable = false;
@@ -625,13 +628,15 @@ namespace IRTicker {
 
         public void SubscribeTickerSocket(string dExchange) {
             // subscribe to all the pairs
+            List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
             foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
                 foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
                     if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                        wSocketConnect.WebSocket_Subscribe(dExchange, primaryCode, secondaryCode);
+                        pairList.Add(new Tuple<string, string>(primaryCode, secondaryCode));
                     }
                 }
             }
+            wSocketConnect.WebSocket_Subscribe(dExchange, pairList);
         }
 
         private void GetBTCMOrderBook(string crypto) {
@@ -832,10 +837,10 @@ namespace IRTicker {
 
                 // separate this because it's possible to hit this code where the socketsreset == true for some other reason that heartbeat
                 if (DCEs["IR"].socketsReset) {
+                    DCEs["IR"].socketsReset = false;
                     // ok we need to reset the socket.
                     Debug.Print(DateTime.Now + " IR - restarting sockets from backgroundWorker");
                     wSocketConnect.WebSocket_Reconnect("IR");
-                    DCEs["IR"].socketsReset = false;
                 }
 
 
@@ -873,6 +878,20 @@ namespace IRTicker {
                     SubscribeTickerSocket("BTCM");
                     pollingThread.ReportProgress(34);
                     DCEs["BTCM"].HasStaticData = true;
+                }
+
+                if (DCEs["BTCM"].HeartBeat + TimeSpan.FromSeconds(10) < DateTime.Now) {
+                    // we haven't received a heartbeat in 10 seconds..
+                    Debug.Print(DateTime.Now + " BTCMv2 - haven't received any messages via sockets in 10 seconds.  reconnecting..");
+                    DCEs["BTCM"].socketsReset = true;
+                }
+
+                // separate this because it's possible to hit this code where the socketsreset == true for some other reason that heartbeat
+                if (DCEs["BTCM"].socketsReset) {
+                    DCEs["BTCM"].socketsReset = false;
+                    // ok we need to reset the socket.
+                    Debug.Print(DateTime.Now + " BTCMv2 - restarting sockets from backgroundWorker");
+                   wSocketConnect.WebSocket_Reconnect("BTCM");
                 }
 
 
