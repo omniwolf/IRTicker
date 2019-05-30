@@ -32,13 +32,13 @@ namespace IRTicker
 
             if (pair == "XBT-AUD") {
                 BidTopGuid_InputBox.Text = "";  // blank it first
-                ConcurrentDictionary<string, DCE.OrderBook_IR> topPrice = Buy_OrderBook.First().Value;  // get the top price
+                ConcurrentDictionary<string, DCE.OrderBook_IR> topPrice = Buy_OrderBook.FirstOrDefault().Value;  // get the top price
                 foreach(KeyValuePair<string, DCE.OrderBook_IR> price in topPrice) {
                     BidTopGuid_InputBox.Text += price.Value.OrderGuid + ", ";  // append each order at this top price
                 }
 
                 OfferTopGuid_InputBox.Text = "";  // blank it first
-                topPrice = Sell_OrderBook.First().Value;  // get the top price
+                topPrice = Sell_OrderBook.FirstOrDefault().Value;  // get the top price
                 foreach (KeyValuePair<string, DCE.OrderBook_IR> price in topPrice) {
                     OfferTopGuid_InputBox.Text += price.Value.OrderGuid + ", ";  // append each order at this top price
                 }
