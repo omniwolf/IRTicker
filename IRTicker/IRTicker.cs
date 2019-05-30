@@ -794,6 +794,9 @@ namespace IRTicker {
                                 // don't pull OB here, we get it during  websockets
                                 //Debug.Print("IR - pulling order book: " + crypto + "-" + fiat);
                                 //DCEs["IR"].GetIROrderBook(crypto, fiat);  // while we're spinning through all the pairs, let's grab their order books too.
+
+                                //create OB objects ready to be filled.  we only do this once here, and never delete them.  neverrrrr
+                                DCEs["IR"].InitialiseOrderBookDicts_IR(crypto, fiat);
                             }
                         }
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
@@ -803,9 +806,9 @@ namespace IRTicker {
                         // OK we have initialised the websockets, now let's get the REST OB so hopefully we don't miss things.
                         foreach (string crypto in DCEs["IR"].PrimaryCurrencyList) {
                             foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
-                                if (!DCEs["IR"].IR_OBs.ContainsKey(crypto + "-" + fiat)) {  // only pull the OB if we haven't already
+                                //if (!DCEs["IR"].IR_OBs.ContainsKey(crypto + "-" + fiat)) {  // only pull the OB if we haven't already
                                     DCEs["IR"].GetIROrderBook(crypto, fiat);
-                                }
+                                //}
                             }
                         }
                     }
@@ -828,8 +831,9 @@ namespace IRTicker {
                     }
                 }
                 else DCEs["IR"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
-                
-                if (DCEs["IR"].HeartBeat + TimeSpan.FromSeconds(100) < DateTime.Now) {
+
+                // the heartbeat is initialised as the year 2000, so if it's this year we know it must be just starting up, no need to worry
+                if ((DCEs["IR"].HeartBeat + TimeSpan.FromSeconds(100) < DateTime.Now) && DCEs["IR"].HeartBeat.Year != 2000) {
                     // we haven't received a heartbeat in 80 seconds..
                     Debug.Print(DateTime.Now + " IR - haven't received any messages via sockets in 100 seconds.  reconnecting..");
                     DCEs["IR"].socketsReset = true;
@@ -880,7 +884,8 @@ namespace IRTicker {
                     DCEs["BTCM"].HasStaticData = true;
                 }
 
-                if (DCEs["BTCM"].HeartBeat + TimeSpan.FromSeconds(10) < DateTime.Now) {
+                // the heartbeat is initialised as the year 2000, so if it's this year we know it must be just starting up, no need to worry
+                if ((DCEs["BTCM"].HeartBeat + TimeSpan.FromSeconds(10) < DateTime.Now) && DCEs["BTCM"].HeartBeat.Year != 2000) {
                     // we haven't received a heartbeat in 10 seconds..
                     Debug.Print(DateTime.Now + " BTCMv2 - haven't received any messages via sockets in 10 seconds.  reconnecting..");
                     DCEs["BTCM"].socketsReset = true;

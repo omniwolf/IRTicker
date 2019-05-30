@@ -24,6 +24,8 @@ namespace IRTicker
         public void UpdateOBs(KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] buySide, 
             KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] sellSide, string pair) {
 
+            if (buySide.Length == 0 || sellSide.Length == 0) return;
+
             RichTextBox BidsTB = ((pair == "XBT-AUD") ? BidsTextBox : ETHBidsTextBox);
             RichTextBox OffersTB = ((pair == "XBT-AUD") ? OffersTextBox : ETHOffersTextBox);
 

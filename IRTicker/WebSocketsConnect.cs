@@ -103,16 +103,16 @@ namespace IRTicker {
                     //Debug.Print("subscrbe IR: " + "{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\", \"" + "\"orderbook-" + crypto + "-" + fiat + "\"]} ");
                     //wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\", \"orderbook-" + crypto + "-" + fiat + "\"]} ");
                     if (wSocket_IR.IsAlive) {
-                        string pairList = "{\"Event\":\"Subscribe\",\"Data\":[";
+                        channel = "{\"Event\":\"Subscribe\",\"Data\":[";
                         foreach (Tuple<string, string> pair in pairs) {
                             string crypto = pair.Item1;
                             string fiat = pair.Item2;
-                            pairList += "\"orderbook-" + crypto + "-" + fiat + "\", ";
+                            channel += "\"orderbook-" + crypto + "-" + fiat + "\", ";
                             DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = 0;  // initialise the nonce dictionary
                             DCEs[dExchange].nonceErrorTracker[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = DCEs[dExchange].OBResetFlag[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = false;  // false means no error, no need to dump OB
                         }
-                        pairList += "]} ";
-                        wSocket_IR.Send(pairList);
+                        channel += "]} ";
+                        wSocket_IR.Send(channel);
                         //wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"orderbook-" + crypto + "-" + fiat + "\"]} ");
                     }
                     else DCEs["IR"].socketsReset = true;
@@ -120,20 +120,19 @@ namespace IRTicker {
                 case "BTCM":
                     if (true) {
                         
-                        string pairList = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\", \"heartbeat\"], \"marketIds\":[";
+                        channel = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\", \"heartbeat\"], \"marketIds\":[";
                         foreach (Tuple<string, string> pair in pairs) {
                             string crypto = pair.Item1;
                             string fiat = pair.Item2;
                             if (crypto == "XBT") crypto = "BTC";
                             if (crypto == "BCH") crypto = "BCHABC";
 
-                            pairList += "\"" + crypto + "-" + fiat + "\", ";
+                            channel += "\"" + crypto + "-" + fiat + "\", ";
                         }
-                        pairList = pairList.Substring(0, pairList.Length - 2);
-                        pairList += "]}";
+                        channel = channel.Substring(0, channel.Length - 2) + "]}";
 
                         //pairList = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\"], \"marketIds\":[\"BTC-AUD\"]}";
-                        wSocket_BTCM.Send(pairList);
+                        wSocket_BTCM.Send(channel);
                     }
                     else {
                         //Debug.Print("trying to subscribe to BTCM " + crypto);
@@ -319,7 +318,7 @@ namespace IRTicker {
                     // clean out all the OBs
                     //DCEs[dExchange].IR_OBs = new ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>>();
                     Debug.Print(DateTime.Now + " IR - About to .clear the IR_OBs");
-                    DCEs[dExchange].IR_OBs.Clear();
+                    DCEs[dExchange].ClearOrderBookSubDicts();
                     Debug.Print(dExchange + " - cleared the order book dictionary, IR_OBs size: " + DCEs["IR"].IR_OBs.Count);
                     break;
                 case "BTCM":
@@ -353,9 +352,9 @@ namespace IRTicker {
                 Debug.Print(dExchange + " - building new REST OBs");
                 foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
                     foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                        if (DCEs[dExchange].IR_OBs.ContainsKey(primaryCode + "-" + secondaryCode)) {
+                        //if (DCEs[dExchange].IR_OBs.ContainsKey(primaryCode + "-" + secondaryCode)) {
                             DCEs[dExchange].GetIROrderBook(primaryCode, secondaryCode);
-                        }
+                        //}
                     }
                 }
                 Debug.Print("Rest OBs built.  IR_OBs size: " + DCEs[dExchange].IR_OBs.Count);
@@ -467,9 +466,9 @@ namespace IRTicker {
                 return;  // no need to interpret the rest of the event, we starting fresh on this orderbook.
             }
 
-            // now we convert it into a classic MarketSummary obj, and add it to cryptopairs
-
-            if (!DCEs["IR"].IR_OBs.ContainsKey(tickerStream.Data.Pair.ToUpper())) {
+            // have removed this because i think we should be prescriptive about getting the order book.  If we just always get it when it's not there
+            // then we might grab it 5 times in one second
+            /*if (!DCEs["IR"].IR_OBs.ContainsKey(tickerStream.Data.Pair.ToUpper())) {
                 Debug.Print(DateTime.Now.ToString() + " IR - receieved an event we don't have a pair for (" + tickerStream.Data.Pair + "), will grab it");
 
                 Tuple<string, string> tempTup = Utilities.SplitPair(tickerStream.Data.Pair.ToUpper());
@@ -477,7 +476,8 @@ namespace IRTicker {
                 DCEs["IR"].GetIROrderBook(tempTup.Item1, tempTup.Item2);
                 //WebSocket_Subscribe("IR", tempTup.Item1, tempTup.Item2);
                 //return;
-            }
+            }*/
+
 
             switch (tickerStream.Event) {
                 case "Heartbeat":
@@ -645,7 +645,7 @@ namespace IRTicker {
             }
             else if (message.Contains("\"messageType\":\"heartbeat\"")) {
                 // let's keep track of this.
-                Debug.Print(DateTime.Now + "BTCMv2 - legit heartbeat");
+                //Debug.Print(DateTime.Now + " - BTCMv2 - legit heartbeat");
                 DCEs["BTCM"].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
             }
         }

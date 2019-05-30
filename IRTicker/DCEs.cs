@@ -259,6 +259,7 @@ namespace IRTicker {
         /////////////////////////////////////////////////////////
 
         // this gets called when we receive an order book change/add/remove. 
+        // returns true if the event will alter the spread, false if not
         public bool OrderBookEvent_IR(string eventStr, OrderBook_IR order) {
 
             // before we do anything, take a copy of the first elements of each order book.  If these change, then the spread has changed and we need to update the UI
@@ -266,17 +267,32 @@ namespace IRTicker {
 
             ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> OB_IR;  // an order will only ever be a limit or a bid, so sort it out up top to reduce code duplication
             ConcurrentDictionary<string, decimal> Order_OB_IR;  // one side of the Order_IR_OBs dictionary
+
+            if (order.OrderType.EndsWith("Bid")) OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
+            else OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
+
+            // if the dictionary for this event pair is empty, just get straight to the adding and move on
+            if (OB_IR.Count == 0) {
+                if (eventStr == "NewOrder") {
+                    ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
+                    tempCD.TryAdd(order.OrderGuid, order);
+                    OB_IR.TryAdd(order.Price, tempCD);
+                }
+                return false;  // don't care about the rest.  Even though this is the first order in the book so it MUST affect the spread, it's highly possible that there is no other side of the spread, so we ret
+            }
+
+
             ConcurrentDictionary<string, OrderBook_IR> TopOrder;
             Decimal TopPrice;  // this will be the price of the order we're looking at.  Have to grab it separarely as the API doesn't tell it to us depending on the event :(
             switch (order.OrderType) {
                 case "LimitBid":
-                    OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
+                    //OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
                     Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item1;
                     TopPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
                     TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[TopPrice];
                     break;
                 case "LimitOffer":
-                    OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
+                    //OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
                     Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item2;
                     TopPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
                     TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[TopPrice];
@@ -285,13 +301,13 @@ namespace IRTicker {
                     // ok this is a market order i guess, which probably means it's an orderchanged event
                     if (eventStr == "OrderChanged") {
                         if (order.OrderType.EndsWith("Bid")) {
-                            OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
+                            //OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
                             Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item1;
                             TopPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
                             TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[TopPrice];
                         }
                         else {
-                            OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
+                            //OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
                             Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item2;
                             TopPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
                             TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[TopPrice];
@@ -325,6 +341,9 @@ namespace IRTicker {
             else if (eventStr == "OrderCanceled" && TopOrder.ContainsKey(order.OrderGuid) && TopOrder.Count == 1) {  // if the cancelled order is at the top, and it's the only one at that price, spread will change.
                 OrderWillChangeSpread = true;
             }
+
+            // if either OB is empty, then we won't change the spread
+            if (IR_OBs[order.Pair.ToUpper()].Item1.Count == 0 || IR_OBs[order.Pair.ToUpper()].Item2.Count == 0) OrderWillChangeSpread = false;
 
             // here we actually adjust the order book in accordance with the event we just received
             switch (eventStr) {
@@ -550,26 +569,9 @@ namespace IRTicker {
 
         // this should be called once we have the orderbooks variable populated.  this method will split the orderbooks object into
         // 2 sorted lists BidOrderBook_IR and OfferOrderBook_IR
-        public void InitialiseOrderBook_IR(string pair) {  // !!!!!!!!!!!!!! need to probably change all adds to TryAdd to make sure they're safe, work out how to handle duplicate adds
+        public void ConvertOrderBook_IR(string pair) {  // !!!!!!!!!!!!!! need to probably change all adds to TryAdd to make sure they're safe, work out how to handle duplicate adds
 
             pair = pair.ToUpper();  // always uppercase
-
-            // fix this.  need to create new dictionaries and whatevs when a pair we haven't seen before comes along
-            if (!IR_OBs.ContainsKey(pair)) {
-                // OK if it doesn't contain this pair, we have to create some shiz
-
-                ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> tempbuy = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();
-                ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> tempsell = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();
-
-                Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>> tempTup = new Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>(tempbuy, tempsell);
-                IR_OBs.TryAdd(pair, tempTup);
-
-                ConcurrentDictionary<string, decimal> tempGuidBuy = new ConcurrentDictionary<string, decimal>();
-                ConcurrentDictionary<string, decimal> tempGuidSell = new ConcurrentDictionary<string, decimal>();
-
-                Tuple<ConcurrentDictionary<string, decimal>, ConcurrentDictionary<string, decimal>> tempGuidTup = new Tuple<ConcurrentDictionary<string, decimal>, ConcurrentDictionary<string, decimal>>(tempGuidBuy, tempGuidSell);
-                OrderGuid_IR_OBs.TryAdd(pair, tempGuidTup);
-            }
 
             ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> bidOB = IR_OBs[pair].Item1;
             ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> offerOB = IR_OBs[pair].Item2;
@@ -584,7 +586,7 @@ namespace IRTicker {
                     if (!bidOB[order.Price].ContainsKey(order.Guid)) {  // it's possible that the dictionary already has this order because we're starting websockets before we pull the REST OB
                         bidOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
                     }
-                    else continue;  // we don't want to try and add this guid to the bidGuid OB, so move on
+                    //else continue;  // we don't want to try and add this guid to the bidGuid OB, so move on
                 }
                 else {  // new price, create the dictionary
                     ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
@@ -601,7 +603,7 @@ namespace IRTicker {
                     if (!offerOB[order.Price].ContainsKey(order.Guid)) {
                         offerOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
                     }
-                    else continue;
+                    //else continue;
                 }
                 else {
                     ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
@@ -630,12 +632,54 @@ namespace IRTicker {
 
                 // next we need to convert this orderbook into a concurrent dictionary of OrderBook_IR objects
                 // so yeah.. the "orderBook" object doesn't really get used anymore.  it's just like a staging area
-                InitialiseOrderBook_IR(crypto + "-" + fiat);
+                ConvertOrderBook_IR(crypto + "-" + fiat);
 
                 Debug.Print(DateTime.Now.ToString() + " IR OB " + crypto + fiat + " done");
             }
             else {
                 Debug.Print(DateTime.Now.ToString() + " | IR - couldn't download REST OB? - " + crypto + "-" + fiat);
+            }
+        }
+
+        // this sub should only be called once at the beginning, it creates the IR_OBs dictionaries and the pair dictionaries inside
+        // them.  any clearing should just be clearing the contents of the pair dictionaries
+        public void InitialiseOrderBookDicts_IR(string crypto, string fiat) {
+
+            string pair = (crypto + "-" + fiat).ToUpper();
+            if (!IR_OBs.ContainsKey(pair)) {
+                // OK if it doesn't contain this pair, we have to create some shiz
+
+                ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> tempbuy = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();
+                ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> tempsell = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();
+
+                Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>> tempTup = new Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>(tempbuy, tempsell);
+                IR_OBs.TryAdd(pair, tempTup);
+            }
+
+            if (!OrderGuid_IR_OBs.ContainsKey(pair)) {
+
+                ConcurrentDictionary<string, decimal> tempGuidBuy = new ConcurrentDictionary<string, decimal>();
+                ConcurrentDictionary<string, decimal> tempGuidSell = new ConcurrentDictionary<string, decimal>();
+
+                Tuple<ConcurrentDictionary<string, decimal>, ConcurrentDictionary<string, decimal>> tempGuidTup = new Tuple<ConcurrentDictionary<string, decimal>, ConcurrentDictionary<string, decimal>>(tempGuidBuy, tempGuidSell);
+                OrderGuid_IR_OBs.TryAdd(pair, tempGuidTup);
+            }
+        }
+
+        // we clear the OB sub dictionaries, such that the pair and buy/sell OB dictionaries still exist, but the buy/sell OB dictionaries are empty.
+        public void ClearOrderBookSubDicts(string crypto = "none", string fiat = "none") {
+            if (crypto == "none" || fiat == "none") {  // clear them all
+                foreach (KeyValuePair<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>> pair in IR_OBs) {
+                    pair.Value.Item1.Clear();
+                    pair.Value.Item2.Clear();
+                }
+            }
+            else {
+                string pairStr = (crypto + "-" + fiat).ToUpper();
+                if (IR_OBs.ContainsKey(pairStr)) {
+                    IR_OBs[pairStr].Item1.Clear();
+                    IR_OBs[pairStr].Item2.Clear();
+                }
             }
         }
 
