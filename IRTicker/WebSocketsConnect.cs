@@ -450,7 +450,9 @@ namespace IRTicker {
                     wSocket_IR.Send("{\"Event\":\"Unsubscribe\",\"Data\":[\"" + tickerStream.Channel + "\"]} ");
 
                     // now need to dump the OBs. 
-                    DCEs["IR"].IR_OBs.TryRemove(tickerStream.Data.Pair.ToUpper(), out Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> ignore);
+                    //DCEs["IR"].IR_OBs.TryRemove(tickerStream.Data.Pair.ToUpper(), out Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> ignore);
+                    DCEs["IR"].IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1.Clear();
+                    DCEs["IR"].IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2.Clear();
 
                     // now subscribe back to the channel
                     Tuple<string, string> pairTup = Utilities.SplitPair(tickerStream.Data.Pair);
