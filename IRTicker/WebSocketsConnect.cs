@@ -499,7 +499,7 @@ namespace IRTicker {
                 case "OrderCanceled":
 
                     // this if block is pure debugging
-                    if (((tickerStream.Event == "OrderChanged" && tickerStream.Data.Volume == 0) || (tickerStream.Event == "OrderCanceled")) && tickerStream.Data.Pair.ToUpper() == "PLA-AUD") {
+                    /*if (((tickerStream.Event == "OrderChanged" && tickerStream.Data.Volume == 0) || (tickerStream.Event == "OrderCanceled")) && tickerStream.Data.Pair.ToUpper() == "PLA-AUD") {
                         bool foundCancelled = false;
                         //Debug.Print("EVENT changed, worknig out price...");
                         if (tickerStream.Data.OrderType.ToUpper().EndsWith("BID")) {
@@ -526,39 +526,29 @@ namespace IRTicker {
                         if (!foundCancelled) {
                             Debug.Print("we have a " + tickerStream.Event + " order, but can't find it in either orderbook? " + tickerStream.Data.OrderGuid + " " + tickerStream.Data.OrderType);
                         }
-                    }
+                    }*/
 
 
-                    // if this OrderBookEvent_IR function returns true, it means the event we just received made changes to the spread.  let's update the UI.
-                    if (DCEs["IR"].OrderBookEvent_IR(tickerStream.Event, tickerStream.Data)) {
-                        // create an mSummary object, and report it with code 21
-                        // first need to find out what pair this event is talking about.
-                        Tuple<string, string> eventPair = Utilities.SplitPair(tickerStream.Data.Pair.ToUpper());
-
-                        // next we need to pull the mSummary object out of the cryptoPairs array :/
+                    // if this OrderBookEvent_IR function returns a legit MarketSummary obj, it means the event we just received made changes to the spread.  let's update the UI.
+                    // if it returns null, then there was no spread change.
+                    // this method also updates the OBs and cryptoPairs obj (cryptoPairs only if there was a spread change)
+                    DCE.MarketSummary mSummary = DCEs["IR"].OrderBookEvent_IR(tickerStream.Event, tickerStream.Data);
+                    if (mSummary != null) {
                         //Debug.Print("spread changing event: " + message);
-                        if (DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()].spread < 0) {
-                            Debug.Print(DateTime.Now + " IR spread (" + tickerStream.Data.Pair + ") is " + DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()].spread + " :(  bid: " + DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()].CurrentHighestBidPrice + " and offer: " + DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()].CurrentLowestOfferPrice);
-                            //WebSocket_Reconnect("IR");
-                            //DCEs["IR"].socketsReset = true;
-                            //return;
+                        if (mSummary.spread < 0) {
+                            Debug.Print(DateTime.Now + " IR spread (" + tickerStream.Data.Pair + ") is " + mSummary.spread + " :(  bid: " + mSummary.CurrentHighestBidPrice + " and offer: " + mSummary.CurrentLowestOfferPrice);
                         }
-                        if (DCEs["IR"].CurrentSecondaryCurrency == eventPair.Item2.ToUpper()) {
-                            DCE.MarketSummary mSummary = DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()];
-                            pollingThread.ReportProgress(21, mSummary);
+                        if (DCEs["IR"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) {  //eventPair.Item2.ToUpper()) {
+                            pollingThread.ReportProgress(21, mSummary);  // do update_pairs thing
+                            //pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
                         }
                         else {
-                            DCE.MarketSummary mSummary = DCEs["IR"].GetCryptoPairs()[tickerStream.Data.Pair.ToUpper()];
-                            pollingThread.ReportProgress(25, mSummary);
+                            pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
                         }
                     }
                     break;
             }
-
-            //mSummary.CurrentHighestBidPrice = tickerStream.Data.   // need to finish this later i guess?
-
         }
-
 
         /* Sample socket data:
          * {

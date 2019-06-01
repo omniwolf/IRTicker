@@ -259,8 +259,8 @@ namespace IRTicker {
         /////////////////////////////////////////////////////////
 
         // this gets called when we receive an order book change/add/remove. 
-        // returns true if the event will alter the spread, false if not
-        public bool OrderBookEvent_IR(string eventStr, OrderBook_IR order) {
+        // returns a MarketSummary object if there was a change to the spread, returns null if not.
+        public MarketSummary OrderBookEvent_IR(string eventStr, OrderBook_IR order) {
 
             // before we do anything, take a copy of the first elements of each order book.  If these change, then the spread has changed and we need to update the UI
             bool OrderWillChangeSpread = false;
@@ -278,7 +278,7 @@ namespace IRTicker {
                     tempCD.TryAdd(order.OrderGuid, order);
                     OB_IR.TryAdd(order.Price, tempCD);
                 }
-                return false;  // don't care about the rest.  Even though this is the first order in the book so it MUST affect the spread, it's highly possible that there is no other side of the spread, so we ret
+                return null;  // don't care about the rest.  Even though this is the first order in the book so it MUST affect the spread, it's highly possible that there is no other side of the spread, so we ret
             }
 
 
@@ -315,7 +315,7 @@ namespace IRTicker {
                     }
                     else {
                         Debug.Print("IR ws - a new order that wasn't a bid or offer was sent to us? " + order.OrderType + " price: " + order.Price + " event: " + eventStr);
-                        return false;
+                        return null;
                     }
                     break;
             }
@@ -364,7 +364,10 @@ namespace IRTicker {
                         OB_IR.TryAdd(order.Price, tempCD);
                         //Debug.Print("New order new price - " + order.Price);
                     }
-                    Order_OB_IR.TryAdd(order.OrderGuid, order.Price);
+                    Order_OB_IR[order.OrderGuid] = order.Price;
+                    /*if (!Order_OB_IR.TryAdd(order.OrderGuid, order.Price)) {
+                        Debug.Print("sockets - trying to add to the order guid dictionary by the guid is already there? - " + order.Price + " " + order.OrderGuid);
+                    }*/
                     break;
 
                 case "OrderChanged":  // API should send us OrderGuid, Pair, OrderType, Volume
@@ -394,7 +397,15 @@ namespace IRTicker {
                             Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to change event vol, but it doesn't exist in order dictionary.  ordertype: " + order.OrderType + " vol: " + order.Volume);
                             foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
                                 if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
-                                    Debug.Print("- but the other dictionary has it...");
+                                    Debug.Print("- but the other dictionary has it... removing.");
+                                    if (order.Volume == 0) {
+                                        if (OB_IR[priceLevel.Key].Count > 1) {
+                                            OB_IR[priceLevel.Key].TryRemove(order.OrderGuid, out OrderBook_IR ignore1);
+                                        }
+                                        else {  // need to remove the whole outer thang
+                                            OB_IR.TryRemove(priceLevel.Key, out ConcurrentDictionary<string, OrderBook_IR> ignore2);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -502,7 +513,7 @@ namespace IRTicker {
                         }
                         if (!Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore2)) Debug.Print("!! 3 failed to remove (" + order.Pair + ") " + order.OrderGuid);
                     }
-                    else {  // else we did NOT find the order in the order dictionary.  let's check the main dictionary in case it's there.  if it is remove it.
+                    else {  // else we did NOT find the order in the order guid dictionary.  let's check the main dictionary in case it's there.  if it is remove it.
                         Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to cancel event, but it doesn't exist in order guid dictionary - " + order.OrderGuid);
                         foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
                             if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
@@ -545,8 +556,10 @@ namespace IRTicker {
                     break;
             }
 
-            // if this order has changed the spread, then let's update the cryptoPairs dictionary
-            if (OrderWillChangeSpread) {
+            // if this order has changed the spread, then let's update the cryptoPairs dictionary.
+            // somehowe had a situation where the OB we're looking at was empty, not sure how we got here as we should have returned null.  maybe it was emptied
+            // after the 0 check at the top.. in any case let's just double check here before trying to do stuff.
+            if (OrderWillChangeSpread && OB_IR.Count > 0) {
                 DateTimeOffset DTO = DateTimeOffset.Now;
                 MarketSummary mSummary = new MarketSummary();
                 mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
@@ -560,11 +573,12 @@ namespace IRTicker {
             }*/
                 mSummary.pair = order.Pair.ToUpper();
                 CryptoPairsAdd(order.Pair.ToUpper(), mSummary);
-            //Debug.Print("OCE: " + order.Pair + " " + eventStr + " " + mSummary.CurrentHighestBidPrice + " " + mSummary.CurrentLowestOfferPrice);
+                //Debug.Print("OCE: " + order.Pair + " " + eventStr + " " + mSummary.CurrentHighestBidPrice + " " + mSummary.CurrentLowestOfferPrice);
+                var cPairs = GetCryptoPairs();
 
-                return true;
+                return cPairs[order.Pair.ToUpper()];
             }
-            return false;
+            return null;
         }
 
         // this should be called once we have the orderbooks variable populated.  this method will split the orderbooks object into
@@ -586,6 +600,7 @@ namespace IRTicker {
                     if (!bidOB[order.Price].ContainsKey(order.Guid)) {  // it's possible that the dictionary already has this order because we're starting websockets before we pull the REST OB
                         bidOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
                     }
+                    // what?? why not?  i have commented the next line out here (and in the sell section too) because this doesn't seem right??
                     //else continue;  // we don't want to try and add this guid to the bidGuid OB, so move on
                 }
                 else {  // new price, create the dictionary
@@ -593,7 +608,10 @@ namespace IRTicker {
                     tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
                     bidOB.TryAdd(order.Price, tempCD);
                 }
-                bidGuidOB.TryAdd(order.Guid, order.Price);
+                bidGuidOB[order.Guid] = order.Price;
+                /*if (!bidGuidOB.TryAdd(order.Guid, order.Price)) {
+                    Debug.Print("REST population of bid Guid OB, we're adding something that's already there? - " + order.Price);
+                }*/
             }
 
 
@@ -610,7 +628,10 @@ namespace IRTicker {
                     tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
                     offerOB.TryAdd(order.Price, tempCD);
                 }
-                offerGuidOB.TryAdd(order.Guid, order.Price);
+                offerGuidOB[order.Guid] = order.Price;
+                /*if (!offerGuidOB.TryAdd(order.Guid, order.Price)) {
+                    Debug.Print("REST population of offer Guid OB, we're adding something that's already there? - " + order.Price);
+                }*/
             }
 
                 // order books for this pair have been created, now we get the spread and put it in the cryptoPairs dictionary
