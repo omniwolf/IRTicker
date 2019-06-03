@@ -268,8 +268,14 @@ namespace IRTicker {
             ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> OB_IR;  // an order will only ever be a limit or a bid, so sort it out up top to reduce code duplication
             ConcurrentDictionary<string, decimal> Order_OB_IR;  // one side of the Order_IR_OBs dictionary
 
-            if (order.OrderType.EndsWith("Bid")) OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
-            else OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
+            if (order.OrderType.EndsWith("Bid")) {
+                OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
+                Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item1;
+            }
+            else {
+                OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
+                Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item2;
+            }
 
             // if the dictionary for this event pair is empty, just get straight to the adding and move on
             if (OB_IR.Count == 0) {
@@ -277,6 +283,7 @@ namespace IRTicker {
                     ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
                     tempCD.TryAdd(order.OrderGuid, order);
                     OB_IR.TryAdd(order.Price, tempCD);
+                    Order_OB_IR[order.OrderGuid] = order.Price;
                 }
                 return null;  // don't care about the rest.  Even though this is the first order in the book so it MUST affect the spread, it's highly possible that there is no other side of the spread, so we ret
             }
@@ -287,13 +294,13 @@ namespace IRTicker {
             switch (order.OrderType) {
                 case "LimitBid":
                     //OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
-                    Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item1;
+                    //Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item1;
                     TopPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
                     TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[TopPrice];
                     break;
                 case "LimitOffer":
                     //OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
-                    Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item2;
+                    //Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item2;
                     TopPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
                     TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[TopPrice];
                     break;
@@ -302,13 +309,13 @@ namespace IRTicker {
                     if (eventStr == "OrderChanged") {
                         if (order.OrderType.EndsWith("Bid")) {
                             //OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
-                            Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item1;
+                            //Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item1;
                             TopPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
                             TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[TopPrice];
                         }
                         else {
                             //OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
-                            Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item2;
+                            //Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item2;
                             TopPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
                             TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[TopPrice];
                         }
@@ -379,7 +386,7 @@ namespace IRTicker {
                     // I think  (roman yet to confirm) that if we get a market order and the volume is 0, then we just remove the top order.  hopefully the top price
                     // doesn't have multiple orders in it.. let's alert if we discover this
                     if (!Order_OB_IR.ContainsKey(order.OrderGuid)) {
-                        if (order.OrderType.ToUpper().StartsWith("MARKET") && order.Volume <= 0) {
+                        if (order.OrderType.ToUpper().StartsWith("MARKET") && order.Volume <= 0) {  // i think i was just taking a stab in the dark here.  thinking that maybe the reason it didn't exist in the order guid dict is because it's a market order?  seems unlikely
                             if (TopOrder.Count > 1 && order.Pair.ToUpper() == "XBT-AUD") {
                                 Debug.Print("xbt-aud market order with vol 0, there are multiple top orders!");
                             }
@@ -388,10 +395,11 @@ namespace IRTicker {
                             }
                             OB_IR.TryRemove(TopPrice, out ConcurrentDictionary<string, OrderBook_IR> TopPrice_Dict); // just trash the first price
 
+                            // commenting this foreach out as a test, does it stop the "but it doesn't exist in the order guid dictionary" errors?
                             // ok here we need to go through the orderGuid dictionary and remove any orders that were in this top price order that we're trashing
-                            foreach (KeyValuePair<string, OrderBook_IR> orderGuid in TopPrice_Dict) { 
+                            /*foreach (KeyValuePair<string, OrderBook_IR> orderGuid in TopPrice_Dict) { 
                                 Order_OB_IR.TryRemove(orderGuid.Key, out decimal ignore);
-                            }
+                            }*/
                         }
                         else {  // else it's not a morket order, or it is, but the volume is > 0
                             Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to change event vol, but it doesn't exist in order dictionary.  ordertype: " + order.OrderType + " vol: " + order.Volume);
