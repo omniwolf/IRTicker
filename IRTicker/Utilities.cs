@@ -23,11 +23,22 @@ namespace IRTicker {
         // this list will be sorted from earliest time to latest time
         public static Color PriceColour(List<Tuple<DateTime, decimal>> priceList) {
 
-            // if we don't have enough data, just go black.
-            var PriceListLast = priceList.LastOrDefault();
-            var PriceListFirst = priceList.FirstOrDefault();
-            var PriceListLastItem1 = PriceListLast.Item1;
-            var PriceListFirstItem1 = PriceListFirst.Item1;
+            Tuple<DateTime, decimal> PriceListLast ;
+            Tuple<DateTime, decimal> PriceListFirst;
+            DateTime PriceListLastItem1;
+            DateTime PriceListFirstItem1;
+
+            try {
+                // if we don't have enough data, just go black.
+                PriceListLast = priceList.LastOrDefault();
+                PriceListFirst = priceList.FirstOrDefault();
+                PriceListLastItem1 = PriceListLast.Item1;
+                PriceListFirstItem1 = PriceListFirst.Item1;
+            }
+            catch (Exception ex) {
+                Debug.Print(DateTime.Now + " - caught an exception for pricelist: " + ex.ToString());
+                return Color.Black;
+            }
 
 
             if (priceList == null || priceList.Count == 0 || PriceListLast == null || PriceListFirst == null || PriceListLastItem1 == null || PriceListFirstItem1 == null) return Color.Black;
