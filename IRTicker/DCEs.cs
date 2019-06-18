@@ -386,13 +386,15 @@ namespace IRTicker {
                     // I think  (roman yet to confirm) that if we get a market order and the volume is 0, then we just remove the top order.  hopefully the top price
                     // doesn't have multiple orders in it.. let's alert if we discover this
                     if (!Order_OB_IR.ContainsKey(order.OrderGuid)) {
-                        if (order.OrderType.ToUpper().StartsWith("MARKET") && order.Volume <= 0) {  // i think i was just taking a stab in the dark here.  thinking that maybe the reason it didn't exist in the order guid dict is because it's a market order?  seems unlikely
+                        /*if (order.OrderType.StartsWith("Market") && order.Volume <= 0) {  // i think i was just taking a stab in the dark here.  thinking that maybe the reason it didn't exist in the order guid dict is because it's a market order?  seems unlikely
                             if (TopOrder.Count > 1 && order.Pair.ToUpper() == "XBT-AUD") {
                                 Debug.Print("xbt-aud market order with vol 0, there are multiple top orders!");
                             }
                             else if (TopOrder.Count == 1 && order.Pair.ToUpper() == "XBT-AUD") {
                                 Debug.Print("xbt-aud market order with vol 0, only 1 top order");
                             }
+
+                            // commenting this next line out to see if this helps... i'm kinda guessing that i have to remove the top price :/
                             OB_IR.TryRemove(TopPrice, out ConcurrentDictionary<string, OrderBook_IR> TopPrice_Dict); // just trash the first price
 
                             // commenting this foreach out as a test, does it stop the "but it doesn't exist in the order guid dictionary" errors?
@@ -400,24 +402,36 @@ namespace IRTicker {
                             /*foreach (KeyValuePair<string, OrderBook_IR> orderGuid in TopPrice_Dict) { 
                                 Order_OB_IR.TryRemove(orderGuid.Key, out decimal ignore);
                             }*/
-                        }
+                        /*}
                         else {  // else it's not a morket order, or it is, but the volume is > 0
-                            Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to change event vol, but it doesn't exist in order dictionary.  ordertype: " + order.OrderType + " vol: " + order.Volume);
-                            foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
-                                if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
-                                    Debug.Print("- but the other dictionary has it... removing.");
-                                    if (order.Volume == 0) {
-                                        if (OB_IR[priceLevel.Key].Count > 1) {
-                                            OB_IR[priceLevel.Key].TryRemove(order.OrderGuid, out OrderBook_IR ignore1);
-                                        }
-                                        else {  // need to remove the whole outer thang
-                                            OB_IR.TryRemove(priceLevel.Key, out ConcurrentDictionary<string, OrderBook_IR> ignore2);
-                                        }
+                            if (order.OrderType.StartsWith("Market")) {
+                                Debug.Print("we've got a market order with vol not 0");
+                            }*/
+                            Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to change event vol, but it doesn't exist in order guid dictionary.  ordertype: " + order.OrderType + " vol: " + order.Volume);
+                        bool foundOrder = false;
+                        foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
+                            if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
+                                foundOrder = true;
+                                Debug.Print("- but the other dictionary has it...");
+                                if (order.Volume == 0) {
+                                    if (OB_IR[priceLevel.Key].Count > 1) {
+                                        OB_IR[priceLevel.Key].TryRemove(order.OrderGuid, out OrderBook_IR ignore1);
+                                        Debug.Print("- removing a single order at this price level - " + priceLevel.Key);
                                     }
+                                    else {  // need to remove the whole outer thang
+                                        OB_IR.TryRemove(priceLevel.Key, out ConcurrentDictionary<string, OrderBook_IR> ignore2);
+                                        Debug.Print("- removing the whole price level - " + priceLevel.Key);
+                                    }
+                                }
+                                else {  // OK we just adjust the vol
+                                    priceLevel.Value[order.OrderGuid].Volume = order.Volume;
+                                    Debug.Print("- adjusting the volume of price " + priceLevel.Key + " to " + order.Volume);
                                 }
                             }
                         }
+                        if (!foundOrder) Debug.Print("- and it alse doesn't exist in the main dictionary.");
                     }
+                   // }
                     else if (order.Volume == 0) {  // delete this order from the orderguid dictionary
                         decimal OrderPrice = Order_OB_IR[order.OrderGuid];  // we have checked above, the orderGuid is defo in this dictionary
                         if (OB_IR.ContainsKey(OrderPrice)) {

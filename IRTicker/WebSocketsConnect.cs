@@ -119,20 +119,22 @@ namespace IRTicker {
                     break;
                 case "BTCM":
                     if (true) {
-                        
-                        channel = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\", \"heartbeat\"], \"marketIds\":[";
-                        foreach (Tuple<string, string> pair in pairs) {
-                            string crypto = pair.Item1;
-                            string fiat = pair.Item2;
-                            if (crypto == "XBT") crypto = "BTC";
-                            if (crypto == "BCH") crypto = "BCHABC";
+                        if (wSocket_BTCM.IsAlive) {
+                            channel = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\", \"heartbeat\"], \"marketIds\":[";
+                            foreach (Tuple<string, string> pair in pairs) {
+                                string crypto = pair.Item1;
+                                string fiat = pair.Item2;
+                                if (crypto == "XBT") crypto = "BTC";
+                                if (crypto == "BCH") crypto = "BCHABC";
 
-                            channel += "\"" + crypto + "-" + fiat + "\", ";
+                                channel += "\"" + crypto + "-" + fiat + "\", ";
+                            }
+                            channel = channel.Substring(0, channel.Length - 2) + "]}";
+
+                            //pairList = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\"], \"marketIds\":[\"BTC-AUD\"]}";
+                            wSocket_BTCM.Send(channel);
                         }
-                        channel = channel.Substring(0, channel.Length - 2) + "]}";
-
-                        //pairList = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\"], \"marketIds\":[\"BTC-AUD\"]}";
-                        wSocket_BTCM.Send(channel);
+                        else DCEs["BTCM"].socketsReset = true;
                     }
                     else {
                         //Debug.Print("trying to subscribe to BTCM " + crypto);
