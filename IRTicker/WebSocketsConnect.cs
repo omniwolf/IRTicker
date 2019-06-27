@@ -269,6 +269,7 @@ namespace IRTicker {
         public void BTCM_Connect_v2() {
 
             wSocket_BTCM = new WebSocket("wss://socket.btcmarkets.net/v2");
+            wSocket_BTCM.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
             wSocket_BTCM.OnMessage += (sender, e) => {
                 //Debug.Print("!!! bTCMv2 got a message: " + e.Data);
                 if (e.IsText) {
