@@ -496,10 +496,11 @@ namespace IRTicker {
                     //tickerStream.
                     break;
                 case "NewOrder":
-                    /*Debug.Print("IR new: " + message);
-                    break;*/
                 case "OrderChanged":
                 case "OrderCanceled":
+
+                    /*Debug.Print("IR new: " + message);
+                    break;*/
 
                     // this if block is pure debugging
                     /*if (((tickerStream.Event == "OrderChanged" && tickerStream.Data.Volume == 0) || (tickerStream.Event == "OrderCanceled")) && tickerStream.Data.Pair.ToUpper() == "PLA-AUD") {
