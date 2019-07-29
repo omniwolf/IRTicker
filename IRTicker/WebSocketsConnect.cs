@@ -178,6 +178,8 @@ namespace IRTicker {
 
         public void IR_Connect() {
             wSocket_IR = new WebSocket("wss://websockets.independentreserve.com");
+            wSocket_IR.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+
             wSocket_IR.OnMessage += (sender, e) => {
                 if (e.IsText) {
                     //Debug.Print(DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("HH:mm:ss") + " - IR sockets: " + e.Data);
