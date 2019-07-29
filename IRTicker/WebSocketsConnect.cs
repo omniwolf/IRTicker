@@ -483,6 +483,11 @@ namespace IRTicker {
                 //return;
             }*/
 
+            if (!tickerStream.Data.OrderType.StartsWith("Limit")) {
+                Debug.Print(" ignoring a " + tickerStream.Data.OrderType + " order.  event: " + tickerStream.Event);
+                return;  // ignore market orders
+            }
+
 
             switch (tickerStream.Event) {
                 case "Heartbeat":
