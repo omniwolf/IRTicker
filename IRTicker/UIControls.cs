@@ -28,6 +28,7 @@ namespace IRTicker {
         public Label BAT_Label { get; set; }
         public Label REP_Label { get; set; }
         public Label GNT_Label { get; set; }
+        public Label ETC_Label { get; set; }
 
         public Label XBT_Price { get; set; }
         public Label ETH_Price { get; set; }
@@ -42,6 +43,7 @@ namespace IRTicker {
         public Label BAT_Price { get; set; }
         public Label REP_Price { get; set; }
         public Label GNT_Price { get; set; }
+        public Label ETC_Price { get; set; }
 
         public ToolTip XBT_PriceTT { get; set; }
         public ToolTip ETH_PriceTT { get; set; }
@@ -56,6 +58,7 @@ namespace IRTicker {
         public ToolTip BAT_PriceTT { get; set; }
         public ToolTip REP_PriceTT { get; set; }
         public ToolTip GNT_PriceTT { get; set; }
+        public ToolTip ETC_PriceTT { get; set; }
 
         public ToolTip AvgPriceTT { get; set; }
 
@@ -72,6 +75,7 @@ namespace IRTicker {
         public Label BAT_Spread { get; set; }
         public Label REP_Spread { get; set; }
         public Label GNT_Spread { get; set; }
+        public Label ETC_Spread { get; set; }
 
         public ComboBox AvgPrice_BuySell { get; set; }
         public MaskedTextBox AvgPrice_NumCoins { get; set; }
@@ -98,6 +102,7 @@ namespace IRTicker {
             if (BAT_Label != null) Label_Dict.Add("BAT_Label", BAT_Label);
             if (REP_Label != null) Label_Dict.Add("REP_Label", REP_Label);
             if (GNT_Label != null) Label_Dict.Add("GNT_Label", GNT_Label);
+            if (ETC_Label != null) Label_Dict.Add("ETC_Label", ETC_Label);
 
             Label_Dict.Add("XBT_Price", XBT_Price);
             Label_Dict.Add("ETH_Price", ETH_Price);
@@ -112,6 +117,7 @@ namespace IRTicker {
             if (BAT_Price != null) Label_Dict.Add("BAT_Price", BAT_Price);
             if (REP_Price != null) Label_Dict.Add("REP_Price", REP_Price);
             if (GNT_Price != null) Label_Dict.Add("GNT_Price", GNT_Price);
+            if (ETC_Price != null) Label_Dict.Add("ETC_Price", ETC_Price);
 
             Label_Dict.Add("XBT_Spread", XBT_Spread);
             Label_Dict.Add("ETH_Spread", ETH_Spread);
@@ -126,6 +132,7 @@ namespace IRTicker {
             if (BAT_Spread != null) Label_Dict.Add("BAT_Spread", BAT_Spread);
             if (REP_Spread != null) Label_Dict.Add("REP_Spread", REP_Spread);
             if (GNT_Spread != null) Label_Dict.Add("GNT_Spread", GNT_Spread);
+            if (ETC_Spread != null) Label_Dict.Add("ETC_Spread", ETC_Spread);
 
             // ToolTips
             ToolTip_Dict = new Dictionary<string, ToolTip>();
@@ -142,6 +149,7 @@ namespace IRTicker {
             if (BAT_PriceTT != null) ToolTip_Dict.Add("BAT_PriceTT", BAT_PriceTT);
             if (REP_PriceTT != null) ToolTip_Dict.Add("REP_PriceTT", REP_PriceTT);
             if (GNT_PriceTT != null) ToolTip_Dict.Add("GNT_PriceTT", GNT_PriceTT);
+            if (ETC_PriceTT != null) ToolTip_Dict.Add("ETC_PriceTT", ETC_PriceTT);
 
             if (AvgPriceTT != null) ToolTip_Dict.Add("AvgPriceTT", AvgPriceTT);
         }
