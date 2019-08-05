@@ -32,6 +32,9 @@ namespace IRTicker {
         public ConcurrentDictionary<string, bool> OBResetFlag = new ConcurrentDictionary<string, bool>();  // if true, we need to dump OB and get a new one once nonce has settled down
         public DateTime HeartBeat = new DateTime(2000, 1, 1);  // set it way in the past.  use this as an initialisation value
         public bool socketsReset = false;
+        public ConcurrentDictionary<string, bool> pulledSnapShot = new ConcurrentDictionary<string, bool>();  // if true we have pulled the REST order book
+
+        public ConcurrentDictionary<string, ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>> orderBuffer_IR = new ConcurrentDictionary<string, ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>>();
 
         // constructor
         public DCE(string _codeName, string _friendlyName) {
@@ -260,7 +263,23 @@ namespace IRTicker {
 
         // this gets called when we receive an order book change/add/remove. 
         // returns a MarketSummary object if there was a change to the spread, returns null if not.
-        public MarketSummary OrderBookEvent_IR(string eventStr, OrderBook_IR order) {
+        public MarketSummary OrderBookEvent_IR(WebSocketsConnect.Ticker_IR ticker) {
+
+            OrderBook_IR order = ticker.Data;
+            string eventStr = ticker.Event;
+            string pair = order.Pair.ToUpper();
+
+            // if we don't have the snapshot, then we buffer
+            if (!pulledSnapShot[pair]) {
+                if (!orderBuffer_IR.ContainsKey(pair)) {
+                    if (!orderBuffer_IR.TryAdd(pair, new ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>())) {
+                        Debug.Print(DateTime.Now + " - can't add orderBuffer_IR concurrent dicsh for " + pair);
+                    }
+                }
+
+                orderBuffer_IR[pair] = new ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>();
+                orderBuffer_IR[pair][ticker.Nonce] = ticker;
+            }
 
             // before we do anything, take a copy of the first elements of each order book.  If these change, then the spread has changed and we need to update the UI
             bool OrderWillChangeSpread = false;
@@ -269,12 +288,12 @@ namespace IRTicker {
             ConcurrentDictionary<string, decimal> Order_OB_IR;  // one side of the Order_IR_OBs dictionary
 
             if (order.OrderType.EndsWith("Bid")) {
-                OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
-                Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item1;
+                OB_IR = IR_OBs[pair].Item1;
+                Order_OB_IR = OrderGuid_IR_OBs[pair].Item1;
             }
             else {
-                OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
-                Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item2;
+                OB_IR = IR_OBs[pair].Item2;
+                Order_OB_IR = OrderGuid_IR_OBs[pair].Item2;
             }
 
             // if the dictionary for this event pair is empty, just get straight to the adding and move on
@@ -295,14 +314,14 @@ namespace IRTicker {
                 case "LimitBid":
                     //OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
                     //Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item1;
-                    TopPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
-                    TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[TopPrice];
+                    TopPrice = IR_OBs[pair].Item1.Keys.Max();
+                    TopOrder = (IR_OBs[pair].Item1)[TopPrice];
                     break;
                 case "LimitOffer":
                     //OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
                     //Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item2;
-                    TopPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
-                    TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[TopPrice];
+                    TopPrice = IR_OBs[pair].Item2.Keys.Min();
+                    TopOrder = (IR_OBs[pair].Item2)[TopPrice];
                     break;
                 default:
                     // ok this is a market order i guess, which probably means it's an orderchanged event
@@ -310,14 +329,14 @@ namespace IRTicker {
                         if (order.OrderType.EndsWith("Bid")) {
                             //OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
                             //Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item1;
-                            TopPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
-                            TopOrder = (IR_OBs[order.Pair.ToUpper()].Item1)[TopPrice];
+                            TopPrice = IR_OBs[pair].Item1.Keys.Max();
+                            TopOrder = (IR_OBs[pair].Item1)[TopPrice];
                         }
                         else {
                             //OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
                             //Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item2;
-                            TopPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
-                            TopOrder = (IR_OBs[order.Pair.ToUpper()].Item2)[TopPrice];
+                            TopPrice = IR_OBs[pair].Item2.Keys.Min();
+                            TopOrder = (IR_OBs[pair].Item2)[TopPrice];
                         }
                     }
                     else {
@@ -350,7 +369,7 @@ namespace IRTicker {
             }
 
             // if either OB is empty, then we won't change the spread
-            if (IR_OBs[order.Pair.ToUpper()].Item1.Count == 0 || IR_OBs[order.Pair.ToUpper()].Item2.Count == 0) OrderWillChangeSpread = false;
+            if (IR_OBs[pair].Item1.Count == 0 || IR_OBs[pair].Item2.Count == 0) OrderWillChangeSpread = false;
 
             // here we actually adjust the order book in accordance with the event we just received
             switch (eventStr) {
@@ -407,7 +426,7 @@ namespace IRTicker {
                             if (order.OrderType.StartsWith("Market")) {
                                 Debug.Print("we've got a market order with vol not 0");
                             }*/
-                            Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to change event vol, but it doesn't exist in order guid dictionary.  ordertype: " + order.OrderType + " vol: " + order.Volume);
+                            Debug.Print(DateTime.Now.ToString() + " |(" + pair + ") Trying to change event vol, but it doesn't exist in order guid dictionary.  ordertype: " + order.OrderType + " vol: " + order.Volume);
                         bool foundOrder = false;
                         foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
                             if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
@@ -466,11 +485,11 @@ namespace IRTicker {
                                 OB_IR[orderPrice][order.OrderGuid].Volume = order.Volume;
                             }
                             else {
-                                Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to update vol to a non-zero value, but can't find the orderGuid at the price: " + orderPrice);
+                                Debug.Print(DateTime.Now.ToString() + " |(" + pair + ") Trying to update vol to a non-zero value, but can't find the orderGuid at the price: " + orderPrice);
                             }
                         }
                         else {
-                            Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") trying to update vol to a non-zero value, but can't find the price in the big dictionary: " + orderPrice);
+                            Debug.Print(DateTime.Now.ToString() + " |(" + pair + ") trying to update vol to a non-zero value, but can't find the price in the big dictionary: " + orderPrice);
                         }
                     }
 
@@ -513,7 +532,7 @@ namespace IRTicker {
 
                         if (OB_IR.ContainsKey(OrderPrice2)) {
 
-                            if (!OB_IR[OrderPrice2].ContainsKey(order.OrderGuid) && (order.Pair.ToUpper() == "XBT-AUD")) {
+                            if (!OB_IR[OrderPrice2].ContainsKey(order.OrderGuid) && (pair == "XBT-AUD")) {
                                 Debug.Print(DateTime.Now.ToString() + " | Trying to cancel an order where the guid doesn't exist - " + order.OrderGuid);
                             }
 
@@ -585,20 +604,20 @@ namespace IRTicker {
                 DateTimeOffset DTO = DateTimeOffset.Now;
                 MarketSummary mSummary = new MarketSummary();
                 mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
-                mSummary.CurrentHighestBidPrice = IR_OBs[order.Pair.ToUpper()].Item1.Keys.Max();
-                mSummary.CurrentLowestOfferPrice = IR_OBs[order.Pair.ToUpper()].Item2.Keys.Min();
+                mSummary.CurrentHighestBidPrice = IR_OBs[pair].Item1.Keys.Max();
+                mSummary.CurrentLowestOfferPrice = IR_OBs[pair].Item2.Keys.Min();
             // should be able to delete this commented block, don't think it's needed anymore
             /*if (mSummary.CurrentHighestBidPrice == 0 && mSummary.CurrentLowestOfferPrice == 0) {  // so i guess this will happen when we haven't pulled the OB yet?
                 Debug.Print("------------- OB's spread was 0, had to use previous cryptoPairs' spread = " + order.Pair);
                 mSummary.CurrentLowestOfferPrice = cryptoPairs[order.Pair.ToUpper()].CurrentLowestOfferPrice;
                 mSummary.CurrentHighestBidPrice = cryptoPairs[order.Pair.ToUpper()].CurrentHighestBidPrice;
             }*/
-                mSummary.pair = order.Pair.ToUpper();
-                CryptoPairsAdd(order.Pair.ToUpper(), mSummary);
+                mSummary.pair = pair;
+                CryptoPairsAdd(pair, mSummary);
                 //Debug.Print("OCE: " + order.Pair + " " + eventStr + " " + mSummary.CurrentHighestBidPrice + " " + mSummary.CurrentLowestOfferPrice);
                 var cPairs = GetCryptoPairs();
 
-                return cPairs[order.Pair.ToUpper()];
+                return cPairs[pair];
             }
             return null;
         }
@@ -656,7 +675,7 @@ namespace IRTicker {
                 }*/
             }
 
-                // order books for this pair have been created, now we get the spread and put it in the cryptoPairs dictionary
+            // order books for this pair have been created, now we get the spread and put it in the cryptoPairs dictionary
             DateTimeOffset DTO = DateTimeOffset.Now;
             MarketSummary mSummary = new MarketSummary();
             mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
@@ -667,22 +686,7 @@ namespace IRTicker {
             //}
         }
 
-        public void GetIROrderBook(string crypto, string fiat) {
-            Tuple<bool, string> orderBookTpl = Utilities.Get("https://api.independentreserve.com/Public/GetAllOrders?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
-            if (orderBookTpl.Item1) {
-                DCE.OrderBook orderBook = JsonConvert.DeserializeObject<DCE.OrderBook>(orderBookTpl.Item2);
-                orderBooks[crypto + "-" + fiat] = orderBook;
 
-                // next we need to convert this orderbook into a concurrent dictionary of OrderBook_IR objects
-                // so yeah.. the "orderBook" object doesn't really get used anymore.  it's just like a staging area
-                ConvertOrderBook_IR(crypto + "-" + fiat);
-
-                Debug.Print(DateTime.Now.ToString() + " IR OB " + crypto + fiat + " done");
-            }
-            else {
-                Debug.Print(DateTime.Now.ToString() + " | IR - couldn't download REST OB? - " + crypto + "-" + fiat);
-            }
-        }
 
         // this sub should only be called once at the beginning, it creates the IR_OBs dictionaries and the pair dictionaries inside
         // them.  any clearing should just be clearing the contents of the pair dictionaries

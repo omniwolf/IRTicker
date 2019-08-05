@@ -13,7 +13,7 @@ using System.Collections.Concurrent;
 
 
 namespace IRTicker {
-    class WebSocketsConnect {
+    public class WebSocketsConnect {
 
         private Dictionary<string, DCE> DCEs;
         private WebSocket wSocket_BFX, wSocket_GDAX, wSocket_IR, wSocket_BTCM;
@@ -96,6 +96,53 @@ namespace IRTicker {
             wSocket_GDAX.Connect();
         }
 
+        public void GetOrderBook_IR(string crypto, string fiat) {
+            string pair = crypto + "-" + fiat;
+            Tuple<bool, string> orderBookTpl = Utilities.Get("https://api.independentreserve.com/Public/GetAllOrders?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
+            if (orderBookTpl.Item1) {
+                DCE.OrderBook orderBook = JsonConvert.DeserializeObject<DCE.OrderBook>(orderBookTpl.Item2);
+                DCEs["IR"].orderBooks[pair] = orderBook;
+
+                // next we need to convert this orderbook into a concurrent dictionary of OrderBook_IR objects
+                // so yeah.. the "orderBook" object doesn't really get used anymore.  it's just like a staging area
+                DCEs["IR"].ConvertOrderBook_IR(pair);
+
+                Debug.Print(DateTime.Now.ToString() + " IR OB " + crypto + fiat + " done");
+
+                DCEs["IR"].pulledSnapShot[pair] = true;
+                ApplyBuffer_IR(pair);
+            }
+            else {
+                Debug.Print(DateTime.Now.ToString() + " | IR - couldn't download REST OB? - " + pair);
+            }
+        }
+
+        private int ApplyBuffer_IR(string pair) {
+            if (!DCEs["IR"].orderBuffer_IR.ContainsKey(pair)) return 0;  // this pair doesn't even exist in the OB
+            if (DCEs["IR"].orderBuffer_IR[pair].Count == 0) return 0;  // the pair is there, but nothing in it.
+
+            if (DCEs["IR"].channelNonce["ORDERBOOK-" + pair] == 0) {
+                DCEs["IR"].channelNonce["ORDERBOOK-" + pair] = DCEs["IR"].orderBuffer_IR[pair].Keys.Min() - 1;
+            }
+
+            Debug.Print(DateTime.Now + " --- about to apply buffer.  missing change or remove order errors are probably expected ---");
+
+            while (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(DCEs["IR"].channelNonce["ORDERBOOK-" + pair] + 1)) {
+                DCEs["IR"].channelNonce["ORDERBOOK-" + pair] += 1;
+                Debug.Print(DateTime.Now + " - popping an order from the " + pair + " buffer, total prior to pop: " + DCEs["IR"].orderBuffer_IR[pair].Count);
+                if (DCEs["IR"].orderBuffer_IR[pair].TryRemove(DCEs["IR"].channelNonce["ORDERBOOK-" + pair], out Ticker_IR ticker)) {
+                    parseTicker_IR(ticker);
+                }
+                else {
+                    Debug.Print(DateTime.Now + " - couldn't remove order from orderbuffer??");
+                }
+            }
+
+            Debug.Print(DateTime.Now + " --- buffer has been applied, any new errors are probably real");
+
+            return DCEs["IR"].orderBuffer_IR[pair].Count;
+        }
+
         public void WebSocket_Subscribe(string dExchange, List<Tuple<string, string>> pairs) {
             string channel = "";
             switch (dExchange) {
@@ -107,13 +154,20 @@ namespace IRTicker {
                         foreach (Tuple<string, string> pair in pairs) {
                             string crypto = pair.Item1;
                             string fiat = pair.Item2;
+                            DCEs["IR"].pulledSnapShot[crypto + "-" + fiat] = false;  // initialise the pulledSnapShot variable for this pair
                             channel += "\"orderbook-" + crypto + "-" + fiat + "\", ";
-                            DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = 0;  // initialise the nonce dictionary
-                            DCEs[dExchange].nonceErrorTracker[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = DCEs[dExchange].OBResetFlag[("ORDERBOOK-" + crypto + "-" + fiat).ToUpper()] = false;  // false means no error, no need to dump OB
+                            DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat)] = 0;  // initialise the nonce dictionary
+                            DCEs[dExchange].nonceErrorTracker[("ORDERBOOK-" + crypto + "-" + fiat)] = DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;  // false means no error, no need to dump OB
                         }
                         channel += "]} ";
                         wSocket_IR.Send(channel);
                         //wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"orderbook-" + crypto + "-" + fiat + "\"]} ");
+
+                        foreach (Tuple<string, string> pair in pairs) {
+                            GetOrderBook_IR(pair.Item1, pair.Item2);
+                        }
+                                
+
                     }
                     else DCEs["IR"].socketsReset = true;
                     break;
@@ -352,7 +406,8 @@ namespace IRTicker {
             }
             WebSocket_Subscribe(dExchange, pairList);
 
-            if (dExchange == "IR") {  // only for IR do we need to grab OBs via REST _after_ we have started the socket machine.  This is to reduce missed events.
+            // don't need this anymore because we pull the OB in the subscribe code.
+            /*if (dExchange == "IR") {  // only for IR do we need to grab OBs via REST _after_ we have started the socket machine.  This is to reduce missed events.
                 // re-populate the OBs using REST
                 Debug.Print(dExchange + " - building new REST OBs");
                 foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
@@ -363,7 +418,7 @@ namespace IRTicker {
                     }
                 }
                 Debug.Print("Rest OBs built.  IR_OBs size: " + DCEs[dExchange].IR_OBs.Count);
-            }
+            }*/
         }
 
         // after calling this sub, please remove the KVP of the channel you're unsubscribing from from the channel_Dict_BFX dictionary
@@ -385,6 +440,12 @@ namespace IRTicker {
 
         public Dictionary<string, Subscribed_BFX> GetChannelsDictionary_BFX() {
             return new Dictionary<string, Subscribed_BFX>(channel_Dict_BFX);
+        }
+
+
+        public void Init_IR(string pair) {
+            DCEs["IR"].pulledSnapShot[pair] = false;
+            DCEs["IR"].OBResetFlag["ORDERBOOK-" + pair] = false;
         }
 
         /* Sample socket data:
@@ -419,35 +480,51 @@ namespace IRTicker {
                     DCEs["IR"].socketsReset = true;
                     return;
                 }*/
-                Debug.Print(DateTime.Now + " IR - legit heartbeat");
+                Debug.Print(DateTime.Now + " IR - official heartbeat");
                 return;
             }
             DCEs["IR"].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
-             
-            if (message.Contains("OrderChanged")) {
-                //Debug.Print("IR order change: " + message);
-            }
+
             Ticker_IR tickerStream = new Ticker_IR();
             tickerStream = JsonConvert.DeserializeObject<Ticker_IR>(message);
+            validateNonce(tickerStream);
+        }
+
+        public void validateNonce(Ticker_IR tickerStream) {
+            string pair = tickerStream.Data.Pair.ToUpper();
+            string channel = tickerStream.Channel.ToUpper();
+
+            // first do orderBuffer stuff
+            if (!DCEs["IR"].pulledSnapShot[pair]) {
+                if (!DCEs["IR"].orderBuffer_IR.ContainsKey(pair)) {
+                    if (!DCEs["IR"].orderBuffer_IR.TryAdd(pair, new ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>())) {
+                        Debug.Print(DateTime.Now + " - can't add orderBuffer_IR concurrent dicsh for " + pair);
+                        return;
+                    }
+                }
+
+                //DCEs["IR"].orderBuffer_IR[pair] = new ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>();
+                DCEs["IR"].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;
+                return;
+            }
 
             // Nonce work.  make sure the nonce is sequential
-            if (DCEs["IR"].channelNonce[tickerStream.Channel.ToUpper()] > 0) {  // 0 means we have never seen a nonce for this channel
-                if (DCEs["IR"].channelNonce[tickerStream.Channel.ToUpper()] + 1 != tickerStream.Nonce) {  // why not??
-                    Debug.Print(DateTime.Now.ToString() + " NONCE ERROR: " + tickerStream.Channel + ", old nonce: " + DCEs["IR"].channelNonce[tickerStream.Channel.ToUpper()] + ", new nonce: " + tickerStream.Nonce);
-                    DCEs["IR"].nonceErrorTracker[tickerStream.Channel.ToUpper()] = DCEs["IR"].OBResetFlag[tickerStream.Channel.ToUpper()] = true;
+            if (DCEs["IR"].channelNonce[channel] > 0) {  // 0 means we have never seen a nonce for this channel
+                if (DCEs["IR"].channelNonce[channel] + 1 != tickerStream.Nonce) {  // why not??
+                    Debug.Print(DateTime.Now.ToString() + " NONCE ERROR: " + tickerStream.Channel + ", old nonce: " + DCEs["IR"].channelNonce[channel] + ", new nonce: " + tickerStream.Nonce);
+                    DCEs["IR"].nonceErrorTracker[channel] = DCEs["IR"].OBResetFlag[channel] = true;  // set them both to true.  when nonceErrorTracker goes false again it means the nonce has settled, and we can dump and start fresh
 
                     // delete OB and re-download it, would be good to wait until the nonce stops throwing errors
                 }
-                else DCEs["IR"].nonceErrorTracker[tickerStream.Channel.ToUpper()] = false;  // if this is false and we're setting it again to false, fine - normal operation.  If this was true and we're now setting it to false, this means that we had some nonce errors but they seem to have settled down, and we can now dump and reconnect
+                else DCEs["IR"].nonceErrorTracker[channel] = false;  // if this is false and we're setting it again to false, fine - normal operation.  If this was true and we're now setting it to false, this means that we had some nonce errors but they seem to have settled down, and we can now dump and reconnect
             }
-            DCEs["IR"].channelNonce[tickerStream.Channel.ToUpper()] = tickerStream.Nonce;  // regardless of whether it was in sequence, update it.
+            DCEs["IR"].channelNonce[channel] = tickerStream.Nonce;  // regardless of whether it was in sequence, update it.
 
             // do we need to dump the OB?
             // if the nonceErrorTracker is true, this means the nonce has recovered from an error run.  if the OBResetFlag is true, it means we need to dump the OB.
             // because the nonce has settled down, we can now "safely" dump the OB and start again.
-            if (!DCEs["IR"].nonceErrorTracker[tickerStream.Channel.ToUpper()] && DCEs["IR"].OBResetFlag[tickerStream.Channel.ToUpper()]) {
+            if (!DCEs["IR"].nonceErrorTracker[channel] && DCEs["IR"].OBResetFlag[channel]) {
                 Debug.Print("NONCE - we have recovered from an error in " + tickerStream.Channel + ", time to dump and restart");
-                DCEs["IR"].OBResetFlag[tickerStream.Channel.ToUpper()] = false;
 
                 if (wSocket_IR.IsAlive) {
 
@@ -456,17 +533,19 @@ namespace IRTicker {
 
                     // now need to dump the OBs. 
                     //DCEs["IR"].IR_OBs.TryRemove(tickerStream.Data.Pair.ToUpper(), out Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> ignore);
-                    DCEs["IR"].IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1.Clear();
-                    DCEs["IR"].IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2.Clear();
+                    DCEs["IR"].IR_OBs[pair].Item1.Clear();
+                    DCEs["IR"].IR_OBs[pair].Item2.Clear();
+
+                    Init_IR(pair);  // only reset it once the OBs are clear
 
                     // now subscribe back to the channel
-                    Tuple<string, string> pairTup = Utilities.SplitPair(tickerStream.Data.Pair);
+                    Tuple<string, string> pairTup = Utilities.SplitPair(pair);
                     List<Tuple<string, string>> tempList = new List<Tuple<string, string>>();
                     tempList.Add(new Tuple<string, string>(pairTup.Item1, pairTup.Item2));
                     WebSocket_Subscribe("IR", tempList);
 
-                    // re-populate the OB using REST
-                    DCEs["IR"].GetIROrderBook(pairTup.Item1, pairTup.Item2);
+                    // re-populate the OB using REST --- nope, not required anymore.  OB pulled in subscribe code.
+                    //DCEs["IR"].GetIROrderBook(pairTup.Item1, pairTup.Item2);
                 }
                 else DCEs["IR"].socketsReset = true;
 
@@ -485,8 +564,13 @@ namespace IRTicker {
                 //return;
             }*/
 
+            parseTicker_IR(tickerStream);
+        }
+
+        public void parseTicker_IR(Ticker_IR tickerStream) { 
+
             if (!tickerStream.Data.OrderType.StartsWith("Limit")) {
-                Debug.Print(" ignoring a " + tickerStream.Data.OrderType + " order.  event: " + tickerStream.Event);
+                Debug.Print(DateTime.Now + " - ignoring a " + tickerStream.Data.OrderType + " order.  event: " + tickerStream.Event);
                 return;  // ignore market orders
             }
 
@@ -543,7 +627,7 @@ namespace IRTicker {
                     // if this OrderBookEvent_IR function returns a legit MarketSummary obj, it means the event we just received made changes to the spread.  let's update the UI.
                     // if it returns null, then there was no spread change.
                     // this method also updates the OBs and cryptoPairs obj (cryptoPairs only if there was a spread change)
-                    DCE.MarketSummary mSummary = DCEs["IR"].OrderBookEvent_IR(tickerStream.Event, tickerStream.Data);
+                    DCE.MarketSummary mSummary = DCEs["IR"].OrderBookEvent_IR(tickerStream);
                     if (mSummary != null) {
                         //Debug.Print("spread changing event: " + message);
                         if (mSummary.spread < 0) {

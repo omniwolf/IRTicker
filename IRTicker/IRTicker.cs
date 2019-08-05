@@ -819,14 +819,15 @@ namespace IRTicker {
                         
                         SubscribeTickerSocket("IR");
 
+                        // not required anymore, we pull the OBs in the subscribe code
                         // OK we have initialised the websockets, now let's get the REST OB so hopefully we don't miss things.
-                        foreach (string crypto in DCEs["IR"].PrimaryCurrencyList) {
+                        /*foreach (string crypto in DCEs["IR"].PrimaryCurrencyList) {
                             foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
                                 //if (!DCEs["IR"].IR_OBs.ContainsKey(crypto + "-" + fiat)) {  // only pull the OB if we haven't already
                                     DCEs["IR"].GetIROrderBook(crypto, fiat);
                                 //}
                             }
-                        }
+                        }*/
                     }
                     else {
                         pollingThread.ReportProgress(12, "IR");
