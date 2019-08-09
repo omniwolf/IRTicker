@@ -1381,7 +1381,7 @@ namespace IRTicker {
             }
             if (reportType == 25) {  // 25 is for updating ob view
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
-                if (mSummary.pair == "XBT-AUD" || mSummary.pair == "ETH-AUD") {
+                if (mSummary.pair == "XBT-AUD") { // || mSummary.pair == "--ETH-AUD") {
                     OBProgressNext(mSummary.spread < 0);
                     KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] buySide = DCEs["IR"].IR_OBs[mSummary.pair].Item1.ToArray();
                     KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] sellSide = DCEs["IR"].IR_OBs[mSummary.pair].Item2.ToArray();

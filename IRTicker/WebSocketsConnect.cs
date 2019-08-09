@@ -487,6 +487,15 @@ namespace IRTicker {
 
             Ticker_IR tickerStream = new Ticker_IR();
             tickerStream = JsonConvert.DeserializeObject<Ticker_IR>(message);
+
+            // still trying to get to the bottom of orders that should be deleted that aren't
+            if (tickerStream.Data.Pair == "xbt-aud" && tickerStream.Event == "OrderCanceled") {
+                Debug.Print(DateTime.Now + " - TO CANCEL: " + tickerStream.Data.OrderGuid);
+            }
+            if (tickerStream.Data.Pair == "xbt-aud" && tickerStream.Event == "OrderChanged" && tickerStream.Data.Volume == 0) {
+                Debug.Print(DateTime.Now + " - TO CHANGE to 0: " + tickerStream.Data.OrderGuid);
+            }
+
             validateNonce(tickerStream);
         }
 

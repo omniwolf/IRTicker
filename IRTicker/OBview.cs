@@ -56,12 +56,14 @@ namespace IRTicker
             int count = 0;
             foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> PriceLevel in OrderBook) {
                 decimal IndividualVol = 0;
+                string guids = "";
                 foreach (var order in PriceLevel.Value) {
                     if (PriceLevel.Key == 0) continue;
                     IndividualVol += order.Value.Volume;
+                    guids += order.Value.OrderGuid + ", ";
                 }
                 RunningVol += IndividualVol;
-                RTB.Text += PriceLevel.Key.ToString("####0.00") + "  |  " + IndividualVol.ToString("#######0.00000000") + "  |  " + RunningVol.ToString("#######0.00000000") + Environment.NewLine;
+                RTB.Text += PriceLevel.Key.ToString("####0.00") + "  |  " + IndividualVol.ToString("#######0.00000000") + "  |  " + RunningVol.ToString("#######0.00000000") + "  |  " + guids + Environment.NewLine;
                 count++;
                 if (count > 10) break;
             }

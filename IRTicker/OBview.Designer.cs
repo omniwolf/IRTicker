@@ -47,21 +47,23 @@
             this.BidsTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BidsTextBox.Location = new System.Drawing.Point(80, 39);
             this.BidsTextBox.Name = "BidsTextBox";
-            this.BidsTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.BidsTextBox.Size = new System.Drawing.Size(251, 192);
+            this.BidsTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Horizontal;
+            this.BidsTextBox.Size = new System.Drawing.Size(251, 247);
             this.BidsTextBox.TabIndex = 0;
             this.BidsTextBox.Text = "1234.54  |  0.01570000  |  0.01570000\n6545.59  |  1.24600000  | 1.2557000\n6545.64" +
     "  |  40.326\n6987.58  |  3.31\n9871.45  |  0.13354978\n123\n123\n132\n123\n123\n123";
+            this.BidsTextBox.WordWrap = false;
             // 
             // OffersTextBox
             // 
             this.OffersTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OffersTextBox.Location = new System.Drawing.Point(374, 39);
             this.OffersTextBox.Name = "OffersTextBox";
-            this.OffersTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.OffersTextBox.Size = new System.Drawing.Size(251, 192);
+            this.OffersTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Horizontal;
+            this.OffersTextBox.Size = new System.Drawing.Size(251, 247);
             this.OffersTextBox.TabIndex = 1;
             this.OffersTextBox.Text = "";
+            this.OffersTextBox.WordWrap = false;
             // 
             // label1
             // 
@@ -84,7 +86,7 @@
             // ETHOffersTextBox
             // 
             this.ETHOffersTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ETHOffersTextBox.Location = new System.Drawing.Point(374, 246);
+            this.ETHOffersTextBox.Location = new System.Drawing.Point(374, 330);
             this.ETHOffersTextBox.Name = "ETHOffersTextBox";
             this.ETHOffersTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.ETHOffersTextBox.Size = new System.Drawing.Size(251, 192);
@@ -94,7 +96,7 @@
             // ETHBidsTextBox
             // 
             this.ETHBidsTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ETHBidsTextBox.Location = new System.Drawing.Point(80, 246);
+            this.ETHBidsTextBox.Location = new System.Drawing.Point(81, 330);
             this.ETHBidsTextBox.Name = "ETHBidsTextBox";
             this.ETHBidsTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.ETHBidsTextBox.Size = new System.Drawing.Size(251, 192);
@@ -149,7 +151,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(637, 450);
+            this.ClientSize = new System.Drawing.Size(637, 542);
             this.Controls.Add(this.OfferTopGuid_InputBox);
             this.Controls.Add(this.BidTopGuid_InputBox);
             this.Controls.Add(this.OBProgress);

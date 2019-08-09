@@ -324,6 +324,7 @@ namespace IRTicker {
                     TopOrder = (IR_OBs[pair].Item2)[TopPrice];
                     break;
                 default:
+                    Debug.Print(DateTime.Now + " - we have a marketOrder in the OrderbookEvent_IR method.  this should never happen!");
                     // ok this is a market order i guess, which probably means it's an orderchanged event
                     if (eventStr == "OrderChanged") {
                         if (order.OrderType.EndsWith("Bid")) {
@@ -455,10 +456,14 @@ namespace IRTicker {
                         decimal OrderPrice = Order_OB_IR[order.OrderGuid];  // we have checked above, the orderGuid is defo in this dictionary
                         if (OB_IR.ContainsKey(OrderPrice)) {
                             if (OB_IR[OrderPrice].Count > 1) {
-                                OB_IR[OrderPrice].TryRemove(order.OrderGuid, out OrderBook_IR ignore1);
+                                if (!OB_IR[OrderPrice].TryRemove(order.OrderGuid, out OrderBook_IR ignore1)) {
+                                    Debug.Print(DateTime.Now + " - couldn't remove order from OB (order changed, vol was 0)!");
+                                }
                             }
                             else {  // need to remove the whole outer thang
-                                OB_IR.TryRemove(OrderPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore2);
+                                if (!OB_IR.TryRemove(OrderPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore2)) {
+                                    Debug.Print(DateTime.Now + " - couldn't remove the price element from price dict (order changed event, vol 0)");
+                                }
                             }
                         }
                         else {  // big dictionary don't contain this price
@@ -476,7 +481,9 @@ namespace IRTicker {
                             }
 
                         }
-                        Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore3);  // regardless of whether we find the price/order in the OB_IR dict, let's remove it from the order_ob_ir dict
+                        if (!Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore3)) {  // regardless of whether we find the price/order in the OB_IR dict, let's remove it from the order_ob_ir dict
+                            Debug.Print(DateTime.Now + " - couldn't remove order guid dictionary?  orderchange event, vol 1");
+                        }
                     }
                     else {  // we just need to update the volume in the IR_OBs dictionary, no change to the OrderGuid dictionary
                         decimal orderPrice = Order_OB_IR[order.OrderGuid];  // we have checked above, the orderGuid is defo in this dictionary
@@ -532,27 +539,28 @@ namespace IRTicker {
 
                         if (OB_IR.ContainsKey(OrderPrice2)) {
 
-                            if (!OB_IR[OrderPrice2].ContainsKey(order.OrderGuid) && (pair == "XBT-AUD")) {
-                                Debug.Print(DateTime.Now.ToString() + " | Trying to cancel an order where the guid doesn't exist - " + order.OrderGuid);
+                            if (!OB_IR[OrderPrice2].ContainsKey(order.OrderGuid)) {
+                                Debug.Print(DateTime.Now.ToString() + " | " + order.Pair + " Trying to cancel an order where the guid doesn't exist - " + order.OrderGuid);
                             }
-
-                            if (OB_IR[OrderPrice2].Count > 1) {
-                                if (!OB_IR[OrderPrice2].TryRemove(order.OrderGuid, out OrderBook_IR ignore)) Debug.Print("!! 1 failed to remove (" + order.Pair + ") " + order.OrderGuid);
-                                /*if (order.Pair.ToUpper() == "XBT-AUD") {
-                                    if (ignore != null) Debug.Print(DateTime.Now.ToString() + " |                                                                 ORDER CANCELED: " + order.OrderGuid + " | others at this price remain, was this: " + ignore.OrderGuid);
-                                }*/
-                            }
-                            else {  // only one order at this price, remove the whole price level
-                                if (!OB_IR.TryRemove(OrderPrice2, out ConcurrentDictionary<string, OrderBook_IR> ignore)) Debug.Print("!! 2 failed to remove (" + order.Pair + ") " + order.OrderGuid);
-                                /*if (order.Pair.ToUpper() == "XBT-AUD") {
-                                    if (ignore != null) Debug.Print(DateTime.Now.ToString() + " |                                                                 ORDER CANCELED: " + order.OrderGuid + " | only one at this price, was this: " + ignore.First().Key);
-                                }*/
+                            else {  // this price level does include the guid, so let's kill it
+                                if (OB_IR[OrderPrice2].Count > 1) {
+                                    if (!OB_IR[OrderPrice2].TryRemove(order.OrderGuid, out OrderBook_IR ignore)) Debug.Print("!! 1 failed to remove (" + order.Pair + ") " + order.OrderGuid);
+                                    /*if (order.Pair.ToUpper() == "XBT-AUD") {
+                                        if (ignore != null) Debug.Print(DateTime.Now.ToString() + " |                                                                 ORDER CANCELED: " + order.OrderGuid + " | others at this price remain, was this: " + ignore.OrderGuid);
+                                    }*/
+                                }
+                                else {  // only one order at this price, remove the whole price level
+                                    if (!OB_IR.TryRemove(OrderPrice2, out ConcurrentDictionary<string, OrderBook_IR> ignore)) Debug.Print("!! 2 failed to remove (" + order.Pair + ") " + order.OrderGuid);
+                                    /*if (order.Pair.ToUpper() == "XBT-AUD") {
+                                        if (ignore != null) Debug.Print(DateTime.Now.ToString() + " |                                                                 ORDER CANCELED: " + order.OrderGuid + " | only one at this price, was this: " + ignore.First().Key);
+                                    }*/
+                                }
                             }
                         }
                         else {  //this price level doesn't exist in the price OB??
                             Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") The big dictionary is missing a price: + " + OrderPrice2);
                         }
-                        if (!Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore2)) Debug.Print("!! 3 failed to remove (" + order.Pair + ") " + order.OrderGuid);
+                        if (!Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore2)) Debug.Print("!! 3 failed to remove (" + order.Pair + ") from guid dict - " + order.OrderGuid);
                     }
                     else {  // else we did NOT find the order in the order guid dictionary.  let's check the main dictionary in case it's there.  if it is remove it.
                         Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to cancel event, but it doesn't exist in order guid dictionary - " + order.OrderGuid);
