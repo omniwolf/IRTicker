@@ -281,6 +281,8 @@ namespace IRTicker {
                 orderBuffer_IR[pair][ticker.Nonce] = ticker;
             }
 
+            if (!IR_OBs.ContainsKey(pair)) return null;
+
             // before we do anything, take a copy of the first elements of each order book.  If these change, then the spread has changed and we need to update the UI
             bool OrderWillChangeSpread = false;
 
