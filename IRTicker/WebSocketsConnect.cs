@@ -264,6 +264,11 @@ namespace IRTicker {
             wSocket_IR.Connect();
         }
 
+        public void IR_Disconnect() {
+            wSocket_IR.Close();
+            DCEs["IR"].ClearOrderBookSubDicts();
+        }
+
         public void BTCM_Connect() {
             // BTCM
 

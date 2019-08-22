@@ -2123,6 +2123,7 @@ namespace IRTicker {
         }
 
         private void IR_Reset_Button_Click(object sender, EventArgs e) {
+            wSocketConnect.IR_Disconnect();
             DCEs["IR"].CurrentDCEStatus = "GettingReset";
             APIDown(UIControls_Dict["IR"].dExchange_GB, "IR");
             DCEs["IR"].socketsReset = true;
