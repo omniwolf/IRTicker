@@ -166,10 +166,13 @@ namespace IRTicker {
                         foreach (Tuple<string, string> pair in pairs) {
                             GetOrderBook_IR(pair.Item1, pair.Item2);
                         }
-                                
+
 
                     }
-                    else DCEs["IR"].socketsReset = true;
+                    else {
+                        DCEs["IR"].socketsReset = true;
+                        Debug.Print(DateTime.Now + " - Trying to subscribe but sockets ain't alive!  IR");
+                    }
                     break;
                 case "BTCM":
                     if (true) {

@@ -933,13 +933,11 @@ namespace IRTicker {
                 else DCEs["GDAX"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
 
                 if (loopCount == 0) {
-                    if (wSocketConnect.IsSocketAlive("BFX")) { } //Debug.Print("GDAX");
-                    else {
+                    if (!wSocketConnect.IsSocketAlive("BFX")) { 
                         Debug.Print("BFX ded, reconnecting");
                         wSocketConnect.WebSocket_Reconnect("BFX");
                     }
-                    if (wSocketConnect.IsSocketAlive("GDAX")) { } //Debug.Print("GDAX");
-                    else {
+                    if (!wSocketConnect.IsSocketAlive("GDAX")) { 
                         Debug.Print("GDAX ded, reconnecting");
                         wSocketConnect.WebSocket_Reconnect("GDAX");
                     }
@@ -1460,7 +1458,7 @@ namespace IRTicker {
                     if (!DCEs[dExchange].HasStaticData) APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);
                     continue;
                 }
-                if (DCEs[dExchange].NetworkAvailable) {
+                if (DCEs[dExchange].NetworkAvailable && DCEs[dExchange].CurrentDCEStatus == "Online") {
                     if (DCEs[dExchange].ChangedSecondaryCurrency) {
                         PopulateCryptoComboBox(dExchange);  // need to re-populate this as it dynamically only populates the comboxbox with cryptos that the current fiat currency has a pair with
                         DCEs[dExchange].ChangedSecondaryCurrency = false;
@@ -2123,8 +2121,8 @@ namespace IRTicker {
         }
 
         private void IR_Reset_Button_Click(object sender, EventArgs e) {
-            wSocketConnect.IR_Disconnect();
-            DCEs["IR"].CurrentDCEStatus = "GettingReset";
+            DCEs["IR"].CurrentDCEStatus = "Resetting...";
+            Debug.Print(DateTime.Now + " - IR reset button clicked");
             APIDown(UIControls_Dict["IR"].dExchange_GB, "IR");
             DCEs["IR"].socketsReset = true;
         }

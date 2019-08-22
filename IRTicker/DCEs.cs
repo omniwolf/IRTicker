@@ -560,7 +560,7 @@ namespace IRTicker {
                             }
                         }
                         else {  //this price level doesn't exist in the price OB??
-                            Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") The big dictionary is missing a price: + " + OrderPrice2);
+                            Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") The big dictionary is missing a price: + $" + OrderPrice2 + " guid: " + order.OrderGuid);
                         }
                         if (!Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore2)) Debug.Print("!! 3 failed to remove (" + order.Pair + ") from guid dict - " + order.OrderGuid);
                     }
