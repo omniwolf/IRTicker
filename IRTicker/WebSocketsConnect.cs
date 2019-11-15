@@ -473,6 +473,7 @@ namespace IRTicker {
                 }
         }*/
         private void MessageRX_IR(string message) {
+            if (message == null) return;
             if (message.Contains("\"Event\":\"Subscriptions\"")) {
                 // ignore the subscriptions event.  it breaks parsing too :/
                 Debug.Print("IGNORING - " + message);
