@@ -32,6 +32,7 @@ namespace IRTicker {
         public ConcurrentDictionary<string, bool> OBResetFlag = new ConcurrentDictionary<string, bool>();  // if true, we need to dump OB and get a new one once nonce has settled down
         public DateTime HeartBeat = new DateTime(2000, 1, 1);  // set it way in the past.  use this as an initialisation value
         public bool socketsReset = false;
+        public bool socketsAlive = false;
         public ConcurrentDictionary<string, bool> pulledSnapShot = new ConcurrentDictionary<string, bool>();  // if true we have pulled the REST order book
 
         public ConcurrentDictionary<string, ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>> orderBuffer_IR = new ConcurrentDictionary<string, ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>>();
@@ -130,12 +131,26 @@ namespace IRTicker {
             }
             
             lock (spreadHistory) {
-                if (!spreadHistory.ContainsKey(pair)) spreadHistory.TryAdd(pair, new List<DataPoint>());
-                spreadHistory[pair].Add(new DataPoint(DateTime.Now.ToOADate(), (double)mSummary.spread));
+                if (!spreadHistory.ContainsKey(pair)) {
+                    spreadHistory.TryAdd(pair, new List<DataPoint>());
+                }
+                else {
+                    spreadHistory[pair].Add(new DataPoint(DateTime.Now.ToOADate(), (double)mSummary.spread));
+                    if ((DateTime.Now.ToOADate() - 2) > spreadHistory[pair].FirstOrDefault().XValue) {
+                        spreadHistory[pair].RemoveAt(0);  // if we have more than 2 days worth of data, remove the first entry
+                    }
+                }
             }
             lock (spreadHistoryCSV) {
-                if (!spreadHistoryCSV.ContainsKey(pair)) spreadHistoryCSV.TryAdd(pair, new List<DataPoint>());
-                spreadHistoryCSV[pair].Add(new DataPoint(DateTime.Now.ToOADate(), (double)mSummary.spread));
+                if (!spreadHistoryCSV.ContainsKey(pair)) {
+                    spreadHistoryCSV.TryAdd(pair, new List<DataPoint>());
+                }
+                else {
+                    spreadHistoryCSV[pair].Add(new DataPoint(DateTime.Now.ToOADate(), (double)mSummary.spread));
+                    if ((DateTime.Now.ToOADate() - 2) > spreadHistoryCSV[pair].FirstOrDefault().XValue) {
+                        spreadHistoryCSV[pair].RemoveAt(0);  // if we have more than 2 days worth of data, remove the first entry
+                    }
+                }
             }
         }
 
@@ -825,8 +840,10 @@ namespace IRTicker {
             public decimal lastPrice { get; set; }
             public string currency { get; set; }  // fiat currency
             public string instrument { get; set; }  // cryptocurrency
-            public double timestamp { get; set; }
+            public string timestamp { get; set; }
             public decimal volume24h { get; set; }
+            public decimal low24h { get; set; }
+            public decimal high24h { get; set; }
         }
 
         public class MarketSummary_GDAX {

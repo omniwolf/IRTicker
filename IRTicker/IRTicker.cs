@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using System.Windows.Controls;
 using System.Collections.Concurrent;
 using System.Windows.Forms.DataVisualization.Charting;
+using BlinkStickDotNet;
 
 
 // todo:
@@ -34,6 +35,7 @@ namespace IRTicker {
         private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "PLA", "XLM", "BAT", "REP", "GNT" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
+        BlinkStick bStick;
 
         public ConcurrentDictionary<string, SpreadGraph> SpreadGraph_Dict = new ConcurrentDictionary<string, SpreadGraph>();  // needs to be public because it gets accessed from the graphs object
 
@@ -49,6 +51,19 @@ namespace IRTicker {
             Debug.Print("IR TICKER BEGINS");
             Debug.Print("----------------");
             Debug.Print("");
+
+            bStick = BlinkStick.FindFirst();
+
+            if (bStick != null && bStick.OpenDevice()) {
+                bStick.Blink("yellow",1,200);
+                bStick.Blink("blue",1,200);
+                //bStick.Pulse("purple", 1, 300, 50);
+                //bStick.Pulse(RgbColor.FromRgb(69, 114, 69), 20, 700, 50);
+                //BlinkStickBW.RunWorkerAsync(argument: RgbColor.FromRgb(69, 114, 69));
+            }
+            else {
+                Debug.Print("BlinkStick couldn't be accessed or opened");
+            }
 
             if (refreshFrequencyTextbox.Text == "1") refreshFrequencyTextbox.Text = minRefreshFrequency.ToString();  // design time default is 1, we set to our actual min
 
@@ -394,6 +409,50 @@ namespace IRTicker {
             }
         }
 
+        private void setStickColour(decimal IRBTCvol, decimal BTCMBTCvol) {
+            //IRBTCvol = 98;
+            //BTCMBTCvol = 99;
+            if (bStick != null && bStick.OpenDevice()) {
+                //RgbColor col = new RgbColor();
+                //RgbColor.FromRgb(69, 114, 69);
+                if (BlinkStickBW.IsBusy) {
+                    BlinkStickBW.CancelAsync();
+                    Debug.Print(DateTime.Now + " -- BS -- cancelling the BlinkStickBW thread...");
+                }
+
+                try {
+                    if (IRBTCvol > BTCMBTCvol * 2) {
+                        if (!BlinkStickBW.IsBusy) {
+                            BlinkStickBW.RunWorkerAsync(RgbColor.FromString("#0079FF"));
+                            Debug.Print(DateTime.Now + " -- BS -- started the IR GOOOOOD thread");
+                        }
+                    }
+                    else if (IRBTCvol * 2 < BTCMBTCvol) {
+                        if (!BlinkStickBW.IsBusy) {
+                            BlinkStickBW.RunWorkerAsync(RgbColor.FromString("#00FF00"));
+                            Debug.Print(DateTime.Now + " -- BS -- started the IR BAAAD thread");
+                        }
+                    }
+                    else if (IRBTCvol > BTCMBTCvol + 5) {
+                        Debug.Print(DateTime.Now + " -- BS -- IR winning");
+                        bStick.Morph("#3176BC");
+                    }
+                    else if ((IRBTCvol <= BTCMBTCvol + 5) && (IRBTCvol >= BTCMBTCvol - 5)) {
+                        Debug.Print(DateTime.Now + " -- BS -- trying to go white");
+                        bStick.Morph("#C19E6E");
+                        if (!BlinkStickWhite_Thread.IsBusy) BlinkStickWhite_Thread.RunWorkerAsync(RgbColor.FromString((BTCMBTCvol > IRBTCvol ? "#42953A" : "#B6CBE1")));
+                    }
+                    else if (IRBTCvol < BTCMBTCvol - 5) {
+                        Debug.Print(DateTime.Now + " -- BS -- BTCM is winning");
+                        bStick.Morph("#00A607");
+                    }
+                }
+                catch (Exception ex) {
+                    Debug.Print(DateTime.Now + " -- BS -- caught an exception: " + ex.Message);
+                }
+            }
+        }
+
         // takes a website httpsResonse.StatusCode and returns a friendly string
         private string WebsiteError(string errorCode) {
             if (errorCode.Contains("429")) return "Rate limited";
@@ -442,8 +501,9 @@ namespace IRTicker {
         private void ParseDCE_BTCM(string crypto, string fiat) {
             string BTCM_crypto = crypto;
             if (crypto == "XBT") BTCM_crypto = "BTC";
-            if (crypto == "BCH") BTCM_crypto = "BCHABC";
-            Tuple<bool, string> marketSummary = Utilities.Get("https://api.btcmarkets.net/market/" + BTCM_crypto + "/" + fiat + "/tick");
+            //if (crypto == "BCH") BTCM_crypto = "BCH";
+            // https://api.btcmarkets.net/v3/markets/BCH-AUD/ticker
+            Tuple<bool, string> marketSummary = Utilities.Get("https://api.btcmarkets.net/v3/markets/" + BTCM_crypto + "-" + fiat + "/ticker");
             if(!marketSummary.Item1) {
                 DCEs["BTCM"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
                 DCEs["BTCM"].NetworkAvailable = false;
@@ -458,6 +518,8 @@ namespace IRTicker {
                 mSummary.PrimaryCurrencyCode = crypto;
                 mSummary.SecondaryCurrencyCode = fiat;
                 mSummary.DayVolume = mSummary_BTCM.volume24h;
+                mSummary.DayHighestPrice = mSummary_BTCM.low24h;
+                mSummary.DayLowestPrice = mSummary_BTCM.high24h;
 
                 DCEs["BTCM"].CryptoPairsAdd(crypto + "-" + fiat, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
 
@@ -910,9 +972,13 @@ namespace IRTicker {
 
                 // separate this because it's possible to hit this code where the socketsreset == true for some other reason that heartbeat
                 if (DCEs["BTCM"].socketsReset) {
+                    // just in case sockets is still broken, let's grab some REST data
+                    foreach (string primaryCode in DCEs["BTCM"].PrimaryCurrencyList) {
+                        ParseDCE_BTCM(primaryCode, DCEs["BTCM"].CurrentSecondaryCurrency);
+                    }
                     DCEs["BTCM"].socketsReset = false;
                     // ok we need to reset the socket.
-                    Debug.Print(DateTime.Now + " BTCMv2 - restarting sockets from backgroundWorker");
+                    Debug.Print(DateTime.Now + " BTCMv2 - REST data pulled, now restarting sockets from backgroundWorker");
                    wSocketConnect.WebSocket_Reconnect("BTCM");
                 }
 
@@ -1016,8 +1082,8 @@ namespace IRTicker {
                 loopCount++;
                 if (loopCount >= shitCoinPollRate) {
                     loopCount = 0;  // reset it, it's time we poll the shit coins again
-                    if (Properties.Settings.Default.ExportFull) WriteSpreadHistory();  // OK it's been 30 secs, let's write what we have
-                    if (Properties.Settings.Default.ExportSummarised) WriteSpreadHistoryCompressed();
+                    //if (Properties.Settings.Default.ExportFull) WriteSpreadHistory();  // OK it's been 30 secs, let's write what we have
+                    //if (Properties.Settings.Default.ExportSummarised) WriteSpreadHistoryCompressed();
                 }
 
             } while(true);  // polling is lyfe
@@ -1440,6 +1506,14 @@ namespace IRTicker {
                 return;
             }
 
+            // update blink stick
+            Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
+            Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
+
+            decimal IRvol = IRpairs["XBT-AUD"].DayVolume;
+            decimal BTCMvol = BTCMpairs["XBT-AUD"].DayVolume;
+
+            setStickColour(IRvol, BTCMvol);
 
             // update the UI
 
@@ -1455,6 +1529,11 @@ namespace IRTicker {
                     }*/
                     /*else*/ UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Gray;  // any text there is now a poll old, so gray it out so the user knows it's stale.
 
+                    if (!DCEs[dExchange].socketsAlive) {  // this should happen if REST is up but sockets are down.  if REST is also down we wouldn't get here i hope.
+                        UpdateLabels(dExchange);
+                        UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")" + " - sockets down";
+                    }
+
                     if (!DCEs[dExchange].HasStaticData) APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);
                     continue;
                 }
@@ -1467,7 +1546,14 @@ namespace IRTicker {
                     GroupBoxAndLabelColourActive(dExchange);
 
                     UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")";
+                    if (!DCEs[dExchange].socketsAlive) {  // website might be up, 
+                        UIControls_Dict[dExchange].dExchange_GB.Text += " - sockets down";
+                    }
 
+                    UpdateLabels(dExchange);
+                }
+                else if (DCEs[dExchange].NetworkAvailable) {  // if we have network but not online, we probably have REST data to send to the UI, so do it.
+                    Debug.Print(DateTime.Now + " - updating UI even though the exchange isn't in an 'online' state");
                     UpdateLabels(dExchange);
                 }
                 else APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);
@@ -1565,33 +1651,40 @@ namespace IRTicker {
             try {
                 string[] cryptoDirs = Directory.GetDirectories(cryptoDir);
 
-                foreach(string dir in cryptoDirs) {
+                foreach (string dir in cryptoDirs) {
                     string dirName = new DirectoryInfo(dir).Name;
 
-                    if(dirName.Length > 6) {
+                    if (dirName.Length > 6) {
                         string lastSixCharsDir = dir.Substring(dir.Length - 7);
 
-                        if(lastSixCharsDir.Equals(" - old", StringComparison.OrdinalIgnoreCase)) { continue; }  // if this dir already is suffixed with " - old", then move on
+                        if (lastSixCharsDir.Equals(" - old", StringComparison.OrdinalIgnoreCase)) { continue; }  // if this dir already is suffixed with " - old", then move on
                     }
 
-                    if (dirName.Length > 5) { 
-                        if(dirName.Substring(0, 5).Equals("XBT $", StringComparison.OrdinalIgnoreCase)) {  // OK, we found the XBT folder, let's move it to the new value
+                    if (dirName.Length > 5) {
+                        if (dirName.Substring(0, 5).Equals("XBT $", StringComparison.OrdinalIgnoreCase)) {  // OK, we found the XBT folder, let's move it to the new value
                             Directory.Move(dir, dir + " - old");
                         }
-                        if(dirName.Substring(0, 5).Equals("ETH $", StringComparison.OrdinalIgnoreCase)) {  // OK, we found the ETH folder, let's move it to the new value
+                        if (dirName.Substring(0, 5).Equals("ETH $", StringComparison.OrdinalIgnoreCase)) {  // OK, we found the ETH folder, let's move it to the new value
                             Directory.Move(dir, dir + " - old");
                         }
-                        if(dirName.Substring(0, 5).Equals("BCH $", StringComparison.OrdinalIgnoreCase)) {  // OK, we found the BCH folder, let's move it to the new value
+                        if (dirName.Substring(0, 5).Equals("BCH $", StringComparison.OrdinalIgnoreCase)) {  // OK, we found the BCH folder, let's move it to the new value
                             Directory.Move(dir, dir + " - old");
                         }
-                        if(dirName.Substring(0, 5).Equals("LTC $", StringComparison.OrdinalIgnoreCase)) {  // OK, we found the LTC folder, let's move it to the new value
+                        if (dirName.Substring(0, 5).Equals("LTC $", StringComparison.OrdinalIgnoreCase)) {  // OK, we found the LTC folder, let's move it to the new value
                             Directory.Move(dir, dir + " - old");
                         }
                     }
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex) {
                 System.Windows.MessageBox.Show("couldn't rename to ' - old': " + ex.ToString());
+            }
+
+            // turn off the blink stick.
+            if (bStick != null) {
+                if (bStick.OpenDevice()) {
+                    bStick.TurnOff();
+                }
             }
         }
 
@@ -2126,6 +2219,60 @@ namespace IRTicker {
             Debug.Print(DateTime.Now + " - IR reset button clicked");
             APIDown(UIControls_Dict["IR"].dExchange_GB, "IR");
             DCEs["IR"].socketsReset = true;
+        }
+
+        private void BlinkStickBW_DoWork(object sender, DoWorkEventArgs e) {
+            RgbColor col = (RgbColor)e.Argument;
+
+            int pulseLength = 700;
+            //int repeats = 15000 / pulseLength;
+
+            //bStick.Pulse(col, repeats, pulseLength, 50);
+
+            do {
+                if (bStick != null && bStick.OpenDevice()) {
+                    try {
+                        bStick.Pulse(col, 1, pulseLength, 50);
+                    }
+                    catch (Exception ex) {
+                        Debug.Print(DateTime.Now + " -- BS -- caught an exception in BW: " + ex.Message);
+                    }
+                }
+                if (BlinkStickBW.CancellationPending == true) {
+                    break;
+                }
+            } while (true);
+        }
+
+        private void BlinkStickBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
+            // update blink stick
+            Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
+            Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
+
+            decimal IRvol = IRpairs["XBT-AUD"].DayVolume;
+            decimal BTCMvol = BTCMpairs["XBT-AUD"].DayVolume;
+            Debug.Print("hoping for FALSE here - isBusy for blink is: " + BlinkStickBW.IsBusy);
+
+            setStickColour(IRvol, BTCMvol);
+        }
+
+        private void BlinkStickWhite_Thread_DoWork(object sender, DoWorkEventArgs e) {
+
+            RgbColor col = (RgbColor)e.Argument;
+
+            int pulseLength = 200;
+            Debug.Print(DateTime.Now + " - BS - white thread should pulse a colour");
+
+            if (bStick != null && bStick.OpenDevice()) {
+                try {
+                    //bStick.Pulse(col, 1, pulseLength, 50);
+                    bStick.Morph(col, pulseLength);
+                    bStick.Morph("#C19E6E", pulseLength);
+                }
+                catch (Exception ex) {
+                    Debug.Print(DateTime.Now + " -- BS -- caught an exception in white thread: " + ex.Message);
+                }
+            }
         }
     }
 }

@@ -38,6 +38,7 @@ namespace IRTicker {
             wSocket_BFX = new WebSocket("wss://api.bitfinex.com/ws");
             wSocket_BFX.OnMessage += (sender, e) => {
                 if (e.IsText) {
+                    DCEs["BFX"].socketsAlive = true;
                     MessageRX_BFX(e.Data);
                 }
                 else Debug.Print("BFX ws stream is not text?? - " + e.RawData.ToString());
@@ -51,6 +52,7 @@ namespace IRTicker {
                 Debug.Print("ws onerror - bfx");
                 wSocket_BFX.Close();
                 DCEs["BFX"].NetworkAvailable = false;
+                DCEs["BFX"].socketsAlive = false;
                 DCEs["BFX"].CurrentDCEStatus = "Socket error";
                 DCEs["BFX"].HasStaticData = false;
                 pollingThread.ReportProgress(12, "BFX");  // 12 is error
@@ -59,6 +61,7 @@ namespace IRTicker {
 
             wSocket_BFX.OnClose += (sender, e) => {
                 Debug.Print("BFX stream closed... should be preceeded by some ded thingo " + DateTime.Now.ToString());
+                DCEs["BFX"].socketsAlive = false;
                 //WebSocket_Reconnect("BFX");
             }; 
             wSocket_BFX.Connect();
@@ -69,6 +72,7 @@ namespace IRTicker {
 
             wSocket_GDAX.OnMessage += (sender, e) => {
                 if (e.IsText) {
+                    DCEs["GDAX"].socketsAlive = true;
                     MessageRX_GDAX(e.Data);
                     //Debug.Print("GDAX SOCKET: " + e.Data);
                 }
@@ -83,6 +87,7 @@ namespace IRTicker {
                 Debug.Print("ws onerror - gdax - " + DateTime.Now.ToString());
                 wSocket_GDAX.Close();
                 DCEs["GDAX"].NetworkAvailable = false;
+                DCEs["GDAX"].socketsAlive = false;
                 DCEs["GDAX"].CurrentDCEStatus = "Socket error";
                 DCEs["GDAX"].HasStaticData = false;
                 pollingThread.ReportProgress(12, "GDAX");  // 12 is error
@@ -91,6 +96,7 @@ namespace IRTicker {
 
             wSocket_GDAX.OnClose += (sender, e) => {
                 Debug.Print("GDAX stream was closed.. should be because we disconnected on purpose. preceeded by ded?  " + DateTime.Now.ToString());
+                DCEs["GDAX"].socketsAlive = false;
                 //WebSocket_Disconnect("GDAX");
             };
             wSocket_GDAX.Connect();
@@ -182,11 +188,12 @@ namespace IRTicker {
                                 string crypto = pair.Item1;
                                 string fiat = pair.Item2;
                                 if (crypto == "XBT") crypto = "BTC";
-                                if (crypto == "BCH") crypto = "BCHABC";
+                                //if (crypto == "BCH") crypto = "BCHABC";
 
                                 channel += "\"" + crypto + "-" + fiat + "\", ";
                             }
                             channel = channel.Substring(0, channel.Length - 2) + "]}";
+                            Debug.Print("BTCH channel subscription string: " + channel);
 
                             //pairList = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\"], \"marketIds\":[\"BTC-AUD\"]}";
                             wSocket_BTCM.Send(channel);
@@ -240,6 +247,7 @@ namespace IRTicker {
             wSocket_IR.OnMessage += (sender, e) => {
                 if (e.IsText) {
                     //Debug.Print(DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("HH:mm:ss") + " - IR sockets: " + e.Data);
+                    DCEs["IR"].socketsAlive = true;
                     MessageRX_IR(e.Data);
                 }
                 else Debug.Print("IR ws stream is not text?? - " + e.RawData.ToString());
@@ -258,10 +266,12 @@ namespace IRTicker {
                 pollingThread.ReportProgress(12, "IR");  // 12 is error
                 //WebSocket_Reconnect("IR");
                 DCEs["IR"].socketsReset = true;
+                DCEs["IR"].socketsAlive = false;
             };
 
             wSocket_IR.OnClose += (sender, e) => {
                 Debug.Print(DateTime.Now + " IR stream closed... should be preceeded by some ded thingo " + DateTime.Now.ToString());
+                DCEs["IR"].socketsAlive = false;
             };
 
             wSocket_IR.Connect();
@@ -290,6 +300,7 @@ namespace IRTicker {
             });
 
             socket_BTCM.On("newTicker", (data) => {
+                DCEs["BTCM"].socketsAlive = true;
                 MessageRX_BTCM(data.ToString());
             });
 
@@ -297,6 +308,7 @@ namespace IRTicker {
                 Debug.Print("ws onerror - btcm");
                 socket_BTCM.Close();
                 DCEs["BTCM"].NetworkAvailable = false;
+                DCEs["BTCM"].socketsAlive = false;
                 DCEs["BTCM"].CurrentDCEStatus = "Socket error";
                 //DCEs["BTCM"].HasStaticData = false;
                 pollingThread.ReportProgress(12, "BTCM");  // 12 is error
@@ -307,6 +319,7 @@ namespace IRTicker {
                 Debug.Print("ws connection error - btcm");
                 socket_BTCM.Close();
                 DCEs["BTCM"].NetworkAvailable = false;
+                DCEs["BTCM"].socketsAlive = false;
                 DCEs["BTCM"].CurrentDCEStatus = "Socket connection error";
                 //DCEs["BTCM"].HasStaticData = false;
                 pollingThread.ReportProgress(12, "BTCM");  // 12 is error
@@ -317,6 +330,7 @@ namespace IRTicker {
                 Debug.Print("ws connection timeout - btcm");
                 socket_BTCM.Close();
                 DCEs["BTCM"].NetworkAvailable = false;
+                DCEs["BTCM"].socketsAlive = false;
                 DCEs["BTCM"].CurrentDCEStatus = "Socket timeout";
                 //DCEs["BTCM"].HasStaticData = false;
                 pollingThread.ReportProgress(12, "BTCM");  // 12 is error
@@ -326,6 +340,7 @@ namespace IRTicker {
             socket_BTCM.On(Socket.EVENT_DISCONNECT, () => {
                 // aww shit
                 Debug.Print("BTCM socket disconnected.  reconnecting...");
+                DCEs["BTCM"].socketsAlive = false;
                 WebSocket_Reconnect("BTCM");
             });
         }
@@ -351,6 +366,7 @@ namespace IRTicker {
                 Debug.Print("ws onerror - BTCMv2");
                 wSocket_BTCM.Close();
                 DCEs["BTCM"].NetworkAvailable = false;
+                DCEs["BTCM"].socketsAlive = false;
                 DCEs["BTCM"].CurrentDCEStatus = "Socket error";
                 
                 pollingThread.ReportProgress(12, "BTCM");  // 12 is error
@@ -358,7 +374,13 @@ namespace IRTicker {
             };
 
             wSocket_BTCM.OnClose += (sender, e) => {
-                Debug.Print(DateTime.Now + " BTCMv2 stream closed... should be preceeded by some ded thingo " + DateTime.Now.ToString());
+                Debug.Print(DateTime.Now + " BTCMv2 stream closed... should be preceeded by some ded thingo ");
+                DCEs["BTCM"].NetworkAvailable = false;
+                DCEs["BTCM"].socketsAlive = false;
+                DCEs["BTCM"].CurrentDCEStatus = "Socket error";
+
+                pollingThread.ReportProgress(12, "BTCM");  // 12 is error
+                DCEs["BTCM"].socketsReset = true;
             };
 
             wSocket_BTCM.Connect();
@@ -500,17 +522,17 @@ namespace IRTicker {
             // still trying to get to the bottom of orders that should be deleted that aren't
             if (tickerStream.Data.Pair == "xbt-aud") {
                 if (tickerStream.Event == "NewOrder") {
-                    Debug.Print(DateTime.Now + " - NEW ORDA: " + tickerStream.Data.OrderGuid);
+                    //Debug.Print(DateTime.Now + " - NEW ORDA: " + tickerStream.Data.OrderGuid);
                 }
                 else if (tickerStream.Event == "OrderCanceled") {
-                    Debug.Print(DateTime.Now + " - TO CANCEL: " + tickerStream.Data.OrderGuid);
+                    //Debug.Print(DateTime.Now + " - TO CANCEL: " + tickerStream.Data.OrderGuid);
                 }
                 else if (tickerStream.Event == "OrderChanged" && tickerStream.Data.Volume == 0) {
-                    Debug.Print(DateTime.Now + " - TO CHANGE to 0: " + tickerStream.Data.OrderGuid);
+                    //Debug.Print(DateTime.Now + " - TO CHANGE to 0: " + tickerStream.Data.OrderGuid);
                 }
 
                 if (tickerStream.Data.OrderType.StartsWith("Market")) {
-                    Debug.Print(DateTime.Now + " - TO MARKET! guid: " + tickerStream.Data.OrderGuid + " event: " + tickerStream.Event);
+                    //Debug.Print(DateTime.Now + " - TO MARKET! guid: " + tickerStream.Data.OrderGuid + " event: " + tickerStream.Event);
                 }
             }
 
@@ -730,7 +752,8 @@ namespace IRTicker {
     private void MessageRX_BTCMv2(string message) {
             //Debug.Print("BTCM STREAM: " + message);
 
-            if (message.Contains("\"messageType\":\"tick\"")) {    
+            if (message.Contains("\"messageType\":\"tick\"")) {
+                DCEs["BTCM"].socketsAlive = true;
                 Ticker_BTCM tickerStream = new Ticker_BTCM();
                 tickerStream = JsonConvert.DeserializeObject<Ticker_BTCM>(message);
 

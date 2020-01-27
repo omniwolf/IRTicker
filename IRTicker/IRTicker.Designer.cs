@@ -46,6 +46,9 @@
             this.GIFLabel = new System.Windows.Forms.Label();
             this.Main = new System.Windows.Forms.Panel();
             this.BTCM_GroupBox = new System.Windows.Forms.GroupBox();
+            this.BTCM_ETC_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_ETC_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_ETC_Label1 = new System.Windows.Forms.Label();
             this.BTCM_BAT_Label2 = new System.Windows.Forms.Label();
             this.BTCM_BAT_Label3 = new System.Windows.Forms.Label();
             this.BTCM_BAT_Label1 = new System.Windows.Forms.Label();
@@ -98,6 +101,9 @@
             this.CSPT_ETH_Label1 = new System.Windows.Forms.Label();
             this.CSPT_XBT_Label1 = new System.Windows.Forms.Label();
             this.BFX_GroupBox = new System.Windows.Forms.GroupBox();
+            this.BFX_ETC_Label2 = new System.Windows.Forms.Label();
+            this.BFX_ETC_Label3 = new System.Windows.Forms.Label();
+            this.BFX_ETC_Label1 = new System.Windows.Forms.Label();
             this.BFX_BAT_Label2 = new System.Windows.Forms.Label();
             this.BFX_BAT_Label3 = new System.Windows.Forms.Label();
             this.BFX_BAT_Label1 = new System.Windows.Forms.Label();
@@ -150,6 +156,9 @@
             this.AUD_Label1 = new System.Windows.Forms.Label();
             this.SettingsButton = new System.Windows.Forms.Button();
             this.IR_GroupBox = new System.Windows.Forms.GroupBox();
+            this.IR_ETC_Label2 = new System.Windows.Forms.Label();
+            this.IR_ETC_Label3 = new System.Windows.Forms.Label();
+            this.IR_ETC_Label1 = new System.Windows.Forms.Label();
             this.IR_GNT_Label2 = new System.Windows.Forms.Label();
             this.IR_GNT_Label1 = new System.Windows.Forms.Label();
             this.IR_GNT_Label3 = new System.Windows.Forms.Label();
@@ -197,6 +206,9 @@
             this.IR_ETH_Label1 = new System.Windows.Forms.Label();
             this.IR_XBT_Label1 = new System.Windows.Forms.Label();
             this.GDAX_GroupBox = new System.Windows.Forms.GroupBox();
+            this.GDAX_ETC_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_ETC_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_ETC_Label1 = new System.Windows.Forms.Label();
             this.GDAX_REP_Label2 = new System.Windows.Forms.Label();
             this.GDAX_REP_Label3 = new System.Windows.Forms.Label();
             this.GDAX_REP_Label1 = new System.Windows.Forms.Label();
@@ -295,22 +307,12 @@
             this.BFX_BAT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BFX_REP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BFX_GNT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_ETC_Label2 = new System.Windows.Forms.Label();
-            this.IR_ETC_Label3 = new System.Windows.Forms.Label();
-            this.IR_ETC_Label1 = new System.Windows.Forms.Label();
             this.IR_ETC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_ETC_Label2 = new System.Windows.Forms.Label();
-            this.BFX_ETC_Label3 = new System.Windows.Forms.Label();
-            this.BFX_ETC_Label1 = new System.Windows.Forms.Label();
-            this.BTCM_ETC_Label2 = new System.Windows.Forms.Label();
-            this.BTCM_ETC_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_ETC_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_ETC_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_ETC_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_ETC_Label1 = new System.Windows.Forms.Label();
             this.BFX_ETC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.GDAX_ETC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BTCM_ETC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.BlinkStickBW = new System.ComponentModel.BackgroundWorker();
+            this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -581,6 +583,42 @@
             this.BTCM_GroupBox.TabIndex = 1;
             this.BTCM_GroupBox.TabStop = false;
             this.BTCM_GroupBox.Text = "BTC Markets";
+            // 
+            // BTCM_ETC_Label2
+            // 
+            this.BTCM_ETC_Label2.AutoSize = true;
+            this.BTCM_ETC_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_ETC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_ETC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_ETC_Label2.Location = new System.Drawing.Point(45, 123);
+            this.BTCM_ETC_Label2.Name = "BTCM_ETC_Label2";
+            this.BTCM_ETC_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BTCM_ETC_Label2.TabIndex = 32;
+            this.BTCM_ETC_Label2.Tag = "BTCM";
+            // 
+            // BTCM_ETC_Label3
+            // 
+            this.BTCM_ETC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BTCM_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_ETC_Label3.Location = new System.Drawing.Point(119, 123);
+            this.BTCM_ETC_Label3.Name = "BTCM_ETC_Label3";
+            this.BTCM_ETC_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BTCM_ETC_Label3.TabIndex = 31;
+            this.BTCM_ETC_Label3.Tag = "";
+            this.BTCM_ETC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BTCM_ETC_Label1
+            // 
+            this.BTCM_ETC_Label1.AutoSize = true;
+            this.BTCM_ETC_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_ETC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_ETC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_ETC_Label1.Location = new System.Drawing.Point(6, 123);
+            this.BTCM_ETC_Label1.Name = "BTCM_ETC_Label1";
+            this.BTCM_ETC_Label1.Size = new System.Drawing.Size(35, 13);
+            this.BTCM_ETC_Label1.TabIndex = 30;
+            this.BTCM_ETC_Label1.Text = "ETC:";
             // 
             // BTCM_BAT_Label2
             // 
@@ -1282,6 +1320,42 @@
             this.BFX_GroupBox.Text = "BitFinex";
             this.BFX_GroupBox.Click += new System.EventHandler(this.BFX_GroupBox_Click);
             // 
+            // BFX_ETC_Label2
+            // 
+            this.BFX_ETC_Label2.AutoSize = true;
+            this.BFX_ETC_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_ETC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_ETC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_ETC_Label2.Location = new System.Drawing.Point(45, 143);
+            this.BFX_ETC_Label2.Name = "BFX_ETC_Label2";
+            this.BFX_ETC_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_ETC_Label2.TabIndex = 43;
+            this.BFX_ETC_Label2.Tag = "BFX";
+            // 
+            // BFX_ETC_Label3
+            // 
+            this.BFX_ETC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_ETC_Label3.Location = new System.Drawing.Point(119, 143);
+            this.BFX_ETC_Label3.Name = "BFX_ETC_Label3";
+            this.BFX_ETC_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_ETC_Label3.TabIndex = 44;
+            this.BFX_ETC_Label3.Tag = "";
+            this.BFX_ETC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_ETC_Label1
+            // 
+            this.BFX_ETC_Label1.AutoSize = true;
+            this.BFX_ETC_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_ETC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_ETC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_ETC_Label1.Location = new System.Drawing.Point(6, 143);
+            this.BFX_ETC_Label1.Name = "BFX_ETC_Label1";
+            this.BFX_ETC_Label1.Size = new System.Drawing.Size(35, 13);
+            this.BFX_ETC_Label1.TabIndex = 42;
+            this.BFX_ETC_Label1.Text = "ETC:";
+            // 
             // BFX_BAT_Label2
             // 
             this.BFX_BAT_Label2.AutoSize = true;
@@ -1947,6 +2021,45 @@
             this.IR_GroupBox.Text = "Independent Reserve";
             this.IR_GroupBox.Click += new System.EventHandler(this.IR_GroupBox_Click);
             // 
+            // IR_ETC_Label2
+            // 
+            this.IR_ETC_Label2.AutoSize = true;
+            this.IR_ETC_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.IR_ETC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_ETC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_ETC_Label2.Location = new System.Drawing.Point(45, 149);
+            this.IR_ETC_Label2.Name = "IR_ETC_Label2";
+            this.IR_ETC_Label2.Size = new System.Drawing.Size(0, 13);
+            this.IR_ETC_Label2.TabIndex = 47;
+            this.IR_ETC_Label2.Tag = "IR";
+            this.IR_ETC_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IR_ETC_Label3
+            // 
+            this.IR_ETC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.IR_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_ETC_Label3.Location = new System.Drawing.Point(119, 149);
+            this.IR_ETC_Label3.Name = "IR_ETC_Label3";
+            this.IR_ETC_Label3.Size = new System.Drawing.Size(134, 13);
+            this.IR_ETC_Label3.TabIndex = 48;
+            this.IR_ETC_Label3.Tag = "";
+            this.IR_ETC_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // IR_ETC_Label1
+            // 
+            this.IR_ETC_Label1.AutoSize = true;
+            this.IR_ETC_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.IR_ETC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_ETC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_ETC_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.IR_ETC_Label1.Location = new System.Drawing.Point(6, 149);
+            this.IR_ETC_Label1.Name = "IR_ETC_Label1";
+            this.IR_ETC_Label1.Size = new System.Drawing.Size(35, 13);
+            this.IR_ETC_Label1.TabIndex = 46;
+            this.IR_ETC_Label1.Text = "ETC:";
+            this.IR_ETC_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
             // IR_GNT_Label2
             // 
             this.IR_GNT_Label2.AutoSize = true;
@@ -2590,6 +2703,42 @@
             this.GDAX_GroupBox.TabStop = false;
             this.GDAX_GroupBox.Text = "Coinbase Pro";
             this.GDAX_GroupBox.Click += new System.EventHandler(this.GDAX_GroupBox_Click);
+            // 
+            // GDAX_ETC_Label2
+            // 
+            this.GDAX_ETC_Label2.AutoSize = true;
+            this.GDAX_ETC_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_ETC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_ETC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_ETC_Label2.Location = new System.Drawing.Point(45, 123);
+            this.GDAX_ETC_Label2.Name = "GDAX_ETC_Label2";
+            this.GDAX_ETC_Label2.Size = new System.Drawing.Size(0, 13);
+            this.GDAX_ETC_Label2.TabIndex = 32;
+            this.GDAX_ETC_Label2.Tag = "GDAX";
+            // 
+            // GDAX_ETC_Label3
+            // 
+            this.GDAX_ETC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_ETC_Label3.Location = new System.Drawing.Point(119, 123);
+            this.GDAX_ETC_Label3.Name = "GDAX_ETC_Label3";
+            this.GDAX_ETC_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_ETC_Label3.TabIndex = 33;
+            this.GDAX_ETC_Label3.Tag = "";
+            this.GDAX_ETC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GDAX_ETC_Label1
+            // 
+            this.GDAX_ETC_Label1.AutoSize = true;
+            this.GDAX_ETC_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_ETC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_ETC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_ETC_Label1.Location = new System.Drawing.Point(6, 123);
+            this.GDAX_ETC_Label1.Name = "GDAX_ETC_Label1";
+            this.GDAX_ETC_Label1.Size = new System.Drawing.Size(35, 13);
+            this.GDAX_ETC_Label1.TabIndex = 31;
+            this.GDAX_ETC_Label1.Text = "ETC:";
             // 
             // GDAX_REP_Label2
             // 
@@ -3366,157 +3515,10 @@
             this.BFX_GNT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.BFX_GNT_PriceTT.ToolTipTitle = "Spread details";
             // 
-            // IR_ETC_Label2
-            // 
-            this.IR_ETC_Label2.AutoSize = true;
-            this.IR_ETC_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IR_ETC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_ETC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_ETC_Label2.Location = new System.Drawing.Point(45, 149);
-            this.IR_ETC_Label2.Name = "IR_ETC_Label2";
-            this.IR_ETC_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IR_ETC_Label2.TabIndex = 47;
-            this.IR_ETC_Label2.Tag = "IR";
-            this.IR_ETC_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IR_ETC_Label3
-            // 
-            this.IR_ETC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.IR_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IR_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_ETC_Label3.Location = new System.Drawing.Point(119, 149);
-            this.IR_ETC_Label3.Name = "IR_ETC_Label3";
-            this.IR_ETC_Label3.Size = new System.Drawing.Size(134, 13);
-            this.IR_ETC_Label3.TabIndex = 48;
-            this.IR_ETC_Label3.Tag = "";
-            this.IR_ETC_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // IR_ETC_Label1
-            // 
-            this.IR_ETC_Label1.AutoSize = true;
-            this.IR_ETC_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IR_ETC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_ETC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_ETC_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IR_ETC_Label1.Location = new System.Drawing.Point(6, 149);
-            this.IR_ETC_Label1.Name = "IR_ETC_Label1";
-            this.IR_ETC_Label1.Size = new System.Drawing.Size(35, 13);
-            this.IR_ETC_Label1.TabIndex = 46;
-            this.IR_ETC_Label1.Text = "ETC:";
-            this.IR_ETC_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
             // IR_ETC_PriceTT
             // 
             this.IR_ETC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.IR_ETC_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BFX_ETC_Label2
-            // 
-            this.BFX_ETC_Label2.AutoSize = true;
-            this.BFX_ETC_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_ETC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_ETC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_ETC_Label2.Location = new System.Drawing.Point(45, 143);
-            this.BFX_ETC_Label2.Name = "BFX_ETC_Label2";
-            this.BFX_ETC_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_ETC_Label2.TabIndex = 43;
-            this.BFX_ETC_Label2.Tag = "BFX";
-            // 
-            // BFX_ETC_Label3
-            // 
-            this.BFX_ETC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_ETC_Label3.Location = new System.Drawing.Point(119, 143);
-            this.BFX_ETC_Label3.Name = "BFX_ETC_Label3";
-            this.BFX_ETC_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_ETC_Label3.TabIndex = 44;
-            this.BFX_ETC_Label3.Tag = "";
-            this.BFX_ETC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BFX_ETC_Label1
-            // 
-            this.BFX_ETC_Label1.AutoSize = true;
-            this.BFX_ETC_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_ETC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_ETC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_ETC_Label1.Location = new System.Drawing.Point(6, 143);
-            this.BFX_ETC_Label1.Name = "BFX_ETC_Label1";
-            this.BFX_ETC_Label1.Size = new System.Drawing.Size(35, 13);
-            this.BFX_ETC_Label1.TabIndex = 42;
-            this.BFX_ETC_Label1.Text = "ETC:";
-            // 
-            // BTCM_ETC_Label2
-            // 
-            this.BTCM_ETC_Label2.AutoSize = true;
-            this.BTCM_ETC_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BTCM_ETC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_ETC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_ETC_Label2.Location = new System.Drawing.Point(45, 123);
-            this.BTCM_ETC_Label2.Name = "BTCM_ETC_Label2";
-            this.BTCM_ETC_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BTCM_ETC_Label2.TabIndex = 32;
-            this.BTCM_ETC_Label2.Tag = "BTCM";
-            // 
-            // BTCM_ETC_Label3
-            // 
-            this.BTCM_ETC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BTCM_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BTCM_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_ETC_Label3.Location = new System.Drawing.Point(119, 123);
-            this.BTCM_ETC_Label3.Name = "BTCM_ETC_Label3";
-            this.BTCM_ETC_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BTCM_ETC_Label3.TabIndex = 31;
-            this.BTCM_ETC_Label3.Tag = "";
-            this.BTCM_ETC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BTCM_ETC_Label1
-            // 
-            this.BTCM_ETC_Label1.AutoSize = true;
-            this.BTCM_ETC_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BTCM_ETC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_ETC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_ETC_Label1.Location = new System.Drawing.Point(6, 123);
-            this.BTCM_ETC_Label1.Name = "BTCM_ETC_Label1";
-            this.BTCM_ETC_Label1.Size = new System.Drawing.Size(35, 13);
-            this.BTCM_ETC_Label1.TabIndex = 30;
-            this.BTCM_ETC_Label1.Text = "ETC:";
-            // 
-            // GDAX_ETC_Label2
-            // 
-            this.GDAX_ETC_Label2.AutoSize = true;
-            this.GDAX_ETC_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_ETC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ETC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_ETC_Label2.Location = new System.Drawing.Point(45, 123);
-            this.GDAX_ETC_Label2.Name = "GDAX_ETC_Label2";
-            this.GDAX_ETC_Label2.Size = new System.Drawing.Size(0, 13);
-            this.GDAX_ETC_Label2.TabIndex = 32;
-            this.GDAX_ETC_Label2.Tag = "GDAX";
-            // 
-            // GDAX_ETC_Label3
-            // 
-            this.GDAX_ETC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.GDAX_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ETC_Label3.Location = new System.Drawing.Point(119, 123);
-            this.GDAX_ETC_Label3.Name = "GDAX_ETC_Label3";
-            this.GDAX_ETC_Label3.Size = new System.Drawing.Size(134, 13);
-            this.GDAX_ETC_Label3.TabIndex = 33;
-            this.GDAX_ETC_Label3.Tag = "";
-            this.GDAX_ETC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GDAX_ETC_Label1
-            // 
-            this.GDAX_ETC_Label1.AutoSize = true;
-            this.GDAX_ETC_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_ETC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ETC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_ETC_Label1.Location = new System.Drawing.Point(6, 123);
-            this.GDAX_ETC_Label1.Name = "GDAX_ETC_Label1";
-            this.GDAX_ETC_Label1.Size = new System.Drawing.Size(35, 13);
-            this.GDAX_ETC_Label1.TabIndex = 31;
-            this.GDAX_ETC_Label1.Text = "ETC:";
             // 
             // BFX_ETC_PriceTT
             // 
@@ -3532,6 +3534,16 @@
             // 
             this.BTCM_ETC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.BTCM_ETC_PriceTT.ToolTipTitle = "Spread details";
+            // 
+            // BlinkStickBW
+            // 
+            this.BlinkStickBW.WorkerSupportsCancellation = true;
+            this.BlinkStickBW.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickBW_DoWork);
+            this.BlinkStickBW.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BlinkStickBW_RunWorkerCompleted);
+            // 
+            // BlinkStickWhite_Thread
+            // 
+            this.BlinkStickWhite_Thread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickWhite_Thread_DoWork);
             // 
             // IRTicker
             // 
@@ -3862,6 +3874,8 @@
         private System.Windows.Forms.ToolTip BFX_ETC_PriceTT;
         private System.Windows.Forms.ToolTip GDAX_ETC_PriceTT;
         private System.Windows.Forms.ToolTip BTCM_ETC_PriceTT;
+        private System.ComponentModel.BackgroundWorker BlinkStickBW;
+        private System.ComponentModel.BackgroundWorker BlinkStickWhite_Thread;
     }
 }
 
