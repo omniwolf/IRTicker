@@ -104,11 +104,11 @@ namespace IRTicker {
             // Actually I'm not sure about the above comment, i think some of them do?  But the main issue is most of them have
             // currencies that we don't want to deal with, so we set the currencies manually here.  IR we want all currencies, so
             // we use the API.  This is probably not really smart, as the UI is static, so when new currencies turn up IR breaks.  meh
-            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"XLM\",\"BAT\",\"GNT\",\"ETC\"";
+            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"XLM\",\"BAT\",\"GNT\",\"ETC\",\"BSV\"";
             DCEs["BTCM"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["BTCM"].HasStaticData = false;  // want to set this to false so we run the subscribe code once.
 
-            DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\",\"EOS\",\"XLM\",\"BAT\",\"REP\",\"GNT\",\"ETC\"";
+            DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\",\"EOS\",\"XLM\",\"BAT\",\"REP\",\"GNT\",\"ETC\",\"BSV\",\"USDT\"";
             DCEs["BFX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
             DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\",\"XRP\",\"XLM\",\"REP\",\"ETC\"";
@@ -212,6 +212,14 @@ namespace IRTicker {
             UIControls_Dict["IR"].ETC_Price = IR_ETC_Label2;
             UIControls_Dict["IR"].ETC_Spread = IR_ETC_Label3;
             UIControls_Dict["IR"].ETC_PriceTT = IR_ETC_PriceTT;
+            UIControls_Dict["IR"].USDT_Label = IR_ETC_Label1;
+            UIControls_Dict["IR"].USDT_Price = IR_ETC_Label2;
+            UIControls_Dict["IR"].USDT_Spread = IR_ETC_Label3;
+            UIControls_Dict["IR"].USDT_Label = IR_ETC_Label1;
+            UIControls_Dict["IR"].BSV_Price = IR_ETC_Label2;
+            UIControls_Dict["IR"].BSV_Spread = IR_ETC_Label3;
+            UIControls_Dict["IR"].BSV_PriceTT = IR_ETC_PriceTT;
+            UIControls_Dict["IR"].BSV_PriceTT = IR_ETC_PriceTT;
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
             UIControls_Dict["IR"].AvgPrice_Crypto = IR_CryptoComboBox;
@@ -262,6 +270,10 @@ namespace IRTicker {
             UIControls_Dict["BTCM"].ETC_Price = BTCM_ETC_Label2;
             UIControls_Dict["BTCM"].ETC_Spread = BTCM_ETC_Label3;
             UIControls_Dict["BTCM"].ETC_PriceTT = BTCM_ETC_PriceTT;
+            UIControls_Dict["BTCM"].BSV_Label = BTCM_ETC_Label1;
+            UIControls_Dict["BTCM"].BSV_Price = BTCM_ETC_Label2;
+            UIControls_Dict["BTCM"].BSV_Spread = BTCM_ETC_Label3;
+            UIControls_Dict["BTCM"].BSV_PriceTT = BTCM_ETC_PriceTT;
             UIControls_Dict["BTCM"].AvgPrice_BuySell = BTCM_BuySellComboBox;
             UIControls_Dict["BTCM"].AvgPrice_NumCoins = BTCM_NumCoinsTextBox;
             UIControls_Dict["BTCM"].AvgPrice_Crypto = BTCM_CryptoComboBox;
@@ -368,6 +380,14 @@ namespace IRTicker {
             UIControls_Dict["BFX"].ETC_Price = BFX_ETC_Label2;
             UIControls_Dict["BFX"].ETC_Spread = BFX_ETC_Label3;
             UIControls_Dict["BFX"].ETC_PriceTT = BFX_ETC_PriceTT;
+            UIControls_Dict["BFX"].USDT_Label = BFX_ETC_Label1;
+            UIControls_Dict["BFX"].USDT_Price = BFX_ETC_Label2;
+            UIControls_Dict["BFX"].USDT_Spread = BFX_ETC_Label3;
+            UIControls_Dict["BFX"].USDT_PriceTT = BFX_ETC_PriceTT;
+            UIControls_Dict["BFX"].BSV_Label = BFX_ETC_Label1;
+            UIControls_Dict["BFX"].BSV_Price = BFX_ETC_Label2;
+            UIControls_Dict["BFX"].BSV_Spread = BFX_ETC_Label3;
+            UIControls_Dict["BFX"].BSV_PriceTT = BFX_ETC_PriceTT;
             UIControls_Dict["BFX"].AvgPrice_BuySell = BFX_BuySellComboBox;
             UIControls_Dict["BFX"].AvgPrice_NumCoins = BFX_NumCoinsTextBox;
             UIControls_Dict["BFX"].AvgPrice_Crypto = BFX_CryptoComboBox;
@@ -397,15 +417,18 @@ namespace IRTicker {
             UIControls_Dict["CSPT"].XRP_Price = CSPT_XRP_Label2;
             UIControls_Dict["CSPT"].XRP_Spread = CSPT_XRP_Label3;
             UIControls_Dict["CSPT"].XRP_PriceTT = CSPT_XRP_PriceTT;
-            UIControls_Dict["CSPT"].AvgPrice_BuySell = CSPT_BuySellComboBox;
+            // removed these coinspot controls cos i'll never use them
+            /*UIControls_Dict["CSPT"].AvgPrice_BuySell = CSPT_BuySellComboBox;
             UIControls_Dict["CSPT"].AvgPrice_NumCoins = CSPT_NumCoinsTextBox;
             UIControls_Dict["CSPT"].AvgPrice_Crypto = CSPT_CryptoComboBox;
-            UIControls_Dict["CSPT"].AvgPrice = CSPT_AvgPrice_Label;
+            UIControls_Dict["CSPT"].AvgPrice = CSPT_AvgPrice_Label;*/
             UIControls_Dict["CSPT"].AvgPriceTT = CSPT_AvgPriceTT;
 
             foreach (KeyValuePair<string, UIControls> uic in UIControls_Dict) {
                 uic.Value.CreateControlDictionaries();  // builds the internal dictionaries so the controls themselves can be iterated over
-                uic.Value.AvgPrice_BuySell.SelectedIndex = 0;  // force all the buy/sell drop downs to select buy (so can never be null)
+                if (uic.Value.AvgPrice != null) {
+                    uic.Value.AvgPrice_BuySell.SelectedIndex = 0;  // force all the buy/sell drop downs to select buy (so can never be null)
+                }
             }
         }
 
@@ -718,7 +741,7 @@ namespace IRTicker {
         }
 
         private void GetBTCMOrderBook(string crypto) {
-            Tuple<bool, string> orderBookTpl = Utilities.Get("https://api.btcmarkets.net/market/" + (crypto == "XBT" ? "BTC" : crypto == "BCH" ? "BCHABC" : crypto) + "/" + DCEs["BTCM"].CurrentSecondaryCurrency + "/orderbook");
+            Tuple<bool, string> orderBookTpl = Utilities.Get("https://api.btcmarkets.net/market/" + (crypto == "XBT" ? "BTC" : crypto) + "/" + DCEs["BTCM"].CurrentSecondaryCurrency + "/orderbook");
             if (orderBookTpl.Item1) { 
                 DCE.OrderBook_BTCM orderBook_BTCM = JsonConvert.DeserializeObject<DCE.OrderBook_BTCM>(orderBookTpl.Item2);
 
@@ -774,7 +797,7 @@ namespace IRTicker {
         }
 
         private void GetBFXOrderBook(string crypto) {
-            Tuple<bool, string> orderBookTpl = Utilities.Get("https://api.bitfinex.com/v1/book/" + (crypto == "XBT" ? "BTC" : crypto == "BCH" ? "BAB" : crypto) + DCEs["BFX"].CurrentSecondaryCurrency + "?limit_bids=200&limit_asks=200");
+            Tuple<bool, string> orderBookTpl = Utilities.Get("https://api.bitfinex.com/v1/book/" + (crypto == "XBT" ? "BTC" : crypto == "BCH" ? "BAB" : crypto == "USDT" ? "UST" : crypto) + DCEs["BFX"].CurrentSecondaryCurrency + "?limit_bids=200&limit_asks=200");
             if (orderBookTpl.Item1) {
                 DCE.OrderBook_BFX orderBook_BFX = JsonConvert.DeserializeObject<DCE.OrderBook_BFX>(orderBookTpl.Item2);
 
@@ -1410,6 +1433,7 @@ namespace IRTicker {
             // 2 means we just want to lock the average coin price controls so it can't be change while we're pulling the data
             if (reportType == 2) {
                 foreach (string dExchange in Exchanges) {
+                    if (dExchange == "CSPT") continue; // none of these fields exist for coinspot
                     // if they have filled in the order book controls, then disable them while we work it out
                     if (UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex > 0 && !string.IsNullOrEmpty(UIControls_Dict[dExchange].AvgPrice_NumCoins.Text)) {
                         UIControls_Dict[dExchange].AvgPrice_Crypto.Enabled = false;

@@ -161,11 +161,13 @@ namespace IRTicker {
                             string crypto = pair.Item1;
                             string fiat = pair.Item2;
                             DCEs["IR"].pulledSnapShot[crypto + "-" + fiat] = false;  // initialise the pulledSnapShot variable for this pair
+                            if (crypto == "USDT") crypto = "UST";
                             channel += "\"orderbook-" + crypto + "-" + fiat + "\", ";
                             DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat)] = 0;  // initialise the nonce dictionary
                             DCEs[dExchange].nonceErrorTracker[("ORDERBOOK-" + crypto + "-" + fiat)] = DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;  // false means no error, no need to dump OB
                         }
                         channel += "]} ";
+                        Debug.Print("IR websocket subscribe: " + channel);
                         wSocket_IR.Send(channel);
                         //wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"orderbook-" + crypto + "-" + fiat + "\"]} ");
 
@@ -217,6 +219,7 @@ namespace IRTicker {
 
                             if (crypto == "XBT") crypto = "BTC";
                             if (crypto == "BCH") crypto = "BAB";
+                            if (crypto == "USDT") crypto = "UST";
                             channel = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"" + crypto + fiat + "\"}";
                             wSocket_BFX.Send(channel);
                         }
@@ -542,7 +545,7 @@ namespace IRTicker {
         public void validateNonce(Ticker_IR tickerStream) {
             string pair = tickerStream.Data.Pair.ToUpper();
             string channel = tickerStream.Channel.ToUpper();
-
+            if (pair.StartsWith("UST")) pair = pair.Replace("UST", "USDT"); // hackkk
             // first do orderBuffer stuff
             if (!DCEs["IR"].pulledSnapShot[pair]) {
                 if (!DCEs["IR"].orderBuffer_IR.ContainsKey(pair)) {
