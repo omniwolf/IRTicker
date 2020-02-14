@@ -212,14 +212,14 @@ namespace IRTicker {
             UIControls_Dict["IR"].ETC_Price = IR_ETC_Label2;
             UIControls_Dict["IR"].ETC_Spread = IR_ETC_Label3;
             UIControls_Dict["IR"].ETC_PriceTT = IR_ETC_PriceTT;
-            UIControls_Dict["IR"].USDT_Label = IR_ETC_Label1;
-            UIControls_Dict["IR"].USDT_Price = IR_ETC_Label2;
-            UIControls_Dict["IR"].USDT_Spread = IR_ETC_Label3;
-            UIControls_Dict["IR"].USDT_Label = IR_ETC_Label1;
-            UIControls_Dict["IR"].BSV_Price = IR_ETC_Label2;
-            UIControls_Dict["IR"].BSV_Spread = IR_ETC_Label3;
-            UIControls_Dict["IR"].BSV_PriceTT = IR_ETC_PriceTT;
-            UIControls_Dict["IR"].BSV_PriceTT = IR_ETC_PriceTT;
+            UIControls_Dict["IR"].USDT_Label = IR_USDT_Label1;
+            UIControls_Dict["IR"].USDT_Price = IR_USDT_Label2;
+            UIControls_Dict["IR"].USDT_Spread = IR_USDT_Label3;
+            UIControls_Dict["IR"].USDT_PriceTT = IR_USDT_PriceTT;
+            UIControls_Dict["IR"].BSV_Label = IR_BSV_Label1;
+            UIControls_Dict["IR"].BSV_Price = IR_BSV_Label2;
+            UIControls_Dict["IR"].BSV_Spread = IR_BSV_Label3;
+            UIControls_Dict["IR"].BSV_PriceTT = IR_BSV_PriceTT;
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
             UIControls_Dict["IR"].AvgPrice_Crypto = IR_CryptoComboBox;
@@ -270,10 +270,10 @@ namespace IRTicker {
             UIControls_Dict["BTCM"].ETC_Price = BTCM_ETC_Label2;
             UIControls_Dict["BTCM"].ETC_Spread = BTCM_ETC_Label3;
             UIControls_Dict["BTCM"].ETC_PriceTT = BTCM_ETC_PriceTT;
-            UIControls_Dict["BTCM"].BSV_Label = BTCM_ETC_Label1;
-            UIControls_Dict["BTCM"].BSV_Price = BTCM_ETC_Label2;
-            UIControls_Dict["BTCM"].BSV_Spread = BTCM_ETC_Label3;
-            UIControls_Dict["BTCM"].BSV_PriceTT = BTCM_ETC_PriceTT;
+            UIControls_Dict["BTCM"].BSV_Label = BTCM_BSV_Label1;
+            UIControls_Dict["BTCM"].BSV_Price = BTCM_BSV_Label2;
+            UIControls_Dict["BTCM"].BSV_Spread = BTCM_BSV_Label3;
+            UIControls_Dict["BTCM"].BSV_PriceTT = BTCM_BSV_PriceTT;
             UIControls_Dict["BTCM"].AvgPrice_BuySell = BTCM_BuySellComboBox;
             UIControls_Dict["BTCM"].AvgPrice_NumCoins = BTCM_NumCoinsTextBox;
             UIControls_Dict["BTCM"].AvgPrice_Crypto = BTCM_CryptoComboBox;
@@ -380,14 +380,14 @@ namespace IRTicker {
             UIControls_Dict["BFX"].ETC_Price = BFX_ETC_Label2;
             UIControls_Dict["BFX"].ETC_Spread = BFX_ETC_Label3;
             UIControls_Dict["BFX"].ETC_PriceTT = BFX_ETC_PriceTT;
-            UIControls_Dict["BFX"].USDT_Label = BFX_ETC_Label1;
-            UIControls_Dict["BFX"].USDT_Price = BFX_ETC_Label2;
-            UIControls_Dict["BFX"].USDT_Spread = BFX_ETC_Label3;
-            UIControls_Dict["BFX"].USDT_PriceTT = BFX_ETC_PriceTT;
-            UIControls_Dict["BFX"].BSV_Label = BFX_ETC_Label1;
-            UIControls_Dict["BFX"].BSV_Price = BFX_ETC_Label2;
-            UIControls_Dict["BFX"].BSV_Spread = BFX_ETC_Label3;
-            UIControls_Dict["BFX"].BSV_PriceTT = BFX_ETC_PriceTT;
+            UIControls_Dict["BFX"].USDT_Label = BFX_USDT_Label1;
+            UIControls_Dict["BFX"].USDT_Price = BFX_USDT_Label2;
+            UIControls_Dict["BFX"].USDT_Spread = BFX_USDT_Label3;
+            UIControls_Dict["BFX"].USDT_PriceTT = BFX_USDT_PriceTT;
+            UIControls_Dict["BFX"].BSV_Label = BFX_BSV_Label1;
+            UIControls_Dict["BFX"].BSV_Price = BFX_BSV_Label2;
+            UIControls_Dict["BFX"].BSV_Spread = BFX_BSV_Label3;
+            UIControls_Dict["BFX"].BSV_PriceTT = BFX_BSV_PriceTT;
             UIControls_Dict["BFX"].AvgPrice_BuySell = BFX_BuySellComboBox;
             UIControls_Dict["BFX"].AvgPrice_NumCoins = BFX_NumCoinsTextBox;
             UIControls_Dict["BFX"].AvgPrice_Crypto = BFX_CryptoComboBox;
@@ -708,10 +708,11 @@ namespace IRTicker {
                     if (prod.pair.StartsWith("bab")) {
                         prod.pair = prod.pair.Replace("bab", "BCH");
                     }
+                    if (prod.pair.StartsWith("ust")) prod.pair = prod.pair.Replace("ust", "USDT");
 
                     // next we need to do a manual conversion.
                     DCE.products_GDAX prod_gdax = new DCE.products_GDAX();
-                    prod_gdax.id = (prod.pair.Insert(3, "-")).ToUpper();  // converts btcusd into BTC-USD
+                    prod_gdax.id = (prod.pair.Insert(prod.pair.Length - 3, "-")).ToUpper();  // converts btcusd into BTC-USD
                     //Debug.Print("BFX prod_gdax id " + prod_gdax.id);
                     prod_gdax.base_min_size = prod.minimum_order_size;
                     prod_gdax.base_max_size = prod.maximum_order_size;
@@ -830,6 +831,9 @@ namespace IRTicker {
         }
 
         private void PopulateCryptoComboBox(string dExchange) {
+
+            if (UIControls_Dict[dExchange].AvgPrice == null) return;  // eg coinspot 
+
             UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Clear();
             UIControls_Dict[dExchange].AvgPrice_Crypto.ResetText();
             UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Add("");  // add an empty option as the first one so it can be selected when we need to "reset"
@@ -1180,9 +1184,11 @@ namespace IRTicker {
                 UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Black;
                 UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex = 0;  // reset this so we don't pull the order book every time.
             }*/
-            /*else*/ UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Gray;  // any text there is now a poll old, so gray it out so the user knows it's stale.
-
-            UIControls_Dict[dExchange].AvgPrice_Crypto.Enabled = true;  // we disable it if they change the fiat currency as we need to re-populate the crypto combo box first
+            /*else*/
+            if (UIControls_Dict[dExchange].AvgPrice != null) {
+                UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Gray;  // any text there is now a poll old, so gray it out so the user knows it's stale.
+                UIControls_Dict[dExchange].AvgPrice_Crypto.Enabled = true;  // we disable it if they change the fiat currency as we need to re-populate the crypto combo box first
+            }
         }
 
         // Updates labels, but just a specific pair (used for websockets because we get each pair separartely)
@@ -1433,7 +1439,7 @@ namespace IRTicker {
             // 2 means we just want to lock the average coin price controls so it can't be change while we're pulling the data
             if (reportType == 2) {
                 foreach (string dExchange in Exchanges) {
-                    if (dExchange == "CSPT") continue; // none of these fields exist for coinspot
+                    if (UIControls_Dict[dExchange].AvgPrice == null) continue; // none of these fields exist for coinspot
                     // if they have filled in the order book controls, then disable them while we work it out
                     if (UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex > 0 && !string.IsNullOrEmpty(UIControls_Dict[dExchange].AvgPrice_NumCoins.Text)) {
                         UIControls_Dict[dExchange].AvgPrice_Crypto.Enabled = false;

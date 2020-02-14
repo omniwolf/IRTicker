@@ -194,6 +194,7 @@ namespace IRTicker {
 
         public List<string> PrimaryCurrencyList {
             get {
+                //Debug.Print("prim currency for " + FriendlyName);
                 List<string> codesList = new List<string>();
                 string[] codess = _primaryCodesStr.Split(',');
                 foreach(string cc in codess) {

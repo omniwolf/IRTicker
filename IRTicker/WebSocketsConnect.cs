@@ -103,10 +103,17 @@ namespace IRTicker {
         }
 
         public void GetOrderBook_IR(string crypto, string fiat) {
+            if (crypto == "USDT") crypto = "UST";
             string pair = crypto + "-" + fiat;
             Tuple<bool, string> orderBookTpl = Utilities.Get("https://api.independentreserve.com/Public/GetAllOrders?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
+
+            // have to change back ughhh
+            if (crypto == "UST") crypto = "USDT";
+            pair = crypto + "-" + fiat;
+
             if (orderBookTpl.Item1) {
                 DCE.OrderBook orderBook = JsonConvert.DeserializeObject<DCE.OrderBook>(orderBookTpl.Item2);
+                if (orderBook.PrimaryCurrencyCode.ToUpper() == "UST") orderBook.PrimaryCurrencyCode = "USDT";
                 DCEs["IR"].orderBooks[pair] = orderBook;
 
                 // next we need to convert this orderbook into a concurrent dictionary of OrderBook_IR objects
@@ -163,6 +170,7 @@ namespace IRTicker {
                             DCEs["IR"].pulledSnapShot[crypto + "-" + fiat] = false;  // initialise the pulledSnapShot variable for this pair
                             if (crypto == "USDT") crypto = "UST";
                             channel += "\"orderbook-" + crypto + "-" + fiat + "\", ";
+                            if (crypto == "UST") crypto = "USDT";
                             DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat)] = 0;  // initialise the nonce dictionary
                             DCEs[dExchange].nonceErrorTracker[("ORDERBOOK-" + crypto + "-" + fiat)] = DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;  // false means no error, no need to dump OB
                         }
@@ -219,7 +227,9 @@ namespace IRTicker {
 
                             if (crypto == "XBT") crypto = "BTC";
                             if (crypto == "BCH") crypto = "BAB";
-                            if (crypto == "USDT") crypto = "UST";
+                            if (crypto == "USDT") {
+                                crypto = "UST";
+                            }
                             channel = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"" + crypto + fiat + "\"}";
                             wSocket_BFX.Send(channel);
                         }
@@ -521,6 +531,8 @@ namespace IRTicker {
 
             Ticker_IR tickerStream = new Ticker_IR();
             tickerStream = JsonConvert.DeserializeObject<Ticker_IR>(message);
+            if (tickerStream.Data.Pair.ToUpper().Contains("UST")) tickerStream.Data.Pair = tickerStream.Data.Pair.Replace(tickerStream.Data.Pair.Substring(0, 3), "USDT");
+            if (tickerStream.Channel.ToUpper().Contains("-UST-")) tickerStream.Channel = tickerStream.Channel.Replace(tickerStream.Channel.Substring(10, 3), "USDT");
 
             // still trying to get to the bottom of orders that should be deleted that aren't
             if (tickerStream.Data.Pair == "xbt-aud") {
@@ -545,7 +557,7 @@ namespace IRTicker {
         public void validateNonce(Ticker_IR tickerStream) {
             string pair = tickerStream.Data.Pair.ToUpper();
             string channel = tickerStream.Channel.ToUpper();
-            if (pair.StartsWith("UST")) pair = pair.Replace("UST", "USDT"); // hackkk
+            
             // first do orderBuffer stuff
             if (!DCEs["IR"].pulledSnapShot[pair]) {
                 if (!DCEs["IR"].orderBuffer_IR.ContainsKey(pair)) {
@@ -935,6 +947,7 @@ namespace IRTicker {
                         int partCount = 1;  // start at 1 because we already pulled out the channel ID
                         DCE.MarketSummary mSummary = new DCE.MarketSummary();
                         mSummary.PrimaryCurrencyCode = channel_Dict_BFX[streamParts[0]].pair.Substring(0, 3);
+                        if (mSummary.PrimaryCurrencyCode.ToUpper() == "UST") mSummary.PrimaryCurrencyCode = "USDT";
                         mSummary.SecondaryCurrencyCode = channel_Dict_BFX[streamParts[0]].pair.Substring(3, 3);
                         do {
                             if (decimal.TryParse(streamParts[partCount], out decimal result)) {
