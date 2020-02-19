@@ -117,6 +117,7 @@ namespace IRTicker {
             DCEs["CSPT"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"EOS\",\"LTC\",\"XRP\"";
             DCEs["CSPT"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["CSPT"].HasStaticData = true;  // we don't poll for static data, so just say we have it.
+            DCEs["CSPT"].socketsAlive = true;  // coinspot has no sockets, so just leave this as true so everything is happy.
 
             wSocketConnect = new WebSocketsConnect(DCEs, pollingThread);
 
