@@ -514,6 +514,10 @@ namespace IRTicker {
                 Debug.Print("IGNORING - " + message);
                 return;
             }
+            if (message.Contains("Error")) {
+                Debug.Print("IR ERROR in websockets: " + message);
+                return;
+            }
 
             if (message.Contains("\"Event\":\"Heartbeat\"")) {
                 // let's keep track of this.
