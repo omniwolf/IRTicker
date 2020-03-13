@@ -23,6 +23,11 @@ namespace IRTicker {
         // this list will be sorted from earliest time to latest time
         public static Color PriceColour(List<Tuple<DateTime, decimal>> priceList) {
 
+            if (priceList.Count <= 1) {  // if there's 1 price, well we can't compare that with anything, so just bail.  if there's no prices, well shit you know you gotta bail
+                //Debug.Print("PriceColour function was sent an empty list.  bailing.");
+                return Color.Black;
+            }
+
             Tuple<DateTime, decimal> PriceListLast ;
             Tuple<DateTime, decimal> PriceListFirst;
             DateTime PriceListLastItem1;

@@ -639,7 +639,7 @@ namespace IRTicker {
 
             if (!tickerStream.Data.OrderType.StartsWith("Limit")) {
                 Debug.Print(DateTime.Now + " - ignoring a " + tickerStream.Data.OrderType + " order.  event: " + tickerStream.Event);
-                return;  // ignore market orders
+                //return;  // ignore market orders
             }
 
 
@@ -706,9 +706,13 @@ namespace IRTicker {
                             //pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
                         }
                         else {
+                            //pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
+                        }
+                        if (tickerStream.Data.Pair.ToUpper() == "XBT-AUD") {
                             pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
                         }
                     }
+
                     break;
             }
         }
