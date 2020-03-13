@@ -22,6 +22,7 @@ namespace IRTicker {
             public double EUR { get; set; }
             public double AUD { get; set; }
             public double NZD { get; set; }
+            public double SGD { get; set; }
         }
 
         public class MarketSummary_OER {
@@ -40,6 +41,7 @@ namespace IRTicker {
             public double AUD { get; set; }
             public double NZD { get; set; }
             public double USD { get; set; }
+            public double SGD { get; set; }
         }
     }
     

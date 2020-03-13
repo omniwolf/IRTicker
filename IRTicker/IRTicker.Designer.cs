@@ -329,6 +329,8 @@
             this.BTCM_BSV_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BFX_USDT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BFX_BSV_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.SGD_Label2 = new System.Windows.Forms.Label();
+            this.SGD_Label1 = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -541,6 +543,7 @@
             // Main
             // 
             this.Main.BackColor = System.Drawing.Color.White;
+            this.Main.Controls.Add(this.fiatRefresh_checkBox);
             this.Main.Controls.Add(this.BTCM_GroupBox);
             this.Main.Controls.Add(this.CSPT_GroupBox);
             this.Main.Controls.Add(this.BFX_GroupBox);
@@ -1928,7 +1931,8 @@
             // 
             // fiat_GroupBox
             // 
-            this.fiat_GroupBox.Controls.Add(this.fiatRefresh_checkBox);
+            this.fiat_GroupBox.Controls.Add(this.SGD_Label2);
+            this.fiat_GroupBox.Controls.Add(this.SGD_Label1);
             this.fiat_GroupBox.Controls.Add(this.USD_Label2);
             this.fiat_GroupBox.Controls.Add(this.USD_Label1);
             this.fiat_GroupBox.Controls.Add(this.AUD_Label2);
@@ -1949,11 +1953,11 @@
             // fiatRefresh_checkBox
             // 
             this.fiatRefresh_checkBox.AutoSize = true;
-            this.fiatRefresh_checkBox.Location = new System.Drawing.Point(10, 107);
+            this.fiatRefresh_checkBox.Location = new System.Drawing.Point(30, 816);
             this.fiatRefresh_checkBox.Name = "fiatRefresh_checkBox";
-            this.fiatRefresh_checkBox.Size = new System.Drawing.Size(143, 17);
+            this.fiatRefresh_checkBox.Size = new System.Drawing.Size(145, 17);
             this.fiatRefresh_checkBox.TabIndex = 9;
-            this.fiatRefresh_checkBox.Text = "Tick to queue an update";
+            this.fiatRefresh_checkBox.Text = "Tick to queue fiat update";
             this.fiatRefresh_checkBox.UseVisualStyleBackColor = true;
             this.fiatRefresh_checkBox.CheckedChanged += new System.EventHandler(this.Fiat_checkBox_CheckedChanged);
             // 
@@ -3736,6 +3740,24 @@
             this.BFX_BSV_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.BFX_BSV_PriceTT.ToolTipTitle = "Spread details";
             // 
+            // SGD_Label2
+            // 
+            this.SGD_Label2.AutoSize = true;
+            this.SGD_Label2.Location = new System.Drawing.Point(58, 102);
+            this.SGD_Label2.Name = "SGD_Label2";
+            this.SGD_Label2.Size = new System.Drawing.Size(0, 13);
+            this.SGD_Label2.TabIndex = 10;
+            // 
+            // SGD_Label1
+            // 
+            this.SGD_Label1.AutoSize = true;
+            this.SGD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SGD_Label1.Location = new System.Drawing.Point(8, 103);
+            this.SGD_Label1.Name = "SGD_Label1";
+            this.SGD_Label1.Size = new System.Drawing.Size(37, 13);
+            this.SGD_Label1.TabIndex = 9;
+            this.SGD_Label1.Text = "SGD:";
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3759,6 +3781,7 @@
             this.Settings.PerformLayout();
             this.LoadingPanel.ResumeLayout(false);
             this.Main.ResumeLayout(false);
+            this.Main.PerformLayout();
             this.BTCM_GroupBox.ResumeLayout(false);
             this.BTCM_GroupBox.PerformLayout();
             this.CSPT_GroupBox.ResumeLayout(false);
@@ -4083,6 +4106,8 @@
         private System.Windows.Forms.ToolTip BTCM_BSV_PriceTT;
         private System.Windows.Forms.ToolTip BFX_USDT_PriceTT;
         private System.Windows.Forms.ToolTip BFX_BSV_PriceTT;
+        private System.Windows.Forms.Label SGD_Label2;
+        private System.Windows.Forms.Label SGD_Label1;
     }
 }
 
