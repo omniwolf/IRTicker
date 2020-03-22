@@ -32,7 +32,7 @@ namespace IRTicker {
         private Dictionary<string, UIControls> UIControls_Dict;
         private List<string> Exchanges;
         private string cryptoDir = "";
-        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "PLA", "XLM", "BAT", "REP", "GNT" };  // we don't poll the shit coins as often to help with rate limiting
+        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "REP", "GNT", "BSV", "USDT" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
         BlinkStick bStick;
@@ -185,9 +185,6 @@ namespace IRTicker {
             UIControls_Dict["IR"].ZRX_Price = IR_ZRX_Label2;
             UIControls_Dict["IR"].ZRX_Spread = IR_ZRX_Label3;
             UIControls_Dict["IR"].ZRX_PriceTT = IR_ZRX_PriceTT;
-            UIControls_Dict["IR"].PLA_Label = IR_PLA_Label1;
-            UIControls_Dict["IR"].PLA_Price = IR_PLA_Label2;
-            UIControls_Dict["IR"].PLA_Spread = IR_PLA_Label3;
             UIControls_Dict["IR"].PLA_PriceTT = IR_PLA_PriceTT;
             UIControls_Dict["IR"].EOS_Label = IR_EOS_Label1;
             UIControls_Dict["IR"].EOS_Price = IR_EOS_Label2;
