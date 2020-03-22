@@ -2143,7 +2143,7 @@
             this.IR_USDT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_USDT_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_USDT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_USDT_Label3.Location = new System.Drawing.Point(119, 79);
+            this.IR_USDT_Label3.Location = new System.Drawing.Point(119, 89);
             this.IR_USDT_Label3.Name = "IR_USDT_Label3";
             this.IR_USDT_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_USDT_Label3.TabIndex = 54;
@@ -2182,7 +2182,7 @@
             this.IR_BSV_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_BSV_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_BSV_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_BSV_Label3.Location = new System.Drawing.Point(119, 139);
+            this.IR_BSV_Label3.Location = new System.Drawing.Point(119, 149);
             this.IR_BSV_Label3.Name = "IR_BSV_Label3";
             this.IR_BSV_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_BSV_Label3.TabIndex = 51;
@@ -2221,7 +2221,7 @@
             this.IR_ETC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_ETC_Label3.Location = new System.Drawing.Point(119, 179);
+            this.IR_ETC_Label3.Location = new System.Drawing.Point(119, 189);
             this.IR_ETC_Label3.Name = "IR_ETC_Label3";
             this.IR_ETC_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_ETC_Label3.TabIndex = 48;
@@ -2274,7 +2274,7 @@
             this.IR_GNT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_GNT_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_GNT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_GNT_Label3.Location = new System.Drawing.Point(119, 299);
+            this.IR_GNT_Label3.Location = new System.Drawing.Point(119, 309);
             this.IR_GNT_Label3.Name = "IR_GNT_Label3";
             this.IR_GNT_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_GNT_Label3.TabIndex = 43;
@@ -2313,7 +2313,7 @@
             this.IR_REP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_REP_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_REP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_REP_Label3.Location = new System.Drawing.Point(119, 279);
+            this.IR_REP_Label3.Location = new System.Drawing.Point(119, 289);
             this.IR_REP_Label3.Name = "IR_REP_Label3";
             this.IR_REP_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_REP_Label3.TabIndex = 40;
@@ -2352,7 +2352,7 @@
             this.IR_BAT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_BAT_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_BAT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_BAT_Label3.Location = new System.Drawing.Point(119, 259);
+            this.IR_BAT_Label3.Location = new System.Drawing.Point(119, 269);
             this.IR_BAT_Label3.Name = "IR_BAT_Label3";
             this.IR_BAT_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_BAT_Label3.TabIndex = 37;
@@ -2391,7 +2391,7 @@
             this.IR_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_XLM_Label3.Location = new System.Drawing.Point(119, 199);
+            this.IR_XLM_Label3.Location = new System.Drawing.Point(119, 209);
             this.IR_XLM_Label3.Name = "IR_XLM_Label3";
             this.IR_XLM_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_XLM_Label3.TabIndex = 35;
@@ -2442,7 +2442,7 @@
             this.IR_EOS_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_EOS_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_EOS_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_EOS_Label3.Location = new System.Drawing.Point(119, 99);
+            this.IR_EOS_Label3.Location = new System.Drawing.Point(119, 109);
             this.IR_EOS_Label3.Name = "IR_EOS_Label3";
             this.IR_EOS_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_EOS_Label3.TabIndex = 31;
@@ -2518,7 +2518,7 @@
             this.IR_OMG_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_OMG_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_OMG_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_OMG_Label3.Location = new System.Drawing.Point(119, 219);
+            this.IR_OMG_Label3.Location = new System.Drawing.Point(119, 229);
             this.IR_OMG_Label3.Name = "IR_OMG_Label3";
             this.IR_OMG_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_OMG_Label3.TabIndex = 22;
@@ -2531,7 +2531,7 @@
             this.IR_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_XRP_Label3.Location = new System.Drawing.Point(119, 39);
+            this.IR_XRP_Label3.Location = new System.Drawing.Point(119, 49);
             this.IR_XRP_Label3.Name = "IR_XRP_Label3";
             this.IR_XRP_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_XRP_Label3.TabIndex = 21;
@@ -2571,7 +2571,7 @@
             this.IR_ZRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_ZRX_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_ZRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_ZRX_Label3.Location = new System.Drawing.Point(119, 239);
+            this.IR_ZRX_Label3.Location = new System.Drawing.Point(119, 249);
             this.IR_ZRX_Label3.Name = "IR_ZRX_Label3";
             this.IR_ZRX_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_ZRX_Label3.TabIndex = 18;
@@ -2699,7 +2699,7 @@
             this.IR_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_LTC_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_LTC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_LTC_Label3.Location = new System.Drawing.Point(119, 159);
+            this.IR_LTC_Label3.Location = new System.Drawing.Point(119, 169);
             this.IR_LTC_Label3.Name = "IR_LTC_Label3";
             this.IR_LTC_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_LTC_Label3.TabIndex = 11;
@@ -2712,7 +2712,7 @@
             this.IR_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_BCH_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_BCH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_BCH_Label3.Location = new System.Drawing.Point(119, 119);
+            this.IR_BCH_Label3.Location = new System.Drawing.Point(119, 129);
             this.IR_BCH_Label3.Name = "IR_BCH_Label3";
             this.IR_BCH_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_BCH_Label3.TabIndex = 10;
@@ -2725,7 +2725,7 @@
             this.IR_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_ETH_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_ETH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_ETH_Label3.Location = new System.Drawing.Point(119, 59);
+            this.IR_ETH_Label3.Location = new System.Drawing.Point(119, 69);
             this.IR_ETH_Label3.Name = "IR_ETH_Label3";
             this.IR_ETH_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_ETH_Label3.TabIndex = 9;
@@ -2738,7 +2738,7 @@
             this.IR_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_XBT_Label3.Location = new System.Drawing.Point(119, 19);
+            this.IR_XBT_Label3.Location = new System.Drawing.Point(119, 29);
             this.IR_XBT_Label3.Name = "IR_XBT_Label3";
             this.IR_XBT_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_XBT_Label3.TabIndex = 8;
