@@ -1218,7 +1218,7 @@ namespace IRTicker {
                 tempPrice.Text = midPoint.ToString(formatString).Trim();
                 tempPrice.ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(mSummary.pair));
                 // if we're experiencing nonce errors for this pair, make it gray.
-                if ((DCEs[dExchange].nonceErrorTracker.ContainsKey("ORDERBOOK-" + mSummary.pair.ToUpper())) && DCEs[dExchange].nonceErrorTracker["ORDERBOOK-" + mSummary.pair.ToUpper()]) {
+                if ((DCEs[dExchange].orderBuffer_IR.ContainsKey(mSummary.pair.ToUpper())) && DCEs[dExchange].orderBuffer_IR[mSummary.pair.ToUpper()].Count > 0) {
                     tempPrice.ForeColor = Color.Gray;
                 }
 
