@@ -366,6 +366,7 @@ namespace IRTicker {
                 //Debug.Print("!!! bTCMv2 got a message: " + e.Data);
                 if (e.IsText) {
                     //Debug.Print(DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("HH:mm:ss") + " - BTCMv2 sockets: " + e.Data);
+                    DCEs["BTCM"].socketsAlive = true;
                     MessageRX_BTCMv2(e.Data);
                 }
                 else Debug.Print("BTCMv2 ws stream is not text?? - " + e.RawData.ToString());
