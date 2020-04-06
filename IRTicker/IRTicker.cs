@@ -438,33 +438,33 @@ namespace IRTicker {
                 //RgbColor.FromRgb(69, 114, 69);
                 if (BlinkStickBW.IsBusy) {
                     BlinkStickBW.CancelAsync();
-                    Debug.Print(DateTime.Now + " -- BS -- cancelling the BlinkStickBW thread...");
+                    //Debug.Print(DateTime.Now + " -- BS -- cancelling the BlinkStickBW thread...");
                 }
 
                 try {
                     if (IRBTCvol > BTCMBTCvol * 2) {
                         if (!BlinkStickBW.IsBusy) {
                             BlinkStickBW.RunWorkerAsync(RgbColor.FromString("#0079FF"));
-                            Debug.Print(DateTime.Now + " -- BS -- started the IR GOOOOOD thread");
+                            //Debug.Print(DateTime.Now + " -- BS -- started the IR GOOOOOD thread");
                         }
                     }
                     else if (IRBTCvol * 2 < BTCMBTCvol) {
                         if (!BlinkStickBW.IsBusy) {
                             BlinkStickBW.RunWorkerAsync(RgbColor.FromString("#00FF00"));
-                            Debug.Print(DateTime.Now + " -- BS -- started the IR BAAAD thread");
+                            //Debug.Print(DateTime.Now + " -- BS -- started the IR BAAAD thread");
                         }
                     }
                     else if (IRBTCvol > BTCMBTCvol + 5) {
-                        Debug.Print(DateTime.Now + " -- BS -- IR winning");
+                        //Debug.Print(DateTime.Now + " -- BS -- IR winning");
                         bStick.Morph("#3176BC");
                     }
                     else if ((IRBTCvol <= BTCMBTCvol + 5) && (IRBTCvol >= BTCMBTCvol - 5)) {
-                        Debug.Print(DateTime.Now + " -- BS -- trying to go white");
+                        //Debug.Print(DateTime.Now + " -- BS -- trying to go white");
                         bStick.Morph("#C19E6E");
                         if (!BlinkStickWhite_Thread.IsBusy) BlinkStickWhite_Thread.RunWorkerAsync(RgbColor.FromString((BTCMBTCvol > IRBTCvol ? "#42953A" : "#B6CBE1")));
                     }
                     else if (IRBTCvol < BTCMBTCvol - 5) {
-                        Debug.Print(DateTime.Now + " -- BS -- BTCM is winning");
+                        //Debug.Print(DateTime.Now + " -- BS -- BTCM is winning");
                         bStick.Morph("#00A607");
                     }
                 }
@@ -2281,7 +2281,7 @@ namespace IRTicker {
 
             decimal IRvol = IRpairs["XBT-AUD"].DayVolume;
             decimal BTCMvol = BTCMpairs["XBT-AUD"].DayVolume;
-            Debug.Print("hoping for FALSE here - isBusy for blink is: " + BlinkStickBW.IsBusy);
+            //Debug.Print("hoping for FALSE here - isBusy for blink is: " + BlinkStickBW.IsBusy);
 
             setStickColour(IRvol, BTCMvol);
         }
@@ -2291,7 +2291,7 @@ namespace IRTicker {
             RgbColor col = (RgbColor)e.Argument;
 
             int pulseLength = 200;
-            Debug.Print(DateTime.Now + " - BS - white thread should pulse a colour");
+            //Debug.Print(DateTime.Now + " - BS - white thread should pulse a colour");
 
             if (bStick != null && bStick.OpenDevice()) {
                 try {

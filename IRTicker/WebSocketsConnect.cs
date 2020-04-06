@@ -639,7 +639,7 @@ namespace IRTicker {
 
             if (!tickerStream.Data.OrderType.StartsWith("Limit")) {
                 Debug.Print(DateTime.Now + " - ignoring a " + tickerStream.Data.OrderType + " order.  event: " + tickerStream.Event);
-                //return;  // ignore market orders
+                return;  // ignore market orders
             }
 
 
