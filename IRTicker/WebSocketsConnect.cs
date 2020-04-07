@@ -122,8 +122,8 @@ namespace IRTicker {
 
                 Debug.Print(DateTime.Now.ToString() + " IR OB " + crypto + fiat + " done");
 
-                DCEs["IR"].pulledSnapShot[pair] = true;
-                ApplyBuffer_IR(pair);
+                int remainingBuffer = ApplyBuffer_IR(pair);
+                Debug.Print("(" + pair + ") Buffer applied, there are " + remainingBuffer + " left in the buffer (should be 0)");
             }
             else {
                 Debug.Print(DateTime.Now.ToString() + " | IR - couldn't download REST OB? - " + pair);
@@ -142,16 +142,18 @@ namespace IRTicker {
 
             while (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(DCEs["IR"].channelNonce["ORDERBOOK-" + pair] + 1)) {
                 DCEs["IR"].channelNonce["ORDERBOOK-" + pair] += 1;
-                Debug.Print(DateTime.Now + " - popping an order (" + DCEs["IR"].channelNonce["ORDERBOOK-" + pair] + ") from the " + pair + " buffer, total prior to pop: " + DCEs["IR"].orderBuffer_IR[pair].Count);
+                Debug.Print(DateTime.Now + " - popping an order (nonce: " + DCEs["IR"].channelNonce["ORDERBOOK-" + pair] + ") from the " + pair + " buffer, total prior to pop: " + DCEs["IR"].orderBuffer_IR[pair].Count);
                 if (DCEs["IR"].orderBuffer_IR[pair].TryRemove(DCEs["IR"].channelNonce["ORDERBOOK-" + pair], out Ticker_IR ticker)) {
                     parseTicker_IR(ticker);
                 }
                 else {
                     Debug.Print(DateTime.Now + " - couldn't remove order from orderbuffer??");
                 }
+                Debug.Print("next none is: " + DCEs["IR"].orderBuffer_IR)
             }
 
-            Debug.Print(DateTime.Now + " --- buffer has been applied, any new errors are probably real");
+            DCEs["IR"].pulledSnapShot[pair] = true;
+            //Debug.Print(DateTime.Now + " --- buffer has been applied, any new errors are probably real");
 
             return DCEs["IR"].orderBuffer_IR[pair].Count;
         }
@@ -565,7 +567,7 @@ namespace IRTicker {
         public void validateNonce(Ticker_IR tickerStream) {
             string pair = tickerStream.Data.Pair.ToUpper();
             string channel = tickerStream.Channel.ToUpper();
-
+            Debug.Print("---- Nonce received: " + tickerStream.Nonce);
 
             // first do orderBuffer stuff
             if (!DCEs["IR"].orderBuffer_IR.ContainsKey(pair)) {  // make sure there exists the dictionary element
@@ -594,6 +596,7 @@ namespace IRTicker {
                             // now need to dump the OBs. 
                             DCEs["IR"].IR_OBs[pair].Item1.Clear();
                             DCEs["IR"].IR_OBs[pair].Item2.Clear();
+                            DCEs["IR"].orderBuffer_IR[pair].Clear();
 
                             Init_IR(pair);  // only reset it once the OBs are clear
 

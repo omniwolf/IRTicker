@@ -875,7 +875,8 @@ namespace IRTicker {
                     else {
                         DCEs["IR"].NetworkAvailable = true;
                         DCEs["IR"].CurrentDCEStatus = "Online";
-                        DCEs["IR"].PrimaryCurrencyCodes = Utilities.TrimEnds(primaryCurrencyCodesTpl.Item2);
+                        //DCEs["IR"].PrimaryCurrencyCodes = Utilities.TrimEnds(primaryCurrencyCodesTpl.Item2);
+                        DCEs["IR"].PrimaryCurrencyCodes = "\"XBT\"";
                     }
 
                     Tuple<bool, string> secondaryCurrencyCodesTpl = Utilities.Get("https://api.independentreserve.com/Public/GetValidSecondaryCurrencyCodes");
@@ -886,7 +887,8 @@ namespace IRTicker {
                     else {
                         DCEs["IR"].NetworkAvailable = true;
                         DCEs["IR"].CurrentDCEStatus = "Online";
-                        DCEs["IR"].SecondaryCurrencyCodes = Utilities.TrimEnds(secondaryCurrencyCodesTpl.Item2);
+                        //DCEs["IR"].SecondaryCurrencyCodes = Utilities.TrimEnds(secondaryCurrencyCodesTpl.Item2);
+                        DCEs["IR"].SecondaryCurrencyCodes = "\"AUD\"";
                     }
                     if (DCEs["IR"].NetworkAvailable) {
                         DCEs["IR"].HasStaticData = true;  // we got here with the network up?  then we got the static data!
@@ -1606,7 +1608,8 @@ namespace IRTicker {
 
             if (!DCEs["IR"].NetworkAvailable) return;  // at this point everything else needs IR data.  no point in continuing if there is none.
 
-            Dictionary<string, DCE.MarketSummary> cPairs = DCEs["IR"].GetCryptoPairs();
+            // we really don't need this folder stuff.
+            /*Dictionary<string, DCE.MarketSummary> cPairs = DCEs["IR"].GetCryptoPairs();
 
             string tempXBTdir = cryptoDir + "XBT $" + cPairs["XBT-AUD"].LastPrice;
             string tempETHdir = cryptoDir + "ETH $" + cPairs["ETH-AUD"].LastPrice;
@@ -1660,7 +1663,7 @@ namespace IRTicker {
             catch(Exception ex) {
                 // TODO: Handle the exception that has been thrown
                 MessageBox.Show("renaming folders went bad: " + ex.ToString());
-            }
+            }*/
 
             foreach (KeyValuePair<string, SpreadGraph> sGraph in SpreadGraph_Dict) sGraph.Value.Redraw();  // update the graph
         }
