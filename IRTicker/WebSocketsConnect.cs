@@ -608,14 +608,14 @@ namespace IRTicker {
                 return;  // bail.
             }
 
-            // Nonce work.  make sure the nonce is sequential
-            if ((DCEs["IR"].channelNonce[channel] == 0) && (DCEs["IR"].orderBuffer_IR[pair].Count > 0)) {  // 0 means we have never seen a nonce for this channel
-                DCEs["IR"].channelNonce[channel] = DCEs["IR"].orderBuffer_IR[pair].Keys.Min() - 1;  // set the nonce to the key before the next one in the buffer
-            }
-
             //Debug.Print(DateTime.Now + " - (" + pair + ") adding to buffer.  current nonce: " + DCEs["IR"].channelNonce[channel] + ", nonce we just received: " + tickerStream.Nonce);
             DCEs["IR"].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;
 
+            // if we don't got a nonce yet
+            if (DCEs["IR"].channelNonce[channel] == 0) {
+                // orderBuffer_IR must have at least one order in it, so we should be able to safely request the minimum key.
+                DCEs["IR"].channelNonce[channel] = DCEs["IR"].orderBuffer_IR[pair].Keys.Min() - 1;  // find the smallest nonce in the buffer, and set the channel nonce to one below that
+            }
 
             // we should check how full our buffer is. If there's more than 10 items (??) then it's probably too full.
             if ((DCEs["IR"].orderBuffer_IR[pair].Count > 100) || (DCEs["IR"].OBResetFlag[channel])) {
