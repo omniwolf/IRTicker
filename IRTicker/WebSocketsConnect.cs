@@ -122,8 +122,9 @@ namespace IRTicker {
 
                 Debug.Print(DateTime.Now.ToString() + " IR OB " + crypto + fiat + " done");
 
-                int remainingBuffer = ApplyBuffer_IR(pair);
-                Debug.Print("(" + pair + ") Buffer applied, there are " + remainingBuffer + " left in the buffer (should be 0)");
+                //int remainingBuffer = ApplyBuffer_IR(pair);
+                //Print("(" + pair + ") Buffer applied, there are " + remainingBuffer + " left in the buffer (should be 0)");
+                DCEs["IR"].pulledSnapShot[pair] = true;
             }
             else {
                 Debug.Print(DateTime.Now.ToString() + " | IR - couldn't download REST OB? - " + pair);
@@ -592,7 +593,7 @@ namespace IRTicker {
         public void validateNonce(Ticker_IR tickerStream) {
             string pair = tickerStream.Data.Pair.ToUpper();
             string channel = tickerStream.Channel.ToUpper();
-            Debug.Print("---- Nonce received: " + tickerStream.Nonce);
+            //Debug.Print("---- Nonce received: " + tickerStream.Nonce);
 
             // first do orderBuffer stuff
             if (!DCEs["IR"].orderBuffer_IR.ContainsKey(pair)) {  // make sure there exists the dictionary element
@@ -608,41 +609,45 @@ namespace IRTicker {
             }
 
             // Nonce work.  make sure the nonce is sequential
-            if (DCEs["IR"].channelNonce[channel] > 0) {  // 0 means we have never seen a nonce for this channel
-                if (DCEs["IR"].channelNonce[channel] + 1 != tickerStream.Nonce) {  // why not??
-                    
-                    // we should check how full our buffer is. If there's more than 10 items (??) then it's probably too full.
-                    if ((DCEs["IR"].orderBuffer_IR[pair].Count > 10) || (DCEs["IR"].OBResetFlag[channel])) {
-                        Debug.Print("NONCE - too many buffered nonces, can't recover " + tickerStream.Channel + ", time to dump and restart");
-
-                        if (wSocket_IR.IsAlive) {
-
-                            wSocket_IR.Send("{\"Event\":\"Unsubscribe\",\"Data\":[\"" + tickerStream.Channel + "\"]} ");
-
-                            // now need to dump the OBs. 
-                            DCEs["IR"].IR_OBs[pair].Item1.Clear();
-                            DCEs["IR"].IR_OBs[pair].Item2.Clear();
-                            DCEs["IR"].orderBuffer_IR[pair].Clear();
-
-                            Init_IR(pair);  // only reset it once the OBs are clear
-
-                            // now subscribe back to the channel
-                            Tuple<string, string> pairTup = Utilities.SplitPair(pair);
-                            List<Tuple<string, string>> tempList = new List<Tuple<string, string>>();
-                            tempList.Add(new Tuple<string, string>(pairTup.Item1, pairTup.Item2));
-                            WebSocket_Subscribe("IR", tempList);
-                        }
-                        else DCEs["IR"].socketsReset = true;
-                    }
-                    else {  // buffer still manageable; add to buffer
-                        Debug.Print(DateTime.Now + " - (" + pair + ") adding to buffer.  current nonce: " + DCEs["IR"].channelNonce[channel] + ", nonce we just received: " + tickerStream.Nonce);
-                        DCEs["IR"].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;
-                    }
-
-                    return;  // no need to interpret the rest of the event, we've either pushed onto the buffer, or we're starting fresh.
-                }
-                //else DCEs["IR"].nonceErrorTracker[channel] = false;  // if this is false and we're setting it again to false, fine - normal operation.  If this was true and we're now setting it to false, this means that we had some nonce errors but they seem to have settled down, and we can now dump and reconnect
+            if ((DCEs["IR"].channelNonce[channel] == 0) && (DCEs["IR"].orderBuffer_IR[pair].Count > 0)) {  // 0 means we have never seen a nonce for this channel
+                DCEs["IR"].channelNonce[channel] = DCEs["IR"].orderBuffer_IR[pair].Keys.Min() - 1;  // set the nonce to the key before the next one in the buffer
             }
+
+            //Debug.Print(DateTime.Now + " - (" + pair + ") adding to buffer.  current nonce: " + DCEs["IR"].channelNonce[channel] + ", nonce we just received: " + tickerStream.Nonce);
+            DCEs["IR"].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;
+
+
+            // we should check how full our buffer is. If there's more than 10 items (??) then it's probably too full.
+            if ((DCEs["IR"].orderBuffer_IR[pair].Count > 100) || (DCEs["IR"].OBResetFlag[channel])) {
+                Debug.Print("NONCE - too many buffered nonces, can't recover " + tickerStream.Channel + ", time to dump and restart");
+
+                if (wSocket_IR.IsAlive) {
+
+                    wSocket_IR.Send("{\"Event\":\"Unsubscribe\",\"Data\":[\"" + tickerStream.Channel + "\"]} ");
+
+                    // now need to dump the OBs. 
+                    DCEs["IR"].IR_OBs[pair].Item1.Clear();
+                    DCEs["IR"].IR_OBs[pair].Item2.Clear();
+                    DCEs["IR"].orderBuffer_IR[pair].Clear();
+
+                    Init_IR(pair);  // only reset it once the OBs are clear
+
+                    // now subscribe back to the channel
+                    Tuple<string, string> pairTup = Utilities.SplitPair(pair);
+                    List<Tuple<string, string>> tempList = new List<Tuple<string, string>>();
+                    tempList.Add(new Tuple<string, string>(pairTup.Item1, pairTup.Item2));
+                    WebSocket_Subscribe("IR", tempList);
+                    return;
+                }
+                else DCEs["IR"].socketsReset = true;
+                return;
+            }
+
+            // always want to try and process the buffer, maybe the next nonce is in there.
+            //return;  // no need to interpret the rest of the event, we've either pushed onto the buffer, or we're starting fresh.
+
+            //else DCEs["IR"].nonceErrorTracker[channel] = false;  // if this is false and we're setting it again to false, fine - normal operation.  If this was true and we're now setting it to false, this means that we had some nonce errors but they seem to have settled down, and we can now dump and reconnect
+
 
             // commented this out because I'm now trying to buffer out of order nonces, so the buffer process should be the only one to update the nonce
             //DCEs["IR"].channelNonce[channel] = tickerStream.Nonce;  // regardless of whether it was in sequence, update it.
@@ -661,15 +666,17 @@ namespace IRTicker {
                 //return;
             }*/
 
+            // commented the below out, maybe we have all the right nonces in the buffer.  let's just process the buffer regardless.
             // to get here we must have a good nonce
-            DCEs["IR"].channelNonce[channel] = tickerStream.Nonce; 
-            parseTicker_IR(tickerStream);
+            //DCEs["IR"].channelNonce[channel] = tickerStream.Nonce; 
+            //parseTicker_IR(tickerStream);
 
             // OK let's check if the buffer has some more events to add
+            //Debug.Print(DateTime.Now + " - starting buffer loop, " + DCEs["IR"].orderBuffer_IR[pair].Count + " events buffered");
             while (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(DCEs["IR"].channelNonce[channel] + 1)) {  // if the buffer has the next nonce...
                 DCEs["IR"].channelNonce[channel]++;  // cool, let's advance the nonce
                 if (DCEs["IR"].orderBuffer_IR[pair].TryRemove(DCEs["IR"].channelNonce[channel], out Ticker_IR ticker)) {  // pop the ticker object,
-                    Debug.Print(DateTime.Now + " - (" + pair + ") parsing nonce " + ticker.Nonce + " from buffer, there are " + (DCEs["IR"].orderBuffer_IR[pair].Count) + " other buffered events in there");
+                    //Debug.Print(DateTime.Now + " - (" + pair + ") parsing nonce " + ticker.Nonce + " from buffer, there are " + (DCEs["IR"].orderBuffer_IR[pair].Count) + " other buffered events in there");
                     parseTicker_IR(ticker);  // and parse it
                 }
                 else {

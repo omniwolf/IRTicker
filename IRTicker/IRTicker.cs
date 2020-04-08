@@ -875,8 +875,8 @@ namespace IRTicker {
                     else {
                         DCEs["IR"].NetworkAvailable = true;
                         DCEs["IR"].CurrentDCEStatus = "Online";
-                        //DCEs["IR"].PrimaryCurrencyCodes = Utilities.TrimEnds(primaryCurrencyCodesTpl.Item2);
-                        DCEs["IR"].PrimaryCurrencyCodes = "\"XBT\"";
+                        DCEs["IR"].PrimaryCurrencyCodes = Utilities.TrimEnds(primaryCurrencyCodesTpl.Item2);
+                        //DCEs["IR"].PrimaryCurrencyCodes = "\"XBT\"";
                     }
 
                     Tuple<bool, string> secondaryCurrencyCodesTpl = Utilities.Get("https://api.independentreserve.com/Public/GetValidSecondaryCurrencyCodes");
@@ -887,8 +887,8 @@ namespace IRTicker {
                     else {
                         DCEs["IR"].NetworkAvailable = true;
                         DCEs["IR"].CurrentDCEStatus = "Online";
-                        //DCEs["IR"].SecondaryCurrencyCodes = Utilities.TrimEnds(secondaryCurrencyCodesTpl.Item2);
-                        DCEs["IR"].SecondaryCurrencyCodes = "\"AUD\"";
+                        DCEs["IR"].SecondaryCurrencyCodes = Utilities.TrimEnds(secondaryCurrencyCodesTpl.Item2);
+                        //DCEs["IR"].SecondaryCurrencyCodes = "\"AUD\"";
                     }
                     if (DCEs["IR"].NetworkAvailable) {
                         DCEs["IR"].HasStaticData = true;  // we got here with the network up?  then we got the static data!
