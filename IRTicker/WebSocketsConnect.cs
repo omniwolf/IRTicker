@@ -7,7 +7,6 @@ using WebSocketSharp;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using System.ComponentModel;
-using Quobject.SocketIoClientDotNet.Client;
 using System.Collections.Concurrent;
 
 
@@ -17,7 +16,6 @@ namespace IRTicker {
 
         private Dictionary<string, DCE> DCEs;
         private WebSocket wSocket_BFX, wSocket_GDAX, wSocket_IR, wSocket_BTCM;
-        private Socket socket_BTCM;
         public Dictionary<string, Subscribed_BFX> channel_Dict_BFX = new Dictionary<string, Subscribed_BFX>();  // string is a string version of the channel ID
         private BackgroundWorker pollingThread;
 
@@ -322,7 +320,7 @@ namespace IRTicker {
             wSocket_IR.Close();
             DCEs["IR"].ClearOrderBookSubDicts();
         }
-
+        /*
         public void BTCM_Connect() {
             // BTCM
 
@@ -385,7 +383,7 @@ namespace IRTicker {
                 WebSocket_Reconnect("BTCM");
             });
         }
-
+        */
         public void BTCM_Connect_v2() {
 
             wSocket_BTCM = new WebSocket("wss://socket.btcmarkets.net/v2");
