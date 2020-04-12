@@ -14,6 +14,7 @@ namespace IRTicker {
         private string _primaryCodesStr;
         private string _secondaryCodesStr;
         private ConcurrentDictionary<string, List<Tuple<DateTime, decimal>>> priceHistory = new ConcurrentDictionary<string, List<Tuple<DateTime, decimal>>>();
+        private ConcurrentDictionary<string, DateTime> spreadHistory_LastPushed = new ConcurrentDictionary<string, DateTime>();  // holds the last time the spread was pushed to the spreadHistory and spreadHistoryCSV dicts
         private ConcurrentDictionary<string, List<DataPoint>> spreadHistory = new ConcurrentDictionary<string, List<DataPoint>>();
         private ConcurrentDictionary<string, List<DataPoint>> spreadHistoryCSV = new ConcurrentDictionary<string, List<DataPoint>>();
         //private ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> OfferOrderBook_IR = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();  // outer decimal is price, inner decimal is guid
@@ -129,26 +130,36 @@ namespace IRTicker {
                     priceHistory[pair].RemoveAt(0);  // if we have more than 6 minutes worth of data, remove the first entry
                 }
             }
-            
-            lock (spreadHistory) {
-                if (!spreadHistory.ContainsKey(pair)) {
-                    spreadHistory.TryAdd(pair, new List<DataPoint>());
-                }
-                else {
-                    spreadHistory[pair].Add(new DataPoint(DateTime.Now.ToOADate(), (double)mSummary.spread));
-                    if ((DateTime.Now.ToOADate() - 2) > spreadHistory[pair].FirstOrDefault().XValue) {
-                        spreadHistory[pair].RemoveAt(0);  // if we have more than 2 days worth of data, remove the first entry
+
+            // only do this stuff once a minute.  Otherwise it's a huge memory hog
+            if (!spreadHistory_LastPushed.ContainsKey(pair)) {
+                spreadHistory_LastPushed[pair] = DateTime.Now;
+            }
+
+
+            //Debug.Print("DateTime.Now: " + DateTime.Now + " and spreadHistory_LastPushed: " + spreadHistory_LastPushed);
+            if (DateTime.Now >= (spreadHistory_LastPushed[pair] + TimeSpan.FromMinutes(1))) {
+                spreadHistory_LastPushed[pair] = DateTime.Now;
+                lock (spreadHistory) {
+                    if (!spreadHistory.ContainsKey(pair)) {
+                        spreadHistory.TryAdd(pair, new List<DataPoint>());
+                    }
+                    else {
+                        spreadHistory[pair].Add(new DataPoint(DateTime.Now.ToOADate(), (double)mSummary.spread));
+                        if ((DateTime.Now.ToOADate() - 2) > spreadHistory[pair].FirstOrDefault().XValue) {
+                            spreadHistory[pair].RemoveAt(0);  // if we have more than 2 days worth of data, remove the first entry
+                        }
                     }
                 }
-            }
-            lock (spreadHistoryCSV) {
-                if (!spreadHistoryCSV.ContainsKey(pair)) {
-                    spreadHistoryCSV.TryAdd(pair, new List<DataPoint>());
-                }
-                else {
-                    spreadHistoryCSV[pair].Add(new DataPoint(DateTime.Now.ToOADate(), (double)mSummary.spread));
-                    if ((DateTime.Now.ToOADate() - 2) > spreadHistoryCSV[pair].FirstOrDefault().XValue) {
-                        spreadHistoryCSV[pair].RemoveAt(0);  // if we have more than 2 days worth of data, remove the first entry
+                lock (spreadHistoryCSV) {
+                    if (!spreadHistoryCSV.ContainsKey(pair)) {
+                        spreadHistoryCSV.TryAdd(pair, new List<DataPoint>());
+                    }
+                    else {
+                        spreadHistoryCSV[pair].Add(new DataPoint(DateTime.Now.ToOADate(), (double)mSummary.spread));
+                        if ((DateTime.Now.ToOADate() - 2) > spreadHistoryCSV[pair].FirstOrDefault().XValue) {
+                            spreadHistoryCSV[pair].RemoveAt(0);  // if we have more than 2 days worth of data, remove the first entry
+                        }
                     }
                 }
             }

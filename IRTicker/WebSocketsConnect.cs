@@ -422,7 +422,8 @@ namespace IRTicker {
                 DCEs["BTCM"].CurrentDCEStatus = "Socket error";
 
                 pollingThread.ReportProgress(12, "BTCM");  // 12 is error
-                DCEs["BTCM"].socketsReset = true;
+                // shouldn't actually need to set socketsreset to true here because we already set it in the OnError method, and otherwise why would we close the stream?
+                //DCEs["BTCM"].socketsReset = true;
             };
 
             wSocket_BTCM.Connect();

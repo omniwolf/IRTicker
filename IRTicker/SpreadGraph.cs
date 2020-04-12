@@ -28,6 +28,8 @@ namespace IRTicker {
         }
 
         public void Redraw() {
+
+            if (!Exchange.GetSpreadHistory().ContainsKey(pair)) return;  // early on it's possible there's no spread graph yet
             SpreadChart.Series["Series1"].Points.Clear();
 
             foreach (DataPoint dp in Exchange.GetSpreadHistory()[pair]) {
