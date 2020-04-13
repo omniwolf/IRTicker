@@ -759,12 +759,18 @@ namespace IRTicker {
                     pair.Value.Item1.Clear();
                     pair.Value.Item2.Clear();
                 }
+                foreach (KeyValuePair<string, Tuple<ConcurrentDictionary<string, decimal>, ConcurrentDictionary<string, decimal>>> pair in OrderGuid_IR_OBs) {
+                    pair.Value.Item1.Clear();
+                    pair.Value.Item2.Clear();
+                }
             }
             else {
                 string pairStr = (crypto + "-" + fiat).ToUpper();
                 if (IR_OBs.ContainsKey(pairStr)) {
                     IR_OBs[pairStr].Item1.Clear();
                     IR_OBs[pairStr].Item2.Clear();
+                    OrderGuid_IR_OBs[pairStr].Item1.Clear();
+                    OrderGuid_IR_OBs[pairStr].Item2.Clear();
                 }
             }
         }

@@ -130,7 +130,7 @@ namespace IRTicker {
                 Debug.Print(DateTime.Now.ToString() + " | IR - couldn't download REST OB? - " + pair);
             }
         }
-
+        /*
         private int ApplyBuffer_IR(string pair) {
             // this pair doesn't even exist in the OB
             // the pair is there, but nothing in it.
@@ -183,7 +183,7 @@ namespace IRTicker {
 
             return DCEs["IR"].orderBuffer_IR[pair].Count;
         }
-
+        */
         public void WebSocket_Subscribe(string dExchange, List<Tuple<string, string>> pairs) {
             string channel = "";
             switch (dExchange) {
@@ -639,29 +639,27 @@ namespace IRTicker {
             }
 
             // we should check how full our buffer is. If there's more than 10 items (??) then it's probably too full.
-            if ((DCEs["IR"].orderBuffer_IR[pair].Count > 100) || (DCEs["IR"].OBResetFlag[channel])) {
+            if (((DCEs["IR"].orderBuffer_IR[pair].Count > 100) && DCEs["IR"].pulledSnapShot[pair]) || (DCEs["IR"].OBResetFlag[channel])) {
                 Debug.Print("NONCE - too many buffered nonces, can't recover " + tickerStream.Channel + ", time to dump and restart");
 
-                //if (wSocket_IR.IsAlive) {
+                Init_IR(pair);
 
-                    //wSocket_IR.Send("{\"Event\":\"Unsubscribe\",\"Data\":[\"" + tickerStream.Channel + "\"]} ");
+                // now need to dump the OBs. 
+                Tuple<string, string> tempTup = Utilities.SplitPair(pair);
+                DCEs["IR"].ClearOrderBookSubDicts(tempTup.Item1, tempTup.Item2);
+                
 
-                    // now need to dump the OBs. 
-                    DCEs["IR"].IR_OBs[pair].Item1.Clear();
-                    DCEs["IR"].IR_OBs[pair].Item2.Clear();
-                    DCEs["IR"].orderBuffer_IR[pair].Clear();
+                DCEs["IR"].orderBuffer_IR[pair].Clear();
 
-                    Init_IR(pair);  // only reset it once the OBs are clear
+                // now subscribe back to the channel
+                Tuple<string, string> pairTup = Utilities.SplitPair(pair);
+                List<Tuple<string, string>> tempList = new List<Tuple<string, string>>();
+                tempList.Add(new Tuple<string, string>(pairTup.Item1, pairTup.Item2));
+                //WebSocket_Subscribe("IR", tempList);
+                GetOrderBook_IR(tempTup.Item1, tempTup.Item2);
 
-                    // now subscribe back to the channel
-                    Tuple<string, string> pairTup = Utilities.SplitPair(pair);
-                    List<Tuple<string, string>> tempList = new List<Tuple<string, string>>();
-                    tempList.Add(new Tuple<string, string>(pairTup.Item1, pairTup.Item2));
-                    WebSocket_Subscribe("IR", tempList);
-                    return;
-                /*}
-                else DCEs["IR"].socketsReset = true;*/
                 return;
+
             }
 
             // always want to try and process the buffer, maybe the next nonce is in there.
@@ -693,7 +691,9 @@ namespace IRTicker {
             //parseTicker_IR(tickerStream);
 
             // OK let's check if the buffer has some more events to add
-            //Debug.Print(DateTime.Now + " - starting buffer loop, " + DCEs["IR"].orderBuffer_IR[pair].Count + " events buffered");
+            if (DCEs["IR"].orderBuffer_IR[pair].Count > 1) {
+                Debug.Print(DateTime.Now + " - " + pair + " buffer has " + DCEs["IR"].orderBuffer_IR[pair].Count + " events buffered, let's try and parse them.");
+            }
             while (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(DCEs["IR"].channelNonce[channel] + 1)) {  // if the buffer has the next nonce...
                 DCEs["IR"].channelNonce[channel]++;  // cool, let's advance the nonce
                 if (DCEs["IR"].orderBuffer_IR[pair].TryRemove(DCEs["IR"].channelNonce[channel], out Ticker_IR ticker)) {  // pop the ticker object,
