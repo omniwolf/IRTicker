@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using WebSocketSharp;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Collections.Concurrent;
+using Websocket.Client;
 
 
 
@@ -15,7 +17,7 @@ namespace IRTicker {
     public class WebSocketsConnect {
 
         private Dictionary<string, DCE> DCEs;
-        private WebSocket wSocket_BFX, wSocket_GDAX, wSocket_IR, wSocket_BTCM;
+        private WebSocket wSocket_BFX, wSocket_GDAX, /*wSocket_IR,*/ wSocket_BTCM;
         public Dictionary<string, Subscribed_BFX> channel_Dict_BFX = new Dictionary<string, Subscribed_BFX>();  // string is a string version of the channel ID
         private BackgroundWorker pollingThread;
 
@@ -25,7 +27,7 @@ namespace IRTicker {
             pollingThread = _pollingThread;
 
             // IR
-            IR_Connect();
+            //IR_Connect();
             
             // BTCM
 
@@ -186,35 +188,29 @@ namespace IRTicker {
             string channel = "";
             switch (dExchange) {
                 case "IR":
-                    //Debug.Print("subscrbe IR: " + "{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\", \"" + "\"orderbook-" + crypto + "-" + fiat + "\"]} ");
-                    //wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\", \"orderbook-" + crypto + "-" + fiat + "\"]} ");
-                    if (wSocket_IR.IsAlive) {
-                        channel = "{\"Event\":\"Subscribe\",\"Data\":[";
-                        foreach (Tuple<string, string> pair in pairs) {
-                            string crypto = pair.Item1;
-                            string fiat = pair.Item2;
-                            DCEs["IR"].pulledSnapShot[crypto + "-" + fiat] = false;  // initialise the pulledSnapShot variable for this pair
-                            if (crypto == "USDT") crypto = "UST";
-                            channel += "\"orderbook-" + crypto + "-" + fiat + "\", ";
-                            if (crypto == "UST") crypto = "USDT";
-                            DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat)] = 0;  // initialise the nonce dictionary
-                            DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;  // false means no error, no need to dump OB
-                        }
-                        channel += "]} ";
-                        Debug.Print("IR websocket subscribe: " + channel);
-                        wSocket_IR.Send(channel);
-                        //wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"orderbook-" + crypto + "-" + fiat + "\"]} ");
 
-                        foreach (Tuple<string, string> pair in pairs) {
-                            GetOrderBook_IR(pair.Item1, pair.Item2);
-                        }
-
-
+                    channel = "{\"Event\":\"Subscribe\",\"Data\":[";
+                    foreach (Tuple<string, string> pair in pairs) {
+                        string crypto = pair.Item1;
+                        string fiat = pair.Item2;
+                        DCEs["IR"].pulledSnapShot[crypto + "-" + fiat] = false;  // initialise the pulledSnapShot variable for this pair
+                        if (crypto == "USDT") crypto = "UST";
+                        channel += "\"orderbook-" + crypto + "-" + fiat + "\", ";
+                        if (crypto == "UST") crypto = "USDT";
+                        DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat)] = 0;  // initialise the nonce dictionary
+                        DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;  // false means no error, no need to dump OB
                     }
-                    else {
-                        DCEs["IR"].socketsReset = true;
-                        Debug.Print(DateTime.Now + " - Trying to subscribe but sockets ain't alive!  IR");
+                    channel += "]} ";
+                    Debug.Print("IR websocket subscribe: " + channel);
+                    //wSocket_IR.Send(channel);
+
+                    startSockets("IR", "wss://websockets.independentreserve.com", channel);
+                    
+
+                    foreach (Tuple<string, string> pair in pairs) {
+                        GetOrderBook_IR(pair.Item1, pair.Item2);
                     }
+
                     break;
                 case "BTCM":
                     if (true) {
@@ -279,6 +275,32 @@ namespace IRTicker {
             }
         }
 
+        private async Task startSockets(string dExchange, string socketsURL, string subscribeStr) {
+            var exitEvent = new ManualResetEvent(false);
+            var url = new Uri(socketsURL);
+
+            using (WebsocketClient client = new WebsocketClient(url)) {
+                client.ReconnectTimeout = TimeSpan.FromSeconds(30);
+                client.ReconnectionHappened.Subscribe(async info => {
+                    Debug.Print($"Reconnection happened, type: {info.Type}");
+                    await Task.Run(() => client.Send(subscribeStr));
+                });
+
+                client.MessageReceived.Subscribe(msg => {
+                    switch (dExchange) {
+                        case "IR":
+                            MessageRX_IR(msg.Text);
+                            break;
+                    }
+                });
+                client.Start().Wait();
+
+                await Task.Run(() => client.Send(subscribeStr));
+
+                exitEvent.WaitOne();
+            }
+        }
+        /*
         public void IR_Connect() {
             wSocket_IR = new WebSocket("wss://websockets.independentreserve.com");
             wSocket_IR.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
@@ -315,9 +337,9 @@ namespace IRTicker {
 
             wSocket_IR.Connect();
         }
-
+        */
         public void IR_Disconnect() {
-            wSocket_IR.Close();
+            //wSocket_IR.Close();
             DCEs["IR"].ClearOrderBookSubDicts();
         }
         /*
@@ -437,13 +459,13 @@ namespace IRTicker {
             switch (dExchange) {
                 case "IR":
                     Debug.Print("switched to IR");
-                    if (wSocket_IR.IsAlive) {
+                    /*if (wSocket_IR.IsAlive) {
                         Debug.Print("IR - websockets is alive, closing websocket");
                         wSocket_IR.Close();
                         Debug.Print("IR - closed websocket");
-                    }
+                    }*/
 
-                    IR_Connect();  // create all the sockets stuff again from scratch :/
+                    //IR_Connect();  // create all the sockets stuff again from scratch :/
                     DCEs["IR"].HeartBeat = DateTime.Now;
                     // clean out all the OBs
                     //DCEs[dExchange].IR_OBs = new ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>>();
@@ -620,9 +642,9 @@ namespace IRTicker {
             if ((DCEs["IR"].orderBuffer_IR[pair].Count > 100) || (DCEs["IR"].OBResetFlag[channel])) {
                 Debug.Print("NONCE - too many buffered nonces, can't recover " + tickerStream.Channel + ", time to dump and restart");
 
-                if (wSocket_IR.IsAlive) {
+                //if (wSocket_IR.IsAlive) {
 
-                    wSocket_IR.Send("{\"Event\":\"Unsubscribe\",\"Data\":[\"" + tickerStream.Channel + "\"]} ");
+                    //wSocket_IR.Send("{\"Event\":\"Unsubscribe\",\"Data\":[\"" + tickerStream.Channel + "\"]} ");
 
                     // now need to dump the OBs. 
                     DCEs["IR"].IR_OBs[pair].Item1.Clear();
@@ -637,8 +659,8 @@ namespace IRTicker {
                     tempList.Add(new Tuple<string, string>(pairTup.Item1, pairTup.Item2));
                     WebSocket_Subscribe("IR", tempList);
                     return;
-                }
-                else DCEs["IR"].socketsReset = true;
+                /*}
+                else DCEs["IR"].socketsReset = true;*/
                 return;
             }
 
@@ -939,8 +961,8 @@ namespace IRTicker {
 
             switch (dExchange) {
                 case "IR":
-                    if (wSocket_IR.IsAlive) return true;
-                    return false;
+                    /*if (wSocket_IR.IsAlive)*/ return true;
+                   // return false;
                 case "BTCM":
                     if (wSocket_BTCM.IsAlive) return true;
                     return false;
