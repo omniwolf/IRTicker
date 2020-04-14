@@ -281,9 +281,29 @@ namespace IRTicker {
 
             using (WebsocketClient client = new WebsocketClient(url)) {
                 client.ReconnectTimeout = TimeSpan.FromSeconds(30);
-                client.ReconnectionHappened.Subscribe(async info => {
-                    Debug.Print($"Reconnection happened, type: {info.Type}");
-                    await Task.Run(() => client.Send(subscribeStr));
+                client.ReconnectionHappened.Subscribe(info => {
+                    Debug.Print(DateTime.Now + " - (" + dExchange + " reconnection) - clearing OB sub dicts...");
+                    DCEs[dExchange].ClearOrderBookSubDicts();
+                    Debug.Print("creating a new buffer dict...");
+                    DCEs[dExchange].orderBuffer_IR = new ConcurrentDictionary<string, ConcurrentDictionary<int, Ticker_IR>>();
+                    Debug.Print("setting the pulledSnapShot dict entries to all false...");
+                    foreach(string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
+                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
+                                DCEs[dExchange].pulledSnapShot[primaryCode + "-" + secondaryCode] = false;
+                            }
+                        }
+                    }
+                    Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
+                    Task.Run(() => client.Send(subscribeStr));
+                    Debug.Print("Pulling the REST OBs...");
+                    foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
+                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
+                                GetOrderBook_IR(primaryCode, secondaryCode);
+                            }
+                        }
+                    }
                 });
 
                 client.MessageReceived.Subscribe(msg => {
@@ -559,6 +579,7 @@ namespace IRTicker {
         }*/
         private void MessageRX_IR(string message) {
             if (message == null) return;
+            DCEs["IR"].socketsAlive = true;
             if (message.Contains("\"Event\":\"Subscriptions\"")) {
                 // ignore the subscriptions event.  it breaks parsing too :/
                 Debug.Print("IGNORING - " + message);
@@ -639,7 +660,7 @@ namespace IRTicker {
             }
 
             // we should check how full our buffer is. If there's more than 10 items (??) then it's probably too full.
-            if (((DCEs["IR"].orderBuffer_IR[pair].Count > 100) && DCEs["IR"].pulledSnapShot[pair]) || (DCEs["IR"].OBResetFlag[channel])) {
+            if (((DCEs["IR"].orderBuffer_IR[pair].Count > 20) && DCEs["IR"].pulledSnapShot[pair]) || (DCEs["IR"].OBResetFlag[channel])) {
                 Debug.Print("NONCE - too many buffered nonces, can't recover " + tickerStream.Channel + ", time to dump and restart");
 
                 Init_IR(pair);
