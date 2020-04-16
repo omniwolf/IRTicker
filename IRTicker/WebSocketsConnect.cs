@@ -306,7 +306,7 @@ namespace IRTicker {
                         channel += "]} ";
                     }
                     else {  // or just one pair
-                        channel += "\"orderbook-" + pair + "\"]";
+                        channel += "\"orderbook-" + pair + "\"]}";
                     }
                     Debug.Print("IR websocket subcribe/unsubscribe - " + (subscribe ? "subscribe" : "unsubscribe") + " event: " + channel);
 
@@ -337,6 +337,7 @@ namespace IRTicker {
 
         private void stopSockets(string dExchange, string pair = "none") {
             client_IR.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
+            Debug.Print("stop command sent");
         }
 
         private async Task startSockets(string dExchange, string socketsURL, string subscribeStr) {
@@ -544,12 +545,12 @@ namespace IRTicker {
             switch (dExchange) {
                 case "IR":
                     Debug.Print("switched to IR");
-                    /*if (wSocket_IR.IsAlive) {
-                        Debug.Print("IR - websockets is alive, closing websocket");
-                        wSocket_IR.Close();
-                        Debug.Print("IR - closed websocket");
-                    }*/
+                    if (client_IR.IsRunning) {
+                        Debug.Print(DateTime.Now + " - IR running, will stop");
+                        stopSockets("IR");
+                    }
 
+                    Init_sockets("IR");
                     //IR_Connect();  // create all the sockets stuff again from scratch :/
                     DCEs["IR"].HeartBeat = DateTime.Now;
                     // clean out all the OBs
@@ -621,9 +622,20 @@ namespace IRTicker {
         }
 
 
-        public void Init_IR(string pair) {
-            DCEs["IR"].pulledSnapShot[pair] = false;
-            DCEs["IR"].OBResetFlag["ORDERBOOK-" + pair] = false;
+        public void Init_sockets(string dExchange, string pair = "none") {
+
+            if (pair == "none") {
+                foreach (string crypto in DCEs[dExchange].PrimaryCurrencyList) {
+                    foreach (string fiat in DCEs[dExchange].SecondaryCurrencyList) {
+                        DCEs[dExchange].pulledSnapShot[crypto + "-" + fiat] = false;
+                        DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;
+                    }
+                }
+            }
+            else {
+                DCEs["IR"].pulledSnapShot[pair] = false;
+                DCEs["IR"].OBResetFlag["ORDERBOOK-" + pair] = false;
+            }
         }
 
         /* Sample socket data:
@@ -729,7 +741,7 @@ namespace IRTicker {
                 Debug.Print("NONCE - too many buffered nonces, can't recover " + tickerStream.Channel + ", time to dump and restart");
                 subscribe_unsubscribe_new("IR", false, pair);
 
-                Init_IR(pair);
+                Init_sockets("IR", pair);
 
                 // now need to dump the OBs. 
                 Tuple<string, string> tempTup = Utilities.SplitPair(pair);
