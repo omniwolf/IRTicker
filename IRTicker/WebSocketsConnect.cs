@@ -629,12 +629,14 @@ namespace IRTicker {
                     foreach (string fiat in DCEs[dExchange].SecondaryCurrencyList) {
                         DCEs[dExchange].pulledSnapShot[crypto + "-" + fiat] = false;
                         DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;
+                        DCEs[dExchange].channelNonce[crypto + "-" + fiat] = 0;
                     }
                 }
             }
             else {
                 DCEs["IR"].pulledSnapShot[pair] = false;
                 DCEs["IR"].OBResetFlag["ORDERBOOK-" + pair] = false;
+                DCEs[dExchange].channelNonce[pair] = 0;
             }
         }
 
