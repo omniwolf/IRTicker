@@ -11,8 +11,6 @@ using System.ComponentModel;
 using System.Collections.Concurrent;
 using Websocket.Client;
 
-
-
 namespace IRTicker {
     public class WebSocketsConnect {
 
@@ -298,7 +296,7 @@ namespace IRTicker {
                             string fiat = pair1.Item2;
                             DCEs["IR"].pulledSnapShot[crypto + "-" + fiat] = false;  // initialise the pulledSnapShot variable for this pair
                             if (crypto == "USDT") crypto = "UST";
-                            channel += "\"orderbook-" + crypto + "-" + fiat + "\", ";
+                            channel += "\"orderbook-" + crypto.ToLower() + "-" + fiat.ToLower() + "\", ";
                             if (crypto == "UST") crypto = "USDT";
                             DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat)] = 0;  // initialise the nonce dictionary
                             DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;  // false means no error, no need to dump OB
@@ -306,7 +304,7 @@ namespace IRTicker {
                         channel += "]} ";
                     }
                     else {  // or just one pair
-                        channel += "\"orderbook-" + pair + "\"]}";
+                        channel += "\"orderbook-" + pair.ToLower() + "\"]}";
                     }
                     Debug.Print("IR websocket subcribe/unsubscribe - " + (subscribe ? "subscribe" : "unsubscribe") + " event: " + channel);
 
@@ -351,11 +349,18 @@ namespace IRTicker {
                     DCEs[dExchange].ClearOrderBookSubDicts();
                     Debug.Print("creating a new buffer dict...");
                     DCEs[dExchange].orderBuffer_IR = new ConcurrentDictionary<string, ConcurrentDictionary<int, Ticker_IR>>();
-                    Debug.Print("setting the pulledSnapShot dict entries to all false...");
+                    Debug.Print("setting the pulledSnapShot dict entries to all false and initialising the orderbuffer dicts...");
                     foreach(string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
                         foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
                             if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
                                 DCEs[dExchange].pulledSnapShot[primaryCode + "-" + secondaryCode] = false;
+                            }
+                            // initialise orderbuffers
+                            if (!DCEs["IR"].orderBuffer_IR.ContainsKey(primaryCode + "-" + secondaryCode)) {  // make sure there exists the dictionary element
+                                if (!DCEs["IR"].orderBuffer_IR.TryAdd(primaryCode + "-" + secondaryCode, new ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>())) {
+                                    Debug.Print(DateTime.Now + " - can't add orderBuffer_IR concurrent dicsh for " + primaryCode + "-" + secondaryCode);
+                                    return;
+                                }
                             }
                         }
                     }
@@ -629,14 +634,14 @@ namespace IRTicker {
                     foreach (string fiat in DCEs[dExchange].SecondaryCurrencyList) {
                         DCEs[dExchange].pulledSnapShot[crypto + "-" + fiat] = false;
                         DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;
-                        DCEs[dExchange].channelNonce[crypto + "-" + fiat] = 0;
+                        DCEs[dExchange].channelNonce["ORDERBOOK-" + crypto + "-" + fiat] = 0;
                     }
                 }
             }
             else {
                 DCEs["IR"].pulledSnapShot[pair] = false;
                 DCEs["IR"].OBResetFlag["ORDERBOOK-" + pair] = false;
-                DCEs[dExchange].channelNonce[pair] = 0;
+                DCEs[dExchange].channelNonce["ORDERBOOK-" + pair] = 0;
             }
         }
 
@@ -716,13 +721,6 @@ namespace IRTicker {
             string channel = tickerStream.Channel.ToUpper();
             //Debug.Print("---- Nonce received: " + tickerStream.Nonce);
 
-            // first do orderBuffer stuff
-            if (!DCEs["IR"].orderBuffer_IR.ContainsKey(pair)) {  // make sure there exists the dictionary element
-                if (!DCEs["IR"].orderBuffer_IR.TryAdd(pair, new ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>())) {
-                    Debug.Print(DateTime.Now + " - can't add orderBuffer_IR concurrent dicsh for " + pair);
-                    return;
-                }
-            }
             if (!DCEs["IR"].pulledSnapShot[pair]) {  // if we haven't even got the OB yet
                 DCEs["IR"].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;  // add this event to the buffer
                 //Debug.Print(" ! just added " + tickerStream.Nonce + " to the buf");
@@ -742,7 +740,7 @@ namespace IRTicker {
             if (((DCEs["IR"].orderBuffer_IR[pair].Count > 20) && DCEs["IR"].pulledSnapShot[pair]) || (DCEs["IR"].OBResetFlag[channel])) {
                 Debug.Print("NONCE - too many buffered nonces, can't recover " + tickerStream.Channel + ", time to dump and restart");
                 subscribe_unsubscribe_new("IR", false, pair);
-
+                pollingThread.ReportProgress(26);
                 Init_sockets("IR", pair);
 
                 // now need to dump the OBs. 
@@ -787,9 +785,9 @@ namespace IRTicker {
             //parseTicker_IR(tickerStream);
 
             // OK let's check if the buffer has some more events to add
-            if (DCEs["IR"].orderBuffer_IR[pair].Count > 1) {
-                Debug.Print(DateTime.Now + " - " + pair + " buffer has " + DCEs["IR"].orderBuffer_IR[pair].Count + " events buffered, let's try and parse them.");
-            }
+            //if (DCEs["IR"].orderBuffer_IR[pair].Count > 1) {
+            //    Debug.Print(DateTime.Now + " - " + pair + " buffer has " + DCEs["IR"].orderBuffer_IR[pair].Count + " events buffered, let's try and parse them.");
+            //}
             while (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(DCEs["IR"].channelNonce[channel] + 1)) {  // if the buffer has the next nonce...
                 DCEs["IR"].channelNonce[channel]++;  // cool, let's advance the nonce
                 if (DCEs["IR"].orderBuffer_IR[pair].TryRemove(DCEs["IR"].channelNonce[channel], out Ticker_IR ticker)) {  // pop the ticker object,
