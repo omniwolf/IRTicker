@@ -15,8 +15,10 @@ using System.Collections.Concurrent;
 using System.Windows.Forms.DataVisualization.Charting;
 using BlinkStickDotNet;
 using System.Runtime.InteropServices;
-using Microsoft.Win32;
-
+using SlackAPI;
+using System.Collections.Specialized;
+using System.Net.Http;
+using System.Net.Http.Headers;
 // todo:
 
 
@@ -65,6 +67,71 @@ namespace IRTicker {
             else {
                 Debug.Print("BlinkStick couldn't be accessed or opened");
             }
+
+            // slack stuff
+            /*const string TOKEN = "xoxb-43125517685-900569511573-gVkZm2d3PZKVMSV1zvalv82u";  // token from last step in section above
+            var slackClient = new SlackTaskClient(TOKEN);
+            var response = slackClient.PostMessageAsync("#general", "hello world");
+            Debug.Print("slack resp: " + response.ToString());*/
+
+            var data = new NameValueCollection();
+            data["token"] = "xoxp-43125517685-43125293143-1091260765201-47615984f763971eaff527d1a4510948";
+            //data["channel"] = "general";
+            //data["as_user"] = "true";           // to send this message as the user who owns the token, false by default
+            //data["text"] = "test message 2";
+            //data["attachments"] = "[{\"fallback\":\"dummy\", \"text\":\"this is an attachment\"}]";
+
+            data["profile[status_text]"] = "riding a train";
+            //data["profile[status_emoji]"] = ":mountain_railway:";
+            //data["profile[status_expiration]"] = "0";
+
+            string temp = "{\"token\": \"xoxp-43125517685-43125293143-1091260765201-47615984f763971eaff527d1a4510948\", \"profile\": {   \"status_text\": \"riding a train\",  \"status_emoji\": \":mountain_railway:\", \"status_expiration\": 0    }    }";
+
+            /* var client = new System.Net.WebClient();
+             //var response = client.UploadValues("https://slack.com/api/users.profile.set", "POST", data);
+             var roeu = client.UploadString("https://slack.com/api/users.profile.set", "POST", temp);
+
+             //string responseInString = Encoding.UTF8.GetString(roeu);
+             //Console.WriteLine(responseInString);*/
+
+            var profChange = new SlackProfile {
+                profile = new SlackStatus {
+                    status_emoji = ":mountain_railway:",
+                    status_text = "weeewee",
+                    status_expiration = 0
+                }
+            };
+
+
+            var msg = new SlackMessage {
+                channel = "general",
+                text = "Hi there!",
+                as_user = true,
+                attachments = new SlackAttachment[]
+                {
+                    new SlackAttachment
+                    {
+                        fallback = "this did not work",
+                        text = "This is attachment 1",
+                        color = "good"
+                    },
+
+                    new SlackAttachment
+                    {
+                        fallback = "this did not work",
+                        text = "This is attachment 2",
+                        color = "danger"
+                    }
+                }
+            };
+
+            SendMessageAsync(
+                "xoxp-43125517685-43125293143-1091260765201-47615984f763971eaff527d1a4510948",
+                profChange
+            ).Wait();
+
+            Console.WriteLine("Message has been sent");
+
 
             if (refreshFrequencyTextbox.Text == "1") refreshFrequencyTextbox.Text = minRefreshFrequency.ToString();  // design time default is 1, we set to our actual min
 
@@ -141,6 +208,78 @@ namespace IRTicker {
 
             pollingThread.RunWorkerAsync();
         }
+
+
+
+        private static readonly HttpClient client = new HttpClient();
+
+        public class SlackProfile {
+            public SlackStatus profile { get; set; }
+        }
+
+        public class SlackStatus {
+            public string status_text { get; set; }
+            public string status_emoji { get; set; }
+            public int status_expiration { get; set; }
+        }
+
+        // reponse from message methods
+        public class SlackMessageResponse {
+            public bool ok { get; set; }
+            public string error { get; set; }
+            public string channel { get; set; }
+            public string ts { get; set; }
+        }
+
+        // a slack message
+        public class SlackMessage {
+            public string channel { get; set; }
+            public string text { get; set; }
+            public bool as_user { get; set; }
+            public SlackAttachment[] attachments { get; set; }
+        }
+
+        // a slack message attachment
+        public class SlackAttachment {
+            public string fallback { get; set; }
+            public string text { get; set; }
+            public string image_url { get; set; }
+            public string color { get; set; }
+        }
+
+        // sends a slack message asynchronous
+        // throws exception if message can not be sent
+        public static async Task SendMessageAsync(string token, SlackProfile msg) {
+            // serialize method parameters to JSON
+            var content = JsonConvert.SerializeObject(msg);
+            var httpContent = new StringContent(
+                content,
+                Encoding.UTF8,
+                "application/json"
+            );
+
+            // set token in authorization header
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            Debug.Print("about to postAsync");
+            // send message to API
+            var response = await client.PostAsync("https://slack.com/api/users.profile.set", httpContent).ConfigureAwait(continueOnCapturedContext: false); 
+            Debug.Print("done posting async");
+            // fetch response from API
+            var responseJson = await response.Content.ReadAsStringAsync();
+
+            // convert JSON response to object
+            SlackMessageResponse messageResponse =
+                JsonConvert.DeserializeObject<SlackMessageResponse>(responseJson);
+
+            // throw exception if sending failed
+            if (messageResponse.ok == false) {
+                throw new Exception(
+                    "failed to send message. error: " + messageResponse.error
+                );
+            }
+        }
+
+
 
         // super manual function to push the UI controls into objects so we can read them programattically
         private void InitialiseUIControls() {
