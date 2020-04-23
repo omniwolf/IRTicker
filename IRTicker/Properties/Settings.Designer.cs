@@ -73,13 +73,37 @@ namespace IRTicker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ToolbarFolder {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Slack {
             get {
-                return ((string)(this["ToolbarFolder"]));
+                return ((bool)(this["Slack"]));
             }
             set {
-                this["ToolbarFolder"] = value;
+                this["Slack"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FlashForm {
+            get {
+                return ((bool)(this["FlashForm"]));
+            }
+            set {
+                this["FlashForm"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SlackToken {
+            get {
+                return ((string)(this["SlackToken"]));
+            }
+            set {
+                this["SlackToken"] = value;
             }
         }
     }

@@ -34,11 +34,11 @@ namespace IRTicker {
         private bool refreshFiat = true;  // this too?
         private Dictionary<string, UIControls> UIControls_Dict;
         private List<string> Exchanges;
-        private string cryptoDir = "";
         private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "REP", "GNT", "BSV", "USDT" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
-        BlinkStick bStick;
+        private BlinkStick bStick;
+        private Slack slackObj = new Slack();
 
         public ConcurrentDictionary<string, SpreadGraph> SpreadGraph_Dict = new ConcurrentDictionary<string, SpreadGraph>();  // needs to be public because it gets accessed from the graphs object
 
@@ -68,84 +68,7 @@ namespace IRTicker {
                 Debug.Print("BlinkStick couldn't be accessed or opened");
             }
 
-            // slack stuff
-            /*const string TOKEN = "xoxb-43125517685-900569511573-gVkZm2d3PZKVMSV1zvalv82u";  // token from last step in section above
-            var slackClient = new SlackTaskClient(TOKEN);
-            var response = slackClient.PostMessageAsync("#general", "hello world");
-            Debug.Print("slack resp: " + response.ToString());*/
-
-            var data = new NameValueCollection();
-            data["token"] = "xoxp-43125517685-43125293143-1091260765201-47615984f763971eaff527d1a4510948";
-            //data["channel"] = "general";
-            //data["as_user"] = "true";           // to send this message as the user who owns the token, false by default
-            //data["text"] = "test message 2";
-            //data["attachments"] = "[{\"fallback\":\"dummy\", \"text\":\"this is an attachment\"}]";
-
-            data["profile[status_text]"] = "riding a train";
-            //data["profile[status_emoji]"] = ":mountain_railway:";
-            //data["profile[status_expiration]"] = "0";
-
-            string temp = "{\"token\": \"xoxp-43125517685-43125293143-1091260765201-47615984f763971eaff527d1a4510948\", \"profile\": {   \"status_text\": \"riding a train\",  \"status_emoji\": \":mountain_railway:\", \"status_expiration\": 0    }    }";
-
-            /* var client = new System.Net.WebClient();
-             //var response = client.UploadValues("https://slack.com/api/users.profile.set", "POST", data);
-             var roeu = client.UploadString("https://slack.com/api/users.profile.set", "POST", temp);
-
-             //string responseInString = Encoding.UTF8.GetString(roeu);
-             //Console.WriteLine(responseInString);*/
-
-            var profChange = new SlackProfile {
-                profile = new SlackStatus {
-                    status_emoji = ":mountain_railway:",
-                    status_text = "weeewee",
-                    status_expiration = 0
-                }
-            };
-
-
-            var msg = new SlackMessage {
-                channel = "general",
-                text = "Hi there!",
-                as_user = true,
-                attachments = new SlackAttachment[]
-                {
-                    new SlackAttachment
-                    {
-                        fallback = "this did not work",
-                        text = "This is attachment 1",
-                        color = "good"
-                    },
-
-                    new SlackAttachment
-                    {
-                        fallback = "this did not work",
-                        text = "This is attachment 2",
-                        color = "danger"
-                    }
-                }
-            };
-
-            SendMessageAsync(
-                "xoxp-43125517685-43125293143-1091260765201-47615984f763971eaff527d1a4510948",
-                profChange
-            ).Wait();
-
-            Console.WriteLine("Message has been sent");
-
-
             if (refreshFrequencyTextbox.Text == "1") refreshFrequencyTextbox.Text = minRefreshFrequency.ToString();  // design time default is 1, we set to our actual min
-
-            if (string.IsNullOrEmpty(Properties.Settings.Default.ToolbarFolder)) {
-                cryptoDir = Path.Combine(System.IO.Path.GetTempPath(), @"Crypto\");
-            }
-            else {
-                cryptoDir = Properties.Settings.Default.ToolbarFolder;
-            }
-
-
-            if (!Directory.Exists(cryptoDir)) {
-                Directory.CreateDirectory(cryptoDir);
-            }
 
             Exchanges = new List<string> {
                 { "IR" },
@@ -191,7 +114,7 @@ namespace IRTicker {
 
             InitialiseUIControls();
 
-            // if they have somehow set it below 20 secs, force back to 20.
+            // if they have somehow set it below 20 secs, force back to 20... or 10
             if (int.TryParse(Properties.Settings.Default.RefreshFreq, out int freq)) {
                 if (freq < minRefreshFrequency) Properties.Settings.Default.RefreshFreq = minRefreshFrequency.ToString();
             }
@@ -199,87 +122,17 @@ namespace IRTicker {
             Properties.Settings.Default.Save();
 
             refreshFrequencyTextbox.Text = Properties.Settings.Default.RefreshFreq.ToString();
-            folderDialogTextbox.Text = cryptoDir;
             EnableGDAXLevel3_CheckBox.Checked = Properties.Settings.Default.FullGDAXOB;
             ExportFull_Checkbox.Checked = Properties.Settings.Default.ExportFull;
             ExportSummarised_Checkbox.Checked = Properties.Settings.Default.ExportSummarised;
+            Slack_checkBox.Checked = Properties.Settings.Default.Slack;
+            flashForm_checkBox.Checked = Properties.Settings.Default.FlashForm;
+            slackToken_textBox.Text = Properties.Settings.Default.SlackToken;
 
             VersionLabel.Text = "IR Ticker version " + FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
 
             pollingThread.RunWorkerAsync();
         }
-
-
-
-        private static readonly HttpClient client = new HttpClient();
-
-        public class SlackProfile {
-            public SlackStatus profile { get; set; }
-        }
-
-        public class SlackStatus {
-            public string status_text { get; set; }
-            public string status_emoji { get; set; }
-            public int status_expiration { get; set; }
-        }
-
-        // reponse from message methods
-        public class SlackMessageResponse {
-            public bool ok { get; set; }
-            public string error { get; set; }
-            public string channel { get; set; }
-            public string ts { get; set; }
-        }
-
-        // a slack message
-        public class SlackMessage {
-            public string channel { get; set; }
-            public string text { get; set; }
-            public bool as_user { get; set; }
-            public SlackAttachment[] attachments { get; set; }
-        }
-
-        // a slack message attachment
-        public class SlackAttachment {
-            public string fallback { get; set; }
-            public string text { get; set; }
-            public string image_url { get; set; }
-            public string color { get; set; }
-        }
-
-        // sends a slack message asynchronous
-        // throws exception if message can not be sent
-        public static async Task SendMessageAsync(string token, SlackProfile msg) {
-            // serialize method parameters to JSON
-            var content = JsonConvert.SerializeObject(msg);
-            var httpContent = new StringContent(
-                content,
-                Encoding.UTF8,
-                "application/json"
-            );
-
-            // set token in authorization header
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            Debug.Print("about to postAsync");
-            // send message to API
-            var response = await client.PostAsync("https://slack.com/api/users.profile.set", httpContent).ConfigureAwait(continueOnCapturedContext: false); 
-            Debug.Print("done posting async");
-            // fetch response from API
-            var responseJson = await response.Content.ReadAsStringAsync();
-
-            // convert JSON response to object
-            SlackMessageResponse messageResponse =
-                JsonConvert.DeserializeObject<SlackMessageResponse>(responseJson);
-
-            // throw exception if sending failed
-            if (messageResponse.ok == false) {
-                throw new Exception(
-                    "failed to send message. error: " + messageResponse.error
-                );
-            }
-        }
-
-
 
         // super manual function to push the UI controls into objects so we can read them programattically
         private void InitialiseUIControls() {
@@ -555,11 +408,7 @@ namespace IRTicker {
             UIControls_Dict["CSPT"].XRP_Price = CSPT_XRP_Label2;
             UIControls_Dict["CSPT"].XRP_Spread = CSPT_XRP_Label3;
             UIControls_Dict["CSPT"].XRP_PriceTT = CSPT_XRP_PriceTT;
-            // removed these coinspot controls cos i'll never use them
-            /*UIControls_Dict["CSPT"].AvgPrice_BuySell = CSPT_BuySellComboBox;
-            UIControls_Dict["CSPT"].AvgPrice_NumCoins = CSPT_NumCoinsTextBox;
-            UIControls_Dict["CSPT"].AvgPrice_Crypto = CSPT_CryptoComboBox;
-            UIControls_Dict["CSPT"].AvgPrice = CSPT_AvgPrice_Label;*/
+
             UIControls_Dict["CSPT"].AvgPriceTT = CSPT_AvgPriceTT;
 
             foreach (KeyValuePair<string, UIControls> uic in UIControls_Dict) {
@@ -612,6 +461,19 @@ namespace IRTicker {
                     Debug.Print(DateTime.Now + " -- BS -- caught an exception: " + ex.Message);
                 }
             }
+
+            // now we set slack stuff
+            if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "")) {
+                if (IRBTCvol > (BTCMBTCvol + 5)) {  // IR is winning :D
+                    slackObj.setStatus("", ":large_blue_diamond:", 60);
+                }
+                else if (BTCMBTCvol > (IRBTCvol + 5)) {  // BTCM is winning :<
+                    slackObj.setStatus("", ":green_book:", 60);
+                }
+                else {  // pretty even - white :|
+                    slackObj.setStatus("", ":white_square:", 60);
+                }
+            }
         }
 
         // takes a website httpsResonse.StatusCode and returns a friendly string
@@ -623,15 +485,6 @@ namespace IRTicker {
             else {
                 MessageBox.Show("Unknown failure: " + errorCode, "Show this to Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return "??";
-            }
-        }
-
-        private void FolderDialogButton_Click(object sender, EventArgs e) {
-            DialogResult result = toolbarFolder.ShowDialog();
-            if(result == DialogResult.OK) {
-                cryptoDir = toolbarFolder.SelectedPath;
-                folderDialogTextbox.Text = Properties.Settings.Default.ToolbarFolder = cryptoDir;
-                Properties.Settings.Default.Save();
             }
         }
 
@@ -731,16 +584,6 @@ namespace IRTicker {
                 }
                 DCEs["CSPT"].NetworkAvailable = true;
                 DCEs["CSPT"].CurrentDCEStatus = "Online";
-            }
-        }
-
-        private void ParseFiat_Fixer(string baseSymbol, string symbols) {
-            Tuple<bool, string> fxRates = Utilities.Get("http://data.fixer.io/api/latest?access_key=3424408462ff94cfa5be1e61d92b6ca4&base=" + baseSymbol + "&symbols=" + symbols);
-            if (!fxRates.Item1) {
-                //OER_NetworkAvailable = false;
-            }
-            else {
-                //OER_NetworkAvailable = true;
             }
         }
 
@@ -1047,16 +890,6 @@ namespace IRTicker {
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
                         
                         SubscribeTickerSocket("IR");
-
-                        // not required anymore, we pull the OBs in the subscribe code
-                        // OK we have initialised the websockets, now let's get the REST OB so hopefully we don't miss things.
-                        /*foreach (string crypto in DCEs["IR"].PrimaryCurrencyList) {
-                            foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
-                                //if (!DCEs["IR"].IR_OBs.ContainsKey(crypto + "-" + fiat)) {  // only pull the OB if we haven't already
-                                    DCEs["IR"].GetIROrderBook(crypto, fiat);
-                                //}
-                            }
-                        }*/
                     }
                     else {
                         pollingThread.ReportProgress(12, "IR");
@@ -1098,9 +931,6 @@ namespace IRTicker {
 
                 if (DCEs["BTCM"].NetworkAvailable) {
                     foreach (string primaryCode in DCEs["BTCM"].PrimaryCurrencyList) {
-                        /*if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
-                            ParseDCE_BTCM(primaryCode, DCEs["BTCM"].CurrentSecondaryCurrency);
-                        }*/  // using sockets now hopefully
 
                         if (DCEs["BTCM"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["BTCM"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
                             GetBTCMOrderBook(primaryCode);
@@ -1153,11 +983,8 @@ namespace IRTicker {
                 //////// GDAX ///////
 
                 if (!DCEs["GDAX"].HasStaticData) {  // should only call this onec per session
-                    //string[] gdax_currencies = GetGDAXCurrencies();  // this is dangerous.  Currently GDAX only supports the cryptos we show, but if it suddenly supports a new one we don't, then it'll be part of the primaryCurrencyList.    Correct!  they added ETC, so now i just build this statically.
                     GetGDAXProducts();
                     if (DCEs["GDAX"].HasStaticData) {
-                        //DCEs["GDAX"].PrimaryCurrencyCodes = gdax_currencies[0];
-                        //DCEs["GDAX"].SecondaryCurrencyCodes = gdax_currencies[1];
                         Debug.Print("calling gdax sockets sub");
                         SubscribeTickerSocket("GDAX");
                         pollingThread.ReportProgress(44);
@@ -1750,65 +1577,6 @@ namespace IRTicker {
 
             LoadingPanel.Visible = false;  // OK, all UI data is written, let's remove the loading panel.
 
-            if (!DCEs["IR"].NetworkAvailable) return;  // at this point everything else needs IR data.  no point in continuing if there is none.
-
-            // we really don't need this folder stuff.
-            /*Dictionary<string, DCE.MarketSummary> cPairs = DCEs["IR"].GetCryptoPairs();
-
-            string tempXBTdir = cryptoDir + "XBT $" + cPairs["XBT-AUD"].LastPrice;
-            string tempETHdir = cryptoDir + "ETH $" + cPairs["ETH-AUD"].LastPrice;
-            string tempBCHdir = cryptoDir + "BCH $" + cPairs["BCH-AUD"].LastPrice;
-            string tempLTCdir = cryptoDir + "LTC $" + cPairs["LTC-AUD"].LastPrice;
-
-            bool XBTupdated = false;
-            bool ETHupdated = false;
-            bool BCHupdated = false;
-            bool LTCupdated = false;
-
-            try {
-                string[] cryptoDirs = Directory.GetDirectories(cryptoDir);
-
-                foreach(string dir in cryptoDirs) {
-                    // don't bother if the value hasn't changed
-                    if(dir.Equals(tempXBTdir, StringComparison.OrdinalIgnoreCase) ||
-                        dir.Equals(tempETHdir, StringComparison.OrdinalIgnoreCase) ||
-                        dir.Equals(tempBCHdir, StringComparison.OrdinalIgnoreCase) ||
-                        dir.Equals(tempLTCdir, StringComparison.OrdinalIgnoreCase)) {
-                        continue;
-                    }
-
-                    string dirName = new DirectoryInfo(dir).Name;
-                    if(dirName.Length > 5) {  // make sure it's actually a legit crypto dir
-                        if(dirName.Substring(0, 5).Equals("XBT $", StringComparison.OrdinalIgnoreCase)) {  // OK, we found the XBT folder, let's move it to the new value
-                            Directory.Move(dir, tempXBTdir);
-                            XBTupdated = true;
-                        }
-                        if(dirName.Substring(0, 5).Equals("ETH $", StringComparison.OrdinalIgnoreCase)) {  // OK, we found the ETH folder, let's move it to the new value
-                            Directory.Move(dir, tempETHdir);
-                            ETHupdated = true;
-                        }
-                        if(dirName.Substring(0, 5).Equals("BCH $", StringComparison.OrdinalIgnoreCase)) {  // OK, we found the BCH folder, let's move it to the new value
-                            Directory.Move(dir, tempBCHdir);
-                            BCHupdated = true;
-                        }
-                        if(dirName.Substring(0, 5).Equals("LTC $", StringComparison.OrdinalIgnoreCase)) {  // OK, we found the LTC folder, let's move it to the new value
-                            Directory.Move(dir, tempLTCdir);
-                            LTCupdated = true;
-                        }
-                    }
-                }
-
-                //  if w didn't come across existing folders to rename, create new ones i guess.
-                if(!XBTupdated) { Directory.CreateDirectory(tempXBTdir); }
-                if(!ETHupdated) { Directory.CreateDirectory(tempETHdir); }
-                if(!BCHupdated) { Directory.CreateDirectory(tempBCHdir); }
-                if(!LTCupdated) { Directory.CreateDirectory(tempLTCdir); }
-            }
-            catch(Exception ex) {
-                // TODO: Handle the exception that has been thrown
-                MessageBox.Show("renaming folders went bad: " + ex.ToString());
-            }*/
-
             foreach (KeyValuePair<string, SpreadGraph> sGraph in SpreadGraph_Dict) sGraph.Value.Redraw();  // update the graph
         }
 
@@ -1823,40 +1591,9 @@ namespace IRTicker {
 
         // when they close the app, rename the crypto dirs to blah - old.  this way if they user happens to check the toolbar thing they'll know they're not being updated anymore
         private void IRTicker_Closing(object sender, FormClosingEventArgs e) {
-            try {
-                string[] cryptoDirs = Directory.GetDirectories(cryptoDir);
-
-                foreach (string dir in cryptoDirs) {
-                    string dirName = new DirectoryInfo(dir).Name;
-
-                    if (dirName.Length > 6) {
-                        string lastSixCharsDir = dir.Substring(dir.Length - 7);
-
-                        if (lastSixCharsDir.Equals(" - old", StringComparison.OrdinalIgnoreCase)) { continue; }  // if this dir already is suffixed with " - old", then move on
-                    }
-
-                    if (dirName.Length > 5) {
-                        if (dirName.Substring(0, 5).Equals("XBT $", StringComparison.OrdinalIgnoreCase)) {  // OK, we found the XBT folder, let's move it to the new value
-                            Directory.Move(dir, dir + " - old");
-                        }
-                        if (dirName.Substring(0, 5).Equals("ETH $", StringComparison.OrdinalIgnoreCase)) {  // OK, we found the ETH folder, let's move it to the new value
-                            Directory.Move(dir, dir + " - old");
-                        }
-                        if (dirName.Substring(0, 5).Equals("BCH $", StringComparison.OrdinalIgnoreCase)) {  // OK, we found the BCH folder, let's move it to the new value
-                            Directory.Move(dir, dir + " - old");
-                        }
-                        if (dirName.Substring(0, 5).Equals("LTC $", StringComparison.OrdinalIgnoreCase)) {  // OK, we found the LTC folder, let's move it to the new value
-                            Directory.Move(dir, dir + " - old");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex) {
-                System.Windows.MessageBox.Show("couldn't rename to ' - old': " + ex.ToString());
-            }
-
-            // turn off the blink stick.
-            if (bStick != null) {
+           
+           // turn off the blink stick.
+           if (bStick != null) {
                 if (bStick.OpenDevice()) {
                     bStick.TurnOff();
                 }
@@ -1871,6 +1608,8 @@ namespace IRTicker {
         private void SettingsOKButton_Click(object sender, EventArgs e) {
             if(int.TryParse(refreshFrequencyTextbox.Text, out int refreshInt)) {
                 if(refreshInt >= minRefreshFrequency) {
+                    Properties.Settings.Default.SlackToken = slackToken_textBox.Text;
+                    Properties.Settings.Default.Save();
                     Main.Visible = true;
                     Settings.Visible = false;
                 }
@@ -2485,6 +2224,16 @@ namespace IRTicker {
             fInfo.dwTimeout = 0;
 
             return FlashWindowEx(ref fInfo);
+        }
+
+        private void Slack_checkBox_CheckedChanged(object sender, EventArgs e) {
+            Properties.Settings.Default.Slack = Slack_checkBox.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void flashForm_checkBox_CheckedChanged(object sender, EventArgs e) {
+            Properties.Settings.Default.FlashForm = flashForm_checkBox.Checked;
+            Properties.Settings.Default.Save();
         }
     }
 }

@@ -28,10 +28,13 @@
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
             this.toolbarFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.folderDialogButton = new System.Windows.Forms.Button();
-            this.folderDialogTextbox = new System.Windows.Forms.TextBox();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
+            this.slackToken_textBox = new System.Windows.Forms.TextBox();
+            this.flashForm_checkBox = new System.Windows.Forms.CheckBox();
+            this.flashForm_label = new System.Windows.Forms.Label();
+            this.Slack_checkBox = new System.Windows.Forms.CheckBox();
+            this.Slack_label = new System.Windows.Forms.Label();
             this.ExportSummarised_Checkbox = new System.Windows.Forms.CheckBox();
             this.ExportSummarised_Label = new System.Windows.Forms.Label();
             this.ExportFull_Checkbox = new System.Windows.Forms.CheckBox();
@@ -41,7 +44,6 @@
             this.EnableGDAXLevel3 = new System.Windows.Forms.Label();
             this.VersionLabel = new System.Windows.Forms.Label();
             this.SettingsOKButton = new System.Windows.Forms.Button();
-            this.FolderLabel = new System.Windows.Forms.Label();
             this.LoadingPanel = new System.Windows.Forms.Panel();
             this.GIFLabel = new System.Windows.Forms.Label();
             this.Main = new System.Windows.Forms.Panel();
@@ -363,25 +365,6 @@
             this.refreshFrequencyLabel.TabIndex = 1;
             this.refreshFrequencyLabel.Text = "How fast should the app refresh (in seconds)?";
             // 
-            // folderDialogButton
-            // 
-            this.folderDialogButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.folderDialogButton.Location = new System.Drawing.Point(364, 221);
-            this.folderDialogButton.Name = "folderDialogButton";
-            this.folderDialogButton.Size = new System.Drawing.Size(141, 31);
-            this.folderDialogButton.TabIndex = 2;
-            this.folderDialogButton.Text = "Choose folder...";
-            this.folderDialogButton.UseVisualStyleBackColor = true;
-            this.folderDialogButton.Click += new System.EventHandler(this.FolderDialogButton_Click);
-            // 
-            // folderDialogTextbox
-            // 
-            this.folderDialogTextbox.Location = new System.Drawing.Point(245, 191);
-            this.folderDialogTextbox.Name = "folderDialogTextbox";
-            this.folderDialogTextbox.ReadOnly = true;
-            this.folderDialogTextbox.Size = new System.Drawing.Size(260, 20);
-            this.folderDialogTextbox.TabIndex = 3;
-            // 
             // pollingThread
             // 
             this.pollingThread.WorkerReportsProgress = true;
@@ -393,6 +376,11 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
+            this.Settings.Controls.Add(this.slackToken_textBox);
+            this.Settings.Controls.Add(this.flashForm_checkBox);
+            this.Settings.Controls.Add(this.flashForm_label);
+            this.Settings.Controls.Add(this.Slack_checkBox);
+            this.Settings.Controls.Add(this.Slack_label);
             this.Settings.Controls.Add(this.ExportSummarised_Checkbox);
             this.Settings.Controls.Add(this.ExportSummarised_Label);
             this.Settings.Controls.Add(this.ExportFull_Checkbox);
@@ -402,15 +390,62 @@
             this.Settings.Controls.Add(this.EnableGDAXLevel3);
             this.Settings.Controls.Add(this.VersionLabel);
             this.Settings.Controls.Add(this.SettingsOKButton);
-            this.Settings.Controls.Add(this.FolderLabel);
             this.Settings.Controls.Add(this.refreshFrequencyLabel);
-            this.Settings.Controls.Add(this.folderDialogTextbox);
             this.Settings.Controls.Add(this.refreshFrequencyTextbox);
-            this.Settings.Controls.Add(this.folderDialogButton);
             this.Settings.Location = new System.Drawing.Point(0, 0);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(585, 723);
+            this.Settings.Size = new System.Drawing.Size(585, 843);
             this.Settings.TabIndex = 4;
+            // 
+            // slackToken_textBox
+            // 
+            this.slackToken_textBox.Location = new System.Drawing.Point(76, 480);
+            this.slackToken_textBox.Name = "slackToken_textBox";
+            this.slackToken_textBox.Size = new System.Drawing.Size(429, 20);
+            this.slackToken_textBox.TabIndex = 23;
+            // 
+            // flashForm_checkBox
+            // 
+            this.flashForm_checkBox.AccessibleName = "";
+            this.flashForm_checkBox.AutoSize = true;
+            this.flashForm_checkBox.Location = new System.Drawing.Point(490, 521);
+            this.flashForm_checkBox.Name = "flashForm_checkBox";
+            this.flashForm_checkBox.Size = new System.Drawing.Size(15, 14);
+            this.flashForm_checkBox.TabIndex = 22;
+            this.flashForm_checkBox.UseVisualStyleBackColor = true;
+            this.flashForm_checkBox.CheckedChanged += new System.EventHandler(this.flashForm_checkBox_CheckedChanged);
+            // 
+            // flashForm_label
+            // 
+            this.flashForm_label.AccessibleName = "";
+            this.flashForm_label.AutoSize = true;
+            this.flashForm_label.Location = new System.Drawing.Point(73, 521);
+            this.flashForm_label.Name = "flashForm_label";
+            this.flashForm_label.Size = new System.Drawing.Size(198, 26);
+            this.flashForm_label.TabIndex = 21;
+            this.flashForm_label.Text = "Flash the window if IR resets (only useful\r\nfor debugging)";
+            // 
+            // Slack_checkBox
+            // 
+            this.Slack_checkBox.AccessibleName = "";
+            this.Slack_checkBox.AutoSize = true;
+            this.Slack_checkBox.Location = new System.Drawing.Point(490, 433);
+            this.Slack_checkBox.Name = "Slack_checkBox";
+            this.Slack_checkBox.Size = new System.Drawing.Size(15, 14);
+            this.Slack_checkBox.TabIndex = 20;
+            this.Slack_checkBox.UseVisualStyleBackColor = true;
+            this.Slack_checkBox.CheckedChanged += new System.EventHandler(this.Slack_checkBox_CheckedChanged);
+            // 
+            // Slack_label
+            // 
+            this.Slack_label.AccessibleName = "";
+            this.Slack_label.AutoSize = true;
+            this.Slack_label.Location = new System.Drawing.Point(73, 433);
+            this.Slack_label.Name = "Slack_label";
+            this.Slack_label.Size = new System.Drawing.Size(238, 39);
+            this.Slack_label.TabIndex = 19;
+            this.Slack_label.Text = "Slack integration - will set your profile emoji \r\ndepending on if we\'re beeing BT" +
+    "C Markets or not\r\nEnter your Slack xoxp token below:";
             // 
             // ExportSummarised_Checkbox
             // 
@@ -458,7 +493,7 @@
             // Help_Button
             // 
             this.Help_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Help_Button.Location = new System.Drawing.Point(502, 569);
+            this.Help_Button.Location = new System.Drawing.Point(499, 779);
             this.Help_Button.Name = "Help_Button";
             this.Help_Button.Size = new System.Drawing.Size(75, 23);
             this.Help_Button.TabIndex = 14;
@@ -500,7 +535,7 @@
             // SettingsOKButton
             // 
             this.SettingsOKButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsOKButton.Location = new System.Drawing.Point(502, 598);
+            this.SettingsOKButton.Location = new System.Drawing.Point(499, 808);
             this.SettingsOKButton.Name = "SettingsOKButton";
             this.SettingsOKButton.Size = new System.Drawing.Size(75, 23);
             this.SettingsOKButton.TabIndex = 4;
@@ -508,21 +543,12 @@
             this.SettingsOKButton.UseVisualStyleBackColor = true;
             this.SettingsOKButton.Click += new System.EventHandler(this.SettingsOKButton_Click);
             // 
-            // FolderLabel
-            // 
-            this.FolderLabel.AutoSize = true;
-            this.FolderLabel.Location = new System.Drawing.Point(73, 191);
-            this.FolderLabel.Name = "FolderLabel";
-            this.FolderLabel.Size = new System.Drawing.Size(115, 13);
-            this.FolderLabel.TabIndex = 5;
-            this.FolderLabel.Text = "Toolbar folder location:";
-            // 
             // LoadingPanel
             // 
             this.LoadingPanel.Controls.Add(this.GIFLabel);
             this.LoadingPanel.Location = new System.Drawing.Point(0, 0);
             this.LoadingPanel.Name = "LoadingPanel";
-            this.LoadingPanel.Size = new System.Drawing.Size(585, 631);
+            this.LoadingPanel.Size = new System.Drawing.Size(585, 843);
             this.LoadingPanel.TabIndex = 10;
             // 
             // GIFLabel
@@ -532,7 +558,7 @@
             this.GIFLabel.Image = global::IRTicker.Properties.Resources.rainbow_space_bricks_jpg;
             this.GIFLabel.Location = new System.Drawing.Point(0, 0);
             this.GIFLabel.Name = "GIFLabel";
-            this.GIFLabel.Size = new System.Drawing.Size(585, 634);
+            this.GIFLabel.Size = new System.Drawing.Size(585, 843);
             this.GIFLabel.TabIndex = 0;
             this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
             this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -3718,9 +3744,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 841);
+            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Main);
             this.Controls.Add(this.Settings);
-            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.OTCHelper);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HelpButton = true;
@@ -3760,8 +3786,6 @@
         private System.Windows.Forms.MaskedTextBox refreshFrequencyTextbox;
         private System.Windows.Forms.Label refreshFrequencyLabel;
         private System.Windows.Forms.FolderBrowserDialog toolbarFolder;
-        private System.Windows.Forms.Button folderDialogButton;
-        private System.Windows.Forms.TextBox folderDialogTextbox;
         private System.ComponentModel.BackgroundWorker pollingThread;
         private System.Windows.Forms.Panel Settings;
         private System.Windows.Forms.Panel Main;
@@ -3817,7 +3841,6 @@
         private System.Windows.Forms.Label BFX_BCH_Label1;
         private System.Windows.Forms.Label BFX_ETH_Label1;
         private System.Windows.Forms.Label BFX_XBT_Label1;
-        private System.Windows.Forms.Label FolderLabel;
         private System.Windows.Forms.Label BFX_LTC_Label3;
         private System.Windows.Forms.Label BFX_BCH_Label3;
         private System.Windows.Forms.Label BFX_ETH_Label3;
@@ -4060,6 +4083,11 @@
         private System.Windows.Forms.ToolTip BFX_BSV_PriceTT;
         private System.Windows.Forms.Label SGD_Label2;
         private System.Windows.Forms.Label SGD_Label1;
+        private System.Windows.Forms.CheckBox Slack_checkBox;
+        private System.Windows.Forms.Label Slack_label;
+        private System.Windows.Forms.CheckBox flashForm_checkBox;
+        private System.Windows.Forms.Label flashForm_label;
+        private System.Windows.Forms.TextBox slackToken_textBox;
     }
 }
 

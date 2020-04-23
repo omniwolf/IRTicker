@@ -740,7 +740,8 @@ namespace IRTicker {
             if (((DCEs["IR"].orderBuffer_IR[pair].Count > 20) && DCEs["IR"].pulledSnapShot[pair]) || (DCEs["IR"].OBResetFlag[channel])) {
                 Debug.Print("NONCE - too many buffered nonces, can't recover " + tickerStream.Channel + ", time to dump and restart");
                 subscribe_unsubscribe_new("IR", false, pair);
-                pollingThread.ReportProgress(26);
+
+                if (Properties.Settings.Default.FlashForm) pollingThread.ReportProgress(26);  // flash the window if the setting is enabled
                 Init_sockets("IR", pair);
 
                 // now need to dump the OBs. 

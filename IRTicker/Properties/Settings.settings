@@ -14,7 +14,13 @@
     <Setting Name="FullGDAXOB" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="ToolbarFolder" Type="System.String" Scope="User">
+    <Setting Name="Slack" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="FlashForm" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SlackToken" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>
