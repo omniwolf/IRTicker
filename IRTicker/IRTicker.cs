@@ -153,70 +153,53 @@ namespace IRTicker {
             UIControls_Dict["IR"].XBT_Label = IR_XBT_Label1;
             UIControls_Dict["IR"].XBT_Price = IR_XBT_Label2;
             UIControls_Dict["IR"].XBT_Spread = IR_XBT_Label3;
-            UIControls_Dict["IR"].XBT_PriceTT = IR_XBT_PriceTT;
             UIControls_Dict["IR"].ETH_Label = IR_ETH_Label1;
             UIControls_Dict["IR"].ETH_Price = IR_ETH_Label2;
             UIControls_Dict["IR"].ETH_Spread = IR_ETH_Label3;
-            UIControls_Dict["IR"].ETH_PriceTT = IR_ETH_PriceTT;
             UIControls_Dict["IR"].BCH_Label = IR_BCH_Label1;
             UIControls_Dict["IR"].BCH_Price = IR_BCH_Label2;
             UIControls_Dict["IR"].BCH_Spread = IR_BCH_Label3;
-            UIControls_Dict["IR"].BCH_PriceTT = IR_BCH_PriceTT;
             UIControls_Dict["IR"].LTC_Label = IR_LTC_Label1;
             UIControls_Dict["IR"].LTC_Price = IR_LTC_Label2;
             UIControls_Dict["IR"].LTC_Spread = IR_LTC_Label3;
-            UIControls_Dict["IR"].LTC_PriceTT = IR_LTC_PriceTT;
             UIControls_Dict["IR"].XRP_Label = IR_XRP_Label1;
             UIControls_Dict["IR"].XRP_Price = IR_XRP_Label2;
             UIControls_Dict["IR"].XRP_Spread = IR_XRP_Label3;
-            UIControls_Dict["IR"].XRP_PriceTT = IR_XRP_PriceTT;
             UIControls_Dict["IR"].OMG_Label = IR_OMG_Label1;
             UIControls_Dict["IR"].OMG_Price = IR_OMG_Label2;
             UIControls_Dict["IR"].OMG_Spread = IR_OMG_Label3;
-            UIControls_Dict["IR"].OMG_PriceTT = IR_OMG_PriceTT;
             UIControls_Dict["IR"].ZRX_Label = IR_ZRX_Label1;
             UIControls_Dict["IR"].ZRX_Price = IR_ZRX_Label2;
             UIControls_Dict["IR"].ZRX_Spread = IR_ZRX_Label3;
-            UIControls_Dict["IR"].ZRX_PriceTT = IR_ZRX_PriceTT;
-            UIControls_Dict["IR"].PLA_PriceTT = IR_PLA_PriceTT;
             UIControls_Dict["IR"].EOS_Label = IR_EOS_Label1;
             UIControls_Dict["IR"].EOS_Price = IR_EOS_Label2;
             UIControls_Dict["IR"].EOS_Spread = IR_EOS_Label3;
-            UIControls_Dict["IR"].EOS_PriceTT = IR_EOS_PriceTT;
             UIControls_Dict["IR"].XLM_Label = IR_XLM_Label1;
             UIControls_Dict["IR"].XLM_Price = IR_XLM_Label2;
             UIControls_Dict["IR"].XLM_Spread = IR_XLM_Label3;
-            UIControls_Dict["IR"].XLM_PriceTT = IR_XLM_PriceTT;
             UIControls_Dict["IR"].BAT_Label = IR_BAT_Label1;
             UIControls_Dict["IR"].BAT_Price = IR_BAT_Label2;
             UIControls_Dict["IR"].BAT_Spread = IR_BAT_Label3;
-            UIControls_Dict["IR"].BAT_PriceTT = IR_BAT_PriceTT;
             UIControls_Dict["IR"].REP_Label = IR_REP_Label1;
             UIControls_Dict["IR"].REP_Price = IR_REP_Label2;
             UIControls_Dict["IR"].REP_Spread = IR_REP_Label3;
-            UIControls_Dict["IR"].REP_PriceTT = IR_REP_PriceTT;
             UIControls_Dict["IR"].GNT_Label = IR_GNT_Label1;
             UIControls_Dict["IR"].GNT_Price = IR_GNT_Label2;
             UIControls_Dict["IR"].GNT_Spread = IR_GNT_Label3;
-            UIControls_Dict["IR"].GNT_PriceTT = IR_GNT_PriceTT;
             UIControls_Dict["IR"].ETC_Label = IR_ETC_Label1;
             UIControls_Dict["IR"].ETC_Price = IR_ETC_Label2;
             UIControls_Dict["IR"].ETC_Spread = IR_ETC_Label3;
-            UIControls_Dict["IR"].ETC_PriceTT = IR_ETC_PriceTT;
             UIControls_Dict["IR"].USDT_Label = IR_USDT_Label1;
             UIControls_Dict["IR"].USDT_Price = IR_USDT_Label2;
             UIControls_Dict["IR"].USDT_Spread = IR_USDT_Label3;
-            UIControls_Dict["IR"].USDT_PriceTT = IR_USDT_PriceTT;
             UIControls_Dict["IR"].BSV_Label = IR_BSV_Label1;
             UIControls_Dict["IR"].BSV_Price = IR_BSV_Label2;
             UIControls_Dict["IR"].BSV_Spread = IR_BSV_Label3;
-            UIControls_Dict["IR"].BSV_PriceTT = IR_BSV_PriceTT;
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
             UIControls_Dict["IR"].AvgPrice_Crypto = IR_CryptoComboBox;
             UIControls_Dict["IR"].AvgPrice_Currency = IR_CryptoComboBox;
             UIControls_Dict["IR"].AvgPrice = IR_AvgPrice_Label;
-            UIControls_Dict["IR"].AvgPriceTT = IR_AvgPriceTT;
 
             // BTCM
             UIControls_Dict["BTCM"].Name = "BTCM";
@@ -224,52 +207,40 @@ namespace IRTicker {
             UIControls_Dict["BTCM"].XBT_Label = BTCM_XBT_Label1;
             UIControls_Dict["BTCM"].XBT_Price = BTCM_XBT_Label2;
             UIControls_Dict["BTCM"].XBT_Spread = BTCM_XBT_Label3;
-            UIControls_Dict["BTCM"].XBT_PriceTT = BTCM_XBT_PriceTT;
             UIControls_Dict["BTCM"].ETH_Label = BTCM_ETH_Label1;
             UIControls_Dict["BTCM"].ETH_Price = BTCM_ETH_Label2;
             UIControls_Dict["BTCM"].ETH_Spread = BTCM_ETH_Label3;
-            UIControls_Dict["BTCM"].ETH_PriceTT = BTCM_ETH_PriceTT;
             UIControls_Dict["BTCM"].BCH_Label = BTCM_BCH_Label1;
             UIControls_Dict["BTCM"].BCH_Price = BTCM_BCH_Label2;
             UIControls_Dict["BTCM"].BCH_Spread = BTCM_BCH_Label3;
-            UIControls_Dict["BTCM"].BCH_PriceTT = BTCM_BCH_PriceTT;
             UIControls_Dict["BTCM"].LTC_Label = BTCM_LTC_Label1;
             UIControls_Dict["BTCM"].LTC_Price = BTCM_LTC_Label2;
             UIControls_Dict["BTCM"].LTC_Spread = BTCM_LTC_Label3;
-            UIControls_Dict["BTCM"].LTC_PriceTT = BTCM_LTC_PriceTT;
             UIControls_Dict["BTCM"].XRP_Label = BTCM_XRP_Label1;
             UIControls_Dict["BTCM"].XRP_Price = BTCM_XRP_Label2;
             UIControls_Dict["BTCM"].XRP_Spread = BTCM_XRP_Label3;
-            UIControls_Dict["BTCM"].XRP_PriceTT = BTCM_XRP_PriceTT;
             UIControls_Dict["BTCM"].OMG_Label = BTCM_OMG_Label1;
             UIControls_Dict["BTCM"].OMG_Price = BTCM_OMG_Label2;
             UIControls_Dict["BTCM"].OMG_Spread = BTCM_OMG_Label3;
-            UIControls_Dict["BTCM"].OMG_PriceTT = BTCM_OMG_PriceTT;
             UIControls_Dict["BTCM"].XLM_Label = BTCM_XLM_Label1;
             UIControls_Dict["BTCM"].XLM_Price = BTCM_XLM_Label2;
             UIControls_Dict["BTCM"].XLM_Spread = BTCM_XLM_Label3;
-            UIControls_Dict["BTCM"].XLM_PriceTT = BTCM_XLM_PriceTT;
             UIControls_Dict["BTCM"].BAT_Label = BTCM_BAT_Label1;
             UIControls_Dict["BTCM"].BAT_Price = BTCM_BAT_Label2;
             UIControls_Dict["BTCM"].BAT_Spread = BTCM_BAT_Label3;
-            UIControls_Dict["BTCM"].BAT_PriceTT = BTCM_BAT_PriceTT;
             UIControls_Dict["BTCM"].GNT_Label = BTCM_GNT_Label1;
             UIControls_Dict["BTCM"].GNT_Price = BTCM_GNT_Label2;
             UIControls_Dict["BTCM"].GNT_Spread = BTCM_GNT_Label3;
-            UIControls_Dict["BTCM"].GNT_PriceTT = BTCM_GNT_PriceTT;
             UIControls_Dict["BTCM"].ETC_Label = BTCM_ETC_Label1;
             UIControls_Dict["BTCM"].ETC_Price = BTCM_ETC_Label2;
             UIControls_Dict["BTCM"].ETC_Spread = BTCM_ETC_Label3;
-            UIControls_Dict["BTCM"].ETC_PriceTT = BTCM_ETC_PriceTT;
             UIControls_Dict["BTCM"].BSV_Label = BTCM_BSV_Label1;
             UIControls_Dict["BTCM"].BSV_Price = BTCM_BSV_Label2;
             UIControls_Dict["BTCM"].BSV_Spread = BTCM_BSV_Label3;
-            UIControls_Dict["BTCM"].BSV_PriceTT = BTCM_BSV_PriceTT;
             UIControls_Dict["BTCM"].AvgPrice_BuySell = BTCM_BuySellComboBox;
             UIControls_Dict["BTCM"].AvgPrice_NumCoins = BTCM_NumCoinsTextBox;
             UIControls_Dict["BTCM"].AvgPrice_Crypto = BTCM_CryptoComboBox;
             UIControls_Dict["BTCM"].AvgPrice = BTCM_AvgPrice_Label;
-            UIControls_Dict["BTCM"].AvgPriceTT = BTCM_AvgPriceTT;
 
             // GDAX
             UIControls_Dict["GDAX"].Name = "GDAX";
@@ -277,44 +248,34 @@ namespace IRTicker {
             UIControls_Dict["GDAX"].XBT_Label = GDAX_XBT_Label1;
             UIControls_Dict["GDAX"].XBT_Price = GDAX_XBT_Label2;
             UIControls_Dict["GDAX"].XBT_Spread = GDAX_XBT_Label3;
-            UIControls_Dict["GDAX"].XBT_PriceTT = GDAX_XBT_PriceTT;
             UIControls_Dict["GDAX"].ETH_Label = GDAX_ETH_Label1;
             UIControls_Dict["GDAX"].ETH_Price = GDAX_ETH_Label2;
             UIControls_Dict["GDAX"].ETH_Spread = GDAX_ETH_Label3;
-            UIControls_Dict["GDAX"].ETH_PriceTT = GDAX_ETH_PriceTT;
             UIControls_Dict["GDAX"].BCH_Label = GDAX_BCH_Label1;
             UIControls_Dict["GDAX"].BCH_Price = GDAX_BCH_Label2;
             UIControls_Dict["GDAX"].BCH_Spread = GDAX_BCH_Label3;
-            UIControls_Dict["GDAX"].BCH_PriceTT = GDAX_BCH_PriceTT;
             UIControls_Dict["GDAX"].LTC_Label = GDAX_LTC_Label1;
             UIControls_Dict["GDAX"].LTC_Price = GDAX_LTC_Label2;
             UIControls_Dict["GDAX"].LTC_Spread = GDAX_LTC_Label3;
-            UIControls_Dict["GDAX"].LTC_PriceTT = GDAX_LTC_PriceTT;
             UIControls_Dict["GDAX"].ZRX_Label = GDAX_ZRX_Label1;
             UIControls_Dict["GDAX"].ZRX_Price = GDAX_ZRX_Label2;
             UIControls_Dict["GDAX"].ZRX_Spread = GDAX_ZRX_Label3;
-            UIControls_Dict["GDAX"].ZRX_PriceTT = GDAX_ZRX_PriceTT;
             UIControls_Dict["GDAX"].XRP_Label = GDAX_XRP_Label1;
             UIControls_Dict["GDAX"].XRP_Price = GDAX_XRP_Label2;
             UIControls_Dict["GDAX"].XRP_Spread = GDAX_XRP_Label3;
-            UIControls_Dict["GDAX"].XRP_PriceTT = GDAX_XRP_PriceTT;
             UIControls_Dict["GDAX"].XLM_Label = GDAX_XLM_Label1;
             UIControls_Dict["GDAX"].XLM_Price = GDAX_XLM_Label2;
             UIControls_Dict["GDAX"].XLM_Spread = GDAX_XLM_Label3;
-            UIControls_Dict["GDAX"].XLM_PriceTT = GDAX_XLM_PriceTT;
             UIControls_Dict["GDAX"].REP_Label = GDAX_REP_Label1;
             UIControls_Dict["GDAX"].REP_Price = GDAX_REP_Label2;
             UIControls_Dict["GDAX"].REP_Spread = GDAX_REP_Label3;
-            UIControls_Dict["GDAX"].REP_PriceTT = GDAX_REP_PriceTT;
             UIControls_Dict["GDAX"].ETC_Label = GDAX_ETC_Label1;
             UIControls_Dict["GDAX"].ETC_Price = GDAX_ETC_Label2;
             UIControls_Dict["GDAX"].ETC_Spread = GDAX_ETC_Label3;
-            UIControls_Dict["GDAX"].ETC_PriceTT = GDAX_ETC_PriceTT;
             UIControls_Dict["GDAX"].AvgPrice_BuySell = GDAX_BuySellComboBox;
             UIControls_Dict["GDAX"].AvgPrice_NumCoins = GDAX_NumCoinsTextBox;
             UIControls_Dict["GDAX"].AvgPrice_Crypto = GDAX_CryptoComboBox;
             UIControls_Dict["GDAX"].AvgPrice = GDAX_AvgPrice_Label;
-            UIControls_Dict["GDAX"].AvgPriceTT = GDAX_AvgPriceTT;
 
             // BFX
             UIControls_Dict["BFX"].Name = "BFX";
@@ -322,68 +283,52 @@ namespace IRTicker {
             UIControls_Dict["BFX"].XBT_Label = BFX_XBT_Label1;
             UIControls_Dict["BFX"].XBT_Price = BFX_XBT_Label2;
             UIControls_Dict["BFX"].XBT_Spread = BFX_XBT_Label3;
-            UIControls_Dict["BFX"].XBT_PriceTT = BFX_XBT_PriceTT;
             UIControls_Dict["BFX"].ETH_Label = BFX_ETH_Label1;
             UIControls_Dict["BFX"].ETH_Price = BFX_ETH_Label2;
             UIControls_Dict["BFX"].ETH_Spread = BFX_ETH_Label3;
-            UIControls_Dict["BFX"].ETH_PriceTT = BFX_ETH_PriceTT;
             UIControls_Dict["BFX"].BCH_Label = BFX_BCH_Label1;
             UIControls_Dict["BFX"].BCH_Price = BFX_BCH_Label2;
             UIControls_Dict["BFX"].BCH_Spread = BFX_BCH_Label3;
-            UIControls_Dict["BFX"].BCH_PriceTT = BFX_BCH_PriceTT;
             UIControls_Dict["BFX"].LTC_Label = BFX_LTC_Label1;
             UIControls_Dict["BFX"].LTC_Price = BFX_LTC_Label2;
             UIControls_Dict["BFX"].LTC_Spread = BFX_LTC_Label3;
-            UIControls_Dict["BFX"].LTC_PriceTT = BFX_LTC_PriceTT;
             UIControls_Dict["BFX"].XRP_Label = BFX_XRP_Label1;
             UIControls_Dict["BFX"].XRP_Price = BFX_XRP_Label2;
             UIControls_Dict["BFX"].XRP_Spread = BFX_XRP_Label3;
-            UIControls_Dict["BFX"].XRP_PriceTT = BFX_XRP_PriceTT;
             UIControls_Dict["BFX"].OMG_Label = BFX_OMG_Label1;
             UIControls_Dict["BFX"].OMG_Price = BFX_OMG_Label2;
             UIControls_Dict["BFX"].OMG_Spread = BFX_OMG_Label3;
-            UIControls_Dict["BFX"].OMG_PriceTT = BFX_OMG_PriceTT;
             UIControls_Dict["BFX"].ZRX_Label = BFX_ZRX_Label1;
             UIControls_Dict["BFX"].ZRX_Price = BFX_ZRX_Label2;
             UIControls_Dict["BFX"].ZRX_Spread = BFX_ZRX_Label3;
-            UIControls_Dict["BFX"].ZRX_PriceTT = BFX_ZRX_PriceTT;
             UIControls_Dict["BFX"].EOS_Label = BFX_EOS_Label1;
             UIControls_Dict["BFX"].EOS_Price = BFX_EOS_Label2;
             UIControls_Dict["BFX"].EOS_Spread = BFX_EOS_Label3;
-            UIControls_Dict["BFX"].EOS_PriceTT = BFX_EOS_PriceTT;
             UIControls_Dict["BFX"].XLM_Label = BFX_XLM_Label1;
             UIControls_Dict["BFX"].XLM_Price = BFX_XLM_Label2;
             UIControls_Dict["BFX"].XLM_Spread = BFX_XLM_Label3;
-            UIControls_Dict["BFX"].XLM_PriceTT = BFX_XLM_PriceTT;
             UIControls_Dict["BFX"].BAT_Label = BFX_BAT_Label1;
             UIControls_Dict["BFX"].BAT_Price = BFX_BAT_Label2;
             UIControls_Dict["BFX"].BAT_Spread = BFX_BAT_Label3;
-            UIControls_Dict["BFX"].BAT_PriceTT = BFX_BAT_PriceTT;
             UIControls_Dict["BFX"].REP_Label = BFX_REP_Label1;
             UIControls_Dict["BFX"].REP_Price = BFX_REP_Label2;
             UIControls_Dict["BFX"].REP_Spread = BFX_REP_Label3;
-            UIControls_Dict["BFX"].REP_PriceTT = BFX_REP_PriceTT;
             UIControls_Dict["BFX"].GNT_Label = BFX_GNT_Label1;
             UIControls_Dict["BFX"].GNT_Price = BFX_GNT_Label2;
             UIControls_Dict["BFX"].GNT_Spread = BFX_GNT_Label3;
-            UIControls_Dict["BFX"].GNT_PriceTT = BFX_GNT_PriceTT;
             UIControls_Dict["BFX"].ETC_Label = BFX_ETC_Label1;
             UIControls_Dict["BFX"].ETC_Price = BFX_ETC_Label2;
             UIControls_Dict["BFX"].ETC_Spread = BFX_ETC_Label3;
-            UIControls_Dict["BFX"].ETC_PriceTT = BFX_ETC_PriceTT;
             UIControls_Dict["BFX"].USDT_Label = BFX_USDT_Label1;
             UIControls_Dict["BFX"].USDT_Price = BFX_USDT_Label2;
             UIControls_Dict["BFX"].USDT_Spread = BFX_USDT_Label3;
-            UIControls_Dict["BFX"].USDT_PriceTT = BFX_USDT_PriceTT;
             UIControls_Dict["BFX"].BSV_Label = BFX_BSV_Label1;
             UIControls_Dict["BFX"].BSV_Price = BFX_BSV_Label2;
             UIControls_Dict["BFX"].BSV_Spread = BFX_BSV_Label3;
-            UIControls_Dict["BFX"].BSV_PriceTT = BFX_BSV_PriceTT;
             UIControls_Dict["BFX"].AvgPrice_BuySell = BFX_BuySellComboBox;
             UIControls_Dict["BFX"].AvgPrice_NumCoins = BFX_NumCoinsTextBox;
             UIControls_Dict["BFX"].AvgPrice_Crypto = BFX_CryptoComboBox;
             UIControls_Dict["BFX"].AvgPrice = BFX_AvgPrice_Label;
-            UIControls_Dict["BFX"].AvgPriceTT = BFX_AvgPriceTT;
 
             // CoinSpot
             UIControls_Dict["CSPT"].Name = "CSPT";
@@ -391,25 +336,18 @@ namespace IRTicker {
             UIControls_Dict["CSPT"].XBT_Label = CSPT_XBT_Label1;
             UIControls_Dict["CSPT"].XBT_Price = CSPT_XBT_Label2;
             UIControls_Dict["CSPT"].XBT_Spread = CSPT_XBT_Label3;
-            UIControls_Dict["CSPT"].XBT_PriceTT = CSPT_XBT_PriceTT;
             UIControls_Dict["CSPT"].ETH_Label = CSPT_ETH_Label1;
             UIControls_Dict["CSPT"].ETH_Price = CSPT_ETH_Label2;
             UIControls_Dict["CSPT"].ETH_Spread = CSPT_ETH_Label3;
-            UIControls_Dict["CSPT"].ETH_PriceTT = CSPT_ETH_PriceTT;
             UIControls_Dict["CSPT"].EOS_Label = CSPT_EOS_Label1;
             UIControls_Dict["CSPT"].EOS_Price = CSPT_EOS_Label2;
             UIControls_Dict["CSPT"].EOS_Spread = CSPT_EOS_Label3;
-            UIControls_Dict["CSPT"].EOS_PriceTT = CSPT_EOS_PriceTT;
             UIControls_Dict["CSPT"].LTC_Label = CSPT_LTC_Label1;
             UIControls_Dict["CSPT"].LTC_Price = CSPT_LTC_Label2;
             UIControls_Dict["CSPT"].LTC_Spread = CSPT_LTC_Label3;
-            UIControls_Dict["CSPT"].LTC_PriceTT = CSPT_LTC_PriceTT;
             UIControls_Dict["CSPT"].XRP_Label = CSPT_XRP_Label1;
             UIControls_Dict["CSPT"].XRP_Price = CSPT_XRP_Label2;
             UIControls_Dict["CSPT"].XRP_Spread = CSPT_XRP_Label3;
-            UIControls_Dict["CSPT"].XRP_PriceTT = CSPT_XRP_PriceTT;
-
-            UIControls_Dict["CSPT"].AvgPriceTT = CSPT_AvgPriceTT;
 
             foreach (KeyValuePair<string, UIControls> uic in UIControls_Dict) {
                 uic.Value.CreateControlDictionaries();  // builds the internal dictionaries so the controls themselves can be iterated over
@@ -1144,7 +1082,7 @@ namespace IRTicker {
                     UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = pairObj.Value.spread.ToString(formatStringSpread) + ((pairObj.Value.DayVolume == 0) ? "" : " / " + pairObj.Value.DayVolume.ToString(formatStringVol));
 
                     // update tool tips.
-                    UIControls_Dict[dExchange].ToolTip_Dict[pairObj.Value.PrimaryCurrencyCode + "_PriceTT"].SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], "Best bid: " + pairObj.Value.CurrentHighestBidPrice.ToString(formatString) + System.Environment.NewLine + "Best offer: " + pairObj.Value.CurrentLowestOfferPrice.ToString(formatString));
+                    IRTickerTT.SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], "Best bid: " + pairObj.Value.CurrentHighestBidPrice.ToString(formatString) + System.Environment.NewLine + "Best offer: " + pairObj.Value.CurrentLowestOfferPrice.ToString(formatString));
                 }
                 //else Debug.Print("Pair don't exist, pairObj.Value.SecondaryCurrencyCode: " + pairObj.Value.SecondaryCurrencyCode);
             }
@@ -1227,7 +1165,7 @@ namespace IRTicker {
                 }
 
                 // update tool tips.
-                UIControls_Dict[dExchange].ToolTip_Dict[mSummary.PrimaryCurrencyCode + "_PriceTT"].SetToolTip(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"], "Best bid: " + mSummary.CurrentHighestBidPrice.ToString(formatString) + System.Environment.NewLine + "Best offer: " + mSummary.CurrentLowestOfferPrice.ToString(formatString));
+                IRTickerTT.SetToolTip(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"], "Best bid: " + mSummary.CurrentHighestBidPrice.ToString(formatString) + System.Environment.NewLine + "Best offer: " + mSummary.CurrentLowestOfferPrice.ToString(formatString));
             }
             else Debug.Print("Pair2 don't exist, pairObj.Value.SecondaryCurrencyCode: " + mSummary.SecondaryCurrencyCode);
         }
@@ -1277,7 +1215,7 @@ namespace IRTicker {
                             Debug.Print("--- total cost is finally " + totalCost + " and the final increase was " + usedCoinsInThisOrder / (fiatSelected ? subOrder.Value.Price : 1));
                             weightedAverage += (usedCoinsInThisOrder / coins) * subOrder.Value.Price;
                             string tTip = buildAvgPriceTooltip(orderSide, fiatSelected, subOrder.Value.Price, orderCount, totalCost, crypto);
-                            UIControls_Dict["IR"].AvgPriceTT.SetToolTip(UIControls_Dict["IR"].AvgPrice, tTip);
+                            IRTickerTT.SetToolTip(UIControls_Dict["IR"].AvgPrice, tTip);
                             return "Average price for " + crypto + ": " + (fiatSelected ? "$" : "") + weightedAverage.ToString("### ##0.##").Trim();  // we have finished filling the hypothetical order
                         }
                         else {  // this whole sub order is required
@@ -1356,7 +1294,7 @@ namespace IRTicker {
                         weightedAverage += (usedCoinsInThisOrder / coins) * order.Price;
                         gracefulFinish = true;
                         string tTip = (orderSide == "Buy" ? "Max" : "Min") + " price paid: " + order.Price.ToString("### ##0.##") + System.Environment.NewLine + "Orders required to fill: " + orderCount + System.Environment.NewLine + "Total fiat cost: " + totalCost.ToString("### ### ##0.##");
-                        UIControls_Dict[dExchange].AvgPriceTT.SetToolTip(UIControls_Dict[dExchange].AvgPrice, tTip);
+                        IRTickerTT.SetToolTip(UIControls_Dict[dExchange].AvgPrice, tTip);
                         break;  // we have finished filling the hypothetical order
                     }
                     else {  // this whole order is required

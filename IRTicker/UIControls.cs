@@ -9,7 +9,6 @@ namespace IRTicker {
     class UIControls {
 
         public Dictionary<string, Label> Label_Dict;
-        public Dictionary<string, ToolTip> ToolTip_Dict;
 
         public string Name { get; set; }  // internal code representing the exchange, eg "IR", "BTCM", etc
 
@@ -48,25 +47,6 @@ namespace IRTicker {
         public Label ETC_Price { get; set; }
         public Label USDT_Price { get; set; }
         public Label BSV_Price { get; set; }
-
-        public ToolTip XBT_PriceTT { get; set; }
-        public ToolTip ETH_PriceTT { get; set; }
-        public ToolTip BCH_PriceTT { get; set; }
-        public ToolTip LTC_PriceTT { get; set; }
-        public ToolTip XRP_PriceTT { get; set; }
-        public ToolTip EOS_PriceTT { get; set; }
-        public ToolTip OMG_PriceTT { get; set; }
-        public ToolTip ZRX_PriceTT { get; set; }
-        public ToolTip PLA_PriceTT { get; set; }
-        public ToolTip XLM_PriceTT { get; set; }
-        public ToolTip BAT_PriceTT { get; set; }
-        public ToolTip REP_PriceTT { get; set; }
-        public ToolTip GNT_PriceTT { get; set; }
-        public ToolTip ETC_PriceTT { get; set; }
-        public ToolTip USDT_PriceTT { get; set; }
-        public ToolTip BSV_PriceTT { get; set; }
-
-        public ToolTip AvgPriceTT { get; set; }
 
         public Label XBT_Spread { get; set; }
         public Label ETH_Spread { get; set; }
@@ -147,27 +127,6 @@ namespace IRTicker {
             if (ETC_Spread != null) Label_Dict.Add("ETC_Spread", ETC_Spread);
             if (USDT_Spread != null) Label_Dict.Add("USDT_Spread", USDT_Spread);
             if (BSV_Spread != null) Label_Dict.Add("BSV_Spread", BSV_Spread);
-
-            // ToolTips
-            ToolTip_Dict = new Dictionary<string, ToolTip>();
-            if (XBT_PriceTT != null) ToolTip_Dict.Add("XBT_PriceTT", XBT_PriceTT);
-            if (ETH_PriceTT != null) ToolTip_Dict.Add("ETH_PriceTT", ETH_PriceTT);
-            if (BCH_PriceTT != null) ToolTip_Dict.Add("BCH_PriceTT", BCH_PriceTT);
-            if (LTC_PriceTT != null) ToolTip_Dict.Add("LTC_PriceTT", LTC_PriceTT);
-            if (XRP_PriceTT != null) ToolTip_Dict.Add("XRP_PriceTT", XRP_PriceTT);
-            if (EOS_PriceTT != null) ToolTip_Dict.Add("EOS_PriceTT", EOS_PriceTT);
-            if (OMG_PriceTT != null) ToolTip_Dict.Add("OMG_PriceTT", OMG_PriceTT);
-            if (ZRX_PriceTT != null) ToolTip_Dict.Add("ZRX_PriceTT", ZRX_PriceTT);
-            if (PLA_PriceTT != null) ToolTip_Dict.Add("PLA_PriceTT", PLA_PriceTT);
-            if (XLM_PriceTT != null) ToolTip_Dict.Add("XLM_PriceTT", XLM_PriceTT);
-            if (BAT_PriceTT != null) ToolTip_Dict.Add("BAT_PriceTT", BAT_PriceTT);
-            if (REP_PriceTT != null) ToolTip_Dict.Add("REP_PriceTT", REP_PriceTT);
-            if (GNT_PriceTT != null) ToolTip_Dict.Add("GNT_PriceTT", GNT_PriceTT);
-            if (ETC_PriceTT != null) ToolTip_Dict.Add("ETC_PriceTT", ETC_PriceTT);
-            if (USDT_PriceTT != null) ToolTip_Dict.Add("USDT_PriceTT", USDT_PriceTT);
-            if (BSV_PriceTT != null) ToolTip_Dict.Add("BSV_PriceTT", BSV_PriceTT);
-
-            if (AvgPriceTT != null) ToolTip_Dict.Add("AvgPriceTT", AvgPriceTT);
         }
     }
 }

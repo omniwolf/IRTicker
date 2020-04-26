@@ -247,34 +247,7 @@
             this.GDAX_BCH_Label1 = new System.Windows.Forms.Label();
             this.GDAX_ETH_Label1 = new System.Windows.Forms.Label();
             this.GDAX_XBT_Label1 = new System.Windows.Forms.Label();
-            this.IR_XBT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_ETH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_BCH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_LTC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BTCM_XBT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BTCM_ETH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BTCM_BCH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BTCM_LTC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BTCM_XRP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.GDAX_XBT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.GDAX_ETH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.GDAX_BCH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.GDAX_LTC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_XBT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_ETH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_BCH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_LTC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.CSPT_XBT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.CSPT_ETH_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.CSPT_EOS_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.CSPT_LTC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BTCM_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.GDAX_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.CSPT_AvgPriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_XRP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_XRP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.IRTickerTT = new System.Windows.Forms.ToolTip(this.components);
             this.OTCHelper = new System.Windows.Forms.Panel();
             this.StepVolume_Label7 = new System.Windows.Forms.Label();
             this.StepPrice_Label7 = new System.Windows.Forms.Label();
@@ -293,41 +266,8 @@
             this.MarketBuyCrypto_Label = new System.Windows.Forms.Label();
             this.CashInput_MaskedTextBox = new System.Windows.Forms.MaskedTextBox();
             this.CryptoChooser_ComboBox = new System.Windows.Forms.ComboBox();
-            this.IR_OMG_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_ZRX_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BTCM_OMG_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_OMG_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_ZRX_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.CSPT_XRP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.GDAX_ZRX_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_PLA_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.GDAX_XRP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_EOS_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_EOS_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BTCM_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.GDAX_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_XLM_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_BAT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_REP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_GNT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BTCM_BAT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BTCM_GNT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.GDAX_REP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_BAT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_REP_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_GNT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_ETC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_ETC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.GDAX_ETC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BTCM_ETC_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BlinkStickBW = new System.ComponentModel.BackgroundWorker();
             this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
-            this.IR_BSV_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.IR_USDT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BTCM_BSV_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_USDT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
-            this.BFX_BSV_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.OB_checkBox = new System.Windows.Forms.CheckBox();
             this.OB_label = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
@@ -3231,145 +3171,10 @@
             this.GDAX_XBT_Label1.TabIndex = 0;
             this.GDAX_XBT_Label1.Text = "BTC:";
             // 
-            // IR_XBT_PriceTT
+            // IRTickerTT
             // 
-            this.IR_XBT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_XBT_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // IR_ETH_PriceTT
-            // 
-            this.IR_ETH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_ETH_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // IR_BCH_PriceTT
-            // 
-            this.IR_BCH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_BCH_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // IR_LTC_PriceTT
-            // 
-            this.IR_LTC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_LTC_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BTCM_XBT_PriceTT
-            // 
-            this.BTCM_XBT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BTCM_XBT_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BTCM_ETH_PriceTT
-            // 
-            this.BTCM_ETH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BTCM_ETH_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BTCM_BCH_PriceTT
-            // 
-            this.BTCM_BCH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BTCM_BCH_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BTCM_LTC_PriceTT
-            // 
-            this.BTCM_LTC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BTCM_LTC_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BTCM_XRP_PriceTT
-            // 
-            this.BTCM_XRP_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BTCM_XRP_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // GDAX_XBT_PriceTT
-            // 
-            this.GDAX_XBT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.GDAX_XBT_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // GDAX_ETH_PriceTT
-            // 
-            this.GDAX_ETH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.GDAX_ETH_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // GDAX_BCH_PriceTT
-            // 
-            this.GDAX_BCH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.GDAX_BCH_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // GDAX_LTC_PriceTT
-            // 
-            this.GDAX_LTC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.GDAX_LTC_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BFX_XBT_PriceTT
-            // 
-            this.BFX_XBT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BFX_XBT_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BFX_ETH_PriceTT
-            // 
-            this.BFX_ETH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BFX_ETH_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BFX_BCH_PriceTT
-            // 
-            this.BFX_BCH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BFX_BCH_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BFX_LTC_PriceTT
-            // 
-            this.BFX_LTC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BFX_LTC_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // CSPT_XBT_PriceTT
-            // 
-            this.CSPT_XBT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.CSPT_XBT_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // CSPT_ETH_PriceTT
-            // 
-            this.CSPT_ETH_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.CSPT_ETH_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // CSPT_EOS_PriceTT
-            // 
-            this.CSPT_EOS_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.CSPT_EOS_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // CSPT_LTC_PriceTT
-            // 
-            this.CSPT_LTC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.CSPT_LTC_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // IR_AvgPriceTT
-            // 
-            this.IR_AvgPriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_AvgPriceTT.ToolTipTitle = "Average price details";
-            // 
-            // BTCM_AvgPriceTT
-            // 
-            this.BTCM_AvgPriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BTCM_AvgPriceTT.ToolTipTitle = "Average price details";
-            // 
-            // GDAX_AvgPriceTT
-            // 
-            this.GDAX_AvgPriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.GDAX_AvgPriceTT.ToolTipTitle = "Average price details";
-            // 
-            // BFX_AvgPriceTT
-            // 
-            this.BFX_AvgPriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BFX_AvgPriceTT.ToolTipTitle = "Average price details";
-            // 
-            // CSPT_AvgPriceTT
-            // 
-            this.CSPT_AvgPriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.CSPT_AvgPriceTT.ToolTipTitle = "Average price details";
-            // 
-            // BFX_XRP_PriceTT
-            // 
-            this.BFX_XRP_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BFX_XRP_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // IR_XRP_PriceTT
-            // 
-            this.IR_XRP_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_XRP_PriceTT.ToolTipTitle = "Spread details";
+            this.IRTickerTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.IRTickerTT.ToolTipTitle = "Spread details";
             // 
             // OTCHelper
             // 
@@ -3545,146 +3350,6 @@
             this.CryptoChooser_ComboBox.Size = new System.Drawing.Size(121, 21);
             this.CryptoChooser_ComboBox.TabIndex = 0;
             // 
-            // IR_OMG_PriceTT
-            // 
-            this.IR_OMG_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_OMG_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // IR_ZRX_PriceTT
-            // 
-            this.IR_ZRX_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_ZRX_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BTCM_OMG_PriceTT
-            // 
-            this.BTCM_OMG_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BTCM_OMG_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BFX_OMG_PriceTT
-            // 
-            this.BFX_OMG_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BFX_OMG_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BFX_ZRX_PriceTT
-            // 
-            this.BFX_ZRX_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BFX_ZRX_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // CSPT_XRP_PriceTT
-            // 
-            this.CSPT_XRP_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.CSPT_XRP_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // GDAX_ZRX_PriceTT
-            // 
-            this.GDAX_ZRX_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.GDAX_ZRX_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // IR_PLA_PriceTT
-            // 
-            this.IR_PLA_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_PLA_PriceTT.ToolTipTitle = "Average price details";
-            // 
-            // GDAX_XRP_PriceTT
-            // 
-            this.GDAX_XRP_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.GDAX_XRP_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // IR_EOS_PriceTT
-            // 
-            this.IR_EOS_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_EOS_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BFX_EOS_PriceTT
-            // 
-            this.BFX_EOS_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BFX_EOS_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // IR_XLM_PriceTT
-            // 
-            this.IR_XLM_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_XLM_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BTCM_XLM_PriceTT
-            // 
-            this.BTCM_XLM_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BTCM_XLM_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // GDAX_XLM_PriceTT
-            // 
-            this.GDAX_XLM_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.GDAX_XLM_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BFX_XLM_PriceTT
-            // 
-            this.BFX_XLM_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BFX_XLM_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // IR_BAT_PriceTT
-            // 
-            this.IR_BAT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_BAT_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // IR_REP_PriceTT
-            // 
-            this.IR_REP_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_REP_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // IR_GNT_PriceTT
-            // 
-            this.IR_GNT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_GNT_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BTCM_BAT_PriceTT
-            // 
-            this.BTCM_BAT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BTCM_BAT_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BTCM_GNT_PriceTT
-            // 
-            this.BTCM_GNT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BTCM_GNT_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // GDAX_REP_PriceTT
-            // 
-            this.GDAX_REP_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.GDAX_REP_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BFX_BAT_PriceTT
-            // 
-            this.BFX_BAT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BFX_BAT_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BFX_REP_PriceTT
-            // 
-            this.BFX_REP_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BFX_REP_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BFX_GNT_PriceTT
-            // 
-            this.BFX_GNT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BFX_GNT_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // IR_ETC_PriceTT
-            // 
-            this.IR_ETC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_ETC_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BFX_ETC_PriceTT
-            // 
-            this.BFX_ETC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BFX_ETC_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // GDAX_ETC_PriceTT
-            // 
-            this.GDAX_ETC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.GDAX_ETC_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BTCM_ETC_PriceTT
-            // 
-            this.BTCM_ETC_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BTCM_ETC_PriceTT.ToolTipTitle = "Spread details";
-            // 
             // BlinkStickBW
             // 
             this.BlinkStickBW.WorkerSupportsCancellation = true;
@@ -3694,31 +3359,6 @@
             // BlinkStickWhite_Thread
             // 
             this.BlinkStickWhite_Thread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickWhite_Thread_DoWork);
-            // 
-            // IR_BSV_PriceTT
-            // 
-            this.IR_BSV_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_BSV_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // IR_USDT_PriceTT
-            // 
-            this.IR_USDT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IR_USDT_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BTCM_BSV_PriceTT
-            // 
-            this.BTCM_BSV_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BTCM_BSV_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BFX_USDT_PriceTT
-            // 
-            this.BFX_USDT_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BFX_USDT_PriceTT.ToolTipTitle = "Spread details";
-            // 
-            // BFX_BSV_PriceTT
-            // 
-            this.BFX_BSV_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.BFX_BSV_PriceTT.ToolTipTitle = "Spread details";
             // 
             // OB_checkBox
             // 
@@ -3893,43 +3533,16 @@
         private System.Windows.Forms.Label CSPT_EOS_Label1;
         private System.Windows.Forms.Label CSPT_ETH_Label1;
         private System.Windows.Forms.Label CSPT_XBT_Label1;
-        private System.Windows.Forms.ToolTip IR_XBT_PriceTT;
-        private System.Windows.Forms.ToolTip IR_ETH_PriceTT;
-        private System.Windows.Forms.ToolTip IR_BCH_PriceTT;
-        private System.Windows.Forms.ToolTip IR_LTC_PriceTT;
-        private System.Windows.Forms.ToolTip BTCM_XBT_PriceTT;
-        private System.Windows.Forms.ToolTip BTCM_ETH_PriceTT;
-        private System.Windows.Forms.ToolTip BTCM_BCH_PriceTT;
-        private System.Windows.Forms.ToolTip BTCM_LTC_PriceTT;
-        private System.Windows.Forms.ToolTip BTCM_XRP_PriceTT;
-        private System.Windows.Forms.ToolTip GDAX_XBT_PriceTT;
-        private System.Windows.Forms.ToolTip GDAX_ETH_PriceTT;
-        private System.Windows.Forms.ToolTip GDAX_BCH_PriceTT;
-        private System.Windows.Forms.ToolTip GDAX_LTC_PriceTT;
-        private System.Windows.Forms.ToolTip BFX_XBT_PriceTT;
-        private System.Windows.Forms.ToolTip BFX_ETH_PriceTT;
-        private System.Windows.Forms.ToolTip BFX_BCH_PriceTT;
-        private System.Windows.Forms.ToolTip BFX_LTC_PriceTT;
-        private System.Windows.Forms.ToolTip CSPT_XBT_PriceTT;
-        private System.Windows.Forms.ToolTip CSPT_ETH_PriceTT;
-        private System.Windows.Forms.ToolTip CSPT_EOS_PriceTT;
-        private System.Windows.Forms.ToolTip CSPT_LTC_PriceTT;
-        private System.Windows.Forms.ToolTip IR_AvgPriceTT;
-        private System.Windows.Forms.ToolTip BTCM_AvgPriceTT;
-        private System.Windows.Forms.ToolTip GDAX_AvgPriceTT;
-        private System.Windows.Forms.ToolTip BFX_AvgPriceTT;
-        private System.Windows.Forms.ToolTip CSPT_AvgPriceTT;
+        private System.Windows.Forms.ToolTip IRTickerTT;
         private System.Windows.Forms.Label BFX_XRP_Label2;
         private System.Windows.Forms.Label BFX_XRP_Label3;
         private System.Windows.Forms.Label BFX_XRP_Label1;
-        private System.Windows.Forms.ToolTip BFX_XRP_PriceTT;
         public System.Windows.Forms.Button Help_Button;
         private System.Windows.Forms.CheckBox ExportSummarised_Checkbox;
         private System.Windows.Forms.Label ExportSummarised_Label;
         private System.Windows.Forms.Label IR_XRP_Label2;
         private System.Windows.Forms.Label IR_ZRX_Label3;
         private System.Windows.Forms.Label IR_XRP_Label1;
-        private System.Windows.Forms.ToolTip IR_XRP_PriceTT;
         private System.Windows.Forms.Panel OTCHelper;
         private System.Windows.Forms.Label StepVolume_Label7;
         private System.Windows.Forms.Label StepPrice_Label7;
@@ -3966,30 +3579,19 @@
         private System.Windows.Forms.Label IR_OMG_Label3;
         private System.Windows.Forms.Label IR_XRP_Label3;
         private System.Windows.Forms.Label IR_OMG_Label1;
-        private System.Windows.Forms.ToolTip IR_OMG_PriceTT;
-        private System.Windows.Forms.ToolTip IR_ZRX_PriceTT;
-        private System.Windows.Forms.ToolTip BTCM_OMG_PriceTT;
-        private System.Windows.Forms.ToolTip BFX_OMG_PriceTT;
-        private System.Windows.Forms.ToolTip BFX_ZRX_PriceTT;
-        private System.Windows.Forms.ToolTip CSPT_XRP_PriceTT;
         private System.Windows.Forms.Label SpreadVolumeTitle_Label;
         private System.Windows.Forms.Label GDAX_ZRX_Label2;
         private System.Windows.Forms.Label GDAX_ZRX_Label3;
         private System.Windows.Forms.Label GDAX_ZRX_Label1;
-        private System.Windows.Forms.ToolTip GDAX_ZRX_PriceTT;
-        private System.Windows.Forms.ToolTip IR_PLA_PriceTT;
         private System.Windows.Forms.Label GDAX_XRP_Label2;
         private System.Windows.Forms.Label GDAX_XRP_Label3;
         private System.Windows.Forms.Label GDAX_XRP_Label1;
-        private System.Windows.Forms.ToolTip GDAX_XRP_PriceTT;
         private System.Windows.Forms.Label BFX_EOS_Label2;
         private System.Windows.Forms.Label BFX_EOS_Label3;
         private System.Windows.Forms.Label BFX_EOS_Label1;
         private System.Windows.Forms.Label IR_EOS_Label2;
         private System.Windows.Forms.Label IR_EOS_Label3;
         private System.Windows.Forms.Label IR_EOS_Label1;
-        private System.Windows.Forms.ToolTip IR_EOS_PriceTT;
-        private System.Windows.Forms.ToolTip BFX_EOS_PriceTT;
         private System.Windows.Forms.Button IR_Reset_Button;
         private System.Windows.Forms.Label BTCM_XLM_Label2;
         private System.Windows.Forms.Label BTCM_XLM_Label3;
@@ -4003,10 +3605,6 @@
         private System.Windows.Forms.Label GDAX_XLM_Label2;
         private System.Windows.Forms.Label GDAX_XLM_Label3;
         private System.Windows.Forms.Label GDAX_XLM_Label1;
-        private System.Windows.Forms.ToolTip IR_XLM_PriceTT;
-        private System.Windows.Forms.ToolTip BTCM_XLM_PriceTT;
-        private System.Windows.Forms.ToolTip GDAX_XLM_PriceTT;
-        private System.Windows.Forms.ToolTip BFX_XLM_PriceTT;
         private System.Windows.Forms.ComboBox IR_CurrencyBox;
         private System.Windows.Forms.Label IR_GNT_Label2;
         private System.Windows.Forms.Label IR_GNT_Label1;
@@ -4017,21 +3615,15 @@
         private System.Windows.Forms.Label IR_BAT_Label2;
         private System.Windows.Forms.Label IR_BAT_Label1;
         private System.Windows.Forms.Label IR_BAT_Label3;
-        private System.Windows.Forms.ToolTip IR_BAT_PriceTT;
-        private System.Windows.Forms.ToolTip IR_REP_PriceTT;
-        private System.Windows.Forms.ToolTip IR_GNT_PriceTT;
         private System.Windows.Forms.Label BTCM_BAT_Label2;
         private System.Windows.Forms.Label BTCM_BAT_Label3;
         private System.Windows.Forms.Label BTCM_BAT_Label1;
         private System.Windows.Forms.Label BTCM_GNT_Label2;
         private System.Windows.Forms.Label BTCM_GNT_Label3;
         private System.Windows.Forms.Label BTCM_GNT_Label1;
-        private System.Windows.Forms.ToolTip BTCM_BAT_PriceTT;
-        private System.Windows.Forms.ToolTip BTCM_GNT_PriceTT;
         private System.Windows.Forms.Label GDAX_REP_Label2;
         private System.Windows.Forms.Label GDAX_REP_Label3;
         private System.Windows.Forms.Label GDAX_REP_Label1;
-        private System.Windows.Forms.ToolTip GDAX_REP_PriceTT;
         private System.Windows.Forms.Label BFX_BAT_Label2;
         private System.Windows.Forms.Label BFX_BAT_Label3;
         private System.Windows.Forms.Label BFX_BAT_Label1;
@@ -4041,13 +3633,9 @@
         private System.Windows.Forms.Label BFX_REP_Label3;
         private System.Windows.Forms.Label BFX_GNT_Label3;
         private System.Windows.Forms.Label BFX_REP_Label1;
-        private System.Windows.Forms.ToolTip BFX_BAT_PriceTT;
-        private System.Windows.Forms.ToolTip BFX_REP_PriceTT;
-        private System.Windows.Forms.ToolTip BFX_GNT_PriceTT;
         private System.Windows.Forms.Label IR_ETC_Label2;
         private System.Windows.Forms.Label IR_ETC_Label3;
         private System.Windows.Forms.Label IR_ETC_Label1;
-        private System.Windows.Forms.ToolTip IR_ETC_PriceTT;
         private System.Windows.Forms.Label BTCM_ETC_Label2;
         private System.Windows.Forms.Label BTCM_ETC_Label3;
         private System.Windows.Forms.Label BTCM_ETC_Label1;
@@ -4057,9 +3645,6 @@
         private System.Windows.Forms.Label GDAX_ETC_Label2;
         private System.Windows.Forms.Label GDAX_ETC_Label3;
         private System.Windows.Forms.Label GDAX_ETC_Label1;
-        private System.Windows.Forms.ToolTip BFX_ETC_PriceTT;
-        private System.Windows.Forms.ToolTip GDAX_ETC_PriceTT;
-        private System.Windows.Forms.ToolTip BTCM_ETC_PriceTT;
         private System.ComponentModel.BackgroundWorker BlinkStickBW;
         private System.ComponentModel.BackgroundWorker BlinkStickWhite_Thread;
         private System.Windows.Forms.Label BTCM_BSV_Label2;
@@ -4077,11 +3662,6 @@
         private System.Windows.Forms.Label IR_BSV_Label2;
         private System.Windows.Forms.Label IR_BSV_Label3;
         private System.Windows.Forms.Label IR_BSV_Label1;
-        private System.Windows.Forms.ToolTip IR_BSV_PriceTT;
-        private System.Windows.Forms.ToolTip IR_USDT_PriceTT;
-        private System.Windows.Forms.ToolTip BTCM_BSV_PriceTT;
-        private System.Windows.Forms.ToolTip BFX_USDT_PriceTT;
-        private System.Windows.Forms.ToolTip BFX_BSV_PriceTT;
         private System.Windows.Forms.Label SGD_Label2;
         private System.Windows.Forms.Label SGD_Label1;
         private System.Windows.Forms.CheckBox Slack_checkBox;
