@@ -16,7 +16,7 @@ namespace IRTicker {
         private ConcurrentDictionary<string, List<Tuple<DateTime, decimal>>> priceHistory = new ConcurrentDictionary<string, List<Tuple<DateTime, decimal>>>();
         private ConcurrentDictionary<string, DateTime> spreadHistory_LastPushed = new ConcurrentDictionary<string, DateTime>();  // holds the last time the spread was pushed to the spreadHistory and spreadHistoryCSV dicts
         private ConcurrentDictionary<string, List<DataPoint>> spreadHistory = new ConcurrentDictionary<string, List<DataPoint>>();
-        private ConcurrentDictionary<string, List<DataPoint>> spreadHistoryCSV = new ConcurrentDictionary<string, List<DataPoint>>();
+        //private ConcurrentDictionary<string, List<DataPoint>> spreadHistoryCSV = new ConcurrentDictionary<string, List<DataPoint>>();  // deleting this - let's just use spreadHistory.  I see no reason to double this info
         //private ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> OfferOrderBook_IR = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();  // outer decimal is price, inner decimal is guid
         //private ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> BidOrderBook_IR = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();
         // this next thing is hectic.  a dictionry of tuples.  The key is the crypto pair, the tuple in the order books (bid,offer) (which is represented by a dictionary (price) of dictionaries (order guids)
@@ -75,14 +75,14 @@ namespace IRTicker {
         }
 
         // we clear this one every time we use it so it's only new data
-        public ConcurrentDictionary<string, List<DataPoint>> GetSpreadHistoryCSV() {
+        /*public ConcurrentDictionary<string, List<DataPoint>> GetSpreadHistoryCSV() {
             lock (spreadHistoryCSV) {
                 ConcurrentDictionary<string, List<DataPoint>> sprd = new ConcurrentDictionary<string, List<DataPoint>>(spreadHistoryCSV);
                 spreadHistoryCSV.Clear();
                 return sprd;
             }
         }
-
+        */
 
         /// <summary>
         /// pair is format "XBT-AUD"
@@ -138,9 +138,9 @@ namespace IRTicker {
 
 
             //Debug.Print("DateTime.Now: " + DateTime.Now + " and spreadHistory_LastPushed: " + spreadHistory_LastPushed);
-            if (DateTime.Now >= (spreadHistory_LastPushed[pair] + TimeSpan.FromMinutes(1))) {
+            if (DateTime.Now >= (spreadHistory_LastPushed[pair] + TimeSpan.FromSeconds(10))) {
                 spreadHistory_LastPushed[pair] = DateTime.Now;
-                lock (spreadHistory) {
+                //lock (spreadHistory) {
                     if (!spreadHistory.ContainsKey(pair)) {
                         spreadHistory.TryAdd(pair, new List<DataPoint>());
                     }
@@ -150,8 +150,8 @@ namespace IRTicker {
                             spreadHistory[pair].RemoveAt(0);  // if we have more than 2 days worth of data, remove the first entry
                         }
                     }
-                }
-                lock (spreadHistoryCSV) {
+                //}
+                /*lock (spreadHistoryCSV) {
                     if (!spreadHistoryCSV.ContainsKey(pair)) {
                         spreadHistoryCSV.TryAdd(pair, new List<DataPoint>());
                     }
@@ -161,7 +161,7 @@ namespace IRTicker {
                             spreadHistoryCSV[pair].RemoveAt(0);  // if we have more than 2 days worth of data, remove the first entry
                         }
                     }
-                }
+                }*/
             }
         }
 

@@ -15,7 +15,6 @@ using System.Collections.Concurrent;
 using System.Windows.Forms.DataVisualization.Charting;
 using BlinkStickDotNet;
 using System.Runtime.InteropServices;
-using SlackAPI;
 using System.Collections.Specialized;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -39,6 +38,7 @@ namespace IRTicker {
         private WebSocketsConnect wSocketConnect;
         private BlinkStick bStick;
         private Slack slackObj = new Slack();
+        private DateTime lastCSVWrite = DateTime.Now;  // this holds the time we last saved the CSV file
 
         public ConcurrentDictionary<string, SpreadGraph> SpreadGraph_Dict = new ConcurrentDictionary<string, SpreadGraph>();  // needs to be public because it gets accessed from the graphs object
 
@@ -464,14 +464,15 @@ namespace IRTicker {
 
             // now we set slack stuff
             if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "")) {
+
                 if (IRBTCvol > (BTCMBTCvol + 5)) {  // IR is winning :D
-                    slackObj.setStatus("", ":large_blue_diamond:", 60);
+                    slackObj.setStatus("", ":large_blue_diamond:", 120);
                 }
                 else if (BTCMBTCvol > (IRBTCvol + 5)) {  // BTCM is winning :<
-                    slackObj.setStatus("", ":green_book:", 60);
+                    slackObj.setStatus("", ":green_book:", 120);
                 }
                 else {  // pretty even - white :|
-                    slackObj.setStatus("", ":white_square:", 60);
+                    slackObj.setStatus("", ":white_square:", 120);
                 }
             }
         }
@@ -1076,8 +1077,11 @@ namespace IRTicker {
                 loopCount++;
                 if (loopCount >= shitCoinPollRate) {
                     loopCount = 0;  // reset it, it's time we poll the shit coins again
-                    //if (Properties.Settings.Default.ExportFull) WriteSpreadHistory();  // OK it's been 30 secs, let's write what we have
-                    //if (Properties.Settings.Default.ExportSummarised) WriteSpreadHistoryCompressed();
+                }
+
+                if (lastCSVWrite + TimeSpan.FromHours(1) < DateTime.Now ) {
+                    lastCSVWrite = DateTime.Now;  // whether or not we write to the CSV, don't try again for another hour.
+                    WriteSpreadHistoryCompressed();
                 }
 
             } while(true);  // polling is lyfe
@@ -1598,6 +1602,10 @@ namespace IRTicker {
                     bStick.TurnOff();
                 }
             }
+
+           if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "")) {
+                slackObj.setStatus("", "");
+            }
         }
 
         private void SettingsButton_Click(object sender, EventArgs e) {
@@ -1770,7 +1778,7 @@ namespace IRTicker {
             }
         }
 
-        private void WriteSpreadHistory() {
+        /*private void WriteSpreadHistory() {
 
             StreamWriter dataWriter;
             string dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\IRTicker spread history data\\";
@@ -1790,7 +1798,7 @@ namespace IRTicker {
             catch (Exception ex) {
                 Debug.Print("Error writing to file: " + ex.ToString());
             }
-        }
+        }*/
 
         // this one only writes the spread as it sees it every 30 seconds or so.. to reduce the CSV file size.
         private void WriteSpreadHistoryCompressed() {
@@ -1806,9 +1814,23 @@ namespace IRTicker {
             StreamWriter dataWriter;
             try {
                 foreach (KeyValuePair<string, DCE> Exchange in DCEs) {  // spin through all the exchanges
-                    foreach (KeyValuePair<string, DCE.MarketSummary> spreadHistory in Exchange.Value.GetCryptoPairs()) {  // spin through all the pairs of this exchange
-                        dataWriter = new StreamWriter(dataFolder + Exchange.Value.CodeName + "-" + spreadHistory.Key + " - compressed.csv", append: true);
-                        dataWriter.WriteLine(string.Join(",", DateTime.Now.ToOADate(), spreadHistory.Value.spread));
+                    ConcurrentDictionary<string, List<DataPoint>> spreadHistory = Exchange.Value.GetSpreadHistory();  // OADate, spread
+                    foreach (string pair in Exchange.Value.UsablePairs()) {  // spin through all the pairs of this exchange
+                        dataWriter = new StreamWriter(dataFolder + Exchange.Value.CodeName + "-" + pair + " - compressed.csv", append: true);
+
+                        double totalSpread = 0;
+                        int avgDivider = 0;
+
+                        foreach (DataPoint dp in spreadHistory[pair]) {
+                            if (dp.XValue > (DateTime.Now.ToOADate() - (1/24))) {  // 1/24 is 1 hour in OADate format.  we average out the last hour
+                                totalSpread += dp.YValues[0];
+                                avgDivider++;
+                            }
+                        }
+
+                        totalSpread = totalSpread / avgDivider;  // just a bit of variable reuse going on here.
+
+                        dataWriter.WriteLine(string.Join(",", DateTime.Now.ToOADate(), totalSpread));
                         dataWriter.Close();
                     }
                 }

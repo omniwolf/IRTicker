@@ -13,13 +13,19 @@ namespace IRTicker {
 
         private static readonly HttpClient client = new HttpClient();
 
+        /// <summary>
+        /// duration of 0 means it will last forever
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="emoji"></param>
+        /// <param name="duration"></param>
         public void setStatus(string status = "", string emoji = "", long duration = 0) {
 
             var profChange = new SlackProfile {
                 profile = new SlackStatus {
                     status_emoji = emoji,
                     status_text = status,
-                    status_expiration = duration + DateTimeOffset.Now.ToUnixTimeSeconds()
+                    status_expiration = duration + (duration == 0 ? 0 : DateTimeOffset.Now.ToUnixTimeSeconds())  // if we send 0 for duration, then send it on to the slack API
                 }
             };
             
