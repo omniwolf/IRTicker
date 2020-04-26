@@ -37,8 +37,6 @@
             this.Slack_label = new System.Windows.Forms.Label();
             this.ExportSummarised_Checkbox = new System.Windows.Forms.CheckBox();
             this.ExportSummarised_Label = new System.Windows.Forms.Label();
-            this.ExportFull_Checkbox = new System.Windows.Forms.CheckBox();
-            this.ExportFull_Label = new System.Windows.Forms.Label();
             this.Help_Button = new System.Windows.Forms.Button();
             this.EnableGDAXLevel3_CheckBox = new System.Windows.Forms.CheckBox();
             this.EnableGDAXLevel3 = new System.Windows.Forms.Label();
@@ -330,6 +328,8 @@
             this.BTCM_BSV_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BFX_USDT_PriceTT = new System.Windows.Forms.ToolTip(this.components);
             this.BFX_BSV_PriceTT = new System.Windows.Forms.ToolTip(this.components);
+            this.OB_checkBox = new System.Windows.Forms.CheckBox();
+            this.OB_label = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -376,6 +376,8 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
+            this.Settings.Controls.Add(this.OB_checkBox);
+            this.Settings.Controls.Add(this.OB_label);
             this.Settings.Controls.Add(this.slackToken_textBox);
             this.Settings.Controls.Add(this.flashForm_checkBox);
             this.Settings.Controls.Add(this.flashForm_label);
@@ -383,8 +385,6 @@
             this.Settings.Controls.Add(this.Slack_label);
             this.Settings.Controls.Add(this.ExportSummarised_Checkbox);
             this.Settings.Controls.Add(this.ExportSummarised_Label);
-            this.Settings.Controls.Add(this.ExportFull_Checkbox);
-            this.Settings.Controls.Add(this.ExportFull_Label);
             this.Settings.Controls.Add(this.Help_Button);
             this.Settings.Controls.Add(this.EnableGDAXLevel3_CheckBox);
             this.Settings.Controls.Add(this.EnableGDAXLevel3);
@@ -399,7 +399,7 @@
             // 
             // slackToken_textBox
             // 
-            this.slackToken_textBox.Location = new System.Drawing.Point(76, 480);
+            this.slackToken_textBox.Location = new System.Drawing.Point(76, 301);
             this.slackToken_textBox.Name = "slackToken_textBox";
             this.slackToken_textBox.Size = new System.Drawing.Size(429, 20);
             this.slackToken_textBox.TabIndex = 23;
@@ -408,7 +408,7 @@
             // 
             this.flashForm_checkBox.AccessibleName = "";
             this.flashForm_checkBox.AutoSize = true;
-            this.flashForm_checkBox.Location = new System.Drawing.Point(490, 521);
+            this.flashForm_checkBox.Location = new System.Drawing.Point(490, 342);
             this.flashForm_checkBox.Name = "flashForm_checkBox";
             this.flashForm_checkBox.Size = new System.Drawing.Size(15, 14);
             this.flashForm_checkBox.TabIndex = 22;
@@ -419,7 +419,7 @@
             // 
             this.flashForm_label.AccessibleName = "";
             this.flashForm_label.AutoSize = true;
-            this.flashForm_label.Location = new System.Drawing.Point(73, 521);
+            this.flashForm_label.Location = new System.Drawing.Point(73, 342);
             this.flashForm_label.Name = "flashForm_label";
             this.flashForm_label.Size = new System.Drawing.Size(198, 26);
             this.flashForm_label.TabIndex = 21;
@@ -429,7 +429,7 @@
             // 
             this.Slack_checkBox.AccessibleName = "";
             this.Slack_checkBox.AutoSize = true;
-            this.Slack_checkBox.Location = new System.Drawing.Point(490, 433);
+            this.Slack_checkBox.Location = new System.Drawing.Point(490, 254);
             this.Slack_checkBox.Name = "Slack_checkBox";
             this.Slack_checkBox.Size = new System.Drawing.Size(15, 14);
             this.Slack_checkBox.TabIndex = 20;
@@ -440,18 +440,19 @@
             // 
             this.Slack_label.AccessibleName = "";
             this.Slack_label.AutoSize = true;
-            this.Slack_label.Location = new System.Drawing.Point(73, 433);
+            this.Slack_label.Location = new System.Drawing.Point(73, 254);
             this.Slack_label.Name = "Slack_label";
-            this.Slack_label.Size = new System.Drawing.Size(238, 39);
+            this.Slack_label.Size = new System.Drawing.Size(351, 39);
             this.Slack_label.TabIndex = 19;
-            this.Slack_label.Text = "Slack integration - will set your profile emoji \r\ndepending on if we\'re beeing BT" +
-    "C Markets or not\r\nEnter your Slack xoxp token below:";
+            this.Slack_label.Text = "Slack integration - will set your profile emoji \r\ndepending on if we\'re beating B" +
+    "TC Markets or not (blue good, green bad)\r\nEnter your Slack xoxp token below (req" +
+    "uired):";
             // 
             // ExportSummarised_Checkbox
             // 
             this.ExportSummarised_Checkbox.AccessibleName = "";
             this.ExportSummarised_Checkbox.AutoSize = true;
-            this.ExportSummarised_Checkbox.Location = new System.Drawing.Point(490, 387);
+            this.ExportSummarised_Checkbox.Location = new System.Drawing.Point(490, 188);
             this.ExportSummarised_Checkbox.Name = "ExportSummarised_Checkbox";
             this.ExportSummarised_Checkbox.Size = new System.Drawing.Size(15, 14);
             this.ExportSummarised_Checkbox.TabIndex = 18;
@@ -462,33 +463,13 @@
             // 
             this.ExportSummarised_Label.AccessibleName = "";
             this.ExportSummarised_Label.AutoSize = true;
-            this.ExportSummarised_Label.Location = new System.Drawing.Point(73, 387);
+            this.ExportSummarised_Label.Location = new System.Drawing.Point(73, 188);
             this.ExportSummarised_Label.Name = "ExportSummarised_Label";
-            this.ExportSummarised_Label.Size = new System.Drawing.Size(263, 26);
+            this.ExportSummarised_Label.Size = new System.Drawing.Size(393, 39);
             this.ExportSummarised_Label.TabIndex = 17;
-            this.ExportSummarised_Label.Text = "Export summary spread data?\r\nWill be saved to the G:\\IR\\IRTicker\\<your username>";
-            // 
-            // ExportFull_Checkbox
-            // 
-            this.ExportFull_Checkbox.AccessibleName = "";
-            this.ExportFull_Checkbox.AutoSize = true;
-            this.ExportFull_Checkbox.Location = new System.Drawing.Point(490, 341);
-            this.ExportFull_Checkbox.Name = "ExportFull_Checkbox";
-            this.ExportFull_Checkbox.Size = new System.Drawing.Size(15, 14);
-            this.ExportFull_Checkbox.TabIndex = 16;
-            this.ExportFull_Checkbox.UseVisualStyleBackColor = true;
-            this.ExportFull_Checkbox.CheckedChanged += new System.EventHandler(this.ExportFull_Checkbox_CheckedChanged);
-            // 
-            // ExportFull_Label
-            // 
-            this.ExportFull_Label.AccessibleName = "";
-            this.ExportFull_Label.AutoSize = true;
-            this.ExportFull_Label.Location = new System.Drawing.Point(73, 341);
-            this.ExportFull_Label.Name = "ExportFull_Label";
-            this.ExportFull_Label.Size = new System.Drawing.Size(263, 26);
-            this.ExportFull_Label.TabIndex = 15;
-            this.ExportFull_Label.Text = "Export full spread history automatically?\r\nWill be saved to the local machine\'s D" +
-    "ocuments library";
+            this.ExportSummarised_Label.Text = "Export summary spread data?\r\nWill be saved to G:\\My Drive\\IR\\IRTicker\\Spread hist" +
+    "ory data\\<your username>\\\r\nThis will save one datapoint per hour, which is avera" +
+    "ged over the last hour.";
             // 
             // Help_Button
             // 
@@ -507,7 +488,7 @@
             this.EnableGDAXLevel3_CheckBox.AutoSize = true;
             this.EnableGDAXLevel3_CheckBox.Checked = true;
             this.EnableGDAXLevel3_CheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.EnableGDAXLevel3_CheckBox.Location = new System.Drawing.Point(490, 287);
+            this.EnableGDAXLevel3_CheckBox.Location = new System.Drawing.Point(490, 124);
             this.EnableGDAXLevel3_CheckBox.Name = "EnableGDAXLevel3_CheckBox";
             this.EnableGDAXLevel3_CheckBox.Size = new System.Drawing.Size(15, 14);
             this.EnableGDAXLevel3_CheckBox.TabIndex = 13;
@@ -517,7 +498,7 @@
             // 
             this.EnableGDAXLevel3.AccessibleName = "";
             this.EnableGDAXLevel3.AutoSize = true;
-            this.EnableGDAXLevel3.Location = new System.Drawing.Point(73, 287);
+            this.EnableGDAXLevel3.Location = new System.Drawing.Point(73, 124);
             this.EnableGDAXLevel3.Name = "EnableGDAXLevel3";
             this.EnableGDAXLevel3.Size = new System.Drawing.Size(241, 39);
             this.EnableGDAXLevel3.TabIndex = 12;
@@ -3739,6 +3720,28 @@
             this.BFX_BSV_PriceTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.BFX_BSV_PriceTT.ToolTipTitle = "Spread details";
             // 
+            // OB_checkBox
+            // 
+            this.OB_checkBox.AccessibleName = "";
+            this.OB_checkBox.AutoSize = true;
+            this.OB_checkBox.Location = new System.Drawing.Point(490, 397);
+            this.OB_checkBox.Name = "OB_checkBox";
+            this.OB_checkBox.Size = new System.Drawing.Size(15, 14);
+            this.OB_checkBox.TabIndex = 25;
+            this.OB_checkBox.UseVisualStyleBackColor = true;
+            this.OB_checkBox.CheckedChanged += new System.EventHandler(this.OB_checkBox_CheckedChanged);
+            // 
+            // OB_label
+            // 
+            this.OB_label.AccessibleName = "";
+            this.OB_label.AutoSize = true;
+            this.OB_label.Location = new System.Drawing.Point(73, 397);
+            this.OB_label.Name = "OB_label";
+            this.OB_label.Size = new System.Drawing.Size(372, 26);
+            this.OB_label.TabIndex = 24;
+            this.OB_label.Text = "Show real time BTC-AUD orderbook for IR?\r\nRequires app restart.  This was mainly " +
+    "used for debugging, so it\'s pretty messy";
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3923,8 +3926,6 @@
         public System.Windows.Forms.Button Help_Button;
         private System.Windows.Forms.CheckBox ExportSummarised_Checkbox;
         private System.Windows.Forms.Label ExportSummarised_Label;
-        private System.Windows.Forms.CheckBox ExportFull_Checkbox;
-        private System.Windows.Forms.Label ExportFull_Label;
         private System.Windows.Forms.Label IR_XRP_Label2;
         private System.Windows.Forms.Label IR_ZRX_Label3;
         private System.Windows.Forms.Label IR_XRP_Label1;
@@ -4088,6 +4089,8 @@
         private System.Windows.Forms.CheckBox flashForm_checkBox;
         private System.Windows.Forms.Label flashForm_label;
         private System.Windows.Forms.TextBox slackToken_textBox;
+        private System.Windows.Forms.CheckBox OB_checkBox;
+        private System.Windows.Forms.Label OB_label;
     }
 }
 

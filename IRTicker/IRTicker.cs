@@ -47,8 +47,6 @@ namespace IRTicker {
         public IRTicker() {
             InitializeComponent();
 
-            obv.Show();
-
             Debug.Print("");
             Debug.Print("----------------");
             Debug.Print("IR TICKER BEGINS");
@@ -123,11 +121,13 @@ namespace IRTicker {
 
             refreshFrequencyTextbox.Text = Properties.Settings.Default.RefreshFreq.ToString();
             EnableGDAXLevel3_CheckBox.Checked = Properties.Settings.Default.FullGDAXOB;
-            ExportFull_Checkbox.Checked = Properties.Settings.Default.ExportFull;
             ExportSummarised_Checkbox.Checked = Properties.Settings.Default.ExportSummarised;
             Slack_checkBox.Checked = Properties.Settings.Default.Slack;
             flashForm_checkBox.Checked = Properties.Settings.Default.FlashForm;
             slackToken_textBox.Text = Properties.Settings.Default.SlackToken;
+            OB_checkBox.Checked = Properties.Settings.Default.ShowOB;
+
+            if (Properties.Settings.Default.ShowOB) obv.Show();
 
             VersionLabel.Text = "IR Ticker version " + FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
 
@@ -1079,9 +1079,9 @@ namespace IRTicker {
                     loopCount = 0;  // reset it, it's time we poll the shit coins again
                 }
 
-                if (lastCSVWrite + TimeSpan.FromHours(1) < DateTime.Now ) {
-                    lastCSVWrite = DateTime.Now;  // whether or not we write to the CSV, don't try again for another hour.
+                if (Properties.Settings.Default.ExportSummarised && (lastCSVWrite + TimeSpan.FromHours(1) < DateTime.Now )) {
                     WriteSpreadHistoryCompressed();
+                    lastCSVWrite = DateTime.Now;  // whether or not we write to the CSV, don't try again for another hour.  Setting this AFTER we call the writeSpreadHistoryCompressed() sub so worst case we miss a couple of datapoints rather than duplicate them.
                 }
 
             } while(true);  // polling is lyfe
@@ -1808,32 +1808,37 @@ namespace IRTicker {
                 Debug.Print("Cannot write spread history info - base folder not accessible or doesn't exist");
                 return;
             }
-
+            Debug.Print(DateTime.Now + " - CSV write: G drive folder exists, let's do it.");
             string dataFolder = baseFolder + Environment.UserName + "\\";
             if (!Directory.Exists(dataFolder)) Directory.CreateDirectory(dataFolder);  // create it if it doesn't exist
             StreamWriter dataWriter;
             try {
                 foreach (KeyValuePair<string, DCE> Exchange in DCEs) {  // spin through all the exchanges
-                    ConcurrentDictionary<string, List<DataPoint>> spreadHistory = Exchange.Value.GetSpreadHistory();  // OADate, spread
+                    ConcurrentDictionary<string, List<DataPoint>> spreadHistory = Exchange.Value.GetSpreadHistory();  // DataPoint: OADate, spread
                     foreach (string pair in Exchange.Value.UsablePairs()) {  // spin through all the pairs of this exchange
-                        dataWriter = new StreamWriter(dataFolder + Exchange.Value.CodeName + "-" + pair + " - compressed.csv", append: true);
+                        if (spreadHistory.ContainsKey(pair)) {
+                            dataWriter = new StreamWriter(dataFolder + Exchange.Value.CodeName + "-" + pair + " - compressed.csv", append: true);
 
-                        double totalSpread = 0;
-                        int avgDivider = 0;
+                            double totalSpread = 0;
+                            int avgDivider = 0;
 
-                        foreach (DataPoint dp in spreadHistory[pair]) {
-                            if (dp.XValue > (DateTime.Now.ToOADate() - (1/24))) {  // 1/24 is 1 hour in OADate format.  we average out the last hour
-                                totalSpread += dp.YValues[0];
-                                avgDivider++;
+                            foreach (DataPoint dp in spreadHistory[pair]) {
+                                if (dp.XValue > (DateTime.Now.ToOADate() - (1 / 24))) {  // 1/24 is 1 hour in OADate format.  we average out the last hour
+                                    totalSpread += dp.YValues[0];
+                                    avgDivider++;
+                                }
                             }
+
+                            totalSpread = totalSpread / avgDivider;  // just a bit of variable reuse going on here.
+
+                            Debug.Print("CSV write: " + Exchange.Value.CodeName + ", " + avgDivider + " datapoints averaged to a spread of $" + totalSpread);
+
+                            dataWriter.WriteLine(string.Join(",", DateTime.Now.ToOADate(), totalSpread));
+                            dataWriter.Close();
                         }
-
-                        totalSpread = totalSpread / avgDivider;  // just a bit of variable reuse going on here.
-
-                        dataWriter.WriteLine(string.Join(",", DateTime.Now.ToOADate(), totalSpread));
-                        dataWriter.Close();
                     }
                 }
+                Debug.Print("Write CSV: done.");
             }
             catch (Exception ex) {
                 Debug.Print("Error writing to file: " + ex.ToString());
@@ -2076,11 +2081,6 @@ namespace IRTicker {
             Help_Button.Enabled = false;
         }
 
-        private void ExportFull_Checkbox_CheckedChanged(object sender, EventArgs e) {
-            Properties.Settings.Default.ExportFull = ExportFull_Checkbox.Checked;
-            Properties.Settings.Default.Save();
-        }
-
         private void ExportSummarised_Checkbox_CheckedChanged(object sender, EventArgs e) {
             Properties.Settings.Default.ExportSummarised = ExportSummarised_Checkbox.Checked;
             Properties.Settings.Default.Save();
@@ -2255,6 +2255,11 @@ namespace IRTicker {
 
         private void flashForm_checkBox_CheckedChanged(object sender, EventArgs e) {
             Properties.Settings.Default.FlashForm = flashForm_checkBox.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void OB_checkBox_CheckedChanged(object sender, EventArgs e) {
+            Properties.Settings.Default.ShowOB = OB_checkBox.Checked;
             Properties.Settings.Default.Save();
         }
     }

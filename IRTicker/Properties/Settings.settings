@@ -5,9 +5,6 @@
     <Setting Name="RefreshFreq" Type="System.String" Scope="User">
       <Value Profile="(Default)">20</Value>
     </Setting>
-    <Setting Name="ExportFull" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="ExportSummarised" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -22,6 +19,9 @@
     </Setting>
     <Setting Name="SlackToken" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ShowOB" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>
