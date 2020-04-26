@@ -1449,14 +1449,17 @@ namespace IRTicker {
                 return;
             }
 
-            // update blink stick
-            Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
-            Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
+            if (bStick == null) bStick = BlinkStick.FindFirst();
 
-            decimal IRvol = IRpairs["XBT-AUD"].DayVolume;
-            decimal BTCMvol = BTCMpairs["XBT-AUD"].DayVolume;
+            if (bStick != null && bStick.OpenDevice()) {
+                // update blink stick
+                Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
+                Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
 
-            setStickColour(IRvol, BTCMvol);
+                decimal IRvol = IRpairs["XBT-AUD"].DayVolume;
+                decimal BTCMvol = BTCMpairs["XBT-AUD"].DayVolume;
+                setStickColour(IRvol, BTCMvol);
+            }
 
             // update the UI
 
