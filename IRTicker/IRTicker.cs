@@ -1758,24 +1758,26 @@ namespace IRTicker {
                     ConcurrentDictionary<string, List<DataPoint>> spreadHistory = Exchange.Value.GetSpreadHistory();  // DataPoint: OADate, spread
                     foreach (string pair in Exchange.Value.UsablePairs()) {  // spin through all the pairs of this exchange
                         if (spreadHistory.ContainsKey(pair)) {
-                            dataWriter = new StreamWriter(dataFolder + Exchange.Value.CodeName + "-" + pair + " - compressed.csv", append: true);
 
                             double totalSpread = 0;
                             int avgDivider = 0;
 
-                            foreach (DataPoint dp in spreadHistory[pair]) {
-                                if (dp.XValue > (DateTime.Now.ToOADate() - (1 / 24))) {  // 1/24 is 1 hour in OADate format.  we average out the last hour
+                            foreach (DataPoint dp in spreadHistory[pair]) {  // average out the last hour
+                                //Debug.Print("Xval: " + dp.XValue + ", current oadate: " + DateTime.Now.ToOADate() + ", 1 hour ago: " + (DateTime.Now.ToOADate() - 0.041666666));
+                                if (dp.XValue > (DateTime.Now.ToOADate() - 0.041666666)) {  // 0.0416666666666 is 1 hour in OADate format.  we average out the last hour
                                     totalSpread += dp.YValues[0];
                                     avgDivider++;
                                 }
                             }
 
-                            totalSpread = totalSpread / avgDivider;  // just a bit of variable reuse going on here.
+                            if (avgDivider > 0) {
+                                totalSpread = totalSpread / avgDivider;  // just a bit of variable reuse going on here.
 
-                            Debug.Print("CSV write: " + Exchange.Value.CodeName + ", " + avgDivider + " datapoints averaged to a spread of $" + totalSpread);
-
-                            dataWriter.WriteLine(string.Join(",", DateTime.Now.ToOADate(), totalSpread));
-                            dataWriter.Close();
+                                Debug.Print("CSV write: " + Exchange.Value.CodeName + " (" + pair + "), " + avgDivider + " datapoints averaged to a spread of $" + totalSpread);
+                                dataWriter = new StreamWriter(dataFolder + Exchange.Value.CodeName + "-" + pair + " - compressed.csv", append: true);
+                                dataWriter.WriteLine(string.Join(",", DateTime.Now.ToOADate(), totalSpread));
+                                dataWriter.Close();
+                            }
                         }
                     }
                 }
