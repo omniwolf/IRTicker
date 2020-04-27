@@ -399,19 +399,18 @@ namespace IRTicker {
                     Debug.Print(DateTime.Now + " -- BS -- caught an exception: " + ex.Message);
                 }
             }
+        }
 
+        private void setSlackStatus(decimal IRBTCvol, decimal BTCMBTCvol) { 
             // now we set slack stuff
-            if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "")) {
-
-                if (IRBTCvol > (BTCMBTCvol + 5)) {  // IR is winning :D
-                    slackObj.setStatus("", ":large_blue_diamond:", 120);
-                }
-                else if (BTCMBTCvol > (IRBTCvol + 5)) {  // BTCM is winning :<
-                    slackObj.setStatus("", ":green_book:", 120);
-                }
-                else {  // pretty even - white :|
-                    slackObj.setStatus("", ":white_square:", 120);
-                }
+            if (IRBTCvol > (BTCMBTCvol + 5)) {  // IR is winning :D
+                slackObj.setStatus("", ":large_blue_diamond:", 120);
+            }
+            else if (BTCMBTCvol > (IRBTCvol + 5)) {  // BTCM is winning :<
+                slackObj.setStatus("", ":green_book:", 120);
+            }
+            else {  // pretty even - white :|
+                slackObj.setStatus("", ":white_square:", 120);
             }
         }
 
@@ -1449,16 +1448,19 @@ namespace IRTicker {
                 return;
             }
 
-            if (bStick == null) bStick = BlinkStick.FindFirst();
+            Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
+            Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
+            decimal IRvol = IRpairs["XBT-AUD"].DayVolume;
+            decimal BTCMvol = BTCMpairs["XBT-AUD"].DayVolume;
 
+            if (bStick == null) bStick = BlinkStick.FindFirst();
             if (bStick != null && bStick.OpenDevice()) {
                 // update blink stick
-                Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
-                Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
-
-                decimal IRvol = IRpairs["XBT-AUD"].DayVolume;
-                decimal BTCMvol = BTCMpairs["XBT-AUD"].DayVolume;
                 setStickColour(IRvol, BTCMvol);
+            }
+
+            if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "")) {
+                setSlackStatus(IRvol, BTCMvol);
             }
 
             // update the UI
