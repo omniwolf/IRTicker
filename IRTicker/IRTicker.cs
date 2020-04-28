@@ -125,6 +125,8 @@ namespace IRTicker {
             Slack_checkBox.Checked = Properties.Settings.Default.Slack;
             flashForm_checkBox.Checked = Properties.Settings.Default.FlashForm;
             slackToken_textBox.Text = Properties.Settings.Default.SlackToken;
+            slackDefaultNameTextBox.Text = Properties.Settings.Default.SlackDefaultName;
+            slackNameChangeCheckBox.Checked = Properties.Settings.Default.SlackNameChange;
             OB_checkBox.Checked = Properties.Settings.Default.ShowOB;
 
             if (Properties.Settings.Default.ShowOB) obv.Show();
@@ -401,9 +403,9 @@ namespace IRTicker {
             }
         }
 
-        private void setSlackStatus(decimal IRBTCvol, decimal BTCMBTCvol) { 
+        private void setSlackStatus(decimal IRBTCvol, decimal BTCMBTCvol) {
             // now we set slack stuff
-            if (IRBTCvol > (BTCMBTCvol + 5)) {  // IR is winning :D
+            /*if (IRBTCvol > (BTCMBTCvol + 5)) {  // IR is winning :D
                 slackObj.setStatus("", ":large_blue_diamond:", 120);
             }
             else if (BTCMBTCvol > (IRBTCvol + 5)) {  // BTCM is winning :<
@@ -411,6 +413,32 @@ namespace IRTicker {
             }
             else {  // pretty even - white :|
                 slackObj.setStatus("", ":white_square:", 120);
+            }*/
+
+            string name = "";
+
+            if (Properties.Settings.Default.SlackNameChange && (Properties.Settings.Default.SlackDefaultName != "")) {
+                string tempName = UIControls_Dict["IR"].Label_Dict["XBT_Price"].Text;
+                tempName = tempName.Substring(0, tempName.Length - 3);  // remove decimal places from the price
+                name = Properties.Settings.Default.SlackDefaultName + " - AUD " + tempName;
+            }
+            //Debug.Print("slack name is: " + name);
+
+
+            if (IRBTCvol > BTCMBTCvol * 2) {
+                slackObj.setStatus("", ":danbizan:", 120, name);
+            }
+            else if (IRBTCvol * 2 < BTCMBTCvol) {
+                slackObj.setStatus("", ":sob:", 120, name);
+            }
+            else if (IRBTCvol > BTCMBTCvol + 5) {
+                slackObj.setStatus("", ":sunglasses:", 120, name);
+            }
+            else if ((IRBTCvol <= BTCMBTCvol + 5) && (IRBTCvol >= BTCMBTCvol - 5)) {
+                slackObj.setStatus("", ":neutral_face:", 120, name);
+            }
+            else if (IRBTCvol < BTCMBTCvol - 5) {
+                slackObj.setStatus("", ":slightly_frowning_face:", 120, name);
             }
         }
 
@@ -1560,6 +1588,7 @@ namespace IRTicker {
             if(int.TryParse(refreshFrequencyTextbox.Text, out int refreshInt)) {
                 if(refreshInt >= minRefreshFrequency) {
                     Properties.Settings.Default.SlackToken = slackToken_textBox.Text;
+                    Properties.Settings.Default.SlackDefaultName = slackDefaultNameTextBox.Text;
                     Properties.Settings.Default.Save();
                     Main.Visible = true;
                     Settings.Visible = false;
@@ -2205,6 +2234,11 @@ namespace IRTicker {
 
         private void OB_checkBox_CheckedChanged(object sender, EventArgs e) {
             Properties.Settings.Default.ShowOB = OB_checkBox.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void slackNameChangeCheckBox_CheckedChanged(object sender, EventArgs e) {
+            Properties.Settings.Default.SlackNameChange = slackNameChangeCheckBox.Checked;
             Properties.Settings.Default.Save();
         }
     }

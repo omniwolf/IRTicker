@@ -30,6 +30,12 @@
             this.toolbarFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
+            this.slackDefaultNameLabel = new System.Windows.Forms.Label();
+            this.slackDefaultNameTextBox = new System.Windows.Forms.TextBox();
+            this.slackNameChangeCheckBox = new System.Windows.Forms.CheckBox();
+            this.slackNameChangeLabel = new System.Windows.Forms.Label();
+            this.OB_checkBox = new System.Windows.Forms.CheckBox();
+            this.OB_label = new System.Windows.Forms.Label();
             this.slackToken_textBox = new System.Windows.Forms.TextBox();
             this.flashForm_checkBox = new System.Windows.Forms.CheckBox();
             this.flashForm_label = new System.Windows.Forms.Label();
@@ -268,8 +274,6 @@
             this.CryptoChooser_ComboBox = new System.Windows.Forms.ComboBox();
             this.BlinkStickBW = new System.ComponentModel.BackgroundWorker();
             this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
-            this.OB_checkBox = new System.Windows.Forms.CheckBox();
-            this.OB_label = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -316,6 +320,10 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
+            this.Settings.Controls.Add(this.slackDefaultNameLabel);
+            this.Settings.Controls.Add(this.slackDefaultNameTextBox);
+            this.Settings.Controls.Add(this.slackNameChangeCheckBox);
+            this.Settings.Controls.Add(this.slackNameChangeLabel);
             this.Settings.Controls.Add(this.OB_checkBox);
             this.Settings.Controls.Add(this.OB_label);
             this.Settings.Controls.Add(this.slackToken_textBox);
@@ -337,9 +345,71 @@
             this.Settings.Size = new System.Drawing.Size(585, 843);
             this.Settings.TabIndex = 4;
             // 
+            // slackDefaultNameLabel
+            // 
+            this.slackDefaultNameLabel.AccessibleName = "";
+            this.slackDefaultNameLabel.AutoSize = true;
+            this.slackDefaultNameLabel.Location = new System.Drawing.Point(73, 372);
+            this.slackDefaultNameLabel.Name = "slackDefaultNameLabel";
+            this.slackDefaultNameLabel.Size = new System.Drawing.Size(210, 13);
+            this.slackDefaultNameLabel.TabIndex = 29;
+            this.slackDefaultNameLabel.Text = "Enter your normal Slack display name here:";
+            this.IRTickerTT.SetToolTip(this.slackDefaultNameLabel, "I could interrogate the Slack API to get this, but it would require extra permiss" +
+        "ions.  Would rather not. ");
+            // 
+            // slackDefaultNameTextBox
+            // 
+            this.slackDefaultNameTextBox.Location = new System.Drawing.Point(305, 369);
+            this.slackDefaultNameTextBox.Name = "slackDefaultNameTextBox";
+            this.slackDefaultNameTextBox.Size = new System.Drawing.Size(200, 20);
+            this.slackDefaultNameTextBox.TabIndex = 28;
+            // 
+            // slackNameChangeCheckBox
+            // 
+            this.slackNameChangeCheckBox.AccessibleName = "";
+            this.slackNameChangeCheckBox.AutoSize = true;
+            this.slackNameChangeCheckBox.Location = new System.Drawing.Point(490, 348);
+            this.slackNameChangeCheckBox.Name = "slackNameChangeCheckBox";
+            this.slackNameChangeCheckBox.Size = new System.Drawing.Size(15, 14);
+            this.slackNameChangeCheckBox.TabIndex = 27;
+            this.slackNameChangeCheckBox.UseVisualStyleBackColor = true;
+            this.slackNameChangeCheckBox.CheckedChanged += new System.EventHandler(this.slackNameChangeCheckBox_CheckedChanged);
+            // 
+            // slackNameChangeLabel
+            // 
+            this.slackNameChangeLabel.AccessibleName = "";
+            this.slackNameChangeLabel.AutoSize = true;
+            this.slackNameChangeLabel.Location = new System.Drawing.Point(73, 348);
+            this.slackNameChangeLabel.Name = "slackNameChangeLabel";
+            this.slackNameChangeLabel.Size = new System.Drawing.Size(331, 13);
+            this.slackNameChangeLabel.TabIndex = 26;
+            this.slackNameChangeLabel.Text = "Change Slack username to have BTC-AUD price midpoint appended";
+            // 
+            // OB_checkBox
+            // 
+            this.OB_checkBox.AccessibleName = "";
+            this.OB_checkBox.AutoSize = true;
+            this.OB_checkBox.Location = new System.Drawing.Point(490, 479);
+            this.OB_checkBox.Name = "OB_checkBox";
+            this.OB_checkBox.Size = new System.Drawing.Size(15, 14);
+            this.OB_checkBox.TabIndex = 25;
+            this.OB_checkBox.UseVisualStyleBackColor = true;
+            this.OB_checkBox.CheckedChanged += new System.EventHandler(this.OB_checkBox_CheckedChanged);
+            // 
+            // OB_label
+            // 
+            this.OB_label.AccessibleName = "";
+            this.OB_label.AutoSize = true;
+            this.OB_label.Location = new System.Drawing.Point(73, 479);
+            this.OB_label.Name = "OB_label";
+            this.OB_label.Size = new System.Drawing.Size(372, 26);
+            this.OB_label.TabIndex = 24;
+            this.OB_label.Text = "Show real time BTC-AUD orderbook for IR?\r\nRequires app restart.  This was mainly " +
+    "used for debugging, so it\'s pretty messy";
+            // 
             // slackToken_textBox
             // 
-            this.slackToken_textBox.Location = new System.Drawing.Point(76, 301);
+            this.slackToken_textBox.Location = new System.Drawing.Point(76, 310);
             this.slackToken_textBox.Name = "slackToken_textBox";
             this.slackToken_textBox.Size = new System.Drawing.Size(429, 20);
             this.slackToken_textBox.TabIndex = 23;
@@ -348,7 +418,7 @@
             // 
             this.flashForm_checkBox.AccessibleName = "";
             this.flashForm_checkBox.AutoSize = true;
-            this.flashForm_checkBox.Location = new System.Drawing.Point(490, 342);
+            this.flashForm_checkBox.Location = new System.Drawing.Point(490, 424);
             this.flashForm_checkBox.Name = "flashForm_checkBox";
             this.flashForm_checkBox.Size = new System.Drawing.Size(15, 14);
             this.flashForm_checkBox.TabIndex = 22;
@@ -359,7 +429,7 @@
             // 
             this.flashForm_label.AccessibleName = "";
             this.flashForm_label.AutoSize = true;
-            this.flashForm_label.Location = new System.Drawing.Point(73, 342);
+            this.flashForm_label.Location = new System.Drawing.Point(73, 424);
             this.flashForm_label.Name = "flashForm_label";
             this.flashForm_label.Size = new System.Drawing.Size(198, 26);
             this.flashForm_label.TabIndex = 21;
@@ -380,13 +450,12 @@
             // 
             this.Slack_label.AccessibleName = "";
             this.Slack_label.AutoSize = true;
-            this.Slack_label.Location = new System.Drawing.Point(73, 254);
+            this.Slack_label.Location = new System.Drawing.Point(73, 251);
             this.Slack_label.Name = "Slack_label";
-            this.Slack_label.Size = new System.Drawing.Size(351, 39);
+            this.Slack_label.Size = new System.Drawing.Size(263, 52);
             this.Slack_label.TabIndex = 19;
-            this.Slack_label.Text = "Slack integration - will set your profile emoji \r\ndepending on if we\'re beating B" +
-    "TC Markets or not (blue good, green bad)\r\nEnter your Slack xoxp token below (req" +
-    "uired):";
+            this.Slack_label.Text = "Slack integration - will set your profile emoji depending \r\non whether we\'re beat" +
+    "ing BTC Markets or not.\r\n\r\nEnter your Slack xoxp token below (required):";
             // 
             // ExportSummarised_Checkbox
             // 
@@ -3360,28 +3429,6 @@
             // 
             this.BlinkStickWhite_Thread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickWhite_Thread_DoWork);
             // 
-            // OB_checkBox
-            // 
-            this.OB_checkBox.AccessibleName = "";
-            this.OB_checkBox.AutoSize = true;
-            this.OB_checkBox.Location = new System.Drawing.Point(490, 397);
-            this.OB_checkBox.Name = "OB_checkBox";
-            this.OB_checkBox.Size = new System.Drawing.Size(15, 14);
-            this.OB_checkBox.TabIndex = 25;
-            this.OB_checkBox.UseVisualStyleBackColor = true;
-            this.OB_checkBox.CheckedChanged += new System.EventHandler(this.OB_checkBox_CheckedChanged);
-            // 
-            // OB_label
-            // 
-            this.OB_label.AccessibleName = "";
-            this.OB_label.AutoSize = true;
-            this.OB_label.Location = new System.Drawing.Point(73, 397);
-            this.OB_label.Name = "OB_label";
-            this.OB_label.Size = new System.Drawing.Size(372, 26);
-            this.OB_label.TabIndex = 24;
-            this.OB_label.Text = "Show real time BTC-AUD orderbook for IR?\r\nRequires app restart.  This was mainly " +
-    "used for debugging, so it\'s pretty messy";
-            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3671,6 +3718,10 @@
         private System.Windows.Forms.TextBox slackToken_textBox;
         private System.Windows.Forms.CheckBox OB_checkBox;
         private System.Windows.Forms.Label OB_label;
+        private System.Windows.Forms.Label slackDefaultNameLabel;
+        private System.Windows.Forms.TextBox slackDefaultNameTextBox;
+        private System.Windows.Forms.CheckBox slackNameChangeCheckBox;
+        private System.Windows.Forms.Label slackNameChangeLabel;
     }
 }
 

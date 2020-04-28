@@ -19,20 +19,30 @@ namespace IRTicker {
         /// <param name="status"></param>
         /// <param name="emoji"></param>
         /// <param name="duration"></param>
-        public void setStatus(string status = "", string emoji = "", long duration = 0) {
+        public void setStatus(string status = "", string emoji = "", long duration = 0, string name = "") {
 
-            var profChange = new SlackProfile {
-                profile = new SlackStatus {
-                    status_emoji = emoji,
-                    status_text = status,
-                    status_expiration = duration + (duration == 0 ? 0 : DateTimeOffset.Now.ToUnixTimeSeconds())  // if we send 0 for duration, then send it on to the slack API
-                }
-            };
-            
-            SendMessageAsync(
-                Properties.Settings.Default.SlackToken,
-                profChange
-            ).Wait();
+            if (name == "" && (Properties.Settings.Default.SlackDefaultName == "")) {
+                var profChange = new SlackProfile {
+                    profile = new SlackStatus {
+                        status_emoji = emoji,
+                        status_text = status,
+                        status_expiration = duration + (duration == 0 ? 0 : DateTimeOffset.Now.ToUnixTimeSeconds()),  // if we send 0 for duration, then send it on to the slack API
+                    }
+                };
+                SendMessageAsync(Properties.Settings.Default.SlackToken, profChange).Wait();
+            }
+            else {
+                if (name == "") name = Properties.Settings.Default.SlackDefaultName;  // set their default name if we don't specify anything (this should be for when the app closes)
+                var profChange = new SlackProfile {
+                    profile = new SlackStatus {
+                        status_emoji = emoji,
+                        status_text = status,
+                        status_expiration = duration + (duration == 0 ? 0 : DateTimeOffset.Now.ToUnixTimeSeconds()),  // if we send 0 for duration, then send it on to the slack API
+                        display_name = name
+                    }
+                };
+                SendMessageAsync(Properties.Settings.Default.SlackToken, profChange).Wait();
+            }
         }
 
         public class SlackProfile {
@@ -43,6 +53,7 @@ namespace IRTicker {
             public string status_text { get; set; }
             public string status_emoji { get; set; }
             public long status_expiration { get; set; }
+            public string display_name { get; set; }
         }
 
         // reponse from message methods

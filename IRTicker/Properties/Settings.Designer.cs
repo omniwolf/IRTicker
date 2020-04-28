@@ -106,5 +106,29 @@ namespace IRTicker.Properties {
                 this["ShowOB"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SlackNameChange {
+            get {
+                return ((bool)(this["SlackNameChange"]));
+            }
+            set {
+                this["SlackNameChange"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SlackDefaultName {
+            get {
+                return ((string)(this["SlackDefaultName"]));
+            }
+            set {
+                this["SlackDefaultName"] = value;
+            }
+        }
     }
 }

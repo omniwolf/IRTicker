@@ -129,60 +129,7 @@ namespace IRTicker {
                 Debug.Print(DateTime.Now.ToString() + " | IR - couldn't download REST OB? - " + pair);
             }
         }
-        /*
-        private int ApplyBuffer_IR(string pair) {
-            // this pair doesn't even exist in the OB
-            // the pair is there, but nothing in it.
-            if (!DCEs["IR"].orderBuffer_IR.ContainsKey(pair) || DCEs["IR"].orderBuffer_IR[pair].Count == 0) {
-                DCEs["IR"].pulledSnapShot[pair] = true;
-                return 0;
-            }
 
-            if (DCEs["IR"].channelNonce["ORDERBOOK-" + pair] == 0) {
-                DCEs["IR"].channelNonce["ORDERBOOK-" + pair] = DCEs["IR"].orderBuffer_IR[pair].Keys.Min() - 1;
-            }
-
-            Debug.Print(DateTime.Now + " --- about to apply buffer.  missing change or remove order errors are probably expected. current nonce: " + DCEs["IR"].channelNonce["ORDERBOOK-" + pair] + " -- -");
-
-            // there's some problem here.  it doesn't appear to be popping all the buffers?
-            while (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(DCEs["IR"].channelNonce["ORDERBOOK-" + pair] + 1)) {
-                DCEs["IR"].channelNonce["ORDERBOOK-" + pair] += 1;
-                Debug.Print(DateTime.Now + " - popping an order (nonce: " + DCEs["IR"].channelNonce["ORDERBOOK-" + pair] + ") from the " + pair + " buffer, total prior to pop: " + DCEs["IR"].orderBuffer_IR[pair].Count);
-                if (DCEs["IR"].orderBuffer_IR[pair].TryRemove(DCEs["IR"].channelNonce["ORDERBOOK-" + pair], out Ticker_IR ticker)) {
-                    Debug.Print("1TryRemove supposedly worked, total now is " + DCEs["IR"].orderBuffer_IR[pair].Count + ", popped nonce is: " + ticker.Nonce);
-                    if (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(ticker.Nonce)) {
-                        Debug.Print("1yep defo in there -- BAD");
-                    }
-                    else {
-                        Debug.Print("1nup not in there -- good");
-                    }
-                    parseTicker_IR(ticker);
-                }
-                else {
-                    Debug.Print(DateTime.Now + " - couldn't remove order from orderbuffer??");
-                }
-                Debug.Print("2TryRemove supposedly worked, total now is " + DCEs["IR"].orderBuffer_IR[pair].Count + ", popped nonce is: " + ticker.Nonce);
-                Debug.Print("next nonce in the buffer is: " + DCEs["IR"].orderBuffer_IR[pair].Keys.Min());
-                if (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(DCEs["IR"].channelNonce["ORDERBOOK-" + pair])) {
-                    Debug.Print("2yep defo in there -- bad");
-                }
-                else {
-                    Debug.Print("2nup not in there - good");
-                }
-                if (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(DCEs["IR"].channelNonce["ORDERBOOK-" + pair] + 1)) {
-                    Debug.Print("next nonce (" + (DCEs["IR"].channelNonce["ORDERBOOK-" + pair] + 1) + " is there waiting! -- good");
-                }
-                else {
-                    Debug.Print("next nonce notin buffer BAD, even though buffer size is " + DCEs["IR"].orderBuffer_IR[pair].Count);
-                }
-            }
-
-            DCEs["IR"].pulledSnapShot[pair] = true;
-            //Debug.Print(DateTime.Now + " --- buffer has been applied, any new errors are probably real");
-
-            return DCEs["IR"].orderBuffer_IR[pair].Count;
-        }
-        */
         public void WebSocket_Subscribe(string dExchange, List<Tuple<string, string>> pairs) {
             string channel = "";
             switch (dExchange) {
