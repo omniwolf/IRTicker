@@ -68,6 +68,7 @@ namespace IRTicker {
 
             // GDAX
             wSocket_GDAX = new WebSocket("wss://ws-feed.pro.coinbase.com");
+            wSocket_GDAX.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
 
             wSocket_GDAX.OnMessage += (sender, e) => {
                 if (e.IsText) {
