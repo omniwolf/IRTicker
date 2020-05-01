@@ -469,12 +469,15 @@ namespace IRTicker {
                 // stay at 0.  This is 
                 //Dictionary<string, DCE.MarketSummary> cPairs = DCEs["IR"].GetCryptoPairs();
                 //if (cPairs.ContainsKey(mSummary.pair) && cPairs[mSummary.pair].spread == 0) { 
+                if (crypto == "XBT") {  // don't want to overwrite the spread orders as they're probably out of date
                     mSummary.CurrentHighestBidPrice = 0;
                     mSummary.CurrentLowestOfferPrice = 0;
+                }
                 //}
                 mSummary.CreatedTimestampUTC = "";
                 DCEs["IR"].CryptoPairsAdd(crypto + "-" + fiat, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
                 DCEs["IR"].CurrentDCEStatus = "Online";
+                pollingThread.ReportProgress(21, mSummary);
             }
         }
 
@@ -678,10 +681,19 @@ namespace IRTicker {
         public void SubscribeTickerSocket(string dExchange) {
             // subscribe to all the pairs
             List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
-            foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
-                foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                    if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                        pairList.Add(new Tuple<string, string>(primaryCode, secondaryCode));
+
+            if (dExchange == "IR") {
+                pairList.Add(new Tuple<string, string>("XBT", "AUD"));
+                pairList.Add(new Tuple<string, string>("XBT", "USD"));
+                pairList.Add(new Tuple<string, string>("XBT", "NZD"));
+            }
+            else {
+
+                foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
+                    foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                        if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
+                            pairList.Add(new Tuple<string, string>(primaryCode, secondaryCode));
+                        }
                     }
                 }
             }
@@ -868,7 +880,6 @@ namespace IRTicker {
                         // if there's no crypto selected in the drop down or there's no number of coins entered, then just pull the market summary
                         if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
                             ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency);
-                            pollingThread.ReportProgress(21, DCEs["IR"].GetCryptoPairs()[primaryCode + "-" + DCEs["IR"].CurrentSecondaryCurrency]);
                         }
                         //if (DCEs["IR"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["IR"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
                             //GetIROrderBook(primaryCode, );
@@ -1144,12 +1155,13 @@ namespace IRTicker {
                 string formatStringSpread = "### ##0.00";
                 string formatStringVol = "##0.00";
 
-                if (mSummary.LastPrice < 10) formatString = "0.00###";  // some coins are so shit, they're worth less than a cent.  Need different formatting for this.  ORRR the spread is so amazingly small we need more decimal places
+                decimal midPoint = (mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice) / 2;  // we don't use last price anymore, instead the midpoint of the spread
+
+                if (midPoint < 10) formatString = "0.00###";  // some coins are so shit, they're worth less than a cent.  Need different formatting for this.  ORRR the spread is so amazingly small we need more decimal places
                 if (mSummary.spread < 10) formatStringSpread = "0.00###";
                 if (mSummary.DayVolume >= 1000) formatStringVol = "### ##0.00";
                 if (mSummary.DayVolume >= 1000000) formatStringVol = "### ### ##0.00";
 
-                decimal midPoint = (mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice ) / 2;  // we don't use last price anymore, instead the midpoint of the spread
 
                 System.Windows.Forms.Label tempPrice = UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"];
 

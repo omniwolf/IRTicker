@@ -437,28 +437,8 @@ namespace IRTicker {
                     // I think  (roman yet to confirm) that if we get a market order and the volume is 0, then we just remove the top order.  hopefully the top price
                     // doesn't have multiple orders in it.. let's alert if we discover this
                     if (!Order_OB_IR.ContainsKey(order.OrderGuid)) {
-                        /*if (order.OrderType.StartsWith("Market") && order.Volume <= 0) {  // i think i was just taking a stab in the dark here.  thinking that maybe the reason it didn't exist in the order guid dict is because it's a market order?  seems unlikely
-                            if (TopOrder.Count > 1 && order.Pair.ToUpper() == "XBT-AUD") {
-                                Debug.Print("xbt-aud market order with vol 0, there are multiple top orders!");
-                            }
-                            else if (TopOrder.Count == 1 && order.Pair.ToUpper() == "XBT-AUD") {
-                                Debug.Print("xbt-aud market order with vol 0, only 1 top order");
-                            }
 
-                            // commenting this next line out to see if this helps... i'm kinda guessing that i have to remove the top price :/
-                            OB_IR.TryRemove(TopPrice, out ConcurrentDictionary<string, OrderBook_IR> TopPrice_Dict); // just trash the first price
-
-                            // commenting this foreach out as a test, does it stop the "but it doesn't exist in the order guid dictionary" errors?
-                            // ok here we need to go through the orderGuid dictionary and remove any orders that were in this top price order that we're trashing
-                            /*foreach (KeyValuePair<string, OrderBook_IR> orderGuid in TopPrice_Dict) { 
-                                Order_OB_IR.TryRemove(orderGuid.Key, out decimal ignore);
-                            }*/
-                        /*}
-                        else {  // else it's not a morket order, or it is, but the volume is > 0
-                            if (order.OrderType.StartsWith("Market")) {
-                                Debug.Print("we've got a market order with vol not 0");
-                            }*/
-                            Debug.Print(DateTime.Now.ToString() + " |(" + pair + ") Trying to change event vol, but it doesn't exist in order guid dictionary.  ordertype: " + order.OrderType + " vol: " + order.Volume);
+                        Debug.Print(DateTime.Now.ToString() + " |(" + pair + ") Trying to change event vol, but it doesn't exist in order guid dictionary.  ordertype: " + order.OrderType + " vol: " + order.Volume);
                         bool foundOrder = false;
                         foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
                             if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
@@ -515,6 +495,29 @@ namespace IRTicker {
                         if (!Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore3)) {  // regardless of whether we find the price/order in the OB_IR dict, let's remove it from the order_ob_ir dict
                             Debug.Print(DateTime.Now + " - couldn't remove order guid dictionary?  orderchange event, vol 1");
                         }
+
+
+
+                        //////////////////
+                        ///going to do another check here to make sure the order is actually removed
+                        //////////////////
+                        ///
+
+                        // first let's check the big OB_IR dict
+                        foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
+                            if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
+                                Debug.Print(DateTime.Now + " !!!!!!!!!!!!!!!!!!!! we have found a guid in BIG we should have deleted just above?? price: " + priceLevel.Key + " and guid is: " + order.OrderGuid);
+                                return null;
+                            }
+                        }
+
+                        // next let's search the small Order_OB_IR dict
+                        if (Order_OB_IR.ContainsKey(order.OrderGuid)) {
+                            Debug.Print(DateTime.Now + " !!!!!!!!!!!!!!!!!!!! we have found a guid in SMALL we should have deleted just above?? price: " + Order_OB_IR[order.OrderGuid] + " and guid is: " + order.OrderGuid);
+                            return null;
+                        }
+
+
                     }
                     else {  // we just need to update the volume in the IR_OBs dictionary, no change to the OrderGuid dictionary
                         decimal orderPrice = Order_OB_IR[order.OrderGuid];  // we have checked above, the orderGuid is defo in this dictionary
@@ -531,37 +534,6 @@ namespace IRTicker {
                         }
                     }
 
-                    // all of this below is back when we weren't using the second OrderGuid dictionary, can probably be removed..
-                    /*bool foundOrderGuid = false;  // if we don't find the orderGuid, then we can check if it's a market order
-                    foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> Price in OB_IR) {  // IR_OB is a one sided order book for the current pair
-                        if (Price.Value.ContainsKey(order.OrderGuid)) {  // we found the needle in the haystack :/   
-                            if (order.Volume == 0) {  // this means the order was fully filled, let's remove the order.
-                                if (Price.Value.Count > 1) Price.Value.TryRemove(order.OrderGuid, out OrderBook_IR ignore);  // more than one order at this price
-                                else OB_IR.TryRemove(Price.Key, out ConcurrentDictionary<string, OrderBook_IR> ignore);  // only one order at this price, we delete the whole cDictionary entry.
-                                //Debug.Print("Filled order and price - " + order.Price);
-                            }
-                            else {  // just need to update the order
-                                Price.Value[order.OrderGuid].Volume = order.Volume;
-                                //Debug.Print("Filled order - " + order.Price);
-                            }
-                            foundOrderGuid = true;
-                            break;  // break out of the foreach
-                        }
-                    }
-
-                    // OK I think  (roman yet to confirm) that if we get a market order and the volume is 0, then we just remove the top order.  hopefully the top price
-                    // doesn't have multiple orders in it.. let's alert if we discover this
-                    if (!foundOrderGuid) {
-                        if (order.OrderType.ToUpper().StartsWith("MARKET") && order.Volume == 0) {
-                            if (TopOrder.Count > 1 && order.Pair.ToUpper() == "XBT-AUD") {
-                                Debug.Print("xbt-aud market order with vol 0, there are multiple top orders!");
-                            }
-                            else if (TopOrder.Count == 1 && order.Pair.ToUpper() == "XBT-AUD") {
-                                Debug.Print("xbt-aud market order with vol 0, only 1 top order");
-                            }
-                            OB_IR.TryRemove(TopPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore); // just trash the first order
-                        }
-                    }*/
                     break;
 
                 case "OrderCanceled":  // API should send us OrderGuid, Pair, OrderType
@@ -592,6 +564,30 @@ namespace IRTicker {
                             Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") The big dictionary is missing a price: + $" + OrderPrice2 + " guid: " + order.OrderGuid);
                         }
                         if (!Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore2)) Debug.Print("!! 3 failed to remove (" + order.Pair + ") from guid dict - " + order.OrderGuid);
+
+
+                        ///////////////////
+                        ///lets check to make sure we successfully deleted these orders
+                        ///////////////////
+                        ///
+
+                        // first lez check the big one
+
+                        foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
+                            if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
+                                Debug.Print(DateTime.Now + " !!!!!!!!!!!!!!!!!!!! we have found a guid in BIG we should have deleted just above?? price: " + priceLevel.Key + " and guid is: " + order.OrderGuid);
+                                return null;
+                            }
+                        }
+
+                        // next let's search the small Order_OB_IR dict
+                        if (Order_OB_IR.ContainsKey(order.OrderGuid)) {
+                            Debug.Print(DateTime.Now + " !!!!!!!!!!!!!!!!!!!! we have found a guid in SMALL we should have deleted just above?? price: " + Order_OB_IR[order.OrderGuid] + " and guid is: " + order.OrderGuid);
+                            return null;
+                        }
+
+
+
                     }
                     else {  // else we did NOT find the order in the order guid dictionary.  let's check the main dictionary in case it's there.  if it is remove it.
                         Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to cancel event, but it doesn't exist in order guid dictionary - " + order.OrderGuid);
@@ -609,29 +605,6 @@ namespace IRTicker {
                             }
                         }
                     }
-
-
-                    // the below was before using the orderGuid dictionary method, can probably be deleted...
-                    /*decimal cancelledPrice = 0;
-                    foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> Price in OB_IR) {  // this might be too inefficient.  might have to do Roman's idea
-
-                        if (Price.Value.ContainsKey(order.OrderGuid)) {
-                            if (Price.Value.Count > 1) Price.Value.TryRemove(order.OrderGuid, out OrderBook_IR ignore);  // more than one order at this price
-                            else {
-                                // we found the price, and it's the only one.   let's break out of this loop and then remove the element from OB_IR
-                                cancelledPrice = Price.Key;
-                                //if (order.Pair.ToUpper() == "ETH-AUD") {
-                                    //Debug.Print("IR ETHAUD canceled order - just tried to remove the outer dictionary element as this was the only order at this price - " + Price.Key);
-                                //}
-                            }
-                            //Debug.Print("Order cancelled - " + order.OrderGuid);
-                            break;  // break out of the foreach
-                        }
-                    }
-
-                    if (cancelledPrice > 0) {
-                        OB_IR.TryRemove(cancelledPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore);  // only one order at this price, we delete the whole cDictionary entry.
-                    }*/
 
                     break;
             }
@@ -654,7 +627,7 @@ namespace IRTicker {
                 mSummary.pair = pair;
                 CryptoPairsAdd(pair, mSummary);
                 //Debug.Print("OCE: " + order.Pair + " " + eventStr + " " + mSummary.CurrentHighestBidPrice + " " + mSummary.CurrentLowestOfferPrice);
-                var cPairs = GetCryptoPairs();
+                var cPairs = GetCryptoPairs();  // we need to push this back to CryptoPairs first because the mSummary object here has nothing but bid and offer.  By pushing to CryptoPairs and then pulling from it we'll pull all the other info too
 
                 return cPairs[pair];
             }

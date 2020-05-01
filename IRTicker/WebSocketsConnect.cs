@@ -260,13 +260,15 @@ namespace IRTicker {
                     if (subscribe) {  // if subscribing then grab the order books too.
                         if (pair == "none") {
                             List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
-                            foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
+                            /*foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
                                 foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                                    if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                                        pairList.Add(new Tuple<string, string>(primaryCode, secondaryCode));
-                                    }
-                                }
-                            }
+                                    if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {*/
+                                        pairList.Add(new Tuple<string, string>("XBT", "AUD"));
+                            pairList.Add(new Tuple<string, string>("XBT", "USD"));
+                            pairList.Add(new Tuple<string, string>("XBT", "NZD"));
+                            //}
+                            //}
+                            //}
                             foreach (Tuple<string, string> pair1 in pairList) {
                                 GetOrderBook_IR(pair1.Item1, pair1.Item2);
                             }
@@ -315,13 +317,15 @@ namespace IRTicker {
                     Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
                     Task.Run(() => client_IR.Send(subscribeStr));
                     Debug.Print("Pulling the REST OBs...");
-                    foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
+                    /*foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
                         foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                                GetOrderBook_IR(primaryCode, secondaryCode);
-                            }
-                        }
-                    }
+                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {*/
+                                GetOrderBook_IR("XBT", "AUD");
+                    GetOrderBook_IR("XBT", "USD");
+                    GetOrderBook_IR("XBT", "NZD");
+                    //}
+                    //}
+                    //}
                 });
 
                 client_IR.MessageReceived.Subscribe(msg => {
@@ -722,11 +726,8 @@ namespace IRTicker {
                         }
                         if (DCEs["IR"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) {  //eventPair.Item2.ToUpper()) {
                             pollingThread.ReportProgress(21, mSummary);  // do update_pairs thing
-                            //pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
                         }
-                        else {
-                            //pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
-                        }
+
                         if (tickerStream.Data.Pair.ToUpper() == "XBT-AUD") {
                             pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
                         }
