@@ -2216,7 +2216,7 @@ namespace IRTicker {
             fInfo.cbSize = Convert.ToUInt32(Marshal.SizeOf(fInfo));
             fInfo.hwnd = hWnd;
             fInfo.dwFlags = FLASHW_ALL | FLASHW_TIMERNOFG;
-            fInfo.uCount = UInt32.MaxValue;
+            fInfo.uCount = 5;
             fInfo.dwTimeout = 0;
 
             return FlashWindowEx(ref fInfo);

@@ -93,10 +93,18 @@ namespace IRTicker {
 
             // set token in authorization header
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            // send message to API
-            var response = await client.PostAsync("https://slack.com/api/users.profile.set", httpContent).ConfigureAwait(continueOnCapturedContext: false);
-            // fetch response from API
-            var responseJson = await response.Content.ReadAsStringAsync();
+            string responseJson = "";
+
+            try {
+                // send message to API
+                var response = await client.PostAsync("https://slack.com/api/users.profile.set", httpContent).ConfigureAwait(continueOnCapturedContext: false);
+                // fetch response from API
+                responseJson = await response.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex) {
+                Debug.Print(DateTime.Now + " - setting slack stuff failed, network error? - " + ex.ToString());
+                return;
+            }
 
             // convert JSON response to object
             SlackMessageResponse messageResponse =
