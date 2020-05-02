@@ -1587,11 +1587,12 @@ namespace IRTicker {
                 if (bStick.OpenDevice()) {
                     bStick.TurnOff();
                 }
-            }
+           }
 
            if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "")) {
                 slackObj.setStatus("", "");
-            }
+           }
+            wSocketConnect.stopUITimerThread();  // needed otherwise the app never actually closes
         }
 
         private void SettingsButton_Click(object sender, EventArgs e) {
