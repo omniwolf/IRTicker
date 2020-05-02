@@ -128,6 +128,7 @@ namespace IRTicker {
             slackDefaultNameTextBox.Text = Properties.Settings.Default.SlackDefaultName;
             slackNameChangeCheckBox.Checked = Properties.Settings.Default.SlackNameChange;
             OB_checkBox.Checked = Properties.Settings.Default.ShowOB;
+            UITimerFreq_maskedTextBox.Text = Properties.Settings.Default.UITimerFreq.ToString();
 
             if (Properties.Settings.Default.ShowOB) obv.Show();
 
@@ -857,14 +858,14 @@ namespace IRTicker {
                         foreach (string crypto in DCEs["IR"].PrimaryCurrencyList) {
                             foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
                                 productDictionary_IR.Add(crypto + "-" + fiat, new DCE.products_GDAX(crypto + "-" + fiat));
-                                // don't pull OB here, we get it during  websockets
-                                //Debug.Print("IR - pulling order book: " + crypto + "-" + fiat);
-                                //DCEs["IR"].GetIROrderBook(crypto, fiat);  // while we're spinning through all the pairs, let's grab their order books too.
 
                                 //create OB objects ready to be filled.  we only do this once here, and never delete them.  neverrrrr
-                                DCEs["IR"].InitialiseOrderBookDicts_IR(crypto, fiat);
+                                //DCEs["IR"].InitialiseOrderBookDicts_IR(crypto, fiat);  // commented as we only want ot do BTC atm
                             }
                         }
+                        DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "AUD");
+                        DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "USD");
+                        DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "NZD");
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
                         
                         SubscribeTickerSocket("IR");
@@ -874,7 +875,7 @@ namespace IRTicker {
                     }
                 }
 
-                // still need to run this to get volume data
+                // still need to run this to get volume data (and all coins except BTC)
                 if (DCEs["IR"].NetworkAvailable) {
                     foreach (string primaryCode in DCEs["IR"].PrimaryCurrencyList) {
                         // if there's no crypto selected in the drop down or there's no number of coins entered, then just pull the market summary
@@ -1518,6 +1519,7 @@ namespace IRTicker {
                     /*else*/ UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Gray;  // any text there is now a poll old, so gray it out so the user knows it's stale.
 
                     if (!DCEs[dExchange].socketsAlive) {  // this should happen if REST is up but sockets are down.  if REST is also down we wouldn't get here i hope.
+                        Debug.Print(DateTime.Now + " - 1 setting sockets down, we are in the main reportProgress and socktsAlive is false - " + dExchange);
                         UpdateLabels(dExchange);
                         UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")" + " - sockets down";
                     }
@@ -1535,6 +1537,7 @@ namespace IRTicker {
 
                     UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")";
                     if (!DCEs[dExchange].socketsAlive) {  // website might be up, 
+                        Debug.Print(DateTime.Now + " - 2 setting sockets down, we are in the main reportProgress and socktsAlive is false - " + dExchange);
                         UIControls_Dict[dExchange].dExchange_GB.Text += " - sockets down";
                     }
 
@@ -1601,6 +1604,8 @@ namespace IRTicker {
                 if(refreshInt >= minRefreshFrequency) {
                     Properties.Settings.Default.SlackToken = slackToken_textBox.Text;
                     Properties.Settings.Default.SlackDefaultName = slackDefaultNameTextBox.Text;
+                    if (Int32.TryParse(UITimerFreq_maskedTextBox.Text, out int freq)) Properties.Settings.Default.UITimerFreq = freq;
+                    else Debug.Print("ERROR: couldn't save the ui timer freq as it couldn't be converted to an int? - " + UITimerFreq_maskedTextBox.Text);
                     Properties.Settings.Default.Save();
                     Main.Visible = true;
                     Settings.Visible = false;

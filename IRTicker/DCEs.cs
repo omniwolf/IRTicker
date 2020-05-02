@@ -16,9 +16,6 @@ namespace IRTicker {
         private ConcurrentDictionary<string, List<Tuple<DateTime, decimal>>> priceHistory = new ConcurrentDictionary<string, List<Tuple<DateTime, decimal>>>();
         private ConcurrentDictionary<string, DateTime> spreadHistory_LastPushed = new ConcurrentDictionary<string, DateTime>();  // holds the last time the spread was pushed to the spreadHistory and spreadHistoryCSV dicts
         private ConcurrentDictionary<string, List<DataPoint>> spreadHistory = new ConcurrentDictionary<string, List<DataPoint>>();
-        //private ConcurrentDictionary<string, List<DataPoint>> spreadHistoryCSV = new ConcurrentDictionary<string, List<DataPoint>>();  // deleting this - let's just use spreadHistory.  I see no reason to double this info
-        //private ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> OfferOrderBook_IR = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();  // outer decimal is price, inner decimal is guid
-        //private ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> BidOrderBook_IR = new ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>();
         // this next thing is hectic.  a dictionry of tuples.  The key is the crypto pair, the tuple in the order books (bid,offer) (which is represented by a dictionary (price) of dictionaries (order guids)
         public ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>> IR_OBs = new ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>>();
         // this next one is a dictionary of orderGuids, where the value is the price.  we can find the price here rather than iterating through the above dictionary.
@@ -436,6 +433,8 @@ namespace IRTicker {
 
                     // I think  (roman yet to confirm) that if we get a market order and the volume is 0, then we just remove the top order.  hopefully the top price
                     // doesn't have multiple orders in it.. let's alert if we discover this
+                    // after more investigation, I believe we should just ignore market order that come through sockets.  They're covored by other limit order events.
+                    // They are ignored long before we get to this code.
                     if (!Order_OB_IR.ContainsKey(order.OrderGuid)) {
 
                         Debug.Print(DateTime.Now.ToString() + " |(" + pair + ") Trying to change event vol, but it doesn't exist in order guid dictionary.  ordertype: " + order.OrderType + " vol: " + order.Volume);
@@ -500,6 +499,7 @@ namespace IRTicker {
 
                         //////////////////
                         ///going to do another check here to make sure the order is actually removed
+                        ///Never seen the code get stopped here, I think we can remove this
                         //////////////////
                         ///
 
@@ -568,6 +568,7 @@ namespace IRTicker {
 
                         ///////////////////
                         ///lets check to make sure we successfully deleted these orders
+                        //////Never seen the code get stopped here, I think we can remove this
                         ///////////////////
                         ///
 
@@ -610,7 +611,7 @@ namespace IRTicker {
             }
 
             // if this order has changed the spread, then let's update the cryptoPairs dictionary.
-            // somehowe had a situation where the OB we're looking at was empty, not sure how we got here as we should have returned null.  maybe it was emptied
+            // somehow had a situation where the OB we're looking at was empty, not sure how we got here as we should have returned null.  maybe it was emptied
             // after the 0 check at the top.. in any case let's just double check here before trying to do stuff.
             if (OrderWillChangeSpread && OB_IR.Count > 0) {
                 DateTimeOffset DTO = DateTimeOffset.Now;
@@ -618,12 +619,6 @@ namespace IRTicker {
                 mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
                 mSummary.CurrentHighestBidPrice = IR_OBs[pair].Item1.Keys.Max();
                 mSummary.CurrentLowestOfferPrice = IR_OBs[pair].Item2.Keys.Min();
-            // should be able to delete this commented block, don't think it's needed anymore
-            /*if (mSummary.CurrentHighestBidPrice == 0 && mSummary.CurrentLowestOfferPrice == 0) {  // so i guess this will happen when we haven't pulled the OB yet?
-                Debug.Print("------------- OB's spread was 0, had to use previous cryptoPairs' spread = " + order.Pair);
-                mSummary.CurrentLowestOfferPrice = cryptoPairs[order.Pair.ToUpper()].CurrentLowestOfferPrice;
-                mSummary.CurrentHighestBidPrice = cryptoPairs[order.Pair.ToUpper()].CurrentHighestBidPrice;
-            }*/
                 mSummary.pair = pair;
                 CryptoPairsAdd(pair, mSummary);
                 //Debug.Print("OCE: " + order.Pair + " " + eventStr + " " + mSummary.CurrentHighestBidPrice + " " + mSummary.CurrentLowestOfferPrice);
@@ -635,7 +630,7 @@ namespace IRTicker {
         }
 
         // this should be called once we have the orderbooks variable populated.  this method will split the orderbooks object into
-        // 2 sorted lists BidOrderBook_IR and OfferOrderBook_IR
+        // 2 concurrent dictionaries (1 for bids, 2 for offers)
         public void ConvertOrderBook_IR(string pair) {  // !!!!!!!!!!!!!! need to probably change all adds to TryAdd to make sure they're safe, work out how to handle duplicate adds
 
             pair = pair.ToUpper();  // always uppercase

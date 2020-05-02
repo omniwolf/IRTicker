@@ -130,5 +130,17 @@ namespace IRTicker.Properties {
                 this["SlackDefaultName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("250")]
+        public int UITimerFreq {
+            get {
+                return ((int)(this["UITimerFreq"]));
+            }
+            set {
+                this["UITimerFreq"] = value;
+            }
+        }
     }
 }

@@ -24,10 +24,7 @@ namespace IRTicker {
         public WebSocketsConnect(Dictionary<string, DCE> _DCEs, BackgroundWorker _pollingThread) {
             DCEs = _DCEs;
             pollingThread = _pollingThread;
-
-            // IR
-            //IR_Connect();
-            
+           
             // BTCM
 
             BTCM_Connect_v2();
@@ -154,9 +151,9 @@ namespace IRTicker {
                     startSockets("IR", "wss://websockets.independentreserve.com", channel);
                     
 
-                    foreach (Tuple<string, string> pair in pairs) {
+                    /*foreach (Tuple<string, string> pair in pairs) {
                         GetOrderBook_IR(pair.Item1, pair.Item2);
-                    }
+                    }*/
 
                     break;
                 case "BTCM":
@@ -300,19 +297,24 @@ namespace IRTicker {
                     Debug.Print("creating a new buffer dict...");
                     DCEs[dExchange].orderBuffer_IR = new ConcurrentDictionary<string, ConcurrentDictionary<int, Ticker_IR>>();
                     Debug.Print("setting the pulledSnapShot dict entries to all false and initialising the orderbuffer dicts...");
-                    foreach(string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
-                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                                DCEs[dExchange].pulledSnapShot[primaryCode + "-" + secondaryCode] = false;
+                    List<string> tempPairs = new List<string>();
+                    tempPairs.Add("XBT-AUD");
+                    tempPairs.Add("XBT-USD");
+                    tempPairs.Add("XBT-NZD");
+                    /*foreach(string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
+                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {*/
+                        foreach (string pair in tempPairs) { 
+                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(pair)) {
+                                DCEs[dExchange].pulledSnapShot[pair] = false;
                             }
                             // initialise orderbuffers
-                            if (!DCEs["IR"].orderBuffer_IR.ContainsKey(primaryCode + "-" + secondaryCode)) {  // make sure there exists the dictionary element
-                                if (!DCEs["IR"].orderBuffer_IR.TryAdd(primaryCode + "-" + secondaryCode, new ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>())) {
-                                    Debug.Print(DateTime.Now + " - can't add orderBuffer_IR concurrent dicsh for " + primaryCode + "-" + secondaryCode);
+                            if (!DCEs["IR"].orderBuffer_IR.ContainsKey(pair)) {  // make the dictionary element doesn't already exist
+                                if (!DCEs["IR"].orderBuffer_IR.TryAdd(pair, new ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>())) {
+                                    Debug.Print(DateTime.Now + " - can't add orderBuffer_IR concurrent dicsh for " + pair);
                                     return;
                                 }
                             }
-                        }
+                        //}
                     }
                     Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
                     Task.Run(() => client_IR.Send(subscribeStr));
@@ -337,10 +339,30 @@ namespace IRTicker {
                 });
                 client_IR.Start().Wait();
 
+                Debug.Print(DateTime.Now + " - about to start the UI timer!");
+                //await updateUITimer_parent();
+                
+                Thread thread = new Thread(new ThreadStart(updateUITimer));
+                // this command to start the thread
+                thread.Start();
+                Debug.Print("UI timer storted.");
                 await Task.Run(() => client_IR.Send(subscribeStr));
                 Debug.Print(DateTime.Now + " - we have moved on after the client_IR.send where we subscribe!");
 
                 exitEvent.WaitOne();
+            }
+        }
+
+
+        private void updateUITimer() {
+            bool x = true; 
+
+            while (x) {
+                foreach (KeyValuePair<string, ConcurrentDictionary<int, Ticker_IR>> pair in DCEs["IR"].orderBuffer_IR) {
+                    if (DCEs["IR"].orderBuffer_IR[pair.Key].Count > 0) applyBufferToOB(pair.Key);
+                }
+
+                Thread.Sleep(Properties.Settings.Default.UITimerFreq);
             }
         }
 
@@ -562,15 +584,15 @@ namespace IRTicker {
                 }
             }*/
 
-            validateNonce(tickerStream);
+            addToBuffer(tickerStream);
         }
 
         // validate nonce will also add to a buffer if we're still yet to properly pull the REST OB. 
         // i think i might try and use the buffer concept every time we have an out of order nonce so it's possible to recover from
         // a few out of order nonces if they're all there, rather than just dumping everything every time.
-        public void validateNonce(Ticker_IR tickerStream) {
+        public void addToBuffer(Ticker_IR tickerStream) {
             string pair = tickerStream.Data.Pair.ToUpper();
-            string channel = tickerStream.Channel.ToUpper();
+            //string channel = tickerStream.Channel.ToUpper();
             //Debug.Print("---- Nonce received: " + tickerStream.Nonce);
 
             if (!DCEs["IR"].pulledSnapShot[pair]) {  // if we haven't even got the OB yet
@@ -582,6 +604,13 @@ namespace IRTicker {
             //Debug.Print(DateTime.Now + " - (" + pair + ") adding to buffer.  current nonce: " + DCEs["IR"].channelNonce[channel] + ", nonce we just received: " + tickerStream.Nonce);
             DCEs["IR"].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;
 
+        }
+
+        // this sub does some nonce maintenance and then spins through the orderbookBuffer, applying sequential buffered events
+        private void applyBufferToOB(string pair) {
+
+            string channel = "ORDERBOOK-" + pair;
+
             // if we don't got a nonce yet
             if (DCEs["IR"].channelNonce[channel] == 0) {
                 // orderBuffer_IR must have at least one order in it, so we should be able to safely request the minimum key.
@@ -590,7 +619,7 @@ namespace IRTicker {
 
             // we should check how full our buffer is. If there's more than 10 items (??) then it's probably too full.
             if (((DCEs["IR"].orderBuffer_IR[pair].Count > 20) && DCEs["IR"].pulledSnapShot[pair]) || (DCEs["IR"].OBResetFlag[channel])) {
-                Debug.Print("NONCE - too many buffered nonces, can't recover " + tickerStream.Channel + ", time to dump and restart");
+                Debug.Print("NONCE - too many buffered nonces, can't recover " + channel + ", time to dump and restart");
                 subscribe_unsubscribe_new("IR", false, pair);
 
                 if (Properties.Settings.Default.FlashForm) pollingThread.ReportProgress(26);  // flash the window if the setting is enabled
@@ -609,38 +638,6 @@ namespace IRTicker {
                 return;
             }
 
-            // always want to try and process the buffer, maybe the next nonce is in there.
-            //return;  // no need to interpret the rest of the event, we've either pushed onto the buffer, or we're starting fresh.
-
-            //else DCEs["IR"].nonceErrorTracker[channel] = false;  // if this is false and we're setting it again to false, fine - normal operation.  If this was true and we're now setting it to false, this means that we had some nonce errors but they seem to have settled down, and we can now dump and reconnect
-
-
-            // commented this out because I'm now trying to buffer out of order nonces, so the buffer process should be the only one to update the nonce
-            //DCEs["IR"].channelNonce[channel] = tickerStream.Nonce;  // regardless of whether it was in sequence, update it.
-
-
-
-            // have removed this because i think we should be prescriptive about getting the order book.  If we just always get it when it's not there
-            // then we might grab it 5 times in one second
-            /*if (!DCEs["IR"].IR_OBs.ContainsKey(tickerStream.Data.Pair.ToUpper())) {
-                Debug.Print(DateTime.Now.ToString() + " IR - receieved an event we don't have a pair for (" + tickerStream.Data.Pair + "), will grab it");
-
-                Tuple<string, string> tempTup = Utilities.SplitPair(tickerStream.Data.Pair.ToUpper());
-
-                DCEs["IR"].GetIROrderBook(tempTup.Item1, tempTup.Item2);
-                //WebSocket_Subscribe("IR", tempTup.Item1, tempTup.Item2);
-                //return;
-            }*/
-
-            // commented the below out, maybe we have all the right nonces in the buffer.  let's just process the buffer regardless.
-            // to get here we must have a good nonce
-            //DCEs["IR"].channelNonce[channel] = tickerStream.Nonce; 
-            //parseTicker_IR(tickerStream);
-
-            // OK let's check if the buffer has some more events to add
-            //if (DCEs["IR"].orderBuffer_IR[pair].Count > 1) {
-            //    Debug.Print(DateTime.Now + " - " + pair + " buffer has " + DCEs["IR"].orderBuffer_IR[pair].Count + " events buffered, let's try and parse them.");
-            //}
             while (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(DCEs["IR"].channelNonce[channel] + 1)) {  // if the buffer has the next nonce...
                 DCEs["IR"].channelNonce[channel]++;  // cool, let's advance the nonce
                 if (DCEs["IR"].orderBuffer_IR[pair].TryRemove(DCEs["IR"].channelNonce[channel], out Ticker_IR ticker)) {  // pop the ticker object,
@@ -680,41 +677,7 @@ namespace IRTicker {
                 case "NewOrder":
                 case "OrderChanged":
                 case "OrderCanceled":
-
-                    /*Debug.Print("IR new: " + message);
-                    break;*/
-
-                    // this if block is pure debugging
-                    /*if (((tickerStream.Event == "OrderChanged" && tickerStream.Data.Volume == 0) || (tickerStream.Event == "OrderCanceled")) && tickerStream.Data.Pair.ToUpper() == "PLA-AUD") {
-                        bool foundCancelled = false;
-                        //Debug.Print("EVENT changed, worknig out price...");
-                        if (tickerStream.Data.OrderType.ToUpper().EndsWith("BID")) {
-                                                       
-                            //var BidOrders = DCEs["IR"].IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1;
-                            //foreach (var PriceLevel in BidOrders) {
-                                //if (PriceLevel.Value.ContainsKey(tickerStream.Data.OrderGuid)) {
-                                if (DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1.ContainsKey(tickerStream.Data.OrderGuid)) { 
-                                    Debug.Print(DateTime.Now.ToString() + " | EVENT(" + tickerStream.Data.Pair + ") " + tickerStream.Event + ": " + DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1[tickerStream.Data.OrderGuid]);
-                                    foundCancelled = true;
-                                }
-                            //}
-                        }
-                        else {
-                            //var OfferOrders = DCEs["IR"].IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2;
-                           // foreach (var PriceLevel in OfferOrders) {
-                                //if (PriceLevel.Value.ContainsKey(tickerStream.Data.OrderGuid)) {
-                                if (DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2.ContainsKey(tickerStream.Data.OrderGuid)) { 
-                                    Debug.Print(DateTime.Now.ToString() + " | EVENT(" + tickerStream.Data.Pair + ") " + tickerStream.Event + ": " + DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2[tickerStream.Data.OrderGuid]);
-                                    foundCancelled = true;
-                                }
-                            
-                        }
-                        if (!foundCancelled) {
-                            Debug.Print("we have a " + tickerStream.Event + " order, but can't find it in either orderbook? " + tickerStream.Data.OrderGuid + " " + tickerStream.Data.OrderType);
-                        }
-                    }*/
-
-
+                                       
                     // if this OrderBookEvent_IR function returns a legit MarketSummary obj, it means the event we just received made changes to the spread.  let's update the UI.
                     // if it returns null, then there was no spread change.
                     // this method also updates the OBs and cryptoPairs obj (cryptoPairs only if there was a spread change)
@@ -728,7 +691,7 @@ namespace IRTicker {
                             pollingThread.ReportProgress(21, mSummary);  // do update_pairs thing
                         }
 
-                        if (tickerStream.Data.Pair.ToUpper() == "XBT-AUD") {
+                        if (Properties.Settings.Default.ShowOB && tickerStream.Data.Pair.ToUpper() == "XBT-AUD") {
                             pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
                         }
                     }

@@ -274,6 +274,8 @@
             this.CryptoChooser_ComboBox = new System.Windows.Forms.ComboBox();
             this.BlinkStickBW = new System.ComponentModel.BackgroundWorker();
             this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
+            this.UITimerFreq_label = new System.Windows.Forms.Label();
+            this.UITimerFreq_maskedTextBox = new System.Windows.Forms.MaskedTextBox();
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -320,6 +322,8 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
+            this.Settings.Controls.Add(this.UITimerFreq_maskedTextBox);
+            this.Settings.Controls.Add(this.UITimerFreq_label);
             this.Settings.Controls.Add(this.slackDefaultNameLabel);
             this.Settings.Controls.Add(this.slackDefaultNameTextBox);
             this.Settings.Controls.Add(this.slackNameChangeCheckBox);
@@ -3429,14 +3433,33 @@
             // 
             this.BlinkStickWhite_Thread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickWhite_Thread_DoWork);
             // 
+            // UITimerFreq_label
+            // 
+            this.UITimerFreq_label.AccessibleName = "";
+            this.UITimerFreq_label.AutoSize = true;
+            this.UITimerFreq_label.Location = new System.Drawing.Point(73, 533);
+            this.UITimerFreq_label.Name = "UITimerFreq_label";
+            this.UITimerFreq_label.Size = new System.Drawing.Size(252, 13);
+            this.UITimerFreq_label.TabIndex = 30;
+            this.UITimerFreq_label.Text = "How often to update the UI get for BTC on IR in ms:";
+            // 
+            // UITimerFreq_maskedTextBox
+            // 
+            this.UITimerFreq_maskedTextBox.Location = new System.Drawing.Point(405, 530);
+            this.UITimerFreq_maskedTextBox.Mask = "0000";
+            this.UITimerFreq_maskedTextBox.Name = "UITimerFreq_maskedTextBox";
+            this.UITimerFreq_maskedTextBox.PromptChar = ' ';
+            this.UITimerFreq_maskedTextBox.Size = new System.Drawing.Size(100, 20);
+            this.UITimerFreq_maskedTextBox.TabIndex = 31;
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 841);
+            this.Controls.Add(this.Settings);
             this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Main);
-            this.Controls.Add(this.Settings);
             this.Controls.Add(this.OTCHelper);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HelpButton = true;
@@ -3722,6 +3745,8 @@
         private System.Windows.Forms.TextBox slackDefaultNameTextBox;
         private System.Windows.Forms.CheckBox slackNameChangeCheckBox;
         private System.Windows.Forms.Label slackNameChangeLabel;
+        private System.Windows.Forms.MaskedTextBox UITimerFreq_maskedTextBox;
+        private System.Windows.Forms.Label UITimerFreq_label;
     }
 }
 
