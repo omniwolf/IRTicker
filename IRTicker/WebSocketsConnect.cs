@@ -119,7 +119,7 @@ namespace IRTicker {
                 // so yeah.. the "orderBook" object doesn't really get used anymore.  it's just like a staging area
                 DCEs["IR"].ConvertOrderBook_IR(pair);
 
-                Debug.Print(DateTime.Now.ToString() + " IR OB " + crypto + fiat + " done");
+                Debug.Print(DateTime.Now.ToString() + " IR OB " + pair + " pulled");
 
                 //int remainingBuffer = ApplyBuffer_IR(pair);
                 //Print("(" + pair + ") Buffer applied, there are " + remainingBuffer + " left in the buffer (should be 0)");
@@ -309,12 +309,12 @@ namespace IRTicker {
                         Debug.Print("Initial 'reconnection', ignored");
                         DCEs["IR"].socketsAlive = true;
                     }
-                    else if (info.Type == ReconnectionType.Lost) {
+                    /*else if (info.Type == ReconnectionType.Lost) {
                         Debug.Print("Lost 'reconnection' ignored, attached to a Reset button click?");
-                    }
+                    }*/
                     else { 
                         Debug.Print(DateTime.Now + " - (" + dExchange + " reconnection) - clearing OB sub dicts...");
-                        DCEs[dExchange].ClearOrderBookSubDicts();
+                        /*DCEs[dExchange].ClearOrderBookSubDicts();
                         Debug.Print("creating a new buffer dict...");
                         DCEs[dExchange].orderBuffer_IR = new ConcurrentDictionary<string, ConcurrentDictionary<int, Ticker_IR>>();
                         Debug.Print("setting the pulledSnapShot dict entries to all false and initialising the orderbuffer dicts...");
@@ -324,7 +324,7 @@ namespace IRTicker {
                         tempPairs.Add("XBT-NZD");
                         /*foreach(string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
                             foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {*/
-                        foreach (string pair in tempPairs) {
+                        /*foreach (string pair in tempPairs) {
                             if (DCEs[dExchange].ExchangeProducts.ContainsKey(pair)) {
                                 DCEs[dExchange].pulledSnapShot[pair] = false;
                             }
@@ -336,7 +336,8 @@ namespace IRTicker {
                                 }
                             }
                             //}
-                        }
+                        }*/
+                        Init_sockets("IR");
                         Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
                         Task.Run(() => client_IR.Send(subscribeStr));
                         Debug.Print("Pulling the REST OBs...");
@@ -349,6 +350,14 @@ namespace IRTicker {
                         //}
                         //}
                         //}
+                        stopUITimerThread();
+
+                        Debug.Print(DateTime.Now + " - RECONNECT: about to start the UI timer!");
+                        UITimerThreadProceed = true;
+                        UITimerThread = new Thread(new ThreadStart(updateUITimer));
+                        // this command to start the thread
+                        UITimerThread.Start();
+                        Debug.Print("RECONNECT: UI timer storted.");
                     }
 
                 });
@@ -534,14 +543,14 @@ namespace IRTicker {
                     }
                 }
                 
-                DCEs["IR"].ClearOrderBookSubDicts();
+                DCEs[dExchange].ClearOrderBookSubDicts();
             }
             else {
-                DCEs["IR"].pulledSnapShot[pair] = false;
-                DCEs["IR"].OBResetFlag["ORDERBOOK-" + pair] = false;
+                DCEs[dExchange].pulledSnapShot[pair] = false;
+                DCEs[dExchange].OBResetFlag["ORDERBOOK-" + pair] = false;
                 DCEs[dExchange].channelNonce["ORDERBOOK-" + pair] = 0;
                 Tuple<string, string> tempTup = Utilities.SplitPair(pair);
-                DCEs["IR"].ClearOrderBookSubDicts(tempTup.Item1, tempTup.Item2);
+                DCEs[dExchange].ClearOrderBookSubDicts(tempTup.Item1, tempTup.Item2);
                 DCEs[dExchange].orderBuffer_IR[pair].Clear();
             }
         }
