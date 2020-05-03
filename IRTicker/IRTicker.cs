@@ -130,6 +130,17 @@ namespace IRTicker {
             OB_checkBox.Checked = Properties.Settings.Default.ShowOB;
             UITimerFreq_maskedTextBox.Text = Properties.Settings.Default.UITimerFreq.ToString();
 
+            if (Slack_checkBox.Checked) {
+                slackDefaultNameTextBox.Enabled = true;
+                slackNameChangeCheckBox.Enabled = true;
+                slackToken_textBox.Enabled = true;
+            }
+            else {
+                slackDefaultNameTextBox.Enabled = false;
+                slackNameChangeCheckBox.Enabled = false;
+                slackToken_textBox.Enabled = false;
+            }
+
             if (Properties.Settings.Default.ShowOB) obv.Show();
 
             VersionLabel.Text = "IR Ticker version " + FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
@@ -418,15 +429,28 @@ namespace IRTicker {
 
             string name = "";
 
-            if (Properties.Settings.Default.SlackNameChange && (Properties.Settings.Default.SlackDefaultName != "")) {
+            if (Properties.Settings.Default.SlackNameChange && (Properties.Settings.Default.SlackDefaultName != string.Empty)) {
+
+                name = Properties.Settings.Default.SlackDefaultName;
+                if (!DCEs["IR"].socketsAlive || !DCEs["IR"].NetworkAvailable || IRBTCvol < 0) {
+                    slackObj.setStatus("", ":exclamation:", 120, name + " - IR API down");
+                    return;
+                }
+                else if (!DCEs["BTCM"].socketsAlive || !DCEs["BTCM"].NetworkAvailable || BTCMBTCvol < 0) {
+                    slackObj.setStatus("", ":face_with_rolling_eyes:", 120, name + " - BTCM API down");
+                    return;
+                }
+
                 string tempName = UIControls_Dict["IR"].Label_Dict["XBT_Price"].Text;
                 tempName = tempName.Substring(0, tempName.Length - 3);  // remove decimal places from the price
-                name = Properties.Settings.Default.SlackDefaultName + " - AUD " + tempName;
+                name += " - AUD " + tempName;
             }
-            //Debug.Print("slack name is: " + name);
+            Debug.Print("slack name is: " + name);
 
-
-            if (IRBTCvol > BTCMBTCvol * 2) {
+            if (IRBTCvol < 0 || BTCMBTCvol < 0) {
+                slackObj.setStatus("", ":question:", 120, name);
+            }
+            else if (IRBTCvol > BTCMBTCvol * 2) {
                 slackObj.setStatus("", ":danbizan:", 120, name);
             }
             else if (IRBTCvol * 2 < BTCMBTCvol) {
@@ -939,9 +963,10 @@ namespace IRTicker {
                 }
 
                 // the heartbeat is initialised as the year 2000, so if it's this year we know it must be just starting up, no need to worry
-                if ((DCEs["BTCM"].HeartBeat + TimeSpan.FromSeconds(10) < DateTime.Now) && DCEs["BTCM"].HeartBeat.Year != 2000) {
+                if ((DCEs["BTCM"].HeartBeat + TimeSpan.FromSeconds(100) < DateTime.Now) && DCEs["BTCM"].HeartBeat.Year != 2000) {
                     // we haven't received a heartbeat in 10 seconds..
-                    Debug.Print(DateTime.Now + " BTCMv2 - haven't received any messages via sockets in 10 seconds.  reconnecting..");
+                    Debug.Print(DateTime.Now + " BTCMv2 - haven't received any messages via sockets in 100 seconds.  reconnecting..");
+                    DCEs["BTCM"].socketsAlive = false;
                     DCEs["BTCM"].socketsReset = true;
                 }
 
@@ -1168,10 +1193,11 @@ namespace IRTicker {
 
                 tempPrice.Text = midPoint.ToString(formatString).Trim();
                 tempPrice.ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(mSummary.pair));
+                // don't do this anymore, because we buffer and hold event, the buffer will often legitimately have events in it, so this isn't (anmymore) an indication that there's a nonce issue
                 // if we're experiencing nonce errors for this pair, make it gray.
-                if ((DCEs[dExchange].orderBuffer_IR.ContainsKey(mSummary.pair.ToUpper())) && DCEs[dExchange].orderBuffer_IR[mSummary.pair.ToUpper()].Count > 0) {
-                    tempPrice.ForeColor = Color.Gray;
-                }
+                //if ((DCEs[dExchange].orderBuffer_IR.ContainsKey(mSummary.pair.ToUpper())) && DCEs[dExchange].orderBuffer_IR[mSummary.pair.ToUpper()].Count > 0) {
+                //    tempPrice.ForeColor = Color.Gray;
+                //}
 
 
                 // if there's a colour, make the font bigger.  otherwise not bigger.
@@ -1436,6 +1462,17 @@ namespace IRTicker {
                 FlashWindowEx(this.FindForm());
                 return;
             }
+            if (reportType == 27) {  // 27 is we need to update the price colour because of nonce
+                Tuple<bool, string> nonceIssue = (Tuple<bool, string>)e.UserState;  // bool is for if an issue exists, the string is the pair it exists (or not) on
+                System.Windows.Forms.Label tempPrice = UIControls_Dict["IR"].Label_Dict[nonceIssue.Item2 + "_Price"];
+                if (nonceIssue.Item1) {  // we have a nonce issue, set to grey
+                    tempPrice.ForeColor = Color.Gray;
+                }
+                else {  // set back to whatever colour it should be
+                    tempPrice.ForeColor = Utilities.PriceColour(DCEs["IR"].GetPriceList(nonceIssue.Item2));
+                }
+                return;
+            }
 
             else if (reportType == 31) {  // update BTCM
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
@@ -1491,13 +1528,16 @@ namespace IRTicker {
 
             Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
             Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
-            decimal IRvol = IRpairs["XBT-AUD"].DayVolume;
-            decimal BTCMvol = BTCMpairs["XBT-AUD"].DayVolume;
-
-            if (bStick == null) bStick = BlinkStick.FindFirst();
-            if (bStick != null && bStick.OpenDevice()) {
-                // update blink stick
-                setStickColour(IRvol, BTCMvol);
+            decimal IRvol = -1, BTCMvol = -1;
+            if (IRpairs.ContainsKey("XBT-AUD") && BTCMpairs.ContainsKey("XBT-AUD")) {
+                IRvol = IRpairs["XBT-AUD"].DayVolume; ;
+                BTCMvol = BTCMpairs["XBT-AUD"].DayVolume; 
+                
+                if (bStick == null) bStick = BlinkStick.FindFirst();
+                if (bStick != null && bStick.OpenDevice()) {
+                    // update blink stick
+                    setStickColour(IRvol, BTCMvol);
+                }
             }
 
             if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "")) {
@@ -1603,10 +1643,24 @@ namespace IRTicker {
         private void SettingsOKButton_Click(object sender, EventArgs e) {
             if(int.TryParse(refreshFrequencyTextbox.Text, out int refreshInt)) {
                 if(refreshInt >= minRefreshFrequency) {
+                    if (slackNameChangeCheckBox.Checked && slackDefaultNameTextBox.Text == string.Empty) {
+                        MessageBox.Show("If you want the Slack name integration, please enter your default display name", "Need a display name!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    else if(slackDefaultNameTextBox.Text == string.Empty && Properties.Settings.Default.SlackDefaultName != string.Empty) {  // if they're trying to delete the name, let's quickly set their slack name back to the default before we erase it.  This will remove the emoji until the next cycle, but oh well
+                        slackObj.setStatus("", "", 120, Properties.Settings.Default.SlackDefaultName);
+                    }
+                    if (Slack_checkBox.Checked && slackToken_textBox.Text == string.Empty) {
+                        MessageBox.Show("If you want Slack integration, please enter your xoxp token.  Ask Nick for details.", "Need a slack token!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
                     Properties.Settings.Default.SlackToken = slackToken_textBox.Text;
                     Properties.Settings.Default.SlackDefaultName = slackDefaultNameTextBox.Text;
                     if (Int32.TryParse(UITimerFreq_maskedTextBox.Text, out int freq)) Properties.Settings.Default.UITimerFreq = freq;
-                    else Debug.Print("ERROR: couldn't save the ui timer freq as it couldn't be converted to an int? - " + UITimerFreq_maskedTextBox.Text);
+                    else {
+                        Debug.Print("ERROR: couldn't save the ui timer freq as it couldn't be converted to an int? - " + UITimerFreq_maskedTextBox.Text);
+                        UITimerFreq_maskedTextBox.Text = Properties.Settings.Default.UITimerFreq.ToString();  // set it back to the last save value
+                    }
                     Properties.Settings.Default.Save();
                     Main.Visible = true;
                     Settings.Visible = false;
@@ -2242,6 +2296,16 @@ namespace IRTicker {
 
         private void Slack_checkBox_CheckedChanged(object sender, EventArgs e) {
             Properties.Settings.Default.Slack = Slack_checkBox.Checked;
+            if (Slack_checkBox.Checked) {
+                slackDefaultNameTextBox.Enabled = true;
+                slackNameChangeCheckBox.Enabled = true;
+                slackToken_textBox.Enabled = true;
+            }
+            else {
+                slackDefaultNameTextBox.Enabled = false;
+                slackNameChangeCheckBox.Enabled = false;
+                slackToken_textBox.Enabled = false;
+            }
             Properties.Settings.Default.Save();
         }
 
@@ -2258,6 +2322,9 @@ namespace IRTicker {
         private void slackNameChangeCheckBox_CheckedChanged(object sender, EventArgs e) {
             Properties.Settings.Default.SlackNameChange = slackNameChangeCheckBox.Checked;
             Properties.Settings.Default.Save();
+            if (!Properties.Settings.Default.SlackNameChange && slackDefaultNameTextBox.Text == string.Empty) {
+                MessageBox.Show("If you leave the name blank here and the app has already changed your name, then the app won't know what to change it back to and your display name will be blank (meaning your display name will default to your real name).  I recommend you leave your preferred display name in here", "No name?", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
     }
 }

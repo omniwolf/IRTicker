@@ -227,6 +227,7 @@ namespace IRTicker {
 
         public List<string> SecondaryCurrencyList {
             get {
+                if (_secondaryCodesStr == null) return new List<string>();  // can be null for IR if there's no network to begin with
                 List<string> codesList = new List<string>();
                 string[] codess = _secondaryCodesStr.Split(',');
                 foreach(string cc in codess) {
@@ -239,6 +240,7 @@ namespace IRTicker {
 
         public string CurrentSecondaryCurrency {
             get {
+                if (SecondaryCurrencyList.Count == 0) return "N/A";
                 return SecondaryCurrencyList[ChosenSecondaryCurrency];
             }
         }

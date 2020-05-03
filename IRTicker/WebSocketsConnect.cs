@@ -20,6 +20,7 @@ namespace IRTicker {
         public Dictionary<string, Subscribed_BFX> channel_Dict_BFX = new Dictionary<string, Subscribed_BFX>();  // string is a string version of the channel ID
         private BackgroundWorker pollingThread;
         private Thread UITimerThread;
+        private bool UITimerThreadProceed = true;
 
         // constructor
         public WebSocketsConnect(Dictionary<string, DCE> _DCEs, BackgroundWorker _pollingThread) {
@@ -293,17 +294,25 @@ namespace IRTicker {
 
         private void stopSockets(string dExchange, string pair = "none") {
             client_IR.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
-            Debug.Print("stop command sent");
+            Debug.Print("IR sockets stop command sent");
         }
 
         private async Task startSockets(string dExchange, string socketsURL, string subscribeStr) {
             var exitEvent = new ManualResetEvent(false);
             var url = new Uri(socketsURL);
+            DCEs["IR"].socketsAlive = false;
 
             using (client_IR = new WebsocketClient(url)) {
                 client_IR.ReconnectTimeout = TimeSpan.FromSeconds(30);
                 client_IR.ReconnectionHappened.Subscribe(info => {
-                    if (info.Type != ReconnectionType.Initial) {
+                    if (info.Type == ReconnectionType.Initial) {
+                        Debug.Print("Initial 'reconnection', ignored");
+                        DCEs["IR"].socketsAlive = true;
+                    }
+                    else if (info.Type == ReconnectionType.Lost) {
+                        Debug.Print("Lost 'reconnection' ignored, attached to a Reset button click?");
+                    }
+                    else { 
                         Debug.Print(DateTime.Now + " - (" + dExchange + " reconnection) - clearing OB sub dicts...");
                         DCEs[dExchange].ClearOrderBookSubDicts();
                         Debug.Print("creating a new buffer dict...");
@@ -341,7 +350,7 @@ namespace IRTicker {
                         //}
                         //}
                     }
-                    else Debug.Print("Initial 'reconnection', ignored");
+
                 });
 
                 client_IR.MessageReceived.Subscribe(msg => {
@@ -369,24 +378,28 @@ namespace IRTicker {
 
         // shuts down the UITimerThread.  Only called when the app is terminating.
         public void stopUITimerThread() {
-            UITimerThread.Abort();
+            if (UITimerThread != null && UITimerThread.IsAlive) UITimerThread.Abort();
         }
 
 
         private void updateUITimer() {
-            bool x = true; 
 
-            while (x) {
+            while (UITimerThreadProceed) {
                 foreach (KeyValuePair<string, ConcurrentDictionary<int, Ticker_IR>> pair in DCEs["IR"].orderBuffer_IR) {
                     if (DCEs["IR"].orderBuffer_IR[pair.Key].Count > 0) applyBufferToOB(pair.Key);
                 }
 
                 Thread.Sleep(Properties.Settings.Default.UITimerFreq);
             }
+            Debug.Print("UITimer thread while loop completed...");
         }
 
         public void IR_Disconnect() {
-            //wSocket_IR.Close();
+            UITimerThreadProceed = false;
+            if (client_IR.IsRunning) {
+                Debug.Print(DateTime.Now + " - IR_Disconnect sub: IR running, will stop");
+                stopSockets("IR");
+            }
             DCEs["IR"].ClearOrderBookSubDicts();
         }
 
@@ -440,22 +453,18 @@ namespace IRTicker {
                 Debug.Print("Trying to reconnect to " + dExchange + " but there's no static data.  will not.");
                 return;
             }
-            switch (dExchange) {
+            switch (dExchange) { 
                 case "IR":
-                    Debug.Print("switched to IR");
+                    Debug.Print("WebSocket_Reconnect: IR");
                     if (client_IR.IsRunning) {
                         Debug.Print(DateTime.Now + " - IR running, will stop");
                         stopSockets("IR");
                     }
+                    stopUITimerThread();  // if it hasn't stopped by now, we force it.
 
                     Init_sockets("IR");
                     //IR_Connect();  // create all the sockets stuff again from scratch :/
                     DCEs["IR"].HeartBeat = DateTime.Now;
-                    // clean out all the OBs
-                    //DCEs[dExchange].IR_OBs = new ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>>();
-                    Debug.Print(DateTime.Now + " IR - About to .clear the IR_OBs");
-                    DCEs[dExchange].ClearOrderBookSubDicts();
-                    Debug.Print(dExchange + " - cleared the order book dictionary, IR_OBs size: " + DCEs["IR"].IR_OBs.Count);
                     break;
                 case "BTCM":
                     wSocket_BTCM.Close();
@@ -474,28 +483,21 @@ namespace IRTicker {
             //re-subscribe?
             Debug.Print(dExchange + " - re-subscribing to all pairs...");
             List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
-            foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
-                foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                    if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                        pairList.Add(new Tuple<string, string>(primaryCode, secondaryCode));
+            if (dExchange == "IR") {
+                pairList.Add(new Tuple<string, string>("XBT", "AUD"));
+                pairList.Add(new Tuple<string, string>("XBT", "USD"));
+                pairList.Add(new Tuple<string, string>("XBT", "NZD"));
+            }
+            else {
+                foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
+                    foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                        if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
+                            pairList.Add(new Tuple<string, string>(primaryCode, secondaryCode));
+                        }
                     }
                 }
             }
             WebSocket_Subscribe(dExchange, pairList);
-
-            // don't need this anymore because we pull the OB in the subscribe code.
-            /*if (dExchange == "IR") {  // only for IR do we need to grab OBs via REST _after_ we have started the socket machine.  This is to reduce missed events.
-                // re-populate the OBs using REST
-                Debug.Print(dExchange + " - building new REST OBs");
-                foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
-                    foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                        //if (DCEs[dExchange].IR_OBs.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                            DCEs[dExchange].GetIROrderBook(primaryCode, secondaryCode);
-                        //}
-                    }
-                }
-                Debug.Print("Rest OBs built.  IR_OBs size: " + DCEs[dExchange].IR_OBs.Count);
-            }*/
         }
 
         // after calling this sub, please remove the KVP of the channel you're unsubscribing from from the channel_Dict_BFX dictionary
@@ -519,22 +521,28 @@ namespace IRTicker {
             return new Dictionary<string, Subscribed_BFX>(channel_Dict_BFX);
         }
 
-
+        // only actually called for reconnections
         public void Init_sockets(string dExchange, string pair = "none") {
 
             if (pair == "none") {
                 foreach (string crypto in DCEs[dExchange].PrimaryCurrencyList) {
                     foreach (string fiat in DCEs[dExchange].SecondaryCurrencyList) {
-                        DCEs[dExchange].pulledSnapShot[crypto + "-" + fiat] = false;
-                        DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;
-                        DCEs[dExchange].channelNonce["ORDERBOOK-" + crypto + "-" + fiat] = 0;
+                        if (DCEs[dExchange].pulledSnapShot.ContainsKey(crypto + "-" + fiat)) DCEs[dExchange].pulledSnapShot[crypto + "-" + fiat] = false;
+                        if (DCEs[dExchange].OBResetFlag.ContainsKey("ORDERBOOK-" + crypto + "-" + fiat)) DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;
+                        if (DCEs[dExchange].channelNonce.ContainsKey("ORDERBOOK-" + crypto + "-" + fiat)) DCEs[dExchange].channelNonce["ORDERBOOK-" + crypto + "-" + fiat] = 0;
+                        if (DCEs[dExchange].orderBuffer_IR.ContainsKey(crypto + "-" + fiat)) DCEs[dExchange].orderBuffer_IR[crypto + "-" + fiat].Clear();
                     }
                 }
+                
+                DCEs["IR"].ClearOrderBookSubDicts();
             }
             else {
                 DCEs["IR"].pulledSnapShot[pair] = false;
                 DCEs["IR"].OBResetFlag["ORDERBOOK-" + pair] = false;
                 DCEs[dExchange].channelNonce["ORDERBOOK-" + pair] = 0;
+                Tuple<string, string> tempTup = Utilities.SplitPair(pair);
+                DCEs["IR"].ClearOrderBookSubDicts(tempTup.Item1, tempTup.Item2);
+                DCEs[dExchange].orderBuffer_IR[pair].Clear();
             }
         }
 
@@ -644,13 +652,6 @@ namespace IRTicker {
                 if (Properties.Settings.Default.FlashForm) pollingThread.ReportProgress(26);  // flash the window if the setting is enabled
                 Init_sockets("IR", pair);
 
-                // now need to dump the OBs. 
-                Tuple<string, string> tempTup = Utilities.SplitPair(pair);
-                DCEs["IR"].ClearOrderBookSubDicts(tempTup.Item1, tempTup.Item2);
-                
-
-                DCEs["IR"].orderBuffer_IR[pair].Clear();
-
                 // now subscribe back to the channel
                 subscribe_unsubscribe_new("IR", true, pair);
 
@@ -660,7 +661,7 @@ namespace IRTicker {
             while (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(DCEs["IR"].channelNonce[channel] + 1)) {  // if the buffer has the next nonce...
                 DCEs["IR"].channelNonce[channel]++;  // cool, let's advance the nonce
                 if (DCEs["IR"].orderBuffer_IR[pair].TryRemove(DCEs["IR"].channelNonce[channel], out Ticker_IR ticker)) {  // pop the ticker object,
-                    //Debug.Print(DateTime.Now + " - (" + pair + ") parsing nonce " + ticker.Nonce + " from buffer, there are " + (DCEs["IR"].orderBuffer_IR[pair].Count) + " other buffered events in there");
+                    //if (pair == "XBT-AUD") Debug.Print(DateTime.Now + " - (" + pair + ") parsing nonce " + ticker.Nonce + " from buffer, there are " + (DCEs["IR"].orderBuffer_IR[pair].Count) + " other buffered events in there");
                     parseTicker_IR(ticker);  // and parse it
                 }
                 else {
@@ -669,6 +670,10 @@ namespace IRTicker {
                     DCEs["IR"].channelNonce[channel]--;  // make sure it fails
                     return;
                 }
+            }
+            if (DCEs["IR"].orderBuffer_IR[pair].Count > 0) {
+                /*if (pair == "XBT-AUD")*/ Debug.Print("(" + pair + ") ooo nonce - " + DCEs["IR"].orderBuffer_IR[pair].Count + " if only 1, it is: " + (DCEs["IR"].orderBuffer_IR[pair].Count == 1 ? DCEs["IR"].orderBuffer_IR[pair].Keys.FirstOrDefault().ToString() : ""));
+                pollingThread.ReportProgress(27, new Tuple<bool, string>(true, Utilities.SplitPair(pair).Item1));  // update pair text colour to gray
             }
         }
         

@@ -276,6 +276,7 @@
             this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
             this.UITimerFreq_label = new System.Windows.Forms.Label();
             this.UITimerFreq_maskedTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Settings.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
@@ -286,6 +287,7 @@
             this.IR_GroupBox.SuspendLayout();
             this.GDAX_GroupBox.SuspendLayout();
             this.OTCHelper.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // refreshFrequencyTextbox
@@ -322,19 +324,13 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
+            this.Settings.Controls.Add(this.groupBox1);
             this.Settings.Controls.Add(this.UITimerFreq_maskedTextBox);
             this.Settings.Controls.Add(this.UITimerFreq_label);
-            this.Settings.Controls.Add(this.slackDefaultNameLabel);
-            this.Settings.Controls.Add(this.slackDefaultNameTextBox);
-            this.Settings.Controls.Add(this.slackNameChangeCheckBox);
-            this.Settings.Controls.Add(this.slackNameChangeLabel);
             this.Settings.Controls.Add(this.OB_checkBox);
             this.Settings.Controls.Add(this.OB_label);
-            this.Settings.Controls.Add(this.slackToken_textBox);
             this.Settings.Controls.Add(this.flashForm_checkBox);
             this.Settings.Controls.Add(this.flashForm_label);
-            this.Settings.Controls.Add(this.Slack_checkBox);
-            this.Settings.Controls.Add(this.Slack_label);
             this.Settings.Controls.Add(this.ExportSummarised_Checkbox);
             this.Settings.Controls.Add(this.ExportSummarised_Label);
             this.Settings.Controls.Add(this.Help_Button);
@@ -353,26 +349,28 @@
             // 
             this.slackDefaultNameLabel.AccessibleName = "";
             this.slackDefaultNameLabel.AutoSize = true;
-            this.slackDefaultNameLabel.Location = new System.Drawing.Point(73, 372);
+            this.slackDefaultNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.slackDefaultNameLabel.Location = new System.Drawing.Point(16, 152);
             this.slackDefaultNameLabel.Name = "slackDefaultNameLabel";
             this.slackDefaultNameLabel.Size = new System.Drawing.Size(210, 13);
             this.slackDefaultNameLabel.TabIndex = 29;
             this.slackDefaultNameLabel.Text = "Enter your normal Slack display name here:";
-            this.IRTickerTT.SetToolTip(this.slackDefaultNameLabel, "I could interrogate the Slack API to get this, but it would require extra permiss" +
-        "ions.  Would rather not. ");
+            this.IRTickerTT.SetToolTip(this.slackDefaultNameLabel, "Please leave this populated even if you decide to disable the name integration so" +
+        " the app knows what to set you back to");
             // 
             // slackDefaultNameTextBox
             // 
-            this.slackDefaultNameTextBox.Location = new System.Drawing.Point(305, 369);
+            this.slackDefaultNameTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.slackDefaultNameTextBox.Location = new System.Drawing.Point(248, 149);
             this.slackDefaultNameTextBox.Name = "slackDefaultNameTextBox";
-            this.slackDefaultNameTextBox.Size = new System.Drawing.Size(200, 20);
+            this.slackDefaultNameTextBox.Size = new System.Drawing.Size(175, 20);
             this.slackDefaultNameTextBox.TabIndex = 28;
             // 
             // slackNameChangeCheckBox
             // 
             this.slackNameChangeCheckBox.AccessibleName = "";
             this.slackNameChangeCheckBox.AutoSize = true;
-            this.slackNameChangeCheckBox.Location = new System.Drawing.Point(490, 348);
+            this.slackNameChangeCheckBox.Location = new System.Drawing.Point(408, 128);
             this.slackNameChangeCheckBox.Name = "slackNameChangeCheckBox";
             this.slackNameChangeCheckBox.Size = new System.Drawing.Size(15, 14);
             this.slackNameChangeCheckBox.TabIndex = 27;
@@ -383,7 +381,8 @@
             // 
             this.slackNameChangeLabel.AccessibleName = "";
             this.slackNameChangeLabel.AutoSize = true;
-            this.slackNameChangeLabel.Location = new System.Drawing.Point(73, 348);
+            this.slackNameChangeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.slackNameChangeLabel.Location = new System.Drawing.Point(16, 128);
             this.slackNameChangeLabel.Name = "slackNameChangeLabel";
             this.slackNameChangeLabel.Size = new System.Drawing.Size(331, 13);
             this.slackNameChangeLabel.TabIndex = 26;
@@ -393,7 +392,7 @@
             // 
             this.OB_checkBox.AccessibleName = "";
             this.OB_checkBox.AutoSize = true;
-            this.OB_checkBox.Location = new System.Drawing.Point(490, 479);
+            this.OB_checkBox.Location = new System.Drawing.Point(490, 548);
             this.OB_checkBox.Name = "OB_checkBox";
             this.OB_checkBox.Size = new System.Drawing.Size(15, 14);
             this.OB_checkBox.TabIndex = 25;
@@ -404,7 +403,7 @@
             // 
             this.OB_label.AccessibleName = "";
             this.OB_label.AutoSize = true;
-            this.OB_label.Location = new System.Drawing.Point(73, 479);
+            this.OB_label.Location = new System.Drawing.Point(73, 548);
             this.OB_label.Name = "OB_label";
             this.OB_label.Size = new System.Drawing.Size(372, 26);
             this.OB_label.TabIndex = 24;
@@ -413,16 +412,17 @@
             // 
             // slackToken_textBox
             // 
-            this.slackToken_textBox.Location = new System.Drawing.Point(76, 310);
+            this.slackToken_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.slackToken_textBox.Location = new System.Drawing.Point(19, 90);
             this.slackToken_textBox.Name = "slackToken_textBox";
-            this.slackToken_textBox.Size = new System.Drawing.Size(429, 20);
+            this.slackToken_textBox.Size = new System.Drawing.Size(404, 20);
             this.slackToken_textBox.TabIndex = 23;
             // 
             // flashForm_checkBox
             // 
             this.flashForm_checkBox.AccessibleName = "";
             this.flashForm_checkBox.AutoSize = true;
-            this.flashForm_checkBox.Location = new System.Drawing.Point(490, 424);
+            this.flashForm_checkBox.Location = new System.Drawing.Point(490, 493);
             this.flashForm_checkBox.Name = "flashForm_checkBox";
             this.flashForm_checkBox.Size = new System.Drawing.Size(15, 14);
             this.flashForm_checkBox.TabIndex = 22;
@@ -433,7 +433,7 @@
             // 
             this.flashForm_label.AccessibleName = "";
             this.flashForm_label.AutoSize = true;
-            this.flashForm_label.Location = new System.Drawing.Point(73, 424);
+            this.flashForm_label.Location = new System.Drawing.Point(73, 493);
             this.flashForm_label.Name = "flashForm_label";
             this.flashForm_label.Size = new System.Drawing.Size(198, 26);
             this.flashForm_label.TabIndex = 21;
@@ -443,7 +443,7 @@
             // 
             this.Slack_checkBox.AccessibleName = "";
             this.Slack_checkBox.AutoSize = true;
-            this.Slack_checkBox.Location = new System.Drawing.Point(490, 254);
+            this.Slack_checkBox.Location = new System.Drawing.Point(408, 31);
             this.Slack_checkBox.Name = "Slack_checkBox";
             this.Slack_checkBox.Size = new System.Drawing.Size(15, 14);
             this.Slack_checkBox.TabIndex = 20;
@@ -454,7 +454,8 @@
             // 
             this.Slack_label.AccessibleName = "";
             this.Slack_label.AutoSize = true;
-            this.Slack_label.Location = new System.Drawing.Point(73, 251);
+            this.Slack_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.Slack_label.Location = new System.Drawing.Point(16, 31);
             this.Slack_label.Name = "Slack_label";
             this.Slack_label.Size = new System.Drawing.Size(263, 52);
             this.Slack_label.TabIndex = 19;
@@ -2114,7 +2115,6 @@
             this.IR_GroupBox.Controls.Add(this.IR_ZRX_Label1);
             this.IR_GroupBox.Controls.Add(this.IR_OMG_Label2);
             this.IR_GroupBox.Controls.Add(this.IR_OMG_Label3);
-            this.IR_GroupBox.Controls.Add(this.IR_XRP_Label3);
             this.IR_GroupBox.Controls.Add(this.IR_OMG_Label1);
             this.IR_GroupBox.Controls.Add(this.IR_XRP_Label2);
             this.IR_GroupBox.Controls.Add(this.IR_ZRX_Label3);
@@ -2135,6 +2135,7 @@
             this.IR_GroupBox.Controls.Add(this.IR_BCH_Label1);
             this.IR_GroupBox.Controls.Add(this.IR_ETH_Label1);
             this.IR_GroupBox.Controls.Add(this.IR_XBT_Label1);
+            this.IR_GroupBox.Controls.Add(this.IR_XRP_Label3);
             this.IR_GroupBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.IR_GroupBox.ForeColor = System.Drawing.Color.Gray;
             this.IR_GroupBox.Location = new System.Drawing.Point(19, 8);
@@ -3437,7 +3438,7 @@
             // 
             this.UITimerFreq_label.AccessibleName = "";
             this.UITimerFreq_label.AutoSize = true;
-            this.UITimerFreq_label.Location = new System.Drawing.Point(73, 533);
+            this.UITimerFreq_label.Location = new System.Drawing.Point(73, 602);
             this.UITimerFreq_label.Name = "UITimerFreq_label";
             this.UITimerFreq_label.Size = new System.Drawing.Size(252, 13);
             this.UITimerFreq_label.TabIndex = 30;
@@ -3445,12 +3446,30 @@
             // 
             // UITimerFreq_maskedTextBox
             // 
-            this.UITimerFreq_maskedTextBox.Location = new System.Drawing.Point(405, 530);
+            this.UITimerFreq_maskedTextBox.Location = new System.Drawing.Point(405, 599);
             this.UITimerFreq_maskedTextBox.Mask = "0000";
             this.UITimerFreq_maskedTextBox.Name = "UITimerFreq_maskedTextBox";
             this.UITimerFreq_maskedTextBox.PromptChar = ' ';
             this.UITimerFreq_maskedTextBox.Size = new System.Drawing.Size(100, 20);
             this.UITimerFreq_maskedTextBox.TabIndex = 31;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.BackColor = System.Drawing.Color.Gainsboro;
+            this.groupBox1.Controls.Add(this.Slack_label);
+            this.groupBox1.Controls.Add(this.Slack_checkBox);
+            this.groupBox1.Controls.Add(this.slackToken_textBox);
+            this.groupBox1.Controls.Add(this.slackDefaultNameLabel);
+            this.groupBox1.Controls.Add(this.slackNameChangeLabel);
+            this.groupBox1.Controls.Add(this.slackDefaultNameTextBox);
+            this.groupBox1.Controls.Add(this.slackNameChangeCheckBox);
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Location = new System.Drawing.Point(76, 251);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(461, 222);
+            this.groupBox1.TabIndex = 32;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Slack";
             // 
             // IRTicker
             // 
@@ -3490,6 +3509,8 @@
             this.GDAX_GroupBox.PerformLayout();
             this.OTCHelper.ResumeLayout(false);
             this.OTCHelper.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -3747,6 +3768,7 @@
         private System.Windows.Forms.Label slackNameChangeLabel;
         private System.Windows.Forms.MaskedTextBox UITimerFreq_maskedTextBox;
         private System.Windows.Forms.Label UITimerFreq_label;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
 

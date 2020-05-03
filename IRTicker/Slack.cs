@@ -22,11 +22,11 @@ namespace IRTicker {
         public void setStatus(string status = "", string emoji = "", long duration = 0, string name = "") {
 
             if (name == "" && (Properties.Settings.Default.SlackDefaultName == "")) {
-                var profChange = new SlackProfile {
-                    profile = new SlackStatus {
+                var profChange = new SlackProfile_noname {
+                    profile = new SlackStatus_noname {
                         status_emoji = emoji,
                         status_text = status,
-                        status_expiration = duration + (duration == 0 ? 0 : DateTimeOffset.Now.ToUnixTimeSeconds()),  // if we send 0 for duration, then send it on to the slack API
+                        status_expiration = duration + (duration == 0 ? 0 : DateTimeOffset.Now.ToUnixTimeSeconds())  // if we send 0 for duration, then send it on to the slack API
                     }
                 };
                 SendMessageAsync(Properties.Settings.Default.SlackToken, profChange).Wait();
@@ -49,11 +49,21 @@ namespace IRTicker {
             public SlackStatus profile { get; set; }
         }
 
+        public class SlackProfile_noname {
+            public SlackStatus_noname profile { get; set; }
+        }
+
         public class SlackStatus {
             public string status_text { get; set; }
             public string status_emoji { get; set; }
             public long status_expiration { get; set; }
             public string display_name { get; set; }
+        }
+
+        public class SlackStatus_noname {
+            public string status_text { get; set; }
+            public string status_emoji { get; set; }
+            public long status_expiration { get; set; }
         }
 
         // reponse from message methods
@@ -82,7 +92,7 @@ namespace IRTicker {
 
         // sends a slack message asynchronous
         // throws exception if message can not be sent
-        public static async Task SendMessageAsync(string token, SlackProfile msg) {
+        public static async Task SendMessageAsync(string token, object msg) {
             // serialize method parameters to JSON
             var content = JsonConvert.SerializeObject(msg);
             var httpContent = new StringContent(
