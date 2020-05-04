@@ -900,7 +900,7 @@ namespace IRTicker {
                 }
 
                 // still need to run this to get volume data (and all coins except BTC)
-                if (DCEs["IR"].NetworkAvailable) {
+                //if (DCEs["IR"].NetworkAvailable) {  // just try and connect. if there's no network or API is down, then the sub will deal.
                     foreach (string primaryCode in DCEs["IR"].PrimaryCurrencyList) {
                         // if there's no crypto selected in the drop down or there's no number of coins entered, then just pull the market summary
                         if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
@@ -910,14 +910,16 @@ namespace IRTicker {
                             //GetIROrderBook(primaryCode, );
                         //}
                     }
-                }
-                else DCEs["IR"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
+                //}
+                // this was just a terrible way to re-try.  just do it and if it fails, then it fails.
+                //else DCEs["IR"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
 
                 // the heartbeat is initialised as the year 2000, so if it's this year we know it must be just starting up, no need to worry
                 if ((DCEs["IR"].HeartBeat + TimeSpan.FromSeconds(100) < DateTime.Now) && DCEs["IR"].HeartBeat.Year != 2000) {
                     // we haven't received a heartbeat in 80 seconds..
                     Debug.Print(DateTime.Now + " IR - haven't received any messages via sockets in 100 seconds.  reconnecting..");
                     DCEs["IR"].socketsReset = true;
+                    DCEs["IR"].socketsAlive = false;
                 }
 
                 // separate this because it's possible to hit this code where the socketsreset == true for some other reason that heartbeat

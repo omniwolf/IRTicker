@@ -294,6 +294,7 @@ namespace IRTicker {
 
         private void stopSockets(string dExchange, string pair = "none") {
             client_IR.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
+            DCEs[dExchange].socketsAlive = false;
             Debug.Print("IR sockets stop command sent");
         }
 
