@@ -95,28 +95,34 @@ namespace IRTicker {
         public static async Task SendMessageAsync(string token, object msg) {
             // serialize method parameters to JSON
             var content = JsonConvert.SerializeObject(msg);
-            var httpContent = new StringContent(
-                content,
-                Encoding.UTF8,
-                "application/json"
-            );
 
-            // set token in authorization header
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            // send message to API
-            var response = await client.PostAsync("https://slack.com/api/users.profile.set", httpContent).ConfigureAwait(continueOnCapturedContext: false);
-            // fetch response from API
-            var responseJson = await response.Content.ReadAsStringAsync();
-
-            // convert JSON response to object
-            SlackMessageResponse messageResponse =
-                JsonConvert.DeserializeObject<SlackMessageResponse>(responseJson);
-
-            // throw exception if sending failed
-            if (messageResponse.ok == false) {
-                throw new Exception(
-                    "failed to send message. error: " + messageResponse.error
+            try {
+                var httpContent = new StringContent(
+                    content,
+                    Encoding.UTF8,
+                    "application/json"
                 );
+
+                // set token in authorization header
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                // send message to API
+                var response = await client.PostAsync("https://slack.com/api/users.profile.set", httpContent).ConfigureAwait(continueOnCapturedContext: false);
+                // fetch response from API
+                var responseJson = await response.Content.ReadAsStringAsync();
+
+                // convert JSON response to object
+                SlackMessageResponse messageResponse =
+                    JsonConvert.DeserializeObject<SlackMessageResponse>(responseJson);
+
+                // throw exception if sending failed
+                if (messageResponse.ok == false) {
+                    throw new Exception(
+                        "failed to send message. error: " + messageResponse.error
+                    );
+                }
+            }
+            catch (Exception ex) {
+                Debug.Print(DateTime.Now + " - exception when trying to do Slack API stuff.  Probably network down? - " + ex.Message);
             }
         }
     }
