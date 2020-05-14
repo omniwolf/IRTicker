@@ -307,7 +307,7 @@ namespace IRTicker {
                 orderBuffer_IR[pair][ticker.Nonce] = ticker;
             }
 
-            if (!IR_OBs.ContainsKey(pair)) {
+            if (!IR_OBs.ContainsKey(pair) || IR_OBs[pair].Item1.Count == 0 || IR_OBs[pair].Item2.Count == 0) {
                 return null;
             }
 

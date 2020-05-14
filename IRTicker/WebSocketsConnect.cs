@@ -302,6 +302,7 @@ namespace IRTicker {
             var exitEvent = new ManualResetEvent(false);
             var url = new Uri(socketsURL);
             DCEs["IR"].socketsAlive = false;
+            Debug.Print(DateTime.Now + " - startSockets called for " + dExchange);
 
             using (client_IR = new WebsocketClient(url)) {
                 client_IR.ReconnectTimeout = TimeSpan.FromSeconds(30);
@@ -338,7 +339,7 @@ namespace IRTicker {
                             }
                             //}
                         }*/
-                        Init_sockets("IR");
+                        Reinit_sockets("IR");
                         Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
                         Task.Run(() => client_IR.Send(subscribeStr));
                         Debug.Print("Pulling the REST OBs...");
@@ -472,7 +473,7 @@ namespace IRTicker {
                     }
                     stopUITimerThread();  // if it hasn't stopped by now, we force it.
 
-                    Init_sockets("IR");
+                    Reinit_sockets("IR");
                     //IR_Connect();  // create all the sockets stuff again from scratch :/
                     DCEs["IR"].HeartBeat = DateTime.Now;
                     break;
@@ -532,7 +533,7 @@ namespace IRTicker {
         }
 
         // only actually called for reconnections
-        public void Init_sockets(string dExchange, string pair = "none") {
+        public void Reinit_sockets(string dExchange, string pair = "none") {
 
             if (pair == "none") {
                 foreach (string crypto in DCEs[dExchange].PrimaryCurrencyList) {
@@ -660,7 +661,7 @@ namespace IRTicker {
                 subscribe_unsubscribe_new("IR", false, pair);
 
                 if (Properties.Settings.Default.FlashForm) pollingThread.ReportProgress(26);  // flash the window if the setting is enabled
-                Init_sockets("IR", pair);
+                Reinit_sockets("IR", pair);
 
                 // now subscribe back to the channel
                 subscribe_unsubscribe_new("IR", true, pair);

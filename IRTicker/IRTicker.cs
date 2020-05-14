@@ -415,7 +415,7 @@ namespace IRTicker {
             }
         }
 
-        private void setSlackStatus(decimal IRBTCvol, decimal BTCMBTCvol) {
+        private void setSlackStatus(decimal IRBTCvol, decimal BTCMBTCvol, bool disable = false) {
             // now we set slack stuff
             /*if (IRBTCvol > (BTCMBTCvol + 5)) {  // IR is winning :D
                 slackObj.setStatus("", ":large_blue_diamond:", 120);
@@ -430,6 +430,11 @@ namespace IRTicker {
             string name = "";
 
             if (Properties.Settings.Default.SlackNameChange && (Properties.Settings.Default.SlackDefaultName != string.Empty)) {
+
+                if (disable) {
+                    slackObj.setStatus("", ":crying_cat_face:", 1, "");  // slack has been disabled.  set the name back to normal and the emoji to crying cat for 1 second
+                    return;
+                }
 
                 name = Properties.Settings.Default.SlackDefaultName;
                 if (!DCEs["IR"].socketsAlive || !DCEs["IR"].NetworkAvailable || IRBTCvol < 0) {
@@ -1634,6 +1639,7 @@ namespace IRTicker {
            if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "")) {
                 slackObj.setStatus("", "");
            }
+            wSocketConnect.IR_Disconnect();  // let's see if this stops the occasional crash on exit
             wSocketConnect.stopUITimerThread();  // needed otherwise the app never actually closes
         }
 
@@ -2307,6 +2313,7 @@ namespace IRTicker {
                 slackDefaultNameTextBox.Enabled = false;
                 slackNameChangeCheckBox.Enabled = false;
                 slackToken_textBox.Enabled = false;
+                setSlackStatus(0, 0, true);  // reset the slack name to the default
             }
             Properties.Settings.Default.Save();
         }
