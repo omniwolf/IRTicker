@@ -92,6 +92,16 @@ namespace IRTicker {
             return new Tuple<string, string>(primary, secondary);
         }
 
+        /// <summary>
+        /// takes - separated pair (eg "USDT-AUD") and swaps the crypto part out with the provided crypto string
+        /// </summary>
+        /// <param name="pair">the pair to manipulate</param>
+        /// <param name="newCrypto">the new crypto to insert into the pair</param>
+        /// <returns>the new pair string with the new crypto</returns>
+        public static string replaceCrypto(string pair, string newCrypto) {
+            return newCrypto + pair.Substring(pair.IndexOf('-'), pair.Length);
+        }
+
         public static void ColourDCETags(System.Windows.Forms.Control.ControlCollection controls, string dExchange) {
             foreach (System.Windows.Forms.Control ctrl in controls) {
                 if (ctrl.Tag != null)

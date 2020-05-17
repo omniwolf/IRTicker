@@ -119,7 +119,7 @@ namespace IRTicker {
                 // so yeah.. the "orderBook" object doesn't really get used anymore.  it's just like a staging area
                 DCEs["IR"].ConvertOrderBook_IR(pair);
 
-                Debug.Print(DateTime.Now.ToString() + " IR OB " + pair + " pulled");
+                Debug.Print(DateTime.Now.ToString() + " IR OB " + pair + " pulled, " + DCEs["IR"].orderBuffer_IR[pair].Count + " ordes in the buffer");
 
                 //int remainingBuffer = ApplyBuffer_IR(pair);
                 //Print("(" + pair + ") Buffer applied, there are " + remainingBuffer + " left in the buffer (should be 0)");
@@ -140,6 +140,7 @@ namespace IRTicker {
                         string crypto = pair.Item1;
                         string fiat = pair.Item2;
                         DCEs["IR"].pulledSnapShot[crypto + "-" + fiat] = false;  // initialise the pulledSnapShot variable for this pair
+                        DCEs["IR"].positiveSpread[crypto + "-" + fiat] = true;  // initialise the positiveSpread variable for this pair, always assume the spread is positive
                         if (crypto == "USDT") crypto = "UST";
                         channel += "\"orderbook-" + crypto + "-" + fiat + "\", ";
                         if (crypto == "UST") crypto = "USDT";
@@ -251,17 +252,21 @@ namespace IRTicker {
                         foreach (Tuple<string, string> pair1 in pairList) {
                             string crypto = pair1.Item1;
                             string fiat = pair1.Item2;
-                            DCEs["IR"].pulledSnapShot[crypto + "-" + fiat] = false;  // initialise the pulledSnapShot variable for this pair
+                            
                             if (crypto == "USDT") crypto = "UST";
                             channel += "\"orderbook-" + crypto.ToLower() + "-" + fiat.ToLower() + "\", ";
                             if (crypto == "UST") crypto = "USDT";
-                            DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat)] = 0;  // initialise the nonce dictionary
-                            DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;  // false means no error, no need to dump OB
+                            // this is covered in reinit_ir(), so no need to do here for subscribe and unsubscribe
+                            //DCEs["IR"].pulledSnapShot[crypto + "-" + fiat] = false;  // initialise the pulledSnapShot variable for this pair
+                            //DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat)] = 0;  // initialise the nonce dictionary
+                            //DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;  // false means no error, no need to dump OB
                         }
                         channel += "]} ";
                     }
                     else {  // or just one pair
+                        if (pair.ToUpper().StartsWith("USDT")) { pair = Utilities.replaceCrypto(pair, "UST"); Debug.Print("replaceCrypto created: " + pair); }
                         channel += "\"orderbook-" + pair.ToLower() + "\"]}";
+                        if (pair.ToUpper().StartsWith("UST")) { pair = Utilities.replaceCrypto(pair, "USDT"); Debug.Print("replaceCrypto created: " + pair); }
                     }
                     Debug.Print("IR websocket subcribe/unsubscribe - " + (subscribe ? "subscribe" : "unsubscribe") + " event: " + channel);
 
@@ -269,15 +274,16 @@ namespace IRTicker {
                     if (subscribe) {  // if subscribing then grab the order books too.
                         if (pair == "none") {
                             List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
-                            /*foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
+                            foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
                                 foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                                    if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {*/
-                                        pairList.Add(new Tuple<string, string>("XBT", "AUD"));
-                            pairList.Add(new Tuple<string, string>("XBT", "USD"));
-                            pairList.Add(new Tuple<string, string>("XBT", "NZD"));
-                            //}
-                            //}
-                            //}
+                                    if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
+                                        /*pairList.Add(new Tuple<string, string>("XBT", "AUD"));
+                                        pairList.Add(new Tuple<string, string>("XBT", "USD"));
+                                        pairList.Add(new Tuple<string, string>("XBT", "NZD"));*/
+                                        pairList.Add(new Tuple<string, string>(primaryCode, secondaryCode));
+                                    }
+                                }
+                            }
                             foreach (Tuple<string, string> pair1 in pairList) {
                                 GetOrderBook_IR(pair1.Item1, pair1.Item2);
                             }
@@ -343,15 +349,16 @@ namespace IRTicker {
                         Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
                         Task.Run(() => client_IR.Send(subscribeStr));
                         Debug.Print("Pulling the REST OBs...");
-                        /*foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
+                        foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
                             foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                                if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {*/
-                        GetOrderBook_IR("XBT", "AUD");
-                        GetOrderBook_IR("XBT", "USD");
-                        GetOrderBook_IR("XBT", "NZD");
-                        //}
-                        //}
-                        //}
+                                if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
+                                    /*GetOrderBook_IR("XBT", "AUD");
+                                    GetOrderBook_IR("XBT", "USD");
+                                    GetOrderBook_IR("XBT", "NZD");*/
+                                    GetOrderBook_IR(primaryCode, secondaryCode);
+                                }
+                            }
+                        }
                         stopUITimerThread();
 
                         Debug.Print(DateTime.Now + " - RECONNECT: about to start the UI timer!");
@@ -397,7 +404,7 @@ namespace IRTicker {
 
             while (UITimerThreadProceed) {
                 foreach (KeyValuePair<string, ConcurrentDictionary<int, Ticker_IR>> pair in DCEs["IR"].orderBuffer_IR) {
-                    if (DCEs["IR"].orderBuffer_IR[pair.Key].Count > 0) applyBufferToOB(pair.Key);
+                    if ((DCEs["IR"].orderBuffer_IR[pair.Key].Count > 0) && DCEs["IR"].pulledSnapShot[pair.Key]) applyBufferToOB(pair.Key);
                 }
 
                 Thread.Sleep(Properties.Settings.Default.UITimerFreq);
@@ -494,12 +501,12 @@ namespace IRTicker {
             //re-subscribe?
             Debug.Print(dExchange + " - re-subscribing to all pairs...");
             List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
-            if (dExchange == "IR") {
+            /*if (dExchange == "IR") {
                 pairList.Add(new Tuple<string, string>("XBT", "AUD"));
                 pairList.Add(new Tuple<string, string>("XBT", "USD"));
                 pairList.Add(new Tuple<string, string>("XBT", "NZD"));
             }
-            else {
+            else {*/
                 foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
                     foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
                         if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
@@ -507,7 +514,7 @@ namespace IRTicker {
                         }
                     }
                 }
-            }
+            //}
             WebSocket_Subscribe(dExchange, pairList);
         }
 
@@ -539,6 +546,7 @@ namespace IRTicker {
                 foreach (string crypto in DCEs[dExchange].PrimaryCurrencyList) {
                     foreach (string fiat in DCEs[dExchange].SecondaryCurrencyList) {
                         if (DCEs[dExchange].pulledSnapShot.ContainsKey(crypto + "-" + fiat)) DCEs[dExchange].pulledSnapShot[crypto + "-" + fiat] = false;
+                        if (DCEs[dExchange].positiveSpread.ContainsKey(crypto + "-" + fiat)) DCEs[dExchange].positiveSpread[crypto + "-" + fiat] = true;
                         if (DCEs[dExchange].OBResetFlag.ContainsKey("ORDERBOOK-" + crypto + "-" + fiat)) DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;
                         if (DCEs[dExchange].channelNonce.ContainsKey("ORDERBOOK-" + crypto + "-" + fiat)) DCEs[dExchange].channelNonce["ORDERBOOK-" + crypto + "-" + fiat] = 0;
                         if (DCEs[dExchange].orderBuffer_IR.ContainsKey(crypto + "-" + fiat)) DCEs[dExchange].orderBuffer_IR[crypto + "-" + fiat].Clear();
@@ -549,6 +557,7 @@ namespace IRTicker {
             }
             else {
                 DCEs[dExchange].pulledSnapShot[pair] = false;
+                DCEs[dExchange].positiveSpread[pair] = true;
                 DCEs[dExchange].OBResetFlag["ORDERBOOK-" + pair] = false;
                 DCEs[dExchange].channelNonce["ORDERBOOK-" + pair] = 0;
                 Tuple<string, string> tempTup = Utilities.SplitPair(pair);
@@ -653,6 +662,7 @@ namespace IRTicker {
             if (DCEs["IR"].channelNonce[channel] == 0) {
                 // orderBuffer_IR must have at least one order in it, so we should be able to safely request the minimum key.
                 DCEs["IR"].channelNonce[channel] = DCEs["IR"].orderBuffer_IR[pair].Keys.Min() - 1;  // find the smallest nonce in the buffer, and set the channel nonce to one below that
+                //Debug.Print("just set the Nonce to 1 before the first we got, it is: " + DCEs["IR"].channelNonce[channel]);
             }
 
             // we should check how full our buffer is. If there's more than 10 items (??) then it's probably too full.
@@ -683,7 +693,7 @@ namespace IRTicker {
                 }
             }
             if (DCEs["IR"].orderBuffer_IR[pair].Count > 0) {
-                /*if (pair == "XBT-AUD")*/ Debug.Print("(" + pair + ") ooo nonce - " + DCEs["IR"].orderBuffer_IR[pair].Count + " if only 1, it is: " + (DCEs["IR"].orderBuffer_IR[pair].Count == 1 ? DCEs["IR"].orderBuffer_IR[pair].Keys.FirstOrDefault().ToString() : ""));
+                /*if (pair == "XBT-AUD")*/ Debug.Print("(" + pair + ") ooo nonce - " + DCEs["IR"].orderBuffer_IR[pair].Count + " if only 1, it is: " + (DCEs["IR"].orderBuffer_IR[pair].Count == 1 ? DCEs["IR"].orderBuffer_IR[pair].Keys.FirstOrDefault().ToString() : "") + " and the current nonce is " + DCEs["IR"].channelNonce[channel]);
                 pollingThread.ReportProgress(27, new Tuple<bool, string>(true, Utilities.SplitPair(pair).Item1));  // update pair text colour to gray
             }
         }

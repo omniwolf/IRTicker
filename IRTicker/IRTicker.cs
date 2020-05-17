@@ -712,12 +712,12 @@ namespace IRTicker {
             // subscribe to all the pairs
             List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
 
-            if (dExchange == "IR") {
+            /*if (dExchange == "IR") {
                 pairList.Add(new Tuple<string, string>("XBT", "AUD"));
                 pairList.Add(new Tuple<string, string>("XBT", "USD"));
                 pairList.Add(new Tuple<string, string>("XBT", "NZD"));
             }
-            else {
+            else {*/
 
                 foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
                     foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
@@ -726,7 +726,7 @@ namespace IRTicker {
                         }
                     }
                 }
-            }
+            //}
             wSocketConnect.WebSocket_Subscribe(dExchange, pairList);
         }
 
@@ -889,12 +889,12 @@ namespace IRTicker {
                                 productDictionary_IR.Add(crypto + "-" + fiat, new DCE.products_GDAX(crypto + "-" + fiat));
 
                                 //create OB objects ready to be filled.  we only do this once here, and never delete them.  neverrrrr
-                                //DCEs["IR"].InitialiseOrderBookDicts_IR(crypto, fiat);  // commented as we only want ot do BTC atm
+                                DCEs["IR"].InitialiseOrderBookDicts_IR(crypto, fiat);  // commented as we only want ot do BTC atm
                             }
                         }
-                        DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "AUD");
+                        /*DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "AUD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "USD");
-                        DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "NZD");
+                        DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "NZD");*/
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
                         
                         SubscribeTickerSocket("IR");
