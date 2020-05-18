@@ -725,7 +725,7 @@ namespace IRTicker {
 
         // we clear the OB sub dictionaries, such that the pair and buy/sell OB dictionaries still exist, but the buy/sell OB dictionaries are empty.
         public void ClearOrderBookSubDicts(string crypto = "none", string fiat = "none") {
-            if (crypto == "none" || fiat == "none") {  // clear them all
+            if (crypto == "none" && fiat == "none") {  // clear them all
                 foreach (KeyValuePair<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>> pair in IR_OBs) {
                     pair.Value.Item1.Clear();
                     pair.Value.Item2.Clear();
@@ -733,6 +733,21 @@ namespace IRTicker {
                 foreach (KeyValuePair<string, Tuple<ConcurrentDictionary<string, decimal>, ConcurrentDictionary<string, decimal>>> pair in OrderGuid_IR_OBs) {
                     pair.Value.Item1.Clear();
                     pair.Value.Item2.Clear();
+                }
+            }
+            else if (crypto == "none" && fiat != "none") {
+                foreach (KeyValuePair<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>> pair in IR_OBs) {
+                    if (pair.Key.EndsWith(fiat)) {
+                        Debug.Print("clearOrderBookSubDicts sub, clearing: " + pair.Key);
+                        pair.Value.Item1.Clear();
+                        pair.Value.Item2.Clear();
+                    }
+                }
+                foreach (KeyValuePair<string, Tuple<ConcurrentDictionary<string, decimal>, ConcurrentDictionary<string, decimal>>> pair in OrderGuid_IR_OBs) {
+                    if (pair.Key.EndsWith(fiat)) {
+                        pair.Value.Item1.Clear();
+                        pair.Value.Item2.Clear();
+                    }
                 }
             }
             else {

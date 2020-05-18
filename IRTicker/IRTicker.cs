@@ -450,7 +450,7 @@ namespace IRTicker {
                 tempName = tempName.Substring(0, tempName.Length - 3);  // remove decimal places from the price
                 name += " - AUD " + tempName;
             }
-            Debug.Print("slack name is: " + name);
+            //Debug.Print("slack name is: " + name);
 
             if (IRBTCvol < 0 || BTCMBTCvol < 0) {
                 slackObj.setStatus("", ":question:", 120, name);
@@ -712,12 +712,18 @@ namespace IRTicker {
             // subscribe to all the pairs
             List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
 
-            /*if (dExchange == "IR") {
-                pairList.Add(new Tuple<string, string>("XBT", "AUD"));
-                pairList.Add(new Tuple<string, string>("XBT", "USD"));
-                pairList.Add(new Tuple<string, string>("XBT", "NZD"));
+            if (dExchange == "IR") {
+                //pairList.Add(new Tuple<string, string>("XBT", "AUD"));
+                //pairList.Add(new Tuple<string, string>("XBT", "USD"));
+                //pairList.Add(new Tuple<string, string>("XBT", "NZD"));
+
+                foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                    if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + DCEs[dExchange].CurrentSecondaryCurrency)) {
+                        pairList.Add(new Tuple<string, string>(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency));
+                    }
+                }
             }
-            else {*/
+            else {
 
                 foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
                     foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
@@ -726,7 +732,7 @@ namespace IRTicker {
                         }
                     }
                 }
-            //}
+            }
             wSocketConnect.WebSocket_Subscribe(dExchange, pairList);
         }
 
@@ -926,6 +932,32 @@ namespace IRTicker {
                     DCEs["IR"].socketsReset = true;
                     DCEs["IR"].socketsAlive = false;
                 }
+
+                // let's check the IR spread.  Cycle through all the "_Spread" labels
+                
+                foreach (KeyValuePair<string, System.Windows.Forms.Label> labelKVP in UIControls_Dict["IR"].Label_Dict) {
+                    if (labelKVP.Key.EndsWith("_Spread")) {
+                        string crypto = labelKVP.Key.Substring(0, labelKVP.Key.IndexOf('_'));  // should get the start of the string until the _
+                        string pair = crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency;
+                        if (labelKVP.Value.Text.StartsWith("-")) {  // we have a negative pair
+                            if (!DCEs["IR"].positiveSpread[pair]) {  // already been negative for this pair :(
+                                Debug.Print(DateTime.Now + " - negative pair detected (" + pair + ").  let's unsub resub");
+                                // do something..
+                                wSocketConnect.WebSocket_Resubscribe("IR", crypto);
+                            }
+                            else {
+                                // spread was positive last time, set the signal and wait for the next rotation
+                                DCEs["IR"].positiveSpread[pair] = false;
+                                Debug.Print(DateTime.Now + " - Negave pair (" + pair + ") signaled, waiting...");
+                            }
+                        }
+                        else {
+                            DCEs["IR"].positiveSpread[pair] = true;  // this pair is OK.  Doesn't mean it's right, it's just not DEFINITELY wrong.
+                            Debug.Print("Negative spread check all good for " + pair);
+                        }
+                    }
+                }
+                Debug.Print("-- spread check finished");
 
                 // separate this because it's possible to hit this code where the socketsreset == true for some other reason that heartbeat
                 if (DCEs["IR"].socketsReset) {
@@ -1718,7 +1750,9 @@ namespace IRTicker {
         }
 
         private void GroupBox_Click(string dExchange) {
+            string oldFiat = DCEs[dExchange].CurrentSecondaryCurrency;
             DCEs[dExchange].NextSecondaryCurrency();
+            wSocketConnect.WebSocket_Resubscribe(dExchange, "none", oldFiat, DCEs[dExchange].CurrentSecondaryCurrency);
             UIControls_Dict[dExchange].dExchange_GB.ForeColor = Color.Gray;
             UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")";
 

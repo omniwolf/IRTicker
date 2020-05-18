@@ -77,9 +77,9 @@ namespace IRTicker {
 
             // Labels
             Label_Dict = new Dictionary<string, Label>();
-            Label_Dict.Add("XBT_Label", XBT_Label);
-            Label_Dict.Add("ETH_Label", ETH_Label);
-            Label_Dict.Add("LTC_Label", LTC_Label);
+            if (XBT_Label != null) Label_Dict.Add("XBT_Label", XBT_Label);
+            if (ETH_Label != null) Label_Dict.Add("ETH_Label", ETH_Label);
+            if (LTC_Label != null) Label_Dict.Add("LTC_Label", LTC_Label);
             if (XRP_Label != null) Label_Dict.Add("XRP_Label", XRP_Label);
             if (BCH_Label != null) Label_Dict.Add("BCH_Label", BCH_Label);
             if (EOS_Label != null) Label_Dict.Add("EOS_Label", EOS_Label);
@@ -94,9 +94,9 @@ namespace IRTicker {
             if (USDT_Label != null) Label_Dict.Add("USDT_Label", USDT_Label);
             if (BSV_Label != null) Label_Dict.Add("BSV_Label", BSV_Label);
 
-            Label_Dict.Add("XBT_Price", XBT_Price);
-            Label_Dict.Add("ETH_Price", ETH_Price);
-            Label_Dict.Add("LTC_Price", LTC_Price);
+            if (XBT_Price != null) Label_Dict.Add("XBT_Price", XBT_Price);
+            if (ETH_Price != null) Label_Dict.Add("ETH_Price", ETH_Price);
+            if (LTC_Price != null) Label_Dict.Add("LTC_Price", LTC_Price);
             if (XRP_Price != null) Label_Dict.Add("XRP_Price", XRP_Price);
             if (BCH_Price != null) Label_Dict.Add("BCH_Price", BCH_Price);
             if (EOS_Price != null) Label_Dict.Add("EOS_Price", EOS_Price);
@@ -111,9 +111,9 @@ namespace IRTicker {
             if (USDT_Price != null) Label_Dict.Add("USDT_Price", USDT_Price);
             if (BSV_Price != null) Label_Dict.Add("BSV_Price", BSV_Price);
 
-            Label_Dict.Add("XBT_Spread", XBT_Spread);
-            Label_Dict.Add("ETH_Spread", ETH_Spread);
-            Label_Dict.Add("LTC_Spread", LTC_Spread);
+            if (XBT_Spread != null) Label_Dict.Add("XBT_Spread", XBT_Spread);
+            if (ETH_Spread != null) Label_Dict.Add("ETH_Spread", ETH_Spread);
+            if (LTC_Spread != null) Label_Dict.Add("LTC_Spread", LTC_Spread);
             if (XRP_Spread != null) Label_Dict.Add("XRP_Spread", XRP_Spread);
             if (BCH_Spread != null) Label_Dict.Add("BCH_Spread", BCH_Spread);
             if (EOS_Spread != null) Label_Dict.Add("EOS_Spread", EOS_Spread);

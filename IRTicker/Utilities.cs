@@ -99,7 +99,7 @@ namespace IRTicker {
         /// <param name="newCrypto">the new crypto to insert into the pair</param>
         /// <returns>the new pair string with the new crypto</returns>
         public static string replaceCrypto(string pair, string newCrypto) {
-            return newCrypto + pair.Substring(pair.IndexOf('-'), pair.Length);
+            return newCrypto + pair.Substring(pair.IndexOf('-'), pair.Length - 1);
         }
 
         public static void ColourDCETags(System.Windows.Forms.Control.ControlCollection controls, string dExchange) {

@@ -119,7 +119,7 @@ namespace IRTicker {
                 // so yeah.. the "orderBook" object doesn't really get used anymore.  it's just like a staging area
                 DCEs["IR"].ConvertOrderBook_IR(pair);
 
-                Debug.Print(DateTime.Now.ToString() + " IR OB " + pair + " pulled, " + DCEs["IR"].orderBuffer_IR[pair].Count + " ordes in the buffer");
+                Debug.Print(DateTime.Now.ToString() + " IR OB " + pair + " pulled, " + (DCEs["IR"].orderBuffer_IR.ContainsKey(pair) ? DCEs["IR"].orderBuffer_IR[pair].Count.ToString() : "n/a") + " ordes in the buffer");
 
                 //int remainingBuffer = ApplyBuffer_IR(pair);
                 //Print("(" + pair + ") Buffer applied, there are " + remainingBuffer + " left in the buffer (should be 0)");
@@ -232,68 +232,60 @@ namespace IRTicker {
             }
         }
 
-        private void subscribe_unsubscribe_new(string dExchange, bool subscribe, string pair = "none") {
-            Debug.Print("subscribe_unsubscribe! subscribe: " + subscribe.ToString() + ", pair: " + pair);
+        private void subscribe_unsubscribe_new(string dExchange, bool subscribe, string crypto = "none", string fiat = "none") {
+            if (fiat == "none") fiat = DCEs[dExchange].CurrentSecondaryCurrency;
+            Debug.Print("subscribe_unsubscribe! subscribe: " + subscribe.ToString() + ", pair: " + crypto + "-" + fiat);
             string channel = "";
             switch (dExchange) {
                 case "IR":
                     channel = subscribe ? "{\"Event\":\"Subscribe\",\"Data\":[" : "{\"Event\":\"Unsubscribe\",\"Data\":[";
-                    if (pair == "none") {  // unsubscribe or subscribe to EVERYTHING
-                        stopSockets("IR");
-                        List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
-                        foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
-                            foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                                if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                                    pairList.Add(new Tuple<string, string>(primaryCode, secondaryCode));
-                                }
+                    if (crypto == "none") {  // unsubscribe or subscribe to EVERYTHING
+                        //stopSockets("IR");  // don't want to stop everything, we just need to unsubscribe like we said we would.
+                        //List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
+                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
+                                string crypto1 = primaryCode;
+                                if (crypto1 == "USDT") crypto1 = "UST";
+                                channel += "\"orderbook-" + crypto1.ToLower() + "-" + fiat.ToLower() + "\", ";
                             }
                         }
 
-                        foreach (Tuple<string, string> pair1 in pairList) {
-                            string crypto = pair1.Item1;
-                            string fiat = pair1.Item2;
-                            
-                            if (crypto == "USDT") crypto = "UST";
-                            channel += "\"orderbook-" + crypto.ToLower() + "-" + fiat.ToLower() + "\", ";
-                            if (crypto == "UST") crypto = "USDT";
-                            // this is covered in reinit_ir(), so no need to do here for subscribe and unsubscribe
-                            //DCEs["IR"].pulledSnapShot[crypto + "-" + fiat] = false;  // initialise the pulledSnapShot variable for this pair
-                            //DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat)] = 0;  // initialise the nonce dictionary
-                            //DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;  // false means no error, no need to dump OB
-                        }
                         channel += "]} ";
                     }
                     else {  // or just one pair
-                        if (pair.ToUpper().StartsWith("USDT")) { pair = Utilities.replaceCrypto(pair, "UST"); Debug.Print("replaceCrypto created: " + pair); }
-                        channel += "\"orderbook-" + pair.ToLower() + "\"]}";
-                        if (pair.ToUpper().StartsWith("UST")) { pair = Utilities.replaceCrypto(pair, "USDT"); Debug.Print("replaceCrypto created: " + pair); }
+                        if (crypto.ToUpper() == "USDT") crypto = "ust";
+                        channel += "\"orderbook-" + crypto.ToLower() + "\"]}";
                     }
                     Debug.Print("IR websocket subcribe/unsubscribe - " + (subscribe ? "subscribe" : "unsubscribe") + " event: " + channel);
 
                     Task.Run(() => client_IR.Send(channel));
                     if (subscribe) {  // if subscribing then grab the order books too.
-                        if (pair == "none") {
-                            List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
-                            foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
-                                foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                                    if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                                        /*pairList.Add(new Tuple<string, string>("XBT", "AUD"));
-                                        pairList.Add(new Tuple<string, string>("XBT", "USD"));
-                                        pairList.Add(new Tuple<string, string>("XBT", "NZD"));*/
-                                        pairList.Add(new Tuple<string, string>(primaryCode, secondaryCode));
-                                    }
+                        if (crypto == "none") {
+                            //List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
+                            foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                                if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
+                                    //pairList.Add(new Tuple<string, string>("XBT", "AUD"));
+                                    //pairList.Add(new Tuple<string, string>("XBT", "USD"));
+                                    //pairList.Add(new Tuple<string, string>("XBT", "NZD"));
+                                    //pairList.Add(new Tuple<string, string>(primaryCode, fiat));
+                                    GetOrderBook_IR(primaryCode, fiat);
                                 }
                             }
-                            foreach (Tuple<string, string> pair1 in pairList) {
-                                GetOrderBook_IR(pair1.Item1, pair1.Item2);
-                            }
+
+                            // wtf why did i have a separate loop for this
+                            //foreach (Tuple<string, string> pair1 in pairList) {
+                            //    GetOrderBook_IR(pair1.Item1, pair1.Item2);
+                            //}
                         }
                         else {
-                            Tuple<string, string> tempTup = Utilities.SplitPair(pair);
-                            GetOrderBook_IR(tempTup.Item1, tempTup.Item2);
+                            GetOrderBook_IR(crypto, fiat);
                         }
                     }
 
+                    break;
+
+                default: 
+                    Debug.Print(" ------ whoops, subscribe_unsubscribe_enw doesn't support this exchange: " + dExchange);
                     break;
             }
         }
@@ -347,18 +339,22 @@ namespace IRTicker {
                         }*/
                         Reinit_sockets("IR");
                         Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
-                        Task.Run(() => client_IR.Send(subscribeStr));
+                        subscribe_unsubscribe_new("IR", true);  // resubscriibe to all pairs
+                        // commented out the below because 1. use subscribe_unsubscribe_new() instead of re-writing code, and 2. stoping and starting the timer again seems pointless
+                        /*Task.Run(() => client_IR.Send(subscribeStr));
                         Debug.Print("Pulling the REST OBs...");
                         foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
                             foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
                                 if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                                    /*GetOrderBook_IR("XBT", "AUD");
-                                    GetOrderBook_IR("XBT", "USD");
-                                    GetOrderBook_IR("XBT", "NZD");*/
+                                    //GetOrderBook_IR("XBT", "AUD");
+                                    //GetOrderBook_IR("XBT", "USD");
+                                    //GetOrderBook_IR("XBT", "NZD");
                                     GetOrderBook_IR(primaryCode, secondaryCode);
                                 }
                             }
                         }
+
+                    // why do we stop and start the timer here?  the socket is already up and running.. i think this is dumb.
                         stopUITimerThread();
 
                         Debug.Print(DateTime.Now + " - RECONNECT: about to start the UI timer!");
@@ -366,7 +362,7 @@ namespace IRTicker {
                         UITimerThread = new Thread(new ThreadStart(updateUITimer));
                         // this command to start the thread
                         UITimerThread.Start();
-                        Debug.Print("RECONNECT: UI timer storted.");
+                        Debug.Print("RECONNECT: UI timer storted.");*/
                     }
 
                 });
@@ -464,6 +460,24 @@ namespace IRTicker {
             wSocket_BTCM.Connect();
         }
 
+        /// <summary>
+        /// UNSUBSCRIBes, re-initialises the dictionaries, then resubscribes from pairs.  if required will do all pairs or just a specific pair
+        /// </summary>
+        /// <param name="dExchange">exchange</param>
+        /// <param name="crypto">crypto we're reinitialising, "none" to do all the cryptos</param>
+        /// <param name="oldFiat">if we're unsubscribing from one fiat and re-subscribing to a new one, this and newFiat need to be populated</param>
+        /// <param name="newFiat">as above, if we're moving from one fiat to another this needs to be populated along with oldFiat</param>
+        public void WebSocket_Resubscribe(string dExchange, string crypto = "none", string oldFiat = "none", string newFiat = "none") {
+
+            if ((oldFiat == "none" && newFiat != "none") || (oldFiat != "none" && newFiat == "none")) {
+                Debug.Print("WebSocket_Resubscribe has been called in an illegal state - both oldfiat (" + oldFiat + ") and  newFiat (" + newFiat + ") need to both be 'none', or both be cryptos.  One can't be 'none' and the other note");
+                return;
+            }
+            subscribe_unsubscribe_new(dExchange, false, crypto, (oldFiat == "none" ? DCEs[dExchange].CurrentSecondaryCurrency : oldFiat));
+            Reinit_sockets(dExchange, crypto, newFiat);
+            subscribe_unsubscribe_new(dExchange, true, crypto, (newFiat == "none" ? DCEs[dExchange].CurrentSecondaryCurrency : newFiat));
+        }
+
 
         public void WebSocket_Reconnect(string dExchange) {
             Debug.Print("WebSocket_Reconnect for " + dExchange);
@@ -501,12 +515,17 @@ namespace IRTicker {
             //re-subscribe?
             Debug.Print(dExchange + " - re-subscribing to all pairs...");
             List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
-            /*if (dExchange == "IR") {
-                pairList.Add(new Tuple<string, string>("XBT", "AUD"));
-                pairList.Add(new Tuple<string, string>("XBT", "USD"));
-                pairList.Add(new Tuple<string, string>("XBT", "NZD"));
+            if (dExchange == "IR") {
+                //pairList.Add(new Tuple<string, string>("XBT", "AUD"));
+                //pairList.Add(new Tuple<string, string>("XBT", "USD"));
+                //pairList.Add(new Tuple<string, string>("XBT", "NZD"));
+                foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                    if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + DCEs[dExchange].CurrentSecondaryCurrency)) {
+                        pairList.Add(new Tuple<string, string>(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency));
+                    }
+                }
             }
-            else {*/
+            else {
                 foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
                     foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
                         if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
@@ -514,7 +533,7 @@ namespace IRTicker {
                         }
                     }
                 }
-            //}
+            }
             WebSocket_Subscribe(dExchange, pairList);
         }
 
@@ -540,29 +559,28 @@ namespace IRTicker {
         }
 
         // only actually called for reconnections
-        public void Reinit_sockets(string dExchange, string pair = "none") {
-
-            if (pair == "none") {
-                foreach (string crypto in DCEs[dExchange].PrimaryCurrencyList) {
-                    foreach (string fiat in DCEs[dExchange].SecondaryCurrencyList) {
-                        if (DCEs[dExchange].pulledSnapShot.ContainsKey(crypto + "-" + fiat)) DCEs[dExchange].pulledSnapShot[crypto + "-" + fiat] = false;
-                        if (DCEs[dExchange].positiveSpread.ContainsKey(crypto + "-" + fiat)) DCEs[dExchange].positiveSpread[crypto + "-" + fiat] = true;
-                        if (DCEs[dExchange].OBResetFlag.ContainsKey("ORDERBOOK-" + crypto + "-" + fiat)) DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;
-                        if (DCEs[dExchange].channelNonce.ContainsKey("ORDERBOOK-" + crypto + "-" + fiat)) DCEs[dExchange].channelNonce["ORDERBOOK-" + crypto + "-" + fiat] = 0;
-                        if (DCEs[dExchange].orderBuffer_IR.ContainsKey(crypto + "-" + fiat)) DCEs[dExchange].orderBuffer_IR[crypto + "-" + fiat].Clear();
-                    }
+        public void Reinit_sockets(string dExchange, string crypto = "none", string fiat = "none") {
+            if (fiat == "none") fiat = DCEs[dExchange].CurrentSecondaryCurrency;
+            if (crypto == "none") {
+                foreach (string crypto1 in DCEs[dExchange].PrimaryCurrencyList) {
+                    DCEs[dExchange].pulledSnapShot[crypto1 + "-" + fiat] = false;
+                    DCEs[dExchange].positiveSpread[crypto1 + "-" + fiat] = true;
+                    DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto1 + "-" + fiat] = false;
+                    DCEs[dExchange].channelNonce["ORDERBOOK-" + crypto1 + "-" + fiat] = 0;
+                    if (DCEs[dExchange].orderBuffer_IR.ContainsKey(crypto1 + "-" + fiat)) DCEs[dExchange].orderBuffer_IR[crypto1 + "-" + fiat].Clear();
+                    else DCEs[dExchange].orderBuffer_IR[crypto1 + "-" + fiat] = new ConcurrentDictionary<int, Ticker_IR>();
                 }
                 
-                DCEs[dExchange].ClearOrderBookSubDicts();
+                DCEs[dExchange].ClearOrderBookSubDicts("none", fiat);
             }
             else {
-                DCEs[dExchange].pulledSnapShot[pair] = false;
-                DCEs[dExchange].positiveSpread[pair] = true;
-                DCEs[dExchange].OBResetFlag["ORDERBOOK-" + pair] = false;
-                DCEs[dExchange].channelNonce["ORDERBOOK-" + pair] = 0;
-                Tuple<string, string> tempTup = Utilities.SplitPair(pair);
-                DCEs[dExchange].ClearOrderBookSubDicts(tempTup.Item1, tempTup.Item2);
-                DCEs[dExchange].orderBuffer_IR[pair].Clear();
+                DCEs[dExchange].pulledSnapShot[crypto + "-" + fiat] = false;
+                DCEs[dExchange].positiveSpread[crypto + "-" + fiat] = true;
+                DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;
+                DCEs[dExchange].channelNonce["ORDERBOOK-" + crypto + "-" + fiat] = 0;
+                DCEs[dExchange].ClearOrderBookSubDicts(crypto, fiat);
+                if (DCEs[dExchange].orderBuffer_IR.ContainsKey(crypto + "-" + fiat)) DCEs[dExchange].orderBuffer_IR[crypto + "-" + fiat].Clear();
+                else DCEs[dExchange].orderBuffer_IR[crypto + "-" + fiat] = new ConcurrentDictionary<int, Ticker_IR>();
             }
         }
 
@@ -668,13 +686,14 @@ namespace IRTicker {
             // we should check how full our buffer is. If there's more than 10 items (??) then it's probably too full.
             if (((DCEs["IR"].orderBuffer_IR[pair].Count > 20) && DCEs["IR"].pulledSnapShot[pair]) || (DCEs["IR"].OBResetFlag[channel])) {
                 Debug.Print("NONCE - too many buffered nonces, can't recover " + channel + ", time to dump and restart");
-                subscribe_unsubscribe_new("IR", false, pair);
+                //subscribe_unsubscribe_new("IR", false, pair);
 
                 if (Properties.Settings.Default.FlashForm) pollingThread.ReportProgress(26);  // flash the window if the setting is enabled
-                Reinit_sockets("IR", pair);
+                //Reinit_sockets("IR", pair);
 
                 // now subscribe back to the channel
-                subscribe_unsubscribe_new("IR", true, pair);
+                //subscribe_unsubscribe_new("IR", true, pair);
+                WebSocket_Resubscribe("IR", Utilities.SplitPair(pair).Item1);
 
                 return;
             }
