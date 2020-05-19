@@ -26,7 +26,36 @@ namespace IRTicker {
         public WebSocketsConnect(Dictionary<string, DCE> _DCEs, BackgroundWorker _pollingThread) {
             DCEs = _DCEs;
             pollingThread = _pollingThread;
-           
+
+            // IR
+
+            // initialise all the dictionaries required to flog this horse
+            // actually we can't do this here because we don't have the cryptos yet for IR.  need to wait until the static data is pulled.
+            /*foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {  // now set all pulled OB flags to false
+                foreach (string crypto in DCEs["IR"].PrimaryCurrencyList) {
+                    if (!DCEs["IR"].orderBuffer_IR.ContainsKey(crypto + "-" + fiat)) {  // make the dictionary element doesn't already exist
+                        if (!DCEs["IR"].orderBuffer_IR.TryAdd(crypto + "-" + fiat, new ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>())) {
+                            Debug.Print(DateTime.Now + " - can't add orderBuffer_IR concurrent dicsh for " + crypto + "-" + fiat);
+                        }
+                        else Debug.Print(DateTime.Now + " - couldn't create the buffer order book?? why? " + crypto + " " + fiat);
+                        DCEs["IR"].pulledSnapShot[crypto + "-" + fiat] = false;  // initialise the pulledSnapShot variable for this pair
+                        DCEs["IR"].positiveSpread[crypto + "-" + fiat] = true;  // initialise the positiveSpread variable for this pair, always assume the spread is positive
+                        DCEs["IR"].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat)] = 0;  // initialise the nonce dictionary
+                        DCEs["IR"].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;  // false means no error, no need to dump OB
+                    }
+                }
+            }*/
+
+            Debug.Print("IR websocket connecting..");
+
+            Task.Factory.StartNew(() => {
+                startSockets("IR", "wss://websockets.independentreserve.com");
+            })
+            ;
+            Debug.Print("after first start sockets");
+            //subscribe_unsubscribe_new("IR", true);  // subscribe to all the things
+
+
             // BTCM
 
             BTCM_Connect_v2();
@@ -130,7 +159,8 @@ namespace IRTicker {
             }
         }
 
-        public void WebSocket_Subscribe(string dExchange, List<Tuple<string, string>> pairs) {
+        // this isn't used anymore
+        public void WebSocket_Subscribe_old(string dExchange, List<Tuple<string, string>> pairs) {
             string channel = "";
             switch (dExchange) {
                 case "IR":
@@ -161,7 +191,7 @@ namespace IRTicker {
                     Debug.Print("IR websocket subscribe: " + channel);
                     //wSocket_IR.Send(channel);
 
-                    startSockets("IR", "wss://websockets.independentreserve.com", channel);
+                    //startSockets("IR", "wss://websockets.independentreserve.com", channel);
                     
 
                     foreach (Tuple<string, string> pair in pairs) {
@@ -232,10 +262,11 @@ namespace IRTicker {
             }
         }
 
-        private void subscribe_unsubscribe_new(string dExchange, bool subscribe, string crypto = "none", string fiat = "none") {
+        public void subscribe_unsubscribe_new(string dExchange, bool subscribe, string crypto = "none", string fiat = "none") {
             if (fiat == "none") fiat = DCEs[dExchange].CurrentSecondaryCurrency;
             Debug.Print("subscribe_unsubscribe! subscribe: " + subscribe.ToString() + ", pair: " + crypto + "-" + fiat);
             string channel = "";
+            List<string> pairs = new List<string>();
             switch (dExchange) {
                 case "IR":
                     channel = subscribe ? "{\"Event\":\"Subscribe\",\"Data\":[" : "{\"Event\":\"Unsubscribe\",\"Data\":[";
@@ -258,7 +289,13 @@ namespace IRTicker {
                     }
                     Debug.Print("IR websocket subcribe/unsubscribe - " + (subscribe ? "subscribe" : "unsubscribe") + " event: " + channel);
 
-                    Task.Run(() => client_IR.Send(channel));
+                    if (client_IR.IsRunning) {
+                        Task.Run(() => client_IR.Send(channel));
+                    }
+                    else {
+                        Debug.Print(DateTime.Now + " - IR sockets down when trying to " + (subscribe ? "subscribe" : "unsubscribe"));
+                        DCEs[dExchange].socketsReset = true;
+                    }
                     if (subscribe) {  // if subscribing then grab the order books too.
                         if (crypto == "none") {
                             //List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
@@ -284,7 +321,98 @@ namespace IRTicker {
 
                     break;
 
-                default: 
+                case "BTCM":
+                    Debug.Print("trying to subscribe to BTCM");
+                    if (crypto == "none") {
+                        foreach (string primarycode in DCEs[dExchange].PrimaryCurrencyList) {
+                            pairs.Add(primarycode);
+                        }
+                    }
+                    else pairs.Add(crypto);
+
+                    if (wSocket_BTCM.IsAlive) {
+                        channel = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\", \"heartbeat\"], \"marketIds\":[";  // we only ever subscribe, no scenario where we need to unsubscribe.  Unsubscribing is a pain for BTCM, see here https://api.btcmarkets.net/doc/v3#tag/WS_Overview
+                        foreach (string crypto1 in pairs) {
+                            string crypto2 = crypto1;
+                            if (crypto2 == "XBT") crypto2 = "BTC";
+
+                            channel += "\"" + crypto2 + "-" + fiat + "\", ";
+                        }
+                        channel = channel.Substring(0, channel.Length - 2) + "]}";
+                        Debug.Print("BTCHH channel subscription string: " + channel);
+
+                        //pairList = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\"], \"marketIds\":[\"BTC-AUD\"]}";
+                        wSocket_BTCM.Send(channel);
+                    }
+                    else DCEs[dExchange].socketsReset = true;
+
+                    break;
+
+                case "BFX":
+
+                    if (!subscribe) {  // there is no unsubscribing in BFX, so we just close it down for resubscription.  better hope we don't try and do it for 1 crypto
+                        wSocket_BFX.Close();
+                        wSocket_BFX.Connect();
+                    }
+                    else {
+                        if (crypto == "none") {
+                            foreach (string primarycode in DCEs[dExchange].PrimaryCurrencyList) {
+                                pairs.Add(primarycode);
+                            }
+                        }
+                        else pairs.Add(crypto);
+
+                        if (wSocket_BFX.IsAlive) {
+                            foreach (string crypto1 in pairs) {
+                                string crypto2 = crypto1;
+                                if (crypto2 == "XBT") crypto2 = "BTC";
+                                if (crypto2 == "BCH") crypto2 = "BAB";
+                                if (crypto2 == "USDT") crypto2 = "UST";
+                                if (!DCEs[dExchange].ExchangeProducts.ContainsKey(crypto1 + "-" + fiat)) continue;  // only try to subscribe to pairs that this BFX supports
+                                channel = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"" + crypto2 + fiat + "\"}";
+                                //Debug.Print("BFX subscribing to: " + channel);
+                                wSocket_BFX.Send(channel);
+                            }
+                        }
+                        else {
+                            Debug.Print(DateTime.Now + " - BFX - trying to " + (subscribe ? "subscribe" : "unsubscribe" + " from channel(s) but BFX websockets is dead"));
+                            DCEs[dExchange].socketsReset = true;
+                        }
+                    }
+
+                    break;
+
+                case "GDAX":
+
+                    if (crypto == "none") {
+                        foreach (string primarycode in DCEs[dExchange].PrimaryCurrencyList) {
+                            pairs.Add(primarycode);
+                        }
+                    }
+                    else pairs.Add(crypto);
+
+                    if (wSocket_BFX.IsAlive) {
+                        channel = "{\"type\": \"" + (subscribe ? "subscribe" : "unsubscribe") + "\", \"channels\": [{\"name\": \"ticker\", \"product_ids\":[";
+                        foreach (string crypto1 in pairs) {
+                            if (!DCEs[dExchange].ExchangeProducts.ContainsKey(crypto1 + "-" + fiat)) continue;  // only try to subscribe to pairs that this BFX supports
+                            string crypto2 = crypto1;
+                            if (crypto2 == "XBT") crypto2 = "BTC";
+                            channel += "\"" + crypto2 + "-" + fiat + "\",";
+                        }
+
+                        channel = channel.Substring(0, channel.Length - 1);
+                        channel += "] } ] }";
+                        wSocket_GDAX.Send(channel);
+                    }
+                    else {
+                        Debug.Print(DateTime.Now + " - GDAX - trying to " + (subscribe ? "subscribe" : "unsubscribe" + " from channel(s) but GDAX websockets is dead"));
+                        DCEs[dExchange].socketsReset = true;
+                    }
+
+
+                    break;
+
+                default:
                     Debug.Print(" ------ whoops, subscribe_unsubscribe_enw doesn't support this exchange: " + dExchange);
                     break;
             }
@@ -296,10 +424,10 @@ namespace IRTicker {
             Debug.Print("IR sockets stop command sent");
         }
 
-        private async Task startSockets(string dExchange, string socketsURL, string subscribeStr) {
+        private void startSockets(string dExchange, string socketsURL) {
             var exitEvent = new ManualResetEvent(false);
             var url = new Uri(socketsURL);
-            DCEs["IR"].socketsAlive = false;
+            DCEs[dExchange].socketsAlive = false;
             Debug.Print(DateTime.Now + " - startSockets called for " + dExchange);
 
             using (client_IR = new WebsocketClient(url)) {
@@ -307,7 +435,7 @@ namespace IRTicker {
                 client_IR.ReconnectionHappened.Subscribe(info => {
                     if (info.Type == ReconnectionType.Initial) {
                         Debug.Print("Initial 'reconnection', ignored");
-                        DCEs["IR"].socketsAlive = true;
+                        DCEs[dExchange].socketsAlive = true;
                     }
                     /*else if (info.Type == ReconnectionType.Lost) {
                         Debug.Print("Lost 'reconnection' ignored, attached to a Reset button click?");
@@ -337,9 +465,9 @@ namespace IRTicker {
                             }
                             //}
                         }*/
-                        Reinit_sockets("IR");
+                        Reinit_sockets(dExchange);
                         Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
-                        subscribe_unsubscribe_new("IR", true);  // resubscriibe to all pairs
+                        subscribe_unsubscribe_new(dExchange, true);  // resubscriibe to all pairs
                         // commented out the below because 1. use subscribe_unsubscribe_new() instead of re-writing code, and 2. stoping and starting the timer again seems pointless
                         /*Task.Run(() => client_IR.Send(subscribeStr));
                         Debug.Print("Pulling the REST OBs...");
@@ -374,17 +502,17 @@ namespace IRTicker {
                             break;
                     }
                 });
-                client_IR.Start().Wait();
+
+                client_IR.Start();
 
                 Debug.Print(DateTime.Now + " - about to start the UI timer!");
-                //await updateUITimer_parent();
-                
+                                
                 UITimerThread = new Thread(new ThreadStart(updateUITimer));
                 // this command to start the thread
                 UITimerThread.Start();
                 Debug.Print("UI timer storted.");
-                await Task.Run(() => client_IR.Send(subscribeStr));
-                Debug.Print(DateTime.Now + " - we have moved on after the client_IR.send where we subscribe!");
+                //await Task.Run(() => client_IR.Send("1"));
+                //Debug.Print(DateTime.Now + " - we have moved on after the client_IR.send where we subscribe!");
 
                 exitEvent.WaitOne();
             }
@@ -486,8 +614,8 @@ namespace IRTicker {
                 return;
             }
             switch (dExchange) { 
-                case "IR":
-                    Debug.Print("WebSocket_Reconnect: IR");
+                case "IR":  // this should never be called because the IR sockets should automatically recover
+                    Debug.Print("WebSocket_Reconnect: IR?? this shouldn't be called?  shouldn't it auto-reconnect?");
                     if (client_IR.IsRunning) {
                         Debug.Print(DateTime.Now + " - IR running, will stop");
                         stopSockets("IR");
@@ -495,6 +623,7 @@ namespace IRTicker {
                     stopUITimerThread();  // if it hasn't stopped by now, we force it.
 
                     Reinit_sockets("IR");
+                    startSockets("IR", "wss://websockets.independentreserve.com");
                     //IR_Connect();  // create all the sockets stuff again from scratch :/
                     DCEs["IR"].HeartBeat = DateTime.Now;
                     break;
@@ -514,8 +643,10 @@ namespace IRTicker {
 
             //re-subscribe?
             Debug.Print(dExchange + " - re-subscribing to all pairs...");
-            List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
-            if (dExchange == "IR") {
+
+            // don't do it this way anymore
+            /*List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
+            if (true ) { //dExchange == "IR") {
                 //pairList.Add(new Tuple<string, string>("XBT", "AUD"));
                 //pairList.Add(new Tuple<string, string>("XBT", "USD"));
                 //pairList.Add(new Tuple<string, string>("XBT", "NZD"));
@@ -534,7 +665,8 @@ namespace IRTicker {
                     }
                 }
             }
-            WebSocket_Subscribe(dExchange, pairList);
+            WebSocket_Subscribe(dExchange, pairList);*/
+            subscribe_unsubscribe_new(dExchange, true);  // subscribe to all 
         }
 
         // after calling this sub, please remove the KVP of the channel you're unsubscribing from from the channel_Dict_BFX dictionary
@@ -987,7 +1119,7 @@ namespace IRTicker {
                     wSocket_BFX.Connect();
                 }
                 else if (message.Contains("unsubscribed")) {
-                    //Debug.Print("UNSUBSCRIBED!  message: " + message);
+                    Debug.Print("BFX UNSUBSCRIBED!  message: " + message);
                 }
                 else {
                     Debug.Print("rando message from BFX sockets: " + message);

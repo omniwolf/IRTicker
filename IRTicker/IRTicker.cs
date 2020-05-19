@@ -710,9 +710,10 @@ namespace IRTicker {
 
         public void SubscribeTickerSocket(string dExchange) {
             // subscribe to all the pairs
-            List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
+            // don't do it this way anymore
+            /*List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
 
-            if (dExchange == "IR") {
+            if (true) { // dExchange == "IR") {
                 //pairList.Add(new Tuple<string, string>("XBT", "AUD"));
                 //pairList.Add(new Tuple<string, string>("XBT", "USD"));
                 //pairList.Add(new Tuple<string, string>("XBT", "NZD"));
@@ -732,8 +733,8 @@ namespace IRTicker {
                         }
                     }
                 }
-            }
-            wSocketConnect.WebSocket_Subscribe(dExchange, pairList);
+            }*/
+            wSocketConnect.subscribe_unsubscribe_new(dExchange, true);  // this sub is now kinda useless
         }
 
         private void GetBTCMOrderBook(string crypto) {
@@ -902,7 +903,8 @@ namespace IRTicker {
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "USD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "NZD");*/
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
-                        
+
+                        wSocketConnect.Reinit_sockets("IR");  // this will setup all the necessary dictionaries
                         SubscribeTickerSocket("IR");
                     }
                     else {
