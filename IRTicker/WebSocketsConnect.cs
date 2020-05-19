@@ -107,7 +107,7 @@ namespace IRTicker {
             Tuple<bool, string> orderBookTpl = Utilities.Get("https://api.independentreserve.com/Public/GetAllOrders?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
 
             // have to change back ughhh
-            if (crypto == "UST") crypto = "USDT";
+            if (crypto.ToUpper() == "UST") crypto = "USDT";
             pair = crypto + "-" + fiat;
 
             if (orderBookTpl.Item1) {
@@ -254,7 +254,7 @@ namespace IRTicker {
                     }
                     else {  // or just one pair
                         if (crypto.ToUpper() == "USDT") crypto = "ust";
-                        channel += "\"orderbook-" + crypto.ToLower() + "\"]}";
+                        channel += "\"orderbook-" + crypto.ToLower() + "-" + fiat.ToLower() + "\"]}";
                     }
                     Debug.Print("IR websocket subcribe/unsubscribe - " + (subscribe ? "subscribe" : "unsubscribe") + " event: " + channel);
 

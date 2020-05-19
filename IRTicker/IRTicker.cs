@@ -953,7 +953,7 @@ namespace IRTicker {
                         }
                         else {
                             DCEs["IR"].positiveSpread[pair] = true;  // this pair is OK.  Doesn't mean it's right, it's just not DEFINITELY wrong.
-                            Debug.Print("Negative spread check all good for " + pair);
+                            //Debug.Print("Negative spread check all good for " + pair);
                         }
                     }
                 }
