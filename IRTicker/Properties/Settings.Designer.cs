@@ -142,5 +142,17 @@ namespace IRTicker.Properties {
                 this["UITimerFreq"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool NegativeSpread {
+            get {
+                return ((bool)(this["NegativeSpread"]));
+            }
+            set {
+                this["NegativeSpread"] = value;
+            }
+        }
     }
 }

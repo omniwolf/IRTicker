@@ -129,6 +129,7 @@ namespace IRTicker {
             slackNameChangeCheckBox.Checked = Properties.Settings.Default.SlackNameChange;
             OB_checkBox.Checked = Properties.Settings.Default.ShowOB;
             UITimerFreq_maskedTextBox.Text = Properties.Settings.Default.UITimerFreq.ToString();
+            NegativeSpread_checkBox.Checked = Properties.Settings.Default.NegativeSpread;
 
             if (Slack_checkBox.Checked) {
                 slackDefaultNameTextBox.Enabled = true;
@@ -936,30 +937,32 @@ namespace IRTicker {
                 }
 
                 // let's check the IR spread.  Cycle through all the "_Spread" labels
-                
-                foreach (KeyValuePair<string, System.Windows.Forms.Label> labelKVP in UIControls_Dict["IR"].Label_Dict) {
-                    if (labelKVP.Key.EndsWith("_Spread")) {
-                        string crypto = labelKVP.Key.Substring(0, labelKVP.Key.IndexOf('_'));  // should get the start of the string until the _
-                        string pair = crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency;
-                        if (labelKVP.Value.Text.StartsWith("-")) {  // we have a negative pair
-                            if (!DCEs["IR"].positiveSpread[pair]) {  // already been negative for this pair :(
-                                Debug.Print(DateTime.Now + " - negative pair detected (" + pair + ").  let's unsub resub");
-                                // do something..
-                                wSocketConnect.WebSocket_Resubscribe("IR", crypto);
+
+                if (Properties.Settings.Default.NegativeSpread) {
+                    foreach (KeyValuePair<string, System.Windows.Forms.Label> labelKVP in UIControls_Dict["IR"].Label_Dict) {
+                        if (labelKVP.Key.EndsWith("_Spread")) {
+                            string crypto = labelKVP.Key.Substring(0, labelKVP.Key.IndexOf('_'));  // should get the start of the string until the _
+                            string pair = crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency;
+                            if (labelKVP.Value.Text.StartsWith("-")) {  // we have a negative pair
+                                if (!DCEs["IR"].positiveSpread[pair]) {  // already been negative for this pair :(
+                                    Debug.Print(DateTime.Now + " - negative pair detected (" + pair + ").  let's unsub resub");
+                                    // do something..
+                                    wSocketConnect.WebSocket_Resubscribe("IR", crypto);
+                                }
+                                else {
+                                    // spread was positive last time, set the signal and wait for the next rotation
+                                    DCEs["IR"].positiveSpread[pair] = false;
+                                    Debug.Print(DateTime.Now + " - Negave pair (" + pair + ") signaled, waiting...");
+                                }
                             }
                             else {
-                                // spread was positive last time, set the signal and wait for the next rotation
-                                DCEs["IR"].positiveSpread[pair] = false;
-                                Debug.Print(DateTime.Now + " - Negave pair (" + pair + ") signaled, waiting...");
+                                DCEs["IR"].positiveSpread[pair] = true;  // this pair is OK.  Doesn't mean it's right, it's just not DEFINITELY wrong.
+                                                                         //Debug.Print("Negative spread check all good for " + pair);
                             }
                         }
-                        else {
-                            DCEs["IR"].positiveSpread[pair] = true;  // this pair is OK.  Doesn't mean it's right, it's just not DEFINITELY wrong.
-                            //Debug.Print("Negative spread check all good for " + pair);
-                        }
                     }
+                    Debug.Print("-- spread check finished");
                 }
-                Debug.Print("-- spread check finished");
 
                 // separate this because it's possible to hit this code where the socketsreset == true for some other reason that heartbeat
                 if (DCEs["IR"].socketsReset) {
@@ -2344,6 +2347,11 @@ namespace IRTicker {
             if (!Properties.Settings.Default.SlackNameChange && slackDefaultNameTextBox.Text == string.Empty) {
                 MessageBox.Show("If you leave the name blank here and the app has already changed your name, then the app won't know what to change it back to and your display name will be blank (meaning your display name will default to your real name).  I recommend you leave your preferred display name in here", "No name?", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void NegativeSpread_checkBox_CheckedChanged(object sender, EventArgs e) {
+            Properties.Settings.Default.NegativeSpread = NegativeSpread_checkBox.Checked;
+            Properties.Settings.Default.Save();
         }
     }
 }

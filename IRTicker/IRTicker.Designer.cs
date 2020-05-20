@@ -93,6 +93,10 @@
             this.BTCM_XBT_Label1 = new System.Windows.Forms.Label();
             this.BTCM_BCH_Label1 = new System.Windows.Forms.Label();
             this.BTCM_LTC_Label1 = new System.Windows.Forms.Label();
+            this.BAR_GroupBox = new System.Windows.Forms.GroupBox();
+            this.BAR_XBT_Label2 = new System.Windows.Forms.Label();
+            this.BAR_XBT_Label3 = new System.Windows.Forms.Label();
+            this.BAR_XBT_Label1 = new System.Windows.Forms.Label();
             this.BFX_GroupBox = new System.Windows.Forms.GroupBox();
             this.BFX_USDT_Label2 = new System.Windows.Forms.Label();
             this.BFX_USDT_Label3 = new System.Windows.Forms.Label();
@@ -261,21 +265,19 @@
             this.CryptoChooser_ComboBox = new System.Windows.Forms.ComboBox();
             this.BlinkStickBW = new System.ComponentModel.BackgroundWorker();
             this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
-            this.BAR_XBT_Label1 = new System.Windows.Forms.Label();
-            this.BAR_XBT_Label3 = new System.Windows.Forms.Label();
-            this.BAR_XBT_Label2 = new System.Windows.Forms.Label();
-            this.BAR_GroupBox = new System.Windows.Forms.GroupBox();
+            this.NegativeSpread_checkBox = new System.Windows.Forms.CheckBox();
+            this.NegativeSpread_label = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
             this.BTCM_GroupBox.SuspendLayout();
+            this.BAR_GroupBox.SuspendLayout();
             this.BFX_GroupBox.SuspendLayout();
             this.fiat_GroupBox.SuspendLayout();
             this.IR_GroupBox.SuspendLayout();
             this.GDAX_GroupBox.SuspendLayout();
             this.OTCHelper.SuspendLayout();
-            this.BAR_GroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // refreshFrequencyTextbox
@@ -312,6 +314,8 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
+            this.Settings.Controls.Add(this.NegativeSpread_checkBox);
+            this.Settings.Controls.Add(this.NegativeSpread_label);
             this.Settings.Controls.Add(this.groupBox1);
             this.Settings.Controls.Add(this.UITimerFreq_maskedTextBox);
             this.Settings.Controls.Add(this.UITimerFreq_label);
@@ -547,7 +551,7 @@
             // VersionLabel
             // 
             this.VersionLabel.AutoSize = true;
-            this.VersionLabel.Location = new System.Drawing.Point(19, 571);
+            this.VersionLabel.Location = new System.Drawing.Point(73, 817);
             this.VersionLabel.Name = "VersionLabel";
             this.VersionLabel.Size = new System.Drawing.Size(0, 13);
             this.VersionLabel.TabIndex = 11;
@@ -1110,6 +1114,59 @@
             this.BTCM_LTC_Label1.Size = new System.Drawing.Size(34, 13);
             this.BTCM_LTC_Label1.TabIndex = 11;
             this.BTCM_LTC_Label1.Text = "LTC:";
+            // 
+            // BAR_GroupBox
+            // 
+            this.BAR_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.coinspot_faded2;
+            this.BAR_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label2);
+            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label3);
+            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label1);
+            this.BAR_GroupBox.Cursor = System.Windows.Forms.Cursors.Default;
+            this.BAR_GroupBox.ForeColor = System.Drawing.Color.Gray;
+            this.BAR_GroupBox.Location = new System.Drawing.Point(305, 316);
+            this.BAR_GroupBox.Name = "BAR_GroupBox";
+            this.BAR_GroupBox.Size = new System.Drawing.Size(262, 50);
+            this.BAR_GroupBox.TabIndex = 16;
+            this.BAR_GroupBox.TabStop = false;
+            this.BAR_GroupBox.Text = "Bitaroo";
+            // 
+            // BAR_XBT_Label2
+            // 
+            this.BAR_XBT_Label2.AutoSize = true;
+            this.BAR_XBT_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BAR_XBT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_XBT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BAR_XBT_Label2.Location = new System.Drawing.Point(53, 23);
+            this.BAR_XBT_Label2.Name = "BAR_XBT_Label2";
+            this.BAR_XBT_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BAR_XBT_Label2.TabIndex = 4;
+            this.BAR_XBT_Label2.Tag = "BAR";
+            // 
+            // BAR_XBT_Label3
+            // 
+            this.BAR_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BAR_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BAR_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_XBT_Label3.Location = new System.Drawing.Point(119, 20);
+            this.BAR_XBT_Label3.Name = "BAR_XBT_Label3";
+            this.BAR_XBT_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BAR_XBT_Label3.TabIndex = 8;
+            this.BAR_XBT_Label3.Tag = "";
+            this.BAR_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BAR_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_XBT_Label3_MouseDoubleClick);
+            // 
+            // BAR_XBT_Label1
+            // 
+            this.BAR_XBT_Label1.AutoSize = true;
+            this.BAR_XBT_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BAR_XBT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_XBT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BAR_XBT_Label1.Location = new System.Drawing.Point(6, 23);
+            this.BAR_XBT_Label1.Name = "BAR_XBT_Label1";
+            this.BAR_XBT_Label1.Size = new System.Drawing.Size(35, 13);
+            this.BAR_XBT_Label1.TabIndex = 0;
+            this.BAR_XBT_Label1.Text = "BTC:";
             // 
             // BFX_GroupBox
             // 
@@ -3246,66 +3303,36 @@
             // 
             this.BlinkStickWhite_Thread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickWhite_Thread_DoWork);
             // 
-            // BAR_XBT_Label1
+            // NegativeSpread_checkBox
             // 
-            this.BAR_XBT_Label1.AutoSize = true;
-            this.BAR_XBT_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BAR_XBT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_XBT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BAR_XBT_Label1.Location = new System.Drawing.Point(6, 23);
-            this.BAR_XBT_Label1.Name = "BAR_XBT_Label1";
-            this.BAR_XBT_Label1.Size = new System.Drawing.Size(35, 13);
-            this.BAR_XBT_Label1.TabIndex = 0;
-            this.BAR_XBT_Label1.Text = "BTC:";
+            this.NegativeSpread_checkBox.AccessibleName = "";
+            this.NegativeSpread_checkBox.AutoSize = true;
+            this.NegativeSpread_checkBox.Checked = true;
+            this.NegativeSpread_checkBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.NegativeSpread_checkBox.Location = new System.Drawing.Point(490, 640);
+            this.NegativeSpread_checkBox.Name = "NegativeSpread_checkBox";
+            this.NegativeSpread_checkBox.Size = new System.Drawing.Size(15, 14);
+            this.NegativeSpread_checkBox.TabIndex = 34;
+            this.NegativeSpread_checkBox.UseVisualStyleBackColor = true;
+            this.NegativeSpread_checkBox.CheckedChanged += new System.EventHandler(this.NegativeSpread_checkBox_CheckedChanged);
             // 
-            // BAR_XBT_Label3
+            // NegativeSpread_label
             // 
-            this.BAR_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BAR_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BAR_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_XBT_Label3.Location = new System.Drawing.Point(119, 20);
-            this.BAR_XBT_Label3.Name = "BAR_XBT_Label3";
-            this.BAR_XBT_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BAR_XBT_Label3.TabIndex = 8;
-            this.BAR_XBT_Label3.Tag = "";
-            this.BAR_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.BAR_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_XBT_Label3_MouseDoubleClick);
-            // 
-            // BAR_XBT_Label2
-            // 
-            this.BAR_XBT_Label2.AutoSize = true;
-            this.BAR_XBT_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BAR_XBT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_XBT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BAR_XBT_Label2.Location = new System.Drawing.Point(53, 23);
-            this.BAR_XBT_Label2.Name = "BAR_XBT_Label2";
-            this.BAR_XBT_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BAR_XBT_Label2.TabIndex = 4;
-            this.BAR_XBT_Label2.Tag = "BAR";
-            // 
-            // BAR_GroupBox
-            // 
-            this.BAR_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.coinspot_faded2;
-            this.BAR_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label2);
-            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label3);
-            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label1);
-            this.BAR_GroupBox.Cursor = System.Windows.Forms.Cursors.Default;
-            this.BAR_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.BAR_GroupBox.Location = new System.Drawing.Point(305, 316);
-            this.BAR_GroupBox.Name = "BAR_GroupBox";
-            this.BAR_GroupBox.Size = new System.Drawing.Size(262, 50);
-            this.BAR_GroupBox.TabIndex = 16;
-            this.BAR_GroupBox.TabStop = false;
-            this.BAR_GroupBox.Text = "Bitaroo";
+            this.NegativeSpread_label.AccessibleName = "";
+            this.NegativeSpread_label.AutoSize = true;
+            this.NegativeSpread_label.Location = new System.Drawing.Point(73, 640);
+            this.NegativeSpread_label.Name = "NegativeSpread_label";
+            this.NegativeSpread_label.Size = new System.Drawing.Size(226, 13);
+            this.NegativeSpread_label.TabIndex = 33;
+            this.NegativeSpread_label.Text = "Monitor for negative spreads and reset if found";
             // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 841);
-            this.Controls.Add(this.Main);
             this.Controls.Add(this.LoadingPanel);
+            this.Controls.Add(this.Main);
             this.Controls.Add(this.Settings);
             this.Controls.Add(this.OTCHelper);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -3327,6 +3354,8 @@
             this.Main.PerformLayout();
             this.BTCM_GroupBox.ResumeLayout(false);
             this.BTCM_GroupBox.PerformLayout();
+            this.BAR_GroupBox.ResumeLayout(false);
+            this.BAR_GroupBox.PerformLayout();
             this.BFX_GroupBox.ResumeLayout(false);
             this.BFX_GroupBox.PerformLayout();
             this.fiat_GroupBox.ResumeLayout(false);
@@ -3337,8 +3366,6 @@
             this.GDAX_GroupBox.PerformLayout();
             this.OTCHelper.ResumeLayout(false);
             this.OTCHelper.PerformLayout();
-            this.BAR_GroupBox.ResumeLayout(false);
-            this.BAR_GroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -3585,6 +3612,8 @@
         private System.Windows.Forms.Label BAR_XBT_Label2;
         private System.Windows.Forms.Label BAR_XBT_Label3;
         private System.Windows.Forms.Label BAR_XBT_Label1;
+        private System.Windows.Forms.CheckBox NegativeSpread_checkBox;
+        private System.Windows.Forms.Label NegativeSpread_label;
     }
 }
 
