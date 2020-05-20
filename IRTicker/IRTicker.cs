@@ -529,7 +529,7 @@ namespace IRTicker {
             }
         }
 
-        private void ParseDCE_BAR(string fiat) {
+        private void ParseDCE_BAR() {
             Tuple<bool, string> marketSummary = Utilities.Get("https://api.bitaroo.com.au/trade/market-data/btcaud");
             if (!marketSummary.Item1) {
                 DCEs["BAR"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
@@ -538,39 +538,51 @@ namespace IRTicker {
             else {
                 DCE.MarketSummary_BAR mSummary_BAR = JsonConvert.DeserializeObject<DCE.MarketSummary_BAR>(marketSummary.Item2);
 
-                if (mSummary_BAR.status != "ok") {
-                    DCEs["CSPT"].NetworkAvailable = false;
-                    Debug.Print("CoinSpot API was alive, but didn't respond in a healthy way, status: " + mSummary_CSPT.status);
-                    return;
+                DCE.MarketSummary mSummary = new DCE.MarketSummary();
+
+                if (decimal.TryParse(mSummary_BAR.orderBook.buy.FirstOrDefault().price, out decimal bid)) {
+                    mSummary.CurrentHighestBidPrice = bid;
                 }
+                else Debug.Print("could not convert BAR bid: " + mSummary_BAR.orderBook.buy.FirstOrDefault().price);
 
-                DCE.MarketSummary mSummary;
-
-                mSummary_CSPT.prices.CreateCryptoList();
-                foreach (DCE.MarketSummary_BAR cryptoResponse in mSummary_CSPT.prices.cryptoList) {
-                    mSummary = new DCE.MarketSummary();
-                    if (decimal.TryParse(cryptoResponse.last, out decimal temp)) {
-                        mSummary.LastPrice = temp;
-                    }
-                    else Debug.Print("Could not convert CSPT price: " + cryptoResponse.last);
-
-                    if (decimal.TryParse(cryptoResponse.bid, out temp)) {
-                        mSummary.CurrentHighestBidPrice = temp;
-                    }
-                    else Debug.Print("Could not convert CSPT price: " + cryptoResponse.bid);
-
-                    if (decimal.TryParse(cryptoResponse.ask, out temp)) {
-                        mSummary.CurrentLowestOfferPrice = temp;
-                    }
-                    else Debug.Print("Could not convert CSPT price: " + cryptoResponse.ask);
-
-                    mSummary.PrimaryCurrencyCode = cryptoResponse.ticker;
-                    mSummary.SecondaryCurrencyCode = fiat;
-
-                    DCEs["CSPT"].CryptoPairsAdd(cryptoResponse.ticker + "-" + fiat, mSummary);
+                if (decimal.TryParse(mSummary_BAR.orderBook.sell.FirstOrDefault().price, out decimal offer)) {
+                    mSummary.CurrentLowestOfferPrice = offer;
                 }
-                DCEs["CSPT"].NetworkAvailable = true;
-                DCEs["CSPT"].CurrentDCEStatus = "Online";
+                else Debug.Print("could not convert BAR offer: " + mSummary_BAR.orderBook.sell.FirstOrDefault().price);
+
+                if (decimal.TryParse(mSummary_BAR.dailyStats.high, out decimal high)) {
+                    mSummary.DayHighestPrice = high;
+                }
+                else Debug.Print("could not convert BAR highest price: " + mSummary_BAR.dailyStats.high);
+
+                if (decimal.TryParse(mSummary_BAR.dailyStats.low, out decimal low)) {
+                    mSummary.DayLowestPrice = low;
+                }
+                else Debug.Print("could not convert BAR lowest price: " + mSummary_BAR.dailyStats.low);
+
+                if (decimal.TryParse(mSummary_BAR.dailyStats.volDst, out decimal vol)) {
+                    mSummary.DayVolumeXbt = vol;
+                }
+                else Debug.Print("could not convert BAR vol: " + mSummary_BAR.dailyStats.volDst);
+
+                if (decimal.TryParse(mSummary_BAR.dailyStats.volSrc, out decimal volFiat)) {
+                    mSummary.DayVolumeInSecondaryCurrency = volFiat;
+                }
+                else Debug.Print("could not convert BAR vol in fiat: " + mSummary_BAR.dailyStats.volSrc);
+
+                if (decimal.TryParse(mSummary_BAR.dailyStats.lastPrice, out decimal lastPrice)) {
+                    mSummary.LastPrice = lastPrice;
+                }
+                else Debug.Print("could not convert BAR last price: " + mSummary_BAR.dailyStats.lastPrice);
+
+                if (mSummary_BAR.pairSymbol == "btcaud") mSummary.pair = "XBT-AUD";  // this will populate both primary and secondary currencies for this mSummary obj
+                else Debug.Print("Bitaroo not sending btcaud as the pair?? - " + mSummary_BAR.pairSymbol);
+
+
+                DCEs["BAR"].CryptoPairsAdd(mSummary.pair, mSummary);
+                
+                DCEs["BAR"].NetworkAvailable = true;
+                DCEs["BAR"].CurrentDCEStatus = "Online";
             }
         }
 
@@ -1051,10 +1063,10 @@ namespace IRTicker {
 
 
                 //////// CoinSpot ////////
-                if (DCEs["CSPT"].NetworkAvailable) {
-                    ParseDCE_CSPT("AUD");  // the coinSpot parseDCE method is a bit different, no need to loop through pairs, there is only one endpoint we call and it has all the info on all the pairs.   This might sound cool, but it's actually shit.  CoinSpot API is shittttt
+                if (DCEs["BAR"].NetworkAvailable) {
+                    ParseDCE_BAR();  // the bitaroo parseDCE method is a bit different, no need to loop through pairs, there is only one endpoint we call and it has all the info on all the pairs.   This might sound cool, but it's actually shit.  CoinSpot API is shittttt
                 }
-                else DCEs["CSPT"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
+                else DCEs["BAR"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
 
 
                 if (pollingThread.CancellationPending) {  // this will be true if the user has changed the secondary currency.  we need to stop and start again, because it's possible that we have
@@ -1622,8 +1634,6 @@ namespace IRTicker {
             // we have updated all the prices, if the average price controls are disabled, we can enable them now
             IR_CryptoComboBox.Enabled = IR_BuySellComboBox.Enabled = IR_NumCoinsTextBox.Enabled = true;
             BTCM_CryptoComboBox.Enabled = BTCM_BuySellComboBox.Enabled = BTCM_NumCoinsTextBox.Enabled = true;
-            //CSPT_CryptoComboBox.Enabled = CSPT_BuySellComboBox.Enabled = CSPT_NumCoinsTextBox.Enabled = true;  // we don't do CSPT order book.
-
 
             if (OER_NetworkAvailable) {
                 PrintFiat();  // i outsourced updating the fiat UI we do it when loading for the first time, and also when the user clicks the fiat_groupBox.  it doesn't realy need to be done each poll as we only pull fiat once.. but meh
@@ -1722,7 +1732,7 @@ namespace IRTicker {
                 case "BFX":
                     fColour = Color.DarkGreen;
                     break;
-                case "CSPT":
+                case "BAR":
                     fColour = Color.DarkTurquoise;
                     break;
                 default:
@@ -2130,27 +2140,9 @@ namespace IRTicker {
         }
 
         private void CSPT_XBT_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
-            SpreadGraph SGForm = new SpreadGraph(DCEs["CSPT"], "XBT-" + DCEs["CSPT"].CurrentSecondaryCurrency, this);
+            SpreadGraph SGForm = new SpreadGraph(DCEs["BAR"], "XBT-" + DCEs["BAR"].CurrentSecondaryCurrency, this);
             SGForm.Show();
-            SpreadGraph_Dict.TryAdd("CSPT-XBT-" + DCEs["CSPT"].CurrentSecondaryCurrency, SGForm);
-        }
-
-        private void CSPT_ETH_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
-            SpreadGraph SGForm = new SpreadGraph(DCEs["CSPT"], "ETH-" + DCEs["CSPT"].CurrentSecondaryCurrency, this);
-            SGForm.Show();
-            SpreadGraph_Dict.TryAdd("CSPT-ETH-" + DCEs["CSPT"].CurrentSecondaryCurrency, SGForm);
-        }
-
-        private void CSPT_DOGE_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
-            SpreadGraph SGForm = new SpreadGraph(DCEs["CSPT"], "DOGE-" + DCEs["CSPT"].CurrentSecondaryCurrency, this);
-            SGForm.Show();
-            SpreadGraph_Dict.TryAdd("CSPT-DOGE-" + DCEs["CSPT"].CurrentSecondaryCurrency, SGForm);
-        }
-
-        private void CSPT_LTC_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
-            SpreadGraph SGForm = new SpreadGraph(DCEs["CSPT"], "LTC-" + DCEs["CSPT"].CurrentSecondaryCurrency, this);
-            SGForm.Show();
-            SpreadGraph_Dict.TryAdd("CSPT-LTC-" + DCEs["CSPT"].CurrentSecondaryCurrency, SGForm);
+            SpreadGraph_Dict.TryAdd("BAR-XBT-" + DCEs["BAR"].CurrentSecondaryCurrency, SGForm);
         }
 
         private void Help_Button_Click(object sender, EventArgs e) {
@@ -2221,12 +2213,6 @@ namespace IRTicker {
             SpreadGraph SGForm = new SpreadGraph(DCEs["BFX"], "ZRX-" + DCEs["BFX"].CurrentSecondaryCurrency, this);
             SGForm.Show();
             SpreadGraph_Dict.TryAdd("BFX-ZRX-" + DCEs["BFX"].CurrentSecondaryCurrency, SGForm);
-        }
-
-        private void CSPT_XRP_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
-            SpreadGraph SGForm = new SpreadGraph(DCEs["CSPT"], "XRP-" + DCEs["CSPT"].CurrentSecondaryCurrency, this);
-            SGForm.Show();
-            SpreadGraph_Dict.TryAdd("CSPT-XRP-" + DCEs["CSPT"].CurrentSecondaryCurrency, SGForm);
         }
 
         private void IR_Reset_Button_Click(object sender, EventArgs e) {
