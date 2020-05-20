@@ -30,17 +30,20 @@
             this.toolbarFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.Slack_label = new System.Windows.Forms.Label();
+            this.Slack_checkBox = new System.Windows.Forms.CheckBox();
+            this.slackToken_textBox = new System.Windows.Forms.TextBox();
             this.slackDefaultNameLabel = new System.Windows.Forms.Label();
+            this.slackNameChangeLabel = new System.Windows.Forms.Label();
             this.slackDefaultNameTextBox = new System.Windows.Forms.TextBox();
             this.slackNameChangeCheckBox = new System.Windows.Forms.CheckBox();
-            this.slackNameChangeLabel = new System.Windows.Forms.Label();
+            this.UITimerFreq_maskedTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.UITimerFreq_label = new System.Windows.Forms.Label();
             this.OB_checkBox = new System.Windows.Forms.CheckBox();
             this.OB_label = new System.Windows.Forms.Label();
-            this.slackToken_textBox = new System.Windows.Forms.TextBox();
             this.flashForm_checkBox = new System.Windows.Forms.CheckBox();
             this.flashForm_label = new System.Windows.Forms.Label();
-            this.Slack_checkBox = new System.Windows.Forms.CheckBox();
-            this.Slack_label = new System.Windows.Forms.Label();
             this.ExportSummarised_Checkbox = new System.Windows.Forms.CheckBox();
             this.ExportSummarised_Label = new System.Windows.Forms.Label();
             this.Help_Button = new System.Windows.Forms.Button();
@@ -90,22 +93,6 @@
             this.BTCM_XBT_Label1 = new System.Windows.Forms.Label();
             this.BTCM_BCH_Label1 = new System.Windows.Forms.Label();
             this.BTCM_LTC_Label1 = new System.Windows.Forms.Label();
-            this.CSPT_GroupBox = new System.Windows.Forms.GroupBox();
-            this.CSPT_XRP_Label2 = new System.Windows.Forms.Label();
-            this.CSPT_XRP_Label3 = new System.Windows.Forms.Label();
-            this.CSPT_XRP_Label1 = new System.Windows.Forms.Label();
-            this.CSPT_XBT_Label2 = new System.Windows.Forms.Label();
-            this.CSPT_ETH_Label2 = new System.Windows.Forms.Label();
-            this.CSPT_EOS_Label2 = new System.Windows.Forms.Label();
-            this.CSPT_LTC_Label2 = new System.Windows.Forms.Label();
-            this.CSPT_LTC_Label3 = new System.Windows.Forms.Label();
-            this.CSPT_EOS_Label3 = new System.Windows.Forms.Label();
-            this.CSPT_ETH_Label3 = new System.Windows.Forms.Label();
-            this.CSPT_XBT_Label3 = new System.Windows.Forms.Label();
-            this.CSPT_LTC_Label1 = new System.Windows.Forms.Label();
-            this.CSPT_EOS_Label1 = new System.Windows.Forms.Label();
-            this.CSPT_ETH_Label1 = new System.Windows.Forms.Label();
-            this.CSPT_XBT_Label1 = new System.Windows.Forms.Label();
             this.BFX_GroupBox = new System.Windows.Forms.GroupBox();
             this.BFX_USDT_Label2 = new System.Windows.Forms.Label();
             this.BFX_USDT_Label3 = new System.Windows.Forms.Label();
@@ -200,7 +187,6 @@
             this.IR_ZRX_Label1 = new System.Windows.Forms.Label();
             this.IR_OMG_Label2 = new System.Windows.Forms.Label();
             this.IR_OMG_Label3 = new System.Windows.Forms.Label();
-            this.IR_XRP_Label3 = new System.Windows.Forms.Label();
             this.IR_OMG_Label1 = new System.Windows.Forms.Label();
             this.IR_XRP_Label2 = new System.Windows.Forms.Label();
             this.IR_ZRX_Label3 = new System.Windows.Forms.Label();
@@ -221,6 +207,7 @@
             this.IR_BCH_Label1 = new System.Windows.Forms.Label();
             this.IR_ETH_Label1 = new System.Windows.Forms.Label();
             this.IR_XBT_Label1 = new System.Windows.Forms.Label();
+            this.IR_XRP_Label3 = new System.Windows.Forms.Label();
             this.GDAX_GroupBox = new System.Windows.Forms.GroupBox();
             this.GDAX_ETC_Label2 = new System.Windows.Forms.Label();
             this.GDAX_ETC_Label3 = new System.Windows.Forms.Label();
@@ -274,20 +261,21 @@
             this.CryptoChooser_ComboBox = new System.Windows.Forms.ComboBox();
             this.BlinkStickBW = new System.ComponentModel.BackgroundWorker();
             this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
-            this.UITimerFreq_label = new System.Windows.Forms.Label();
-            this.UITimerFreq_maskedTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.BAR_XBT_Label1 = new System.Windows.Forms.Label();
+            this.BAR_XBT_Label3 = new System.Windows.Forms.Label();
+            this.BAR_XBT_Label2 = new System.Windows.Forms.Label();
+            this.BAR_GroupBox = new System.Windows.Forms.GroupBox();
             this.Settings.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
             this.BTCM_GroupBox.SuspendLayout();
-            this.CSPT_GroupBox.SuspendLayout();
             this.BFX_GroupBox.SuspendLayout();
             this.fiat_GroupBox.SuspendLayout();
             this.IR_GroupBox.SuspendLayout();
             this.GDAX_GroupBox.SuspendLayout();
             this.OTCHelper.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.BAR_GroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // refreshFrequencyTextbox
@@ -345,6 +333,55 @@
             this.Settings.Size = new System.Drawing.Size(585, 843);
             this.Settings.TabIndex = 4;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.BackColor = System.Drawing.Color.Gainsboro;
+            this.groupBox1.Controls.Add(this.Slack_label);
+            this.groupBox1.Controls.Add(this.Slack_checkBox);
+            this.groupBox1.Controls.Add(this.slackToken_textBox);
+            this.groupBox1.Controls.Add(this.slackDefaultNameLabel);
+            this.groupBox1.Controls.Add(this.slackNameChangeLabel);
+            this.groupBox1.Controls.Add(this.slackDefaultNameTextBox);
+            this.groupBox1.Controls.Add(this.slackNameChangeCheckBox);
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Location = new System.Drawing.Point(76, 251);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(461, 222);
+            this.groupBox1.TabIndex = 32;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Slack";
+            // 
+            // Slack_label
+            // 
+            this.Slack_label.AccessibleName = "";
+            this.Slack_label.AutoSize = true;
+            this.Slack_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.Slack_label.Location = new System.Drawing.Point(16, 31);
+            this.Slack_label.Name = "Slack_label";
+            this.Slack_label.Size = new System.Drawing.Size(263, 52);
+            this.Slack_label.TabIndex = 19;
+            this.Slack_label.Text = "Slack integration - will set your profile emoji depending \r\non whether we\'re beat" +
+    "ing BTC Markets or not.\r\n\r\nEnter your Slack xoxp token below (required):";
+            // 
+            // Slack_checkBox
+            // 
+            this.Slack_checkBox.AccessibleName = "";
+            this.Slack_checkBox.AutoSize = true;
+            this.Slack_checkBox.Location = new System.Drawing.Point(408, 31);
+            this.Slack_checkBox.Name = "Slack_checkBox";
+            this.Slack_checkBox.Size = new System.Drawing.Size(15, 14);
+            this.Slack_checkBox.TabIndex = 20;
+            this.Slack_checkBox.UseVisualStyleBackColor = true;
+            this.Slack_checkBox.CheckedChanged += new System.EventHandler(this.Slack_checkBox_CheckedChanged);
+            // 
+            // slackToken_textBox
+            // 
+            this.slackToken_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.slackToken_textBox.Location = new System.Drawing.Point(19, 90);
+            this.slackToken_textBox.Name = "slackToken_textBox";
+            this.slackToken_textBox.Size = new System.Drawing.Size(404, 20);
+            this.slackToken_textBox.TabIndex = 23;
+            // 
             // slackDefaultNameLabel
             // 
             this.slackDefaultNameLabel.AccessibleName = "";
@@ -357,6 +394,17 @@
             this.slackDefaultNameLabel.Text = "Enter your normal Slack display name here:";
             this.IRTickerTT.SetToolTip(this.slackDefaultNameLabel, "Please leave this populated even if you decide to disable the name integration so" +
         " the app knows what to set you back to");
+            // 
+            // slackNameChangeLabel
+            // 
+            this.slackNameChangeLabel.AccessibleName = "";
+            this.slackNameChangeLabel.AutoSize = true;
+            this.slackNameChangeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.slackNameChangeLabel.Location = new System.Drawing.Point(16, 128);
+            this.slackNameChangeLabel.Name = "slackNameChangeLabel";
+            this.slackNameChangeLabel.Size = new System.Drawing.Size(331, 13);
+            this.slackNameChangeLabel.TabIndex = 26;
+            this.slackNameChangeLabel.Text = "Change Slack username to have BTC-AUD price midpoint appended";
             // 
             // slackDefaultNameTextBox
             // 
@@ -377,16 +425,24 @@
             this.slackNameChangeCheckBox.UseVisualStyleBackColor = true;
             this.slackNameChangeCheckBox.CheckedChanged += new System.EventHandler(this.slackNameChangeCheckBox_CheckedChanged);
             // 
-            // slackNameChangeLabel
+            // UITimerFreq_maskedTextBox
             // 
-            this.slackNameChangeLabel.AccessibleName = "";
-            this.slackNameChangeLabel.AutoSize = true;
-            this.slackNameChangeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.slackNameChangeLabel.Location = new System.Drawing.Point(16, 128);
-            this.slackNameChangeLabel.Name = "slackNameChangeLabel";
-            this.slackNameChangeLabel.Size = new System.Drawing.Size(331, 13);
-            this.slackNameChangeLabel.TabIndex = 26;
-            this.slackNameChangeLabel.Text = "Change Slack username to have BTC-AUD price midpoint appended";
+            this.UITimerFreq_maskedTextBox.Location = new System.Drawing.Point(405, 599);
+            this.UITimerFreq_maskedTextBox.Mask = "0000";
+            this.UITimerFreq_maskedTextBox.Name = "UITimerFreq_maskedTextBox";
+            this.UITimerFreq_maskedTextBox.PromptChar = ' ';
+            this.UITimerFreq_maskedTextBox.Size = new System.Drawing.Size(100, 20);
+            this.UITimerFreq_maskedTextBox.TabIndex = 31;
+            // 
+            // UITimerFreq_label
+            // 
+            this.UITimerFreq_label.AccessibleName = "";
+            this.UITimerFreq_label.AutoSize = true;
+            this.UITimerFreq_label.Location = new System.Drawing.Point(73, 602);
+            this.UITimerFreq_label.Name = "UITimerFreq_label";
+            this.UITimerFreq_label.Size = new System.Drawing.Size(252, 13);
+            this.UITimerFreq_label.TabIndex = 30;
+            this.UITimerFreq_label.Text = "How often to update the UI get for BTC on IR in ms:";
             // 
             // OB_checkBox
             // 
@@ -410,14 +466,6 @@
             this.OB_label.Text = "Show real time BTC-AUD orderbook for IR?\r\nRequires app restart.  This was mainly " +
     "used for debugging, so it\'s pretty messy";
             // 
-            // slackToken_textBox
-            // 
-            this.slackToken_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.slackToken_textBox.Location = new System.Drawing.Point(19, 90);
-            this.slackToken_textBox.Name = "slackToken_textBox";
-            this.slackToken_textBox.Size = new System.Drawing.Size(404, 20);
-            this.slackToken_textBox.TabIndex = 23;
-            // 
             // flashForm_checkBox
             // 
             this.flashForm_checkBox.AccessibleName = "";
@@ -438,29 +486,6 @@
             this.flashForm_label.Size = new System.Drawing.Size(198, 26);
             this.flashForm_label.TabIndex = 21;
             this.flashForm_label.Text = "Flash the window if IR resets (only useful\r\nfor debugging)";
-            // 
-            // Slack_checkBox
-            // 
-            this.Slack_checkBox.AccessibleName = "";
-            this.Slack_checkBox.AutoSize = true;
-            this.Slack_checkBox.Location = new System.Drawing.Point(408, 31);
-            this.Slack_checkBox.Name = "Slack_checkBox";
-            this.Slack_checkBox.Size = new System.Drawing.Size(15, 14);
-            this.Slack_checkBox.TabIndex = 20;
-            this.Slack_checkBox.UseVisualStyleBackColor = true;
-            this.Slack_checkBox.CheckedChanged += new System.EventHandler(this.Slack_checkBox_CheckedChanged);
-            // 
-            // Slack_label
-            // 
-            this.Slack_label.AccessibleName = "";
-            this.Slack_label.AutoSize = true;
-            this.Slack_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.Slack_label.Location = new System.Drawing.Point(16, 31);
-            this.Slack_label.Name = "Slack_label";
-            this.Slack_label.Size = new System.Drawing.Size(263, 52);
-            this.Slack_label.TabIndex = 19;
-            this.Slack_label.Text = "Slack integration - will set your profile emoji depending \r\non whether we\'re beat" +
-    "ing BTC Markets or not.\r\n\r\nEnter your Slack xoxp token below (required):";
             // 
             // ExportSummarised_Checkbox
             // 
@@ -563,7 +588,7 @@
             this.Main.BackColor = System.Drawing.Color.White;
             this.Main.Controls.Add(this.fiatRefresh_checkBox);
             this.Main.Controls.Add(this.BTCM_GroupBox);
-            this.Main.Controls.Add(this.CSPT_GroupBox);
+            this.Main.Controls.Add(this.BAR_GroupBox);
             this.Main.Controls.Add(this.BFX_GroupBox);
             this.Main.Controls.Add(this.fiat_GroupBox);
             this.Main.Controls.Add(this.SettingsButton);
@@ -1086,219 +1111,6 @@
             this.BTCM_LTC_Label1.TabIndex = 11;
             this.BTCM_LTC_Label1.Text = "LTC:";
             // 
-            // CSPT_GroupBox
-            // 
-            this.CSPT_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.coinspot_faded2;
-            this.CSPT_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.CSPT_GroupBox.Controls.Add(this.CSPT_XRP_Label2);
-            this.CSPT_GroupBox.Controls.Add(this.CSPT_XRP_Label3);
-            this.CSPT_GroupBox.Controls.Add(this.CSPT_XRP_Label1);
-            this.CSPT_GroupBox.Controls.Add(this.CSPT_XBT_Label2);
-            this.CSPT_GroupBox.Controls.Add(this.CSPT_ETH_Label2);
-            this.CSPT_GroupBox.Controls.Add(this.CSPT_EOS_Label2);
-            this.CSPT_GroupBox.Controls.Add(this.CSPT_LTC_Label2);
-            this.CSPT_GroupBox.Controls.Add(this.CSPT_LTC_Label3);
-            this.CSPT_GroupBox.Controls.Add(this.CSPT_EOS_Label3);
-            this.CSPT_GroupBox.Controls.Add(this.CSPT_ETH_Label3);
-            this.CSPT_GroupBox.Controls.Add(this.CSPT_XBT_Label3);
-            this.CSPT_GroupBox.Controls.Add(this.CSPT_LTC_Label1);
-            this.CSPT_GroupBox.Controls.Add(this.CSPT_EOS_Label1);
-            this.CSPT_GroupBox.Controls.Add(this.CSPT_ETH_Label1);
-            this.CSPT_GroupBox.Controls.Add(this.CSPT_XBT_Label1);
-            this.CSPT_GroupBox.Cursor = System.Windows.Forms.Cursors.Default;
-            this.CSPT_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.CSPT_GroupBox.Location = new System.Drawing.Point(305, 710);
-            this.CSPT_GroupBox.Name = "CSPT_GroupBox";
-            this.CSPT_GroupBox.Size = new System.Drawing.Size(262, 123);
-            this.CSPT_GroupBox.TabIndex = 16;
-            this.CSPT_GroupBox.TabStop = false;
-            this.CSPT_GroupBox.Text = "CoinSpot";
-            // 
-            // CSPT_XRP_Label2
-            // 
-            this.CSPT_XRP_Label2.AutoSize = true;
-            this.CSPT_XRP_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.CSPT_XRP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_XRP_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CSPT_XRP_Label2.Location = new System.Drawing.Point(53, 43);
-            this.CSPT_XRP_Label2.Name = "CSPT_XRP_Label2";
-            this.CSPT_XRP_Label2.Size = new System.Drawing.Size(0, 13);
-            this.CSPT_XRP_Label2.TabIndex = 17;
-            this.CSPT_XRP_Label2.Tag = "CSPT";
-            // 
-            // CSPT_XRP_Label3
-            // 
-            this.CSPT_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.CSPT_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.CSPT_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_XRP_Label3.Location = new System.Drawing.Point(118, 43);
-            this.CSPT_XRP_Label3.Name = "CSPT_XRP_Label3";
-            this.CSPT_XRP_Label3.Size = new System.Drawing.Size(134, 13);
-            this.CSPT_XRP_Label3.TabIndex = 18;
-            this.CSPT_XRP_Label3.Tag = "";
-            this.CSPT_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.CSPT_XRP_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_XRP_Label3_MouseDoubleClick);
-            // 
-            // CSPT_XRP_Label1
-            // 
-            this.CSPT_XRP_Label1.AutoSize = true;
-            this.CSPT_XRP_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.CSPT_XRP_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_XRP_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CSPT_XRP_Label1.Location = new System.Drawing.Point(6, 43);
-            this.CSPT_XRP_Label1.Name = "CSPT_XRP_Label1";
-            this.CSPT_XRP_Label1.Size = new System.Drawing.Size(36, 13);
-            this.CSPT_XRP_Label1.TabIndex = 16;
-            this.CSPT_XRP_Label1.Text = "XRP:";
-            // 
-            // CSPT_XBT_Label2
-            // 
-            this.CSPT_XBT_Label2.AutoSize = true;
-            this.CSPT_XBT_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.CSPT_XBT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_XBT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CSPT_XBT_Label2.Location = new System.Drawing.Point(53, 23);
-            this.CSPT_XBT_Label2.Name = "CSPT_XBT_Label2";
-            this.CSPT_XBT_Label2.Size = new System.Drawing.Size(0, 13);
-            this.CSPT_XBT_Label2.TabIndex = 4;
-            this.CSPT_XBT_Label2.Tag = "CSPT";
-            // 
-            // CSPT_ETH_Label2
-            // 
-            this.CSPT_ETH_Label2.AutoSize = true;
-            this.CSPT_ETH_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.CSPT_ETH_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_ETH_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CSPT_ETH_Label2.Location = new System.Drawing.Point(53, 63);
-            this.CSPT_ETH_Label2.Name = "CSPT_ETH_Label2";
-            this.CSPT_ETH_Label2.Size = new System.Drawing.Size(0, 13);
-            this.CSPT_ETH_Label2.TabIndex = 5;
-            this.CSPT_ETH_Label2.Tag = "CSPT";
-            // 
-            // CSPT_EOS_Label2
-            // 
-            this.CSPT_EOS_Label2.AutoSize = true;
-            this.CSPT_EOS_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.CSPT_EOS_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_EOS_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CSPT_EOS_Label2.Location = new System.Drawing.Point(53, 83);
-            this.CSPT_EOS_Label2.Name = "CSPT_EOS_Label2";
-            this.CSPT_EOS_Label2.Size = new System.Drawing.Size(0, 13);
-            this.CSPT_EOS_Label2.TabIndex = 6;
-            this.CSPT_EOS_Label2.Tag = "CSPT";
-            // 
-            // CSPT_LTC_Label2
-            // 
-            this.CSPT_LTC_Label2.AutoSize = true;
-            this.CSPT_LTC_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.CSPT_LTC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_LTC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CSPT_LTC_Label2.Location = new System.Drawing.Point(53, 103);
-            this.CSPT_LTC_Label2.Name = "CSPT_LTC_Label2";
-            this.CSPT_LTC_Label2.Size = new System.Drawing.Size(0, 13);
-            this.CSPT_LTC_Label2.TabIndex = 7;
-            this.CSPT_LTC_Label2.Tag = "CSPT";
-            // 
-            // CSPT_LTC_Label3
-            // 
-            this.CSPT_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.CSPT_LTC_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.CSPT_LTC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_LTC_Label3.Location = new System.Drawing.Point(118, 103);
-            this.CSPT_LTC_Label3.Name = "CSPT_LTC_Label3";
-            this.CSPT_LTC_Label3.Size = new System.Drawing.Size(134, 13);
-            this.CSPT_LTC_Label3.TabIndex = 11;
-            this.CSPT_LTC_Label3.Tag = "";
-            this.CSPT_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.CSPT_LTC_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_LTC_Label3_MouseDoubleClick);
-            // 
-            // CSPT_EOS_Label3
-            // 
-            this.CSPT_EOS_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.CSPT_EOS_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.CSPT_EOS_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_EOS_Label3.Location = new System.Drawing.Point(118, 83);
-            this.CSPT_EOS_Label3.Name = "CSPT_EOS_Label3";
-            this.CSPT_EOS_Label3.Size = new System.Drawing.Size(134, 13);
-            this.CSPT_EOS_Label3.TabIndex = 10;
-            this.CSPT_EOS_Label3.Tag = "";
-            this.CSPT_EOS_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.CSPT_EOS_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_DOGE_Label3_MouseDoubleClick);
-            // 
-            // CSPT_ETH_Label3
-            // 
-            this.CSPT_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.CSPT_ETH_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.CSPT_ETH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_ETH_Label3.Location = new System.Drawing.Point(118, 63);
-            this.CSPT_ETH_Label3.Name = "CSPT_ETH_Label3";
-            this.CSPT_ETH_Label3.Size = new System.Drawing.Size(134, 13);
-            this.CSPT_ETH_Label3.TabIndex = 9;
-            this.CSPT_ETH_Label3.Tag = "";
-            this.CSPT_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.CSPT_ETH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_ETH_Label3_MouseDoubleClick);
-            // 
-            // CSPT_XBT_Label3
-            // 
-            this.CSPT_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.CSPT_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.CSPT_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_XBT_Label3.Location = new System.Drawing.Point(118, 23);
-            this.CSPT_XBT_Label3.Name = "CSPT_XBT_Label3";
-            this.CSPT_XBT_Label3.Size = new System.Drawing.Size(134, 13);
-            this.CSPT_XBT_Label3.TabIndex = 8;
-            this.CSPT_XBT_Label3.Tag = "";
-            this.CSPT_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.CSPT_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_XBT_Label3_MouseDoubleClick);
-            // 
-            // CSPT_LTC_Label1
-            // 
-            this.CSPT_LTC_Label1.AutoSize = true;
-            this.CSPT_LTC_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.CSPT_LTC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_LTC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CSPT_LTC_Label1.Location = new System.Drawing.Point(6, 103);
-            this.CSPT_LTC_Label1.Name = "CSPT_LTC_Label1";
-            this.CSPT_LTC_Label1.Size = new System.Drawing.Size(34, 13);
-            this.CSPT_LTC_Label1.TabIndex = 3;
-            this.CSPT_LTC_Label1.Text = "LTC:";
-            // 
-            // CSPT_EOS_Label1
-            // 
-            this.CSPT_EOS_Label1.AutoSize = true;
-            this.CSPT_EOS_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.CSPT_EOS_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_EOS_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CSPT_EOS_Label1.Location = new System.Drawing.Point(6, 83);
-            this.CSPT_EOS_Label1.Name = "CSPT_EOS_Label1";
-            this.CSPT_EOS_Label1.Size = new System.Drawing.Size(36, 13);
-            this.CSPT_EOS_Label1.TabIndex = 2;
-            this.CSPT_EOS_Label1.Text = "EOS:";
-            // 
-            // CSPT_ETH_Label1
-            // 
-            this.CSPT_ETH_Label1.AutoSize = true;
-            this.CSPT_ETH_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.CSPT_ETH_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_ETH_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CSPT_ETH_Label1.Location = new System.Drawing.Point(6, 63);
-            this.CSPT_ETH_Label1.Name = "CSPT_ETH_Label1";
-            this.CSPT_ETH_Label1.Size = new System.Drawing.Size(36, 13);
-            this.CSPT_ETH_Label1.TabIndex = 1;
-            this.CSPT_ETH_Label1.Text = "ETH:";
-            // 
-            // CSPT_XBT_Label1
-            // 
-            this.CSPT_XBT_Label1.AutoSize = true;
-            this.CSPT_XBT_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.CSPT_XBT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CSPT_XBT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CSPT_XBT_Label1.Location = new System.Drawing.Point(6, 23);
-            this.CSPT_XBT_Label1.Name = "CSPT_XBT_Label1";
-            this.CSPT_XBT_Label1.Size = new System.Drawing.Size(35, 13);
-            this.CSPT_XBT_Label1.TabIndex = 0;
-            this.CSPT_XBT_Label1.Text = "BTC:";
-            // 
             // BFX_GroupBox
             // 
             this.BFX_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.bfx_faded;
@@ -1354,7 +1166,7 @@
             this.BFX_GroupBox.Controls.Add(this.BFX_AvgPrice_Label);
             this.BFX_GroupBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.BFX_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.BFX_GroupBox.Location = new System.Drawing.Point(305, 319);
+            this.BFX_GroupBox.Location = new System.Drawing.Point(305, 383);
             this.BFX_GroupBox.Name = "BFX_GroupBox";
             this.BFX_GroupBox.Size = new System.Drawing.Size(262, 380);
             this.BFX_GroupBox.TabIndex = 9;
@@ -2072,7 +1884,7 @@
             // SettingsButton
             // 
             this.SettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsButton.Location = new System.Drawing.Point(207, 810);
+            this.SettingsButton.Location = new System.Drawing.Point(492, 806);
             this.SettingsButton.Name = "SettingsButton";
             this.SettingsButton.Size = new System.Drawing.Size(75, 23);
             this.SettingsButton.TabIndex = 2;
@@ -2547,19 +2359,6 @@
             this.IR_OMG_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.IR_OMG_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.IR_OMG_Label3_MouseDoubleClick);
             // 
-            // IR_XRP_Label3
-            // 
-            this.IR_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.IR_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IR_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_XRP_Label3.Location = new System.Drawing.Point(119, 49);
-            this.IR_XRP_Label3.Name = "IR_XRP_Label3";
-            this.IR_XRP_Label3.Size = new System.Drawing.Size(134, 13);
-            this.IR_XRP_Label3.TabIndex = 21;
-            this.IR_XRP_Label3.Tag = "";
-            this.IR_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.IR_XRP_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.IR_XRP_Label3_MouseDoubleClick);
-            // 
             // IR_OMG_Label1
             // 
             this.IR_OMG_Label1.AutoSize = true;
@@ -2822,6 +2621,19 @@
             this.IR_XBT_Label1.TabIndex = 0;
             this.IR_XBT_Label1.Text = "BTC:";
             this.IR_XBT_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IR_XRP_Label3
+            // 
+            this.IR_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.IR_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_XRP_Label3.Location = new System.Drawing.Point(119, 49);
+            this.IR_XRP_Label3.Name = "IR_XRP_Label3";
+            this.IR_XRP_Label3.Size = new System.Drawing.Size(134, 13);
+            this.IR_XRP_Label3.TabIndex = 21;
+            this.IR_XRP_Label3.Tag = "";
+            this.IR_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.IR_XRP_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.IR_XRP_Label3_MouseDoubleClick);
             // 
             // GDAX_GroupBox
             // 
@@ -3434,50 +3246,66 @@
             // 
             this.BlinkStickWhite_Thread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickWhite_Thread_DoWork);
             // 
-            // UITimerFreq_label
+            // BAR_XBT_Label1
             // 
-            this.UITimerFreq_label.AccessibleName = "";
-            this.UITimerFreq_label.AutoSize = true;
-            this.UITimerFreq_label.Location = new System.Drawing.Point(73, 602);
-            this.UITimerFreq_label.Name = "UITimerFreq_label";
-            this.UITimerFreq_label.Size = new System.Drawing.Size(252, 13);
-            this.UITimerFreq_label.TabIndex = 30;
-            this.UITimerFreq_label.Text = "How often to update the UI get for BTC on IR in ms:";
+            this.BAR_XBT_Label1.AutoSize = true;
+            this.BAR_XBT_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BAR_XBT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_XBT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BAR_XBT_Label1.Location = new System.Drawing.Point(6, 23);
+            this.BAR_XBT_Label1.Name = "BAR_XBT_Label1";
+            this.BAR_XBT_Label1.Size = new System.Drawing.Size(35, 13);
+            this.BAR_XBT_Label1.TabIndex = 0;
+            this.BAR_XBT_Label1.Text = "BTC:";
             // 
-            // UITimerFreq_maskedTextBox
+            // BAR_XBT_Label3
             // 
-            this.UITimerFreq_maskedTextBox.Location = new System.Drawing.Point(405, 599);
-            this.UITimerFreq_maskedTextBox.Mask = "0000";
-            this.UITimerFreq_maskedTextBox.Name = "UITimerFreq_maskedTextBox";
-            this.UITimerFreq_maskedTextBox.PromptChar = ' ';
-            this.UITimerFreq_maskedTextBox.Size = new System.Drawing.Size(100, 20);
-            this.UITimerFreq_maskedTextBox.TabIndex = 31;
+            this.BAR_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BAR_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BAR_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_XBT_Label3.Location = new System.Drawing.Point(119, 20);
+            this.BAR_XBT_Label3.Name = "BAR_XBT_Label3";
+            this.BAR_XBT_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BAR_XBT_Label3.TabIndex = 8;
+            this.BAR_XBT_Label3.Tag = "";
+            this.BAR_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BAR_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_XBT_Label3_MouseDoubleClick);
             // 
-            // groupBox1
+            // BAR_XBT_Label2
             // 
-            this.groupBox1.BackColor = System.Drawing.Color.Gainsboro;
-            this.groupBox1.Controls.Add(this.Slack_label);
-            this.groupBox1.Controls.Add(this.Slack_checkBox);
-            this.groupBox1.Controls.Add(this.slackToken_textBox);
-            this.groupBox1.Controls.Add(this.slackDefaultNameLabel);
-            this.groupBox1.Controls.Add(this.slackNameChangeLabel);
-            this.groupBox1.Controls.Add(this.slackDefaultNameTextBox);
-            this.groupBox1.Controls.Add(this.slackNameChangeCheckBox);
-            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(76, 251);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(461, 222);
-            this.groupBox1.TabIndex = 32;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Slack";
+            this.BAR_XBT_Label2.AutoSize = true;
+            this.BAR_XBT_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BAR_XBT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_XBT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BAR_XBT_Label2.Location = new System.Drawing.Point(53, 23);
+            this.BAR_XBT_Label2.Name = "BAR_XBT_Label2";
+            this.BAR_XBT_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BAR_XBT_Label2.TabIndex = 4;
+            this.BAR_XBT_Label2.Tag = "BAR";
+            // 
+            // BAR_GroupBox
+            // 
+            this.BAR_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.coinspot_faded2;
+            this.BAR_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label2);
+            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label3);
+            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label1);
+            this.BAR_GroupBox.Cursor = System.Windows.Forms.Cursors.Default;
+            this.BAR_GroupBox.ForeColor = System.Drawing.Color.Gray;
+            this.BAR_GroupBox.Location = new System.Drawing.Point(305, 316);
+            this.BAR_GroupBox.Name = "BAR_GroupBox";
+            this.BAR_GroupBox.Size = new System.Drawing.Size(262, 50);
+            this.BAR_GroupBox.TabIndex = 16;
+            this.BAR_GroupBox.TabStop = false;
+            this.BAR_GroupBox.Text = "Bitaroo";
             // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 841);
-            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Main);
+            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Settings);
             this.Controls.Add(this.OTCHelper);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -3492,13 +3320,13 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.IRTicker_Closing);
             this.Settings.ResumeLayout(false);
             this.Settings.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.LoadingPanel.ResumeLayout(false);
             this.Main.ResumeLayout(false);
             this.Main.PerformLayout();
             this.BTCM_GroupBox.ResumeLayout(false);
             this.BTCM_GroupBox.PerformLayout();
-            this.CSPT_GroupBox.ResumeLayout(false);
-            this.CSPT_GroupBox.PerformLayout();
             this.BFX_GroupBox.ResumeLayout(false);
             this.BFX_GroupBox.PerformLayout();
             this.fiat_GroupBox.ResumeLayout(false);
@@ -3509,8 +3337,8 @@
             this.GDAX_GroupBox.PerformLayout();
             this.OTCHelper.ResumeLayout(false);
             this.OTCHelper.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.BAR_GroupBox.ResumeLayout(false);
+            this.BAR_GroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -3611,19 +3439,6 @@
         private System.Windows.Forms.Label IR_AvgPrice_Label;
         private System.Windows.Forms.CheckBox EnableGDAXLevel3_CheckBox;
         private System.Windows.Forms.Label EnableGDAXLevel3;
-        private System.Windows.Forms.GroupBox CSPT_GroupBox;
-        private System.Windows.Forms.Label CSPT_XBT_Label2;
-        private System.Windows.Forms.Label CSPT_ETH_Label2;
-        private System.Windows.Forms.Label CSPT_EOS_Label2;
-        private System.Windows.Forms.Label CSPT_LTC_Label2;
-        private System.Windows.Forms.Label CSPT_LTC_Label3;
-        private System.Windows.Forms.Label CSPT_EOS_Label3;
-        private System.Windows.Forms.Label CSPT_ETH_Label3;
-        private System.Windows.Forms.Label CSPT_XBT_Label3;
-        private System.Windows.Forms.Label CSPT_LTC_Label1;
-        private System.Windows.Forms.Label CSPT_EOS_Label1;
-        private System.Windows.Forms.Label CSPT_ETH_Label1;
-        private System.Windows.Forms.Label CSPT_XBT_Label1;
         private System.Windows.Forms.ToolTip IRTickerTT;
         private System.Windows.Forms.Label BFX_XRP_Label2;
         private System.Windows.Forms.Label BFX_XRP_Label3;
@@ -3655,9 +3470,6 @@
         private System.Windows.Forms.Label BTCM_OMG_Label2;
         private System.Windows.Forms.Label BTCM_OMG_Label3;
         private System.Windows.Forms.Label BTCM_OMG_Label1;
-        private System.Windows.Forms.Label CSPT_XRP_Label2;
-        private System.Windows.Forms.Label CSPT_XRP_Label3;
-        private System.Windows.Forms.Label CSPT_XRP_Label1;
         private System.Windows.Forms.Label BFX_ZRX_Label2;
         private System.Windows.Forms.Label BFX_ZRX_Label1;
         private System.Windows.Forms.Label BFX_OMG_Label2;
@@ -3769,6 +3581,10 @@
         private System.Windows.Forms.MaskedTextBox UITimerFreq_maskedTextBox;
         private System.Windows.Forms.Label UITimerFreq_label;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox BAR_GroupBox;
+        private System.Windows.Forms.Label BAR_XBT_Label2;
+        private System.Windows.Forms.Label BAR_XBT_Label3;
+        private System.Windows.Forms.Label BAR_XBT_Label1;
     }
 }
 

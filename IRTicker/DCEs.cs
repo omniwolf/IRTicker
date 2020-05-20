@@ -917,39 +917,44 @@ namespace IRTicker {
             public string timestamp { get; set; }
         }
 
-        public class Crypto_CSPT {
-            public string bid { get; set; }
-            public string ask { get; set; }
-            public string last { get; set; }
-            public string ticker { get; set; }  // manually set as the ticker, eg btc or eth
+        public class DailyStats_BAR {
+            public string lastPrice { get; set; }
+            public string high { get; set; }
+            public string low { get; set; }
+            public string volSrc { get; set; }
+            public string volDst { get; set; }
+            public string change { get; set; }
+            public string changePercentage { get; set; }
         }
 
-        public class Prices_CSPT {
-            public Crypto_CSPT btc { get; set; }
-            public Crypto_CSPT ltc { get; set; }
-            public Crypto_CSPT eth { get; set; }
-            public Crypto_CSPT xrp { get; set; }
-            public Crypto_CSPT eos { get; set; }
-
-            // create a list of the coins so we can iterate through them in the main code.
-            public List<Crypto_CSPT> cryptoList = new List<Crypto_CSPT>();
-            public void CreateCryptoList() {
-                cryptoList.Add(btc);
-                cryptoList.Add(ltc);
-                cryptoList.Add(eos);
-                cryptoList.Add(eth);
-                cryptoList.Add(xrp);
-                btc.ticker = "XBT";
-                ltc.ticker = "LTC";
-                eos.ticker = "EOS";
-                eth.ticker = "ETH";
-                xrp.ticker = "XRP";
-            }
+        public class Buy_BAR {
+            public string price { get; set; }
+            public string amount { get; set; }
         }
 
-        public class MarketSummary_CSPT {
-            public string status { get; set; }
-            public Prices_CSPT prices { get; set; }
+        public class Sell_BAR {
+            public string price { get; set; }
+            public string amount { get; set; }
+        }
+
+        public class OrderBook_BAR {
+            public IList<Buy_BAR> buy { get; set; }
+            public IList<Sell_BAR> sell { get; set; }
+        }
+
+        public class LastTrade_BAR {
+            public int tradeId { get; set; }
+            public string price { get; set; }
+            public string amount { get; set; }
+            public string takerSide { get; set; }
+            public object timestamp { get; set; }
+        }
+
+        public class MarketSummary_BAR {
+            public string pairSymbol { get; set; }
+            public DailyStats_BAR dailyStats { get; set; }
+            public OrderBook_BAR orderBook { get; set; }
+            public IList<LastTrade_BAR> lastTrades { get; set; }
         }
 
         public class Order {

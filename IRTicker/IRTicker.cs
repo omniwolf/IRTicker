@@ -73,7 +73,7 @@ namespace IRTicker {
                 { "BTCM" },
                 { "GDAX" },
                 { "BFX" },
-                { "CSPT" }
+                { "BAR" }
             };
 
             DCEs = new Dictionary<string, DCE> {
@@ -83,13 +83,13 @@ namespace IRTicker {
                 { "BTCM", new DCE("BTCM", "BTC Markets") },
                 { "GDAX", new DCE("GDAX", "Coinbase Pro") },
                 { "BFX", new DCE("BFX", "BitFinex") },
-                { "CSPT", new DCE("CSPT", "CoinSpot") }
+                { "BAR", new DCE("BAR", "Bitaroo") }
             };
 
             DCEs["IR"].CurrencyCombo = "fiat";
             IR_CurrencyBox.SelectedIndex = 1;
 
-            // BTCM, BFX, and CSPT have no APIs that let you download the currency pairs, so just set them manually
+            // BTCM, BFX, and BAR have no APIs that let you download the currency pairs, so just set them manually
             // Actually I'm not sure about the above comment, i think some of them do?  But the main issue is most of them have
             // currencies that we don't want to deal with, so we set the currencies manually here.  IR we want all currencies, so
             // we use the API.  This is probably not really smart, as the UI is static, so when new currencies turn up IR breaks.  meh
@@ -103,10 +103,10 @@ namespace IRTicker {
             DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\",\"XRP\",\"XLM\",\"REP\",\"ETC\"";
             DCEs["GDAX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
-            DCEs["CSPT"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"EOS\",\"LTC\",\"XRP\"";
-            DCEs["CSPT"].SecondaryCurrencyCodes = "\"AUD\"";
-            DCEs["CSPT"].HasStaticData = true;  // we don't poll for static data, so just say we have it.
-            DCEs["CSPT"].socketsAlive = true;  // coinspot has no sockets, so just leave this as true so everything is happy.
+            DCEs["BAR"].PrimaryCurrencyCodes = "\"XBT\"";
+            DCEs["BAR"].SecondaryCurrencyCodes = "\"AUD\"";
+            DCEs["BAR"].HasStaticData = true;  // we don't poll for static data, so just say we have it.
+            DCEs["BAR"].socketsAlive = true;  // coinspot has no sockets, so just leave this as true so everything is happy.
 
             wSocketConnect = new WebSocketsConnect(DCEs, pollingThread);
 
@@ -158,7 +158,7 @@ namespace IRTicker {
                 { "BTCM", new UIControls() },
                 { "GDAX", new UIControls() },
                 { "BFX", new UIControls() },
-                { "CSPT", new UIControls() }
+                { "BAR", new UIControls() }
             };
 
             // IR
@@ -345,23 +345,11 @@ namespace IRTicker {
             UIControls_Dict["BFX"].AvgPrice = BFX_AvgPrice_Label;
 
             // CoinSpot
-            UIControls_Dict["CSPT"].Name = "CSPT";
-            UIControls_Dict["CSPT"].dExchange_GB = CSPT_GroupBox;
-            UIControls_Dict["CSPT"].XBT_Label = CSPT_XBT_Label1;
-            UIControls_Dict["CSPT"].XBT_Price = CSPT_XBT_Label2;
-            UIControls_Dict["CSPT"].XBT_Spread = CSPT_XBT_Label3;
-            UIControls_Dict["CSPT"].ETH_Label = CSPT_ETH_Label1;
-            UIControls_Dict["CSPT"].ETH_Price = CSPT_ETH_Label2;
-            UIControls_Dict["CSPT"].ETH_Spread = CSPT_ETH_Label3;
-            UIControls_Dict["CSPT"].EOS_Label = CSPT_EOS_Label1;
-            UIControls_Dict["CSPT"].EOS_Price = CSPT_EOS_Label2;
-            UIControls_Dict["CSPT"].EOS_Spread = CSPT_EOS_Label3;
-            UIControls_Dict["CSPT"].LTC_Label = CSPT_LTC_Label1;
-            UIControls_Dict["CSPT"].LTC_Price = CSPT_LTC_Label2;
-            UIControls_Dict["CSPT"].LTC_Spread = CSPT_LTC_Label3;
-            UIControls_Dict["CSPT"].XRP_Label = CSPT_XRP_Label1;
-            UIControls_Dict["CSPT"].XRP_Price = CSPT_XRP_Label2;
-            UIControls_Dict["CSPT"].XRP_Spread = CSPT_XRP_Label3;
+            UIControls_Dict["BAR"].Name = "BAR";
+            UIControls_Dict["BAR"].dExchange_GB = BAR_GroupBox;
+            UIControls_Dict["BAR"].XBT_Label = BAR_XBT_Label1;
+            UIControls_Dict["BAR"].XBT_Price = BAR_XBT_Label2;
+            UIControls_Dict["BAR"].XBT_Spread = BAR_XBT_Label3;
 
             foreach (KeyValuePair<string, UIControls> uic in UIControls_Dict) {
                 uic.Value.CreateControlDictionaries();  // builds the internal dictionaries so the controls themselves can be iterated over
@@ -541,16 +529,16 @@ namespace IRTicker {
             }
         }
 
-        private void ParseDCE_CSPT(string fiat) {
-            Tuple<bool, string> marketSummary = Utilities.Get("https://www.coinspot.com.au/pubapi/latest");
+        private void ParseDCE_BAR(string fiat) {
+            Tuple<bool, string> marketSummary = Utilities.Get("https://api.bitaroo.com.au/trade/market-data/btcaud");
             if (!marketSummary.Item1) {
-                DCEs["CSPT"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
-                DCEs["CSPT"].NetworkAvailable = false;
+                DCEs["BAR"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
+                DCEs["BAR"].NetworkAvailable = false;
             }
             else {
-                DCE.MarketSummary_CSPT mSummary_CSPT = JsonConvert.DeserializeObject<DCE.MarketSummary_CSPT>(marketSummary.Item2);
+                DCE.MarketSummary_BAR mSummary_BAR = JsonConvert.DeserializeObject<DCE.MarketSummary_BAR>(marketSummary.Item2);
 
-                if (mSummary_CSPT.status != "ok") {
+                if (mSummary_BAR.status != "ok") {
                     DCEs["CSPT"].NetworkAvailable = false;
                     Debug.Print("CoinSpot API was alive, but didn't respond in a healthy way, status: " + mSummary_CSPT.status);
                     return;
@@ -559,7 +547,7 @@ namespace IRTicker {
                 DCE.MarketSummary mSummary;
 
                 mSummary_CSPT.prices.CreateCryptoList();
-                foreach (DCE.Crypto_CSPT cryptoResponse in mSummary_CSPT.prices.cryptoList) {
+                foreach (DCE.MarketSummary_BAR cryptoResponse in mSummary_CSPT.prices.cryptoList) {
                     mSummary = new DCE.MarketSummary();
                     if (decimal.TryParse(cryptoResponse.last, out decimal temp)) {
                         mSummary.LastPrice = temp;
