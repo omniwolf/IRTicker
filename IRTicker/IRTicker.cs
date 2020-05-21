@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
@@ -1756,6 +1756,8 @@ namespace IRTicker {
             string oldFiat = DCEs[dExchange].CurrentSecondaryCurrency;
             DCEs[dExchange].NextSecondaryCurrency();
             wSocketConnect.WebSocket_Resubscribe(dExchange, "none", oldFiat, DCEs[dExchange].CurrentSecondaryCurrency);
+
+            ParseExchangeThreadStarter(dExchange);  // here we start a quick thread pull volume data for IR
             UIControls_Dict[dExchange].dExchange_GB.ForeColor = Color.Gray;
             UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")";
 
@@ -1764,6 +1766,25 @@ namespace IRTicker {
             Utilities.ColourDCETags(Controls, dExchange);
             DCEs[dExchange].ChangedSecondaryCurrency = true;
         }
+
+        // this starts the thread.  I return the thread, but in reality I don't do anything with it, so it's just discarded.  Maybe I should make sure the thread isn't hanging...
+        public Thread ParseExchangeThreadStarter(string dExchange) {
+            var t = new Thread(() => ParseExchangeThreadWorker(dExchange));
+            t.Start();
+            return t;
+        }
+
+        private void ParseExchangeThreadWorker(string dExchange) {
+            switch (dExchange) {
+                case "IR":
+                    foreach (string crypto in DCEs[dExchange].PrimaryCurrencyList) {
+                        ParseDCE_IR(crypto, DCEs[dExchange].CurrentSecondaryCurrency);
+                    }
+                    break;
+            }
+        }
+
+
 
         private void IR_GroupBox_Click(object sender, EventArgs e) {
             if (DCEs["IR"].HasStaticData) {
