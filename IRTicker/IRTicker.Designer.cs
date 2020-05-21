@@ -30,6 +30,8 @@
             this.toolbarFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
+            this.NegativeSpread_checkBox = new System.Windows.Forms.CheckBox();
+            this.NegativeSpread_label = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Slack_label = new System.Windows.Forms.Label();
             this.Slack_checkBox = new System.Windows.Forms.CheckBox();
@@ -265,8 +267,6 @@
             this.CryptoChooser_ComboBox = new System.Windows.Forms.ComboBox();
             this.BlinkStickBW = new System.ComponentModel.BackgroundWorker();
             this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
-            this.NegativeSpread_checkBox = new System.Windows.Forms.CheckBox();
-            this.NegativeSpread_label = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
@@ -336,6 +336,29 @@
             this.Settings.Name = "Settings";
             this.Settings.Size = new System.Drawing.Size(585, 843);
             this.Settings.TabIndex = 4;
+            // 
+            // NegativeSpread_checkBox
+            // 
+            this.NegativeSpread_checkBox.AccessibleName = "";
+            this.NegativeSpread_checkBox.AutoSize = true;
+            this.NegativeSpread_checkBox.Checked = true;
+            this.NegativeSpread_checkBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.NegativeSpread_checkBox.Location = new System.Drawing.Point(490, 640);
+            this.NegativeSpread_checkBox.Name = "NegativeSpread_checkBox";
+            this.NegativeSpread_checkBox.Size = new System.Drawing.Size(15, 14);
+            this.NegativeSpread_checkBox.TabIndex = 34;
+            this.NegativeSpread_checkBox.UseVisualStyleBackColor = true;
+            this.NegativeSpread_checkBox.CheckedChanged += new System.EventHandler(this.NegativeSpread_checkBox_CheckedChanged);
+            // 
+            // NegativeSpread_label
+            // 
+            this.NegativeSpread_label.AccessibleName = "";
+            this.NegativeSpread_label.AutoSize = true;
+            this.NegativeSpread_label.Location = new System.Drawing.Point(73, 640);
+            this.NegativeSpread_label.Name = "NegativeSpread_label";
+            this.NegativeSpread_label.Size = new System.Drawing.Size(226, 13);
+            this.NegativeSpread_label.TabIndex = 33;
+            this.NegativeSpread_label.Text = "Monitor for negative spreads and reset if found";
             // 
             // groupBox1
             // 
@@ -1117,7 +1140,6 @@
             // 
             // BAR_GroupBox
             // 
-            this.BAR_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.coinspot_faded2;
             this.BAR_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label2);
             this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label3);
@@ -3302,29 +3324,6 @@
             // BlinkStickWhite_Thread
             // 
             this.BlinkStickWhite_Thread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickWhite_Thread_DoWork);
-            // 
-            // NegativeSpread_checkBox
-            // 
-            this.NegativeSpread_checkBox.AccessibleName = "";
-            this.NegativeSpread_checkBox.AutoSize = true;
-            this.NegativeSpread_checkBox.Checked = true;
-            this.NegativeSpread_checkBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.NegativeSpread_checkBox.Location = new System.Drawing.Point(490, 640);
-            this.NegativeSpread_checkBox.Name = "NegativeSpread_checkBox";
-            this.NegativeSpread_checkBox.Size = new System.Drawing.Size(15, 14);
-            this.NegativeSpread_checkBox.TabIndex = 34;
-            this.NegativeSpread_checkBox.UseVisualStyleBackColor = true;
-            this.NegativeSpread_checkBox.CheckedChanged += new System.EventHandler(this.NegativeSpread_checkBox_CheckedChanged);
-            // 
-            // NegativeSpread_label
-            // 
-            this.NegativeSpread_label.AccessibleName = "";
-            this.NegativeSpread_label.AutoSize = true;
-            this.NegativeSpread_label.Location = new System.Drawing.Point(73, 640);
-            this.NegativeSpread_label.Name = "NegativeSpread_label";
-            this.NegativeSpread_label.Size = new System.Drawing.Size(226, 13);
-            this.NegativeSpread_label.TabIndex = 33;
-            this.NegativeSpread_label.Text = "Monitor for negative spreads and reset if found";
             // 
             // IRTicker
             // 

@@ -436,7 +436,7 @@ namespace IRTicker {
                 }
 
                 string tempName = UIControls_Dict["IR"].Label_Dict["XBT_Price"].Text;
-                tempName = tempName.Substring(0, tempName.Length - 3);  // remove decimal places from the price
+                if (tempName.Length >= 3) tempName = tempName.Substring(0, tempName.Length - 3);  // remove decimal places from the price
                 name += " - AUD " + tempName;
             }
             //Debug.Print("slack name is: " + name);
