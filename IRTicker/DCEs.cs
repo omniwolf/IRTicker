@@ -135,31 +135,19 @@ namespace IRTicker {
             }
 
 
-            //Debug.Print("DateTime.Now: " + DateTime.Now + " and spreadHistory_LastPushed: " + spreadHistory_LastPushed);
-            if (DateTime.Now >= (spreadHistory_LastPushed[pair] + TimeSpan.FromSeconds(10))) {
+            // only log the spread every 10 seconds, and if it's greater than 0
+            if ((DateTime.Now >= (spreadHistory_LastPushed[pair] + TimeSpan.FromSeconds(10))) && (mSummary.spread > 0)) {
                 spreadHistory_LastPushed[pair] = DateTime.Now;
                 //lock (spreadHistory) {
-                    if (!spreadHistory.ContainsKey(pair)) {
-                        spreadHistory.TryAdd(pair, new List<DataPoint>());
+                if (!spreadHistory.ContainsKey(pair)) {
+                    spreadHistory.TryAdd(pair, new List<DataPoint>());
+                }
+                else {
+                    spreadHistory[pair].Add(new DataPoint(DateTime.Now.ToOADate(), (double)mSummary.spread));
+                    if ((DateTime.Now.ToOADate() - 2) > spreadHistory[pair].FirstOrDefault().XValue) {
+                        spreadHistory[pair].RemoveAt(0);  // if we have more than 2 days worth of data, remove the first entry
                     }
-                    else {
-                        spreadHistory[pair].Add(new DataPoint(DateTime.Now.ToOADate(), (double)mSummary.spread));
-                        if ((DateTime.Now.ToOADate() - 2) > spreadHistory[pair].FirstOrDefault().XValue) {
-                            spreadHistory[pair].RemoveAt(0);  // if we have more than 2 days worth of data, remove the first entry
-                        }
-                    }
-                //}
-                /*lock (spreadHistoryCSV) {
-                    if (!spreadHistoryCSV.ContainsKey(pair)) {
-                        spreadHistoryCSV.TryAdd(pair, new List<DataPoint>());
-                    }
-                    else {
-                        spreadHistoryCSV[pair].Add(new DataPoint(DateTime.Now.ToOADate(), (double)mSummary.spread));
-                        if ((DateTime.Now.ToOADate() - 2) > spreadHistoryCSV[pair].FirstOrDefault().XValue) {
-                            spreadHistoryCSV[pair].RemoveAt(0);  // if we have more than 2 days worth of data, remove the first entry
-                        }
-                    }
-                }*/
+                }
             }
         }
 

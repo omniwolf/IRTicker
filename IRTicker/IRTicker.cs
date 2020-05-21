@@ -106,7 +106,10 @@ namespace IRTicker {
             DCEs["BAR"].PrimaryCurrencyCodes = "\"XBT\"";
             DCEs["BAR"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["BAR"].HasStaticData = true;  // we don't poll for static data, so just say we have it.
-            DCEs["BAR"].socketsAlive = true;  // coinspot has no sockets, so just leave this as true so everything is happy.
+            DCEs["BAR"].socketsAlive = true;  // Bitaroo has no sockets, so just leave this as true so everything is happy.
+            Dictionary<string, DCE.products_GDAX> productDictionary_BAR = new Dictionary<string, DCE.products_GDAX>();
+            productDictionary_BAR.Add("XBT-AUD", new DCE.products_GDAX("XBT-AUD"));
+            DCEs["BAR"].ExchangeProducts = productDictionary_BAR;  // manually create an ExchangeProduct for this exchange so we save spread data
 
             wSocketConnect = new WebSocketsConnect(DCEs, pollingThread);
 
@@ -705,7 +708,6 @@ namespace IRTicker {
                 //DCEs["BFX"].NetworkAvailable = true;
                 DCEs["BFX"].HasStaticData = true;
                 DCEs["BFX"].CurrentDCEStatus = "Online";
-                SubscribeTickerSocket("BFX");
             }
         }
 
@@ -914,26 +916,14 @@ namespace IRTicker {
                 }
 
                 // still need to run this to get volume data (and all coins except BTC)
-                //if (DCEs["IR"].NetworkAvailable) {  // just try and connect. if there's no network or API is down, then the sub will deal.
-                    foreach (string primaryCode in DCEs["IR"].PrimaryCurrencyList) {
-                        // if there's no crypto selected in the drop down or there's no number of coins entered, then just pull the market summary
-                        if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
-                            ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency);
-                        }
-                        //if (DCEs["IR"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["IR"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
-                            //GetIROrderBook(primaryCode, );
-                        //}
+                foreach (string primaryCode in DCEs["IR"].PrimaryCurrencyList) {
+                    // if there's no crypto selected in the drop down or there's no number of coins entered, then just pull the market summary
+                    if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
+                        ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency);
                     }
-                //}
-                // this was just a terrible way to re-try.  just do it and if it fails, then it fails.
-                //else DCEs["IR"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
-
-                // the heartbeat is initialised as the year 2000, so if it's this year we know it must be just starting up, no need to worry
-                if ((DCEs["IR"].HeartBeat + TimeSpan.FromSeconds(100) < DateTime.Now) && DCEs["IR"].HeartBeat.Year != 2000) {
-                    // we haven't received a heartbeat in 80 seconds..
-                    Debug.Print(DateTime.Now + " IR - haven't received any messages via sockets in 100 seconds.  reconnecting..");
-                    DCEs["IR"].socketsReset = true;
-                    DCEs["IR"].socketsAlive = false;
+                    //if (DCEs["IR"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["IR"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
+                    //GetIROrderBook(primaryCode, );
+                    //}
                 }
 
                 // let's check the IR spread.  Cycle through all the "_Spread" labels
@@ -964,26 +954,15 @@ namespace IRTicker {
                     Debug.Print("-- spread check finished");
                 }
 
-                // separate this because it's possible to hit this code where the socketsreset == true for some other reason that heartbeat
-                if (DCEs["IR"].socketsReset) {
-                    DCEs["IR"].socketsReset = false;
-                    // ok we need to reset the socket.
-                    Debug.Print(DateTime.Now + " IR - restarting sockets from backgroundWorker");
-                    wSocketConnect.WebSocket_Reconnect("IR");
-                }
-
-
                 //////// BTC Markets /////////
 
-                if (DCEs["BTCM"].NetworkAvailable) {
-                    foreach (string primaryCode in DCEs["BTCM"].PrimaryCurrencyList) {
 
-                        if (DCEs["BTCM"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["BTCM"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
-                            GetBTCMOrderBook(primaryCode);
-                        }
+                foreach (string primaryCode in DCEs["BTCM"].PrimaryCurrencyList) {
+
+                    if (DCEs["BTCM"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["BTCM"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
+                        GetBTCMOrderBook(primaryCode);
                     }
                 }
-                else DCEs["BTCM"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
 
                 // everything in here only happens once per session
                 if (!DCEs["BTCM"].HasStaticData) {
@@ -1006,76 +985,64 @@ namespace IRTicker {
                     DCEs["BTCM"].HasStaticData = true;
                 }
 
-                // the heartbeat is initialised as the year 2000, so if it's this year we know it must be just starting up, no need to worry
-                if ((DCEs["BTCM"].HeartBeat + TimeSpan.FromSeconds(100) < DateTime.Now) && DCEs["BTCM"].HeartBeat.Year != 2000) {
-                    // we haven't received a heartbeat in 10 seconds..
-                    Debug.Print(DateTime.Now + " BTCMv2 - haven't received any messages via sockets in 100 seconds.  reconnecting..");
-                    DCEs["BTCM"].socketsAlive = false;
-                    DCEs["BTCM"].socketsReset = true;
-                }
-
-                // separate this because it's possible to hit this code where the socketsreset == true for some other reason that heartbeat
-                if (DCEs["BTCM"].socketsReset) {
-                    // just in case sockets is still broken, let's grab some REST data
-                    foreach (string primaryCode in DCEs["BTCM"].PrimaryCurrencyList) {
-                        ParseDCE_BTCM(primaryCode, DCEs["BTCM"].CurrentSecondaryCurrency);
-                    }
-                    DCEs["BTCM"].socketsReset = false;
-                    // ok we need to reset the socket.
-                    Debug.Print(DateTime.Now + " BTCMv2 - REST data pulled, now restarting sockets from backgroundWorker");
-                   wSocketConnect.WebSocket_Reconnect("BTCM");
-                }
-
 
                 //////// GDAX ///////
 
-                if (!DCEs["GDAX"].HasStaticData) {  // should only call this onec per session
+                if (!DCEs["GDAX"].HasStaticData) {
                     GetGDAXProducts();
-                    if (DCEs["GDAX"].HasStaticData) {
-                        Debug.Print("calling gdax sockets sub");
-                        SubscribeTickerSocket("GDAX");
-                        pollingThread.ReportProgress(44);
-                    }
+                    Debug.Print("calling gdax sockets sub");
+                    SubscribeTickerSocket("GDAX");
+                    pollingThread.ReportProgress(44);
                 }
-                else DCEs["GDAX"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
-
-                if (loopCount == 0) {
-                    if (!wSocketConnect.IsSocketAlive("BFX")) { 
-                        Debug.Print("BFX ded, reconnecting");
-                        wSocketConnect.WebSocket_Reconnect("BFX");
-                    }
-                    if (!wSocketConnect.IsSocketAlive("GDAX")) { 
-                        Debug.Print("GDAX ded, reconnecting");
-                        wSocketConnect.WebSocket_Reconnect("GDAX");
-                    }
-                    if (!wSocketConnect.IsSocketAlive("IR")) {  // do i need to add some logic here to make sure we're not currently in the reconnect process if this code happens to get hit when we are reconnecting?
-                        Debug.Print("IR ded, reconnecting at next poll");
-                        pollingThread.ReportProgress(12, "IR");
-                        DCEs["IR"].socketsReset = true;
-                    }
-                }
-
 
                 //////// BitFinex /////////
 
                 if (!DCEs["BFX"].HasStaticData) {
                     GetBFXProducts();  // pulls bfx pairs, and starts the websockets connection
                     pollingThread.ReportProgress(54);  // populate crypto drop down
-                    //if (DCEs["BFX"].NetworkAvailable) DCEs["BFX"].HasStaticData = true;  // we got here with the network up?  then we got the static data!
+                    SubscribeTickerSocket("BFX");
                 }
 
-
-                //////// CoinSpot ////////
-                if (DCEs["BAR"].NetworkAvailable) {
-                    ParseDCE_BAR();  // the bitaroo parseDCE method is a bit different, no need to loop through pairs, there is only one endpoint we call and it has all the info on all the pairs.   This might sound cool, but it's actually shit.  CoinSpot API is shittttt
-                }
-                else DCEs["BAR"].NetworkAvailable = true;  // set to true here so on the next poll we make an attempt on the parseDCE method.  If it fails, we set to false and skip the next try
-
+                //////// Bitaroo ////////
+                
+                ParseDCE_BAR();  // the bitaroo parseDCE method is a bit different, no need to loop through pairs, there is only one endpoint we call and it has all the info on all the pairs.   This might sound cool, but it's actually shit.  CoinSpot API is shittttt
+                
 
                 if (pollingThread.CancellationPending) {  // this will be true if the user has changed the secondary currency.  we need to stop and start again, because it's possible that we have
                     e.Cancel = true;  // pulled the old secondary currency already from the API
-                    Debug.Print("Poll cancelled, bottom!");
-                    break;
+                    Debug.Print("Poll cancelled, middle!");
+                    break;  // will break out of our big ol' loop
+                }
+
+                // do a loop through the exchanges and do some common stuff
+                foreach (string dExchange in Exchanges) {
+                    if (dExchange == "BAR") continue;
+                    // the heartbeat is initialised as the year 2000, so if it's this year we know it must be just starting up, no need to worry
+                    if ((DCEs[dExchange].HeartBeat + TimeSpan.FromSeconds(100) < DateTime.Now) && DCEs[dExchange].HeartBeat.Year != 2000) {
+                        // we haven't received a heartbeat in 10 seconds..
+                        Debug.Print(DateTime.Now + " - " + dExchange + " - haven't received any messages via sockets in 100 seconds.  reconnecting..");
+                        DCEs[dExchange].socketsAlive = false;
+                        DCEs[dExchange].socketsReset = true;
+                    }
+
+                    // separate this because it's possible to hit this code where the socketsreset == true for some other reason that heartbeat
+                    if (DCEs[dExchange].socketsReset) {
+                        // just in case sockets is still broken, let's grab some REST data
+                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                            ParseDCE_BTCM(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency);
+                        }
+                        DCEs[dExchange].socketsReset = false;
+                        // ok we need to reset the socket.
+                        Debug.Print(DateTime.Now + " - " + dExchange + " - REST data pulled, now restarting sockets from backgroundWorker");
+                        wSocketConnect.WebSocket_Reconnect(dExchange);
+                    }
+
+                    if (loopCount == 0) {
+                        if (!wSocketConnect.IsSocketAlive(dExchange)) {
+                            Debug.Print(dExchange + " ded, reconnecting");
+                            wSocketConnect.WebSocket_Reconnect(dExchange);
+                        }
+                    }
                 }
 
 
@@ -1113,11 +1080,11 @@ namespace IRTicker {
                 }
 
                 if (int.TryParse(refreshFrequencyTextbox.Text, out int refreshInt)) {
-                    System.Threading.Thread.Sleep(refreshInt * 1000);
+                    Thread.Sleep(refreshInt * 1000);
                 }
                 else {
                     System.Windows.MessageBox.Show("couldn't parse the refresh time.. why?  text: " + refreshFrequencyTextbox.Text);
-                    System.Threading.Thread.Sleep(10000);
+                    Thread.Sleep(10000);
                 }
 
                 loopCount++;
@@ -1620,7 +1587,7 @@ namespace IRTicker {
                     GroupBoxAndLabelColourActive(dExchange);
 
                     UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")";
-                    if (!DCEs[dExchange].socketsAlive) {  // website might be up, 
+                    if (!DCEs[dExchange].socketsAlive) {  // website might be up, this should never be reached.  only exchang to get here should be BAR, and it's sockets will by definition always be "
                         Debug.Print(DateTime.Now + " - 2 setting sockets down, we are in the main reportProgress and socktsAlive is false - " + dExchange);
                         UIControls_Dict[dExchange].dExchange_GB.Text += " - sockets down";
                     }
@@ -1628,7 +1595,7 @@ namespace IRTicker {
                     UpdateLabels(dExchange);
                 }
                 else if (DCEs[dExchange].NetworkAvailable) {  // if we have network but not online, we probably have REST data to send to the UI, so do it.
-                    Debug.Print(DateTime.Now + " - updating UI even though the exchange isn't in an 'online' state");
+                    Debug.Print(DateTime.Now + " - updating UI even though the exchange (" + dExchange + ") isn't in an 'online' state");
                     UpdateLabels(dExchange);
                 }
                 else APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);

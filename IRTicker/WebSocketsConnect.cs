@@ -29,23 +29,6 @@ namespace IRTicker {
 
             // IR
 
-            // initialise all the dictionaries required to flog this horse
-            // actually we can't do this here because we don't have the cryptos yet for IR.  need to wait until the static data is pulled.
-            /*foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {  // now set all pulled OB flags to false
-                foreach (string crypto in DCEs["IR"].PrimaryCurrencyList) {
-                    if (!DCEs["IR"].orderBuffer_IR.ContainsKey(crypto + "-" + fiat)) {  // make the dictionary element doesn't already exist
-                        if (!DCEs["IR"].orderBuffer_IR.TryAdd(crypto + "-" + fiat, new ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>())) {
-                            Debug.Print(DateTime.Now + " - can't add orderBuffer_IR concurrent dicsh for " + crypto + "-" + fiat);
-                        }
-                        else Debug.Print(DateTime.Now + " - couldn't create the buffer order book?? why? " + crypto + " " + fiat);
-                        DCEs["IR"].pulledSnapShot[crypto + "-" + fiat] = false;  // initialise the pulledSnapShot variable for this pair
-                        DCEs["IR"].positiveSpread[crypto + "-" + fiat] = true;  // initialise the positiveSpread variable for this pair, always assume the spread is positive
-                        DCEs["IR"].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat)] = 0;  // initialise the nonce dictionary
-                        DCEs["IR"].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;  // false means no error, no need to dump OB
-                    }
-                }
-            }*/
-
             Debug.Print("IR websocket connecting..");
 
             Task.Factory.StartNew(() => {
@@ -77,18 +60,22 @@ namespace IRTicker {
 
             wSocket_BFX.OnError += (sender, e) => {
                 Debug.Print("ws onerror - bfx");
-                wSocket_BFX.Close();
+                //wSocket_BFX.Close();
                 DCEs["BFX"].NetworkAvailable = false;
                 DCEs["BFX"].socketsAlive = false;
+                DCEs["BFX"].socketsReset = true;
                 DCEs["BFX"].CurrentDCEStatus = "Socket error";
                 DCEs["BFX"].HasStaticData = false;
                 pollingThread.ReportProgress(12, "BFX");  // 12 is error
-                WebSocket_Reconnect("BFX");
+                //WebSocket_Reconnect("BFX");
             };
 
             wSocket_BFX.OnClose += (sender, e) => {
                 Debug.Print("BFX stream closed... should be preceeded by some ded thingo " + DateTime.Now.ToString());
                 DCEs["BFX"].socketsAlive = false;
+                DCEs["BFX"].socketsReset = true;
+                DCEs["BFX"].CurrentDCEStatus = "Socket error";
+                pollingThread.ReportProgress(12, "BFX");  // 12 is error
                 //WebSocket_Reconnect("BFX");
             }; 
             wSocket_BFX.Connect();
@@ -113,18 +100,22 @@ namespace IRTicker {
 
             wSocket_GDAX.OnError += (sender, e) => {
                 Debug.Print("ws onerror - gdax - " + DateTime.Now.ToString());
-                wSocket_GDAX.Close();
+                //wSocket_GDAX.Close();
                 DCEs["GDAX"].NetworkAvailable = false;
                 DCEs["GDAX"].socketsAlive = false;
+                DCEs["GDAX"].socketsReset = true;
                 DCEs["GDAX"].CurrentDCEStatus = "Socket error";
                 DCEs["GDAX"].HasStaticData = false;
                 pollingThread.ReportProgress(12, "GDAX");  // 12 is error
-                WebSocket_Reconnect("GDAX");
+                //WebSocket_Reconnect("GDAX");
             };
 
             wSocket_GDAX.OnClose += (sender, e) => {
                 Debug.Print("GDAX stream was closed.. should be because we disconnected on purpose. preceeded by ded?  " + DateTime.Now.ToString());
                 DCEs["GDAX"].socketsAlive = false;
+                DCEs["GDAX"].socketsReset = true;
+                DCEs["GDAX"].CurrentDCEStatus = "Socket error";
+                pollingThread.ReportProgress(12, "GDAX");  // 12 is error
                 //WebSocket_Disconnect("GDAX");
             };
             wSocket_GDAX.Connect();
@@ -264,7 +255,7 @@ namespace IRTicker {
 
         public void subscribe_unsubscribe_new(string dExchange, bool subscribe, string crypto = "none", string fiat = "none") {
             if (fiat == "none") fiat = DCEs[dExchange].CurrentSecondaryCurrency;
-            Debug.Print("subscribe_unsubscribe! subscribe: " + subscribe.ToString() + ", pair: " + crypto + "-" + fiat);
+            Debug.Print("subscribe_unsubscribe! -- " + dExchange + " -- did we subscribe: " + subscribe.ToString() + ", pair: " + crypto + "-" + fiat);
             string channel = "";
             List<string> pairs = new List<string>();
             switch (dExchange) {
@@ -442,6 +433,8 @@ namespace IRTicker {
                     }*/
                     else { 
                         Debug.Print(DateTime.Now + " - (" + dExchange + " reconnection) - clearing OB sub dicts...");
+                        DCEs[dExchange].socketsAlive = false;
+                        DCEs["IR"].CurrentDCEStatus = "Reconnected";
                         /*DCEs[dExchange].ClearOrderBookSubDicts();
                         Debug.Print("creating a new buffer dict...");
                         DCEs[dExchange].orderBuffer_IR = new ConcurrentDictionary<string, ConcurrentDictionary<int, Ticker_IR>>();
@@ -578,11 +571,10 @@ namespace IRTicker {
                 Debug.Print(DateTime.Now + " BTCMv2 stream closed... should be preceeded by some ded thingo ");
                 DCEs["BTCM"].NetworkAvailable = false;
                 DCEs["BTCM"].socketsAlive = false;
+                DCEs["BTCM"].socketsReset = true;
                 DCEs["BTCM"].CurrentDCEStatus = "Socket error";
 
                 pollingThread.ReportProgress(12, "BTCM");  // 12 is error
-                // shouldn't actually need to set socketsreset to true here because we already set it in the OnError method, and otherwise why would we close the stream?
-                //DCEs["BTCM"].socketsReset = true;
             };
 
             wSocket_BTCM.Connect();
@@ -629,7 +621,7 @@ namespace IRTicker {
                     break;
                 case "BTCM":
                     wSocket_BTCM.Close();
-                    BTCM_Connect_v2();  // with sockets.io we need to start from scratch
+                    wSocket_BTCM.Connect();
                     break;
                 case "BFX":
                     wSocket_BFX.Close();
@@ -758,6 +750,8 @@ namespace IRTicker {
                 return;
             }
             DCEs["IR"].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
+            DCEs["IR"].CurrentDCEStatus = "Online";
+
 
             Ticker_IR tickerStream = new Ticker_IR();
             tickerStream = JsonConvert.DeserializeObject<Ticker_IR>(message);
@@ -956,6 +950,7 @@ namespace IRTicker {
 
             if (message.Contains("\"messageType\":\"tick\"")) {
                 DCEs["BTCM"].socketsAlive = true;
+                DCEs["BTCM"].CurrentDCEStatus = "Online";
                 Ticker_BTCM tickerStream = new Ticker_BTCM();
                 tickerStream = JsonConvert.DeserializeObject<Ticker_BTCM>(message);
 
@@ -993,6 +988,7 @@ namespace IRTicker {
         private void MessageRX_GDAX(string message) {
 
             if (message.Contains("\"type\":\"ticker\"")) {
+                DCEs["GDAX"].CurrentDCEStatus = "Online";
                 Ticker_GDAX tickerStream = new Ticker_GDAX();
                 tickerStream = JsonConvert.DeserializeObject<Ticker_GDAX>(message);
 
@@ -1127,6 +1123,7 @@ namespace IRTicker {
             }
             else if (message.StartsWith("[")) {  // is this how I tell if it's real socket data?  seems dodgy
                 //Debug.Print("BFX MESSAGE: " + message);
+                DCEs["BFX"].CurrentDCEStatus = "Online";
                 message = Utilities.TrimEnds(message);  // remove the [ ] characters from the ends
                 string[] streamParts = message.Split(',');
                 if (channel_Dict_BFX.ContainsKey(streamParts[0])) {
