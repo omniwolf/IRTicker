@@ -285,7 +285,7 @@ namespace IRTicker {
                     }
                     else {
                         Debug.Print(DateTime.Now + " - IR sockets down when trying to " + (subscribe ? "subscribe" : "unsubscribe"));
-                        DCEs[dExchange].socketsReset = true;
+                        DCEs["IR"].socketsReset = true;
                     }
                     if (subscribe) {  // if subscribing then grab the order books too.
                         if (crypto == "none") {
@@ -361,7 +361,7 @@ namespace IRTicker {
                                 if (crypto2 == "USDT") crypto2 = "UST";
                                 if (!DCEs[dExchange].ExchangeProducts.ContainsKey(crypto1 + "-" + fiat)) continue;  // only try to subscribe to pairs that this BFX supports
                                 channel = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"" + crypto2 + fiat + "\"}";
-                                //Debug.Print("BFX subscribing to: " + channel);
+                                Debug.Print("BFX subscribing to: " + channel);
                                 wSocket_BFX.Send(channel);
                             }
                         }
@@ -393,6 +393,7 @@ namespace IRTicker {
 
                         channel = channel.Substring(0, channel.Length - 1);
                         channel += "] } ] }";
+                        Debug.Print("GDAX subscribing to: " + channel);
                         wSocket_GDAX.Send(channel);
                     }
                     else {
@@ -559,7 +560,7 @@ namespace IRTicker {
             wSocket_BTCM.OnError += (sender, e) => {
                 Debug.Print("ws onerror - BTCMv2");
                 wSocket_BTCM.Close();
-                DCEs["BTCM"].NetworkAvailable = false;
+                //DCEs["BTCM"].NetworkAvailable = false;
                 DCEs["BTCM"].socketsAlive = false;
                 DCEs["BTCM"].CurrentDCEStatus = "Socket error";
                 
@@ -569,7 +570,7 @@ namespace IRTicker {
 
             wSocket_BTCM.OnClose += (sender, e) => {
                 Debug.Print(DateTime.Now + " BTCMv2 stream closed... should be preceeded by some ded thingo ");
-                DCEs["BTCM"].NetworkAvailable = false;
+                //DCEs["BTCM"].NetworkAvailable = false;
                 DCEs["BTCM"].socketsAlive = false;
                 DCEs["BTCM"].socketsReset = true;
                 DCEs["BTCM"].CurrentDCEStatus = "Socket error";
@@ -1107,12 +1108,11 @@ namespace IRTicker {
                 else if (message.Contains("\"event\":\"error\"")) {  // uh oh we done bad.  could look like this: {"channel":"ticker","pair":"BTCUSD","event":"error","msg":"subscribe: dup","code":10301}
                     Debug.Print("Error from BFX socket: " + message);
                     // so i guess at this stage we want to try again
-                    wSocket_BFX.Close();
                     DCEs["BFX"].CurrentDCEStatus = "API response error";
-                    DCEs["BFX"].NetworkAvailable = false;
-                    //DCEs["BFX"].HasStaticData = false;
+                    Debug.Print("BFX sent us an error, let's reset " + DateTime.Now.ToString());
+                    DCEs["BFX"].socketsAlive = false;
+                    DCEs["BFX"].socketsReset = true;
                     pollingThread.ReportProgress(12, "BFX");  // 12 is error
-                    wSocket_BFX.Connect();
                 }
                 else if (message.Contains("unsubscribed")) {
                     Debug.Print("BFX UNSUBSCRIBED!  message: " + message);

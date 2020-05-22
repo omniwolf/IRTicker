@@ -1029,7 +1029,14 @@ namespace IRTicker {
                     if (DCEs[dExchange].socketsReset) {
                         // just in case sockets is still broken, let's grab some REST data
                         foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                            ParseDCE_BTCM(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency);
+                            switch (dExchange) {
+                                case "IR":
+                                    ParseDCE_IR(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency);
+                                    break;
+                                case "BTCM":
+                                    ParseDCE_BTCM(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency);
+                                    break;
+                            }
                         }
                         DCEs[dExchange].socketsReset = false;
                         // ok we need to reset the socket.
