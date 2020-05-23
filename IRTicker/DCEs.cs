@@ -33,6 +33,7 @@ namespace IRTicker {
         public bool socketsAlive = false;
         public ConcurrentDictionary<string, bool> pulledSnapShot = new ConcurrentDictionary<string, bool>();  // if true we have pulled the REST order book
         public ConcurrentDictionary<string, bool> positiveSpread = new ConcurrentDictionary<string, bool>();  // if false then the spread is negative, need to reset the pair if this continues for a cycle
+        public ConcurrentDictionary<string, int> newOrders = new ConcurrentDictionary<string, int>();  // string is the pair, how many new orders added to the buffer since the last UITimer cycle
 
         public ConcurrentDictionary<string, ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>> orderBuffer_IR = new ConcurrentDictionary<string, ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>>();
 

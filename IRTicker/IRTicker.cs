@@ -1627,11 +1627,12 @@ namespace IRTicker {
         }
 
         private void PollingThread_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
-            if(e.Cancelled) {  // if it was cancelled, we start it up again.  The only reason it would be cancelled is if the user chooses a different secondary currency.
+            if (e.Cancelled) {  // if it was cancelled, we start it up again.  The only reason it would be cancelled is if the user chooses a different secondary currency.
+                Debug.Print(DateTime.Now + " - Poll was cancelled, now restarting...");
                 pollingThread.RunWorkerAsync(); // we need to cancel to make sure we haven't already pulled the old currency from the API
             }
             else {
-                Debug.Print("POLL stopped!! why?? " + e.Result + " " + e.Error + " " + e.ToString());
+                Debug.Print(DateTime.Now + " - POLL stopped!! why?? " + e.Result + " " + e.Error + " " + e.ToString());
             }
         }
 

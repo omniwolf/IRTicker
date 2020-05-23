@@ -21,6 +21,7 @@ namespace IRTicker {
         private BackgroundWorker pollingThread;
         private Thread UITimerThread;
         private bool UITimerThreadProceed = true;
+        private ManualResetEvent startSocket_exitEvent = new ManualResetEvent(false);
 
         // constructor
         public WebSocketsConnect(Dictionary<string, DCE> _DCEs, BackgroundWorker _pollingThread) {
@@ -413,11 +414,11 @@ namespace IRTicker {
         private void stopSockets(string dExchange, string pair = "none") {
             client_IR.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
             DCEs[dExchange].socketsAlive = false;
+            startSocket_exitEvent.Set();  // hopefully this should let the existing startSockets() sub complete
             Debug.Print("IR sockets stop command sent");
         }
 
         private void startSockets(string dExchange, string socketsURL) {
-            var exitEvent = new ManualResetEvent(false);
             var url = new Uri(socketsURL);
             DCEs[dExchange].socketsAlive = false;
             Debug.Print(DateTime.Now + " - startSockets called for " + dExchange);
@@ -508,7 +509,7 @@ namespace IRTicker {
                 //await Task.Run(() => client_IR.Send("1"));
                 //Debug.Print(DateTime.Now + " - we have moved on after the client_IR.send where we subscribe!");
 
-                exitEvent.WaitOne();
+                startSocket_exitEvent.WaitOne();
             }
         }
 
@@ -522,7 +523,10 @@ namespace IRTicker {
 
             while (UITimerThreadProceed) {
                 foreach (KeyValuePair<string, ConcurrentDictionary<int, Ticker_IR>> pair in DCEs["IR"].orderBuffer_IR) {
-                    if ((DCEs["IR"].orderBuffer_IR[pair.Key].Count > 0) && DCEs["IR"].pulledSnapShot[pair.Key]) applyBufferToOB(pair.Key);
+                    if (DCEs["IR"].newOrders[pair.Key] > 0) {
+                        if ((DCEs["IR"].orderBuffer_IR[pair.Key].Count > 0) && DCEs["IR"].pulledSnapShot[pair.Key]) applyBufferToOB(pair.Key);
+                        DCEs["IR"].newOrders[pair.Key] = 0;
+                    }
                 }
 
                 Thread.Sleep(Properties.Settings.Default.UITimerFreq);
@@ -692,6 +696,7 @@ namespace IRTicker {
                     DCEs[dExchange].positiveSpread[crypto1 + "-" + fiat] = true;
                     DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto1 + "-" + fiat] = false;
                     DCEs[dExchange].channelNonce["ORDERBOOK-" + crypto1 + "-" + fiat] = 0;
+                    DCEs[dExchange].newOrders[crypto1 + "-" + fiat] = 0;
                     if (DCEs[dExchange].orderBuffer_IR.ContainsKey(crypto1 + "-" + fiat)) DCEs[dExchange].orderBuffer_IR[crypto1 + "-" + fiat].Clear();
                     else DCEs[dExchange].orderBuffer_IR[crypto1 + "-" + fiat] = new ConcurrentDictionary<int, Ticker_IR>();
                 }
@@ -704,6 +709,7 @@ namespace IRTicker {
                 DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;
                 DCEs[dExchange].channelNonce["ORDERBOOK-" + crypto + "-" + fiat] = 0;
                 DCEs[dExchange].ClearOrderBookSubDicts(crypto, fiat);
+                DCEs[dExchange].newOrders[crypto + "-" + fiat] = 0;
                 if (DCEs[dExchange].orderBuffer_IR.ContainsKey(crypto + "-" + fiat)) DCEs[dExchange].orderBuffer_IR[crypto + "-" + fiat].Clear();
                 else DCEs[dExchange].orderBuffer_IR[crypto + "-" + fiat] = new ConcurrentDictionary<int, Ticker_IR>();
             }
@@ -795,6 +801,7 @@ namespace IRTicker {
 
             //Debug.Print(DateTime.Now + " - (" + pair + ") adding to buffer.  current nonce: " + DCEs["IR"].channelNonce[channel] + ", nonce we just received: " + tickerStream.Nonce);
             DCEs["IR"].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;
+            DCEs["IR"].newOrders[pair]++;
 
         }
 
