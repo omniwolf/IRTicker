@@ -637,6 +637,7 @@ namespace IRTicker {
                     wSocket_GDAX.Connect();
                     break;
             }
+            DCEs[dExchange].socketsReset = false;  // when closing the stream, the OnClose method is called, which sets the socketsReset to true.  need to turn this off so we don't reconnect forever
 
             //re-subscribe?
             Debug.Print(dExchange + " - re-subscribing to all pairs...");
