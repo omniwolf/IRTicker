@@ -154,5 +154,17 @@ namespace IRTicker.Properties {
                 this["NegativeSpread"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("AUD")]
+        public string SlackNameCurrency {
+            get {
+                return ((string)(this["SlackNameCurrency"]));
+            }
+            set {
+                this["SlackNameCurrency"] = value;
+            }
+        }
     }
 }

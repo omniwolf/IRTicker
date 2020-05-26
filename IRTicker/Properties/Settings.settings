@@ -35,5 +35,8 @@
     <Setting Name="NegativeSpread" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="SlackNameCurrency" Type="System.String" Scope="User">
+      <Value Profile="(Default)">AUD</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

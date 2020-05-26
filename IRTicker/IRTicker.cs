@@ -133,6 +133,7 @@ namespace IRTicker {
             OB_checkBox.Checked = Properties.Settings.Default.ShowOB;
             UITimerFreq_maskedTextBox.Text = Properties.Settings.Default.UITimerFreq.ToString();
             NegativeSpread_checkBox.Checked = Properties.Settings.Default.NegativeSpread;
+            if (string.IsNullOrEmpty(Properties.Settings.Default.SlackNameCurrency)) Properties.Settings.Default.SlackNameCurrency = "AUD";
 
             if (Slack_checkBox.Checked) {
                 slackDefaultNameTextBox.Enabled = true;
@@ -438,11 +439,21 @@ namespace IRTicker {
                     return;
                 }
 
-                string tempName = UIControls_Dict["IR"].Label_Dict["XBT_Price"].Text;
-                if (tempName.Length >= 3) tempName = tempName.Substring(0, tempName.Length - 3);  // remove decimal places from the price
-                name += " - AUD " + tempName;
+                //string tempName = UIControls_Dict["IR"].Label_Dict["XBT_Price"].Text;
+                Dictionary<string, DCE.MarketSummary> cPairs = DCEs["IR"].GetCryptoPairs();
+                if (cPairs.ContainsKey("XBT-" + Properties.Settings.Default.SlackNameCurrency)) {
+                    decimal bid = cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentHighestBidPrice;
+                    decimal offer = cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentLowestOfferPrice;
+                    string midPoint = Math.Round(((bid + offer) / 2), 0).ToString();
+
+
+                    //string tempName = ((cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentLowestOfferPrice - cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentHighestBidPrice) / 2).ToString();
+
+                    //if (tempName.Length >= 3) tempName = tempName.Substring(0, tempName.Length - 3);  // remove decimal places from the price
+                    name += " - " + Properties.Settings.Default.SlackNameCurrency + " " + midPoint;
+                }
             }
-            //Debug.Print("slack name is: " + name);
+            Debug.Print("slack name is: " + name);
 
             if (IRBTCvol < 0 || BTCMBTCvol < 0) {
                 slackObj.setStatus("", ":question:", 120, name);
@@ -489,9 +500,9 @@ namespace IRTicker {
 
                 // This bit is for a) volume (we don't get vol from websockets), and b) if there have been no orders to establish a spread, then the price and spread
                 // stay at 0.  This is 
-                //Dictionary<string, DCE.MarketSummary> cPairs = DCEs["IR"].GetCryptoPairs();
-                //if (cPairs.ContainsKey(mSummary.pair) && cPairs[mSummary.pair].spread == 0) { 
-                if (crypto == "XBT") {  // don't want to overwrite the spread orders as they're probably out of date
+                Dictionary<string, DCE.MarketSummary> cPairs = DCEs["IR"].GetCryptoPairs();
+                if (cPairs.ContainsKey(mSummary.pair) && cPairs[mSummary.pair].spread == 0) { 
+                //if (crypto == "XBT") {  // don't want to overwrite the spread orders as they're probably out of date
                     mSummary.CurrentHighestBidPrice = 0;
                     mSummary.CurrentLowestOfferPrice = 0;
                 }
@@ -499,7 +510,8 @@ namespace IRTicker {
                 mSummary.CreatedTimestampUTC = "";
                 DCEs["IR"].CryptoPairsAdd(crypto + "-" + fiat, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
                 DCEs["IR"].CurrentDCEStatus = "Online";
-                pollingThread.ReportProgress(21, mSummary);
+                // don't update the labels if we are pulling a different fiat than the one we're showing (eg for Slack name)
+                if (DCEs["IR"].CurrentSecondaryCurrency == fiat) pollingThread.ReportProgress(21, mSummary);
             }
         }
 
@@ -890,6 +902,8 @@ namespace IRTicker {
                         DCEs["IR"].CurrentDCEStatus = "Online";
                         DCEs["IR"].SecondaryCurrencyCodes = Utilities.TrimEnds(secondaryCurrencyCodesTpl.Item2);
                         //DCEs["IR"].SecondaryCurrencyCodes = "\"AUD\"";
+
+                        pollingThread.ReportProgress(28, "IR");  // populate slack name currency combobox in settnigs
                     }
                     if (DCEs["IR"].NetworkAvailable) {
                         DCEs["IR"].HasStaticData = true;  // we got here with the network up?  then we got the static data!
@@ -921,9 +935,15 @@ namespace IRTicker {
                     if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
                         ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency);
                     }
+                    
                     //if (DCEs["IR"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["IR"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
                     //GetIROrderBook(primaryCode, );
                     //}
+                }
+
+                // need to pull this other fiat currency market summary data if our chose slack currency is not the one we're looking at
+                if (Properties.Settings.Default.SlackNameCurrency != DCEs["IR"].CurrentSecondaryCurrency) {
+                    ParseDCE_IR("XBT", Properties.Settings.Default.SlackNameCurrency);
                 }
 
                 // let's check the IR spread.  Cycle through all the "_Spread" labels
@@ -1489,6 +1509,26 @@ namespace IRTicker {
                 else {  // set back to whatever colour it should be
                     tempPrice.ForeColor = Utilities.PriceColour(DCEs["IR"].GetPriceList(nonceIssue.Item2));
                 }
+                return;
+            }
+
+            if (reportType == 28) {  // populate slack name currency combobox in settings
+
+                // now we populate the slack name currency combobox in settings
+                foreach (string irFiat in DCEs["IR"].SecondaryCurrencyList) {
+                    if (SlackNameCurrency_comboBox.Items.Contains(irFiat)) continue;
+                    SlackNameCurrency_comboBox.Items.Add(irFiat);
+                }
+
+                SlackNameCurrency_comboBox.Enabled = true;  // have to enable it to change the value :/
+                Debug.Print("properties slack name currency: " + Properties.Settings.Default.SlackNameCurrency + "find string index: " + SlackNameCurrency_comboBox.FindStringExact(Properties.Settings.Default.SlackNameCurrency));
+                if (SlackNameCurrency_comboBox.FindStringExact(Properties.Settings.Default.SlackNameCurrency) > -1)
+                    SlackNameCurrency_comboBox.SelectedIndex = SlackNameCurrency_comboBox.FindStringExact(Properties.Settings.Default.SlackNameCurrency);
+
+                // after setting the default value, if this control shouldn't be enabled, disable it.
+                if (!Properties.Settings.Default.Slack || !Properties.Settings.Default.SlackNameChange || (SlackNameCurrency_comboBox.Items.Count == 0))
+                    SlackNameCurrency_comboBox.Enabled = false;
+
                 return;
             }
 
@@ -2317,12 +2357,14 @@ namespace IRTicker {
                 slackDefaultNameTextBox.Enabled = true;
                 slackNameChangeCheckBox.Enabled = true;
                 slackToken_textBox.Enabled = true;
+                if (Properties.Settings.Default.SlackNameChange && (SlackNameCurrency_comboBox.Items.Count > 0)) SlackNameCurrency_comboBox.Enabled = true;
             }
             else {
                 slackDefaultNameTextBox.Enabled = false;
                 slackNameChangeCheckBox.Enabled = false;
                 slackToken_textBox.Enabled = false;
                 setSlackStatus(0, 0, true);  // reset the slack name to the default
+                SlackNameCurrency_comboBox.Enabled = false;
             }
             Properties.Settings.Default.Save();
         }
@@ -2343,10 +2385,18 @@ namespace IRTicker {
             if (!Properties.Settings.Default.SlackNameChange && slackDefaultNameTextBox.Text == string.Empty) {
                 MessageBox.Show("If you leave the name blank here and the app has already changed your name, then the app won't know what to change it back to and your display name will be blank (meaning your display name will default to your real name).  I recommend you leave your preferred display name in here", "No name?", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+
+            if (Properties.Settings.Default.SlackNameChange && (SlackNameCurrency_comboBox.Items.Count > 0)) SlackNameCurrency_comboBox.Enabled = true;
+            else SlackNameCurrency_comboBox.Enabled = false;
         }
 
         private void NegativeSpread_checkBox_CheckedChanged(object sender, EventArgs e) {
             Properties.Settings.Default.NegativeSpread = NegativeSpread_checkBox.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void SlackNameCurrency_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            Properties.Settings.Default.SlackNameCurrency = (string)SlackNameCurrency_comboBox.SelectedItem;
             Properties.Settings.Default.Save();
         }
     }

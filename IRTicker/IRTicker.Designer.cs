@@ -54,45 +54,9 @@
             this.VersionLabel = new System.Windows.Forms.Label();
             this.SettingsOKButton = new System.Windows.Forms.Button();
             this.LoadingPanel = new System.Windows.Forms.Panel();
+            this.GIFLabel = new System.Windows.Forms.Label();
             this.Main = new System.Windows.Forms.Panel();
             this.fiatRefresh_checkBox = new System.Windows.Forms.CheckBox();
-            this.BAR_GroupBox = new System.Windows.Forms.GroupBox();
-            this.BAR_XBT_Label2 = new System.Windows.Forms.Label();
-            this.BAR_XBT_Label3 = new System.Windows.Forms.Label();
-            this.BAR_XBT_Label1 = new System.Windows.Forms.Label();
-            this.fiat_GroupBox = new System.Windows.Forms.GroupBox();
-            this.SGD_Label2 = new System.Windows.Forms.Label();
-            this.SGD_Label1 = new System.Windows.Forms.Label();
-            this.USD_Label2 = new System.Windows.Forms.Label();
-            this.USD_Label1 = new System.Windows.Forms.Label();
-            this.AUD_Label2 = new System.Windows.Forms.Label();
-            this.NZD_Label2 = new System.Windows.Forms.Label();
-            this.EUR_Label2 = new System.Windows.Forms.Label();
-            this.EUR_Label1 = new System.Windows.Forms.Label();
-            this.NZD_Label1 = new System.Windows.Forms.Label();
-            this.AUD_Label1 = new System.Windows.Forms.Label();
-            this.SettingsButton = new System.Windows.Forms.Button();
-            this.IRTickerTT = new System.Windows.Forms.ToolTip(this.components);
-            this.OTCHelper = new System.Windows.Forms.Panel();
-            this.StepVolume_Label7 = new System.Windows.Forms.Label();
-            this.StepPrice_Label7 = new System.Windows.Forms.Label();
-            this.StepVolume_Label6 = new System.Windows.Forms.Label();
-            this.StepPrice_Label6 = new System.Windows.Forms.Label();
-            this.StepVolume_Label5 = new System.Windows.Forms.Label();
-            this.StepPrice_Label5 = new System.Windows.Forms.Label();
-            this.StepVolume_Label4 = new System.Windows.Forms.Label();
-            this.StepPrice_Label4 = new System.Windows.Forms.Label();
-            this.StepPrice_Label3 = new System.Windows.Forms.Label();
-            this.StepVolume_Label3 = new System.Windows.Forms.Label();
-            this.StepVolume_Label2 = new System.Windows.Forms.Label();
-            this.StepPrice_Label2 = new System.Windows.Forms.Label();
-            this.StepVolume_Label1 = new System.Windows.Forms.Label();
-            this.StepPrice_Label1 = new System.Windows.Forms.Label();
-            this.MarketBuyCrypto_Label = new System.Windows.Forms.Label();
-            this.CashInput_MaskedTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.CryptoChooser_ComboBox = new System.Windows.Forms.ComboBox();
-            this.BlinkStickBW = new System.ComponentModel.BackgroundWorker();
-            this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
             this.BTCM_GroupBox = new System.Windows.Forms.GroupBox();
             this.BTCM_BSV_Label2 = new System.Windows.Forms.Label();
             this.BTCM_BSV_Label3 = new System.Windows.Forms.Label();
@@ -131,6 +95,10 @@
             this.BTCM_XBT_Label1 = new System.Windows.Forms.Label();
             this.BTCM_BCH_Label1 = new System.Windows.Forms.Label();
             this.BTCM_LTC_Label1 = new System.Windows.Forms.Label();
+            this.BAR_GroupBox = new System.Windows.Forms.GroupBox();
+            this.BAR_XBT_Label2 = new System.Windows.Forms.Label();
+            this.BAR_XBT_Label3 = new System.Windows.Forms.Label();
+            this.BAR_XBT_Label1 = new System.Windows.Forms.Label();
             this.BFX_GroupBox = new System.Windows.Forms.GroupBox();
             this.BFX_USDT_Label2 = new System.Windows.Forms.Label();
             this.BFX_USDT_Label3 = new System.Windows.Forms.Label();
@@ -181,6 +149,18 @@
             this.BFX_ETH_Label1 = new System.Windows.Forms.Label();
             this.BFX_XBT_Label1 = new System.Windows.Forms.Label();
             this.BFX_AvgPrice_Label = new System.Windows.Forms.Label();
+            this.fiat_GroupBox = new System.Windows.Forms.GroupBox();
+            this.SGD_Label2 = new System.Windows.Forms.Label();
+            this.SGD_Label1 = new System.Windows.Forms.Label();
+            this.USD_Label2 = new System.Windows.Forms.Label();
+            this.USD_Label1 = new System.Windows.Forms.Label();
+            this.AUD_Label2 = new System.Windows.Forms.Label();
+            this.NZD_Label2 = new System.Windows.Forms.Label();
+            this.EUR_Label2 = new System.Windows.Forms.Label();
+            this.EUR_Label1 = new System.Windows.Forms.Label();
+            this.NZD_Label1 = new System.Windows.Forms.Label();
+            this.AUD_Label1 = new System.Windows.Forms.Label();
+            this.SettingsButton = new System.Windows.Forms.Button();
             this.IR_GroupBox = new System.Windows.Forms.GroupBox();
             this.IR_USDT_Label2 = new System.Windows.Forms.Label();
             this.IR_USDT_Label3 = new System.Windows.Forms.Label();
@@ -266,18 +246,40 @@
             this.GDAX_BCH_Label1 = new System.Windows.Forms.Label();
             this.GDAX_ETH_Label1 = new System.Windows.Forms.Label();
             this.GDAX_XBT_Label1 = new System.Windows.Forms.Label();
-            this.GIFLabel = new System.Windows.Forms.Label();
+            this.IRTickerTT = new System.Windows.Forms.ToolTip(this.components);
+            this.OTCHelper = new System.Windows.Forms.Panel();
+            this.StepVolume_Label7 = new System.Windows.Forms.Label();
+            this.StepPrice_Label7 = new System.Windows.Forms.Label();
+            this.StepVolume_Label6 = new System.Windows.Forms.Label();
+            this.StepPrice_Label6 = new System.Windows.Forms.Label();
+            this.StepVolume_Label5 = new System.Windows.Forms.Label();
+            this.StepPrice_Label5 = new System.Windows.Forms.Label();
+            this.StepVolume_Label4 = new System.Windows.Forms.Label();
+            this.StepPrice_Label4 = new System.Windows.Forms.Label();
+            this.StepPrice_Label3 = new System.Windows.Forms.Label();
+            this.StepVolume_Label3 = new System.Windows.Forms.Label();
+            this.StepVolume_Label2 = new System.Windows.Forms.Label();
+            this.StepPrice_Label2 = new System.Windows.Forms.Label();
+            this.StepVolume_Label1 = new System.Windows.Forms.Label();
+            this.StepPrice_Label1 = new System.Windows.Forms.Label();
+            this.MarketBuyCrypto_Label = new System.Windows.Forms.Label();
+            this.CashInput_MaskedTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.CryptoChooser_ComboBox = new System.Windows.Forms.ComboBox();
+            this.BlinkStickBW = new System.ComponentModel.BackgroundWorker();
+            this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
+            this.SlackNameCurrency_comboBox = new System.Windows.Forms.ComboBox();
+            this.SlackNameCurrency_label = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
-            this.BAR_GroupBox.SuspendLayout();
-            this.fiat_GroupBox.SuspendLayout();
-            this.OTCHelper.SuspendLayout();
             this.BTCM_GroupBox.SuspendLayout();
+            this.BAR_GroupBox.SuspendLayout();
             this.BFX_GroupBox.SuspendLayout();
+            this.fiat_GroupBox.SuspendLayout();
             this.IR_GroupBox.SuspendLayout();
             this.GDAX_GroupBox.SuspendLayout();
+            this.OTCHelper.SuspendLayout();
             this.SuspendLayout();
             // 
             // refreshFrequencyTextbox
@@ -363,6 +365,8 @@
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.Color.Gainsboro;
+            this.groupBox1.Controls.Add(this.SlackNameCurrency_label);
+            this.groupBox1.Controls.Add(this.SlackNameCurrency_comboBox);
             this.groupBox1.Controls.Add(this.Slack_label);
             this.groupBox1.Controls.Add(this.Slack_checkBox);
             this.groupBox1.Controls.Add(this.slackToken_textBox);
@@ -429,9 +433,9 @@
             this.slackNameChangeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.slackNameChangeLabel.Location = new System.Drawing.Point(16, 128);
             this.slackNameChangeLabel.Name = "slackNameChangeLabel";
-            this.slackNameChangeLabel.Size = new System.Drawing.Size(331, 13);
+            this.slackNameChangeLabel.Size = new System.Drawing.Size(305, 13);
             this.slackNameChangeLabel.TabIndex = 26;
-            this.slackNameChangeLabel.Text = "Change Slack username to have BTC-AUD price midpoint appended";
+            this.slackNameChangeLabel.Text = "Change Slack username to have BTC price midpoint appended";
             // 
             // slackDefaultNameTextBox
             // 
@@ -598,6 +602,18 @@
             this.LoadingPanel.Size = new System.Drawing.Size(585, 843);
             this.LoadingPanel.TabIndex = 10;
             // 
+            // GIFLabel
+            // 
+            this.GIFLabel.BackColor = System.Drawing.Color.Black;
+            this.GIFLabel.ForeColor = System.Drawing.Color.Red;
+            this.GIFLabel.Image = global::IRTicker.Properties.Resources.rainbow_space_bricks_jpg;
+            this.GIFLabel.Location = new System.Drawing.Point(0, 0);
+            this.GIFLabel.Name = "GIFLabel";
+            this.GIFLabel.Size = new System.Drawing.Size(585, 843);
+            this.GIFLabel.TabIndex = 0;
+            this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
+            this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // Main
             // 
             this.Main.BackColor = System.Drawing.Color.White;
@@ -624,369 +640,6 @@
             this.fiatRefresh_checkBox.Text = "Tick to queue fiat update";
             this.fiatRefresh_checkBox.UseVisualStyleBackColor = true;
             this.fiatRefresh_checkBox.CheckedChanged += new System.EventHandler(this.Fiat_checkBox_CheckedChanged);
-            // 
-            // BAR_GroupBox
-            // 
-            this.BAR_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label2);
-            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label3);
-            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label1);
-            this.BAR_GroupBox.Cursor = System.Windows.Forms.Cursors.Default;
-            this.BAR_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.BAR_GroupBox.Location = new System.Drawing.Point(305, 318);
-            this.BAR_GroupBox.Name = "BAR_GroupBox";
-            this.BAR_GroupBox.Size = new System.Drawing.Size(262, 50);
-            this.BAR_GroupBox.TabIndex = 16;
-            this.BAR_GroupBox.TabStop = false;
-            this.BAR_GroupBox.Text = "Bitaroo";
-            // 
-            // BAR_XBT_Label2
-            // 
-            this.BAR_XBT_Label2.AutoSize = true;
-            this.BAR_XBT_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BAR_XBT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_XBT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BAR_XBT_Label2.Location = new System.Drawing.Point(53, 23);
-            this.BAR_XBT_Label2.Name = "BAR_XBT_Label2";
-            this.BAR_XBT_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BAR_XBT_Label2.TabIndex = 4;
-            this.BAR_XBT_Label2.Tag = "BAR";
-            // 
-            // BAR_XBT_Label3
-            // 
-            this.BAR_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BAR_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BAR_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_XBT_Label3.Location = new System.Drawing.Point(119, 20);
-            this.BAR_XBT_Label3.Name = "BAR_XBT_Label3";
-            this.BAR_XBT_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BAR_XBT_Label3.TabIndex = 8;
-            this.BAR_XBT_Label3.Tag = "";
-            this.BAR_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.BAR_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_XBT_Label3_MouseDoubleClick);
-            // 
-            // BAR_XBT_Label1
-            // 
-            this.BAR_XBT_Label1.AutoSize = true;
-            this.BAR_XBT_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BAR_XBT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_XBT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BAR_XBT_Label1.Location = new System.Drawing.Point(6, 23);
-            this.BAR_XBT_Label1.Name = "BAR_XBT_Label1";
-            this.BAR_XBT_Label1.Size = new System.Drawing.Size(35, 13);
-            this.BAR_XBT_Label1.TabIndex = 0;
-            this.BAR_XBT_Label1.Text = "BTC:";
-            // 
-            // fiat_GroupBox
-            // 
-            this.fiat_GroupBox.Controls.Add(this.SGD_Label2);
-            this.fiat_GroupBox.Controls.Add(this.SGD_Label1);
-            this.fiat_GroupBox.Controls.Add(this.USD_Label2);
-            this.fiat_GroupBox.Controls.Add(this.USD_Label1);
-            this.fiat_GroupBox.Controls.Add(this.AUD_Label2);
-            this.fiat_GroupBox.Controls.Add(this.NZD_Label2);
-            this.fiat_GroupBox.Controls.Add(this.EUR_Label2);
-            this.fiat_GroupBox.Controls.Add(this.EUR_Label1);
-            this.fiat_GroupBox.Controls.Add(this.NZD_Label1);
-            this.fiat_GroupBox.Controls.Add(this.AUD_Label1);
-            this.fiat_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.fiat_GroupBox.Location = new System.Drawing.Point(19, 671);
-            this.fiat_GroupBox.Name = "fiat_GroupBox";
-            this.fiat_GroupBox.Size = new System.Drawing.Size(263, 131);
-            this.fiat_GroupBox.TabIndex = 9;
-            this.fiat_GroupBox.TabStop = false;
-            this.fiat_GroupBox.Text = "Fiat rates";
-            this.fiat_GroupBox.Click += new System.EventHandler(this.Fiat_GroupBox_Click);
-            // 
-            // SGD_Label2
-            // 
-            this.SGD_Label2.AutoSize = true;
-            this.SGD_Label2.Location = new System.Drawing.Point(58, 102);
-            this.SGD_Label2.Name = "SGD_Label2";
-            this.SGD_Label2.Size = new System.Drawing.Size(0, 13);
-            this.SGD_Label2.TabIndex = 10;
-            // 
-            // SGD_Label1
-            // 
-            this.SGD_Label1.AutoSize = true;
-            this.SGD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SGD_Label1.Location = new System.Drawing.Point(8, 103);
-            this.SGD_Label1.Name = "SGD_Label1";
-            this.SGD_Label1.Size = new System.Drawing.Size(37, 13);
-            this.SGD_Label1.TabIndex = 9;
-            this.SGD_Label1.Text = "SGD:";
-            // 
-            // USD_Label2
-            // 
-            this.USD_Label2.AutoSize = true;
-            this.USD_Label2.Location = new System.Drawing.Point(58, 82);
-            this.USD_Label2.Name = "USD_Label2";
-            this.USD_Label2.Size = new System.Drawing.Size(0, 13);
-            this.USD_Label2.TabIndex = 8;
-            // 
-            // USD_Label1
-            // 
-            this.USD_Label1.AutoSize = true;
-            this.USD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.USD_Label1.Location = new System.Drawing.Point(8, 83);
-            this.USD_Label1.Name = "USD_Label1";
-            this.USD_Label1.Size = new System.Drawing.Size(37, 13);
-            this.USD_Label1.TabIndex = 7;
-            this.USD_Label1.Text = "USD:";
-            // 
-            // AUD_Label2
-            // 
-            this.AUD_Label2.AutoSize = true;
-            this.AUD_Label2.Location = new System.Drawing.Point(57, 23);
-            this.AUD_Label2.Name = "AUD_Label2";
-            this.AUD_Label2.Size = new System.Drawing.Size(0, 13);
-            this.AUD_Label2.TabIndex = 4;
-            // 
-            // NZD_Label2
-            // 
-            this.NZD_Label2.AutoSize = true;
-            this.NZD_Label2.Location = new System.Drawing.Point(57, 43);
-            this.NZD_Label2.Name = "NZD_Label2";
-            this.NZD_Label2.Size = new System.Drawing.Size(0, 13);
-            this.NZD_Label2.TabIndex = 5;
-            // 
-            // EUR_Label2
-            // 
-            this.EUR_Label2.AutoSize = true;
-            this.EUR_Label2.Location = new System.Drawing.Point(58, 62);
-            this.EUR_Label2.Name = "EUR_Label2";
-            this.EUR_Label2.Size = new System.Drawing.Size(0, 13);
-            this.EUR_Label2.TabIndex = 6;
-            // 
-            // EUR_Label1
-            // 
-            this.EUR_Label1.AutoSize = true;
-            this.EUR_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EUR_Label1.Location = new System.Drawing.Point(8, 63);
-            this.EUR_Label1.Name = "EUR_Label1";
-            this.EUR_Label1.Size = new System.Drawing.Size(37, 13);
-            this.EUR_Label1.TabIndex = 2;
-            this.EUR_Label1.Text = "EUR:";
-            // 
-            // NZD_Label1
-            // 
-            this.NZD_Label1.AutoSize = true;
-            this.NZD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NZD_Label1.Location = new System.Drawing.Point(7, 43);
-            this.NZD_Label1.Name = "NZD_Label1";
-            this.NZD_Label1.Size = new System.Drawing.Size(37, 13);
-            this.NZD_Label1.TabIndex = 1;
-            this.NZD_Label1.Text = "NZD:";
-            // 
-            // AUD_Label1
-            // 
-            this.AUD_Label1.AutoSize = true;
-            this.AUD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AUD_Label1.Location = new System.Drawing.Point(7, 23);
-            this.AUD_Label1.Name = "AUD_Label1";
-            this.AUD_Label1.Size = new System.Drawing.Size(37, 13);
-            this.AUD_Label1.TabIndex = 0;
-            this.AUD_Label1.Text = "AUD:";
-            // 
-            // SettingsButton
-            // 
-            this.SettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsButton.Location = new System.Drawing.Point(492, 806);
-            this.SettingsButton.Name = "SettingsButton";
-            this.SettingsButton.Size = new System.Drawing.Size(75, 23);
-            this.SettingsButton.TabIndex = 2;
-            this.SettingsButton.Text = "Settings";
-            this.SettingsButton.UseVisualStyleBackColor = true;
-            this.SettingsButton.Click += new System.EventHandler(this.SettingsButton_Click);
-            // 
-            // IRTickerTT
-            // 
-            this.IRTickerTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IRTickerTT.ToolTipTitle = "Spread details";
-            // 
-            // OTCHelper
-            // 
-            this.OTCHelper.Controls.Add(this.StepVolume_Label7);
-            this.OTCHelper.Controls.Add(this.StepPrice_Label7);
-            this.OTCHelper.Controls.Add(this.StepVolume_Label6);
-            this.OTCHelper.Controls.Add(this.StepPrice_Label6);
-            this.OTCHelper.Controls.Add(this.StepVolume_Label5);
-            this.OTCHelper.Controls.Add(this.StepPrice_Label5);
-            this.OTCHelper.Controls.Add(this.StepVolume_Label4);
-            this.OTCHelper.Controls.Add(this.StepPrice_Label4);
-            this.OTCHelper.Controls.Add(this.StepPrice_Label3);
-            this.OTCHelper.Controls.Add(this.StepVolume_Label3);
-            this.OTCHelper.Controls.Add(this.StepVolume_Label2);
-            this.OTCHelper.Controls.Add(this.StepPrice_Label2);
-            this.OTCHelper.Controls.Add(this.StepVolume_Label1);
-            this.OTCHelper.Controls.Add(this.StepPrice_Label1);
-            this.OTCHelper.Controls.Add(this.MarketBuyCrypto_Label);
-            this.OTCHelper.Controls.Add(this.CashInput_MaskedTextBox);
-            this.OTCHelper.Controls.Add(this.CryptoChooser_ComboBox);
-            this.OTCHelper.Location = new System.Drawing.Point(0, 0);
-            this.OTCHelper.Name = "OTCHelper";
-            this.OTCHelper.Size = new System.Drawing.Size(585, 613);
-            this.OTCHelper.TabIndex = 1;
-            // 
-            // StepVolume_Label7
-            // 
-            this.StepVolume_Label7.AutoSize = true;
-            this.StepVolume_Label7.Location = new System.Drawing.Point(136, 312);
-            this.StepVolume_Label7.Name = "StepVolume_Label7";
-            this.StepVolume_Label7.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label7.TabIndex = 16;
-            this.StepVolume_Label7.Text = "label1";
-            // 
-            // StepPrice_Label7
-            // 
-            this.StepPrice_Label7.AutoSize = true;
-            this.StepPrice_Label7.Location = new System.Drawing.Point(51, 312);
-            this.StepPrice_Label7.Name = "StepPrice_Label7";
-            this.StepPrice_Label7.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label7.TabIndex = 15;
-            this.StepPrice_Label7.Text = "label1";
-            // 
-            // StepVolume_Label6
-            // 
-            this.StepVolume_Label6.AutoSize = true;
-            this.StepVolume_Label6.Location = new System.Drawing.Point(136, 274);
-            this.StepVolume_Label6.Name = "StepVolume_Label6";
-            this.StepVolume_Label6.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label6.TabIndex = 14;
-            this.StepVolume_Label6.Text = "label1";
-            // 
-            // StepPrice_Label6
-            // 
-            this.StepPrice_Label6.AutoSize = true;
-            this.StepPrice_Label6.Location = new System.Drawing.Point(51, 274);
-            this.StepPrice_Label6.Name = "StepPrice_Label6";
-            this.StepPrice_Label6.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label6.TabIndex = 13;
-            this.StepPrice_Label6.Text = "label1";
-            // 
-            // StepVolume_Label5
-            // 
-            this.StepVolume_Label5.AutoSize = true;
-            this.StepVolume_Label5.Location = new System.Drawing.Point(136, 240);
-            this.StepVolume_Label5.Name = "StepVolume_Label5";
-            this.StepVolume_Label5.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label5.TabIndex = 12;
-            this.StepVolume_Label5.Text = "label1";
-            // 
-            // StepPrice_Label5
-            // 
-            this.StepPrice_Label5.AutoSize = true;
-            this.StepPrice_Label5.Location = new System.Drawing.Point(51, 240);
-            this.StepPrice_Label5.Name = "StepPrice_Label5";
-            this.StepPrice_Label5.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label5.TabIndex = 11;
-            this.StepPrice_Label5.Text = "label1";
-            // 
-            // StepVolume_Label4
-            // 
-            this.StepVolume_Label4.AutoSize = true;
-            this.StepVolume_Label4.Location = new System.Drawing.Point(136, 214);
-            this.StepVolume_Label4.Name = "StepVolume_Label4";
-            this.StepVolume_Label4.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label4.TabIndex = 10;
-            this.StepVolume_Label4.Text = "label1";
-            // 
-            // StepPrice_Label4
-            // 
-            this.StepPrice_Label4.AutoSize = true;
-            this.StepPrice_Label4.Location = new System.Drawing.Point(51, 214);
-            this.StepPrice_Label4.Name = "StepPrice_Label4";
-            this.StepPrice_Label4.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label4.TabIndex = 9;
-            this.StepPrice_Label4.Text = "label1";
-            // 
-            // StepPrice_Label3
-            // 
-            this.StepPrice_Label3.AutoSize = true;
-            this.StepPrice_Label3.Location = new System.Drawing.Point(51, 182);
-            this.StepPrice_Label3.Name = "StepPrice_Label3";
-            this.StepPrice_Label3.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label3.TabIndex = 8;
-            this.StepPrice_Label3.Text = "label1";
-            // 
-            // StepVolume_Label3
-            // 
-            this.StepVolume_Label3.AutoSize = true;
-            this.StepVolume_Label3.Location = new System.Drawing.Point(136, 182);
-            this.StepVolume_Label3.Name = "StepVolume_Label3";
-            this.StepVolume_Label3.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label3.TabIndex = 7;
-            this.StepVolume_Label3.Text = "label1";
-            // 
-            // StepVolume_Label2
-            // 
-            this.StepVolume_Label2.AutoSize = true;
-            this.StepVolume_Label2.Location = new System.Drawing.Point(136, 150);
-            this.StepVolume_Label2.Name = "StepVolume_Label2";
-            this.StepVolume_Label2.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label2.TabIndex = 6;
-            this.StepVolume_Label2.Text = "label1";
-            // 
-            // StepPrice_Label2
-            // 
-            this.StepPrice_Label2.AutoSize = true;
-            this.StepPrice_Label2.Location = new System.Drawing.Point(51, 150);
-            this.StepPrice_Label2.Name = "StepPrice_Label2";
-            this.StepPrice_Label2.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label2.TabIndex = 5;
-            this.StepPrice_Label2.Text = "label1";
-            // 
-            // StepVolume_Label1
-            // 
-            this.StepVolume_Label1.AutoSize = true;
-            this.StepVolume_Label1.Location = new System.Drawing.Point(136, 116);
-            this.StepVolume_Label1.Name = "StepVolume_Label1";
-            this.StepVolume_Label1.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label1.TabIndex = 4;
-            this.StepVolume_Label1.Text = "label1";
-            // 
-            // StepPrice_Label1
-            // 
-            this.StepPrice_Label1.AutoSize = true;
-            this.StepPrice_Label1.Location = new System.Drawing.Point(51, 116);
-            this.StepPrice_Label1.Name = "StepPrice_Label1";
-            this.StepPrice_Label1.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label1.TabIndex = 3;
-            this.StepPrice_Label1.Text = "label1";
-            // 
-            // MarketBuyCrypto_Label
-            // 
-            this.MarketBuyCrypto_Label.AutoSize = true;
-            this.MarketBuyCrypto_Label.Location = new System.Drawing.Point(325, 43);
-            this.MarketBuyCrypto_Label.Name = "MarketBuyCrypto_Label";
-            this.MarketBuyCrypto_Label.Size = new System.Drawing.Size(35, 13);
-            this.MarketBuyCrypto_Label.TabIndex = 2;
-            this.MarketBuyCrypto_Label.Text = "label1";
-            // 
-            // CashInput_MaskedTextBox
-            // 
-            this.CashInput_MaskedTextBox.Location = new System.Drawing.Point(200, 37);
-            this.CashInput_MaskedTextBox.Name = "CashInput_MaskedTextBox";
-            this.CashInput_MaskedTextBox.Size = new System.Drawing.Size(100, 20);
-            this.CashInput_MaskedTextBox.TabIndex = 1;
-            // 
-            // CryptoChooser_ComboBox
-            // 
-            this.CryptoChooser_ComboBox.FormattingEnabled = true;
-            this.CryptoChooser_ComboBox.Location = new System.Drawing.Point(41, 36);
-            this.CryptoChooser_ComboBox.Name = "CryptoChooser_ComboBox";
-            this.CryptoChooser_ComboBox.Size = new System.Drawing.Size(121, 21);
-            this.CryptoChooser_ComboBox.TabIndex = 0;
-            // 
-            // BlinkStickBW
-            // 
-            this.BlinkStickBW.WorkerSupportsCancellation = true;
-            this.BlinkStickBW.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickBW_DoWork);
-            this.BlinkStickBW.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BlinkStickBW_RunWorkerCompleted);
-            // 
-            // BlinkStickWhite_Thread
-            // 
-            this.BlinkStickWhite_Thread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickWhite_Thread_DoWork);
             // 
             // BTCM_GroupBox
             // 
@@ -1488,6 +1141,58 @@
             this.BTCM_LTC_Label1.Size = new System.Drawing.Size(34, 13);
             this.BTCM_LTC_Label1.TabIndex = 11;
             this.BTCM_LTC_Label1.Text = "LTC:";
+            // 
+            // BAR_GroupBox
+            // 
+            this.BAR_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label2);
+            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label3);
+            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label1);
+            this.BAR_GroupBox.Cursor = System.Windows.Forms.Cursors.Default;
+            this.BAR_GroupBox.ForeColor = System.Drawing.Color.Gray;
+            this.BAR_GroupBox.Location = new System.Drawing.Point(305, 318);
+            this.BAR_GroupBox.Name = "BAR_GroupBox";
+            this.BAR_GroupBox.Size = new System.Drawing.Size(262, 50);
+            this.BAR_GroupBox.TabIndex = 16;
+            this.BAR_GroupBox.TabStop = false;
+            this.BAR_GroupBox.Text = "Bitaroo";
+            // 
+            // BAR_XBT_Label2
+            // 
+            this.BAR_XBT_Label2.AutoSize = true;
+            this.BAR_XBT_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BAR_XBT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_XBT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BAR_XBT_Label2.Location = new System.Drawing.Point(53, 23);
+            this.BAR_XBT_Label2.Name = "BAR_XBT_Label2";
+            this.BAR_XBT_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BAR_XBT_Label2.TabIndex = 4;
+            this.BAR_XBT_Label2.Tag = "BAR";
+            // 
+            // BAR_XBT_Label3
+            // 
+            this.BAR_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BAR_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BAR_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_XBT_Label3.Location = new System.Drawing.Point(119, 20);
+            this.BAR_XBT_Label3.Name = "BAR_XBT_Label3";
+            this.BAR_XBT_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BAR_XBT_Label3.TabIndex = 8;
+            this.BAR_XBT_Label3.Tag = "";
+            this.BAR_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BAR_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_XBT_Label3_MouseDoubleClick);
+            // 
+            // BAR_XBT_Label1
+            // 
+            this.BAR_XBT_Label1.AutoSize = true;
+            this.BAR_XBT_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BAR_XBT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_XBT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BAR_XBT_Label1.Location = new System.Drawing.Point(6, 23);
+            this.BAR_XBT_Label1.Name = "BAR_XBT_Label1";
+            this.BAR_XBT_Label1.Size = new System.Drawing.Size(35, 13);
+            this.BAR_XBT_Label1.TabIndex = 0;
+            this.BAR_XBT_Label1.Text = "BTC:";
             // 
             // BFX_GroupBox
             // 
@@ -2147,6 +1852,128 @@
             this.BFX_AvgPrice_Label.Name = "BFX_AvgPrice_Label";
             this.BFX_AvgPrice_Label.Size = new System.Drawing.Size(251, 16);
             this.BFX_AvgPrice_Label.TabIndex = 19;
+            // 
+            // fiat_GroupBox
+            // 
+            this.fiat_GroupBox.Controls.Add(this.SGD_Label2);
+            this.fiat_GroupBox.Controls.Add(this.SGD_Label1);
+            this.fiat_GroupBox.Controls.Add(this.USD_Label2);
+            this.fiat_GroupBox.Controls.Add(this.USD_Label1);
+            this.fiat_GroupBox.Controls.Add(this.AUD_Label2);
+            this.fiat_GroupBox.Controls.Add(this.NZD_Label2);
+            this.fiat_GroupBox.Controls.Add(this.EUR_Label2);
+            this.fiat_GroupBox.Controls.Add(this.EUR_Label1);
+            this.fiat_GroupBox.Controls.Add(this.NZD_Label1);
+            this.fiat_GroupBox.Controls.Add(this.AUD_Label1);
+            this.fiat_GroupBox.ForeColor = System.Drawing.Color.Gray;
+            this.fiat_GroupBox.Location = new System.Drawing.Point(19, 671);
+            this.fiat_GroupBox.Name = "fiat_GroupBox";
+            this.fiat_GroupBox.Size = new System.Drawing.Size(263, 131);
+            this.fiat_GroupBox.TabIndex = 9;
+            this.fiat_GroupBox.TabStop = false;
+            this.fiat_GroupBox.Text = "Fiat rates";
+            this.fiat_GroupBox.Click += new System.EventHandler(this.Fiat_GroupBox_Click);
+            // 
+            // SGD_Label2
+            // 
+            this.SGD_Label2.AutoSize = true;
+            this.SGD_Label2.Location = new System.Drawing.Point(58, 102);
+            this.SGD_Label2.Name = "SGD_Label2";
+            this.SGD_Label2.Size = new System.Drawing.Size(0, 13);
+            this.SGD_Label2.TabIndex = 10;
+            // 
+            // SGD_Label1
+            // 
+            this.SGD_Label1.AutoSize = true;
+            this.SGD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SGD_Label1.Location = new System.Drawing.Point(8, 103);
+            this.SGD_Label1.Name = "SGD_Label1";
+            this.SGD_Label1.Size = new System.Drawing.Size(37, 13);
+            this.SGD_Label1.TabIndex = 9;
+            this.SGD_Label1.Text = "SGD:";
+            // 
+            // USD_Label2
+            // 
+            this.USD_Label2.AutoSize = true;
+            this.USD_Label2.Location = new System.Drawing.Point(58, 82);
+            this.USD_Label2.Name = "USD_Label2";
+            this.USD_Label2.Size = new System.Drawing.Size(0, 13);
+            this.USD_Label2.TabIndex = 8;
+            // 
+            // USD_Label1
+            // 
+            this.USD_Label1.AutoSize = true;
+            this.USD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.USD_Label1.Location = new System.Drawing.Point(8, 83);
+            this.USD_Label1.Name = "USD_Label1";
+            this.USD_Label1.Size = new System.Drawing.Size(37, 13);
+            this.USD_Label1.TabIndex = 7;
+            this.USD_Label1.Text = "USD:";
+            // 
+            // AUD_Label2
+            // 
+            this.AUD_Label2.AutoSize = true;
+            this.AUD_Label2.Location = new System.Drawing.Point(57, 23);
+            this.AUD_Label2.Name = "AUD_Label2";
+            this.AUD_Label2.Size = new System.Drawing.Size(0, 13);
+            this.AUD_Label2.TabIndex = 4;
+            // 
+            // NZD_Label2
+            // 
+            this.NZD_Label2.AutoSize = true;
+            this.NZD_Label2.Location = new System.Drawing.Point(57, 43);
+            this.NZD_Label2.Name = "NZD_Label2";
+            this.NZD_Label2.Size = new System.Drawing.Size(0, 13);
+            this.NZD_Label2.TabIndex = 5;
+            // 
+            // EUR_Label2
+            // 
+            this.EUR_Label2.AutoSize = true;
+            this.EUR_Label2.Location = new System.Drawing.Point(58, 62);
+            this.EUR_Label2.Name = "EUR_Label2";
+            this.EUR_Label2.Size = new System.Drawing.Size(0, 13);
+            this.EUR_Label2.TabIndex = 6;
+            // 
+            // EUR_Label1
+            // 
+            this.EUR_Label1.AutoSize = true;
+            this.EUR_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EUR_Label1.Location = new System.Drawing.Point(8, 63);
+            this.EUR_Label1.Name = "EUR_Label1";
+            this.EUR_Label1.Size = new System.Drawing.Size(37, 13);
+            this.EUR_Label1.TabIndex = 2;
+            this.EUR_Label1.Text = "EUR:";
+            // 
+            // NZD_Label1
+            // 
+            this.NZD_Label1.AutoSize = true;
+            this.NZD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NZD_Label1.Location = new System.Drawing.Point(7, 43);
+            this.NZD_Label1.Name = "NZD_Label1";
+            this.NZD_Label1.Size = new System.Drawing.Size(37, 13);
+            this.NZD_Label1.TabIndex = 1;
+            this.NZD_Label1.Text = "NZD:";
+            // 
+            // AUD_Label1
+            // 
+            this.AUD_Label1.AutoSize = true;
+            this.AUD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AUD_Label1.Location = new System.Drawing.Point(7, 23);
+            this.AUD_Label1.Name = "AUD_Label1";
+            this.AUD_Label1.Size = new System.Drawing.Size(37, 13);
+            this.AUD_Label1.TabIndex = 0;
+            this.AUD_Label1.Text = "AUD:";
+            // 
+            // SettingsButton
+            // 
+            this.SettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SettingsButton.Location = new System.Drawing.Point(492, 806);
+            this.SettingsButton.Name = "SettingsButton";
+            this.SettingsButton.Size = new System.Drawing.Size(75, 23);
+            this.SettingsButton.TabIndex = 2;
+            this.SettingsButton.Text = "Settings";
+            this.SettingsButton.UseVisualStyleBackColor = true;
+            this.SettingsButton.Click += new System.EventHandler(this.SettingsButton_Click);
             // 
             // IR_GroupBox
             // 
@@ -3313,17 +3140,218 @@
             this.GDAX_XBT_Label1.TabIndex = 0;
             this.GDAX_XBT_Label1.Text = "BTC:";
             // 
-            // GIFLabel
+            // IRTickerTT
             // 
-            this.GIFLabel.BackColor = System.Drawing.Color.Black;
-            this.GIFLabel.ForeColor = System.Drawing.Color.Red;
-            this.GIFLabel.Image = global::IRTicker.Properties.Resources.rainbow_space_bricks_jpg;
-            this.GIFLabel.Location = new System.Drawing.Point(0, 0);
-            this.GIFLabel.Name = "GIFLabel";
-            this.GIFLabel.Size = new System.Drawing.Size(585, 843);
-            this.GIFLabel.TabIndex = 0;
-            this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
-            this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.IRTickerTT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.IRTickerTT.ToolTipTitle = "Spread details";
+            // 
+            // OTCHelper
+            // 
+            this.OTCHelper.Controls.Add(this.StepVolume_Label7);
+            this.OTCHelper.Controls.Add(this.StepPrice_Label7);
+            this.OTCHelper.Controls.Add(this.StepVolume_Label6);
+            this.OTCHelper.Controls.Add(this.StepPrice_Label6);
+            this.OTCHelper.Controls.Add(this.StepVolume_Label5);
+            this.OTCHelper.Controls.Add(this.StepPrice_Label5);
+            this.OTCHelper.Controls.Add(this.StepVolume_Label4);
+            this.OTCHelper.Controls.Add(this.StepPrice_Label4);
+            this.OTCHelper.Controls.Add(this.StepPrice_Label3);
+            this.OTCHelper.Controls.Add(this.StepVolume_Label3);
+            this.OTCHelper.Controls.Add(this.StepVolume_Label2);
+            this.OTCHelper.Controls.Add(this.StepPrice_Label2);
+            this.OTCHelper.Controls.Add(this.StepVolume_Label1);
+            this.OTCHelper.Controls.Add(this.StepPrice_Label1);
+            this.OTCHelper.Controls.Add(this.MarketBuyCrypto_Label);
+            this.OTCHelper.Controls.Add(this.CashInput_MaskedTextBox);
+            this.OTCHelper.Controls.Add(this.CryptoChooser_ComboBox);
+            this.OTCHelper.Location = new System.Drawing.Point(0, 0);
+            this.OTCHelper.Name = "OTCHelper";
+            this.OTCHelper.Size = new System.Drawing.Size(585, 613);
+            this.OTCHelper.TabIndex = 1;
+            // 
+            // StepVolume_Label7
+            // 
+            this.StepVolume_Label7.AutoSize = true;
+            this.StepVolume_Label7.Location = new System.Drawing.Point(136, 312);
+            this.StepVolume_Label7.Name = "StepVolume_Label7";
+            this.StepVolume_Label7.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label7.TabIndex = 16;
+            this.StepVolume_Label7.Text = "label1";
+            // 
+            // StepPrice_Label7
+            // 
+            this.StepPrice_Label7.AutoSize = true;
+            this.StepPrice_Label7.Location = new System.Drawing.Point(51, 312);
+            this.StepPrice_Label7.Name = "StepPrice_Label7";
+            this.StepPrice_Label7.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label7.TabIndex = 15;
+            this.StepPrice_Label7.Text = "label1";
+            // 
+            // StepVolume_Label6
+            // 
+            this.StepVolume_Label6.AutoSize = true;
+            this.StepVolume_Label6.Location = new System.Drawing.Point(136, 274);
+            this.StepVolume_Label6.Name = "StepVolume_Label6";
+            this.StepVolume_Label6.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label6.TabIndex = 14;
+            this.StepVolume_Label6.Text = "label1";
+            // 
+            // StepPrice_Label6
+            // 
+            this.StepPrice_Label6.AutoSize = true;
+            this.StepPrice_Label6.Location = new System.Drawing.Point(51, 274);
+            this.StepPrice_Label6.Name = "StepPrice_Label6";
+            this.StepPrice_Label6.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label6.TabIndex = 13;
+            this.StepPrice_Label6.Text = "label1";
+            // 
+            // StepVolume_Label5
+            // 
+            this.StepVolume_Label5.AutoSize = true;
+            this.StepVolume_Label5.Location = new System.Drawing.Point(136, 240);
+            this.StepVolume_Label5.Name = "StepVolume_Label5";
+            this.StepVolume_Label5.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label5.TabIndex = 12;
+            this.StepVolume_Label5.Text = "label1";
+            // 
+            // StepPrice_Label5
+            // 
+            this.StepPrice_Label5.AutoSize = true;
+            this.StepPrice_Label5.Location = new System.Drawing.Point(51, 240);
+            this.StepPrice_Label5.Name = "StepPrice_Label5";
+            this.StepPrice_Label5.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label5.TabIndex = 11;
+            this.StepPrice_Label5.Text = "label1";
+            // 
+            // StepVolume_Label4
+            // 
+            this.StepVolume_Label4.AutoSize = true;
+            this.StepVolume_Label4.Location = new System.Drawing.Point(136, 214);
+            this.StepVolume_Label4.Name = "StepVolume_Label4";
+            this.StepVolume_Label4.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label4.TabIndex = 10;
+            this.StepVolume_Label4.Text = "label1";
+            // 
+            // StepPrice_Label4
+            // 
+            this.StepPrice_Label4.AutoSize = true;
+            this.StepPrice_Label4.Location = new System.Drawing.Point(51, 214);
+            this.StepPrice_Label4.Name = "StepPrice_Label4";
+            this.StepPrice_Label4.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label4.TabIndex = 9;
+            this.StepPrice_Label4.Text = "label1";
+            // 
+            // StepPrice_Label3
+            // 
+            this.StepPrice_Label3.AutoSize = true;
+            this.StepPrice_Label3.Location = new System.Drawing.Point(51, 182);
+            this.StepPrice_Label3.Name = "StepPrice_Label3";
+            this.StepPrice_Label3.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label3.TabIndex = 8;
+            this.StepPrice_Label3.Text = "label1";
+            // 
+            // StepVolume_Label3
+            // 
+            this.StepVolume_Label3.AutoSize = true;
+            this.StepVolume_Label3.Location = new System.Drawing.Point(136, 182);
+            this.StepVolume_Label3.Name = "StepVolume_Label3";
+            this.StepVolume_Label3.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label3.TabIndex = 7;
+            this.StepVolume_Label3.Text = "label1";
+            // 
+            // StepVolume_Label2
+            // 
+            this.StepVolume_Label2.AutoSize = true;
+            this.StepVolume_Label2.Location = new System.Drawing.Point(136, 150);
+            this.StepVolume_Label2.Name = "StepVolume_Label2";
+            this.StepVolume_Label2.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label2.TabIndex = 6;
+            this.StepVolume_Label2.Text = "label1";
+            // 
+            // StepPrice_Label2
+            // 
+            this.StepPrice_Label2.AutoSize = true;
+            this.StepPrice_Label2.Location = new System.Drawing.Point(51, 150);
+            this.StepPrice_Label2.Name = "StepPrice_Label2";
+            this.StepPrice_Label2.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label2.TabIndex = 5;
+            this.StepPrice_Label2.Text = "label1";
+            // 
+            // StepVolume_Label1
+            // 
+            this.StepVolume_Label1.AutoSize = true;
+            this.StepVolume_Label1.Location = new System.Drawing.Point(136, 116);
+            this.StepVolume_Label1.Name = "StepVolume_Label1";
+            this.StepVolume_Label1.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label1.TabIndex = 4;
+            this.StepVolume_Label1.Text = "label1";
+            // 
+            // StepPrice_Label1
+            // 
+            this.StepPrice_Label1.AutoSize = true;
+            this.StepPrice_Label1.Location = new System.Drawing.Point(51, 116);
+            this.StepPrice_Label1.Name = "StepPrice_Label1";
+            this.StepPrice_Label1.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label1.TabIndex = 3;
+            this.StepPrice_Label1.Text = "label1";
+            // 
+            // MarketBuyCrypto_Label
+            // 
+            this.MarketBuyCrypto_Label.AutoSize = true;
+            this.MarketBuyCrypto_Label.Location = new System.Drawing.Point(325, 43);
+            this.MarketBuyCrypto_Label.Name = "MarketBuyCrypto_Label";
+            this.MarketBuyCrypto_Label.Size = new System.Drawing.Size(35, 13);
+            this.MarketBuyCrypto_Label.TabIndex = 2;
+            this.MarketBuyCrypto_Label.Text = "label1";
+            // 
+            // CashInput_MaskedTextBox
+            // 
+            this.CashInput_MaskedTextBox.Location = new System.Drawing.Point(200, 37);
+            this.CashInput_MaskedTextBox.Name = "CashInput_MaskedTextBox";
+            this.CashInput_MaskedTextBox.Size = new System.Drawing.Size(100, 20);
+            this.CashInput_MaskedTextBox.TabIndex = 1;
+            // 
+            // CryptoChooser_ComboBox
+            // 
+            this.CryptoChooser_ComboBox.FormattingEnabled = true;
+            this.CryptoChooser_ComboBox.Location = new System.Drawing.Point(41, 36);
+            this.CryptoChooser_ComboBox.Name = "CryptoChooser_ComboBox";
+            this.CryptoChooser_ComboBox.Size = new System.Drawing.Size(121, 21);
+            this.CryptoChooser_ComboBox.TabIndex = 0;
+            // 
+            // BlinkStickBW
+            // 
+            this.BlinkStickBW.WorkerSupportsCancellation = true;
+            this.BlinkStickBW.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickBW_DoWork);
+            this.BlinkStickBW.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BlinkStickBW_RunWorkerCompleted);
+            // 
+            // BlinkStickWhite_Thread
+            // 
+            this.BlinkStickWhite_Thread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickWhite_Thread_DoWork);
+            // 
+            // SlackNameCurrency_comboBox
+            // 
+            this.SlackNameCurrency_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SlackNameCurrency_comboBox.Enabled = false;
+            this.SlackNameCurrency_comboBox.FormattingEnabled = true;
+            this.SlackNameCurrency_comboBox.Location = new System.Drawing.Point(329, 186);
+            this.SlackNameCurrency_comboBox.Name = "SlackNameCurrency_comboBox";
+            this.SlackNameCurrency_comboBox.Size = new System.Drawing.Size(94, 24);
+            this.SlackNameCurrency_comboBox.TabIndex = 35;
+            this.SlackNameCurrency_comboBox.SelectedIndexChanged += new System.EventHandler(this.SlackNameCurrency_comboBox_SelectedIndexChanged);
+            // 
+            // SlackNameCurrency_label
+            // 
+            this.SlackNameCurrency_label.AccessibleName = "";
+            this.SlackNameCurrency_label.AutoSize = true;
+            this.SlackNameCurrency_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.SlackNameCurrency_label.Location = new System.Drawing.Point(16, 191);
+            this.SlackNameCurrency_label.Name = "SlackNameCurrency_label";
+            this.SlackNameCurrency_label.Size = new System.Drawing.Size(193, 13);
+            this.SlackNameCurrency_label.TabIndex = 36;
+            this.SlackNameCurrency_label.Text = "Base pair for BTC price shown in name:";
+            this.IRTickerTT.SetToolTip(this.SlackNameCurrency_label, "Please leave this populated even if you decide to disable the name integration so" +
+        " the app knows what to set you back to");
             // 
             // IRTicker
             // 
@@ -3351,20 +3379,20 @@
             this.LoadingPanel.ResumeLayout(false);
             this.Main.ResumeLayout(false);
             this.Main.PerformLayout();
-            this.BAR_GroupBox.ResumeLayout(false);
-            this.BAR_GroupBox.PerformLayout();
-            this.fiat_GroupBox.ResumeLayout(false);
-            this.fiat_GroupBox.PerformLayout();
-            this.OTCHelper.ResumeLayout(false);
-            this.OTCHelper.PerformLayout();
             this.BTCM_GroupBox.ResumeLayout(false);
             this.BTCM_GroupBox.PerformLayout();
+            this.BAR_GroupBox.ResumeLayout(false);
+            this.BAR_GroupBox.PerformLayout();
             this.BFX_GroupBox.ResumeLayout(false);
             this.BFX_GroupBox.PerformLayout();
+            this.fiat_GroupBox.ResumeLayout(false);
+            this.fiat_GroupBox.PerformLayout();
             this.IR_GroupBox.ResumeLayout(false);
             this.IR_GroupBox.PerformLayout();
             this.GDAX_GroupBox.ResumeLayout(false);
             this.GDAX_GroupBox.PerformLayout();
+            this.OTCHelper.ResumeLayout(false);
+            this.OTCHelper.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -3613,6 +3641,8 @@
         private System.Windows.Forms.Label BAR_XBT_Label1;
         private System.Windows.Forms.CheckBox NegativeSpread_checkBox;
         private System.Windows.Forms.Label NegativeSpread_label;
+        private System.Windows.Forms.Label SlackNameCurrency_label;
+        private System.Windows.Forms.ComboBox SlackNameCurrency_comboBox;
     }
 }
 
