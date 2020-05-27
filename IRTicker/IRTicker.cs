@@ -444,7 +444,7 @@ namespace IRTicker {
                 if (cPairs.ContainsKey("XBT-" + Properties.Settings.Default.SlackNameCurrency)) {
                     decimal bid = cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentHighestBidPrice;
                     decimal offer = cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentLowestOfferPrice;
-                    string midPoint = Math.Round(((bid + offer) / 2), 0).ToString();
+                    string midPoint = Math.Round(((bid + offer) / 2), 0).ToString("### ##0").Trim();
 
 
                     //string tempName = ((cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentLowestOfferPrice - cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentHighestBidPrice) / 2).ToString();
