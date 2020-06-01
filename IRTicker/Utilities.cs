@@ -20,6 +20,34 @@ namespace IRTicker {
             return value.Remove(value.Length - 1, 1);
         }
 
+        /// <summary>
+        /// takes a decimal and returns a beautiful string.  eg input: 144223.443332, output: 144 223
+        /// input 0.3434332, output 0.34343
+        /// input 0.34343 and 2, output 0.34
+        /// a value between 10 and 1000 will automatically get 2 decimal places, this is strict
+        /// a value over 1000 will get no decimal places, this is strict
+        /// a value under 10 will be default get 5 decimal places, but this is configurable using maxDecimalPlaces.
+        /// </summary>
+        /// <param name="val">the value we're formatting</param>
+        /// <param name="maxDecimalPlaces">max decimal places to return.  Defaults to 5, this is only for limiting if you want less than 5 where the value is less than 10</param>
+        /// <returns>a beautiful string</returns>
+        public static string FormatValue(decimal val, int maxDecimalPlaces = 5) {
+
+            if (val >= 1000) return val.ToString("### ### ### ##0").Trim();
+            if (val >= 10) return val.ToString("##0.00").Trim();
+
+            string formatString = "0";
+
+            int loopCounter = 0;
+            if (maxDecimalPlaces > 0) formatString = "0.";
+            while (loopCounter < maxDecimalPlaces) {
+                if (loopCounter < 2) formatString += "0";
+                else formatString += "#";
+                loopCounter++;
+            }
+            return val.ToString(formatString).Trim();
+        }
+
         // this list will be sorted from earliest time to latest time
         public static Color PriceColour(List<Tuple<DateTime, decimal>> priceList) {
 

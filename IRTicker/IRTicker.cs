@@ -444,8 +444,7 @@ namespace IRTicker {
                 if (cPairs.ContainsKey("XBT-" + Properties.Settings.Default.SlackNameCurrency)) {
                     decimal bid = cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentHighestBidPrice;
                     decimal offer = cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentLowestOfferPrice;
-                    string midPoint = Math.Round(((bid + offer) / 2), 0).ToString("### ##0").Trim();
-
+                    string midPoint = Utilities.FormatValue(Math.Round(((bid + offer) / 2), 0));
 
                     //string tempName = ((cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentLowestOfferPrice - cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentHighestBidPrice) / 2).ToString();
 
@@ -596,10 +595,36 @@ namespace IRTicker {
 
 
                 DCEs["BAR"].CryptoPairsAdd(mSummary.pair, mSummary);
+
+                ParseOrderBook_BAR(mSummary_BAR.orderBook);  // the REST response sends the OB as well, so may as well parse it.
                 
                 DCEs["BAR"].NetworkAvailable = true;
                 DCEs["BAR"].CurrentDCEStatus = "Online";
             }
+        }
+
+        private void ParseOrderBook_BAR (DCE.OrderBook_BAR OB_BAR) {
+
+            // every single entry is a string, and I don't wan to do a decimal.tryParse() around every call, so just do a try on the whole thing
+            try {
+                if (!DCEs["BAR"].orderBooks.ContainsKey("XBT-AUD")) {
+                    DCEs["BAR"].orderBooks["XBT-AUD"] = new DCE.OrderBook();
+                    DCEs["BAR"].orderBooks["XBT-AUD"].PrimaryCurrencyCode = "XBT";
+                    DCEs["BAR"].orderBooks["XBT-AUD"].SecondaryCurrencyCode = "AUD";
+                    DCEs["BAR"].orderBooks["XBT-AUD"].CreatedTimestampUtc = DateTime.Now;
+                }
+                DCE.OrderBook OB = DCEs["BAR"].orderBooks["XBT-AUD"];
+                foreach (DCE.Buy_BAR buyOrder in OB_BAR.buy) {
+                    OB.BuyOrders.Add(new DCE.Order("LimitBid", decimal.Parse(buyOrder.price), decimal.Parse(buyOrder.amount), "1"));
+                }
+                foreach (DCE.Sell_BAR sellOrder in OB_BAR.sell) {
+                    OB.SellOrders.Add(new DCE.Order("LimitOffer", decimal.Parse(sellOrder.price), decimal.Parse(sellOrder.amount), "1"));
+                }
+            }
+            catch (Exception ex) {
+                Debug.Print(DateTime.Now + " - BAR failed to parse the order book, probably one of the strings couldn't be turned into a decimal. error: " + ex.Message);
+            }
+
         }
 
         private void ParseFiat_OER(string baseSymbol, string symbols) {
@@ -941,8 +966,10 @@ namespace IRTicker {
                     //}
                 }
 
-                // need to pull this other fiat currency market summary data if our chose slack currency is not the one we're looking at
-                if (Properties.Settings.Default.SlackNameCurrency != DCEs["IR"].CurrentSecondaryCurrency) {
+                // need to pull this other fiat currency market summary data if our chose slack currency is not the one we're looking at (and the slack stuff is enabled)
+                if ((Properties.Settings.Default.SlackNameCurrency != DCEs["IR"].CurrentSecondaryCurrency) && 
+                    Properties.Settings.Default.Slack && Properties.Settings.Default.SlackNameChange) {
+
                     ParseDCE_IR("XBT", Properties.Settings.Default.SlackNameCurrency);
                 }
 
@@ -1043,6 +1070,7 @@ namespace IRTicker {
                         Debug.Print(DateTime.Now + " - " + dExchange + " - haven't received any messages via sockets in 100 seconds.  reconnecting..");
                         DCEs[dExchange].socketsAlive = false;
                         DCEs[dExchange].socketsReset = true;
+                        pollingThread.ReportProgress(12, dExchange);
                     }
 
                     // separate this because it's possible to hit this code where the socketsreset == true for some other reason that heartbeat
@@ -1146,18 +1174,12 @@ namespace IRTicker {
             foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in cPairs) {
                 // i guess we need to filter out the wrong pairs, also don't try and update labels that are -1 (-1 means they're a fake entry)
                 if (pairObj.Value.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency && pairObj.Value.LastPrice >= 0) {
-                    string formatString = "### ##0.00";
-                    string formatStringSpread = "### ##0.00";
-                    string formatStringVol = "##0.00";
-                    if (pairObj.Value.LastPrice < 10) formatString = "0.00###";  // some coins are so shit, they're worth less than a cent.  Need different formatting for this.  ORRR the spread is so amazingly small we need more decimal places
-                    if (pairObj.Value.spread < 10) formatStringSpread = "0.00###";
-                    if (pairObj.Value.DayVolume >= 1000) formatStringVol = "### ##0.00";
-                    if (pairObj.Value.DayVolume >= 1000000) formatStringVol = "### ### ##0.00";
+
                     decimal midPoint = (pairObj.Value.CurrentHighestBidPrice + pairObj.Value.CurrentLowestOfferPrice) / 2;
 
                     // we use this price label so often and it's so much text to access it, i want to just create a quick variable to make the code easier to read
                     System.Windows.Forms.Label tempPrice = UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"];
-                    tempPrice.Text = midPoint.ToString(formatString).Trim();
+                    tempPrice.Text = Utilities.FormatValue(midPoint);
                     tempPrice.ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(pairObj.Key));
 
                     // if there's a colour, make the font bigger.  otherwise not bigger.
@@ -1181,10 +1203,10 @@ namespace IRTicker {
                         }
                     }
 
-                    UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = pairObj.Value.spread.ToString(formatStringSpread) + ((pairObj.Value.DayVolume == 0) ? "" : " / " + pairObj.Value.DayVolume.ToString(formatStringVol));
+                    UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(pairObj.Value.spread) + ((pairObj.Value.DayVolume == 0) ? "" : " / " + Utilities.FormatValue(pairObj.Value.DayVolume));
 
                     // update tool tips.
-                    IRTickerTT.SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], "Best bid: " + pairObj.Value.CurrentHighestBidPrice.ToString(formatString) + System.Environment.NewLine + "Best offer: " + pairObj.Value.CurrentLowestOfferPrice.ToString(formatString));
+                    IRTickerTT.SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], "Best bid: " + Utilities.FormatValue(pairObj.Value.CurrentHighestBidPrice) + System.Environment.NewLine + "Best offer: " + Utilities.FormatValue(pairObj.Value.CurrentLowestOfferPrice));
                 }
                 //else Debug.Print("Pair don't exist, pairObj.Value.SecondaryCurrencyCode: " + pairObj.Value.SecondaryCurrencyCode);
             }
@@ -1215,21 +1237,11 @@ namespace IRTicker {
                 GroupBoxAndLabelColourActive(dExchange);
                 UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")";
 
-                string formatString = "### ##0.00";
-                string formatStringSpread = "### ##0.00";
-                string formatStringVol = "##0.00";
-
                 decimal midPoint = (mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice) / 2;  // we don't use last price anymore, instead the midpoint of the spread
-
-                if (midPoint < 10) formatString = "0.00###";  // some coins are so shit, they're worth less than a cent.  Need different formatting for this.  ORRR the spread is so amazingly small we need more decimal places
-                if (mSummary.spread < 10) formatStringSpread = "0.00###";
-                if (mSummary.DayVolume >= 1000) formatStringVol = "### ##0.00";
-                if (mSummary.DayVolume >= 1000000) formatStringVol = "### ### ##0.00";
-
 
                 System.Windows.Forms.Label tempPrice = UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"];
 
-                tempPrice.Text = midPoint.ToString(formatString).Trim();
+                tempPrice.Text = Utilities.FormatValue(midPoint);
                 tempPrice.ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(mSummary.pair));
                 // don't do this anymore, because we buffer and hold event, the buffer will often legitimately have events in it, so this isn't (anmymore) an indication that there's a nonce issue
                 // if we're experiencing nonce errors for this pair, make it gray.
@@ -1259,7 +1271,7 @@ namespace IRTicker {
                     }
                 }
 
-                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = mSummary.spread.ToString(formatStringSpread) + ((mSummary.DayVolume == 0) ? "" : " / " + mSummary.DayVolume.ToString(formatStringVol));
+                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(mSummary.spread) + ((mSummary.DayVolume == 0) ? "" : " / " + Utilities.FormatValue(mSummary.DayVolume));
                 //Debug.Print("ABOUT TO CHECK ORDER BOOK STUFF:");
                 //Debug.Print("---num coins = " + UIControls_Dict[dExchange].AvgPrice_NumCoins.Text + " avgprice_crypto = " + (UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedItem == null ? "null" : UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedItem.ToString()));
 
@@ -1269,7 +1281,7 @@ namespace IRTicker {
                 }
 
                 // update tool tips.
-                IRTickerTT.SetToolTip(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"], "Best bid: " + mSummary.CurrentHighestBidPrice.ToString(formatString) + System.Environment.NewLine + "Best offer: " + mSummary.CurrentLowestOfferPrice.ToString(formatString));
+                IRTickerTT.SetToolTip(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"], "Best bid: " + Utilities.FormatValue(mSummary.CurrentHighestBidPrice) + System.Environment.NewLine + "Best offer: " + Utilities.FormatValue(mSummary.CurrentLowestOfferPrice));
             }
             else Debug.Print("Pair2 don't exist, pairObj.Value.SecondaryCurrencyCode: " + mSummary.SecondaryCurrencyCode);
         }
@@ -1320,16 +1332,17 @@ namespace IRTicker {
                             weightedAverage += (usedCoinsInThisOrder / coins) * subOrder.Value.Price;
                             string tTip = buildAvgPriceTooltip(orderSide, fiatSelected, subOrder.Value.Price, orderCount, totalCost, crypto);
                             IRTickerTT.SetToolTip(UIControls_Dict["IR"].AvgPrice, tTip);
-                            return "Average price for " + crypto + ": " + (fiatSelected ? "$" : "") + weightedAverage.ToString("### ##0.##").Trim();  // we have finished filling the hypothetical order
+                            
+                            return "Average price for " + crypto + ": " + (fiatSelected ? "$" : "") + Utilities.FormatValue(weightedAverage);  // we have finished filling the hypothetical order
                         }
-                        else {  // this whole sub order is required
+                        else {  // this whole sub order is required, factor it in and then loop
                             weightedAverage += ((subOrder.Value.Volume * (fiatSelected ? subOrder.Value.Price : 1)) / coins) * subOrder.Value.Price;
                             totalCost += subOrder.Value.Volume * (fiatSelected ? 1 : subOrder.Value.Price);  // if fiat is selected, totalCost var represents total coins
                             Debug.Print("--- totalCost is now " + totalCost + " and was increased by " + subOrder.Value.Volume * (fiatSelected ? 1 : subOrder.Value.Price));
                         }
                     }
                 }
-                return "Order book only has " + (fiatSelected ? "$" : "") + coinCounter.ToString("### ##0.##").Trim() + " " + crypto;
+                return "Order book only has " + (fiatSelected ? "$" : "") + Utilities.FormatValue(coinCounter) + " " + crypto;
             }
             else {
                 MessageBox.Show("Could not convert num coins to a number.  how? num = " + UIControls_Dict["IR"].AvgPrice_NumCoins.Text, "Show this to Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1341,7 +1354,7 @@ namespace IRTicker {
         private string buildAvgPriceTooltip(string buySell, bool fiatSelected, decimal price, int orderCount, decimal finalAmount, string crypto) {
 
             StringBuilder AvgPrice_TTStr = new StringBuilder();
-            AvgPrice_TTStr.AppendLine((buySell == "Buy" ? "Max" : "Min") + " price paid: " + price.ToString("### ##0.##"));
+            AvgPrice_TTStr.AppendLine((buySell == "Buy" ? "Max" : "Min") + " price paid: " + Utilities.FormatValue(price));
             AvgPrice_TTStr.AppendLine("Orders required to fill: " + orderCount);
             AvgPrice_TTStr.Append("Notional ");
 
@@ -1358,11 +1371,7 @@ namespace IRTicker {
                 AvgPrice_TTStr.Append("fiat received: $ ");
             }
 
-            string formatString = "##0.##";
-            if (finalAmount > 999) formatString = "### ##0.##";
-            if (finalAmount > 999999) formatString = "### ### ##0.##";
-
-            AvgPrice_TTStr.Append(finalAmount.ToString(formatString));
+            AvgPrice_TTStr.Append(Utilities.FormatValue(finalAmount));
             return AvgPrice_TTStr.ToString();
         }
 
@@ -1397,7 +1406,7 @@ namespace IRTicker {
                         totalCost += usedCoinsInThisOrder * order.Price;
                         weightedAverage += (usedCoinsInThisOrder / coins) * order.Price;
                         gracefulFinish = true;
-                        string tTip = (orderSide == "Buy" ? "Max" : "Min") + " price paid: " + order.Price.ToString("### ##0.##") + System.Environment.NewLine + "Orders required to fill: " + orderCount + System.Environment.NewLine + "Total fiat cost: " + totalCost.ToString("### ### ##0.##");
+                        string tTip = (orderSide == "Buy" ? "Max" : "Min") + " price paid: " + Utilities.FormatValue(order.Price) + System.Environment.NewLine + "Orders required to fill: " + orderCount + System.Environment.NewLine + "Total fiat cost: " + Utilities.FormatValue(totalCost);
                         IRTickerTT.SetToolTip(UIControls_Dict[dExchange].AvgPrice, tTip);
                         break;  // we have finished filling the hypothetical order
                     }
@@ -1408,10 +1417,10 @@ namespace IRTicker {
                 }
                 if (!gracefulFinish) {
                     //MessageBox.Show("You requested " + coins + " coins, but the order book's entire volume (that the API returned to us) had only " + coinCounter + " coins in it.  So, the displayed average price will be less than reality, but you probably fat fingered how many coins?", dExchange + "'s order book too small for that number of coins", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return "Order book only has " + coinCounter.ToString("### ##0.##").Trim() + " " + crypto;
+                    return "Order book only has " + Utilities.FormatValue(coinCounter) + " " + crypto;
                 }
                 DCEs[dExchange].RemoveOrderBook(pair);  // need to remove once we've used - there's the possibility that the next orderbook API pull fails, then the code will just use the existing order book
-                return "Average price for " + crypto + ": " + weightedAverage.ToString("### ##0.##").Trim();
+                return "Average price for " + crypto + ": " + Utilities.FormatValue(weightedAverage);
             }
             else {
                 MessageBox.Show("Could not convert num coins to a number.  how? num = " + UIControls_Dict[dExchange].AvgPrice_NumCoins.Text, "Show this to Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1463,7 +1472,7 @@ namespace IRTicker {
                 return;
             }
 
-            else if (reportType == 12) {  // 12 is error in the response or API.   either way, we disconnect and start again.
+            if (reportType == 12) {  // 12 is error in the response or API.   either way, we disconnect and start again.
                 string dExchange = (string)e.UserState;
                 APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);
                 return;
