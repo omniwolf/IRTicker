@@ -33,6 +33,8 @@
             this.NegativeSpread_checkBox = new System.Windows.Forms.CheckBox();
             this.NegativeSpread_label = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.SlackNameCurrency_label = new System.Windows.Forms.Label();
+            this.SlackNameCurrency_comboBox = new System.Windows.Forms.ComboBox();
             this.Slack_label = new System.Windows.Forms.Label();
             this.Slack_checkBox = new System.Windows.Forms.CheckBox();
             this.slackToken_textBox = new System.Windows.Forms.TextBox();
@@ -267,8 +269,11 @@
             this.CryptoChooser_ComboBox = new System.Windows.Forms.ComboBox();
             this.BlinkStickBW = new System.ComponentModel.BackgroundWorker();
             this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
-            this.SlackNameCurrency_comboBox = new System.Windows.Forms.ComboBox();
-            this.SlackNameCurrency_label = new System.Windows.Forms.Label();
+            this.BAR_CurrencyBox = new System.Windows.Forms.ComboBox();
+            this.BAR_AvgPrice_Label = new System.Windows.Forms.Label();
+            this.BAR_CryptoComboBox = new System.Windows.Forms.ComboBox();
+            this.BAR_NumCoinsTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.BAR_BuySellComboBox = new System.Windows.Forms.ComboBox();
             this.Settings.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
@@ -381,6 +386,30 @@
             this.groupBox1.TabIndex = 32;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Slack";
+            // 
+            // SlackNameCurrency_label
+            // 
+            this.SlackNameCurrency_label.AccessibleName = "";
+            this.SlackNameCurrency_label.AutoSize = true;
+            this.SlackNameCurrency_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.SlackNameCurrency_label.Location = new System.Drawing.Point(16, 191);
+            this.SlackNameCurrency_label.Name = "SlackNameCurrency_label";
+            this.SlackNameCurrency_label.Size = new System.Drawing.Size(193, 13);
+            this.SlackNameCurrency_label.TabIndex = 36;
+            this.SlackNameCurrency_label.Text = "Base pair for BTC price shown in name:";
+            this.IRTickerTT.SetToolTip(this.SlackNameCurrency_label, "Please leave this populated even if you decide to disable the name integration so" +
+        " the app knows what to set you back to");
+            // 
+            // SlackNameCurrency_comboBox
+            // 
+            this.SlackNameCurrency_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SlackNameCurrency_comboBox.Enabled = false;
+            this.SlackNameCurrency_comboBox.FormattingEnabled = true;
+            this.SlackNameCurrency_comboBox.Location = new System.Drawing.Point(329, 186);
+            this.SlackNameCurrency_comboBox.Name = "SlackNameCurrency_comboBox";
+            this.SlackNameCurrency_comboBox.Size = new System.Drawing.Size(94, 24);
+            this.SlackNameCurrency_comboBox.TabIndex = 35;
+            this.SlackNameCurrency_comboBox.SelectedIndexChanged += new System.EventHandler(this.SlackNameCurrency_comboBox_SelectedIndexChanged);
             // 
             // Slack_label
             // 
@@ -1145,14 +1174,19 @@
             // BAR_GroupBox
             // 
             this.BAR_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.BAR_GroupBox.Controls.Add(this.BAR_CurrencyBox);
             this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label2);
             this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label3);
+            this.BAR_GroupBox.Controls.Add(this.BAR_AvgPrice_Label);
+            this.BAR_GroupBox.Controls.Add(this.BAR_CryptoComboBox);
             this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label1);
+            this.BAR_GroupBox.Controls.Add(this.BAR_NumCoinsTextBox);
+            this.BAR_GroupBox.Controls.Add(this.BAR_BuySellComboBox);
             this.BAR_GroupBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.BAR_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.BAR_GroupBox.Location = new System.Drawing.Point(305, 318);
+            this.BAR_GroupBox.Location = new System.Drawing.Point(305, 314);
             this.BAR_GroupBox.Name = "BAR_GroupBox";
-            this.BAR_GroupBox.Size = new System.Drawing.Size(262, 50);
+            this.BAR_GroupBox.Size = new System.Drawing.Size(262, 102);
             this.BAR_GroupBox.TabIndex = 16;
             this.BAR_GroupBox.TabStop = false;
             this.BAR_GroupBox.Text = "Bitaroo";
@@ -1174,7 +1208,7 @@
             this.BAR_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.BAR_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BAR_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_XBT_Label3.Location = new System.Drawing.Point(119, 20);
+            this.BAR_XBT_Label3.Location = new System.Drawing.Point(117, 25);
             this.BAR_XBT_Label3.Name = "BAR_XBT_Label3";
             this.BAR_XBT_Label3.Size = new System.Drawing.Size(134, 13);
             this.BAR_XBT_Label3.TabIndex = 8;
@@ -1249,7 +1283,7 @@
             this.BFX_GroupBox.Controls.Add(this.BFX_AvgPrice_Label);
             this.BFX_GroupBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.BFX_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.BFX_GroupBox.Location = new System.Drawing.Point(305, 383);
+            this.BFX_GroupBox.Location = new System.Drawing.Point(305, 422);
             this.BFX_GroupBox.Name = "BFX_GroupBox";
             this.BFX_GroupBox.Size = new System.Drawing.Size(262, 380);
             this.BFX_GroupBox.TabIndex = 9;
@@ -1967,7 +2001,7 @@
             // SettingsButton
             // 
             this.SettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsButton.Location = new System.Drawing.Point(492, 806);
+            this.SettingsButton.Location = new System.Drawing.Point(492, 810);
             this.SettingsButton.Name = "SettingsButton";
             this.SettingsButton.Size = new System.Drawing.Size(75, 23);
             this.SettingsButton.TabIndex = 2;
@@ -3329,29 +3363,63 @@
             // 
             this.BlinkStickWhite_Thread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickWhite_Thread_DoWork);
             // 
-            // SlackNameCurrency_comboBox
+            // BAR_CurrencyBox
             // 
-            this.SlackNameCurrency_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.SlackNameCurrency_comboBox.Enabled = false;
-            this.SlackNameCurrency_comboBox.FormattingEnabled = true;
-            this.SlackNameCurrency_comboBox.Location = new System.Drawing.Point(329, 186);
-            this.SlackNameCurrency_comboBox.Name = "SlackNameCurrency_comboBox";
-            this.SlackNameCurrency_comboBox.Size = new System.Drawing.Size(94, 24);
-            this.SlackNameCurrency_comboBox.TabIndex = 35;
-            this.SlackNameCurrency_comboBox.SelectedIndexChanged += new System.EventHandler(this.SlackNameCurrency_comboBox_SelectedIndexChanged);
+            this.BAR_CurrencyBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_CurrencyBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BAR_CurrencyBox.Enabled = false;
+            this.BAR_CurrencyBox.FormattingEnabled = true;
+            this.BAR_CurrencyBox.Items.AddRange(new object[] {
+            "crypto",
+            "fiat"});
+            this.BAR_CurrencyBox.Location = new System.Drawing.Point(131, 72);
+            this.BAR_CurrencyBox.Name = "BAR_CurrencyBox";
+            this.BAR_CurrencyBox.Size = new System.Drawing.Size(58, 21);
+            this.BAR_CurrencyBox.TabIndex = 60;
             // 
-            // SlackNameCurrency_label
+            // BAR_AvgPrice_Label
             // 
-            this.SlackNameCurrency_label.AccessibleName = "";
-            this.SlackNameCurrency_label.AutoSize = true;
-            this.SlackNameCurrency_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.SlackNameCurrency_label.Location = new System.Drawing.Point(16, 191);
-            this.SlackNameCurrency_label.Name = "SlackNameCurrency_label";
-            this.SlackNameCurrency_label.Size = new System.Drawing.Size(193, 13);
-            this.SlackNameCurrency_label.TabIndex = 36;
-            this.SlackNameCurrency_label.Text = "Base pair for BTC price shown in name:";
-            this.IRTickerTT.SetToolTip(this.SlackNameCurrency_label, "Please leave this populated even if you decide to disable the name integration so" +
-        " the app knows what to set you back to");
+            this.BAR_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
+            this.BAR_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BAR_AvgPrice_Label.Location = new System.Drawing.Point(6, 45);
+            this.BAR_AvgPrice_Label.Name = "BAR_AvgPrice_Label";
+            this.BAR_AvgPrice_Label.Size = new System.Drawing.Size(245, 17);
+            this.BAR_AvgPrice_Label.TabIndex = 58;
+            // 
+            // BAR_CryptoComboBox
+            // 
+            this.BAR_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BAR_CryptoComboBox.Location = new System.Drawing.Point(193, 72);
+            this.BAR_CryptoComboBox.Name = "BAR_CryptoComboBox";
+            this.BAR_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
+            this.BAR_CryptoComboBox.TabIndex = 57;
+            // 
+            // BAR_NumCoinsTextBox
+            // 
+            this.BAR_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_NumCoinsTextBox.Location = new System.Drawing.Point(58, 72);
+            this.BAR_NumCoinsTextBox.Mask = "00000000";
+            this.BAR_NumCoinsTextBox.Name = "BAR_NumCoinsTextBox";
+            this.BAR_NumCoinsTextBox.PromptChar = ' ';
+            this.BAR_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
+            this.BAR_NumCoinsTextBox.TabIndex = 56;
+            this.BAR_NumCoinsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.BAR_NumCoinsTextBox.ValidatingType = typeof(int);
+            // 
+            // BAR_BuySellComboBox
+            // 
+            this.BAR_BuySellComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_BuySellComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BAR_BuySellComboBox.FormattingEnabled = true;
+            this.BAR_BuySellComboBox.Items.AddRange(new object[] {
+            "Buy",
+            "Sell"});
+            this.BAR_BuySellComboBox.Location = new System.Drawing.Point(9, 72);
+            this.BAR_BuySellComboBox.Name = "BAR_BuySellComboBox";
+            this.BAR_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
+            this.BAR_BuySellComboBox.TabIndex = 55;
             // 
             // IRTicker
             // 
@@ -3643,6 +3711,11 @@
         private System.Windows.Forms.Label NegativeSpread_label;
         private System.Windows.Forms.Label SlackNameCurrency_label;
         private System.Windows.Forms.ComboBox SlackNameCurrency_comboBox;
+        private System.Windows.Forms.ComboBox BAR_CurrencyBox;
+        private System.Windows.Forms.Label BAR_AvgPrice_Label;
+        private System.Windows.Forms.ComboBox BAR_CryptoComboBox;
+        private System.Windows.Forms.MaskedTextBox BAR_NumCoinsTextBox;
+        private System.Windows.Forms.ComboBox BAR_BuySellComboBox;
     }
 }
 
