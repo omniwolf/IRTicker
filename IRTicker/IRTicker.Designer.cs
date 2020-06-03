@@ -960,9 +960,9 @@
             // 
             // BTCM_NumCoinsTextBox
             // 
+            this.BTCM_NumCoinsTextBox.AsciiOnly = true;
             this.BTCM_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_NumCoinsTextBox.Location = new System.Drawing.Point(96, 271);
-            this.BTCM_NumCoinsTextBox.Mask = "00000000";
             this.BTCM_NumCoinsTextBox.Name = "BTCM_NumCoinsTextBox";
             this.BTCM_NumCoinsTextBox.PromptChar = ' ';
             this.BTCM_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
@@ -1705,7 +1705,6 @@
             // 
             this.BFX_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BFX_NumCoinsTextBox.Location = new System.Drawing.Point(96, 350);
-            this.BFX_NumCoinsTextBox.Mask = "00000000";
             this.BFX_NumCoinsTextBox.Name = "BFX_NumCoinsTextBox";
             this.BFX_NumCoinsTextBox.PromptChar = ' ';
             this.BFX_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
@@ -2555,7 +2554,6 @@
             // 
             this.IR_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_NumCoinsTextBox.Location = new System.Drawing.Point(58, 354);
-            this.IR_NumCoinsTextBox.Mask = "00000000";
             this.IR_NumCoinsTextBox.Name = "IR_NumCoinsTextBox";
             this.IR_NumCoinsTextBox.PromptChar = ' ';
             this.IR_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
@@ -3002,7 +3000,6 @@
             // 
             this.GDAX_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_NumCoinsTextBox.Location = new System.Drawing.Point(95, 231);
-            this.GDAX_NumCoinsTextBox.Mask = "00000000";
             this.GDAX_NumCoinsTextBox.Name = "GDAX_NumCoinsTextBox";
             this.GDAX_NumCoinsTextBox.PromptChar = ' ';
             this.GDAX_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
@@ -3395,18 +3392,20 @@
             this.BAR_CryptoComboBox.Name = "BAR_CryptoComboBox";
             this.BAR_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
             this.BAR_CryptoComboBox.TabIndex = 57;
+            this.BAR_CryptoComboBox.DropDown += new System.EventHandler(this.BAR_CryptoComboBox_DropDown);
+            this.BAR_CryptoComboBox.SelectedIndexChanged += new System.EventHandler(this.BAR_CryptoComboBox_SelectedIndexChanged);
             // 
             // BAR_NumCoinsTextBox
             // 
             this.BAR_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BAR_NumCoinsTextBox.Location = new System.Drawing.Point(58, 72);
-            this.BAR_NumCoinsTextBox.Mask = "00000000";
             this.BAR_NumCoinsTextBox.Name = "BAR_NumCoinsTextBox";
             this.BAR_NumCoinsTextBox.PromptChar = ' ';
             this.BAR_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
             this.BAR_NumCoinsTextBox.TabIndex = 56;
             this.BAR_NumCoinsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.BAR_NumCoinsTextBox.ValidatingType = typeof(int);
+            this.BAR_NumCoinsTextBox.ValidatingType = typeof(System.DateTime);
+            this.BAR_NumCoinsTextBox.TextChanged += new System.EventHandler(this.BAR_NumCoinsTextBox_TextChanged);
             // 
             // BAR_BuySellComboBox
             // 
@@ -3420,6 +3419,7 @@
             this.BAR_BuySellComboBox.Name = "BAR_BuySellComboBox";
             this.BAR_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
             this.BAR_BuySellComboBox.TabIndex = 55;
+            this.BAR_BuySellComboBox.SelectedIndexChanged += new System.EventHandler(this.BAR_BuySellComboBox_SelectedIndexChanged);
             // 
             // IRTicker
             // 
