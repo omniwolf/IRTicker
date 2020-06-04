@@ -487,7 +487,7 @@ namespace IRTicker {
         }
 
         // this grabs data from the API, creates a MarketSummary object, and pops it in the cryptoPairs dictionary
-        private void ParseDCE_IR(string crypto, string fiat) {
+        private void ParseDCE_IR(string crypto, string fiat, bool updateLabels) {
             Tuple<bool, string> marketSummary = Utilities.Get("https://api.independentreserve.com/Public/GetMarketSummary?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
             if (!marketSummary.Item1) {
                 DCEs["IR"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
@@ -510,7 +510,7 @@ namespace IRTicker {
                 DCEs["IR"].CryptoPairsAdd(crypto + "-" + fiat, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
                 DCEs["IR"].CurrentDCEStatus = "Online";
                 // don't update the labels if we are pulling a different fiat than the one we're showing (eg for Slack name)
-                if (DCEs["IR"].CurrentSecondaryCurrency == fiat) pollingThread.ReportProgress(21, mSummary);
+                if (updateLabels && (DCEs["IR"].CurrentSecondaryCurrency == fiat)) pollingThread.ReportProgress(21, mSummary);
             }
         }
 
@@ -541,6 +541,7 @@ namespace IRTicker {
 
                 DCEs["BTCM"].CurrentDCEStatus = "Online";
                 DCEs["BTCM"].NetworkAvailable = true;
+                pollingThread.ReportProgress(31, mSummary);
             }
         }
 
@@ -596,24 +597,29 @@ namespace IRTicker {
 
                 DCEs["BAR"].CryptoPairsAdd(mSummary.pair, mSummary);
 
-                ParseOrderBook_BAR(mSummary_BAR.orderBook);  // the REST response sends the OB as well, so may as well parse it.
+                ParseOrderBook_BAR(mSummary_BAR.orderBook, mSummary.pair);  // the REST response sends the OB as well, so may as well parse it.
                 
                 DCEs["BAR"].NetworkAvailable = true;
                 DCEs["BAR"].CurrentDCEStatus = "Online";
             }
         }
 
-        private void ParseOrderBook_BAR (DCE.OrderBook_BAR OB_BAR) {
+        private void ParseOrderBook_BAR (DCE.OrderBook_BAR OB_BAR, string pair) {
 
             // every single entry is a string, and I don't wan to do a decimal.tryParse() around every call, so just do a try on the whole thing
             try {
-                if (!DCEs["BAR"].orderBooks.ContainsKey("XBT-AUD")) {
-                    DCEs["BAR"].orderBooks["XBT-AUD"] = new DCE.OrderBook();
-                    DCEs["BAR"].orderBooks["XBT-AUD"].PrimaryCurrencyCode = "XBT";
-                    DCEs["BAR"].orderBooks["XBT-AUD"].SecondaryCurrencyCode = "AUD";
-                    DCEs["BAR"].orderBooks["XBT-AUD"].CreatedTimestampUtc = DateTime.Now;
+                if (!DCEs["BAR"].orderBooks.ContainsKey(pair)) {
+                    DCEs["BAR"].orderBooks[pair] = new DCE.OrderBook();
+                    DCEs["BAR"].orderBooks[pair].PrimaryCurrencyCode = Utilities.SplitPair(pair).Item1;
+                    DCEs["BAR"].orderBooks[pair].SecondaryCurrencyCode = Utilities.SplitPair(pair).Item2;
+                    DCEs["BAR"].orderBooks[pair].CreatedTimestampUtc = DateTime.Now;
                 }
-                DCE.OrderBook OB = DCEs["BAR"].orderBooks["XBT-AUD"];
+                else {  // the OB_BAR object contains a complete copy of the order book, so we clear what we have and repace with this.
+                    DCEs["BAR"].orderBooks[pair].BuyOrders.Clear();
+                    DCEs["BAR"].orderBooks[pair].SellOrders.Clear();
+                }
+
+                DCE.OrderBook OB = DCEs["BAR"].orderBooks[pair];
                 foreach (DCE.Buy_BAR buyOrder in OB_BAR.buy) {
                     OB.BuyOrders.Add(new DCE.Order("LimitBid", decimal.Parse(buyOrder.price), decimal.Parse(buyOrder.amount), "1"));
                 }
@@ -622,7 +628,7 @@ namespace IRTicker {
                 }
             }
             catch (Exception ex) {
-                Debug.Print(DateTime.Now + " - BAR failed to parse the order book, probably one of the strings couldn't be turned into a decimal. error: " + ex.Message);
+                Debug.Print(DateTime.Now + " - BAR failed to parse the " + pair + " order book, probably one of the strings couldn't be turned into a decimal. error: " + ex.Message);
             }
 
         }
@@ -941,6 +947,7 @@ namespace IRTicker {
 
                                 //create OB objects ready to be filled.  we only do this once here, and never delete them.  neverrrrr
                                 DCEs["IR"].InitialiseOrderBookDicts_IR(crypto, fiat);
+                                if (DCEs["IR"].CurrentSecondaryCurrency == fiat) ParseDCE_IR(crypto, fiat, true);  // initial data pull and display
                             }
                         }
                         /*DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "AUD");
@@ -961,7 +968,7 @@ namespace IRTicker {
                 foreach (string primaryCode in DCEs["IR"].PrimaryCurrencyList) {
                     // if there's no crypto selected in the drop down or there's no number of coins entered, then just pull the market summary
                     if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
-                        ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency);
+                        ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency, false);
                     }
                     
                     //if (DCEs["IR"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["IR"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
@@ -973,7 +980,7 @@ namespace IRTicker {
                 if ((Properties.Settings.Default.SlackNameCurrency != DCEs["IR"].CurrentSecondaryCurrency) && 
                     Properties.Settings.Default.Slack && Properties.Settings.Default.SlackNameChange) {
 
-                    ParseDCE_IR("XBT", Properties.Settings.Default.SlackNameCurrency);
+                    ParseDCE_IR("XBT", Properties.Settings.Default.SlackNameCurrency, false);
                 }
 
                 // let's check the IR spread.  Cycle through all the "_Spread" labels
@@ -1092,7 +1099,7 @@ namespace IRTicker {
                         foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
                             switch (dExchange) {
                                 case "IR":
-                                    ParseDCE_IR(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency);
+                                    ParseDCE_IR(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency, true);
                                     break;
                                 case "BTCM":
                                     ParseDCE_BTCM(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency);
@@ -1373,10 +1380,12 @@ namespace IRTicker {
                         }
                     }
                 }
+                IRTickerTT.SetToolTip(UIControls_Dict["IR"].AvgPrice, buildAvgPriceTooltip(orderSide, fiatSelected, orderedBook.Last().Key, orderCount, totalCost, crypto));
                 return "Order book only has " + (fiatSelected ? "$" : "") + Utilities.FormatValue(coinCounter) + " " + crypto;
             }
             else {
-                MessageBox.Show("Could not convert num coins to a number.  how? num = " + UIControls_Dict["IR"].AvgPrice_NumCoins.Text, "Show this to Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please just enter a real number (decimal places are fine).", "Avg price calc for Independent Reserve", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UIControls_Dict["IR"].AvgPrice_NumCoins.Text = "";
             }
             return "";
         }
@@ -1447,6 +1456,7 @@ namespace IRTicker {
                     }
                 }
                 if (!gracefulFinish) {
+                    IRTickerTT.SetToolTip(UIControls_Dict[dExchange].AvgPrice, buildAvgPriceTooltip(orderSide, false, orderBook.Last().Price, orderCount, totalCost, crypto));
                     //MessageBox.Show("You requested " + coins + " coins, but the order book's entire volume (that the API returned to us) had only " + coinCounter + " coins in it.  So, the displayed average price will be less than reality, but you probably fat fingered how many coins?", dExchange + "'s order book too small for that number of coins", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return "Order book only has " + Utilities.FormatValue(coinCounter) + " " + crypto;
                 }
@@ -1454,7 +1464,8 @@ namespace IRTicker {
                 return "Average price for " + crypto + ": " + Utilities.FormatValue(weightedAverage);
             }
             else {
-                MessageBox.Show("Could not convert num coins to a number.  how? num = " + UIControls_Dict[dExchange].AvgPrice_NumCoins.Text, "Show this to Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please just enter a real number (decimal places are fine).", "Avg price calc for " + DCEs[dExchange].FriendlyName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                UIControls_Dict[dExchange].AvgPrice_NumCoins.Text = "";
             }
             return "";
         }
@@ -1865,7 +1876,7 @@ namespace IRTicker {
             switch (dExchange) {
                 case "IR":
                     foreach (string crypto in DCEs[dExchange].PrimaryCurrencyList) {
-                        ParseDCE_IR(crypto, DCEs[dExchange].CurrentSecondaryCurrency);
+                        ParseDCE_IR(crypto, DCEs[dExchange].CurrentSecondaryCurrency, false);
                     }
                     break;
             }
@@ -2134,6 +2145,24 @@ namespace IRTicker {
 
         private void BFX_CryptoComboBox_DropDown(object sender, EventArgs e) {
             BFX_AvgPrice_Label.Text = "";
+        }
+
+        private void BAR_BuySellComboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            DCEs["BAR"].BuySell = BAR_BuySellComboBox.SelectedItem.ToString();
+            BAR_AvgPrice_Label.Text = "";
+        }
+
+        private void BAR_NumCoinsTextBox_TextChanged(object sender, EventArgs e) {
+            DCEs["BAR"].NumCoinsStr = BAR_NumCoinsTextBox.Text;
+            BAR_AvgPrice_Label.Text = "";
+        }
+
+        private void BAR_CryptoComboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            DCEs["BAR"].CryptoCombo = BAR_CryptoComboBox.SelectedItem.ToString();
+        }
+
+        private void BAR_CryptoComboBox_DropDown(object sender, EventArgs e) {
+            BAR_AvgPrice_Label.Text = "";
         }
 
         private void IR_XBT_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
