@@ -555,12 +555,12 @@ namespace IRTicker {
 
                 DCE.MarketSummary mSummary = new DCE.MarketSummary();
 
-                if (decimal.TryParse(mSummary_BAR.orderBook.buy.FirstOrDefault().price, out decimal bid)) {
+                if ((mSummary_BAR.orderBook.buy.Count > 0) && decimal.TryParse(mSummary_BAR.orderBook.buy.FirstOrDefault().price, out decimal bid)) {
                     mSummary.CurrentHighestBidPrice = bid;
                 }
                 else Debug.Print("could not convert BAR bid: " + mSummary_BAR.orderBook.buy.FirstOrDefault().price);
 
-                if (decimal.TryParse(mSummary_BAR.orderBook.sell.FirstOrDefault().price, out decimal offer)) {
+                if ((mSummary_BAR.orderBook.sell.Count > 0) && decimal.TryParse(mSummary_BAR.orderBook.sell.FirstOrDefault().price, out decimal offer)) {
                     mSummary.CurrentLowestOfferPrice = offer;
                 }
                 else Debug.Print("could not convert BAR offer: " + mSummary_BAR.orderBook.sell.FirstOrDefault().price);
