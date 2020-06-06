@@ -105,6 +105,7 @@ namespace IRTicker {
 
             DCEs["BAR"].PrimaryCurrencyCodes = "\"XBT\"";
             DCEs["BAR"].SecondaryCurrencyCodes = "\"AUD\"";
+            BAR_CurrencyBox.SelectedIndex = 1;
 
             wSocketConnect = new WebSocketsConnect(DCEs, pollingThread);
 
@@ -353,7 +354,7 @@ namespace IRTicker {
             UIControls_Dict["BAR"].AvgPrice_BuySell = BAR_BuySellComboBox;
             UIControls_Dict["BAR"].AvgPrice_NumCoins = BAR_NumCoinsTextBox;
             UIControls_Dict["BAR"].AvgPrice_Crypto = BAR_CryptoComboBox;
-            //UIControls_Dict["BAR"].AvgPrice_Currency = BAR_CurrencyBox;  // will require a lot of changes, basically meaning all other exchanges will be able to do this.  a job for later
+            UIControls_Dict["BAR"].AvgPrice_Currency = BAR_CurrencyBox;  // will require a lot of changes, basically meaning all other exchanges will be able to do this.  a job for later
             UIControls_Dict["BAR"].AvgPrice = BAR_AvgPrice_Label;
 
             foreach (KeyValuePair<string, UIControls> uic in UIControls_Dict) {
@@ -452,7 +453,7 @@ namespace IRTicker {
                     name += " - " + Properties.Settings.Default.SlackNameCurrency + " " + midPoint;
                 }
             }
-            Debug.Print("slack name is: " + name);
+            //Debug.Print("slack name is: " + name);
 
             if (IRBTCvol < 0 || BTCMBTCvol < 0) {
                 slackObj.setStatus("", ":question:", 120, name);
@@ -884,7 +885,7 @@ namespace IRTicker {
             foreach (string pair in DCEs[dExchange].UsablePairs()) {
                 Tuple<string, string> splitPair = Utilities.SplitPair(pair);  // splits "XBT-AUD" into a tuple ("XBT","AUD")
                 if (splitPair.Item2 == DCEs[dExchange].CurrentSecondaryCurrency) {
-                    UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Add(splitPair.Item1);
+                    UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Add(splitPair.Item1 == "XBT" ? "BTC" : splitPair.Item1);
                 }
             }
 
@@ -1420,6 +1421,8 @@ namespace IRTicker {
             crypto = crypto.ToUpper();
             fiat = fiat.ToUpper();
             string pair = crypto + "-" + fiat;
+            // if fiat we need to multiply by the current price constantly... or you know.. whatever man.  don't let fiat rule your life
+            bool isFiat = UIControls_Dict[dExchange].AvgPrice_Currency.Text.ToUpper() == "FIAT";
 
             if (!DCEs[dExchange].orderBooks.ContainsKey(pair)) return "Failed to pull order book from API";
 
@@ -1435,24 +1438,26 @@ namespace IRTicker {
 
                 decimal coinCounter = 0;  // we add to this counter until it reaches the numCoinsTextBox (coins) value
                 decimal weightedAverage = 0;
-                decimal totalCost = 0;
+                decimal totalCost = 0;  // for crypto this is the total cost/profit in fiat, for fiat this is the total coins bought/sold
                 int orderCount = 0;
                 bool gracefulFinish = false;  // this only gets set to true if the order book has enough coins in it to handle the number of inputted coins.  If it doesn't (ie the foreach completes without us having counted the inputted coins), then we throw a warning message
                 foreach (DCE.Order order in orderBook) {
                     orderCount++;
-                    coinCounter += order.Volume;
+                    coinCounter += order.Volume * (isFiat ? order.Price : 1);
                     if (coinCounter > coins) {  // ok we are on the last value we need to look at.  need to truncate.
-                        decimal usedCoinsInThisOrder = order.Volume - (coinCounter - coins);  // this is how many coins in this order would be required
-                        totalCost += usedCoinsInThisOrder * order.Price;
+                        decimal usedCoinsInThisOrder = (order.Volume * (isFiat ? order.Price : 1)) - (coinCounter - coins);  // this is how many coins in this order would be required
+                        totalCost += usedCoinsInThisOrder * (isFiat ? 1 / order.Price : order.Price);
                         weightedAverage += (usedCoinsInThisOrder / coins) * order.Price;
                         gracefulFinish = true;
                         //string tTip = (orderSide == "Buy" ? "Max" : "Min") + " price paid: " + Utilities.FormatValue(order.Price) + System.Environment.NewLine + "Orders required to fill: " + orderCount + System.Environment.NewLine + "Total fiat cost: " + Utilities.FormatValue(totalCost);
-                        IRTickerTT.SetToolTip(UIControls_Dict[dExchange].AvgPrice, buildAvgPriceTooltip(orderSide, false, order.Price, orderCount, totalCost, crypto));
+                        IRTickerTT.SetToolTip(UIControls_Dict[dExchange].AvgPrice, buildAvgPriceTooltip(orderSide, isFiat, order.Price, orderCount, totalCost, crypto));
                         break;  // we have finished filling the hypothetical order
                     }
                     else {  // this whole order is required
-                        weightedAverage += (order.Volume / coins) * order.Price;
-                        totalCost += order.Volume * order.Price;
+                        decimal test = order.Volume * (isFiat ? order.Price : 1);
+                        decimal test2 = test / coins;
+                        weightedAverage += ((order.Volume * (isFiat ? order.Price : 1)) / coins) * order.Price;
+                        totalCost += order.Volume * (isFiat ? 1 : order.Price);
                     }
                 }
                 if (!gracefulFinish) {

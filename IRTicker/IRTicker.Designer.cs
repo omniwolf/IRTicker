@@ -98,9 +98,14 @@
             this.BTCM_BCH_Label1 = new System.Windows.Forms.Label();
             this.BTCM_LTC_Label1 = new System.Windows.Forms.Label();
             this.BAR_GroupBox = new System.Windows.Forms.GroupBox();
+            this.BAR_CurrencyBox = new System.Windows.Forms.ComboBox();
             this.BAR_XBT_Label2 = new System.Windows.Forms.Label();
             this.BAR_XBT_Label3 = new System.Windows.Forms.Label();
+            this.BAR_AvgPrice_Label = new System.Windows.Forms.Label();
+            this.BAR_CryptoComboBox = new System.Windows.Forms.ComboBox();
             this.BAR_XBT_Label1 = new System.Windows.Forms.Label();
+            this.BAR_NumCoinsTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.BAR_BuySellComboBox = new System.Windows.Forms.ComboBox();
             this.BFX_GroupBox = new System.Windows.Forms.GroupBox();
             this.BFX_USDT_Label2 = new System.Windows.Forms.Label();
             this.BFX_USDT_Label3 = new System.Windows.Forms.Label();
@@ -269,11 +274,6 @@
             this.CryptoChooser_ComboBox = new System.Windows.Forms.ComboBox();
             this.BlinkStickBW = new System.ComponentModel.BackgroundWorker();
             this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
-            this.BAR_CurrencyBox = new System.Windows.Forms.ComboBox();
-            this.BAR_AvgPrice_Label = new System.Windows.Forms.Label();
-            this.BAR_CryptoComboBox = new System.Windows.Forms.ComboBox();
-            this.BAR_NumCoinsTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.BAR_BuySellComboBox = new System.Windows.Forms.ComboBox();
             this.Settings.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
@@ -1191,6 +1191,19 @@
             this.BAR_GroupBox.TabStop = false;
             this.BAR_GroupBox.Text = "Bitaroo";
             // 
+            // BAR_CurrencyBox
+            // 
+            this.BAR_CurrencyBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_CurrencyBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BAR_CurrencyBox.FormattingEnabled = true;
+            this.BAR_CurrencyBox.Items.AddRange(new object[] {
+            "crypto",
+            "fiat"});
+            this.BAR_CurrencyBox.Location = new System.Drawing.Point(131, 72);
+            this.BAR_CurrencyBox.Name = "BAR_CurrencyBox";
+            this.BAR_CurrencyBox.Size = new System.Drawing.Size(58, 21);
+            this.BAR_CurrencyBox.TabIndex = 60;
+            // 
             // BAR_XBT_Label2
             // 
             this.BAR_XBT_Label2.AutoSize = true;
@@ -1216,6 +1229,27 @@
             this.BAR_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.BAR_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_XBT_Label3_MouseDoubleClick);
             // 
+            // BAR_AvgPrice_Label
+            // 
+            this.BAR_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
+            this.BAR_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BAR_AvgPrice_Label.Location = new System.Drawing.Point(6, 45);
+            this.BAR_AvgPrice_Label.Name = "BAR_AvgPrice_Label";
+            this.BAR_AvgPrice_Label.Size = new System.Drawing.Size(245, 17);
+            this.BAR_AvgPrice_Label.TabIndex = 58;
+            // 
+            // BAR_CryptoComboBox
+            // 
+            this.BAR_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BAR_CryptoComboBox.Location = new System.Drawing.Point(193, 72);
+            this.BAR_CryptoComboBox.Name = "BAR_CryptoComboBox";
+            this.BAR_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
+            this.BAR_CryptoComboBox.TabIndex = 57;
+            this.BAR_CryptoComboBox.DropDown += new System.EventHandler(this.BAR_CryptoComboBox_DropDown);
+            this.BAR_CryptoComboBox.SelectedIndexChanged += new System.EventHandler(this.BAR_CryptoComboBox_SelectedIndexChanged);
+            // 
             // BAR_XBT_Label1
             // 
             this.BAR_XBT_Label1.AutoSize = true;
@@ -1227,6 +1261,32 @@
             this.BAR_XBT_Label1.Size = new System.Drawing.Size(35, 13);
             this.BAR_XBT_Label1.TabIndex = 0;
             this.BAR_XBT_Label1.Text = "BTC:";
+            // 
+            // BAR_NumCoinsTextBox
+            // 
+            this.BAR_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_NumCoinsTextBox.Location = new System.Drawing.Point(58, 72);
+            this.BAR_NumCoinsTextBox.Name = "BAR_NumCoinsTextBox";
+            this.BAR_NumCoinsTextBox.PromptChar = ' ';
+            this.BAR_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
+            this.BAR_NumCoinsTextBox.TabIndex = 56;
+            this.BAR_NumCoinsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.BAR_NumCoinsTextBox.ValidatingType = typeof(System.DateTime);
+            this.BAR_NumCoinsTextBox.TextChanged += new System.EventHandler(this.BAR_NumCoinsTextBox_TextChanged);
+            // 
+            // BAR_BuySellComboBox
+            // 
+            this.BAR_BuySellComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_BuySellComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BAR_BuySellComboBox.FormattingEnabled = true;
+            this.BAR_BuySellComboBox.Items.AddRange(new object[] {
+            "Buy",
+            "Sell"});
+            this.BAR_BuySellComboBox.Location = new System.Drawing.Point(9, 72);
+            this.BAR_BuySellComboBox.Name = "BAR_BuySellComboBox";
+            this.BAR_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
+            this.BAR_BuySellComboBox.TabIndex = 55;
+            this.BAR_BuySellComboBox.SelectedIndexChanged += new System.EventHandler(this.BAR_BuySellComboBox_SelectedIndexChanged);
             // 
             // BFX_GroupBox
             // 
@@ -3359,67 +3419,6 @@
             // BlinkStickWhite_Thread
             // 
             this.BlinkStickWhite_Thread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickWhite_Thread_DoWork);
-            // 
-            // BAR_CurrencyBox
-            // 
-            this.BAR_CurrencyBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_CurrencyBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.BAR_CurrencyBox.Enabled = false;
-            this.BAR_CurrencyBox.FormattingEnabled = true;
-            this.BAR_CurrencyBox.Items.AddRange(new object[] {
-            "crypto",
-            "fiat"});
-            this.BAR_CurrencyBox.Location = new System.Drawing.Point(131, 72);
-            this.BAR_CurrencyBox.Name = "BAR_CurrencyBox";
-            this.BAR_CurrencyBox.Size = new System.Drawing.Size(58, 21);
-            this.BAR_CurrencyBox.TabIndex = 60;
-            // 
-            // BAR_AvgPrice_Label
-            // 
-            this.BAR_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
-            this.BAR_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BAR_AvgPrice_Label.Location = new System.Drawing.Point(6, 45);
-            this.BAR_AvgPrice_Label.Name = "BAR_AvgPrice_Label";
-            this.BAR_AvgPrice_Label.Size = new System.Drawing.Size(245, 17);
-            this.BAR_AvgPrice_Label.TabIndex = 58;
-            // 
-            // BAR_CryptoComboBox
-            // 
-            this.BAR_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.BAR_CryptoComboBox.Location = new System.Drawing.Point(193, 72);
-            this.BAR_CryptoComboBox.Name = "BAR_CryptoComboBox";
-            this.BAR_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
-            this.BAR_CryptoComboBox.TabIndex = 57;
-            this.BAR_CryptoComboBox.DropDown += new System.EventHandler(this.BAR_CryptoComboBox_DropDown);
-            this.BAR_CryptoComboBox.SelectedIndexChanged += new System.EventHandler(this.BAR_CryptoComboBox_SelectedIndexChanged);
-            // 
-            // BAR_NumCoinsTextBox
-            // 
-            this.BAR_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_NumCoinsTextBox.Location = new System.Drawing.Point(58, 72);
-            this.BAR_NumCoinsTextBox.Name = "BAR_NumCoinsTextBox";
-            this.BAR_NumCoinsTextBox.PromptChar = ' ';
-            this.BAR_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
-            this.BAR_NumCoinsTextBox.TabIndex = 56;
-            this.BAR_NumCoinsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.BAR_NumCoinsTextBox.ValidatingType = typeof(System.DateTime);
-            this.BAR_NumCoinsTextBox.TextChanged += new System.EventHandler(this.BAR_NumCoinsTextBox_TextChanged);
-            // 
-            // BAR_BuySellComboBox
-            // 
-            this.BAR_BuySellComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_BuySellComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.BAR_BuySellComboBox.FormattingEnabled = true;
-            this.BAR_BuySellComboBox.Items.AddRange(new object[] {
-            "Buy",
-            "Sell"});
-            this.BAR_BuySellComboBox.Location = new System.Drawing.Point(9, 72);
-            this.BAR_BuySellComboBox.Name = "BAR_BuySellComboBox";
-            this.BAR_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
-            this.BAR_BuySellComboBox.TabIndex = 55;
-            this.BAR_BuySellComboBox.SelectedIndexChanged += new System.EventHandler(this.BAR_BuySellComboBox_SelectedIndexChanged);
             // 
             // IRTicker
             // 
