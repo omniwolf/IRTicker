@@ -166,5 +166,17 @@ namespace IRTicker.Properties {
                 this["SlackNameCurrency"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("G:\\My Drive\\IR\\IRTicker\\Spread history data\\")]
+        public string SpreadHistoryCustomFolder {
+            get {
+                return ((string)(this["SpreadHistoryCustomFolder"]));
+            }
+            set {
+                this["SpreadHistoryCustomFolder"] = value;
+            }
+        }
     }
 }

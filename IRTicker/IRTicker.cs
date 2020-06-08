@@ -86,9 +86,6 @@ namespace IRTicker {
                 { "BAR", new DCE("BAR", "Bitaroo") }
             };
 
-            DCEs["IR"].CurrencyCombo = "fiat";
-            IR_CurrencyBox.SelectedIndex = 1;
-
             // BTCM, BFX, and BAR have no APIs that let you download the currency pairs, so just set them manually
             // Actually I'm not sure about the above comment, i think some of them do?  But the main issue is most of them have
             // currencies that we don't want to deal with, so we set the currencies manually here.  IR we want all currencies, so
@@ -105,11 +102,12 @@ namespace IRTicker {
 
             DCEs["BAR"].PrimaryCurrencyCodes = "\"XBT\"";
             DCEs["BAR"].SecondaryCurrencyCodes = "\"AUD\"";
-            BAR_CurrencyBox.SelectedIndex = 1;
 
             wSocketConnect = new WebSocketsConnect(DCEs, pollingThread);
 
             InitialiseUIControls();
+
+            // initialise settings
 
             // if they have somehow set it below 20 secs, force back to 20... or 10
             if (int.TryParse(Properties.Settings.Default.RefreshFreq, out int freq)) {
@@ -120,7 +118,12 @@ namespace IRTicker {
 
             refreshFrequencyTextbox.Text = Properties.Settings.Default.RefreshFreq.ToString();
             EnableGDAXLevel3_CheckBox.Checked = Properties.Settings.Default.FullGDAXOB;
+
             ExportSummarised_Checkbox.Checked = Properties.Settings.Default.ExportSummarised;
+            spreadHistoryCustomFolderValue_Textbox.Text = Properties.Settings.Default.SpreadHistoryCustomFolder;
+            if (Properties.Settings.Default.ExportSummarised) spreadHistoryCustomFolderValue_Textbox.Enabled = true;
+            else spreadHistoryCustomFolderValue_Textbox.Enabled = false;
+
             Slack_checkBox.Checked = Properties.Settings.Default.Slack;
             flashForm_checkBox.Checked = Properties.Settings.Default.FlashForm;
             slackToken_textBox.Text = Properties.Settings.Default.SlackToken;
@@ -255,6 +258,7 @@ namespace IRTicker {
             UIControls_Dict["BTCM"].AvgPrice_BuySell = BTCM_BuySellComboBox;
             UIControls_Dict["BTCM"].AvgPrice_NumCoins = BTCM_NumCoinsTextBox;
             UIControls_Dict["BTCM"].AvgPrice_Crypto = BTCM_CryptoComboBox;
+            UIControls_Dict["BTCM"].AvgPrice_Currency = BTCM_CurrencyBox;
             UIControls_Dict["BTCM"].AvgPrice = BTCM_AvgPrice_Label;
 
             // GDAX
@@ -290,6 +294,7 @@ namespace IRTicker {
             UIControls_Dict["GDAX"].AvgPrice_BuySell = GDAX_BuySellComboBox;
             UIControls_Dict["GDAX"].AvgPrice_NumCoins = GDAX_NumCoinsTextBox;
             UIControls_Dict["GDAX"].AvgPrice_Crypto = GDAX_CryptoComboBox;
+            UIControls_Dict["GDAX"].AvgPrice_Currency = GDAX_CurrencyBox;
             UIControls_Dict["GDAX"].AvgPrice = GDAX_AvgPrice_Label;
 
             // BFX
@@ -343,6 +348,7 @@ namespace IRTicker {
             UIControls_Dict["BFX"].AvgPrice_BuySell = BFX_BuySellComboBox;
             UIControls_Dict["BFX"].AvgPrice_NumCoins = BFX_NumCoinsTextBox;
             UIControls_Dict["BFX"].AvgPrice_Crypto = BFX_CryptoComboBox;
+            UIControls_Dict["BFX"].AvgPrice_Currency = BFX_CurrencyBox;
             UIControls_Dict["BFX"].AvgPrice = BFX_AvgPrice_Label;
 
             // Bitaroo
@@ -362,6 +368,7 @@ namespace IRTicker {
                 if (uic.Value.AvgPrice != null) {
                     uic.Value.AvgPrice_BuySell.SelectedIndex = 0;  // force all the buy/sell drop downs to select buy (so can never be null)
                 }
+                uic.Value.AvgPrice_Currency.SelectedIndex = 1;
             }
         }
 
@@ -1156,29 +1163,23 @@ namespace IRTicker {
                 }*/
 
                 foreach (string dExchange in Exchanges) {
-                    if (DCEs[dExchange].CryptoCombo != "" && !string.IsNullOrEmpty(DCEs[dExchange].NumCoinsStr) && DCEs[dExchange].HasStaticData) {  // we have a crypto selected and coins entered, let's get the order book for them
+                    string cCombo = DCEs[dExchange].CryptoCombo;
+                    if (cCombo == "BTC") cCombo = "XBT";
+                    if (cCombo != "" && !string.IsNullOrEmpty(DCEs[dExchange].NumCoinsStr) && DCEs[dExchange].HasStaticData) {  // we have a crypto selected and coins entered, let's get the order book for them
                         pollingThread.ReportProgress(2, dExchange);  // OK let's lock the fields down
                         switch (dExchange) {
                             case "BTCM":
-                                GetBTCMOrderBook(DCEs["BTCM"].CryptoCombo);
+                                GetBTCMOrderBook(cCombo);
                                 break;
                             case "GDAX":
-                                GetGDAXOrderBook(DCEs["GDAX"].CryptoCombo);
+                                GetGDAXOrderBook(cCombo);
                                 break;
                             case "BFX":
-                                GetBFXOrderBook(DCEs["BFX"].CryptoCombo);
+                                GetBFXOrderBook(cCombo);
                                 break;
                         }
                         pollingThread.ReportProgress(13, dExchange);  // display order book
                     }
-                }
-
-                if (int.TryParse(refreshFrequencyTextbox.Text, out int refreshInt)) {
-                    Thread.Sleep(refreshInt * 1000);
-                }
-                else {
-                    System.Windows.MessageBox.Show("couldn't parse the refresh time.. why?  text: " + refreshFrequencyTextbox.Text);
-                    Thread.Sleep(10000);
                 }
 
                 loopCount++;
@@ -1189,6 +1190,14 @@ namespace IRTicker {
                 if (Properties.Settings.Default.ExportSummarised && (lastCSVWrite + TimeSpan.FromHours(1) < DateTime.Now )) {
                     WriteSpreadHistoryCompressed();
                     lastCSVWrite = DateTime.Now;  // whether or not we write to the CSV, don't try again for another hour.  Setting this AFTER we call the writeSpreadHistoryCompressed() sub so worst case we miss a couple of datapoints rather than duplicate them.
+                }
+
+                if (int.TryParse(refreshFrequencyTextbox.Text, out int refreshInt)) {
+                    Thread.Sleep(refreshInt * 1000);
+                }
+                else {
+                    System.Windows.MessageBox.Show("couldn't parse the refresh time.. why?  text: " + refreshFrequencyTextbox.Text);
+                    Thread.Sleep(10000);
                 }
 
             } while(true);  // polling is lyfe
@@ -1328,10 +1337,10 @@ namespace IRTicker {
         // this works out what the average price of a market order on the OB would be for IR.  We needed to separate this logic from the other exchanges 
         // because IR's order book is represented very differently (and used constantly)
         private string DetermineAveragePrice_IR(string crypto, string fiat, string currency) {
-            crypto = crypto.ToUpper();
+            bool fiatSelected = currency.ToLower() == "fiat";  // if the crypto value is the same as the fiat one, it means that the selected crypto was fiat (ie they chose AUD from the drop avg price dropdown)
+            crypto = (crypto == "BTC" ? "XBT" : crypto.ToUpper());
             fiat = fiat.ToUpper();
             string pair = crypto + "-" + fiat;
-            bool fiatSelected = (currency == "fiat" ? true : false);  // if the crypto value is the same as the fiat one, it means that the selected crypto was fiat (ie they chose AUD from the drop avg price dropdown)
 
             if (!DCEs["IR"].IR_OBs.ContainsKey(pair)) return "No order book for the " + pair + " pair";
             string orderSide = "Buy";
@@ -1382,7 +1391,7 @@ namespace IRTicker {
                     }
                 }
                 IRTickerTT.SetToolTip(UIControls_Dict["IR"].AvgPrice, buildAvgPriceTooltip(orderSide, fiatSelected, orderedBook.Last().Key, orderCount, totalCost, crypto));
-                return "Order book only has " + (fiatSelected ? "$" : "") + Utilities.FormatValue(coinCounter) + " " + crypto;
+                return "Order book only has " + (fiatSelected ? "$" : crypto) + " " + Utilities.FormatValue(coinCounter);
             }
             else {
                 MessageBox.Show("Please just enter a real number (decimal places are fine).", "Avg price calc for Independent Reserve", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1418,7 +1427,7 @@ namespace IRTicker {
 
         private string DetermineAveragePrice(string crypto, string fiat, string dExchange) { 
 
-            crypto = crypto.ToUpper();
+            crypto = (crypto == "BTC" ? "XBT" : crypto.ToUpper());  // gotta convert it back to XBT
             fiat = fiat.ToUpper();
             string pair = crypto + "-" + fiat;
             // if fiat we need to multiply by the current price constantly... or you know.. whatever man.  don't let fiat rule your life
@@ -1461,9 +1470,9 @@ namespace IRTicker {
                     }
                 }
                 if (!gracefulFinish) {
-                    IRTickerTT.SetToolTip(UIControls_Dict[dExchange].AvgPrice, buildAvgPriceTooltip(orderSide, false, orderBook.Last().Price, orderCount, totalCost, crypto));
+                    IRTickerTT.SetToolTip(UIControls_Dict[dExchange].AvgPrice, buildAvgPriceTooltip(orderSide, isFiat, orderBook.Last().Price, orderCount, totalCost, crypto));
                     //MessageBox.Show("You requested " + coins + " coins, but the order book's entire volume (that the API returned to us) had only " + coinCounter + " coins in it.  So, the displayed average price will be less than reality, but you probably fat fingered how many coins?", dExchange + "'s order book too small for that number of coins", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return "Order book only has " + Utilities.FormatValue(coinCounter) + " " + crypto;
+                    return "Order book only has " + (isFiat ? "$" : crypto) + " " + Utilities.FormatValue(coinCounter);
                 }
                 DCEs[dExchange].RemoveOrderBook(pair);  // need to remove once we've used - there's the possibility that the next orderbook API pull fails, then the code will just use the existing order book
                 return "Average price for " + crypto + ": " + Utilities.FormatValue(weightedAverage);
@@ -2016,13 +2025,14 @@ namespace IRTicker {
         // this one only writes the spread as it sees it every 30 seconds or so.. to reduce the CSV file size.
         private void WriteSpreadHistoryCompressed() {
 
-            string baseFolder = "G:\\My Drive\\IR\\IRTicker\\Spread history data\\";
+            //string baseFolder = "G:\\My Drive\\IR\\IRTicker\\Spread history data\\";
+            string baseFolder = Properties.Settings.Default.SpreadHistoryCustomFolder;
             if (!Directory.Exists(baseFolder)) {
                 Debug.Print("Cannot write spread history info - base folder not accessible or doesn't exist");
                 return;
             }
-            Debug.Print(DateTime.Now + " - CSV write: G drive folder exists, let's do it.");
-            string dataFolder = baseFolder + Environment.UserName + "\\";
+            Debug.Print(DateTime.Now + " - CSV write: " + baseFolder + " exists, let's do it.");
+            string dataFolder = baseFolder + "\\" + Environment.UserName + "\\";
             if (!Directory.Exists(dataFolder)) Directory.CreateDirectory(dataFolder);  // create it if it doesn't exist
             StreamWriter dataWriter;
             try {
@@ -2299,6 +2309,8 @@ namespace IRTicker {
         private void ExportSummarised_Checkbox_CheckedChanged(object sender, EventArgs e) {
             Properties.Settings.Default.ExportSummarised = ExportSummarised_Checkbox.Checked;
             Properties.Settings.Default.Save();
+            if (Properties.Settings.Default.ExportSummarised) spreadHistoryCustomFolderValue_Textbox.Enabled = true;
+            else spreadHistoryCustomFolderValue_Textbox.Enabled = false;
         }
 
         // this sub sets the cursor position to the far right when control enters the num coins masked text box
@@ -2504,6 +2516,17 @@ namespace IRTicker {
         private void SlackNameCurrency_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
             Properties.Settings.Default.SlackNameCurrency = (string)SlackNameCurrency_comboBox.SelectedItem;
             Properties.Settings.Default.Save();
+        }
+
+        private void spreadHistoryCustomFolderValue_Textbox_Click(object sender, EventArgs e) {
+            if (Properties.Settings.Default.ExportSummarised) {  // only do something if we're actually exporting
+                DialogResult result = spreadHistory_FolderDialog.ShowDialog();
+                if (result == DialogResult.OK) {
+                    Properties.Settings.Default.SpreadHistoryCustomFolder = spreadHistory_FolderDialog.SelectedPath;
+                    Properties.Settings.Default.Save();
+                    spreadHistoryCustomFolderValue_Textbox.Text = Properties.Settings.Default.SpreadHistoryCustomFolder;
+                }
+            }
         }
     }
 }

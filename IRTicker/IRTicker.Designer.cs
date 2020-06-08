@@ -27,9 +27,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
-            this.toolbarFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
+            this.spreadHistoryCustomFolderValue_Textbox = new System.Windows.Forms.TextBox();
+            this.spreadHistoryCustomFolder_label = new System.Windows.Forms.Label();
             this.NegativeSpread_checkBox = new System.Windows.Forms.CheckBox();
             this.NegativeSpread_label = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -274,6 +275,10 @@
             this.CryptoChooser_ComboBox = new System.Windows.Forms.ComboBox();
             this.BlinkStickBW = new System.ComponentModel.BackgroundWorker();
             this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
+            this.spreadHistory_FolderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.GDAX_CurrencyBox = new System.Windows.Forms.ComboBox();
+            this.BFX_CurrencyBox = new System.Windows.Forms.ComboBox();
+            this.BTCM_CurrencyBox = new System.Windows.Forms.ComboBox();
             this.Settings.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
@@ -321,6 +326,8 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
+            this.Settings.Controls.Add(this.spreadHistoryCustomFolderValue_Textbox);
+            this.Settings.Controls.Add(this.spreadHistoryCustomFolder_label);
             this.Settings.Controls.Add(this.NegativeSpread_checkBox);
             this.Settings.Controls.Add(this.NegativeSpread_label);
             this.Settings.Controls.Add(this.groupBox1);
@@ -344,13 +351,38 @@
             this.Settings.Size = new System.Drawing.Size(585, 843);
             this.Settings.TabIndex = 4;
             // 
+            // spreadHistoryCustomFolderValue_Textbox
+            // 
+            this.spreadHistoryCustomFolderValue_Textbox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.spreadHistoryCustomFolderValue_Textbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.spreadHistoryCustomFolderValue_Textbox.Location = new System.Drawing.Point(226, 244);
+            this.spreadHistoryCustomFolderValue_Textbox.Name = "spreadHistoryCustomFolderValue_Textbox";
+            this.spreadHistoryCustomFolderValue_Textbox.ReadOnly = true;
+            this.spreadHistoryCustomFolderValue_Textbox.Size = new System.Drawing.Size(279, 20);
+            this.spreadHistoryCustomFolderValue_Textbox.TabIndex = 37;
+            this.spreadHistoryCustomFolderValue_Textbox.Text = "G:\\My Drive\\IR\\IRTicker\\Spread history data\\";
+            this.IRTickerTT.SetToolTip(this.spreadHistoryCustomFolderValue_Textbox, "Default is G:\\My Drive\\IR\\IRTicker\\Spread history data\\");
+            this.spreadHistoryCustomFolderValue_Textbox.Click += new System.EventHandler(this.spreadHistoryCustomFolderValue_Textbox_Click);
+            // 
+            // spreadHistoryCustomFolder_label
+            // 
+            this.spreadHistoryCustomFolder_label.AccessibleName = "";
+            this.spreadHistoryCustomFolder_label.AutoSize = true;
+            this.spreadHistoryCustomFolder_label.Location = new System.Drawing.Point(73, 244);
+            this.spreadHistoryCustomFolder_label.Name = "spreadHistoryCustomFolder_label";
+            this.spreadHistoryCustomFolder_label.Size = new System.Drawing.Size(144, 26);
+            this.spreadHistoryCustomFolder_label.TabIndex = 35;
+            this.spreadHistoryCustomFolder_label.Text = "Choose a custom base folder\r\nto export spread data to";
+            this.IRTickerTT.SetToolTip(this.spreadHistoryCustomFolder_label, "A folder under this one will be created to store the CSVs in, it will be named yo" +
+        "ur current logged in username");
+            // 
             // NegativeSpread_checkBox
             // 
             this.NegativeSpread_checkBox.AccessibleName = "";
             this.NegativeSpread_checkBox.AutoSize = true;
             this.NegativeSpread_checkBox.Checked = true;
             this.NegativeSpread_checkBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.NegativeSpread_checkBox.Location = new System.Drawing.Point(490, 640);
+            this.NegativeSpread_checkBox.Location = new System.Drawing.Point(490, 692);
             this.NegativeSpread_checkBox.Name = "NegativeSpread_checkBox";
             this.NegativeSpread_checkBox.Size = new System.Drawing.Size(15, 14);
             this.NegativeSpread_checkBox.TabIndex = 34;
@@ -361,7 +393,7 @@
             // 
             this.NegativeSpread_label.AccessibleName = "";
             this.NegativeSpread_label.AutoSize = true;
-            this.NegativeSpread_label.Location = new System.Drawing.Point(73, 640);
+            this.NegativeSpread_label.Location = new System.Drawing.Point(73, 692);
             this.NegativeSpread_label.Name = "NegativeSpread_label";
             this.NegativeSpread_label.Size = new System.Drawing.Size(226, 13);
             this.NegativeSpread_label.TabIndex = 33;
@@ -380,7 +412,7 @@
             this.groupBox1.Controls.Add(this.slackDefaultNameTextBox);
             this.groupBox1.Controls.Add(this.slackNameChangeCheckBox);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(76, 251);
+            this.groupBox1.Location = new System.Drawing.Point(76, 303);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(461, 222);
             this.groupBox1.TabIndex = 32;
@@ -487,7 +519,7 @@
             // 
             // UITimerFreq_maskedTextBox
             // 
-            this.UITimerFreq_maskedTextBox.Location = new System.Drawing.Point(405, 599);
+            this.UITimerFreq_maskedTextBox.Location = new System.Drawing.Point(405, 651);
             this.UITimerFreq_maskedTextBox.Mask = "0000";
             this.UITimerFreq_maskedTextBox.Name = "UITimerFreq_maskedTextBox";
             this.UITimerFreq_maskedTextBox.PromptChar = ' ';
@@ -498,7 +530,7 @@
             // 
             this.UITimerFreq_label.AccessibleName = "";
             this.UITimerFreq_label.AutoSize = true;
-            this.UITimerFreq_label.Location = new System.Drawing.Point(73, 602);
+            this.UITimerFreq_label.Location = new System.Drawing.Point(73, 654);
             this.UITimerFreq_label.Name = "UITimerFreq_label";
             this.UITimerFreq_label.Size = new System.Drawing.Size(252, 13);
             this.UITimerFreq_label.TabIndex = 30;
@@ -508,7 +540,7 @@
             // 
             this.OB_checkBox.AccessibleName = "";
             this.OB_checkBox.AutoSize = true;
-            this.OB_checkBox.Location = new System.Drawing.Point(490, 548);
+            this.OB_checkBox.Location = new System.Drawing.Point(490, 600);
             this.OB_checkBox.Name = "OB_checkBox";
             this.OB_checkBox.Size = new System.Drawing.Size(15, 14);
             this.OB_checkBox.TabIndex = 25;
@@ -519,7 +551,7 @@
             // 
             this.OB_label.AccessibleName = "";
             this.OB_label.AutoSize = true;
-            this.OB_label.Location = new System.Drawing.Point(73, 548);
+            this.OB_label.Location = new System.Drawing.Point(73, 600);
             this.OB_label.Name = "OB_label";
             this.OB_label.Size = new System.Drawing.Size(372, 26);
             this.OB_label.TabIndex = 24;
@@ -530,7 +562,7 @@
             // 
             this.flashForm_checkBox.AccessibleName = "";
             this.flashForm_checkBox.AutoSize = true;
-            this.flashForm_checkBox.Location = new System.Drawing.Point(490, 493);
+            this.flashForm_checkBox.Location = new System.Drawing.Point(490, 545);
             this.flashForm_checkBox.Name = "flashForm_checkBox";
             this.flashForm_checkBox.Size = new System.Drawing.Size(15, 14);
             this.flashForm_checkBox.TabIndex = 22;
@@ -541,7 +573,7 @@
             // 
             this.flashForm_label.AccessibleName = "";
             this.flashForm_label.AutoSize = true;
-            this.flashForm_label.Location = new System.Drawing.Point(73, 493);
+            this.flashForm_label.Location = new System.Drawing.Point(73, 545);
             this.flashForm_label.Name = "flashForm_label";
             this.flashForm_label.Size = new System.Drawing.Size(198, 26);
             this.flashForm_label.TabIndex = 21;
@@ -674,6 +706,7 @@
             // 
             this.BTCM_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.btcm3;
             this.BTCM_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.BTCM_GroupBox.Controls.Add(this.BTCM_CurrencyBox);
             this.BTCM_GroupBox.Controls.Add(this.BTCM_BSV_Label2);
             this.BTCM_GroupBox.Controls.Add(this.BTCM_BSV_Label3);
             this.BTCM_GroupBox.Controls.Add(this.BTCM_BSV_Label1);
@@ -962,7 +995,7 @@
             // 
             this.BTCM_NumCoinsTextBox.AsciiOnly = true;
             this.BTCM_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_NumCoinsTextBox.Location = new System.Drawing.Point(96, 271);
+            this.BTCM_NumCoinsTextBox.Location = new System.Drawing.Point(58, 271);
             this.BTCM_NumCoinsTextBox.Name = "BTCM_NumCoinsTextBox";
             this.BTCM_NumCoinsTextBox.PromptChar = ' ';
             this.BTCM_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
@@ -994,7 +1027,7 @@
             "Sell"});
             this.BTCM_BuySellComboBox.Location = new System.Drawing.Point(10, 271);
             this.BTCM_BuySellComboBox.Name = "BTCM_BuySellComboBox";
-            this.BTCM_BuySellComboBox.Size = new System.Drawing.Size(58, 21);
+            this.BTCM_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
             this.BTCM_BuySellComboBox.TabIndex = 15;
             this.BTCM_BuySellComboBox.SelectedIndexChanged += new System.EventHandler(this.BTCM_BuySellComboBox_SelectedIndexChanged);
             // 
@@ -1292,6 +1325,7 @@
             // 
             this.BFX_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.bfx_faded;
             this.BFX_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.BFX_GroupBox.Controls.Add(this.BFX_CurrencyBox);
             this.BFX_GroupBox.Controls.Add(this.BFX_USDT_Label2);
             this.BFX_GroupBox.Controls.Add(this.BFX_USDT_Label3);
             this.BFX_GroupBox.Controls.Add(this.BFX_USDT_Label1);
@@ -1764,7 +1798,7 @@
             // BFX_NumCoinsTextBox
             // 
             this.BFX_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_NumCoinsTextBox.Location = new System.Drawing.Point(96, 350);
+            this.BFX_NumCoinsTextBox.Location = new System.Drawing.Point(58, 350);
             this.BFX_NumCoinsTextBox.Name = "BFX_NumCoinsTextBox";
             this.BFX_NumCoinsTextBox.PromptChar = ' ';
             this.BFX_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
@@ -1796,7 +1830,7 @@
             "Sell"});
             this.BFX_BuySellComboBox.Location = new System.Drawing.Point(10, 350);
             this.BFX_BuySellComboBox.Name = "BFX_BuySellComboBox";
-            this.BFX_BuySellComboBox.Size = new System.Drawing.Size(58, 21);
+            this.BFX_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
             this.BFX_BuySellComboBox.TabIndex = 18;
             this.BFX_BuySellComboBox.SelectedIndexChanged += new System.EventHandler(this.BFX_BuySellComboBox_SelectedIndexChanged);
             // 
@@ -2814,6 +2848,7 @@
             // 
             this.GDAX_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.coinbasepro_logo3;
             this.GDAX_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.GDAX_GroupBox.Controls.Add(this.GDAX_CurrencyBox);
             this.GDAX_GroupBox.Controls.Add(this.GDAX_ETC_Label2);
             this.GDAX_GroupBox.Controls.Add(this.GDAX_ETC_Label3);
             this.GDAX_GroupBox.Controls.Add(this.GDAX_ETC_Label1);
@@ -3059,7 +3094,7 @@
             // GDAX_NumCoinsTextBox
             // 
             this.GDAX_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_NumCoinsTextBox.Location = new System.Drawing.Point(95, 231);
+            this.GDAX_NumCoinsTextBox.Location = new System.Drawing.Point(58, 231);
             this.GDAX_NumCoinsTextBox.Name = "GDAX_NumCoinsTextBox";
             this.GDAX_NumCoinsTextBox.PromptChar = ' ';
             this.GDAX_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
@@ -3091,7 +3126,7 @@
             "Sell"});
             this.GDAX_BuySellComboBox.Location = new System.Drawing.Point(9, 231);
             this.GDAX_BuySellComboBox.Name = "GDAX_BuySellComboBox";
-            this.GDAX_BuySellComboBox.Size = new System.Drawing.Size(58, 21);
+            this.GDAX_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
             this.GDAX_BuySellComboBox.TabIndex = 15;
             this.GDAX_BuySellComboBox.SelectedIndexChanged += new System.EventHandler(this.GDAX_BuySellComboBox_SelectedIndexChanged);
             // 
@@ -3420,6 +3455,46 @@
             // 
             this.BlinkStickWhite_Thread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickWhite_Thread_DoWork);
             // 
+            // GDAX_CurrencyBox
+            // 
+            this.GDAX_CurrencyBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_CurrencyBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.GDAX_CurrencyBox.FormattingEnabled = true;
+            this.GDAX_CurrencyBox.Items.AddRange(new object[] {
+            "crypto",
+            "fiat"});
+            this.GDAX_CurrencyBox.Location = new System.Drawing.Point(131, 231);
+            this.GDAX_CurrencyBox.Name = "GDAX_CurrencyBox";
+            this.GDAX_CurrencyBox.Size = new System.Drawing.Size(58, 21);
+            this.GDAX_CurrencyBox.TabIndex = 55;
+            // 
+            // BFX_CurrencyBox
+            // 
+            this.BFX_CurrencyBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_CurrencyBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BFX_CurrencyBox.FormattingEnabled = true;
+            this.BFX_CurrencyBox.Items.AddRange(new object[] {
+            "crypto",
+            "fiat"});
+            this.BFX_CurrencyBox.Location = new System.Drawing.Point(131, 350);
+            this.BFX_CurrencyBox.Name = "BFX_CurrencyBox";
+            this.BFX_CurrencyBox.Size = new System.Drawing.Size(58, 21);
+            this.BFX_CurrencyBox.TabIndex = 56;
+            // 
+            // BTCM_CurrencyBox
+            // 
+            this.BTCM_CurrencyBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_CurrencyBox.DisplayMember = "fiat";
+            this.BTCM_CurrencyBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BTCM_CurrencyBox.FormattingEnabled = true;
+            this.BTCM_CurrencyBox.Items.AddRange(new object[] {
+            "crypto",
+            "fiat"});
+            this.BTCM_CurrencyBox.Location = new System.Drawing.Point(131, 271);
+            this.BTCM_CurrencyBox.Name = "BTCM_CurrencyBox";
+            this.BTCM_CurrencyBox.Size = new System.Drawing.Size(58, 21);
+            this.BTCM_CurrencyBox.TabIndex = 61;
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3468,7 +3543,6 @@
 
         private System.Windows.Forms.MaskedTextBox refreshFrequencyTextbox;
         private System.Windows.Forms.Label refreshFrequencyLabel;
-        private System.Windows.Forms.FolderBrowserDialog toolbarFolder;
         private System.ComponentModel.BackgroundWorker pollingThread;
         private System.Windows.Forms.Panel Settings;
         private System.Windows.Forms.Panel Main;
@@ -3715,6 +3789,12 @@
         private System.Windows.Forms.ComboBox BAR_CryptoComboBox;
         private System.Windows.Forms.MaskedTextBox BAR_NumCoinsTextBox;
         private System.Windows.Forms.ComboBox BAR_BuySellComboBox;
+        private System.Windows.Forms.FolderBrowserDialog spreadHistory_FolderDialog;
+        private System.Windows.Forms.TextBox spreadHistoryCustomFolderValue_Textbox;
+        private System.Windows.Forms.Label spreadHistoryCustomFolder_label;
+        private System.Windows.Forms.ComboBox BFX_CurrencyBox;
+        private System.Windows.Forms.ComboBox GDAX_CurrencyBox;
+        private System.Windows.Forms.ComboBox BTCM_CurrencyBox;
     }
 }
 

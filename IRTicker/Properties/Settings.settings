@@ -38,5 +38,8 @@
     <Setting Name="SlackNameCurrency" Type="System.String" Scope="User">
       <Value Profile="(Default)">AUD</Value>
     </Setting>
+    <Setting Name="SpreadHistoryCustomFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">G:\My Drive\IR\IRTicker\Spread history data\</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
