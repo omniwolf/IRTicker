@@ -73,10 +73,12 @@ namespace IRTicker {
 
             wSocket_BFX.OnClose += (sender, e) => {
                 Debug.Print("BFX stream closed... should be preceeded by some ded thingo " + DateTime.Now.ToString());
-                DCEs["BFX"].socketsAlive = false;
+                
+               // trying to comment this out in the hope that it will stop the reconnect loop we get into after hibernation
+                /*DCEs["BFX"].socketsAlive = false;
                 DCEs["BFX"].socketsReset = true;
                 DCEs["BFX"].CurrentDCEStatus = "Socket error";
-                pollingThread.ReportProgress(12, "BFX");  // 12 is error
+                pollingThread.ReportProgress(12, "BFX");  // 12 is error*/
                 //WebSocket_Reconnect("BFX");
             }; 
             wSocket_BFX.Connect();
@@ -113,10 +115,11 @@ namespace IRTicker {
 
             wSocket_GDAX.OnClose += (sender, e) => {
                 Debug.Print("GDAX stream was closed.. should be because we disconnected on purpose. preceeded by ded?  " + DateTime.Now.ToString());
-                DCEs["GDAX"].socketsAlive = false;
+                // trying to comment this out in the hope that it will stop the reconnect loop we get into after hibernation
+                /*DCEs["GDAX"].socketsAlive = false;
                 DCEs["GDAX"].socketsReset = true;
                 DCEs["GDAX"].CurrentDCEStatus = "Socket error";
-                pollingThread.ReportProgress(12, "GDAX");  // 12 is error
+                pollingThread.ReportProgress(12, "GDAX");  // 12 is error*/
                 //WebSocket_Disconnect("GDAX");
             };
             wSocket_GDAX.Connect();
@@ -383,7 +386,7 @@ namespace IRTicker {
                     }
                     else pairs.Add(crypto);
 
-                    if (wSocket_BFX.IsAlive) {
+                    if (wSocket_GDAX.IsAlive) {
                         channel = "{\"type\": \"" + (subscribe ? "subscribe" : "unsubscribe") + "\", \"channels\": [{\"name\": \"ticker\", \"product_ids\":[";
                         foreach (string crypto1 in pairs) {
                             if (!DCEs[dExchange].ExchangeProducts.ContainsKey(crypto1 + "-" + fiat)) continue;  // only try to subscribe to pairs that this BFX supports
