@@ -166,6 +166,7 @@ namespace IRTicker {
                         string fiat = pair.Item2;
                         DCEs["IR"].pulledSnapShot[crypto + "-" + fiat] = false;  // initialise the pulledSnapShot variable for this pair
                         DCEs["IR"].positiveSpread[crypto + "-" + fiat] = true;  // initialise the positiveSpread variable for this pair, always assume the spread is positive
+                        DCEs["IR"].negSpreadCount[crypto + "-" + fiat] = 0;  // init
                         if (crypto == "USDT") crypto = "UST";
                         channel += "\"orderbook-" + crypto + "-" + fiat + "\", ";
                         if (crypto == "UST") crypto = "USDT";

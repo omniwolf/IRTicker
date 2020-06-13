@@ -53,6 +53,9 @@ namespace IRTicker {
             Debug.Print("----------------");
             Debug.Print("");
 
+            // populate Session started labels
+            SessionStartedAbs_label.Text = DateTime.Now.ToString("g");
+
             bStick = BlinkStick.FindFirst();
 
             if (bStick != null && bStick.OpenDevice()) {
@@ -952,6 +955,7 @@ namespace IRTicker {
                         foreach (string crypto in DCEs["IR"].PrimaryCurrencyList) {
                             foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
                                 productDictionary_IR.Add(crypto + "-" + fiat, new DCE.products_GDAX(crypto + "-" + fiat));
+                                DCEs["IR"].negSpreadCount[crypto + "-" + fiat] = 0;  // init
 
                                 //create OB objects ready to be filled.  we only do this once here, and never delete them.  neverrrrr
                                 DCEs["IR"].InitialiseOrderBookDicts_IR(crypto, fiat);
@@ -998,10 +1002,12 @@ namespace IRTicker {
                         if (labelKVP.Key.EndsWith("_Spread")) {
                             string crypto = labelKVP.Key.Substring(0, labelKVP.Key.IndexOf('_'));  // should get the start of the string until the _
                             string pair = crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency;
+
                             if (labelKVP.Value.Text.StartsWith("-")) {  // we have a negative pair
                                 if (!DCEs["IR"].positiveSpread[pair]) {  // already been negative for this pair :(
                                     Debug.Print(DateTime.Now + " - negative pair detected (" + pair + ").  let's unsub resub");
                                     // do something..
+                                    pollingThread.ReportProgress(29, pair);  // update UI to show another spread fail
                                     wSocketConnect.WebSocket_Resubscribe("IR", crypto);
                                 }
                                 else {
@@ -1016,7 +1022,7 @@ namespace IRTicker {
                             }
                         }
                     }
-                    Debug.Print("-- spread check finished");
+                    //Debug.Print("-- spread check finished");
                 }
 
                 //////// BTC Markets /////////
@@ -1617,6 +1623,15 @@ namespace IRTicker {
                 return;
             }
 
+            if (reportType == 29) {
+                // do something..
+                string pair = (string)e.UserState;
+                Tuple<string, string> pairTup = Utilities.SplitPair(pair);
+                DCEs["IR"].negSpreadCount[pair]++;
+                UIControls_Dict["IR"].Label_Dict[pairTup.Item1 + "_Label"].Text = (pairTup.Item1 == "XBT" ? "BTC" : pairTup.Item1) + " (" + DCEs["IR"].negSpreadCount[pair] + "):";
+                return;
+            }
+
             else if (reportType == 31) {  // update BTCM
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
 
@@ -1791,6 +1806,10 @@ namespace IRTicker {
         }
 
         private void SettingsButton_Click(object sender, EventArgs e) {
+            // update session started relative label
+            TimeSpan session = DateTime.Now - DateTime.Parse(SessionStartedAbs_label.Text);
+            SessionStartedRel_label.Text = session.ToString("%d") + " day(s), " + session.ToString("%h") + " hour(s), " + session.ToString("%m") + " min(s)";
+
             Settings.Visible = true;
             Main.Visible = false;
         }

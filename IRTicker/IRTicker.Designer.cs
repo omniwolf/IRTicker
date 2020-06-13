@@ -279,6 +279,10 @@
             this.GDAX_CurrencyBox = new System.Windows.Forms.ComboBox();
             this.BFX_CurrencyBox = new System.Windows.Forms.ComboBox();
             this.BTCM_CurrencyBox = new System.Windows.Forms.ComboBox();
+            this.SessionStart_label = new System.Windows.Forms.Label();
+            this.SessionStartedAbs_label = new System.Windows.Forms.Label();
+            this.SessionStartedRel_label = new System.Windows.Forms.Label();
+            this.SettingsSeparator_label = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
@@ -326,6 +330,10 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
+            this.Settings.Controls.Add(this.SettingsSeparator_label);
+            this.Settings.Controls.Add(this.SessionStartedRel_label);
+            this.Settings.Controls.Add(this.SessionStartedAbs_label);
+            this.Settings.Controls.Add(this.SessionStart_label);
             this.Settings.Controls.Add(this.spreadHistoryCustomFolderValue_Textbox);
             this.Settings.Controls.Add(this.spreadHistoryCustomFolder_label);
             this.Settings.Controls.Add(this.NegativeSpread_checkBox);
@@ -2174,7 +2182,7 @@
             this.IR_USDT_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_USDT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_USDT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_USDT_Label2.Location = new System.Drawing.Point(45, 89);
+            this.IR_USDT_Label2.Location = new System.Drawing.Point(70, 89);
             this.IR_USDT_Label2.Name = "IR_USDT_Label2";
             this.IR_USDT_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_USDT_Label2.TabIndex = 53;
@@ -2213,7 +2221,7 @@
             this.IR_BSV_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_BSV_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_BSV_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_BSV_Label2.Location = new System.Drawing.Point(45, 149);
+            this.IR_BSV_Label2.Location = new System.Drawing.Point(70, 149);
             this.IR_BSV_Label2.Name = "IR_BSV_Label2";
             this.IR_BSV_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_BSV_Label2.TabIndex = 50;
@@ -2252,7 +2260,7 @@
             this.IR_ETC_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_ETC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_ETC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_ETC_Label2.Location = new System.Drawing.Point(45, 189);
+            this.IR_ETC_Label2.Location = new System.Drawing.Point(70, 189);
             this.IR_ETC_Label2.Name = "IR_ETC_Label2";
             this.IR_ETC_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_ETC_Label2.TabIndex = 47;
@@ -2291,7 +2299,7 @@
             this.IR_GNT_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_GNT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_GNT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_GNT_Label2.Location = new System.Drawing.Point(45, 309);
+            this.IR_GNT_Label2.Location = new System.Drawing.Point(70, 309);
             this.IR_GNT_Label2.Name = "IR_GNT_Label2";
             this.IR_GNT_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_GNT_Label2.TabIndex = 45;
@@ -2330,7 +2338,7 @@
             this.IR_REP_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_REP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_REP_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_REP_Label2.Location = new System.Drawing.Point(45, 289);
+            this.IR_REP_Label2.Location = new System.Drawing.Point(70, 289);
             this.IR_REP_Label2.Name = "IR_REP_Label2";
             this.IR_REP_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_REP_Label2.TabIndex = 42;
@@ -2369,7 +2377,7 @@
             this.IR_BAT_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_BAT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_BAT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_BAT_Label2.Location = new System.Drawing.Point(45, 269);
+            this.IR_BAT_Label2.Location = new System.Drawing.Point(70, 269);
             this.IR_BAT_Label2.Name = "IR_BAT_Label2";
             this.IR_BAT_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_BAT_Label2.TabIndex = 39;
@@ -2422,7 +2430,7 @@
             this.IR_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_XLM_Label2.Location = new System.Drawing.Point(45, 209);
+            this.IR_XLM_Label2.Location = new System.Drawing.Point(70, 209);
             this.IR_XLM_Label2.Name = "IR_XLM_Label2";
             this.IR_XLM_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_XLM_Label2.TabIndex = 34;
@@ -2473,7 +2481,7 @@
             this.IR_EOS_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_EOS_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_EOS_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_EOS_Label2.Location = new System.Drawing.Point(45, 109);
+            this.IR_EOS_Label2.Location = new System.Drawing.Point(70, 109);
             this.IR_EOS_Label2.Name = "IR_EOS_Label2";
             this.IR_EOS_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_EOS_Label2.TabIndex = 30;
@@ -2522,7 +2530,7 @@
             this.IR_ZRX_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_ZRX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_ZRX_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_ZRX_Label2.Location = new System.Drawing.Point(45, 249);
+            this.IR_ZRX_Label2.Location = new System.Drawing.Point(70, 249);
             this.IR_ZRX_Label2.Name = "IR_ZRX_Label2";
             this.IR_ZRX_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_ZRX_Label2.TabIndex = 24;
@@ -2549,7 +2557,7 @@
             this.IR_OMG_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_OMG_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_OMG_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_OMG_Label2.Location = new System.Drawing.Point(45, 229);
+            this.IR_OMG_Label2.Location = new System.Drawing.Point(70, 229);
             this.IR_OMG_Label2.Name = "IR_OMG_Label2";
             this.IR_OMG_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_OMG_Label2.TabIndex = 20;
@@ -2589,7 +2597,7 @@
             this.IR_XRP_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_XRP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_XRP_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_XRP_Label2.Location = new System.Drawing.Point(45, 49);
+            this.IR_XRP_Label2.Location = new System.Drawing.Point(70, 49);
             this.IR_XRP_Label2.Name = "IR_XRP_Label2";
             this.IR_XRP_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_XRP_Label2.TabIndex = 17;
@@ -2677,7 +2685,7 @@
             this.IR_XBT_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_XBT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_XBT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_XBT_Label2.Location = new System.Drawing.Point(45, 29);
+            this.IR_XBT_Label2.Location = new System.Drawing.Point(70, 29);
             this.IR_XBT_Label2.Name = "IR_XBT_Label2";
             this.IR_XBT_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_XBT_Label2.TabIndex = 4;
@@ -2690,7 +2698,7 @@
             this.IR_ETH_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_ETH_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_ETH_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_ETH_Label2.Location = new System.Drawing.Point(45, 69);
+            this.IR_ETH_Label2.Location = new System.Drawing.Point(70, 69);
             this.IR_ETH_Label2.Name = "IR_ETH_Label2";
             this.IR_ETH_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_ETH_Label2.TabIndex = 5;
@@ -2703,7 +2711,7 @@
             this.IR_BCH_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_BCH_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_BCH_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_BCH_Label2.Location = new System.Drawing.Point(45, 129);
+            this.IR_BCH_Label2.Location = new System.Drawing.Point(70, 129);
             this.IR_BCH_Label2.Name = "IR_BCH_Label2";
             this.IR_BCH_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_BCH_Label2.TabIndex = 6;
@@ -2716,7 +2724,7 @@
             this.IR_LTC_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_LTC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_LTC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_LTC_Label2.Location = new System.Drawing.Point(45, 169);
+            this.IR_LTC_Label2.Location = new System.Drawing.Point(70, 169);
             this.IR_LTC_Label2.Name = "IR_LTC_Label2";
             this.IR_LTC_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_LTC_Label2.TabIndex = 7;
@@ -3495,6 +3503,40 @@
             this.BTCM_CurrencyBox.Size = new System.Drawing.Size(58, 21);
             this.BTCM_CurrencyBox.TabIndex = 61;
             // 
+            // SessionStart_label
+            // 
+            this.SessionStart_label.AutoSize = true;
+            this.SessionStart_label.Location = new System.Drawing.Point(252, 784);
+            this.SessionStart_label.Name = "SessionStart_label";
+            this.SessionStart_label.Size = new System.Drawing.Size(82, 13);
+            this.SessionStart_label.TabIndex = 38;
+            this.SessionStart_label.Text = "Session started:";
+            // 
+            // SessionStartedAbs_label
+            // 
+            this.SessionStartedAbs_label.AutoSize = true;
+            this.SessionStartedAbs_label.Location = new System.Drawing.Point(338, 784);
+            this.SessionStartedAbs_label.Name = "SessionStartedAbs_label";
+            this.SessionStartedAbs_label.Size = new System.Drawing.Size(0, 13);
+            this.SessionStartedAbs_label.TabIndex = 39;
+            // 
+            // SessionStartedRel_label
+            // 
+            this.SessionStartedRel_label.AutoSize = true;
+            this.SessionStartedRel_label.Location = new System.Drawing.Point(338, 813);
+            this.SessionStartedRel_label.Name = "SessionStartedRel_label";
+            this.SessionStartedRel_label.Size = new System.Drawing.Size(0, 13);
+            this.SessionStartedRel_label.TabIndex = 40;
+            // 
+            // SettingsSeparator_label
+            // 
+            this.SettingsSeparator_label.AutoSize = true;
+            this.SettingsSeparator_label.Location = new System.Drawing.Point(90, 749);
+            this.SettingsSeparator_label.Name = "SettingsSeparator_label";
+            this.SettingsSeparator_label.Size = new System.Drawing.Size(409, 13);
+            this.SettingsSeparator_label.TabIndex = 41;
+            this.SettingsSeparator_label.Text = "___________________________________________________________________";
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3795,6 +3837,10 @@
         private System.Windows.Forms.ComboBox BFX_CurrencyBox;
         private System.Windows.Forms.ComboBox GDAX_CurrencyBox;
         private System.Windows.Forms.ComboBox BTCM_CurrencyBox;
+        private System.Windows.Forms.Label SessionStartedRel_label;
+        private System.Windows.Forms.Label SessionStartedAbs_label;
+        private System.Windows.Forms.Label SessionStart_label;
+        private System.Windows.Forms.Label SettingsSeparator_label;
     }
 }
 
