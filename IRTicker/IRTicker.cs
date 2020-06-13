@@ -1612,7 +1612,7 @@ namespace IRTicker {
                 }
 
                 SlackNameCurrency_comboBox.Enabled = true;  // have to enable it to change the value :/
-                Debug.Print("properties slack name currency: " + Properties.Settings.Default.SlackNameCurrency + "find string index: " + SlackNameCurrency_comboBox.FindStringExact(Properties.Settings.Default.SlackNameCurrency));
+                //Debug.Print("properties slack name currency: " + Properties.Settings.Default.SlackNameCurrency + "find string index: " + SlackNameCurrency_comboBox.FindStringExact(Properties.Settings.Default.SlackNameCurrency));
                 if (SlackNameCurrency_comboBox.FindStringExact(Properties.Settings.Default.SlackNameCurrency) > -1)
                     SlackNameCurrency_comboBox.SelectedIndex = SlackNameCurrency_comboBox.FindStringExact(Properties.Settings.Default.SlackNameCurrency);
 
@@ -1623,7 +1623,7 @@ namespace IRTicker {
                 return;
             }
 
-            if (reportType == 29) {
+            if (reportType == 29) {  // updates the IR currency label to include the number of negative spread fail events we've had for this currency
                 // do something..
                 string pair = (string)e.UserState;
                 Tuple<string, string> pairTup = Utilities.SplitPair(pair);
