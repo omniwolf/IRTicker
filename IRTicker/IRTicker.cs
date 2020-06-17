@@ -56,6 +56,8 @@ namespace IRTicker {
             // populate Session started labels
             SessionStartedAbs_label.Text = DateTime.Now.ToString("g");
 
+            PrivateIR pIR = new PrivateIR();
+
             bStick = BlinkStick.FindFirst();
 
             if (bStick != null && bStick.OpenDevice()) {

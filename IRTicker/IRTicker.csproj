@@ -177,6 +177,7 @@
     <Compile Include="OBview.Designer.cs">
       <DependentUpon>OBview.cs</DependentUpon>
     </Compile>
+    <Compile Include="PrivateIR.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
