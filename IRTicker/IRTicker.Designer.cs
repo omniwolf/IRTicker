@@ -369,19 +369,19 @@
             this.IRTickerTT_avgPrice = new System.Windows.Forms.ToolTip(this.components);
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
             this.AccountClosedOrders_panel = new System.Windows.Forms.Panel();
-            this.label2 = new System.Windows.Forms.Label();
+            this.AccountClosedOrders_label = new System.Windows.Forms.Label();
             this.AccountClosedOrders_listview = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.AccountOpenOrders_panel = new System.Windows.Forms.Panel();
             this.AccountOpenOrders_listview = new System.Windows.Forms.ListView();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.label3 = new System.Windows.Forms.Label();
+            this.AccountOpenOrders_label = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.IRAccountSettings_groupBox.SuspendLayout();
             this.SlackSettings_groupBox.SuspendLayout();
@@ -398,7 +398,7 @@
             this.IRAccountAddress_panel.SuspendLayout();
             this.GetAccounts_panel.SuspendLayout();
             this.AccountClosedOrders_panel.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.AccountOpenOrders_panel.SuspendLayout();
             this.SuspendLayout();
             // 
             // refreshFrequencyTextbox
@@ -3795,7 +3795,7 @@
             // 
             // IRAccount_panel
             // 
-            this.IRAccount_panel.Controls.Add(this.panel1);
+            this.IRAccount_panel.Controls.Add(this.AccountOpenOrders_panel);
             this.IRAccount_panel.Controls.Add(this.AccountClosedOrders_panel);
             this.IRAccount_panel.Controls.Add(this.AccountEstOrderValue_value);
             this.IRAccount_panel.Controls.Add(this.AccountEstOrderValue_label);
@@ -4622,21 +4622,21 @@
             // 
             this.AccountClosedOrders_panel.BackColor = System.Drawing.Color.PaleGoldenrod;
             this.AccountClosedOrders_panel.Controls.Add(this.AccountClosedOrders_listview);
-            this.AccountClosedOrders_panel.Controls.Add(this.label2);
+            this.AccountClosedOrders_panel.Controls.Add(this.AccountClosedOrders_label);
             this.AccountClosedOrders_panel.Location = new System.Drawing.Point(296, 520);
             this.AccountClosedOrders_panel.Name = "AccountClosedOrders_panel";
             this.AccountClosedOrders_panel.Size = new System.Drawing.Size(289, 185);
             this.AccountClosedOrders_panel.TabIndex = 12;
             // 
-            // label2
+            // AccountClosedOrders_label
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(7, 13);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(139, 20);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "BTC closed orders";
+            this.AccountClosedOrders_label.AutoSize = true;
+            this.AccountClosedOrders_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountClosedOrders_label.Location = new System.Drawing.Point(7, 13);
+            this.AccountClosedOrders_label.Name = "AccountClosedOrders_label";
+            this.AccountClosedOrders_label.Size = new System.Drawing.Size(139, 20);
+            this.AccountClosedOrders_label.TabIndex = 6;
+            this.AccountClosedOrders_label.Text = "BTC closed orders";
             // 
             // AccountClosedOrders_listview
             // 
@@ -4679,15 +4679,15 @@
             // 
             this.columnHeader4.Text = "Notional";
             // 
-            // panel1
+            // AccountOpenOrders_panel
             // 
-            this.panel1.BackColor = System.Drawing.Color.LightGreen;
-            this.panel1.Controls.Add(this.AccountOpenOrders_listview);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Location = new System.Drawing.Point(296, 335);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(289, 185);
-            this.panel1.TabIndex = 14;
+            this.AccountOpenOrders_panel.BackColor = System.Drawing.Color.LightGreen;
+            this.AccountOpenOrders_panel.Controls.Add(this.AccountOpenOrders_listview);
+            this.AccountOpenOrders_panel.Controls.Add(this.AccountOpenOrders_label);
+            this.AccountOpenOrders_panel.Location = new System.Drawing.Point(296, 335);
+            this.AccountOpenOrders_panel.Name = "AccountOpenOrders_panel";
+            this.AccountOpenOrders_panel.Size = new System.Drawing.Size(289, 185);
+            this.AccountOpenOrders_panel.TabIndex = 14;
             // 
             // AccountOpenOrders_listview
             // 
@@ -4732,25 +4732,25 @@
             this.columnHeader8.Text = "Outstanding";
             this.columnHeader8.Width = 70;
             // 
-            // label3
+            // AccountOpenOrders_label
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(7, 13);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(129, 20);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "BTC open orders";
+            this.AccountOpenOrders_label.AutoSize = true;
+            this.AccountOpenOrders_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountOpenOrders_label.Location = new System.Drawing.Point(7, 13);
+            this.AccountOpenOrders_label.Name = "AccountOpenOrders_label";
+            this.AccountOpenOrders_label.Size = new System.Drawing.Size(129, 20);
+            this.AccountOpenOrders_label.TabIndex = 6;
+            this.AccountOpenOrders_label.Text = "BTC open orders";
             // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 841);
+            this.Controls.Add(this.LoadingPanel);
+            this.Controls.Add(this.Main);
             this.Controls.Add(this.IRAccount_panel);
             this.Controls.Add(this.Settings);
-            this.Controls.Add(this.Main);
-            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.OTCHelper);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HelpButton = true;
@@ -4793,8 +4793,8 @@
             this.GetAccounts_panel.PerformLayout();
             this.AccountClosedOrders_panel.ResumeLayout(false);
             this.AccountClosedOrders_panel.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.AccountOpenOrders_panel.ResumeLayout(false);
+            this.AccountOpenOrders_panel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -5150,14 +5150,14 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label AccountClosedOrders_label;
+        private System.Windows.Forms.Panel AccountOpenOrders_panel;
         private System.Windows.Forms.ListView AccountOpenOrders_listview;
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader8;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label AccountOpenOrders_label;
     }
 }
 

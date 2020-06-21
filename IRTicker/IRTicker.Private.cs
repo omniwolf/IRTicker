@@ -60,11 +60,11 @@ namespace IRTicker {
             Page<BankHistoryOrder> closedOrders = await IRAccountClosedOrders;
             drawClosedOrders(closedOrders.Data);
 
-            /*Task<Page<BankHistoryOrder>> IRAccountOpenOrders = new Task<Page<BankHistoryOrder>>(() => pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency));
+            Task<Page<BankHistoryOrder>> IRAccountOpenOrders = new Task<Page<BankHistoryOrder>>(() => pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency));
             IRAccountOpenOrders.Start();
 
             Page<BankHistoryOrder> openOrders = await IRAccountOpenOrders;
-            drawOpenOrders(openOrders.Data);*/
+            drawOpenOrders(openOrders.Data);
 
         }
 
@@ -278,12 +278,16 @@ namespace IRTicker {
             Task<BankOrder> orderResultTask;
             BankOrder orderResult;
 
+            OrderType oType = AccountBuySell_listbox.SelectedIndex == 0 ? OrderType.MarketBid : OrderType.MarketOffer;
+            decimal volume = decimal.Parse(AccountOrderVolume_textbox.Text);
+
             // no need to check if we can parse the volume value, we already checked in AccountOrderVolume_textbox_TextChanged
             if (AccountOrderType_listbox.SelectedIndex == 0) {
 
-                orderResultTask = new Task<BankOrder>(() => pIR.PlaceMarketOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency,
-                    (AccountBuySell_listbox.SelectedIndex == 0 ? "MarketBuy" : "MarketSell"),
-                    decimal.Parse(AccountOrderVolume_textbox.Text)));
+                orderResultTask = new Task<BankOrder>(() => pIR.PlaceMarketOrder(AccountSelectedCrypto, 
+                    DCEs["IR"].CurrentSecondaryCurrency,
+                    oType,
+                    volume));
                 orderResultTask.Start();
                 orderResult = await orderResultTask;
             }

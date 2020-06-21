@@ -1918,7 +1918,8 @@ namespace IRTicker {
                     if (!IRAccount_button.Enabled && 
                         !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) &&
                         !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
-                        pIR = new PrivateIR(Properties.Settings.Default.IRAPIPubKey, IRAccountPrivKey_textBox.Text);
+
+                        pIR = new PrivateIR(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey);
                         IRAccount_button.Enabled = true;
                     }
                     else if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {

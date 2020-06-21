@@ -64,15 +64,14 @@ namespace IRTicker {
             return result;
         }
 
-        public BankOrder PlaceMarketOrder(string crypto, string fiat, string orderType, decimal volume) {
+        public BankOrder PlaceMarketOrder(string crypto, string fiat, OrderType orderType, decimal volume) {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
-            Enum.TryParse(orderType, out OrderType enumOrderType);
 
             BankOrder orderResult;
 
             try {
-                orderResult = IRclient.PlaceMarketOrder(enumCrypto, enumFiat, enumOrderType, volume);
+                orderResult = IRclient.PlaceMarketOrder(enumCrypto, enumFiat, orderType, volume);
             }
             catch (Exception ex) {
                 MessageBox.Show("API error: " + ex.InnerException.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -82,7 +81,7 @@ namespace IRTicker {
         }
 
         public Page<BankHistoryOrder> GetOpenOrders(string crypto, string fiat) {
-
+            Thread.Sleep(10);
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
@@ -90,6 +89,7 @@ namespace IRTicker {
         }
 
         public Page<BankHistoryOrder> GetClosedOrders(string crypto, string fiat) {
+            Thread.Sleep(10);
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
