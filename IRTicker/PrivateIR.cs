@@ -57,11 +57,27 @@ namespace IRTicker {
                 result = IRclient.SynchDigitalCurrencyDepositAddressWithBlockchain(address, convertCryptoStrToCryptoEnum(crypto));
             }
             catch (Exception ex) {
-                MessageBox.Show("API error: " + ex.InnerException.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("API error: " + ex.InnerException.Message, "Check Address Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 result = null;
             }
 
             return result;
+        }
+
+        public BankOrder PlaceLimitOrder(string crypto, string fiat, OrderType orderType, decimal price, decimal volume) {
+            CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
+            CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
+
+            BankOrder orderResult;
+
+            try {
+                orderResult = IRclient.PlaceLimitOrder(enumCrypto, enumFiat, orderType, price, volume);
+            }
+            catch (Exception ex) {
+                MessageBox.Show("API error: " + ex.InnerException.Message, "Limit Order Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                orderResult = null;
+            }
+            return orderResult;
         }
 
         public BankOrder PlaceMarketOrder(string crypto, string fiat, OrderType orderType, decimal volume) {
@@ -74,7 +90,7 @@ namespace IRTicker {
                 orderResult = IRclient.PlaceMarketOrder(enumCrypto, enumFiat, orderType, volume);
             }
             catch (Exception ex) {
-                MessageBox.Show("API error: " + ex.InnerException.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("API error: " + ex.InnerException.Message, "Market Order Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 orderResult = null;
             }
             return orderResult;

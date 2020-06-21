@@ -293,6 +293,20 @@
             this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
             this.spreadHistory_FolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.IRAccount_panel = new System.Windows.Forms.Panel();
+            this.AccountOpenOrders_panel = new System.Windows.Forms.Panel();
+            this.AccountOpenOrders_listview = new System.Windows.Forms.ListView();
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.AccountOpenOrders_label = new System.Windows.Forms.Label();
+            this.AccountClosedOrders_panel = new System.Windows.Forms.Panel();
+            this.AccountClosedOrders_listview = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.AccountClosedOrders_label = new System.Windows.Forms.Label();
             this.AccountEstOrderValue_value = new System.Windows.Forms.Label();
             this.AccountEstOrderValue_label = new System.Windows.Forms.Label();
             this.AccountOrders_listview = new System.Windows.Forms.ListView();
@@ -368,20 +382,6 @@
             this.AccountXBT_label = new System.Windows.Forms.Label();
             this.IRTickerTT_avgPrice = new System.Windows.Forms.ToolTip(this.components);
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
-            this.AccountClosedOrders_panel = new System.Windows.Forms.Panel();
-            this.AccountClosedOrders_label = new System.Windows.Forms.Label();
-            this.AccountClosedOrders_listview = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.AccountOpenOrders_panel = new System.Windows.Forms.Panel();
-            this.AccountOpenOrders_listview = new System.Windows.Forms.ListView();
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.AccountOpenOrders_label = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.IRAccountSettings_groupBox.SuspendLayout();
             this.SlackSettings_groupBox.SuspendLayout();
@@ -395,10 +395,10 @@
             this.GDAX_GroupBox.SuspendLayout();
             this.OTCHelper.SuspendLayout();
             this.IRAccount_panel.SuspendLayout();
+            this.AccountOpenOrders_panel.SuspendLayout();
+            this.AccountClosedOrders_panel.SuspendLayout();
             this.IRAccountAddress_panel.SuspendLayout();
             this.GetAccounts_panel.SuspendLayout();
-            this.AccountClosedOrders_panel.SuspendLayout();
-            this.AccountOpenOrders_panel.SuspendLayout();
             this.SuspendLayout();
             // 
             // refreshFrequencyTextbox
@@ -3814,6 +3814,130 @@
             this.IRAccount_panel.Size = new System.Drawing.Size(585, 843);
             this.IRAccount_panel.TabIndex = 61;
             // 
+            // AccountOpenOrders_panel
+            // 
+            this.AccountOpenOrders_panel.BackColor = System.Drawing.Color.LightGreen;
+            this.AccountOpenOrders_panel.Controls.Add(this.AccountOpenOrders_listview);
+            this.AccountOpenOrders_panel.Controls.Add(this.AccountOpenOrders_label);
+            this.AccountOpenOrders_panel.Location = new System.Drawing.Point(296, 335);
+            this.AccountOpenOrders_panel.Name = "AccountOpenOrders_panel";
+            this.AccountOpenOrders_panel.Size = new System.Drawing.Size(289, 185);
+            this.AccountOpenOrders_panel.TabIndex = 14;
+            // 
+            // AccountOpenOrders_listview
+            // 
+            this.AccountOpenOrders_listview.AllowColumnReorder = true;
+            this.AccountOpenOrders_listview.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader5,
+            this.columnHeader6,
+            this.columnHeader7,
+            this.columnHeader8});
+            this.AccountOpenOrders_listview.FullRowSelect = true;
+            this.AccountOpenOrders_listview.GridLines = true;
+            this.AccountOpenOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.AccountOpenOrders_listview.HideSelection = false;
+            this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 41);
+            this.AccountOpenOrders_listview.MultiSelect = false;
+            this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";
+            this.AccountOpenOrders_listview.Scrollable = false;
+            this.AccountOpenOrders_listview.ShowGroups = false;
+            this.AccountOpenOrders_listview.ShowItemToolTips = true;
+            this.AccountOpenOrders_listview.Size = new System.Drawing.Size(269, 137);
+            this.AccountOpenOrders_listview.TabIndex = 13;
+            this.AccountOpenOrders_listview.UseCompatibleStateImageBehavior = false;
+            this.AccountOpenOrders_listview.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "Date";
+            this.columnHeader5.Width = 80;
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "Volume";
+            this.columnHeader6.Width = 70;
+            // 
+            // columnHeader7
+            // 
+            this.columnHeader7.Text = "Price";
+            this.columnHeader7.Width = 50;
+            // 
+            // columnHeader8
+            // 
+            this.columnHeader8.Text = "Outstanding";
+            this.columnHeader8.Width = 70;
+            // 
+            // AccountOpenOrders_label
+            // 
+            this.AccountOpenOrders_label.AutoSize = true;
+            this.AccountOpenOrders_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountOpenOrders_label.Location = new System.Drawing.Point(7, 13);
+            this.AccountOpenOrders_label.Name = "AccountOpenOrders_label";
+            this.AccountOpenOrders_label.Size = new System.Drawing.Size(129, 20);
+            this.AccountOpenOrders_label.TabIndex = 6;
+            this.AccountOpenOrders_label.Text = "BTC open orders";
+            // 
+            // AccountClosedOrders_panel
+            // 
+            this.AccountClosedOrders_panel.BackColor = System.Drawing.Color.PaleGoldenrod;
+            this.AccountClosedOrders_panel.Controls.Add(this.AccountClosedOrders_listview);
+            this.AccountClosedOrders_panel.Controls.Add(this.AccountClosedOrders_label);
+            this.AccountClosedOrders_panel.Location = new System.Drawing.Point(296, 520);
+            this.AccountClosedOrders_panel.Name = "AccountClosedOrders_panel";
+            this.AccountClosedOrders_panel.Size = new System.Drawing.Size(289, 185);
+            this.AccountClosedOrders_panel.TabIndex = 12;
+            // 
+            // AccountClosedOrders_listview
+            // 
+            this.AccountClosedOrders_listview.AllowColumnReorder = true;
+            this.AccountClosedOrders_listview.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3,
+            this.columnHeader4});
+            this.AccountClosedOrders_listview.FullRowSelect = true;
+            this.AccountClosedOrders_listview.GridLines = true;
+            this.AccountClosedOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.AccountClosedOrders_listview.HideSelection = false;
+            this.AccountClosedOrders_listview.Location = new System.Drawing.Point(9, 41);
+            this.AccountClosedOrders_listview.MultiSelect = false;
+            this.AccountClosedOrders_listview.Name = "AccountClosedOrders_listview";
+            this.AccountClosedOrders_listview.Scrollable = false;
+            this.AccountClosedOrders_listview.ShowGroups = false;
+            this.AccountClosedOrders_listview.ShowItemToolTips = true;
+            this.AccountClosedOrders_listview.Size = new System.Drawing.Size(269, 137);
+            this.AccountClosedOrders_listview.TabIndex = 13;
+            this.AccountClosedOrders_listview.UseCompatibleStateImageBehavior = false;
+            this.AccountClosedOrders_listview.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Date";
+            this.columnHeader1.Width = 80;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Volume";
+            this.columnHeader2.Width = 70;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Avg price";
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "Notional";
+            // 
+            // AccountClosedOrders_label
+            // 
+            this.AccountClosedOrders_label.AutoSize = true;
+            this.AccountClosedOrders_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountClosedOrders_label.Location = new System.Drawing.Point(7, 13);
+            this.AccountClosedOrders_label.Name = "AccountClosedOrders_label";
+            this.AccountClosedOrders_label.Size = new System.Drawing.Size(139, 20);
+            this.AccountClosedOrders_label.TabIndex = 6;
+            this.AccountClosedOrders_label.Text = "BTC closed orders";
+            // 
             // AccountEstOrderValue_value
             // 
             this.AccountEstOrderValue_value.AutoSize = true;
@@ -3900,6 +4024,7 @@
             this.AccountLimitPrice_textbox.Size = new System.Drawing.Size(100, 20);
             this.AccountLimitPrice_textbox.TabIndex = 6;
             this.AccountLimitPrice_textbox.Visible = false;
+            this.AccountLimitPrice_textbox.TextChanged += new System.EventHandler(this.AccountLimitPrice_textbox_TextChanged);
             // 
             // AccountOrderVolume_label
             // 
@@ -4618,130 +4743,6 @@
             // 
             this.IRTickerTT_generic.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
-            // AccountClosedOrders_panel
-            // 
-            this.AccountClosedOrders_panel.BackColor = System.Drawing.Color.PaleGoldenrod;
-            this.AccountClosedOrders_panel.Controls.Add(this.AccountClosedOrders_listview);
-            this.AccountClosedOrders_panel.Controls.Add(this.AccountClosedOrders_label);
-            this.AccountClosedOrders_panel.Location = new System.Drawing.Point(296, 520);
-            this.AccountClosedOrders_panel.Name = "AccountClosedOrders_panel";
-            this.AccountClosedOrders_panel.Size = new System.Drawing.Size(289, 185);
-            this.AccountClosedOrders_panel.TabIndex = 12;
-            // 
-            // AccountClosedOrders_label
-            // 
-            this.AccountClosedOrders_label.AutoSize = true;
-            this.AccountClosedOrders_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountClosedOrders_label.Location = new System.Drawing.Point(7, 13);
-            this.AccountClosedOrders_label.Name = "AccountClosedOrders_label";
-            this.AccountClosedOrders_label.Size = new System.Drawing.Size(139, 20);
-            this.AccountClosedOrders_label.TabIndex = 6;
-            this.AccountClosedOrders_label.Text = "BTC closed orders";
-            // 
-            // AccountClosedOrders_listview
-            // 
-            this.AccountClosedOrders_listview.AllowColumnReorder = true;
-            this.AccountClosedOrders_listview.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3,
-            this.columnHeader4});
-            this.AccountClosedOrders_listview.FullRowSelect = true;
-            this.AccountClosedOrders_listview.GridLines = true;
-            this.AccountClosedOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.AccountClosedOrders_listview.HideSelection = false;
-            this.AccountClosedOrders_listview.Location = new System.Drawing.Point(9, 41);
-            this.AccountClosedOrders_listview.MultiSelect = false;
-            this.AccountClosedOrders_listview.Name = "AccountClosedOrders_listview";
-            this.AccountClosedOrders_listview.Scrollable = false;
-            this.AccountClosedOrders_listview.ShowGroups = false;
-            this.AccountClosedOrders_listview.ShowItemToolTips = true;
-            this.AccountClosedOrders_listview.Size = new System.Drawing.Size(269, 137);
-            this.AccountClosedOrders_listview.TabIndex = 13;
-            this.AccountClosedOrders_listview.UseCompatibleStateImageBehavior = false;
-            this.AccountClosedOrders_listview.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Date";
-            this.columnHeader1.Width = 80;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Volume";
-            this.columnHeader2.Width = 70;
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Avg price";
-            // 
-            // columnHeader4
-            // 
-            this.columnHeader4.Text = "Notional";
-            // 
-            // AccountOpenOrders_panel
-            // 
-            this.AccountOpenOrders_panel.BackColor = System.Drawing.Color.LightGreen;
-            this.AccountOpenOrders_panel.Controls.Add(this.AccountOpenOrders_listview);
-            this.AccountOpenOrders_panel.Controls.Add(this.AccountOpenOrders_label);
-            this.AccountOpenOrders_panel.Location = new System.Drawing.Point(296, 335);
-            this.AccountOpenOrders_panel.Name = "AccountOpenOrders_panel";
-            this.AccountOpenOrders_panel.Size = new System.Drawing.Size(289, 185);
-            this.AccountOpenOrders_panel.TabIndex = 14;
-            // 
-            // AccountOpenOrders_listview
-            // 
-            this.AccountOpenOrders_listview.AllowColumnReorder = true;
-            this.AccountOpenOrders_listview.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader5,
-            this.columnHeader6,
-            this.columnHeader7,
-            this.columnHeader8});
-            this.AccountOpenOrders_listview.FullRowSelect = true;
-            this.AccountOpenOrders_listview.GridLines = true;
-            this.AccountOpenOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.AccountOpenOrders_listview.HideSelection = false;
-            this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 41);
-            this.AccountOpenOrders_listview.MultiSelect = false;
-            this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";
-            this.AccountOpenOrders_listview.Scrollable = false;
-            this.AccountOpenOrders_listview.ShowGroups = false;
-            this.AccountOpenOrders_listview.ShowItemToolTips = true;
-            this.AccountOpenOrders_listview.Size = new System.Drawing.Size(269, 137);
-            this.AccountOpenOrders_listview.TabIndex = 13;
-            this.AccountOpenOrders_listview.UseCompatibleStateImageBehavior = false;
-            this.AccountOpenOrders_listview.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader5
-            // 
-            this.columnHeader5.Text = "Date";
-            this.columnHeader5.Width = 80;
-            // 
-            // columnHeader6
-            // 
-            this.columnHeader6.Text = "Volume";
-            this.columnHeader6.Width = 70;
-            // 
-            // columnHeader7
-            // 
-            this.columnHeader7.Text = "Price";
-            this.columnHeader7.Width = 50;
-            // 
-            // columnHeader8
-            // 
-            this.columnHeader8.Text = "Outstanding";
-            this.columnHeader8.Width = 70;
-            // 
-            // AccountOpenOrders_label
-            // 
-            this.AccountOpenOrders_label.AutoSize = true;
-            this.AccountOpenOrders_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountOpenOrders_label.Location = new System.Drawing.Point(7, 13);
-            this.AccountOpenOrders_label.Name = "AccountOpenOrders_label";
-            this.AccountOpenOrders_label.Size = new System.Drawing.Size(129, 20);
-            this.AccountOpenOrders_label.TabIndex = 6;
-            this.AccountOpenOrders_label.Text = "BTC open orders";
-            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4787,14 +4788,14 @@
             this.OTCHelper.PerformLayout();
             this.IRAccount_panel.ResumeLayout(false);
             this.IRAccount_panel.PerformLayout();
+            this.AccountOpenOrders_panel.ResumeLayout(false);
+            this.AccountOpenOrders_panel.PerformLayout();
+            this.AccountClosedOrders_panel.ResumeLayout(false);
+            this.AccountClosedOrders_panel.PerformLayout();
             this.IRAccountAddress_panel.ResumeLayout(false);
             this.IRAccountAddress_panel.PerformLayout();
             this.GetAccounts_panel.ResumeLayout(false);
             this.GetAccounts_panel.PerformLayout();
-            this.AccountClosedOrders_panel.ResumeLayout(false);
-            this.AccountClosedOrders_panel.PerformLayout();
-            this.AccountOpenOrders_panel.ResumeLayout(false);
-            this.AccountOpenOrders_panel.PerformLayout();
             this.ResumeLayout(false);
 
         }

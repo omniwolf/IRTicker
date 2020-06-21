@@ -54,18 +54,29 @@ namespace IRTicker {
             }
             updateDepositAddress();
 
-            Task<Page<BankHistoryOrder>> IRAccountClosedOrders = new Task<Page<BankHistoryOrder>>(() => pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency));
-            IRAccountClosedOrders.Start();
+            updateClosedOrders();
 
-            Page<BankHistoryOrder> closedOrders = await IRAccountClosedOrders;
-            drawClosedOrders(closedOrders.Data);
+            updateOpenOrders();
+        }
 
+        private async void updateOpenOrders() {
             Task<Page<BankHistoryOrder>> IRAccountOpenOrders = new Task<Page<BankHistoryOrder>>(() => pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency));
             IRAccountOpenOrders.Start();
 
+            AccountOpenOrders_label.Text = AccountSelectedCrypto + " open orders";
+
             Page<BankHistoryOrder> openOrders = await IRAccountOpenOrders;
             drawOpenOrders(openOrders.Data);
+        }
 
+        private async void updateClosedOrders() {
+            Task<Page<BankHistoryOrder>> IRAccountClosedOrders = new Task<Page<BankHistoryOrder>>(() => pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency));
+            IRAccountClosedOrders.Start();
+
+            AccountClosedOrders_label.Text = AccountSelectedCrypto + " closed orders";
+
+            Page<BankHistoryOrder> closedOrders = await IRAccountClosedOrders;
+            drawClosedOrders(closedOrders.Data);
         }
 
         private void drawClosedOrders(IEnumerable<BankHistoryOrder> closedOrders) {
@@ -186,7 +197,8 @@ namespace IRTicker {
                     AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(totalOrderValue);
                 }
             }
-            else AccountEstOrderValue_value.Text = "";
+            // if it's a limit order, then the AccountEstOrderValue field is calculated manually (no need for OB), so here we need to make sure we don't clear it
+            else if (AccountOrderType_listbox.SelectedIndex == 0) AccountEstOrderValue_value.Text = "";
         }
 
         private void cryptoClicked(Label clickedLabel) {
@@ -217,6 +229,8 @@ namespace IRTicker {
             updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
 
             updateDepositAddress();
+            updateOpenOrders();
+            updateClosedOrders();
         }
 
         private void IRAccountClose_button_Click(object sender, EventArgs e) {
@@ -245,15 +259,14 @@ namespace IRTicker {
             if (AccountOrderType_listbox.SelectedIndex == 1) {
                 AccountLimitPrice_label.Visible = true;
                 AccountLimitPrice_textbox.Visible = true;
-                AccountEstOrderValue_value.Text = "";
-                AccountPlaceOrder_button.Enabled = false;  // we're not ready for this yet
+                AccountLimitPrice_textbox_TextChanged(null, null);  // simulate a change in the limit text box to recalculate the order value
             }
             else {
                 AccountLimitPrice_label.Visible = false;
                 AccountLimitPrice_textbox.Visible = false;
                 updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
-                AccountPlaceOrder_button.Enabled = true;  // can only do market orders
             }
+            AccountPlaceOrder_button.Enabled = VolumePriceParseable();
         }
 
         private void AccountBuySell_listbox_Click(object sender, EventArgs e) {
@@ -265,21 +278,50 @@ namespace IRTicker {
             }
         }
 
+        private bool VolumePriceParseable() {
+            int orderType = AccountOrderType_listbox.SelectedIndex;
+            string volume = AccountOrderVolume_textbox.Text;
+            string price = AccountLimitPrice_textbox.Text;
+            if (orderType == 0) {   // market, only care about volume
+                if (decimal.TryParse(volume, out decimal orderVol)) {
+                    if (orderVol > 0) return true;
+                }
+                return false;
+            }
+            else {  // limit order, need to check both fields
+                if (decimal.TryParse(volume, out decimal orderVol) && decimal.TryParse(price, out decimal orderPrice)) {
+                    if ((orderVol > 0) && (orderPrice > 0)) return true;
+                }
+                return false;
+            }
+        }
+
         private void AccountOrderVolume_textbox_TextChanged(object sender, EventArgs e) {
-            if (decimal.TryParse(AccountOrderVolume_textbox.Text, out decimal orderVol)) {
-                if (orderVol > 0) updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
+            if (VolumePriceParseable()) {
+                decimal volume = decimal.Parse(AccountOrderVolume_textbox.Text);
+                if (AccountOrderType_listbox.SelectedIndex == 0) {
+                    updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
+                }
+                else {  // limit order
+                    AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(
+                        volume * decimal.Parse(AccountLimitPrice_textbox.Text));
+                }
                 AccountPlaceOrder_button.Enabled = true;
             }
-            else AccountPlaceOrder_button.Enabled = false;
+            else {
+                AccountPlaceOrder_button.Enabled = false;
+                AccountEstOrderValue_value.Text = "";
+            }
         }
 
         private async void AccountPlaceOrder_button_Click(object sender, EventArgs e) {
-            // need to also check for limit orders..
+           
             Task<BankOrder> orderResultTask;
             BankOrder orderResult;
 
             OrderType oType = AccountBuySell_listbox.SelectedIndex == 0 ? OrderType.MarketBid : OrderType.MarketOffer;
             decimal volume = decimal.Parse(AccountOrderVolume_textbox.Text);
+            decimal price = decimal.Parse(AccountLimitPrice_textbox.Text);
 
             // no need to check if we can parse the volume value, we already checked in AccountOrderVolume_textbox_TextChanged
             if (AccountOrderType_listbox.SelectedIndex == 0) {
@@ -304,6 +346,18 @@ namespace IRTicker {
 
             // need to disable the button until we have a result
 
+        }
+
+        private void AccountLimitPrice_textbox_TextChanged(object sender, EventArgs e) {
+            if (VolumePriceParseable()) {
+                AccountPlaceOrder_button.Enabled = true;
+                AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(
+                    decimal.Parse(AccountOrderVolume_textbox.Text) * decimal.Parse(AccountLimitPrice_textbox.Text));
+            }
+            else {
+                AccountPlaceOrder_button.Enabled = false;
+                AccountEstOrderValue_value.Text = "";
+            }
         }
     }
 }
