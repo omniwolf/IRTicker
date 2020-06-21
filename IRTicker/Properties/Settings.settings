@@ -41,5 +41,11 @@
     <Setting Name="SpreadHistoryCustomFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)">G:\My Drive\IR\IRTicker\Spread history data\</Value>
     </Setting>
+    <Setting Name="IRAPIPubKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="IRAPIPrivKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

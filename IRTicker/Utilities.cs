@@ -178,5 +178,20 @@ namespace IRTicker {
                 return new Tuple<bool, string>(false, returnStr);
             }
         }
+
+        /// <summary>
+        /// Will make the first letter capitalised, and all other letters lower case
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string FirstLetterToUpper(string str) {
+            if (str == null) return null;
+
+            str = str.ToLower();
+            if (str.Length > 1)
+                return char.ToUpper(str[0]) + str.Substring(1);
+
+            return str.ToUpper();
+        }
     }
 }

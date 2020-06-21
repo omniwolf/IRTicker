@@ -528,6 +528,7 @@ namespace IRTicker {
             while (UITimerThreadProceed) {
                 foreach (KeyValuePair<string, ConcurrentDictionary<int, Ticker_IR>> pair in DCEs["IR"].orderBuffer_IR) {
                     if (DCEs["IR"].newOrders[pair.Key] > 0) {
+                        pollingThread.ReportProgress(20, pair.Key);  // this will get the 
                         if ((DCEs["IR"].orderBuffer_IR[pair.Key].Count > 0) && DCEs["IR"].pulledSnapShot[pair.Key]) applyBufferToOB(pair.Key);
                         DCEs["IR"].newOrders[pair.Key] = 0;
                     }

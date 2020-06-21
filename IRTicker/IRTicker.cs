@@ -15,9 +15,6 @@ using System.Collections.Concurrent;
 using System.Windows.Forms.DataVisualization.Charting;
 using BlinkStickDotNet;
 using System.Runtime.InteropServices;
-using System.Collections.Specialized;
-using System.Net.Http;
-using System.Net.Http.Headers;
 // todo:
 
 
@@ -42,6 +39,8 @@ namespace IRTicker {
 
         public ConcurrentDictionary<string, SpreadGraph> SpreadGraph_Dict = new ConcurrentDictionary<string, SpreadGraph>();  // needs to be public because it gets accessed from the graphs object
 
+        PrivateIR pIR;
+
         OBview obv = new OBview();
 
         public IRTicker() {
@@ -55,8 +54,6 @@ namespace IRTicker {
 
             // populate Session started labels
             SessionStartedAbs_label.Text = DateTime.Now.ToString("g");
-
-            PrivateIR pIR = new PrivateIR();
 
             bStick = BlinkStick.FindFirst();
 
@@ -150,9 +147,22 @@ namespace IRTicker {
                 slackToken_textBox.Enabled = false;
             }
 
+            if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
+                IRAccount_button.Enabled = false;
+            }
+            else {
+                pIR = new PrivateIR(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey);
+                //pIR = new PrivateIR("67a60129-033e-429b-a46a-3f0395334e19", "a031caf6c67440819cf2a15f0fbe9784");
+            }
+            IRAccountPubKey_textBox.Text = Properties.Settings.Default.IRAPIPubKey;
+            IRAccountPrivKey_textBox.Text = Properties.Settings.Default.IRAPIPrivKey;
+
             if (Properties.Settings.Default.ShowOB) obv.Show();
 
             VersionLabel.Text = "IR Ticker version " + FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
+
+            AccountBuySell_listbox.SelectedIndex = 0;
+            AccountOrderType_listbox.SelectedIndex = 0;
 
             pollingThread.RunWorkerAsync();
         }
@@ -223,6 +233,57 @@ namespace IRTicker {
             UIControls_Dict["IR"].AvgPrice_Crypto = IR_CryptoComboBox;
             UIControls_Dict["IR"].AvgPrice_Currency = IR_CurrencyBox;
             UIControls_Dict["IR"].AvgPrice = IR_AvgPrice_Label;
+            UIControls_Dict["IR"].Account_XBT_Label = AccountXBT_label;
+            UIControls_Dict["IR"].Account_XBT_Value = AccountXBT_value;
+            UIControls_Dict["IR"].Account_ETH_Value = AccountETH_value;
+            UIControls_Dict["IR"].Account_ETH_Label = AccountETH_label;
+            UIControls_Dict["IR"].Account_XRP_Value = AccountXRP_value;
+            UIControls_Dict["IR"].Account_XRP_Label = AccountXRP_label;
+            UIControls_Dict["IR"].Account_BCH_Value = AccountBCH_value;
+            UIControls_Dict["IR"].Account_BCH_Label = AccountBCH_label;
+            UIControls_Dict["IR"].Account_BSV_Value = AccountBSV_value;
+            UIControls_Dict["IR"].Account_BSV_Label = AccountBSV_label;
+            UIControls_Dict["IR"].Account_USDT_Value = AccountUSDT_value;
+            UIControls_Dict["IR"].Account_USDT_Label = AccountUSDT_label;
+            UIControls_Dict["IR"].Account_LTC_Value = AccountLTC_value;
+            UIControls_Dict["IR"].Account_LTC_Label = AccountLTC_label;
+            UIControls_Dict["IR"].Account_EOS_Value = AccountEOS_value;
+            UIControls_Dict["IR"].Account_EOS_Label = AccountEOS_label;
+            UIControls_Dict["IR"].Account_XLM_Value = AccountXLM_value;
+            UIControls_Dict["IR"].Account_XLM_Label = AccountXLM_label;
+            UIControls_Dict["IR"].Account_ETC_Value = AccountETC_value;
+            UIControls_Dict["IR"].Account_ETC_Label = AccountETC_label;
+            UIControls_Dict["IR"].Account_BAT_Value = AccountBAT_value;
+            UIControls_Dict["IR"].Account_BAT_Label = AccountBAT_label;
+            UIControls_Dict["IR"].Account_OMG_Value = AccountOMG_value;
+            UIControls_Dict["IR"].Account_OMG_Label = AccountOMG_label;
+            UIControls_Dict["IR"].Account_REP_Value = AccountREP_value;
+            UIControls_Dict["IR"].Account_REP_Label = AccountREP_label;
+            UIControls_Dict["IR"].Account_ZRX_Value = AccountZRX_value;
+            UIControls_Dict["IR"].Account_ZRX_Label = AccountZRX_label;
+            UIControls_Dict["IR"].Account_GNT_Value = AccountGNT_value;
+            UIControls_Dict["IR"].Account_GNT_Label = AccountGNT_label;
+            UIControls_Dict["IR"].Account_XBT_Total = AccountXBT_total;
+            UIControls_Dict["IR"].Account_ETH_Total = AccountETH_total;
+            UIControls_Dict["IR"].Account_XRP_Total = AccountXRP_total;
+            UIControls_Dict["IR"].Account_BCH_Total = AccountBCH_total;
+            UIControls_Dict["IR"].Account_BSV_Total = AccountBSV_total;
+            UIControls_Dict["IR"].Account_USDT_Total = AccountUSDT_total;
+            UIControls_Dict["IR"].Account_LTC_Total = AccountLTC_total;
+            UIControls_Dict["IR"].Account_EOS_Total = AccountEOS_total;
+            UIControls_Dict["IR"].Account_XLM_Total = AccountXLM_total;
+            UIControls_Dict["IR"].Account_ETC_Total = AccountETC_total;
+            UIControls_Dict["IR"].Account_BAT_Total = AccountBAT_total;
+            UIControls_Dict["IR"].Account_OMG_Total = AccountOMG_total;
+            UIControls_Dict["IR"].Account_REP_Total = AccountREP_total;
+            UIControls_Dict["IR"].Account_ZRX_Total = AccountZRX_total;
+            UIControls_Dict["IR"].Account_GNT_Total = AccountGNT_total;
+            UIControls_Dict["IR"].Account_AUD_Total = AccountAUD_total;
+            UIControls_Dict["IR"].Account_AUD_Label = AccountAUD_label;
+            UIControls_Dict["IR"].Account_NZD_Total = AccountNZD_total;
+            UIControls_Dict["IR"].Account_NZD_Label = AccountNZD_label;
+            UIControls_Dict["IR"].Account_USD_Total = AccountUSD_total;
+            UIControls_Dict["IR"].Account_USD_Label = AccountUSD_label;
 
             // BTCM
             UIControls_Dict["BTCM"].Name = "BTCM";
@@ -1262,7 +1323,7 @@ namespace IRTicker {
                     UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(pairObj.Value.spread) + ((pairObj.Value.DayVolume == 0) ? "" : " / " + Utilities.FormatValue(pairObj.Value.DayVolume));
 
                     // update tool tips.
-                    IRTickerTT.SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], "Best bid: " + Utilities.FormatValue(pairObj.Value.CurrentHighestBidPrice) + System.Environment.NewLine + "Best offer: " + Utilities.FormatValue(pairObj.Value.CurrentLowestOfferPrice));
+                    IRTickerTT_spread.SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], "Best bid: " + Utilities.FormatValue(pairObj.Value.CurrentHighestBidPrice) + System.Environment.NewLine + "Best offer: " + Utilities.FormatValue(pairObj.Value.CurrentLowestOfferPrice));
                 }
                 //else Debug.Print("Pair don't exist, pairObj.Value.SecondaryCurrencyCode: " + pairObj.Value.SecondaryCurrencyCode);
             }
@@ -1305,6 +1366,11 @@ namespace IRTicker {
                 //    tempPrice.ForeColor = Color.Gray;
                 //}
 
+                // lets update IRACCOUNTS
+                if (IRAccount_panel.Visible && dExchange == "IR") {
+                    setCurrencyValues(mSummary.PrimaryCurrencyCode.ToUpper(), mSummary.CurrentHighestBidPrice);
+                }
+
 
                 // if there's a colour, make the font bigger.  otherwise not bigger.
                 if (tempPrice.ForeColor != Color.Black) {
@@ -1337,7 +1403,7 @@ namespace IRTicker {
                 }
 
                 // update tool tips.
-                IRTickerTT.SetToolTip(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"], "Best bid: " + Utilities.FormatValue(mSummary.CurrentHighestBidPrice) + System.Environment.NewLine + "Best offer: " + Utilities.FormatValue(mSummary.CurrentLowestOfferPrice));
+                IRTickerTT_spread.SetToolTip(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"], "Best bid: " + Utilities.FormatValue(mSummary.CurrentHighestBidPrice) + System.Environment.NewLine + "Best offer: " + Utilities.FormatValue(mSummary.CurrentLowestOfferPrice));
             }
             else Debug.Print("Pair2 don't exist, pairObj.Value.SecondaryCurrencyCode: " + mSummary.SecondaryCurrencyCode);
         }
@@ -1387,7 +1453,7 @@ namespace IRTicker {
                             Debug.Print("--- total cost is finally " + totalCost + " and the final increase was " + usedCoinsInThisOrder / (fiatSelected ? subOrder.Value.Price : 1));
                             weightedAverage += (usedCoinsInThisOrder / coins) * subOrder.Value.Price;
                             string tTip = buildAvgPriceTooltip(orderSide, fiatSelected, subOrder.Value.Price, orderCount, totalCost, crypto);
-                            IRTickerTT.SetToolTip(UIControls_Dict["IR"].AvgPrice, tTip);
+                            IRTickerTT_avgPrice.SetToolTip(UIControls_Dict["IR"].AvgPrice, tTip);
                             
                             return "Average price for " + crypto + ": " + (fiatSelected ? "$" : "") + Utilities.FormatValue(weightedAverage);  // we have finished filling the hypothetical order
                         }
@@ -1398,7 +1464,7 @@ namespace IRTicker {
                         }
                     }
                 }
-                IRTickerTT.SetToolTip(UIControls_Dict["IR"].AvgPrice, buildAvgPriceTooltip(orderSide, fiatSelected, orderedBook.Last().Key, orderCount, totalCost, crypto));
+                IRTickerTT_avgPrice.SetToolTip(UIControls_Dict["IR"].AvgPrice, buildAvgPriceTooltip(orderSide, fiatSelected, orderedBook.Last().Key, orderCount, totalCost, crypto));
                 return "Order book only has " + (fiatSelected ? "$" : crypto) + " " + Utilities.FormatValue(coinCounter);
             }
             else {
@@ -1467,7 +1533,7 @@ namespace IRTicker {
                         weightedAverage += (usedCoinsInThisOrder / coins) * order.Price;
                         gracefulFinish = true;
                         //string tTip = (orderSide == "Buy" ? "Max" : "Min") + " price paid: " + Utilities.FormatValue(order.Price) + System.Environment.NewLine + "Orders required to fill: " + orderCount + System.Environment.NewLine + "Total fiat cost: " + Utilities.FormatValue(totalCost);
-                        IRTickerTT.SetToolTip(UIControls_Dict[dExchange].AvgPrice, buildAvgPriceTooltip(orderSide, isFiat, order.Price, orderCount, totalCost, crypto));
+                        IRTickerTT_avgPrice.SetToolTip(UIControls_Dict[dExchange].AvgPrice, buildAvgPriceTooltip(orderSide, isFiat, order.Price, orderCount, totalCost, crypto));
                         break;  // we have finished filling the hypothetical order
                     }
                     else {  // this whole order is required
@@ -1478,7 +1544,7 @@ namespace IRTicker {
                     }
                 }
                 if (!gracefulFinish) {
-                    IRTickerTT.SetToolTip(UIControls_Dict[dExchange].AvgPrice, buildAvgPriceTooltip(orderSide, isFiat, orderBook.Last().Price, orderCount, totalCost, crypto));
+                    IRTickerTT_avgPrice.SetToolTip(UIControls_Dict[dExchange].AvgPrice, buildAvgPriceTooltip(orderSide, isFiat, orderBook.Last().Price, orderCount, totalCost, crypto));
                     //MessageBox.Show("You requested " + coins + " coins, but the order book's entire volume (that the API returned to us) had only " + coinCounter + " coins in it.  So, the displayed average price will be less than reality, but you probably fat fingered how many coins?", dExchange + "'s order book too small for that number of coins", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return "Order book only has " + (isFiat ? "$" : crypto) + " " + Utilities.FormatValue(coinCounter);
                 }
@@ -1559,6 +1625,14 @@ namespace IRTicker {
             else if (reportType == 14) {  // should only be called once per session - if we don't do this the crypto combo box is empty until we change secondary currencies
                 string dExchange = (string)e.UserState;
                 PopulateCryptoComboBox(dExchange);
+                return;
+            }
+
+            if (reportType == 20) {
+                if (IRAccount_panel.Visible) {
+                    string pair = (string)e.UserState;
+                    updateAccountOrderBook(pair);
+                }
                 return;
             }
 
@@ -1837,6 +1911,21 @@ namespace IRTicker {
                         Debug.Print("ERROR: couldn't save the ui timer freq as it couldn't be converted to an int? - " + UITimerFreq_maskedTextBox.Text);
                         UITimerFreq_maskedTextBox.Text = Properties.Settings.Default.UITimerFreq.ToString();  // set it back to the last save value
                     }
+
+                    Properties.Settings.Default.IRAPIPubKey = IRAccountPubKey_textBox.Text;
+                    Properties.Settings.Default.IRAPIPrivKey = IRAccountPrivKey_textBox.Text;
+
+                    if (!IRAccount_button.Enabled && 
+                        !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) &&
+                        !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
+                        pIR = new PrivateIR(Properties.Settings.Default.IRAPIPubKey, IRAccountPrivKey_textBox.Text);
+                        IRAccount_button.Enabled = true;
+                    }
+                    else if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
+                        IRAccount_button.Enabled = false;
+                    }
+
+
                     Properties.Settings.Default.Save();
                     Main.Visible = true;
                     Settings.Visible = false;
@@ -1879,7 +1968,7 @@ namespace IRTicker {
             UIControls_Dict[dExchange].dExchange_GB.ForeColor = Color.Black;
 
             foreach (KeyValuePair<string, System.Windows.Forms.Label> UICobj in UIControls_Dict[dExchange].Label_Dict) {
-                if (UICobj.Key.EndsWith("_Label")) {
+                if ((string)UICobj.Value.Tag == "DCECryptoLabel") {
                     UICobj.Value.ForeColor = fColour;
                 }
             }
@@ -2548,6 +2637,10 @@ namespace IRTicker {
                     spreadHistoryCustomFolderValue_Textbox.Text = Properties.Settings.Default.SpreadHistoryCustomFolder;
                 }
             }
+        }
+
+        private void IRAccount_button_Click(object sender, EventArgs e) {
+            DrawIRAccounts();
         }
     }
 }

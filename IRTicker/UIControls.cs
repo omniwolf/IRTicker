@@ -73,6 +73,65 @@ namespace IRTicker {
         public Label AvgPrice { get; set; }
 
 
+
+        // IR account stuff, private API
+
+        public Label Account_XBT_Label { get; set; }
+        public Label Account_ETH_Label { get; set; }
+        public Label Account_XRP_Label { get; set; }
+        public Label Account_BCH_Label { get; set; }
+        public Label Account_BSV_Label { get; set; }
+        public Label Account_USDT_Label { get; set; }
+        public Label Account_LTC_Label { get; set; }
+        public Label Account_EOS_Label { get; set; }
+        public Label Account_XLM_Label { get; set; }
+        public Label Account_ETC_Label { get; set; }
+        public Label Account_BAT_Label { get; set; }
+        public Label Account_OMG_Label { get; set; }
+        public Label Account_REP_Label { get; set; }
+        public Label Account_ZRX_Label { get; set; }
+        public Label Account_GNT_Label { get; set; }
+        public Label Account_AUD_Label { get; set; }
+        public Label Account_NZD_Label { get; set; }
+        public Label Account_USD_Label { get; set; }
+
+        public Label Account_XBT_Value { get; set; }
+        public Label Account_ETH_Value { get; set; }
+        public Label Account_XRP_Value { get; set; }
+        public Label Account_BCH_Value { get; set; }
+        public Label Account_BSV_Value { get; set; }
+        public Label Account_USDT_Value { get; set; }
+        public Label Account_LTC_Value { get; set; }
+        public Label Account_EOS_Value { get; set; }
+        public Label Account_XLM_Value { get; set; }
+        public Label Account_ETC_Value { get; set; }
+        public Label Account_BAT_Value { get; set; }
+        public Label Account_OMG_Value { get; set; }
+        public Label Account_REP_Value { get; set; }
+        public Label Account_ZRX_Value { get; set; }
+        public Label Account_GNT_Value { get; set; }
+
+        public Label Account_XBT_Total { get; set; }
+        public Label Account_ETH_Total { get; set; }
+        public Label Account_XRP_Total { get; set; }
+        public Label Account_BCH_Total { get; set; }
+        public Label Account_BSV_Total { get; set; }
+        public Label Account_USDT_Total { get; set; }
+        public Label Account_LTC_Total { get; set; }
+        public Label Account_EOS_Total { get; set; }
+        public Label Account_XLM_Total { get; set; }
+        public Label Account_ETC_Total { get; set; }
+        public Label Account_BAT_Total { get; set; }
+        public Label Account_OMG_Total { get; set; }
+        public Label Account_REP_Total { get; set; }
+        public Label Account_ZRX_Total { get; set; }
+        public Label Account_GNT_Total { get; set; }
+        public Label Account_AUD_Total { get; set; }
+        public Label Account_NZD_Total { get; set; }
+        public Label Account_USD_Total { get; set; }
+
+
+
         public void CreateControlDictionaries() {
 
             // Labels
@@ -127,6 +186,63 @@ namespace IRTicker {
             if (ETC_Spread != null) Label_Dict.Add("ETC_Spread", ETC_Spread);
             if (USDT_Spread != null) Label_Dict.Add("USDT_Spread", USDT_Spread);
             if (BSV_Spread != null) Label_Dict.Add("BSV_Spread", BSV_Spread);
+
+
+
+            if (Account_XBT_Label != null) Label_Dict.Add("XBT_Account_Label", Account_XBT_Label);
+            if (Account_ETH_Label != null) Label_Dict.Add("ETH_Account_Label", Account_ETH_Label);
+            if (Account_XRP_Label != null) Label_Dict.Add("XRP_Account_Label", Account_XRP_Label);
+            if (Account_BCH_Label != null) Label_Dict.Add("BCH_Account_Label", Account_BCH_Label);
+            if (Account_BSV_Label != null) Label_Dict.Add("BSV_Account_Label", Account_BSV_Label);
+            if (Account_USDT_Label != null) Label_Dict.Add("USDT_Account_Label", Account_USDT_Label);
+            if (Account_LTC_Label != null) Label_Dict.Add("LTC_Account_Label", Account_LTC_Label);
+            if (Account_EOS_Label != null) Label_Dict.Add("EOS_Account_Label", Account_EOS_Label);
+            if (Account_XLM_Label != null) Label_Dict.Add("XLM_Account_Label", Account_XLM_Label);
+            if (Account_ETC_Label != null) Label_Dict.Add("ETC_Account_Label", Account_ETC_Label);
+            if (Account_BAT_Label != null) Label_Dict.Add("BAT_Account_Label", Account_BAT_Label);
+            if (Account_OMG_Label != null) Label_Dict.Add("OMG_Account_Label", Account_OMG_Label);
+            if (Account_REP_Label != null) Label_Dict.Add("REP_Account_Label", Account_REP_Label);
+            if (Account_ZRX_Label != null) Label_Dict.Add("ZRX_Account_Label", Account_ZRX_Label);
+            if (Account_GNT_Label != null) Label_Dict.Add("GNT_Account_Label", Account_GNT_Label);
+            if (Account_AUD_Label != null) Label_Dict.Add("AUD_Account_Label", Account_AUD_Label);
+            if (Account_NZD_Label != null) Label_Dict.Add("NZD_Account_Label", Account_NZD_Label);
+            if (Account_USD_Label != null) Label_Dict.Add("USD_Account_Label", Account_USD_Label);
+
+            if (Account_XBT_Value != null) Label_Dict.Add("XBT_Account_Value", Account_XBT_Value);
+            if (Account_ETH_Value != null) Label_Dict.Add("ETH_Account_Value", Account_ETH_Value);
+            if (Account_XRP_Value != null) Label_Dict.Add("XRP_Account_Value", Account_XRP_Value);
+            if (Account_BCH_Value != null) Label_Dict.Add("BCH_Account_Value", Account_BCH_Value);
+            if (Account_BSV_Value != null) Label_Dict.Add("BSV_Account_Value", Account_BSV_Value);
+            if (Account_USDT_Value != null) Label_Dict.Add("USDT_Account_Value", Account_USDT_Value);
+            if (Account_LTC_Value != null) Label_Dict.Add("LTC_Account_Value", Account_LTC_Value);
+            if (Account_EOS_Value != null) Label_Dict.Add("EOS_Account_Value", Account_EOS_Value);
+            if (Account_XLM_Value != null) Label_Dict.Add("XLM_Account_Value", Account_XLM_Value);
+            if (Account_ETC_Value != null) Label_Dict.Add("ETC_Account_Value", Account_ETC_Value);
+            if (Account_BAT_Value != null) Label_Dict.Add("BAT_Account_Value", Account_BAT_Value);
+            if (Account_OMG_Value != null) Label_Dict.Add("OMG_Account_Value", Account_OMG_Value);
+            if (Account_REP_Value != null) Label_Dict.Add("REP_Account_Value", Account_REP_Value);
+            if (Account_ZRX_Value != null) Label_Dict.Add("ZRX_Account_Value", Account_ZRX_Value);
+            if (Account_GNT_Value != null) Label_Dict.Add("GNT_Account_Value", Account_GNT_Value);
+
+            if (Account_XBT_Total != null) Label_Dict.Add("XBT_Account_Total", Account_XBT_Total);
+            if (Account_ETH_Total != null) Label_Dict.Add("ETH_Account_Total", Account_ETH_Total);
+            if (Account_XRP_Total != null) Label_Dict.Add("XRP_Account_Total", Account_XRP_Total);
+            if (Account_BCH_Total != null) Label_Dict.Add("BCH_Account_Total", Account_BCH_Total);
+            if (Account_BSV_Total != null) Label_Dict.Add("BSV_Account_Total", Account_BSV_Total);
+            if (Account_USDT_Total != null) Label_Dict.Add("USDT_Account_Total", Account_USDT_Total);
+            if (Account_LTC_Total != null) Label_Dict.Add("LTC_Account_Total", Account_LTC_Total);
+            if (Account_EOS_Total != null) Label_Dict.Add("EOS_Account_Total", Account_EOS_Total);
+            if (Account_XLM_Total != null) Label_Dict.Add("XLM_Account_Total", Account_XLM_Total);
+            if (Account_ETC_Total != null) Label_Dict.Add("ETC_Account_Total", Account_ETC_Total);
+            if (Account_BAT_Total != null) Label_Dict.Add("BAT_Account_Total", Account_BAT_Total);
+            if (Account_OMG_Total != null) Label_Dict.Add("OMG_Account_Total", Account_OMG_Total);
+            if (Account_REP_Total != null) Label_Dict.Add("REP_Account_Total", Account_REP_Total);
+            if (Account_ZRX_Total != null) Label_Dict.Add("ZRX_Account_Total", Account_ZRX_Total);
+            if (Account_GNT_Total != null) Label_Dict.Add("GNT_Account_Total", Account_GNT_Total);
+            if (Account_AUD_Total != null) Label_Dict.Add("AUD_Account_Total", Account_AUD_Total);
+            if (Account_NZD_Total != null) Label_Dict.Add("NZD_Account_Total", Account_NZD_Total);
+            if (Account_USD_Total != null) Label_Dict.Add("USD_Account_Total", Account_USD_Total);
+
         }
     }
 }

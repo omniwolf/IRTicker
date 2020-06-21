@@ -178,5 +178,29 @@ namespace IRTicker.Properties {
                 this["SpreadHistoryCustomFolder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKey {
+            get {
+                return ((string)(this["IRAPIPubKey"]));
+            }
+            set {
+                this["IRAPIPubKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKey {
+            get {
+                return ((string)(this["IRAPIPrivKey"]));
+            }
+            set {
+                this["IRAPIPrivKey"] = value;
+            }
+        }
     }
 }
