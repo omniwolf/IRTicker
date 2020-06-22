@@ -24,6 +24,7 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("oeui");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
@@ -3813,6 +3814,7 @@
             this.IRAccount_panel.Name = "IRAccount_panel";
             this.IRAccount_panel.Size = new System.Drawing.Size(585, 843);
             this.IRAccount_panel.TabIndex = 61;
+            this.IRAccount_panel.Visible = false;
             // 
             // AccountOpenOrders_panel
             // 
@@ -3836,6 +3838,8 @@
             this.AccountOpenOrders_listview.GridLines = true;
             this.AccountOpenOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountOpenOrders_listview.HideSelection = false;
+            this.AccountOpenOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem1});
             this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 41);
             this.AccountOpenOrders_listview.MultiSelect = false;
             this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";
@@ -3846,6 +3850,7 @@
             this.AccountOpenOrders_listview.TabIndex = 13;
             this.AccountOpenOrders_listview.UseCompatibleStateImageBehavior = false;
             this.AccountOpenOrders_listview.View = System.Windows.Forms.View.Details;
+            this.AccountOpenOrders_listview.DoubleClick += new System.EventHandler(this.AccountOpenOrders_listview_DoubleClick);
             // 
             // columnHeader5
             // 
@@ -4748,9 +4753,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 841);
+            this.Controls.Add(this.IRAccount_panel);
             this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Main);
-            this.Controls.Add(this.IRAccount_panel);
             this.Controls.Add(this.Settings);
             this.Controls.Add(this.OTCHelper);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

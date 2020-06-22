@@ -1870,6 +1870,7 @@ namespace IRTicker {
            // turn off the blink stick.
            if (bStick != null) {
                 if (bStick.OpenDevice()) {
+                    BlinkStickBW.CancelAsync();
                     bStick.TurnOff();
                 }
            }
@@ -2500,6 +2501,9 @@ namespace IRTicker {
             //bStick.Pulse(col, repeats, pulseLength, 50);
 
             do {
+                if (BlinkStickBW.CancellationPending == true) {
+                    break;
+                }
                 if (bStick != null && bStick.OpenDevice()) {
                     try {
                         bStick.Pulse(col, 1, pulseLength, 50);
