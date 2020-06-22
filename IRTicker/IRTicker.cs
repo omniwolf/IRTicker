@@ -2645,7 +2645,7 @@ namespace IRTicker {
         }
 
         private void IRAccount_button_Click(object sender, EventArgs e) {
-            DrawIRAccounts();
+            InitialiseAccountsPanel();
         }
     }
 }

@@ -3884,7 +3884,7 @@
             // 
             // AccountClosedOrders_panel
             // 
-            this.AccountClosedOrders_panel.BackColor = System.Drawing.Color.PaleGoldenrod;
+            this.AccountClosedOrders_panel.BackColor = System.Drawing.Color.DodgerBlue;
             this.AccountClosedOrders_panel.Controls.Add(this.AccountClosedOrders_listview);
             this.AccountClosedOrders_panel.Controls.Add(this.AccountClosedOrders_label);
             this.AccountClosedOrders_panel.Location = new System.Drawing.Point(296, 520);
@@ -4078,7 +4078,7 @@
             // 
             // IRAccountAddress_panel
             // 
-            this.IRAccountAddress_panel.BackColor = System.Drawing.Color.MistyRose;
+            this.IRAccountAddress_panel.BackColor = System.Drawing.Color.Salmon;
             this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalTag_value);
             this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalTag_label);
             this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalLastCheck_label);
@@ -4743,10 +4743,6 @@
             // 
             this.IRTickerTT_avgPrice.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.IRTickerTT_avgPrice.ToolTipTitle = "Market order estimation";
-            // 
-            // IRTickerTT_generic
-            // 
-            this.IRTickerTT_generic.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
             // IRTicker
             // 

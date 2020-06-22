@@ -97,7 +97,6 @@ namespace IRTicker {
         }
 
         public Page<BankHistoryOrder> GetOpenOrders(string crypto, string fiat) {
-            Thread.Sleep(10);
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
@@ -105,11 +104,14 @@ namespace IRTicker {
         }
 
         public Page<BankHistoryOrder> GetClosedOrders(string crypto, string fiat) {
-            Thread.Sleep(10);
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
             return IRclient.GetClosedFilledOrders(enumCrypto, enumFiat, 1, 6);
+        }
+
+        public BankOrder CancelOrder(string guid) {
+            return IRclient.CancelOrder(new Guid(guid));
         }
 
         private CurrencyCode convertCryptoStrToCryptoEnum(string crypto) {
