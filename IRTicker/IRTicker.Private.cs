@@ -15,6 +15,7 @@ namespace IRTicker {
     partial class IRTicker {
 
         private string AccountSelectedCrypto = "XBT";
+        private string OrderBookSide = "Bids";  //  maintains which side of the order book we show in the AccountOrders_listview
 
         private void InitialiseAccountsPanel() {
             AccountOrderVolume_textbox.Enabled = true;
@@ -234,27 +235,24 @@ namespace IRTicker {
             }
         }
 
-        public void updateAccountOrderBook(string pair) {
+        private async Task<Tuple<decimal, List<ListViewItem>>> compileAccountOrderBook(string pair, string side) {
 
-            if (AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency != pair) return;
-            if (!DCEs["IR"].IR_OBs.ContainsKey(pair)) return;
+            List<ListViewItem> accOrderListView = new List<ListViewItem>();
+            decimal estValue = 0;
 
             // here we grab the buy or sell order book, make a copy, and then sort it
             IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBook;
-            if (AccountBuySell_listbox.SelectedIndex == 0) {
+            if (OrderBookSide == "Offers") {
                 KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCEs["IR"].IR_OBs[pair].Item2.ToArray();  // because we're buying from the sell orders
                 orderedBook = arrayBook.OrderBy(k => k.Key);
-                AccountOrders_listview.Columns[1].Text = "Offers";
                 //Debug.Print("--- Account picked the sell side, top order is: " + orderedBook.First().Key);
             }
             else {
                 KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCEs["IR"].IR_OBs[pair].Item1.ToArray();  // because we're selling to the buy orders
                 orderedBook = arrayBook.OrderByDescending(k => k.Key);
-                AccountOrders_listview.Columns[1].Text = "Bids";
                 //Debug.Print("--- Account picked the buy side, top order is: " + orderedBook.First().Key);
             }
 
-            AccountOrders_listview.Items.Clear();
             int count = 1;
             decimal cumulativeVol = 0;
             decimal cumulativeValue = 0;
@@ -288,8 +286,7 @@ namespace IRTicker {
                 if (count < 6) {  // less than 6 we haven't finished populating the listview yet
                     cumulativeVol += totalVolume;
                     cumulativeValue += pricePoint.Key * totalVolume;
-                    AccountOrders_listview.Items.Add(new ListViewItem(new string[] { count.ToString(), Utilities.FormatValue(pricePoint.Key, 2), Utilities.FormatValue(totalVolume), Utilities.FormatValue(cumulativeVol), Utilities.FormatValue(cumulativeValue) }));
-                    AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].SubItems[1].Tag = pricePoint.Key;  // need to store the price in an unformatted (and therefore parseable) format
+                    accOrderListView.Add(new ListViewItem(new string[] { count.ToString(), pricePoint.Key.ToString(), Utilities.FormatValue(totalVolume), Utilities.FormatValue(cumulativeVol), Utilities.FormatValue(cumulativeValue) }));
                     count++;
                 }
                 // this can be read like: "if we've finished populating the listview, but we still have more orders required 
@@ -299,14 +296,36 @@ namespace IRTicker {
 
             if ((AccountOrderType_listbox.SelectedIndex == 0) && (trackedOrderVolume >= 0)) {
                 if (trackedOrderVolume > 0) {
-                    AccountEstOrderValue_value.Text = "Not enough depth!";
+                    estValue = -1; //"Not enough depth!";
                 }
                 else {
-                    AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(totalOrderValue);
+                    estValue = totalOrderValue;
                 }
             }
             // if it's a limit order, then the AccountEstOrderValue field is calculated manually (no need for OB), so here we need to make sure we don't clear it
-            else if (AccountOrderType_listbox.SelectedIndex == 0) AccountEstOrderValue_value.Text = "";
+            else if (AccountOrderType_listbox.SelectedIndex == 0) estValue = -2; // ""
+            return new Tuple<decimal, List<ListViewItem>>(estValue, accOrderListView);
+        }
+
+        public void updateAccountOrderBook(string pair) {
+
+            if (AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency != pair) return;
+            if (!DCEs["IR"].IR_OBs.ContainsKey(pair)) return;
+
+            if (OrderBookSide == "Offers") {
+                AccountOrders_listview.Columns[1].Text = "Offers";
+            }
+            else {
+                AccountOrders_listview.Columns[1].Text = "Bids";
+            }
+
+            AccountOrders_listview.Items.Clear();
+
+            // here we run the task, and then await it, and parse the list
+
+
+            AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].SubItems[1].Tag = pricePoint.Key;  // need to store the price in an unformatted (and therefore parseable) format
+
 
             // if the price at the spread moves such that our limit order is now essentially a market order, we should alert
             if ((AccountOrderType_listbox.SelectedIndex == 1) && VolumePriceParseable()) ValidateLimitOrder();
@@ -390,10 +409,12 @@ namespace IRTicker {
             if (AccountBuySell_listbox.SelectedIndex == 0) {
                 AccountPlaceOrder_button.Text = "Buy now";
                 AccountOrders_listview.Columns[1].Text = "Offers";
+                OrderBookSide = "Offers";
             }
             else {
                 AccountPlaceOrder_button.Text = "Sell now";
                 AccountOrders_listview.Columns[1].Text = "Bids";
+                OrderBookSide = "Bids";
             }
             updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
         }
@@ -529,6 +550,12 @@ namespace IRTicker {
                 bulkSequentialAPICalls(new List<PrivateIREndPoints>() {
                     PrivateIREndPoints.CancelOrder, PrivateIREndPoints.GetOpenOrders });
             }
+        }
+
+        private void SwitchOrderBookSide_button_Click(object sender, EventArgs e) {
+            if (OrderBookSide == "Bids") OrderBookSide = "Offers";
+            else OrderBookSide = "Bids";
+            updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
         }
 
         enum PrivateIREndPoints {

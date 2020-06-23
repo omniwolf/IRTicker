@@ -294,7 +294,7 @@
             this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
             this.spreadHistory_FolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.IRAccount_panel = new System.Windows.Forms.Panel();
-            this.noScrollListBox1 = new NoScrollListBox.NoScrollListBox();
+            this.AccountOrderType_listbox = new NoScrollListBox.NoScrollListBox();
             this.AccountOpenOrders_panel = new System.Windows.Forms.Panel();
             this.AccountOpenOrders_listview = new System.Windows.Forms.ListView();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -322,7 +322,6 @@
             this.AccountLimitPrice_textbox = new System.Windows.Forms.TextBox();
             this.AccountOrderVolume_label = new System.Windows.Forms.Label();
             this.AccountOrderVolume_textbox = new System.Windows.Forms.TextBox();
-            this.AccountOrderType_listbox = new System.Windows.Forms.ListBox();
             this.AccountBuySell_listbox = new System.Windows.Forms.ListBox();
             this.IRAccountAddress_panel = new System.Windows.Forms.Panel();
             this.AccountWithdrawalTag_value = new System.Windows.Forms.Label();
@@ -385,6 +384,7 @@
             this.AccountXBT_label = new System.Windows.Forms.Label();
             this.IRTickerTT_avgPrice = new System.Windows.Forms.ToolTip(this.components);
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
+            this.SwitchOrderBookSide_button = new System.Windows.Forms.Button();
             this.Settings.SuspendLayout();
             this.IRAccountSettings_groupBox.SuspendLayout();
             this.SlackSettings_groupBox.SuspendLayout();
@@ -3804,7 +3804,8 @@
             // 
             // IRAccount_panel
             // 
-            this.IRAccount_panel.Controls.Add(this.noScrollListBox1);
+            this.IRAccount_panel.Controls.Add(this.SwitchOrderBookSide_button);
+            this.IRAccount_panel.Controls.Add(this.AccountOrderType_listbox);
             this.IRAccount_panel.Controls.Add(this.AccountOpenOrders_panel);
             this.IRAccount_panel.Controls.Add(this.AccountClosedOrders_panel);
             this.IRAccount_panel.Controls.Add(this.AccountEstOrderValue_value);
@@ -3815,7 +3816,6 @@
             this.IRAccount_panel.Controls.Add(this.AccountLimitPrice_textbox);
             this.IRAccount_panel.Controls.Add(this.AccountOrderVolume_label);
             this.IRAccount_panel.Controls.Add(this.AccountOrderVolume_textbox);
-            this.IRAccount_panel.Controls.Add(this.AccountOrderType_listbox);
             this.IRAccount_panel.Controls.Add(this.AccountBuySell_listbox);
             this.IRAccount_panel.Controls.Add(this.IRAccountAddress_panel);
             this.IRAccount_panel.Controls.Add(this.GetAccounts_panel);
@@ -3825,21 +3825,21 @@
             this.IRAccount_panel.TabIndex = 61;
             this.IRAccount_panel.Visible = false;
             // 
-            // noScrollListBox1
+            // AccountOrderType_listbox
             // 
-            this.noScrollListBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.noScrollListBox1.FormattingEnabled = true;
-            this.noScrollListBox1.ItemHeight = 20;
-            this.noScrollListBox1.Items.AddRange(new object[] {
+            this.AccountOrderType_listbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.AccountOrderType_listbox.FormattingEnabled = true;
+            this.AccountOrderType_listbox.ItemHeight = 20;
+            this.AccountOrderType_listbox.Items.AddRange(new object[] {
             "Market",
             "Limit",
             "Market baiter"});
-            this.noScrollListBox1.Location = new System.Drawing.Point(330, 12);
-            this.noScrollListBox1.Name = "noScrollListBox1";
-            this.noScrollListBox1.ShowScrollbar = false;
-            this.noScrollListBox1.Size = new System.Drawing.Size(91, 44);
-            this.noScrollListBox1.TabIndex = 15;
-            this.noScrollListBox1.SelectedIndexChanged += new System.EventHandler(this.noScrollListBox1_SelectedIndexChanged);
+            this.AccountOrderType_listbox.Location = new System.Drawing.Point(330, 12);
+            this.AccountOrderType_listbox.Name = "AccountOrderType_listbox";
+            this.AccountOrderType_listbox.ShowScrollbar = false;
+            this.AccountOrderType_listbox.Size = new System.Drawing.Size(101, 44);
+            this.AccountOrderType_listbox.TabIndex = 15;
+            this.AccountOrderType_listbox.SelectedIndexChanged += new System.EventHandler(this.AcccountOrderType_listbox_SelectedIndexChanged);
             // 
             // AccountOpenOrders_panel
             // 
@@ -4057,9 +4057,9 @@
             // 
             // AccountLimitPrice_textbox
             // 
-            this.AccountLimitPrice_textbox.Location = new System.Drawing.Point(430, 36);
+            this.AccountLimitPrice_textbox.Location = new System.Drawing.Point(437, 36);
             this.AccountLimitPrice_textbox.Name = "AccountLimitPrice_textbox";
-            this.AccountLimitPrice_textbox.Size = new System.Drawing.Size(100, 20);
+            this.AccountLimitPrice_textbox.Size = new System.Drawing.Size(93, 20);
             this.AccountLimitPrice_textbox.TabIndex = 6;
             this.AccountLimitPrice_textbox.Visible = false;
             this.AccountLimitPrice_textbox.TextChanged += new System.EventHandler(this.AccountLimitPrice_textbox_TextChanged);
@@ -4075,26 +4075,11 @@
             // 
             // AccountOrderVolume_textbox
             // 
-            this.AccountOrderVolume_textbox.Location = new System.Drawing.Point(430, 12);
+            this.AccountOrderVolume_textbox.Location = new System.Drawing.Point(437, 12);
             this.AccountOrderVolume_textbox.Name = "AccountOrderVolume_textbox";
-            this.AccountOrderVolume_textbox.Size = new System.Drawing.Size(100, 20);
+            this.AccountOrderVolume_textbox.Size = new System.Drawing.Size(93, 20);
             this.AccountOrderVolume_textbox.TabIndex = 4;
             this.AccountOrderVolume_textbox.TextChanged += new System.EventHandler(this.AccountOrderVolume_textbox_TextChanged);
-            // 
-            // AccountOrderType_listbox
-            // 
-            this.AccountOrderType_listbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountOrderType_listbox.FormattingEnabled = true;
-            this.AccountOrderType_listbox.ItemHeight = 20;
-            this.AccountOrderType_listbox.Items.AddRange(new object[] {
-            "Market",
-            "Limit",
-            "Market baiter"});
-            this.AccountOrderType_listbox.Location = new System.Drawing.Point(311, 274);
-            this.AccountOrderType_listbox.Name = "AccountOrderType_listbox";
-            this.AccountOrderType_listbox.Size = new System.Drawing.Size(91, 44);
-            this.AccountOrderType_listbox.TabIndex = 3;
-            this.AccountOrderType_listbox.SelectedIndexChanged += new System.EventHandler(this.AcccountOrderType_listbox_SelectedIndexChanged);
             // 
             // AccountBuySell_listbox
             // 
@@ -4778,6 +4763,16 @@
             this.IRTickerTT_avgPrice.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.IRTickerTT_avgPrice.ToolTipTitle = "Market order estimation";
             // 
+            // SwitchOrderBookSide_button
+            // 
+            this.SwitchOrderBookSide_button.Location = new System.Drawing.Point(499, 117);
+            this.SwitchOrderBookSide_button.Name = "SwitchOrderBookSide_button";
+            this.SwitchOrderBookSide_button.Size = new System.Drawing.Size(77, 24);
+            this.SwitchOrderBookSide_button.TabIndex = 16;
+            this.SwitchOrderBookSide_button.Text = "Switch sides";
+            this.SwitchOrderBookSide_button.UseVisualStyleBackColor = true;
+            this.SwitchOrderBookSide_button.Click += new System.EventHandler(this.SwitchOrderBookSide_button_Click);
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5165,7 +5160,6 @@
         private System.Windows.Forms.Label AccountWithdrawalTag_label;
         private System.Windows.Forms.ToolTip IRTickerTT_avgPrice;
         private System.Windows.Forms.ToolTip IRTickerTT_generic;
-        private System.Windows.Forms.ListBox AccountOrderType_listbox;
         private System.Windows.Forms.ListBox AccountBuySell_listbox;
         private System.Windows.Forms.Label AccountLimitPrice_label;
         private System.Windows.Forms.TextBox AccountLimitPrice_textbox;
@@ -5195,7 +5189,8 @@
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.Label AccountOpenOrders_label;
         private System.Windows.Forms.ColumnHeader Value;
-        private NoScrollListBox.NoScrollListBox noScrollListBox1;
+        private NoScrollListBox.NoScrollListBox AccountOrderType_listbox;
+        private System.Windows.Forms.Button SwitchOrderBookSide_button;
     }
 }
 

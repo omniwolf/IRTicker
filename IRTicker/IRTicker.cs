@@ -2649,9 +2649,5 @@ namespace IRTicker {
         private void IRAccount_button_Click(object sender, EventArgs e) {
             InitialiseAccountsPanel();
         }
-
-        private void noScrollListBox1_SelectedIndexChanged(object sender, EventArgs e) {
-            Debug.Print("no scroll index: " + noScrollListBox1.SelectedIndex);
-        }
     }
 }
