@@ -31,16 +31,28 @@ namespace IRTicker {
         /// <param name="val">the value we're formatting</param>
         /// <param name="maxDecimalPlaces">max decimal places to return.  Defaults to 5, this is only for limiting if you want less than 5 where the value is less than 10</param>
         /// <returns>a beautiful string</returns>
-        public static string FormatValue(decimal val, int maxDecimalPlaces = 5) {
-
-            if (val >= 1000) return val.ToString("### ### ### ##0").Trim();
-            if (val >= 10) return val.ToString("##0.00").Trim();
+        public static string FormatValue(decimal val, int decimalPlaces = -1, bool decimalsForLargeNumbersOnly = true) {
 
             string formatString = "0";
 
+            // default settings
+            if (val < 10) formatString = "0.00###";
+            if (val >= 10) formatString = "##0.00";
+            if (val >= 1000) formatString = "### ### ### ##0";
+
+            if (decimalPlaces == -1) return val.ToString(formatString).Trim();
+
+            if (decimalsForLargeNumbersOnly && (val < 1000)) return val.ToString(formatString).Trim();
+
+            // custom decimal places
+            if (val < 10) formatString = "0";
+            if (val >= 10) formatString = "##0";
+            if (val >= 1000) formatString = "### ### ### ##0";
+
+
             int loopCounter = 0;
-            if (maxDecimalPlaces > 0) formatString = "0.";
-            while (loopCounter < maxDecimalPlaces) {
+            if (decimalPlaces > 0) formatString += ".";
+            while (loopCounter < decimalPlaces) {
                 if (loopCounter < 2) formatString += "0";
                 else formatString += "#";
                 loopCounter++;

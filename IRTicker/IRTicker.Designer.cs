@@ -294,6 +294,7 @@
             this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
             this.spreadHistory_FolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.IRAccount_panel = new System.Windows.Forms.Panel();
+            this.noScrollListBox1 = new NoScrollListBox.NoScrollListBox();
             this.AccountOpenOrders_panel = new System.Windows.Forms.Panel();
             this.AccountOpenOrders_listview = new System.Windows.Forms.ListView();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -315,6 +316,7 @@
             this.OrderPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.OrderVolume = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.CumulativeVol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Value = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.AccountPlaceOrder_button = new System.Windows.Forms.Button();
             this.AccountLimitPrice_label = new System.Windows.Forms.Label();
             this.AccountLimitPrice_textbox = new System.Windows.Forms.TextBox();
@@ -497,8 +499,10 @@
             this.IRAccountPrivKey_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IRAccountPrivKey_textBox.Location = new System.Drawing.Point(85, 59);
             this.IRAccountPrivKey_textBox.Name = "IRAccountPrivKey_textBox";
+            this.IRAccountPrivKey_textBox.PasswordChar = '●';
             this.IRAccountPrivKey_textBox.Size = new System.Drawing.Size(338, 20);
             this.IRAccountPrivKey_textBox.TabIndex = 30;
+            this.IRAccountPrivKey_textBox.UseSystemPasswordChar = true;
             // 
             // IRPubKey_label
             // 
@@ -516,8 +520,10 @@
             this.IRAccountPubKey_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IRAccountPubKey_textBox.Location = new System.Drawing.Point(85, 33);
             this.IRAccountPubKey_textBox.Name = "IRAccountPubKey_textBox";
+            this.IRAccountPubKey_textBox.PasswordChar = '●';
             this.IRAccountPubKey_textBox.Size = new System.Drawing.Size(338, 20);
             this.IRAccountPubKey_textBox.TabIndex = 28;
+            this.IRAccountPubKey_textBox.UseSystemPasswordChar = true;
             // 
             // SettingsSeparator_label
             // 
@@ -671,8 +677,10 @@
             this.slackToken_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.slackToken_textBox.Location = new System.Drawing.Point(19, 90);
             this.slackToken_textBox.Name = "slackToken_textBox";
+            this.slackToken_textBox.PasswordChar = '●';
             this.slackToken_textBox.Size = new System.Drawing.Size(404, 20);
             this.slackToken_textBox.TabIndex = 23;
+            this.slackToken_textBox.UseSystemPasswordChar = true;
             // 
             // slackDefaultNameLabel
             // 
@@ -3583,7 +3591,7 @@
             this.AccountWithdrawalAddress_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountWithdrawalAddress_label.Location = new System.Drawing.Point(11, 40);
             this.AccountWithdrawalAddress_label.Name = "AccountWithdrawalAddress_label";
-            this.AccountWithdrawalAddress_label.Size = new System.Drawing.Size(270, 12);
+            this.AccountWithdrawalAddress_label.Size = new System.Drawing.Size(289, 14);
             this.AccountWithdrawalAddress_label.TabIndex = 1;
             this.IRTickerTT_generic.SetToolTip(this.AccountWithdrawalAddress_label, "Click to copy");
             this.AccountWithdrawalAddress_label.Click += new System.EventHandler(this.AccountWithdrawalAddress_label_Click);
@@ -3796,6 +3804,7 @@
             // 
             // IRAccount_panel
             // 
+            this.IRAccount_panel.Controls.Add(this.noScrollListBox1);
             this.IRAccount_panel.Controls.Add(this.AccountOpenOrders_panel);
             this.IRAccount_panel.Controls.Add(this.AccountClosedOrders_panel);
             this.IRAccount_panel.Controls.Add(this.AccountEstOrderValue_value);
@@ -3816,14 +3825,30 @@
             this.IRAccount_panel.TabIndex = 61;
             this.IRAccount_panel.Visible = false;
             // 
+            // noScrollListBox1
+            // 
+            this.noScrollListBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.noScrollListBox1.FormattingEnabled = true;
+            this.noScrollListBox1.ItemHeight = 20;
+            this.noScrollListBox1.Items.AddRange(new object[] {
+            "Market",
+            "Limit",
+            "Market baiter"});
+            this.noScrollListBox1.Location = new System.Drawing.Point(330, 12);
+            this.noScrollListBox1.Name = "noScrollListBox1";
+            this.noScrollListBox1.ShowScrollbar = false;
+            this.noScrollListBox1.Size = new System.Drawing.Size(91, 44);
+            this.noScrollListBox1.TabIndex = 15;
+            this.noScrollListBox1.SelectedIndexChanged += new System.EventHandler(this.noScrollListBox1_SelectedIndexChanged);
+            // 
             // AccountOpenOrders_panel
             // 
             this.AccountOpenOrders_panel.BackColor = System.Drawing.Color.LightGreen;
             this.AccountOpenOrders_panel.Controls.Add(this.AccountOpenOrders_listview);
             this.AccountOpenOrders_panel.Controls.Add(this.AccountOpenOrders_label);
-            this.AccountOpenOrders_panel.Location = new System.Drawing.Point(296, 335);
+            this.AccountOpenOrders_panel.Location = new System.Drawing.Point(276, 335);
             this.AccountOpenOrders_panel.Name = "AccountOpenOrders_panel";
-            this.AccountOpenOrders_panel.Size = new System.Drawing.Size(289, 185);
+            this.AccountOpenOrders_panel.Size = new System.Drawing.Size(309, 185);
             this.AccountOpenOrders_panel.TabIndex = 14;
             // 
             // AccountOpenOrders_listview
@@ -3846,7 +3871,7 @@
             this.AccountOpenOrders_listview.Scrollable = false;
             this.AccountOpenOrders_listview.ShowGroups = false;
             this.AccountOpenOrders_listview.ShowItemToolTips = true;
-            this.AccountOpenOrders_listview.Size = new System.Drawing.Size(269, 137);
+            this.AccountOpenOrders_listview.Size = new System.Drawing.Size(291, 137);
             this.AccountOpenOrders_listview.TabIndex = 13;
             this.AccountOpenOrders_listview.UseCompatibleStateImageBehavior = false;
             this.AccountOpenOrders_listview.View = System.Windows.Forms.View.Details;
@@ -3865,12 +3890,12 @@
             // columnHeader7
             // 
             this.columnHeader7.Text = "Price";
-            this.columnHeader7.Width = 50;
+            this.columnHeader7.Width = 70;
             // 
             // columnHeader8
             // 
             this.columnHeader8.Text = "Outstanding";
-            this.columnHeader8.Width = 70;
+            this.columnHeader8.Width = 69;
             // 
             // AccountOpenOrders_label
             // 
@@ -3887,9 +3912,9 @@
             this.AccountClosedOrders_panel.BackColor = System.Drawing.Color.DodgerBlue;
             this.AccountClosedOrders_panel.Controls.Add(this.AccountClosedOrders_listview);
             this.AccountClosedOrders_panel.Controls.Add(this.AccountClosedOrders_label);
-            this.AccountClosedOrders_panel.Location = new System.Drawing.Point(296, 520);
+            this.AccountClosedOrders_panel.Location = new System.Drawing.Point(276, 520);
             this.AccountClosedOrders_panel.Name = "AccountClosedOrders_panel";
-            this.AccountClosedOrders_panel.Size = new System.Drawing.Size(289, 185);
+            this.AccountClosedOrders_panel.Size = new System.Drawing.Size(309, 185);
             this.AccountClosedOrders_panel.TabIndex = 12;
             // 
             // AccountClosedOrders_listview
@@ -3910,7 +3935,7 @@
             this.AccountClosedOrders_listview.Scrollable = false;
             this.AccountClosedOrders_listview.ShowGroups = false;
             this.AccountClosedOrders_listview.ShowItemToolTips = true;
-            this.AccountClosedOrders_listview.Size = new System.Drawing.Size(269, 137);
+            this.AccountClosedOrders_listview.Size = new System.Drawing.Size(291, 137);
             this.AccountClosedOrders_listview.TabIndex = 13;
             this.AccountClosedOrders_listview.UseCompatibleStateImageBehavior = false;
             this.AccountClosedOrders_listview.View = System.Windows.Forms.View.Details;
@@ -3928,10 +3953,12 @@
             // columnHeader3
             // 
             this.columnHeader3.Text = "Avg price";
+            this.columnHeader3.Width = 70;
             // 
             // columnHeader4
             // 
             this.columnHeader4.Text = "Notional";
+            this.columnHeader4.Width = 70;
             // 
             // AccountClosedOrders_label
             // 
@@ -3947,7 +3974,7 @@
             // 
             this.AccountEstOrderValue_value.AutoSize = true;
             this.AccountEstOrderValue_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountEstOrderValue_value.Location = new System.Drawing.Point(418, 116);
+            this.AccountEstOrderValue_value.Location = new System.Drawing.Point(393, 116);
             this.AccountEstOrderValue_value.Name = "AccountEstOrderValue_value";
             this.AccountEstOrderValue_value.Size = new System.Drawing.Size(0, 16);
             this.AccountEstOrderValue_value.TabIndex = 11;
@@ -3955,7 +3982,7 @@
             // AccountEstOrderValue_label
             // 
             this.AccountEstOrderValue_label.AutoSize = true;
-            this.AccountEstOrderValue_label.Location = new System.Drawing.Point(305, 117);
+            this.AccountEstOrderValue_label.Location = new System.Drawing.Point(280, 117);
             this.AccountEstOrderValue_label.Name = "AccountEstOrderValue_label";
             this.AccountEstOrderValue_label.Size = new System.Drawing.Size(76, 13);
             this.AccountEstOrderValue_label.TabIndex = 10;
@@ -3968,17 +3995,18 @@
             this.OrderNumber,
             this.OrderPrice,
             this.OrderVolume,
-            this.CumulativeVol});
+            this.CumulativeVol,
+            this.Value});
             this.AccountOrders_listview.FullRowSelect = true;
             this.AccountOrders_listview.GridLines = true;
             this.AccountOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountOrders_listview.HideSelection = false;
-            this.AccountOrders_listview.Location = new System.Drawing.Point(305, 147);
+            this.AccountOrders_listview.Location = new System.Drawing.Point(282, 147);
             this.AccountOrders_listview.MultiSelect = false;
             this.AccountOrders_listview.Name = "AccountOrders_listview";
             this.AccountOrders_listview.Scrollable = false;
             this.AccountOrders_listview.ShowGroups = false;
-            this.AccountOrders_listview.Size = new System.Drawing.Size(269, 115);
+            this.AccountOrders_listview.Size = new System.Drawing.Size(294, 115);
             this.AccountOrders_listview.TabIndex = 9;
             this.AccountOrders_listview.UseCompatibleStateImageBehavior = false;
             this.AccountOrders_listview.View = System.Windows.Forms.View.Details;
@@ -3999,14 +4027,19 @@
             // 
             // CumulativeVol
             // 
-            this.CumulativeVol.Text = "Cumulative volume";
-            this.CumulativeVol.Width = 115;
+            this.CumulativeVol.Text = "Cum. vol";
+            this.CumulativeVol.Width = 70;
+            // 
+            // Value
+            // 
+            this.Value.Text = "Cum. value";
+            this.Value.Width = 70;
             // 
             // AccountPlaceOrder_button
             // 
-            this.AccountPlaceOrder_button.Location = new System.Drawing.Point(305, 65);
+            this.AccountPlaceOrder_button.Location = new System.Drawing.Point(282, 65);
             this.AccountPlaceOrder_button.Name = "AccountPlaceOrder_button";
-            this.AccountPlaceOrder_button.Size = new System.Drawing.Size(269, 39);
+            this.AccountPlaceOrder_button.Size = new System.Drawing.Size(294, 39);
             this.AccountPlaceOrder_button.TabIndex = 8;
             this.AccountPlaceOrder_button.Text = "Buy now";
             this.AccountPlaceOrder_button.UseVisualStyleBackColor = true;
@@ -4015,7 +4048,7 @@
             // AccountLimitPrice_label
             // 
             this.AccountLimitPrice_label.AutoSize = true;
-            this.AccountLimitPrice_label.Location = new System.Drawing.Point(534, 41);
+            this.AccountLimitPrice_label.Location = new System.Drawing.Point(537, 41);
             this.AccountLimitPrice_label.Name = "AccountLimitPrice_label";
             this.AccountLimitPrice_label.Size = new System.Drawing.Size(31, 13);
             this.AccountLimitPrice_label.TabIndex = 7;
@@ -4024,7 +4057,7 @@
             // 
             // AccountLimitPrice_textbox
             // 
-            this.AccountLimitPrice_textbox.Location = new System.Drawing.Point(427, 36);
+            this.AccountLimitPrice_textbox.Location = new System.Drawing.Point(430, 36);
             this.AccountLimitPrice_textbox.Name = "AccountLimitPrice_textbox";
             this.AccountLimitPrice_textbox.Size = new System.Drawing.Size(100, 20);
             this.AccountLimitPrice_textbox.TabIndex = 6;
@@ -4034,7 +4067,7 @@
             // AccountOrderVolume_label
             // 
             this.AccountOrderVolume_label.AutoSize = true;
-            this.AccountOrderVolume_label.Location = new System.Drawing.Point(534, 17);
+            this.AccountOrderVolume_label.Location = new System.Drawing.Point(537, 17);
             this.AccountOrderVolume_label.Name = "AccountOrderVolume_label";
             this.AccountOrderVolume_label.Size = new System.Drawing.Size(42, 13);
             this.AccountOrderVolume_label.TabIndex = 5;
@@ -4042,7 +4075,7 @@
             // 
             // AccountOrderVolume_textbox
             // 
-            this.AccountOrderVolume_textbox.Location = new System.Drawing.Point(427, 12);
+            this.AccountOrderVolume_textbox.Location = new System.Drawing.Point(430, 12);
             this.AccountOrderVolume_textbox.Name = "AccountOrderVolume_textbox";
             this.AccountOrderVolume_textbox.Size = new System.Drawing.Size(100, 20);
             this.AccountOrderVolume_textbox.TabIndex = 4;
@@ -4055,10 +4088,11 @@
             this.AccountOrderType_listbox.ItemHeight = 20;
             this.AccountOrderType_listbox.Items.AddRange(new object[] {
             "Market",
-            "Limit"});
-            this.AccountOrderType_listbox.Location = new System.Drawing.Point(356, 12);
+            "Limit",
+            "Market baiter"});
+            this.AccountOrderType_listbox.Location = new System.Drawing.Point(311, 274);
             this.AccountOrderType_listbox.Name = "AccountOrderType_listbox";
-            this.AccountOrderType_listbox.Size = new System.Drawing.Size(62, 44);
+            this.AccountOrderType_listbox.Size = new System.Drawing.Size(91, 44);
             this.AccountOrderType_listbox.TabIndex = 3;
             this.AccountOrderType_listbox.SelectedIndexChanged += new System.EventHandler(this.AcccountOrderType_listbox_SelectedIndexChanged);
             // 
@@ -4070,7 +4104,7 @@
             this.AccountBuySell_listbox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.AccountBuySell_listbox.Location = new System.Drawing.Point(305, 12);
+            this.AccountBuySell_listbox.Location = new System.Drawing.Point(282, 12);
             this.AccountBuySell_listbox.Name = "AccountBuySell_listbox";
             this.AccountBuySell_listbox.Size = new System.Drawing.Size(42, 44);
             this.AccountBuySell_listbox.TabIndex = 2;
@@ -4085,9 +4119,9 @@
             this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalNextCheck_label);
             this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalAddress_label);
             this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalCrypto_label);
-            this.IRAccountAddress_panel.Location = new System.Drawing.Point(296, 705);
+            this.IRAccountAddress_panel.Location = new System.Drawing.Point(276, 705);
             this.IRAccountAddress_panel.Name = "IRAccountAddress_panel";
-            this.IRAccountAddress_panel.Size = new System.Drawing.Size(289, 137);
+            this.IRAccountAddress_panel.Size = new System.Drawing.Size(309, 137);
             this.IRAccountAddress_panel.TabIndex = 1;
             // 
             // AccountWithdrawalTag_value
@@ -4183,7 +4217,7 @@
             this.GetAccounts_panel.Controls.Add(this.AccountXBT_label);
             this.GetAccounts_panel.Location = new System.Drawing.Point(0, 0);
             this.GetAccounts_panel.Name = "GetAccounts_panel";
-            this.GetAccounts_panel.Size = new System.Drawing.Size(296, 843);
+            this.GetAccounts_panel.Size = new System.Drawing.Size(276, 843);
             this.GetAccounts_panel.TabIndex = 0;
             // 
             // AccountGNT_total
@@ -4342,9 +4376,9 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(98, 5);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(141, 9);
+            this.label1.Size = new System.Drawing.Size(129, 9);
             this.label1.TabIndex = 38;
-            this.label1.Text = "T o t a l                                          V a l u e";
+            this.label1.Text = "T o t a l                                    V a l u e";
             // 
             // label7
             // 
@@ -4427,7 +4461,7 @@
             this.AccountGNT_value.AutoSize = true;
             this.AccountGNT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountGNT_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountGNT_value.Location = new System.Drawing.Point(193, 577);
+            this.AccountGNT_value.Location = new System.Drawing.Point(183, 577);
             this.AccountGNT_value.Name = "AccountGNT_value";
             this.AccountGNT_value.Size = new System.Drawing.Size(0, 24);
             this.AccountGNT_value.TabIndex = 29;
@@ -4448,7 +4482,7 @@
             this.AccountZRX_value.AutoSize = true;
             this.AccountZRX_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountZRX_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountZRX_value.Location = new System.Drawing.Point(193, 537);
+            this.AccountZRX_value.Location = new System.Drawing.Point(183, 537);
             this.AccountZRX_value.Name = "AccountZRX_value";
             this.AccountZRX_value.Size = new System.Drawing.Size(0, 24);
             this.AccountZRX_value.TabIndex = 27;
@@ -4469,7 +4503,7 @@
             this.AccountREP_value.AutoSize = true;
             this.AccountREP_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountREP_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountREP_value.Location = new System.Drawing.Point(193, 497);
+            this.AccountREP_value.Location = new System.Drawing.Point(183, 497);
             this.AccountREP_value.Name = "AccountREP_value";
             this.AccountREP_value.Size = new System.Drawing.Size(0, 24);
             this.AccountREP_value.TabIndex = 25;
@@ -4490,7 +4524,7 @@
             this.AccountOMG_value.AutoSize = true;
             this.AccountOMG_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountOMG_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountOMG_value.Location = new System.Drawing.Point(193, 457);
+            this.AccountOMG_value.Location = new System.Drawing.Point(183, 457);
             this.AccountOMG_value.Name = "AccountOMG_value";
             this.AccountOMG_value.Size = new System.Drawing.Size(0, 24);
             this.AccountOMG_value.TabIndex = 23;
@@ -4511,7 +4545,7 @@
             this.AccountBAT_value.AutoSize = true;
             this.AccountBAT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountBAT_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBAT_value.Location = new System.Drawing.Point(193, 417);
+            this.AccountBAT_value.Location = new System.Drawing.Point(183, 417);
             this.AccountBAT_value.Name = "AccountBAT_value";
             this.AccountBAT_value.Size = new System.Drawing.Size(0, 24);
             this.AccountBAT_value.TabIndex = 21;
@@ -4532,7 +4566,7 @@
             this.AccountETC_value.AutoSize = true;
             this.AccountETC_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountETC_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountETC_value.Location = new System.Drawing.Point(193, 377);
+            this.AccountETC_value.Location = new System.Drawing.Point(183, 377);
             this.AccountETC_value.Name = "AccountETC_value";
             this.AccountETC_value.Size = new System.Drawing.Size(0, 24);
             this.AccountETC_value.TabIndex = 19;
@@ -4553,7 +4587,7 @@
             this.AccountXLM_value.AutoSize = true;
             this.AccountXLM_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountXLM_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountXLM_value.Location = new System.Drawing.Point(193, 337);
+            this.AccountXLM_value.Location = new System.Drawing.Point(183, 337);
             this.AccountXLM_value.Name = "AccountXLM_value";
             this.AccountXLM_value.Size = new System.Drawing.Size(0, 24);
             this.AccountXLM_value.TabIndex = 17;
@@ -4575,7 +4609,7 @@
             this.AccountEOS_value.AutoSize = true;
             this.AccountEOS_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountEOS_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountEOS_value.Location = new System.Drawing.Point(193, 297);
+            this.AccountEOS_value.Location = new System.Drawing.Point(183, 297);
             this.AccountEOS_value.Name = "AccountEOS_value";
             this.AccountEOS_value.Size = new System.Drawing.Size(0, 24);
             this.AccountEOS_value.TabIndex = 15;
@@ -4596,7 +4630,7 @@
             this.AccountLTC_value.AutoSize = true;
             this.AccountLTC_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountLTC_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountLTC_value.Location = new System.Drawing.Point(193, 257);
+            this.AccountLTC_value.Location = new System.Drawing.Point(183, 257);
             this.AccountLTC_value.Name = "AccountLTC_value";
             this.AccountLTC_value.Size = new System.Drawing.Size(0, 24);
             this.AccountLTC_value.TabIndex = 13;
@@ -4617,7 +4651,7 @@
             this.AccountUSDT_value.AutoSize = true;
             this.AccountUSDT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountUSDT_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountUSDT_value.Location = new System.Drawing.Point(193, 217);
+            this.AccountUSDT_value.Location = new System.Drawing.Point(183, 217);
             this.AccountUSDT_value.Name = "AccountUSDT_value";
             this.AccountUSDT_value.Size = new System.Drawing.Size(0, 24);
             this.AccountUSDT_value.TabIndex = 11;
@@ -4638,7 +4672,7 @@
             this.AccountBSV_value.AutoSize = true;
             this.AccountBSV_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountBSV_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBSV_value.Location = new System.Drawing.Point(193, 177);
+            this.AccountBSV_value.Location = new System.Drawing.Point(183, 177);
             this.AccountBSV_value.Name = "AccountBSV_value";
             this.AccountBSV_value.Size = new System.Drawing.Size(0, 24);
             this.AccountBSV_value.TabIndex = 9;
@@ -4659,7 +4693,7 @@
             this.AccountBCH_value.AutoSize = true;
             this.AccountBCH_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountBCH_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBCH_value.Location = new System.Drawing.Point(193, 137);
+            this.AccountBCH_value.Location = new System.Drawing.Point(183, 137);
             this.AccountBCH_value.Name = "AccountBCH_value";
             this.AccountBCH_value.Size = new System.Drawing.Size(0, 24);
             this.AccountBCH_value.TabIndex = 7;
@@ -4680,7 +4714,7 @@
             this.AccountXRP_value.AutoSize = true;
             this.AccountXRP_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountXRP_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountXRP_value.Location = new System.Drawing.Point(193, 97);
+            this.AccountXRP_value.Location = new System.Drawing.Point(183, 97);
             this.AccountXRP_value.Name = "AccountXRP_value";
             this.AccountXRP_value.Size = new System.Drawing.Size(0, 24);
             this.AccountXRP_value.TabIndex = 5;
@@ -4701,7 +4735,7 @@
             this.AccountETH_value.AutoSize = true;
             this.AccountETH_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountETH_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountETH_value.Location = new System.Drawing.Point(193, 57);
+            this.AccountETH_value.Location = new System.Drawing.Point(183, 57);
             this.AccountETH_value.Name = "AccountETH_value";
             this.AccountETH_value.Size = new System.Drawing.Size(0, 24);
             this.AccountETH_value.TabIndex = 3;
@@ -4722,7 +4756,7 @@
             this.AccountXBT_value.AutoSize = true;
             this.AccountXBT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountXBT_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountXBT_value.Location = new System.Drawing.Point(193, 17);
+            this.AccountXBT_value.Location = new System.Drawing.Point(183, 17);
             this.AccountXBT_value.Name = "AccountXBT_value";
             this.AccountXBT_value.Size = new System.Drawing.Size(0, 24);
             this.AccountXBT_value.TabIndex = 1;
@@ -5160,6 +5194,8 @@
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.Label AccountOpenOrders_label;
+        private System.Windows.Forms.ColumnHeader Value;
+        private NoScrollListBox.NoScrollListBox noScrollListBox1;
     }
 }
 
