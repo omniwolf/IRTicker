@@ -160,7 +160,7 @@ namespace IRTicker {
             else {
                 tt += "Avg price: $ " + Utilities.FormatValue(order.AvgPrice.Value) + Environment.NewLine;
                 tt += "Notional value: $ " + Utilities.FormatValue(order.Value.Value) + Environment.NewLine;
-                tt += "Fee: " + Utilities.FormatValue(order.FeePercent) + "%" + Environment.NewLine;
+                tt += "Fee: " + Utilities.FormatValue(order.FeePercent, 2, false) + "%" + Environment.NewLine;
             }
             tt += "Status: " + order.Status;
             return tt;
@@ -235,9 +235,9 @@ namespace IRTicker {
             }
         }
 
-        private async Task<Tuple<decimal, List<ListViewItem>>> compileAccountOrderBook(string pair, string side) {
+        private Tuple<decimal, List<string[]>> compileAccountOrderBook(string pair, string side, string oType, string volume) {
 
-            List<ListViewItem> accOrderListView = new List<ListViewItem>();
+            List<string[]> accOrderListView = new List<string[]>();
             decimal estValue = 0;
 
             // here we grab the buy or sell order book, make a copy, and then sort it
@@ -259,8 +259,8 @@ namespace IRTicker {
             decimal totalOrderValue = 0;
             decimal trackedOrderVolume = -1;
 
-            // if we can parse the volume box, and it's a market order, let's work out the order value
-            if (decimal.TryParse(AccountOrderVolume_textbox.Text, out decimal orderVolParsed) && AccountOrderType_listbox.SelectedIndex == 0) {
+            // if we can parse the volume box, and it's a market order, let's work out the order value.  No need to track for limit order, can just do simple maths
+            if (decimal.TryParse(volume, out decimal orderVolParsed) && oType == "Market") {
                 if (orderVolParsed > 0) {
                     trackedOrderVolume = orderVolParsed;
                 }
@@ -286,7 +286,7 @@ namespace IRTicker {
                 if (count < 6) {  // less than 6 we haven't finished populating the listview yet
                     cumulativeVol += totalVolume;
                     cumulativeValue += pricePoint.Key * totalVolume;
-                    accOrderListView.Add(new ListViewItem(new string[] { count.ToString(), pricePoint.Key.ToString(), Utilities.FormatValue(totalVolume), Utilities.FormatValue(cumulativeVol), Utilities.FormatValue(cumulativeValue) }));
+                    accOrderListView.Add(new string[] { count.ToString(), pricePoint.Key.ToString(), Utilities.FormatValue(totalVolume), Utilities.FormatValue(cumulativeVol), Utilities.FormatValue(cumulativeValue) });
                     count++;
                 }
                 // this can be read like: "if we've finished populating the listview, but we still have more orders required 
@@ -294,7 +294,7 @@ namespace IRTicker {
                 if ((count > 5) && (trackedOrderVolume <= 0)) break;
             }
 
-            if ((AccountOrderType_listbox.SelectedIndex == 0) && (trackedOrderVolume >= 0)) {
+            if ((oType == "Market") && (trackedOrderVolume >= 0)) {
                 if (trackedOrderVolume > 0) {
                     estValue = -1; //"Not enough depth!";
                 }
@@ -303,14 +303,24 @@ namespace IRTicker {
                 }
             }
             // if it's a limit order, then the AccountEstOrderValue field is calculated manually (no need for OB), so here we need to make sure we don't clear it
-            else if (AccountOrderType_listbox.SelectedIndex == 0) estValue = -2; // ""
-            return new Tuple<decimal, List<ListViewItem>>(estValue, accOrderListView);
+            // this else is saying "if it's a market order, but we didn't engage trackedOrderVolume, then they probably have unparsable text in the vol box, so clear the estimate value label"
+            else if (oType == "Market") estValue = -2; // ""
+            return new Tuple<decimal, List<string[]>>(estValue, accOrderListView);
         }
 
-        public void updateAccountOrderBook(string pair) {
+        public async void updateAccountOrderBook(string pair) {
 
             if (AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency != pair) return;
             if (!DCEs["IR"].IR_OBs.ContainsKey(pair)) return;
+
+            string oType = "";
+            if (AccountOrderType_listbox.SelectedIndex == 0) oType = "Market";
+            else if (AccountOrderType_listbox.SelectedIndex == 1) oType = "Limit";
+
+            string volume = AccountOrderVolume_textbox.Text;
+
+            Task<Tuple<decimal, List<string[]>>> AccountOrderUpdateTask = new Task<Tuple<decimal, List<string[]>>>(() => compileAccountOrderBook(pair, OrderBookSide, oType, volume));
+            AccountOrderUpdateTask.Start();
 
             if (OrderBookSide == "Offers") {
                 AccountOrders_listview.Columns[1].Text = "Offers";
@@ -319,16 +329,28 @@ namespace IRTicker {
                 AccountOrders_listview.Columns[1].Text = "Bids";
             }
 
-            AccountOrders_listview.Items.Clear();
-
             // here we run the task, and then await it, and parse the list
 
+            Tuple<decimal, List<string[]>> AccountOrders = await AccountOrderUpdateTask;
 
-            AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].SubItems[1].Tag = pricePoint.Key;  // need to store the price in an unformatted (and therefore parseable) format
+            AccountOrders_listview.Items.Clear();
 
+            foreach (string[] lvi in AccountOrders.Item2) {
+                AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0], Utilities.FormatValue(decimal.Parse(lvi[1]), 2), lvi[2], lvi[3], lvi[4] }));
+                AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].SubItems[1].Tag = lvi[1];  // need to store the price in an unformatted (and therefore parseable) format
+            }
 
-            // if the price at the spread moves such that our limit order is now essentially a market order, we should alert
-            if ((AccountOrderType_listbox.SelectedIndex == 1) && VolumePriceParseable()) ValidateLimitOrder();
+            if (AccountOrders.Item1 == -1) {
+                AccountEstOrderValue_value.Text = "Not enough depth!";
+            }
+            else if (AccountOrders.Item1 == -2) {
+                AccountEstOrderValue_value.Text = "";
+            }
+            else {  // leave it alone if a limit order
+                if (AccountOrderType_listbox.SelectedIndex == 0) {
+                    AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(AccountOrders.Item1);
+                }
+            }
         }
 
         private void cryptoClicked(Label clickedLabel) {
@@ -416,6 +438,7 @@ namespace IRTicker {
                 AccountOrders_listview.Columns[1].Text = "Bids";
                 OrderBookSide = "Bids";
             }
+            if (AccountOrderType_listbox.SelectedIndex == 1) ValidateLimitOrder();
             updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
         }
 
@@ -494,7 +517,7 @@ namespace IRTicker {
         private void ValidateLimitOrder() {
             decimal price = decimal.Parse(AccountLimitPrice_textbox.Text);
             if (AccountOrders_listview.Items.Count > 0) {
-                if (AccountBuySell_listbox.SelectedIndex == 0) {
+                if (AccountBuySell_listbox.SelectedIndex == 0) {  // buy
                     if (price >= decimal.Parse(AccountOrders_listview.Items[0].SubItems[1].Tag.ToString())) {
                         AccountLimitPrice_label.ForeColor = Color.Red;
                         AccountPlaceOrder_button.Text = "MARKET buy now";
@@ -531,6 +554,12 @@ namespace IRTicker {
                 ValidateLimitOrder();
                 AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(
                     decimal.Parse(AccountOrderVolume_textbox.Text) * decimal.Parse(AccountLimitPrice_textbox.Text));
+            }
+            // if VolumePriceParseable() not true, but we can parse the price field on it's own, then we can still colour some UI elements
+            else if (decimal.TryParse(AccountLimitPrice_textbox.Text, out decimal volume)) {
+                AccountPlaceOrder_button.Enabled = false;
+                AccountEstOrderValue_value.Text = "";
+                ValidateLimitOrder();
             }
             else {
                 AccountPlaceOrder_button.Enabled = false;

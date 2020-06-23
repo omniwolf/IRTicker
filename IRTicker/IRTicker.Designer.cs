@@ -294,6 +294,7 @@
             this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
             this.spreadHistory_FolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.IRAccount_panel = new System.Windows.Forms.Panel();
+            this.SwitchOrderBookSide_button = new System.Windows.Forms.Button();
             this.AccountOrderType_listbox = new NoScrollListBox.NoScrollListBox();
             this.AccountOpenOrders_panel = new System.Windows.Forms.Panel();
             this.AccountOpenOrders_listview = new System.Windows.Forms.ListView();
@@ -384,7 +385,6 @@
             this.AccountXBT_label = new System.Windows.Forms.Label();
             this.IRTickerTT_avgPrice = new System.Windows.Forms.ToolTip(this.components);
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
-            this.SwitchOrderBookSide_button = new System.Windows.Forms.Button();
             this.Settings.SuspendLayout();
             this.IRAccountSettings_groupBox.SuspendLayout();
             this.SlackSettings_groupBox.SuspendLayout();
@@ -3825,6 +3825,16 @@
             this.IRAccount_panel.TabIndex = 61;
             this.IRAccount_panel.Visible = false;
             // 
+            // SwitchOrderBookSide_button
+            // 
+            this.SwitchOrderBookSide_button.Location = new System.Drawing.Point(499, 116);
+            this.SwitchOrderBookSide_button.Name = "SwitchOrderBookSide_button";
+            this.SwitchOrderBookSide_button.Size = new System.Drawing.Size(77, 24);
+            this.SwitchOrderBookSide_button.TabIndex = 16;
+            this.SwitchOrderBookSide_button.Text = "Switch sides";
+            this.SwitchOrderBookSide_button.UseVisualStyleBackColor = true;
+            this.SwitchOrderBookSide_button.Click += new System.EventHandler(this.SwitchOrderBookSide_button_Click);
+            // 
             // AccountOrderType_listbox
             // 
             this.AccountOrderType_listbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
@@ -3832,8 +3842,7 @@
             this.AccountOrderType_listbox.ItemHeight = 20;
             this.AccountOrderType_listbox.Items.AddRange(new object[] {
             "Market",
-            "Limit",
-            "Market baiter"});
+            "Limit"});
             this.AccountOrderType_listbox.Location = new System.Drawing.Point(330, 12);
             this.AccountOrderType_listbox.Name = "AccountOrderType_listbox";
             this.AccountOrderType_listbox.ShowScrollbar = false;
@@ -3974,7 +3983,7 @@
             // 
             this.AccountEstOrderValue_value.AutoSize = true;
             this.AccountEstOrderValue_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountEstOrderValue_value.Location = new System.Drawing.Point(393, 116);
+            this.AccountEstOrderValue_value.Location = new System.Drawing.Point(371, 119);
             this.AccountEstOrderValue_value.Name = "AccountEstOrderValue_value";
             this.AccountEstOrderValue_value.Size = new System.Drawing.Size(0, 16);
             this.AccountEstOrderValue_value.TabIndex = 11;
@@ -3982,7 +3991,7 @@
             // AccountEstOrderValue_label
             // 
             this.AccountEstOrderValue_label.AutoSize = true;
-            this.AccountEstOrderValue_label.Location = new System.Drawing.Point(280, 117);
+            this.AccountEstOrderValue_label.Location = new System.Drawing.Point(280, 120);
             this.AccountEstOrderValue_label.Name = "AccountEstOrderValue_label";
             this.AccountEstOrderValue_label.Size = new System.Drawing.Size(76, 13);
             this.AccountEstOrderValue_label.TabIndex = 10;
@@ -4762,16 +4771,6 @@
             // 
             this.IRTickerTT_avgPrice.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.IRTickerTT_avgPrice.ToolTipTitle = "Market order estimation";
-            // 
-            // SwitchOrderBookSide_button
-            // 
-            this.SwitchOrderBookSide_button.Location = new System.Drawing.Point(499, 117);
-            this.SwitchOrderBookSide_button.Name = "SwitchOrderBookSide_button";
-            this.SwitchOrderBookSide_button.Size = new System.Drawing.Size(77, 24);
-            this.SwitchOrderBookSide_button.TabIndex = 16;
-            this.SwitchOrderBookSide_button.Text = "Switch sides";
-            this.SwitchOrderBookSide_button.UseVisualStyleBackColor = true;
-            this.SwitchOrderBookSide_button.Click += new System.EventHandler(this.SwitchOrderBookSide_button_Click);
             // 
             // IRTicker
             // 
