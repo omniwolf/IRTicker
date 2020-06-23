@@ -66,33 +66,33 @@ namespace IRTicker {
                     Dictionary<string, Account> irAccounts = await irAccountsTask;
                     DrawIRAccounts(irAccounts);
                 }
-                if (endP == PrivateIREndPoints.GetAddress) {
+                else if (endP == PrivateIREndPoints.GetAddress) {
                     Task<DigitalCurrencyDepositAddress> updateDepositAddressTask = new Task<DigitalCurrencyDepositAddress>(() => pIR.GetDepositAddress(AccountSelectedCrypto));
                     updateDepositAddressTask.Start();
                     DigitalCurrencyDepositAddress addressData = await updateDepositAddressTask;
                     drawDepositAddress(addressData);
                 }
-                if (endP == PrivateIREndPoints.CheckAddress) {
+                else if (endP == PrivateIREndPoints.CheckAddress) {
                     string address = AccountWithdrawalAddress_label.Text;
                     Task<DigitalCurrencyDepositAddress> CheckAddressTask = new Task<DigitalCurrencyDepositAddress>(() => pIR.CheckAddressNow(AccountSelectedCrypto, address));
                     CheckAddressTask.Start();
                     DigitalCurrencyDepositAddress addressData = await CheckAddressTask;
                     drawDepositAddress(addressData);
                 }
-                if (endP == PrivateIREndPoints.GetOpenOrders) {
+                else if (endP == PrivateIREndPoints.GetOpenOrders) {
 
                     Task<Page<BankHistoryOrder>> updateOpenOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency));
                     updateOpenOrdersTask.Start();
                     Page<BankHistoryOrder> openOrders = await updateOpenOrdersTask;
                     drawOpenOrders(openOrders.Data);
                 }
-                if (endP == PrivateIREndPoints.GetClosedOrders) {
+                else if (endP == PrivateIREndPoints.GetClosedOrders) {
                     Task<Page<BankHistoryOrder>> updateClosedOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency));
                     updateClosedOrdersTask.Start();
                     Page<BankHistoryOrder> closedOrders = await updateClosedOrdersTask;
                     drawClosedOrders(closedOrders.Data);
                 }
-                if (endP == PrivateIREndPoints.PlaceMarketOrder) {
+                else if (endP == PrivateIREndPoints.PlaceMarketOrder) {
                     BankOrder orderResult;
 
                     decimal volume = decimal.Parse(AccountOrderVolume_textbox.Text);
@@ -107,7 +107,7 @@ namespace IRTicker {
                         MessageBox.Show("Market order failed!", "Order failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                if (endP == PrivateIREndPoints.PlaceLimitOrder) {
+                else if (endP == PrivateIREndPoints.PlaceLimitOrder) {
                     BankOrder orderResult;
 
                     decimal volume = decimal.Parse(AccountOrderVolume_textbox.Text);
@@ -124,7 +124,7 @@ namespace IRTicker {
                         MessageBox.Show("Limit order failed!", "Order failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                if (endP == PrivateIREndPoints.CancelOrder) {
+                else if (endP == PrivateIREndPoints.CancelOrder) {
                     string orderGuid = ((BankOrder)AccountOpenOrders_listview.SelectedItems[0].Tag).OrderGuid.ToString();
                     Task<BankOrder> cancelOrderTask = new Task<BankOrder>(() => pIR.CancelOrder(orderGuid));
                     cancelOrderTask.Start();
