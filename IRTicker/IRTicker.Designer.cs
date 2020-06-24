@@ -3841,8 +3841,9 @@
             this.AccountOrderType_listbox.FormattingEnabled = true;
             this.AccountOrderType_listbox.ItemHeight = 20;
             this.AccountOrderType_listbox.Items.AddRange(new object[] {
-            "Market",
-            "Limit"});
+            "Market order",
+            "Limit order",
+            "Market baiter"});
             this.AccountOrderType_listbox.Location = new System.Drawing.Point(330, 12);
             this.AccountOrderType_listbox.Name = "AccountOrderType_listbox";
             this.AccountOrderType_listbox.ShowScrollbar = false;

@@ -5,6 +5,7 @@ using System.Text;
 using IndependentReserve.DotNetClientApi;
 using IndependentReserve.DotNetClientApi.Data;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Drawing;
@@ -16,6 +17,8 @@ namespace IRTicker {
 
         private string AccountSelectedCrypto = "XBT";
         private string OrderBookSide = "Bids";  //  maintains which side of the order book we show in the AccountOrders_listview
+        private bool marketBaiterActive = false;
+        IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBook;
 
         private void InitialiseAccountsPanel() {
             AccountOrderVolume_textbox.Enabled = true;
@@ -241,7 +244,6 @@ namespace IRTicker {
             decimal estValue = 0;
 
             // here we grab the buy or sell order book, make a copy, and then sort it
-            IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBook;
             if (OrderBookSide == "Offers") {
                 KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCEs["IR"].IR_OBs[pair].Item2.ToArray();  // because we're buying from the sell orders
                 orderedBook = arrayBook.OrderBy(k => k.Key);
@@ -405,13 +407,16 @@ namespace IRTicker {
             cryptoClicked((Label)sender);
         }
 
+        // market order, limit order, market baiter list box
         private void AcccountOrderType_listbox_SelectedIndexChanged(object sender, EventArgs e) {
             if (AccountOrderType_listbox.SelectedIndex == 1) {
+                SwitchOrderBookSide_button.Enabled = true;
                 AccountLimitPrice_label.Visible = true;
                 AccountLimitPrice_textbox.Visible = true;
                 AccountLimitPrice_textbox_TextChanged(null, null);  // simulate a change in the limit text box to recalculate the order value
             }
             else if (AccountOrderType_listbox.SelectedIndex == 0) {
+                SwitchOrderBookSide_button.Enabled = true;
                 AccountLimitPrice_label.Visible = false;
                 AccountLimitPrice_textbox.Visible = false;
                 if (AccountBuySell_listbox.SelectedIndex == 0) {
@@ -423,6 +428,15 @@ namespace IRTicker {
                 AccountLimitPrice_label.ForeColor = Color.Black;
                 AccountPlaceOrder_button.ForeColor = Color.Black;
                 IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "");
+            }
+            else if (AccountOrderType_listbox.SelectedIndex == 2) {  // market baiter!
+                AccountPlaceOrder_button.Text = "Start baitin'";
+
+                // switch the order book to the side we're dealing in
+                SwitchOrderBookSide_button.Enabled = false;  // we're now monitoring this side, no changes allowed.
+                if (AccountBuySell_listbox.SelectedIndex == 0) OrderBookSide = "Bids";
+                else OrderBookSide = "Offers";
+                updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
             }
             AccountPlaceOrder_button.Enabled = VolumePriceParseable();
         }
@@ -438,7 +452,8 @@ namespace IRTicker {
                 AccountOrders_listview.Columns[1].Text = "Bids";
                 OrderBookSide = "Bids";
             }
-            if (AccountOrderType_listbox.SelectedIndex == 1) ValidateLimitOrder();
+            if ((AccountOrderType_listbox.SelectedIndex == 1) && 
+                decimal.TryParse(AccountLimitPrice_textbox.Text, out decimal ignore)) ValidateLimitOrder();
             updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
         }
 
@@ -452,7 +467,7 @@ namespace IRTicker {
                 }
                 return false;
             }
-            else {  // limit order, need to check both fields
+            else {  // limit order or market baiter, need to check both fields
                 if (decimal.TryParse(price, out decimal orderPrice) && decimal.TryParse(volume, out decimal orderVol)) {
                     if ((orderVol > 0) && (orderPrice > 0)) return true;
                 }
@@ -483,11 +498,26 @@ namespace IRTicker {
             if (AccountBuySell_listbox.SelectedIndex == 0) orderSide = "buy";
             else orderSide = "sell";
 
-            DialogResult res = MessageBox.Show("Placing " + orderSide + " order!" + Environment.NewLine + Environment.NewLine +
-                "Size of order: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + AccountOrderVolume_textbox.Text + Environment.NewLine +
-                (AccountOrderType_listbox.SelectedIndex == 0 ? "" : AccountOrderType_listbox.SelectedIndex == 1 ? Utilities.FirstLetterToUpper(orderSide) + " price: $ " + Utilities.FormatValue(decimal.Parse(AccountLimitPrice_textbox.Text)) + Environment.NewLine : "") +
-                "Estimated value of order: " + AccountEstOrderValue_value.Text,
-                "Confirm order", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
+            DialogResult res = DialogResult.Cancel;
+            if (AccountOrderType_listbox.SelectedIndex < 2) {
+                res = MessageBox.Show("Placing " + orderSide + " order!" + Environment.NewLine + Environment.NewLine +
+                    "Size of order: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + AccountOrderVolume_textbox.Text + Environment.NewLine +
+                    (AccountOrderType_listbox.SelectedIndex == 0 ? "" : AccountOrderType_listbox.SelectedIndex == 1 ? Utilities.FirstLetterToUpper(orderSide) + " price: $ " + Utilities.FormatValue(decimal.Parse(AccountLimitPrice_textbox.Text)) + Environment.NewLine : "") +
+                    "Estimated value of order: " + AccountEstOrderValue_value.Text,
+                    "Confirm order", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
+            }
+            else if (AccountOrderType_listbox.SelectedIndex == 2) {  // market baiter
+                if (marketBaiterActive) {
+                    // cancel it
+                }
+                else {
+                    res = MessageBox.Show("Start the market baiter strategy?" + Environment.NewLine + Environment.NewLine +
+                        "This will create a " + orderSide + " order that will automatically move with the best order " +
+                        "on the market, never going beyond $ " + Utilities.FormatValue(decimal.Parse(AccountLimitPrice_textbox.Text)) + Environment.NewLine + Environment.NewLine +
+                        "Size of moving order: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + AccountOrderVolume_textbox.Text,
+                        "Confirm market baiter order", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
+                }
+            }
 
             if (res == DialogResult.OK) {
 
@@ -505,11 +535,33 @@ namespace IRTicker {
                     PrivateIREndPoints.PlaceLimitOrder, PrivateIREndPoints.GetOpenOrders,
                     PrivateIREndPoints.GetClosedOrders, PrivateIREndPoints.GetAccounts });
                 }
+                else if (AccountOrderType_listbox.SelectedIndex == 2) {  // market baiter
+                    // do something that starts the market baiter
+                    marketBaiterActive = true;
+                    AccountPlaceOrder_button.Text = "Stop market baiter and cancel order";
+                    AccountBuySell_listbox.Enabled = false;
+                    AccountOrderType_listbox.Enabled = false;
+                    startMarketBaiter();
+                }
 
                 // need to disable the button until we have a result
                 AccountPlaceOrder_button.Enabled = true;
                 AccountOrderVolume_textbox.Enabled = true;
                 AccountLimitPrice_textbox.Enabled = true;
+            }
+        }
+
+        private async void startMarketBaiter() {
+            Task mBaiterTask = new Task(marketBaiterLoop);
+            mBaiterTask.Start();
+            await mBaiterTask;
+        }
+
+        private void marketBaiterLoop() {
+
+            while (true) {
+
+                Thread.Sleep(250);
             }
         }
 
