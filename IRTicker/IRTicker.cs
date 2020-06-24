@@ -1028,6 +1028,13 @@ namespace IRTicker {
                         /*DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "AUD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "USD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "NZD");*/
+
+                        Dictionary<string, DCE.MarketSummary> cryptos = DCEs["IR"].GetCryptoPairs();
+                        foreach (KeyValuePair<string, DCE.MarketSummary> mSummary in cryptos) {
+
+                            DCEs["IR"].currencyFiatDivision.Add(mSummary.Value.PrimaryCurrencyCode, 0.01M);
+                        }
+
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
 
                         wSocketConnect.Reinit_sockets("IR");  // this will setup all the necessary dictionaries

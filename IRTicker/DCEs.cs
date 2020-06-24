@@ -21,6 +21,8 @@ namespace IRTicker {
         // this next one is a dictionary of orderGuids, where the value is the price.  we can find the price here rather than iterating through the above dictionary.
         public ConcurrentDictionary<string, Tuple<ConcurrentDictionary<string, decimal>, ConcurrentDictionary<string, decimal>>> OrderGuid_IR_OBs = new ConcurrentDictionary<string, Tuple<ConcurrentDictionary<string, decimal>, ConcurrentDictionary<string, decimal>>>();
 
+        public Dictionary<string, decimal> currencyFiatDivision = new Dictionary<string, decimal>();  // a place to store each currency and it's minimum fiat division (eg IR bitcoin is 0.01 - you can be accurate to 1c when placing an order)
+
         private Dictionary<string, MarketSummary> cryptoPairs;
         public Dictionary<string, OrderBook> orderBooks;  // string format is eg "XBT-AUD" - caps with a dash
 
