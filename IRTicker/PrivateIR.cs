@@ -103,6 +103,13 @@ namespace IRTicker {
             return IRclient.GetOpenOrders(enumCrypto,enumFiat,1, 6);
         }
 
+        public Task<Page<BankHistoryOrder>> GetOpenOrdersAsync(string crypto, string fiat) {
+            CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
+            CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
+
+            return IRclient.GetOpenOrdersAsync(enumCrypto,enumFiat,1, 6);
+        }
+
         public Page<BankHistoryOrder> GetClosedOrders(string crypto, string fiat) {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
@@ -112,6 +119,11 @@ namespace IRTicker {
 
         public BankOrder CancelOrder(string guid) {
             return IRclient.CancelOrder(new Guid(guid));
+        }
+
+
+        public Task<BankOrder> CancelOrderAsync(string guid) {
+            return IRclient.CancelOrderAsync(new Guid(guid));
         }
 
         private CurrencyCode convertCryptoStrToCryptoEnum(string crypto) {

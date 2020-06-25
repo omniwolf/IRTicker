@@ -82,11 +82,15 @@ namespace IRTicker {
                     DigitalCurrencyDepositAddress addressData = await CheckAddressTask;
                     drawDepositAddress(addressData);
                 }
-                else if (endP == PrivateIREndPoints.GetOpenOrders) {
+                /*else if (endP == PrivateIREndPoints.GetOpenOrders) {
 
                     Task<Page<BankHistoryOrder>> updateOpenOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency));
                     updateOpenOrdersTask.Start();
                     Page<BankHistoryOrder> openOrders = await updateOpenOrdersTask;
+                    drawOpenOrders(openOrders.Data);
+                }*/
+                else if (endP == PrivateIREndPoints.GetOpenOrders) {
+                    var openOrders = await pIR.GetOpenOrdersAsync(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
                     drawOpenOrders(openOrders.Data);
                 }
                 else if (endP == PrivateIREndPoints.GetClosedOrders) {
