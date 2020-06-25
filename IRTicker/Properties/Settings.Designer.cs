@@ -202,5 +202,197 @@ namespace IRTicker.Properties {
                 this["IRAPIPrivKey"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKey1 {
+            get {
+                return ((string)(this["IRAPIPubKey1"]));
+            }
+            set {
+                this["IRAPIPubKey1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKey2 {
+            get {
+                return ((string)(this["IRAPIPubKey2"]));
+            }
+            set {
+                this["IRAPIPubKey2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKey3 {
+            get {
+                return ((string)(this["IRAPIPubKey3"]));
+            }
+            set {
+                this["IRAPIPubKey3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKey4 {
+            get {
+                return ((string)(this["IRAPIPubKey4"]));
+            }
+            set {
+                this["IRAPIPubKey4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKey5 {
+            get {
+                return ((string)(this["IRAPIPubKey5"]));
+            }
+            set {
+                this["IRAPIPubKey5"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKey1 {
+            get {
+                return ((string)(this["IRAPIPrivKey1"]));
+            }
+            set {
+                this["IRAPIPrivKey1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKey2 {
+            get {
+                return ((string)(this["IRAPIPrivKey2"]));
+            }
+            set {
+                this["IRAPIPrivKey2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKey3 {
+            get {
+                return ((string)(this["IRAPIPrivKey3"]));
+            }
+            set {
+                this["IRAPIPrivKey3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKey4 {
+            get {
+                return ((string)(this["IRAPIPrivKey4"]));
+            }
+            set {
+                this["IRAPIPrivKey4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKey5 {
+            get {
+                return ((string)(this["IRAPIPrivKey5"]));
+            }
+            set {
+                this["IRAPIPrivKey5"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string APIFriendly1 {
+            get {
+                return ((string)(this["APIFriendly1"]));
+            }
+            set {
+                this["APIFriendly1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string APIFriendly2 {
+            get {
+                return ((string)(this["APIFriendly2"]));
+            }
+            set {
+                this["APIFriendly2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string APIFriendly3 {
+            get {
+                return ((string)(this["APIFriendly3"]));
+            }
+            set {
+                this["APIFriendly3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string APIFriendly4 {
+            get {
+                return ((string)(this["APIFriendly4"]));
+            }
+            set {
+                this["APIFriendly4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string APIFriendly5 {
+            get {
+                return ((string)(this["APIFriendly5"]));
+            }
+            set {
+                this["APIFriendly5"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string APIFriendly {
+            get {
+                return ((string)(this["APIFriendly"]));
+            }
+            set {
+                this["APIFriendly"] = value;
+            }
+        }
     }
 }

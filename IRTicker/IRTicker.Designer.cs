@@ -31,10 +31,8 @@
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
             this.IRAccountSettings_groupBox = new System.Windows.Forms.GroupBox();
-            this.IRPrivKey_label = new System.Windows.Forms.Label();
-            this.IRAccountPrivKey_textBox = new System.Windows.Forms.TextBox();
-            this.IRPubKey_label = new System.Windows.Forms.Label();
-            this.IRAccountPubKey_textBox = new System.Windows.Forms.TextBox();
+            this.EditKeys_button = new System.Windows.Forms.Button();
+            this.APIKeys_comboBox = new System.Windows.Forms.ComboBox();
             this.SettingsSeparator_label = new System.Windows.Forms.Label();
             this.SessionStartedRel_label = new System.Windows.Forms.Label();
             this.SessionStartedAbs_label = new System.Windows.Forms.Label();
@@ -385,6 +383,7 @@
             this.AccountXBT_label = new System.Windows.Forms.Label();
             this.IRTickerTT_avgPrice = new System.Windows.Forms.ToolTip(this.components);
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
+            this.label2 = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.IRAccountSettings_groupBox.SuspendLayout();
             this.SlackSettings_groupBox.SuspendLayout();
@@ -471,10 +470,9 @@
             // IRAccountSettings_groupBox
             // 
             this.IRAccountSettings_groupBox.BackColor = System.Drawing.Color.Gainsboro;
-            this.IRAccountSettings_groupBox.Controls.Add(this.IRPrivKey_label);
-            this.IRAccountSettings_groupBox.Controls.Add(this.IRAccountPrivKey_textBox);
-            this.IRAccountSettings_groupBox.Controls.Add(this.IRPubKey_label);
-            this.IRAccountSettings_groupBox.Controls.Add(this.IRAccountPubKey_textBox);
+            this.IRAccountSettings_groupBox.Controls.Add(this.label2);
+            this.IRAccountSettings_groupBox.Controls.Add(this.EditKeys_button);
+            this.IRAccountSettings_groupBox.Controls.Add(this.APIKeys_comboBox);
             this.IRAccountSettings_groupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IRAccountSettings_groupBox.Location = new System.Drawing.Point(76, 633);
             this.IRAccountSettings_groupBox.Name = "IRAccountSettings_groupBox";
@@ -483,47 +481,29 @@
             this.IRAccountSettings_groupBox.TabStop = false;
             this.IRAccountSettings_groupBox.Text = "IR account";
             // 
-            // IRPrivKey_label
+            // EditKeys_button
             // 
-            this.IRPrivKey_label.AccessibleName = "";
-            this.IRPrivKey_label.AutoSize = true;
-            this.IRPrivKey_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.IRPrivKey_label.Location = new System.Drawing.Point(16, 62);
-            this.IRPrivKey_label.Name = "IRPrivKey_label";
-            this.IRPrivKey_label.Size = new System.Drawing.Size(63, 13);
-            this.IRPrivKey_label.TabIndex = 31;
-            this.IRPrivKey_label.Text = "Private key:";
+            this.EditKeys_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EditKeys_button.Location = new System.Drawing.Point(326, 60);
+            this.EditKeys_button.Name = "EditKeys_button";
+            this.EditKeys_button.Size = new System.Drawing.Size(97, 23);
+            this.EditKeys_button.TabIndex = 42;
+            this.EditKeys_button.Text = "Edit keys";
+            this.EditKeys_button.UseVisualStyleBackColor = true;
+            this.EditKeys_button.Click += new System.EventHandler(this.EditKeys_button_Click);
             // 
-            // IRAccountPrivKey_textBox
+            // APIKeys_comboBox
             // 
-            this.IRAccountPrivKey_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRAccountPrivKey_textBox.Location = new System.Drawing.Point(85, 59);
-            this.IRAccountPrivKey_textBox.Name = "IRAccountPrivKey_textBox";
-            this.IRAccountPrivKey_textBox.PasswordChar = '●';
-            this.IRAccountPrivKey_textBox.Size = new System.Drawing.Size(338, 20);
-            this.IRAccountPrivKey_textBox.TabIndex = 30;
-            this.IRAccountPrivKey_textBox.UseSystemPasswordChar = true;
-            // 
-            // IRPubKey_label
-            // 
-            this.IRPubKey_label.AccessibleName = "";
-            this.IRPubKey_label.AutoSize = true;
-            this.IRPubKey_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.IRPubKey_label.Location = new System.Drawing.Point(16, 36);
-            this.IRPubKey_label.Name = "IRPubKey_label";
-            this.IRPubKey_label.Size = new System.Drawing.Size(59, 13);
-            this.IRPubKey_label.TabIndex = 29;
-            this.IRPubKey_label.Text = "Pubilc key:";
-            // 
-            // IRAccountPubKey_textBox
-            // 
-            this.IRAccountPubKey_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRAccountPubKey_textBox.Location = new System.Drawing.Point(85, 33);
-            this.IRAccountPubKey_textBox.Name = "IRAccountPubKey_textBox";
-            this.IRAccountPubKey_textBox.PasswordChar = '●';
-            this.IRAccountPubKey_textBox.Size = new System.Drawing.Size(338, 20);
-            this.IRAccountPubKey_textBox.TabIndex = 28;
-            this.IRAccountPubKey_textBox.UseSystemPasswordChar = true;
+            this.APIKeys_comboBox.DisplayMember = "friendlyName";
+            this.APIKeys_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.APIKeys_comboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.APIKeys_comboBox.FormattingEnabled = true;
+            this.APIKeys_comboBox.Location = new System.Drawing.Point(19, 60);
+            this.APIKeys_comboBox.Name = "APIKeys_comboBox";
+            this.APIKeys_comboBox.Size = new System.Drawing.Size(276, 24);
+            this.APIKeys_comboBox.TabIndex = 32;
+            this.APIKeys_comboBox.ValueMember = "friendlyName";
+            this.APIKeys_comboBox.SelectedIndexChanged += new System.EventHandler(this.APIKeys_comboBox_SelectedIndexChanged);
             // 
             // SettingsSeparator_label
             // 
@@ -815,9 +795,9 @@
             // Help_Button
             // 
             this.Help_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Help_Button.Location = new System.Drawing.Point(499, 779);
+            this.Help_Button.Location = new System.Drawing.Point(477, 779);
             this.Help_Button.Name = "Help_Button";
-            this.Help_Button.Size = new System.Drawing.Size(75, 23);
+            this.Help_Button.Size = new System.Drawing.Size(97, 23);
             this.Help_Button.TabIndex = 14;
             this.Help_Button.Text = "Help";
             this.Help_Button.UseVisualStyleBackColor = true;
@@ -857,11 +837,11 @@
             // SettingsOKButton
             // 
             this.SettingsOKButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsOKButton.Location = new System.Drawing.Point(499, 808);
+            this.SettingsOKButton.Location = new System.Drawing.Point(477, 808);
             this.SettingsOKButton.Name = "SettingsOKButton";
-            this.SettingsOKButton.Size = new System.Drawing.Size(75, 23);
+            this.SettingsOKButton.Size = new System.Drawing.Size(97, 23);
             this.SettingsOKButton.TabIndex = 4;
-            this.SettingsOKButton.Text = "Close";
+            this.SettingsOKButton.Text = "Save and close";
             this.SettingsOKButton.UseVisualStyleBackColor = true;
             this.SettingsOKButton.Click += new System.EventHandler(this.SettingsOKButton_Click);
             // 
@@ -4773,6 +4753,16 @@
             this.IRTickerTT_avgPrice.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.IRTickerTT_avgPrice.ToolTipTitle = "Market order estimation";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(24, 33);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(229, 16);
+            this.label2.TabIndex = 43;
+            this.label2.Text = "Choose which API keyto connect with:";
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5090,10 +5080,6 @@
         private System.Windows.Forms.Label SessionStart_label;
         private System.Windows.Forms.Label SettingsSeparator_label;
         private System.Windows.Forms.GroupBox IRAccountSettings_groupBox;
-        private System.Windows.Forms.Label IRPrivKey_label;
-        private System.Windows.Forms.TextBox IRAccountPrivKey_textBox;
-        private System.Windows.Forms.Label IRPubKey_label;
-        private System.Windows.Forms.TextBox IRAccountPubKey_textBox;
         private System.Windows.Forms.Button IRAccount_button;
         private System.Windows.Forms.Panel IRAccount_panel;
         private System.Windows.Forms.Panel GetAccounts_panel;
@@ -5191,6 +5177,9 @@
         private System.Windows.Forms.ColumnHeader Value;
         private NoScrollListBox.NoScrollListBox AccountOrderType_listbox;
         private System.Windows.Forms.Button SwitchOrderBookSide_button;
+        private System.Windows.Forms.ComboBox APIKeys_comboBox;
+        public System.Windows.Forms.Button EditKeys_button;
+        private System.Windows.Forms.Label label2;
     }
 }
 

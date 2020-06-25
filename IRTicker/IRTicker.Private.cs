@@ -71,69 +71,41 @@ namespace IRTicker {
                     DrawIRAccounts(irAccounts);
                 }
                 else if (endP == PrivateIREndPoints.GetAddress) {
-                    Task<DigitalCurrencyDepositAddress> updateDepositAddressTask = new Task<DigitalCurrencyDepositAddress>(() => pIR.GetDepositAddress(AccountSelectedCrypto));
-                    updateDepositAddressTask.Start();
-                    DigitalCurrencyDepositAddress addressData = await updateDepositAddressTask;
+                    DigitalCurrencyDepositAddress addressData = await pIR.GetDepositAddress(AccountSelectedCrypto);
                     drawDepositAddress(addressData);
                 }
                 else if (endP == PrivateIREndPoints.CheckAddress) {
                     string address = AccountWithdrawalAddress_label.Text;
-                    Task<DigitalCurrencyDepositAddress> CheckAddressTask = new Task<DigitalCurrencyDepositAddress>(() => pIR.CheckAddressNow(AccountSelectedCrypto, address));
-                    CheckAddressTask.Start();
-                    DigitalCurrencyDepositAddress addressData = await CheckAddressTask;
+                    DigitalCurrencyDepositAddress addressData = await pIR.CheckAddressNow(AccountSelectedCrypto, address);
                     drawDepositAddress(addressData);
                 }
-                /*else if (endP == PrivateIREndPoints.GetOpenOrders) {
-
-                    Task<Page<BankHistoryOrder>> updateOpenOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency));
-                    updateOpenOrdersTask.Start();
-                    Page<BankHistoryOrder> openOrders = await updateOpenOrdersTask;
-                    drawOpenOrders(openOrders.Data);
-                }*/
                 else if (endP == PrivateIREndPoints.GetOpenOrders) {
-                    var openOrders = await pIR.GetOpenOrdersAsync(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
+                    var openOrders = await pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
                     drawOpenOrders(openOrders.Data);
                 }
                 else if (endP == PrivateIREndPoints.GetClosedOrders) {
-                    Task<Page<BankHistoryOrder>> updateClosedOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency));
-                    updateClosedOrdersTask.Start();
-                    Page<BankHistoryOrder> closedOrders = await updateClosedOrdersTask;
+                    Page<BankHistoryOrder> closedOrders = await pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
                     drawClosedOrders(closedOrders.Data);
                 }
                 else if (endP == PrivateIREndPoints.PlaceMarketOrder) {
-                    BankOrder orderResult;
-
                     OrderType oType = AccountBuySell_listbox.SelectedIndex == 0 ? OrderType.MarketBid : OrderType.MarketOffer;
-                    Task<BankOrder> orderResultTask = new Task<BankOrder>(() => pIR.PlaceMarketOrder(AccountSelectedCrypto,
-                        DCEs["IR"].CurrentSecondaryCurrency,
-                        oType,
-                        volume));
-                    orderResultTask.Start();
-                    orderResult = await orderResultTask;
+
+                    BankOrder orderResult = await pIR.PlaceMarketOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, oType, volume);
                     if ((orderResult != null) && (orderResult.Status == OrderStatus.Failed)) {
                         MessageBox.Show("Market order failed!", "Order failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else if (endP == PrivateIREndPoints.PlaceLimitOrder) {
-                    BankOrder orderResult;
-
                     OrderType oType = AccountBuySell_listbox.SelectedIndex == 0 ? OrderType.LimitBid : OrderType.LimitOffer;
-                    Task<BankOrder> orderResultTask = new Task<BankOrder>(() => pIR.PlaceLimitOrder(AccountSelectedCrypto,
-                        DCEs["IR"].CurrentSecondaryCurrency,
-                        oType,
-                        price,
-                        volume));
-                    orderResultTask.Start();
-                    orderResult = await orderResultTask;
+
+                    BankOrder orderResult = await pIR.PlaceLimitOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, oType, price, volume);
                     if ((orderResult != null) && (orderResult.Status == OrderStatus.Failed)) {
                         MessageBox.Show("Limit order failed!", "Order failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else if (endP == PrivateIREndPoints.CancelOrder) {
                     string orderGuid = ((BankHistoryOrder)AccountOpenOrders_listview.SelectedItems[0].Tag).OrderGuid.ToString();
-                    Task<BankOrder> cancelOrderTask = new Task<BankOrder>(() => pIR.CancelOrder(orderGuid));
-                    cancelOrderTask.Start();
-                    BankOrder cancelledOrder = await cancelOrderTask;
+                    BankOrder cancelledOrder = await pIR.CancelOrder(orderGuid);
                     Debug.Print("cancelled order status: " + cancelledOrder.Status.ToString());
                 }
             }
@@ -569,26 +541,69 @@ namespace IRTicker {
             await mBaiterTask;
         }
 
-        private void marketBaiterLoop(decimal volume) {
+        private async void marketBaiterLoop(decimal volume) {
+            string pair = AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency;
 
             decimal distanceMultiplier = 1;  // this is how we can subtract for offers and add for bids
             if (OrderBookSide == "Offers") distanceMultiplier = -1;
 
             Guid baitGuid = new Guid();
             decimal distanceFromTopOrder = DCEs["IR"].currencyFiatDivision[AccountSelectedCrypto] * 5;  // how far infront of the best order should we be?  will be different for different cryptos
-            Debug.Print("distance from top: " + distanceFromTopOrder);
+            Debug.Print("MBAIT: distance from top: " + distanceFromTopOrder);
             while (true) {
                 if (orderedBook.First().Value.First().Value.OrderType.EndsWith(OrderBookSide)) {  // first make sure we have the right order book
                     if (baitGuid == Guid.Empty) {  // we haven't created the order yet, probably first run
-                        Debug.Print(DateTime.Now + " - no bait guid, lets create it. Top order: " + orderedBook.First().Key);
+                        Debug.Print(DateTime.Now + " - MBAIT: no bait guid, lets create it. Top order: " + orderedBook.First().Key);
 
                         decimal orderPrice = orderedBook.First().Key + (distanceMultiplier * distanceFromTopOrder);
-                        Debug.Print("order price: " + orderPrice);
-                        BankOrder placedOrder = pIR.PlaceLimitOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, (OrderBookSide == "Bids" ? OrderType.LimitBid : OrderType.LimitOffer), orderPrice, volume);
+                        Debug.Print("MBAIT: order price: " + orderPrice);
+
+                        // now we need to make sure this orderPrice is not bigger/smaller than the best offer/bid (ie turning the order into a market order)
+                        if (OrderBookSide == "Bids") {
+                            if (orderPrice > DCEs["IR"].IR_OBs[pair].Item2.Min().Key) {
+                                Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is greater than the lowest bid - " + DCEs["IR"].IR_OBs[pair].Item2.Min().Key);
+                                Thread.Sleep(10000);
+                                continue;
+                            }
+                        }
+                        else {
+                            if (orderPrice < DCEs["IR"].IR_OBs[pair].Item1.Max().Key) {
+                                Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is less than the highest offer - " + DCEs["IR"].IR_OBs[pair].Item1.Min().Key);
+                                Thread.Sleep(10000);
+                                continue;
+                            }
+                        }
+
+                        BankOrder placedOrder = await pIR.PlaceLimitOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, 
+                            (OrderBookSide == "Bids" ? OrderType.LimitBid : OrderType.LimitOffer), orderPrice, volume);
                         baitGuid = placedOrder.OrderGuid;
                     }
+                    else {  // an order is in play
+                        // keeps track of how many pricePoint order dictionaries we have gone through.  the first is special - 
+                        // if we find our order in the first it means we're still at the spread which is good.
+                        int pricePointCount = 0;  
+                        foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> pricePoint in orderedBook) {
+                            foreach (KeyValuePair<string, DCE.OrderBook_IR> order in pricePoint.Value) {
+                                if (new Guid(order.Value.OrderGuid) == baitGuid) {
+                                    if (pricePointCount == 0) {  // our order is top of the pops.  nothing to do.
+                                        goto ContinueLoop;  // my first goto awww
+                                    }
+                                    else {  // our order has been beaten by another. lez cancel and start again.
+                                        Debug.Print("MBAIT: our order has been beaten.  cancelling it...");
+                                        await pIR.CancelOrder(baitGuid.ToString());
+                                        baitGuid = new Guid();
+                                        goto ContinueLoop;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                Thread.Sleep(250);
+                else {
+                    Debug.Print("MBAIT: wrong order book for market baiter?");
+                }
+                ContinueLoop:
+                Thread.Sleep(Properties.Settings.Default.UITimerFreq + 50);  // refresh a bit slower than our OB updates, so any updates should be made before this loop tries to read them
             }
         }
 

@@ -154,8 +154,7 @@ namespace IRTicker {
                 pIR = new PrivateIR(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey);
                 //pIR = new PrivateIR("67a60129-033e-429b-a46a-3f0395334e19", "a031caf6c67440819cf2a15f0fbe9784");
             }
-            IRAccountPubKey_textBox.Text = Properties.Settings.Default.IRAPIPubKey;
-            IRAccountPrivKey_textBox.Text = Properties.Settings.Default.IRAPIPrivKey;
+
 
             if (Properties.Settings.Default.ShowOB) obv.Show();
 
@@ -1896,6 +1895,8 @@ namespace IRTicker {
             TimeSpan session = DateTime.Now - DateTime.Parse(SessionStartedAbs_label.Text);
             SessionStartedRel_label.Text = session.ToString("%d") + " day(s), " + session.ToString("%h") + " hour(s), " + session.ToString("%m") + " min(s)";
 
+            EditKeys_button_Click(null, null);  // populate the api keys drop down.
+
             Settings.Visible = true;
             Main.Visible = false;
         }
@@ -1921,9 +1922,6 @@ namespace IRTicker {
                         Debug.Print("ERROR: couldn't save the ui timer freq as it couldn't be converted to an int? - " + UITimerFreq_maskedTextBox.Text);
                         UITimerFreq_maskedTextBox.Text = Properties.Settings.Default.UITimerFreq.ToString();  // set it back to the last save value
                     }
-
-                    Properties.Settings.Default.IRAPIPubKey = IRAccountPubKey_textBox.Text;
-                    Properties.Settings.Default.IRAPIPrivKey = IRAccountPrivKey_textBox.Text;
 
                     if (!IRAccount_button.Enabled && 
                         !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) &&
@@ -2655,6 +2653,63 @@ namespace IRTicker {
 
         private void IRAccount_button_Click(object sender, EventArgs e) {
             InitialiseAccountsPanel();
+        }
+
+        private void EditKeys_button_Click(object sender, EventArgs e) {
+            if (Settings.Visible) {  // we call this function from the main panel when they click the Settings button.  only want to spawn the api keys form when it's coming from the settings panel.
+                Form EditKeys = new AccountAPIKeys();
+                EditKeys.ShowDialog();
+            }
+
+            APIKeys_comboBox.Items.Clear();
+                        
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.APIFriendly1) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey1) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey1)) {
+                AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly1, Properties.Settings.Default.IRAPIPubKey1, Properties.Settings.Default.IRAPIPrivKey1);
+                APIKeys_comboBox.Items.Add(grp);
+            }
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.APIFriendly2) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey2) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey2)) {
+                AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly2, Properties.Settings.Default.IRAPIPubKey2, Properties.Settings.Default.IRAPIPrivKey2);
+                APIKeys_comboBox.Items.Add(grp);
+            }
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.APIFriendly3) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey3) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey3)) {
+                AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly3, Properties.Settings.Default.IRAPIPubKey3, Properties.Settings.Default.IRAPIPrivKey3);
+                APIKeys_comboBox.Items.Add(grp);
+            }
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.APIFriendly4) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey4) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey4)) {
+                AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly4, Properties.Settings.Default.IRAPIPubKey4, Properties.Settings.Default.IRAPIPrivKey4);
+                APIKeys_comboBox.Items.Add(grp);
+            }
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.APIFriendly5) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey5) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey5)) {
+                AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly5, Properties.Settings.Default.IRAPIPubKey5, Properties.Settings.Default.IRAPIPrivKey5);
+                APIKeys_comboBox.Items.Add(grp);
+            }
+
+            bool foundKey = false;
+            foreach (AccountAPIKeys.APIKeyGroup chosenKey in APIKeys_comboBox.Items) {
+                if (chosenKey.friendlyName == Properties.Settings.Default.APIFriendly) {
+                    //Select this one somehow..
+                    APIKeys_comboBox.SelectedItem = chosenKey;
+                    foundKey = true;
+                }
+            }
+            if (!foundKey) {
+                Properties.Settings.Default.APIFriendly = "";
+                Properties.Settings.Default.IRAPIPubKey = "";
+                Properties.Settings.Default.IRAPIPrivKey = "";
+                AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup("", "", "");
+                APIKeys_comboBox.Items.Add(grp);
+                APIKeys_comboBox.SelectedItem = grp;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        private void APIKeys_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
+
+            Properties.Settings.Default.APIFriendly = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName;
+            Properties.Settings.Default.IRAPIPubKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).pubKey;
+            Properties.Settings.Default.IRAPIPrivKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).privKey;
+
+            pIR = new PrivateIR(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey);
         }
     }
 }

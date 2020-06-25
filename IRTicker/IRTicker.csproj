@@ -163,6 +163,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountAPIKeys.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AccountAPIKeys.Designer.cs">
+      <DependentUpon>AccountAPIKeys.cs</DependentUpon>
+    </Compile>
     <Compile Include="CE.cs" />
     <Compile Include="DCEs.cs" />
     <Compile Include="Help.cs">
@@ -213,6 +219,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="WebSocketsConnect.cs" />
+    <EmbeddedResource Include="AccountAPIKeys.resx">
+      <DependentUpon>AccountAPIKeys.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DCEControl.resx">
       <DependentUpon>DCEControl.cs</DependentUpon>
     </EmbeddedResource>

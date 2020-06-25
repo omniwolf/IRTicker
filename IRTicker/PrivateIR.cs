@@ -46,15 +46,15 @@ namespace IRTicker {
             return accounts;
         }
 
-        public DigitalCurrencyDepositAddress GetDepositAddress(string crypto) {
-            return IRclient.GetDigitalCurrencyDepositAddress(convertCryptoStrToCryptoEnum(crypto));
+        public Task<DigitalCurrencyDepositAddress> GetDepositAddress(string crypto) {
+            return IRclient.GetDigitalCurrencyDepositAddressAsync(convertCryptoStrToCryptoEnum(crypto));
         }
 
         //
-        public DigitalCurrencyDepositAddress CheckAddressNow(string crypto, string address) {
-            DigitalCurrencyDepositAddress result;
+        public Task<DigitalCurrencyDepositAddress> CheckAddressNow(string crypto, string address) {
+            Task<DigitalCurrencyDepositAddress> result;
             try {
-                result = IRclient.SynchDigitalCurrencyDepositAddressWithBlockchain(address, convertCryptoStrToCryptoEnum(crypto));
+                result = IRclient.SynchDigitalCurrencyDepositAddressWithBlockchainAsync(address, convertCryptoStrToCryptoEnum(crypto));
             }
             catch (Exception ex) {
                 MessageBox.Show("API error: " + ex.InnerException.Message, "Check Address Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -64,14 +64,14 @@ namespace IRTicker {
             return result;
         }
 
-        public BankOrder PlaceLimitOrder(string crypto, string fiat, OrderType orderType, decimal price, decimal volume) {
+        public Task<BankOrder> PlaceLimitOrder(string crypto, string fiat, OrderType orderType, decimal price, decimal volume) {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
-            BankOrder orderResult;
+            Task<BankOrder> orderResult;
 
             try {
-                orderResult = IRclient.PlaceLimitOrder(enumCrypto, enumFiat, orderType, price, volume);
+                orderResult = IRclient.PlaceLimitOrderAsync(enumCrypto, enumFiat, orderType, price, volume);
             }
             catch (Exception ex) {
                 MessageBox.Show("API error: " + ex.InnerException.Message, "Limit Order Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -80,14 +80,14 @@ namespace IRTicker {
             return orderResult;
         }
 
-        public BankOrder PlaceMarketOrder(string crypto, string fiat, OrderType orderType, decimal volume) {
+        public Task<BankOrder> PlaceMarketOrder(string crypto, string fiat, OrderType orderType, decimal volume) {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
-            BankOrder orderResult;
+            Task<BankOrder> orderResult;
 
             try {
-                orderResult = IRclient.PlaceMarketOrder(enumCrypto, enumFiat, orderType, volume);
+                orderResult = IRclient.PlaceMarketOrderAsync(enumCrypto, enumFiat, orderType, volume);
             }
             catch (Exception ex) {
                 MessageBox.Show("API error: " + ex.InnerException.Message, "Market Order Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -96,33 +96,21 @@ namespace IRTicker {
             return orderResult;
         }
 
-        public Page<BankHistoryOrder> GetOpenOrders(string crypto, string fiat) {
-            CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
-            CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
-
-            return IRclient.GetOpenOrders(enumCrypto,enumFiat,1, 6);
-        }
-
-        public Task<Page<BankHistoryOrder>> GetOpenOrdersAsync(string crypto, string fiat) {
+        public Task<Page<BankHistoryOrder>> GetOpenOrders(string crypto, string fiat) {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
             return IRclient.GetOpenOrdersAsync(enumCrypto,enumFiat,1, 6);
         }
 
-        public Page<BankHistoryOrder> GetClosedOrders(string crypto, string fiat) {
+        public Task<Page<BankHistoryOrder>> GetClosedOrders(string crypto, string fiat) {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
-            return IRclient.GetClosedFilledOrders(enumCrypto, enumFiat, 1, 6);
+            return IRclient.GetClosedFilledOrdersAsync(enumCrypto, enumFiat, 1, 6);
         }
 
-        public BankOrder CancelOrder(string guid) {
-            return IRclient.CancelOrder(new Guid(guid));
-        }
-
-
-        public Task<BankOrder> CancelOrderAsync(string guid) {
+        public Task<BankOrder> CancelOrder(string guid) {
             return IRclient.CancelOrderAsync(new Guid(guid));
         }
 
