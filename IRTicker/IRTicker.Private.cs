@@ -19,6 +19,7 @@ namespace IRTicker {
         private string OrderBookSide = "Bids";  //  maintains which side of the order book we show in the AccountOrders_listview
         private bool marketBaiterActive = false;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBook;
+        ConcurrentBag<Guid> openOrderGuids = new ConcurrentBag<Guid>();
 
         private void InitialiseAccountsPanel() {
             AccountOrderVolume_textbox.Enabled = true;
@@ -60,7 +61,7 @@ namespace IRTicker {
         }
 
         // runs these network calls in order
-        private async void bulkSequentialAPICalls(List<PrivateIREndPoints> endPoints) {
+        private async void bulkSequentialAPICalls(List<PrivateIREndPoints> endPoints, decimal volume = 0, decimal price = 0) {
 
             foreach (PrivateIREndPoints endP in endPoints) {
                 if (endP == PrivateIREndPoints.GetAccounts) {
@@ -102,7 +103,6 @@ namespace IRTicker {
                 else if (endP == PrivateIREndPoints.PlaceMarketOrder) {
                     BankOrder orderResult;
 
-                    decimal volume = decimal.Parse(AccountOrderVolume_textbox.Text);
                     OrderType oType = AccountBuySell_listbox.SelectedIndex == 0 ? OrderType.MarketBid : OrderType.MarketOffer;
                     Task<BankOrder> orderResultTask = new Task<BankOrder>(() => pIR.PlaceMarketOrder(AccountSelectedCrypto,
                         DCEs["IR"].CurrentSecondaryCurrency,
@@ -117,8 +117,6 @@ namespace IRTicker {
                 else if (endP == PrivateIREndPoints.PlaceLimitOrder) {
                     BankOrder orderResult;
 
-                    decimal volume = decimal.Parse(AccountOrderVolume_textbox.Text);
-                    decimal price = decimal.Parse(AccountLimitPrice_textbox.Text);
                     OrderType oType = AccountBuySell_listbox.SelectedIndex == 0 ? OrderType.LimitBid : OrderType.LimitOffer;
                     Task<BankOrder> orderResultTask = new Task<BankOrder>(() => pIR.PlaceLimitOrder(AccountSelectedCrypto,
                         DCEs["IR"].CurrentSecondaryCurrency,
@@ -132,7 +130,7 @@ namespace IRTicker {
                     }
                 }
                 else if (endP == PrivateIREndPoints.CancelOrder) {
-                    string orderGuid = ((BankOrder)AccountOpenOrders_listview.SelectedItems[0].Tag).OrderGuid.ToString();
+                    string orderGuid = ((BankHistoryOrder)AccountOpenOrders_listview.SelectedItems[0].Tag).OrderGuid.ToString();
                     Task<BankOrder> cancelOrderTask = new Task<BankOrder>(() => pIR.CancelOrder(orderGuid));
                     cancelOrderTask.Start();
                     BankOrder cancelledOrder = await cancelOrderTask;
@@ -196,6 +194,7 @@ namespace IRTicker {
         private void drawOpenOrders(IEnumerable<BankHistoryOrder> openOrders) {
             AccountOpenOrders_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " open orders";
             AccountOpenOrders_listview.Items.Clear();
+            openOrderGuids = new ConcurrentBag<Guid>();
             foreach (BankHistoryOrder order in openOrders) {
                 if ((order.Status != OrderStatus.Open) && (order.Status != OrderStatus.PartiallyFilled)) return;
                 AccountOpenOrders_listview.Items.Add(new ListViewItem(new string[] {
@@ -211,6 +210,7 @@ namespace IRTicker {
                     AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].BackColor = Color.PeachPuff;
                 }
                 AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].Tag = order;
+                openOrderGuids.Add(order.OrderGuid);
             }
         }
 
@@ -274,6 +274,7 @@ namespace IRTicker {
 
             foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> pricePoint in orderedBook) {
                 decimal totalVolume = 0;
+                bool includesMyOrder = false;
 
                 foreach (KeyValuePair<string, DCE.OrderBook_IR> order in pricePoint.Value) {
                     totalVolume += order.Value.Volume;
@@ -287,12 +288,16 @@ namespace IRTicker {
                             trackedOrderVolume = 0;  // no more counting
                         }
                     }
+                    
+                    if (openOrderGuids.Contains(new Guid(order.Key))) {
+                        includesMyOrder = true;
+                    }
                 }
 
                 if (count < 6) {  // less than 6 we haven't finished populating the listview yet
                     cumulativeVol += totalVolume;
                     cumulativeValue += pricePoint.Key * totalVolume;
-                    accOrderListView.Add(new string[] { count.ToString(), pricePoint.Key.ToString(), Utilities.FormatValue(totalVolume), Utilities.FormatValue(cumulativeVol), Utilities.FormatValue(cumulativeValue) });
+                    accOrderListView.Add(new string[] { count.ToString(), pricePoint.Key.ToString(), Utilities.FormatValue(totalVolume), Utilities.FormatValue(cumulativeVol), Utilities.FormatValue(cumulativeValue), (includesMyOrder ? "true" : "false") });
                     count++;
                 }
                 // this can be read like: "if we've finished populating the listview, but we still have more orders required 
@@ -344,8 +349,11 @@ namespace IRTicker {
             foreach (string[] lvi in AccountOrders.Item2) {
                 AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0], Utilities.FormatValue(decimal.Parse(lvi[1]), 2), lvi[2], lvi[3], lvi[4] }));
                 AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].SubItems[1].Tag = lvi[1];  // need to store the price in an unformatted (and therefore parseable) format
+                if (lvi[5] == "true") {  // what a hack.  colourising any orders that are MINE
+                    AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].ForeColor = Color.RoyalBlue;
+                    AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.Yellow;
+                }
             }
-
             if (AccountOrders.Item1 == -1) {
                 AccountEstOrderValue_value.Text = "Not enough depth!";
             }
@@ -532,12 +540,12 @@ namespace IRTicker {
                 // no need to check if we can parse the volume value, we already checked in AccountOrderVolume_textbox_TextChanged
                 if (AccountOrderType_listbox.SelectedIndex == 0) {
                     bulkSequentialAPICalls(new List<PrivateIREndPoints>() {
-                    PrivateIREndPoints.PlaceMarketOrder, PrivateIREndPoints.GetClosedOrders, PrivateIREndPoints.GetAccounts });
+                    PrivateIREndPoints.PlaceMarketOrder, PrivateIREndPoints.GetClosedOrders, PrivateIREndPoints.GetAccounts }, decimal.Parse(AccountOrderVolume_textbox.Text));
                 }
                 else if (AccountOrderType_listbox.SelectedIndex == 1)  {  // Limit order
                     bulkSequentialAPICalls(new List<PrivateIREndPoints>() {
                     PrivateIREndPoints.PlaceLimitOrder, PrivateIREndPoints.GetOpenOrders,
-                    PrivateIREndPoints.GetClosedOrders, PrivateIREndPoints.GetAccounts });
+                    PrivateIREndPoints.GetClosedOrders, PrivateIREndPoints.GetAccounts }, decimal.Parse(AccountOrderVolume_textbox.Text), decimal.Parse(AccountLimitPrice_textbox.Text));
                 }
                 else if (AccountOrderType_listbox.SelectedIndex == 2) {  // market baiter
                     // do something that starts the market baiter
@@ -545,7 +553,7 @@ namespace IRTicker {
                     AccountPlaceOrder_button.Text = "Stop market baiter and cancel order";
                     AccountBuySell_listbox.Enabled = false;
                     AccountOrderType_listbox.Enabled = false;
-                    startMarketBaiter();
+                    startMarketBaiter(decimal.Parse(AccountOrderVolume_textbox.Text));
                 }
 
                 // need to disable the button until we have a result
@@ -555,16 +563,31 @@ namespace IRTicker {
             }
         }
 
-        private async void startMarketBaiter() {
-            Task mBaiterTask = new Task(marketBaiterLoop);
+        private async void startMarketBaiter(decimal volume) {
+            Task mBaiterTask = new Task(() => marketBaiterLoop(volume));
             mBaiterTask.Start();
             await mBaiterTask;
         }
 
-        private void marketBaiterLoop() {
+        private void marketBaiterLoop(decimal volume) {
 
+            decimal distanceMultiplier = 1;  // this is how we can subtract for offers and add for bids
+            if (OrderBookSide == "Offers") distanceMultiplier = -1;
+
+            Guid baitGuid = new Guid();
+            decimal distanceFromTopOrder = DCEs["IR"].currencyFiatDivision[AccountSelectedCrypto] * 5;  // how far infront of the best order should we be?  will be different for different cryptos
+            Debug.Print("distance from top: " + distanceFromTopOrder);
             while (true) {
+                if (orderedBook.First().Value.First().Value.OrderType.EndsWith(OrderBookSide)) {  // first make sure we have the right order book
+                    if (baitGuid == Guid.Empty) {  // we haven't created the order yet, probably first run
+                        Debug.Print(DateTime.Now + " - no bait guid, lets create it. Top order: " + orderedBook.First().Key);
 
+                        decimal orderPrice = orderedBook.First().Key + (distanceMultiplier * distanceFromTopOrder);
+                        Debug.Print("order price: " + orderPrice);
+                        BankOrder placedOrder = pIR.PlaceLimitOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, (OrderBookSide == "Bids" ? OrderType.LimitBid : OrderType.LimitOffer), orderPrice, volume);
+                        baitGuid = placedOrder.OrderGuid;
+                    }
+                }
                 Thread.Sleep(250);
             }
         }
