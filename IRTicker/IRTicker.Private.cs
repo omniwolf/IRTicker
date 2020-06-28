@@ -307,7 +307,7 @@ namespace IRTicker {
                     }
                 }
 
-                if (count < 6) {  // less than 6 we haven't finished populating the listview yet
+                if (count < 10) {  // less than 6 we haven't finished populating the listview yet
                     cumulativeVol += totalVolume;
                     cumulativeValue += pricePoint.Key * totalVolume;
                     accOrderListView.Add(new string[] { count.ToString(), pricePoint.Key.ToString(), Utilities.FormatValue(totalVolume), Utilities.FormatValue(cumulativeVol), Utilities.FormatValue(cumulativeValue), (includesMyOrder ? "true" : "false") });
@@ -315,7 +315,7 @@ namespace IRTicker {
                 }
                 // this can be read like: "if we've finished populating the listview, but we still have more orders required 
                 // to calculate our market order size, then keep looping
-                if ((count > 5) && (trackedOrderVolume <= 0)) break;
+                if ((count > 9) && (trackedOrderVolume <= 0)) break;
             }
 
             if ((oType == "Market") && (trackedOrderVolume >= 0)) {

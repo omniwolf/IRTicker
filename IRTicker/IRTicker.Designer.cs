@@ -4001,7 +4001,7 @@
             // 
             // SwitchOrderBookSide_button
             // 
-            this.SwitchOrderBookSide_button.Location = new System.Drawing.Point(499, 116);
+            this.SwitchOrderBookSide_button.Location = new System.Drawing.Point(499, 114);
             this.SwitchOrderBookSide_button.Name = "SwitchOrderBookSide_button";
             this.SwitchOrderBookSide_button.Size = new System.Drawing.Size(77, 24);
             this.SwitchOrderBookSide_button.TabIndex = 16;
@@ -4049,13 +4049,13 @@
             this.AccountOpenOrders_listview.HideSelection = false;
             this.AccountOpenOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             listViewItem1});
-            this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 41);
+            this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountOpenOrders_listview.MultiSelect = false;
             this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";
             this.AccountOpenOrders_listview.Scrollable = false;
             this.AccountOpenOrders_listview.ShowGroups = false;
             this.AccountOpenOrders_listview.ShowItemToolTips = true;
-            this.AccountOpenOrders_listview.Size = new System.Drawing.Size(291, 137);
+            this.AccountOpenOrders_listview.Size = new System.Drawing.Size(291, 148);
             this.AccountOpenOrders_listview.TabIndex = 13;
             this.AccountOpenOrders_listview.UseCompatibleStateImageBehavior = false;
             this.AccountOpenOrders_listview.View = System.Windows.Forms.View.Details;
@@ -4085,7 +4085,7 @@
             // 
             this.AccountOpenOrders_label.AutoSize = true;
             this.AccountOpenOrders_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountOpenOrders_label.Location = new System.Drawing.Point(7, 13);
+            this.AccountOpenOrders_label.Location = new System.Drawing.Point(7, 8);
             this.AccountOpenOrders_label.Name = "AccountOpenOrders_label";
             this.AccountOpenOrders_label.Size = new System.Drawing.Size(129, 20);
             this.AccountOpenOrders_label.TabIndex = 6;
@@ -4113,13 +4113,13 @@
             this.AccountClosedOrders_listview.GridLines = true;
             this.AccountClosedOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountClosedOrders_listview.HideSelection = false;
-            this.AccountClosedOrders_listview.Location = new System.Drawing.Point(9, 41);
+            this.AccountClosedOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountClosedOrders_listview.MultiSelect = false;
             this.AccountClosedOrders_listview.Name = "AccountClosedOrders_listview";
             this.AccountClosedOrders_listview.Scrollable = false;
             this.AccountClosedOrders_listview.ShowGroups = false;
             this.AccountClosedOrders_listview.ShowItemToolTips = true;
-            this.AccountClosedOrders_listview.Size = new System.Drawing.Size(291, 137);
+            this.AccountClosedOrders_listview.Size = new System.Drawing.Size(291, 148);
             this.AccountClosedOrders_listview.TabIndex = 13;
             this.AccountClosedOrders_listview.UseCompatibleStateImageBehavior = false;
             this.AccountClosedOrders_listview.View = System.Windows.Forms.View.Details;
@@ -4148,7 +4148,7 @@
             // 
             this.AccountClosedOrders_label.AutoSize = true;
             this.AccountClosedOrders_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountClosedOrders_label.Location = new System.Drawing.Point(7, 13);
+            this.AccountClosedOrders_label.Location = new System.Drawing.Point(7, 8);
             this.AccountClosedOrders_label.Name = "AccountClosedOrders_label";
             this.AccountClosedOrders_label.Size = new System.Drawing.Size(139, 20);
             this.AccountClosedOrders_label.TabIndex = 6;
@@ -4158,7 +4158,7 @@
             // 
             this.AccountEstOrderValue_value.AutoSize = true;
             this.AccountEstOrderValue_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountEstOrderValue_value.Location = new System.Drawing.Point(371, 119);
+            this.AccountEstOrderValue_value.Location = new System.Drawing.Point(371, 117);
             this.AccountEstOrderValue_value.Name = "AccountEstOrderValue_value";
             this.AccountEstOrderValue_value.Size = new System.Drawing.Size(0, 16);
             this.AccountEstOrderValue_value.TabIndex = 11;
@@ -4166,7 +4166,7 @@
             // AccountEstOrderValue_label
             // 
             this.AccountEstOrderValue_label.AutoSize = true;
-            this.AccountEstOrderValue_label.Location = new System.Drawing.Point(280, 120);
+            this.AccountEstOrderValue_label.Location = new System.Drawing.Point(280, 118);
             this.AccountEstOrderValue_label.Name = "AccountEstOrderValue_label";
             this.AccountEstOrderValue_label.Size = new System.Drawing.Size(76, 13);
             this.AccountEstOrderValue_label.TabIndex = 10;
@@ -4185,12 +4185,12 @@
             this.AccountOrders_listview.GridLines = true;
             this.AccountOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountOrders_listview.HideSelection = false;
-            this.AccountOrders_listview.Location = new System.Drawing.Point(282, 147);
+            this.AccountOrders_listview.Location = new System.Drawing.Point(282, 148);
             this.AccountOrders_listview.MultiSelect = false;
             this.AccountOrders_listview.Name = "AccountOrders_listview";
             this.AccountOrders_listview.Scrollable = false;
             this.AccountOrders_listview.ShowGroups = false;
-            this.AccountOrders_listview.Size = new System.Drawing.Size(294, 115);
+            this.AccountOrders_listview.Size = new System.Drawing.Size(294, 182);
             this.AccountOrders_listview.TabIndex = 9;
             this.AccountOrders_listview.UseCompatibleStateImageBehavior = false;
             this.AccountOrders_listview.View = System.Windows.Forms.View.Details;
@@ -4647,7 +4647,7 @@
             // 
             this.AccountNZD_total.AutoSize = true;
             this.AccountNZD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountNZD_total.Location = new System.Drawing.Point(83, 717);
+            this.AccountNZD_total.Location = new System.Drawing.Point(83, 719);
             this.AccountNZD_total.Name = "AccountNZD_total";
             this.AccountNZD_total.Size = new System.Drawing.Size(0, 24);
             this.AccountNZD_total.TabIndex = 34;
@@ -4666,7 +4666,7 @@
             // 
             this.AccountAUD_total.AutoSize = true;
             this.AccountAUD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountAUD_total.Location = new System.Drawing.Point(83, 677);
+            this.AccountAUD_total.Location = new System.Drawing.Point(83, 681);
             this.AccountAUD_total.Name = "AccountAUD_total";
             this.AccountAUD_total.Size = new System.Drawing.Size(0, 24);
             this.AccountAUD_total.TabIndex = 32;
