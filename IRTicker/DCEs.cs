@@ -52,6 +52,8 @@ namespace IRTicker {
 
         public string FriendlyName { get; }
 
+        public string BaseURL { get; set; }
+
         public bool NetworkAvailable { get; set; } = true;
 
         public bool HasStaticData { get; set; } = false;  // this will be false until we can pull the DCE static data (eg currency pairs, etc - data that will never change in a session).  Once true always true for a session.
@@ -641,14 +643,14 @@ namespace IRTicker {
                 //OrderBookEvent_IR("NewOrder", new DCE.OrderBook_IR(order.Guid, crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency, order.Price, "LimitBid", order.Volume));
                 if (bidOB.ContainsKey(order.Price)) {  // this price already has order(s)
                     if (!bidOB[order.Price].ContainsKey(order.Guid)) {  // it's possible that the dictionary already has this order because we're starting websockets before we pull the REST OB
-                        bidOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
+                        bidOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, "LimitBid", order.Volume));
                     }
                     // what?? why not?  i have commented the next line out here (and in the sell section too) because this doesn't seem right??
                     //else continue;  // we don't want to try and add this guid to the bidGuid OB, so move on
                 }
                 else {  // new price, create the dictionary
                     ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
-                    tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
+                    tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, "LimitBid", order.Volume));
                     bidOB.TryAdd(order.Price, tempCD);
                 }
                 bidGuidOB[order.Guid] = order.Price;
@@ -662,13 +664,13 @@ namespace IRTicker {
             foreach (Order order in orderBooks[pair].SellOrders) {
                 if (offerOB.ContainsKey(order.Price)) {
                     if (!offerOB[order.Price].ContainsKey(order.Guid)) {
-                        offerOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
+                        offerOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, "LimitOffer", order.Volume));
                     }
                     //else continue;
                 }
                 else {
                     ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
-                    tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, order.OrderType, order.Volume));
+                    tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, pair, order.Price, "LimitOffer", order.Volume));
                     offerOB.TryAdd(order.Price, tempCD);
                 }
                 offerGuidOB[order.Guid] = order.Price;
@@ -952,7 +954,7 @@ namespace IRTicker {
         public class Order {
 
             public Order(string _orderType, decimal _price, decimal _volume, string _guid) {
-                OrderType = _orderType;
+                OrderType = _orderType;  // this isn't actually sent to us by the API, have to assume by which List<Order> the order comes from
                 Price = _price;
                 Volume = _volume;
                 Guid = _guid;

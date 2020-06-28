@@ -16,7 +16,7 @@ namespace IRTicker {
     partial class IRTicker {
 
         private string AccountSelectedCrypto = "XBT";
-        private string OrderBookSide = "Bids";  //  maintains which side of the order book we show in the AccountOrders_listview
+        private string OrderBookSide = "Bid";  //  maintains which side of the order book we show in the AccountOrders_listview
         private bool marketBaiterActive = false;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBook;
         ConcurrentBag<Guid> openOrderGuids = new ConcurrentBag<Guid>();
@@ -24,7 +24,7 @@ namespace IRTicker {
         private void InitialiseAccountsPanel() {
             AccountOrderVolume_textbox.Enabled = true;
             AccountLimitPrice_textbox.Enabled = true;
-            bulkSequentialAPICalls(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetAccounts, PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.GetClosedOrders, PrivateIREndPoints.GetAddress });
+            bulkSequentialAPICalls(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetAccounts, PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.GetClosedOrders, PrivateIREndPoints.GetAddress, PrivateIREndPoints.UpdateOrderBook });
         }
 
         private void DrawIRAccounts(Dictionary<string, Account> irAccounts) {
@@ -68,6 +68,12 @@ namespace IRTicker {
                     Task<Dictionary<string, Account>> irAccountsTask = new Task<Dictionary<string, Account>>(pIR.GetAccounts);
                     irAccountsTask.Start();
                     Dictionary<string, Account> irAccounts = await irAccountsTask;
+                    if (irAccounts == null) {
+                        Debug.Print(DateTime.Now + " - there was an error, closing the accounts page");
+                        Main.Visible = true;
+                        IRAccount_panel.Visible = false;
+                        return;
+                    }
                     DrawIRAccounts(irAccounts);
                 }
                 else if (endP == PrivateIREndPoints.GetAddress) {
@@ -76,8 +82,16 @@ namespace IRTicker {
                 }
                 else if (endP == PrivateIREndPoints.CheckAddress) {
                     string address = AccountWithdrawalAddress_label.Text;
-                    DigitalCurrencyDepositAddress addressData = await pIR.CheckAddressNow(AccountSelectedCrypto, address);
-                    drawDepositAddress(addressData);
+                    DigitalCurrencyDepositAddress addressData;
+                    try {
+                        addressData = await pIR.CheckAddressNow(AccountSelectedCrypto, address);
+                    }
+                    catch (Exception ex) {
+                        MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
+                            ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    if (addressData != null) drawDepositAddress(addressData);
                 }
                 else if (endP == PrivateIREndPoints.GetOpenOrders) {
                     var openOrders = await pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
@@ -90,7 +104,15 @@ namespace IRTicker {
                 else if (endP == PrivateIREndPoints.PlaceMarketOrder) {
                     OrderType oType = AccountBuySell_listbox.SelectedIndex == 0 ? OrderType.MarketBid : OrderType.MarketOffer;
 
-                    BankOrder orderResult = await pIR.PlaceMarketOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, oType, volume);
+                    BankOrder orderResult;
+                    try {
+                        orderResult = await pIR.PlaceMarketOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, oType, volume);
+                    }
+                    catch (Exception ex) {
+                        MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
+                            ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
                     if ((orderResult != null) && (orderResult.Status == OrderStatus.Failed)) {
                         MessageBox.Show("Market order failed!", "Order failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -98,15 +120,34 @@ namespace IRTicker {
                 else if (endP == PrivateIREndPoints.PlaceLimitOrder) {
                     OrderType oType = AccountBuySell_listbox.SelectedIndex == 0 ? OrderType.LimitBid : OrderType.LimitOffer;
 
-                    BankOrder orderResult = await pIR.PlaceLimitOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, oType, price, volume);
+                    BankOrder orderResult;
+                    try {
+                        orderResult = await pIR.PlaceLimitOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, oType, price, volume);
+                    }
+                    catch (Exception ex) {
+                        MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
+                            ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
                     if ((orderResult != null) && (orderResult.Status == OrderStatus.Failed)) {
                         MessageBox.Show("Limit order failed!", "Order failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else if (endP == PrivateIREndPoints.CancelOrder) {
                     string orderGuid = ((BankHistoryOrder)AccountOpenOrders_listview.SelectedItems[0].Tag).OrderGuid.ToString();
-                    BankOrder cancelledOrder = await pIR.CancelOrder(orderGuid);
+                    BankOrder cancelledOrder;
+                    try { 
+                    cancelledOrder = await pIR.CancelOrder(orderGuid);
+                    }
+                    catch (Exception ex) {
+                        MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
+                            ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
                     Debug.Print("cancelled order status: " + cancelledOrder.Status.ToString());
+                }
+                else if (endP == PrivateIREndPoints.UpdateOrderBook) {
+                    updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
                 }
             }
         }
@@ -150,7 +191,7 @@ namespace IRTicker {
                 AccountClosedOrders_listview.Items.Add(new ListViewItem(new string[] {
                     order.CreatedTimestampUtc.ToLocalTime().ToShortDateString(),
                     Utilities.FormatValue(order.Volume),
-                    Utilities.FormatValue(order.AvgPrice.Value),
+                    Utilities.FormatValue(order.AvgPrice.Value, 2),
                     Utilities.FormatValue(order.Value.Value)}));
                 AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].ToolTipText = buildOrderTT(order, false);
                 if (order.OrderType == OrderType.LimitBid || order.OrderType == OrderType.MarketBid) {
@@ -172,7 +213,7 @@ namespace IRTicker {
                 AccountOpenOrders_listview.Items.Add(new ListViewItem(new string[] {
                     order.CreatedTimestampUtc.ToLocalTime().ToShortDateString(),
                     Utilities.FormatValue(order.Volume),
-                    Utilities.FormatValue(order.Price.Value),
+                    Utilities.FormatValue(order.Price.Value, 2),
                     Utilities.FormatValue(order.Outstanding.Value)}));
                 AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].ToolTipText = buildOrderTT(order, true);
                 if (order.OrderType == OrderType.LimitBid) {
@@ -220,7 +261,7 @@ namespace IRTicker {
             decimal estValue = 0;
 
             // here we grab the buy or sell order book, make a copy, and then sort it
-            if (OrderBookSide == "Offers") {
+            if (OrderBookSide == "Offer") {
                 KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCEs["IR"].IR_OBs[pair].Item2.ToArray();  // because we're buying from the sell orders
                 orderedBook = arrayBook.OrderBy(k => k.Key);
                 //Debug.Print("--- Account picked the sell side, top order is: " + orderedBook.First().Key);
@@ -305,7 +346,7 @@ namespace IRTicker {
             Task<Tuple<decimal, List<string[]>>> AccountOrderUpdateTask = new Task<Tuple<decimal, List<string[]>>>(() => compileAccountOrderBook(pair, OrderBookSide, oType, volume));
             AccountOrderUpdateTask.Start();
 
-            if (OrderBookSide == "Offers") {
+            if (OrderBookSide == "Offer") {
                 AccountOrders_listview.Columns[1].Text = "Offers";
             }
             else {
@@ -340,6 +381,7 @@ namespace IRTicker {
         }
 
         private void cryptoClicked(Label clickedLabel) {
+            if (marketBaiterActive) return;  // can't let the crypto change while we're baitin'
             Label oldLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
             oldLabel.ForeColor = Color.Black;
             oldLabel.Font = new Font(oldLabel.Font.FontFamily, 14.25f, FontStyle.Regular);
@@ -371,6 +413,7 @@ namespace IRTicker {
         }
 
         private void IRAccountClose_button_Click(object sender, EventArgs e) {
+            marketBaiterActive = false;
             IRAccount_panel.Visible = false;
             Main.Visible = true;
             Label CurrentSecondaryCurrecyLabel = UIControls_Dict["IR"].Label_Dict[DCEs["IR"].CurrentSecondaryCurrency + "_Account_Label"];
@@ -415,28 +458,33 @@ namespace IRTicker {
             }
             else if (AccountOrderType_listbox.SelectedIndex == 2) {  // market baiter!
                 AccountPlaceOrder_button.Text = "Start baitin'";
+                AccountLimitPrice_label.Visible = true;
+                AccountLimitPrice_textbox.Visible = true;
+                AccountLimitPrice_textbox_TextChanged(null, null);  // simulate a change in the limit text box to recalculate the order value
 
                 // switch the order book to the side we're dealing in
                 SwitchOrderBookSide_button.Enabled = false;  // we're now monitoring this side, no changes allowed.
-                if (AccountBuySell_listbox.SelectedIndex == 0) OrderBookSide = "Bids";
-                else OrderBookSide = "Offers";
+                if (AccountBuySell_listbox.SelectedIndex == 0) OrderBookSide = "Bid";
+                else OrderBookSide = "Offer";
                 updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
             }
             AccountPlaceOrder_button.Enabled = VolumePriceParseable();
         }
 
         private void AccountBuySell_listbox_Click(object sender, EventArgs e) {
-            if (AccountBuySell_listbox.SelectedIndex == 0) {
-                AccountPlaceOrder_button.Text = "Buy now";
-                AccountOrders_listview.Columns[1].Text = "Offers";
-                OrderBookSide = "Offers";
+            if (AccountOrderType_listbox.SelectedIndex < 2) {  // if we're baitin', then don't change the button
+                if (AccountBuySell_listbox.SelectedIndex == 0) {
+                    AccountPlaceOrder_button.Text = "Buy now";
+                    AccountOrders_listview.Columns[1].Text = "Offers";
+                    OrderBookSide = "Offer";
+                }
+                else {
+                    AccountPlaceOrder_button.Text = "Sell now";
+                    AccountOrders_listview.Columns[1].Text = "Bids";
+                    OrderBookSide = "Bid";
+                }
             }
-            else {
-                AccountPlaceOrder_button.Text = "Sell now";
-                AccountOrders_listview.Columns[1].Text = "Bids";
-                OrderBookSide = "Bids";
-            }
-            if ((AccountOrderType_listbox.SelectedIndex == 1) && 
+            if ((AccountOrderType_listbox.SelectedIndex > 0) &&  //  limit or bait
                 decimal.TryParse(AccountLimitPrice_textbox.Text, out decimal ignore)) ValidateLimitOrder();
             updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
         }
@@ -493,6 +541,7 @@ namespace IRTicker {
             else if (AccountOrderType_listbox.SelectedIndex == 2) {  // market baiter
                 if (marketBaiterActive) {
                     // cancel it
+                    marketBaiterActive = false;
                 }
                 else {
                     res = MessageBox.Show("Start the market baiter strategy?" + Environment.NewLine + Environment.NewLine +
@@ -525,7 +574,7 @@ namespace IRTicker {
                     AccountPlaceOrder_button.Text = "Stop market baiter and cancel order";
                     AccountBuySell_listbox.Enabled = false;
                     AccountOrderType_listbox.Enabled = false;
-                    startMarketBaiter(decimal.Parse(AccountOrderVolume_textbox.Text));
+                    startMarketBaiter(decimal.Parse(AccountOrderVolume_textbox.Text), decimal.Parse(AccountLimitPrice_textbox.Text));
                 }
 
                 // need to disable the button until we have a result
@@ -535,76 +584,164 @@ namespace IRTicker {
             }
         }
 
-        private async void startMarketBaiter(decimal volume) {
-            Task mBaiterTask = new Task(() => marketBaiterLoop(volume));
-            mBaiterTask.Start();
-            await mBaiterTask;
+        private async void startMarketBaiter(decimal volume, decimal limitPrice) {
+            var firstPricepoint = orderedBook.First().Value;
+            var firstOrder = firstPricepoint.ElementAt(0).Value;
+            if (!firstOrder.OrderType.EndsWith(OrderBookSide)) {  // we had an order where the orderType was null ??? how? This means I have to check for null :/
+                Debug.Print("MBAIT: wrong order book for market baiter?");
+                AccountBuySell_listbox.Enabled = true;
+                AccountOrderType_listbox.Enabled = true;
+                AccountPlaceOrder_button.Text = "Start baitin'";
+                return;                
+            }
+            Task marketBaiterLoopTask = new Task(() => marketBaiterLoop(volume, limitPrice));
+            //marketBaiterLoopTask = marketBaiterLoop(volume, limitPrice);
+            marketBaiterLoopTask.Start();
+            await marketBaiterLoopTask;
+            //if (marketBaiterLoopTask.IsCompleted) {
+                AccountBuySell_listbox.Enabled = true;
+                AccountOrderType_listbox.Enabled = true;
+                AccountPlaceOrder_button.Text = "Start baitin'";
+                bulkSequentialAPICalls(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.GetClosedOrders, PrivateIREndPoints.GetAccounts, PrivateIREndPoints.UpdateOrderBook });
+            //}
         }
 
-        private async void marketBaiterLoop(decimal volume) {
+        private async Task marketBaiterLoop(decimal volume, decimal limitPrice) {
             string pair = AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency;
+            string crypto = AccountSelectedCrypto;
+            string fiat = DCEs["IR"].CurrentSecondaryCurrency;
 
-            decimal distanceMultiplier = 1;  // this is how we can subtract for offers and add for bids
-            if (OrderBookSide == "Offers") distanceMultiplier = -1;
+            bool orderFilled = false;
 
-            Guid baitGuid = new Guid();
+            BankOrder placedOrder = null;
             decimal distanceFromTopOrder = DCEs["IR"].currencyFiatDivision[AccountSelectedCrypto] * 5;  // how far infront of the best order should we be?  will be different for different cryptos
-            Debug.Print("MBAIT: distance from top: " + distanceFromTopOrder);
-            while (true) {
-                if (orderedBook.First().Value.First().Value.OrderType.EndsWith(OrderBookSide)) {  // first make sure we have the right order book
-                    if (baitGuid == Guid.Empty) {  // we haven't created the order yet, probably first run
-                        Debug.Print(DateTime.Now + " - MBAIT: no bait guid, lets create it. Top order: " + orderedBook.First().Key);
+            if (OrderBookSide == "Offer") distanceFromTopOrder = distanceFromTopOrder * -1;
+                Debug.Print("MBAIT: distance from top: " + distanceFromTopOrder);
+            while (marketBaiterActive) {
 
-                        decimal orderPrice = orderedBook.First().Key + (distanceMultiplier * distanceFromTopOrder);
-                        Debug.Print("MBAIT: order price: " + orderPrice);
+                //if ((orderedBook.First().Value).ElementAt(0).Value.OrderType.EndsWith(OrderBookSide)) {  // first make sure we have the right order book
+                if (placedOrder == null) {  // no order.  let's create one.
+                    Debug.Print(DateTime.Now + " - MBAIT: no bait guid, lets create it. Top order: " + orderedBook.First().Key);
 
-                        // now we need to make sure this orderPrice is not bigger/smaller than the best offer/bid (ie turning the order into a market order)
-                        if (OrderBookSide == "Bids") {
-                            if (orderPrice > DCEs["IR"].IR_OBs[pair].Item2.Min().Key) {
-                                Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is greater than the lowest bid - " + DCEs["IR"].IR_OBs[pair].Item2.Min().Key);
-                                Thread.Sleep(10000);
-                                continue;
-                            }
+                    decimal orderPrice;
+
+                    // now we need to make sure this orderPrice is not bigger/smaller than the best offer/bid (ie turning the order into a market order)
+                    orderPrice = orderedBook.First().Key + distanceFromTopOrder;
+                    if (OrderBookSide == "Bid") {
+                        Debug.Print("MBAIT: bid order price: " + orderPrice);
+                        if (orderPrice > DCEs["IR"].IR_OBs[pair].Item2.Keys.Min()) {
+                            Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is greater than the lowest bid - " + DCEs["IR"].IR_OBs[pair].Item2.Min().Key);
+                            Thread.Sleep(10000);
+                            continue;  // master while loop
                         }
-                        else {
-                            if (orderPrice < DCEs["IR"].IR_OBs[pair].Item1.Max().Key) {
-                                Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is less than the highest offer - " + DCEs["IR"].IR_OBs[pair].Item1.Min().Key);
-                                Thread.Sleep(10000);
-                                continue;
-                            }
+                        else if (orderPrice > limitPrice) {
+                            orderPrice = limitPrice;  // never go over the limitPrice
+                            Debug.Print("MBAIT: order too high, limited to " + limitPrice);  
                         }
-
-                        BankOrder placedOrder = await pIR.PlaceLimitOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, 
-                            (OrderBookSide == "Bids" ? OrderType.LimitBid : OrderType.LimitOffer), orderPrice, volume);
-                        baitGuid = placedOrder.OrderGuid;
                     }
-                    else {  // an order is in play
-                        // keeps track of how many pricePoint order dictionaries we have gone through.  the first is special - 
-                        // if we find our order in the first it means we're still at the spread which is good.
-                        int pricePointCount = 0;  
-                        foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> pricePoint in orderedBook) {
-                            foreach (KeyValuePair<string, DCE.OrderBook_IR> order in pricePoint.Value) {
-                                if (new Guid(order.Value.OrderGuid) == baitGuid) {
-                                    if (pricePointCount == 0) {  // our order is top of the pops.  nothing to do.
-                                        goto ContinueLoop;  // my first goto awww
+                    else {
+                        Debug.Print("MBAIT: offer order price: " + orderPrice);
+                        if (orderPrice < DCEs["IR"].IR_OBs[pair].Item1.Keys.Max()) {
+                            Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is less than the highest offer - " + DCEs["IR"].IR_OBs[pair].Item1.Min().Key);
+                            Thread.Sleep(10000);
+                            continue;  // master while loop
+                        }
+                        else if (orderPrice < limitPrice) {
+                            orderPrice = limitPrice;  // never go under the limitPrice
+                            Debug.Print("MBAIT: order too low, limited to " + limitPrice); 
+                        }
+                    }
+                    Debug.Print("MBAIT: placing order at " + orderPrice);
+                    try {
+                        placedOrder = await pIR.PlaceLimitOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency,
+                            (OrderBookSide == "Bid" ? OrderType.LimitBid : OrderType.LimitOffer), orderPrice, volume);
+                    }
+                    catch (Exception ex) {
+                        Debug.Print("MBAIT: trid to create an order, but it failed: " + ex.Message);
+                    }
+                    updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { /*PrivateIREndPoints.PlaceLimitOrder,*/ PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
+
+                }
+                else {  // an order is in play
+                    // keeps track of how many pricePoint order dictionaries we have gone through.  the first is special - 
+                    // if we find our order in the first it means we're still at the spread which is good.
+                    int pricePointCount = 0;
+                    bool foundOrder = false;
+
+                    if (OrderBookSide == "Offer") {
+                        KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCEs["IR"].IR_OBs[pair].Item2.ToArray();  // because we're buying from the sell orders
+                        orderedBook = arrayBook.OrderBy(k => k.Key);
+                        //Debug.Print("--- Account picked the sell side, top order is: " + orderedBook.First().Key);
+                    }
+                    else {
+                        KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCEs["IR"].IR_OBs[pair].Item1.ToArray();  // because we're selling to the buy orders
+                        orderedBook = arrayBook.OrderByDescending(k => k.Key);
+                        //Debug.Print("--- Account picked the buy side, top order is: " + orderedBook.First().Key);
+                    }
+
+                    foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> pricePoint in orderedBook) {
+                        if (pricePoint.Value.ContainsKey(placedOrder.OrderGuid.ToString())) {
+                            foundOrder = true;
+                            if (pricePointCount > 0) {  // our order has been beaten by another. lez cancel and start again.  if == 0 then we're the top of the book, do nothing.
+                                if (placedOrder.Price != limitPrice) {  // if we're at the limit price, just leave the order, do not cancel.
+                                    Debug.Print("MBAIT: our order has been beaten.  cancelling it...");
+                                    BankOrder bo = await pIR.CancelOrder(placedOrder.OrderGuid.ToString());
+                                    if (bo.Status == OrderStatus.Cancelled) {
+                                        Debug.Print("MBAIT: cancel order was successful");
+                                        updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
+                                        placedOrder = null;
                                     }
-                                    else {  // our order has been beaten by another. lez cancel and start again.
-                                        Debug.Print("MBAIT: our order has been beaten.  cancelling it...");
-                                        await pIR.CancelOrder(baitGuid.ToString());
-                                        baitGuid = new Guid();
-                                        goto ContinueLoop;
-                                    }
+                                }
+                                //else Debug.Print("MBAIT: our order is at the limit, just gonna leave it.  price: " + placedOrder.Price);
+                            }
+                            break;
+                        }
+                        pricePointCount++;
+                    }
+                    if (!foundOrder) {
+                        Debug.Print("MBAIT: Our order doesn't exist in the OB, possibly filled? " + placedOrder.OrderGuid.ToString());
+                        Page<BankHistoryOrder> bhos = await pIR.GetClosedOrders(crypto, fiat);
+                        foreach (BankHistoryOrder bho in bhos.Data) {
+                            if (bho.OrderGuid == placedOrder.OrderGuid) {
+                                if (bho.Status == OrderStatus.Filled) {
+                                    Debug.Print("MBAIT: our order got filled.  sweet.");
+                                    orderFilled = true;
+                                    break;  // closed orders loop
                                 }
                             }
                         }
+                        if (orderFilled) break;
+                        Debug.Print("MBAIT: nope, order not filled.  maybe cancelled?  will recreate...");
+                        placedOrder = null;
                     }
                 }
-                else {
-                    Debug.Print("MBAIT: wrong order book for market baiter?");
-                }
-                ContinueLoop:
+                //Debug.Print("sleeping for " + (Properties.Settings.Default.UITimerFreq + 50).ToString());
                 Thread.Sleep(Properties.Settings.Default.UITimerFreq + 50);  // refresh a bit slower than our OB updates, so any updates should be made before this loop tries to read them
             }
+
+            if (!orderFilled && (placedOrder != null)) {
+                Debug.Print("MBAIT: master loop finished, let's cancel the order if it still exists...");
+                BankOrder bo;
+                try {
+                    bo = await pIR.CancelOrder(placedOrder.OrderGuid.ToString());
+                }
+                catch {
+                    Debug.Print("MBAIT: couldn't cancel the order, I guess will try again?");
+                    bo = new BankOrder() { Status = OrderStatus.Open };  // fake it for below if statement
+                }
+                if (bo.Status == OrderStatus.Cancelled) {
+                    Debug.Print("MBAIT: cancel order was successful");
+                    placedOrder = null;
+                }
+                else Debug.Print("MBAIT: couldn't cancel the order?? guid: " + bo.OrderGuid);
+            }
+            marketBaiterActive = false;
+        }
+
+        private void updateUIFromMarketBaiter(List<PrivateIREndPoints> endPoints) {
+            synchronizationContext.Post(new SendOrPostCallback(o => {
+                bulkSequentialAPICalls((List<PrivateIREndPoints>)o);
+            }), endPoints);
         }
 
         // this method checks the limit price, and if it would make the order a market order, then highlight buttons and shit
@@ -613,28 +750,26 @@ namespace IRTicker {
             if (AccountOrders_listview.Items.Count > 0) {
                 if (AccountBuySell_listbox.SelectedIndex == 0) {  // buy
                     if (price >= decimal.Parse(AccountOrders_listview.Items[0].SubItems[1].Tag.ToString())) {
-                        AccountLimitPrice_label.ForeColor = Color.Red;
-                        AccountPlaceOrder_button.Text = "MARKET buy now";
-                        AccountPlaceOrder_button.ForeColor = Color.Red;
+                        AccountPlaceOrder_button.Text = (AccountOrderType_listbox.SelectedIndex == 1 ? "MARKET buy now" : "Start baitin'");
+                        AccountLimitPrice_label.ForeColor = AccountPlaceOrder_button.ForeColor = (AccountOrderType_listbox.SelectedIndex == 1 ? Color.Red : Color.Black);
                         IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "Price is higher than the lowest offer, this will be a market order!");
                     }
                     else {
                         AccountLimitPrice_label.ForeColor = Color.Black;
-                        AccountPlaceOrder_button.Text = "Buy now";
+                        AccountPlaceOrder_button.Text = (AccountOrderType_listbox.SelectedIndex == 1 ? "Buy now" : "Start baitin'");
                         AccountPlaceOrder_button.ForeColor = Color.Black;
                         IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "");
                     }
                 }
                 else {  // sell
                     if (price <= decimal.Parse(AccountOrders_listview.Items[0].SubItems[1].Tag.ToString())) {
-                        AccountLimitPrice_label.ForeColor = Color.Red;
-                        AccountPlaceOrder_button.Text = "MARKET sell now";
-                        AccountPlaceOrder_button.ForeColor = Color.Red;
+                        AccountPlaceOrder_button.Text = (AccountOrderType_listbox.SelectedIndex == 1 ? "MARKET sell now" : "Start baitin'");
+                        AccountLimitPrice_label.ForeColor = AccountPlaceOrder_button.ForeColor = (AccountOrderType_listbox.SelectedIndex == 1 ? Color.Red : Color.Black);
                         IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "Price is lower than the higest bid, this will be a market order!");
                     }
                     else {
                         AccountLimitPrice_label.ForeColor = Color.Black;
-                        AccountPlaceOrder_button.Text = "Sell now";
+                        AccountPlaceOrder_button.Text = (AccountOrderType_listbox.SelectedIndex == 1 ? "Sell now" : "Start baitin'");
                         AccountPlaceOrder_button.ForeColor = Color.Black;
                         IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "");
                     }
@@ -671,13 +806,13 @@ namespace IRTicker {
 
             if (res == DialogResult.Yes) {
                 bulkSequentialAPICalls(new List<PrivateIREndPoints>() {
-                    PrivateIREndPoints.CancelOrder, PrivateIREndPoints.GetOpenOrders });
+                    PrivateIREndPoints.CancelOrder, PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
             }
         }
 
         private void SwitchOrderBookSide_button_Click(object sender, EventArgs e) {
-            if (OrderBookSide == "Bids") OrderBookSide = "Offers";
-            else OrderBookSide = "Bids";
+            if (OrderBookSide == "Bid") OrderBookSide = "Offer";
+            else OrderBookSide = "Bid";
             updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
         }
 
@@ -689,7 +824,8 @@ namespace IRTicker {
             CheckAddress,
             PlaceMarketOrder,
             PlaceLimitOrder,
-            CancelOrder
+            CancelOrder,
+            UpdateOrderBook
         }
     }
 }

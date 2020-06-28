@@ -40,6 +40,7 @@ namespace IRTicker {
         public ConcurrentDictionary<string, SpreadGraph> SpreadGraph_Dict = new ConcurrentDictionary<string, SpreadGraph>();  // needs to be public because it gets accessed from the graphs object
 
         PrivateIR pIR;
+        private readonly SynchronizationContext synchronizationContext;  // use this to do UI stuff from the market baiter thread
 
         OBview obv = new OBview();
 
@@ -88,18 +89,23 @@ namespace IRTicker {
                 { "BAR", new DCE("BAR", "Bitaroo") }
             };
 
+            DCEs["IR"].BaseURL = "https://api.independentreserve.com";
+            //DCEs["IR"].BaseURL = "https://dev.api.independentreserve.net";
+
+            synchronizationContext = SynchronizationContext.Current;  // for the market baiter thread, see IRTicker.Private.cs
+
             // BTCM, BFX, and BAR have no APIs that let you download the currency pairs, so just set them manually
             // Actually I'm not sure about the above comment, i think some of them do?  But the main issue is most of them have
             // currencies that we don't want to deal with, so we set the currencies manually here.  IR we want all currencies, so
             // we use the API.  This is probably not really smart, as the UI is static, so when new currencies turn up IR breaks.  meh
-            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"XLM\",\"BAT\",\"GNT\",\"ETC\",\"BSV\"";
+            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"XLM\",\"BAT\",\"GNT\",\"ETC\",\"BSV\",\"LINK\"";
             DCEs["BTCM"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["BTCM"].HasStaticData = false;  // want to set this to false so we run the subscribe code once.
 
             DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\",\"EOS\",\"XLM\",\"BAT\",\"REP\",\"GNT\",\"ETC\",\"BSV\",\"USDT\"";
             DCEs["BFX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
-            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\",\"XRP\",\"XLM\",\"REP\",\"ETC\"";
+            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\",\"XRP\",\"XLM\",\"REP\",\"ETC\",\"LINK\"";
             DCEs["GDAX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
             DCEs["BAR"].PrimaryCurrencyCodes = "\"XBT\"";
@@ -151,7 +157,7 @@ namespace IRTicker {
                 IRAccount_button.Enabled = false;
             }
             else {
-                pIR = new PrivateIR(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey);
+                pIR = new PrivateIR(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey);
                 //pIR = new PrivateIR("67a60129-033e-429b-a46a-3f0395334e19", "a031caf6c67440819cf2a15f0fbe9784");
             }
 
@@ -227,6 +233,12 @@ namespace IRTicker {
             UIControls_Dict["IR"].BSV_Label = IR_BSV_Label1;
             UIControls_Dict["IR"].BSV_Price = IR_BSV_Label2;
             UIControls_Dict["IR"].BSV_Spread = IR_BSV_Label3;
+            UIControls_Dict["IR"].PMGT_Label = IR_PMGT_Label1;
+            UIControls_Dict["IR"].PMGT_Price = IR_PMGT_Label2;
+            UIControls_Dict["IR"].PMGT_Spread = IR_PMGT_Label3;
+            UIControls_Dict["IR"].LINK_Label = IR_LINK_Label1;
+            UIControls_Dict["IR"].LINK_Price = IR_LINK_Label2;
+            UIControls_Dict["IR"].LINK_Spread = IR_LINK_Label3;
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
             UIControls_Dict["IR"].AvgPrice_Crypto = IR_CryptoComboBox;
@@ -262,6 +274,10 @@ namespace IRTicker {
             UIControls_Dict["IR"].Account_ZRX_Label = AccountZRX_label;
             UIControls_Dict["IR"].Account_GNT_Value = AccountGNT_value;
             UIControls_Dict["IR"].Account_GNT_Label = AccountGNT_label;
+            UIControls_Dict["IR"].Account_PMGT_Value = AccountPMGT_value;
+            UIControls_Dict["IR"].Account_PMGT_Label = AccountPMGT_label;
+            UIControls_Dict["IR"].Account_LINK_Value = AccountLINK_value;
+            UIControls_Dict["IR"].Account_LINK_Label = AccountLINK_label;
             UIControls_Dict["IR"].Account_XBT_Total = AccountXBT_total;
             UIControls_Dict["IR"].Account_ETH_Total = AccountETH_total;
             UIControls_Dict["IR"].Account_XRP_Total = AccountXRP_total;
@@ -277,6 +293,8 @@ namespace IRTicker {
             UIControls_Dict["IR"].Account_REP_Total = AccountREP_total;
             UIControls_Dict["IR"].Account_ZRX_Total = AccountZRX_total;
             UIControls_Dict["IR"].Account_GNT_Total = AccountGNT_total;
+            UIControls_Dict["IR"].Account_PMGT_Total = AccountPMGT_total;
+            UIControls_Dict["IR"].Account_LINK_Total = AccountLINK_total;
             UIControls_Dict["IR"].Account_AUD_Total = AccountAUD_total;
             UIControls_Dict["IR"].Account_AUD_Label = AccountAUD_label;
             UIControls_Dict["IR"].Account_NZD_Total = AccountNZD_total;
@@ -320,6 +338,9 @@ namespace IRTicker {
             UIControls_Dict["BTCM"].BSV_Label = BTCM_BSV_Label1;
             UIControls_Dict["BTCM"].BSV_Price = BTCM_BSV_Label2;
             UIControls_Dict["BTCM"].BSV_Spread = BTCM_BSV_Label3;
+            UIControls_Dict["BTCM"].LINK_Label = BTCM_LINK_Label1;
+            UIControls_Dict["BTCM"].LINK_Price = BTCM_LINK_Label2;
+            UIControls_Dict["BTCM"].LINK_Spread = BTCM_LINK_Label3;
             UIControls_Dict["BTCM"].AvgPrice_BuySell = BTCM_BuySellComboBox;
             UIControls_Dict["BTCM"].AvgPrice_NumCoins = BTCM_NumCoinsTextBox;
             UIControls_Dict["BTCM"].AvgPrice_Crypto = BTCM_CryptoComboBox;
@@ -356,6 +377,9 @@ namespace IRTicker {
             UIControls_Dict["GDAX"].ETC_Label = GDAX_ETC_Label1;
             UIControls_Dict["GDAX"].ETC_Price = GDAX_ETC_Label2;
             UIControls_Dict["GDAX"].ETC_Spread = GDAX_ETC_Label3;
+            UIControls_Dict["GDAX"].LINK_Label = GDAX_LINK_Label1;
+            UIControls_Dict["GDAX"].LINK_Price = GDAX_LINK_Label2;
+            UIControls_Dict["GDAX"].LINK_Spread = GDAX_LINK_Label3;
             UIControls_Dict["GDAX"].AvgPrice_BuySell = GDAX_BuySellComboBox;
             UIControls_Dict["GDAX"].AvgPrice_NumCoins = GDAX_NumCoinsTextBox;
             UIControls_Dict["GDAX"].AvgPrice_Crypto = GDAX_CryptoComboBox;
@@ -561,14 +585,22 @@ namespace IRTicker {
 
         // this grabs data from the API, creates a MarketSummary object, and pops it in the cryptoPairs dictionary
         private void ParseDCE_IR(string crypto, string fiat, bool updateLabels) {
-            Tuple<bool, string> marketSummary = Utilities.Get("https://api.independentreserve.com/Public/GetMarketSummary?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
+            Tuple<bool, string> marketSummary = Utilities.Get(DCEs["IR"].BaseURL + "/Public/GetMarketSummary?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
             if (!marketSummary.Item1) {
                 DCEs["IR"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
                 DCEs["IR"].NetworkAvailable = false;
             }
             else {
                 DCEs["IR"].NetworkAvailable = true;
-                DCE.MarketSummary mSummary = JsonConvert.DeserializeObject<DCE.MarketSummary>(marketSummary.Item2);
+                DCE.MarketSummary mSummary;
+                try {
+                    mSummary = JsonConvert.DeserializeObject<DCE.MarketSummary>(marketSummary.Item2);
+                }
+                catch {
+                    Debug.Print(DateTime.Now + " - IR - bad REST result: " + marketSummary.Item2);
+                    DCEs["IR"].NetworkAvailable = false;
+                    return;
+                }
 
                 // This bit is for a) volume (we don't get vol from websockets), and b) if there have been no orders to establish a spread, then the price and spread
                 // stay at 0.  This is 
@@ -986,7 +1018,7 @@ namespace IRTicker {
 
                 ////// IR ///////
                 if(!DCEs["IR"].HasStaticData) {  // only pull the currencies once per session as these are essentially static
-                    Tuple<bool, string> primaryCurrencyCodesTpl = Utilities.Get("https://api.independentreserve.com/Public/GetValidPrimaryCurrencyCodes");
+                    Tuple<bool, string> primaryCurrencyCodesTpl = Utilities.Get(DCEs["IR"].BaseURL + "/Public/GetValidPrimaryCurrencyCodes");
                     if (!primaryCurrencyCodesTpl.Item1) {
                         DCEs["IR"].CurrentDCEStatus = WebsiteError(primaryCurrencyCodesTpl.Item2);
                         DCEs["IR"].NetworkAvailable = false;
@@ -998,7 +1030,7 @@ namespace IRTicker {
                         //DCEs["IR"].PrimaryCurrencyCodes = "\"XBT\"";
                     }
 
-                    Tuple<bool, string> secondaryCurrencyCodesTpl = Utilities.Get("https://api.independentreserve.com/Public/GetValidSecondaryCurrencyCodes");
+                    Tuple<bool, string> secondaryCurrencyCodesTpl = Utilities.Get(DCEs["IR"].BaseURL + "/Public/GetValidSecondaryCurrencyCodes");
                     if (!secondaryCurrencyCodesTpl.Item1) {
                         DCEs["IR"].CurrentDCEStatus = WebsiteError(secondaryCurrencyCodesTpl.Item2);
                         DCEs["IR"].NetworkAvailable = false;
@@ -1872,6 +1904,16 @@ namespace IRTicker {
 
         // when they close the app, rename the crypto dirs to blah - old.  this way if they user happens to check the toolbar thing they'll know they're not being updated anymore
         private void IRTicker_Closing(object sender, FormClosingEventArgs e) {
+
+            if (marketBaiterActive) {
+                DialogResult result = MessageBox.Show("Market Baiter still active, you should cancel it before closing the app or the order will stay on the order book!" + Environment.NewLine + Environment.NewLine +
+                    "Are you sure you want to close IRTicker?",
+                    "Trading bot still going", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                if (result == DialogResult.No) {
+                    e.Cancel = true;
+                    return;
+                }
+            }
            
            // turn off the blink stick.
            if (bStick != null) {
@@ -1895,7 +1937,7 @@ namespace IRTicker {
             TimeSpan session = DateTime.Now - DateTime.Parse(SessionStartedAbs_label.Text);
             SessionStartedRel_label.Text = session.ToString("%d") + " day(s), " + session.ToString("%h") + " hour(s), " + session.ToString("%m") + " min(s)";
 
-            EditKeys_button_Click(null, null);  // populate the api keys drop down.
+            populateIRAPIKeysSettings();  // populate the api keys drop down.
 
             Settings.Visible = true;
             Main.Visible = false;
@@ -1927,7 +1969,7 @@ namespace IRTicker {
                         !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) &&
                         !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
 
-                        pIR = new PrivateIR(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey);
+                        pIR = new PrivateIR(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey);
                         IRAccount_button.Enabled = true;
                     }
                     else if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
@@ -2656,10 +2698,13 @@ namespace IRTicker {
         }
 
         private void EditKeys_button_Click(object sender, EventArgs e) {
-            if (Settings.Visible) {  // we call this function from the main panel when they click the Settings button.  only want to spawn the api keys form when it's coming from the settings panel.
-                Form EditKeys = new AccountAPIKeys();
-                EditKeys.ShowDialog();
-            }
+            Form EditKeys = new AccountAPIKeys();
+            EditKeys.ShowDialog();
+
+            populateIRAPIKeysSettings();
+        }
+
+        private void populateIRAPIKeysSettings() { 
 
             APIKeys_comboBox.Items.Clear();
                         
@@ -2709,7 +2754,7 @@ namespace IRTicker {
             Properties.Settings.Default.IRAPIPubKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).pubKey;
             Properties.Settings.Default.IRAPIPrivKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).privKey;
 
-            pIR = new PrivateIR(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey);
+            pIR = new PrivateIR(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey);
         }
     }
 }

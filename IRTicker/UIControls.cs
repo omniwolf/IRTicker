@@ -30,6 +30,8 @@ namespace IRTicker {
         public Label ETC_Label { get; set; }
         public Label USDT_Label { get; set; }
         public Label BSV_Label { get; set; }
+        public Label PMGT_Label { get; set; }
+        public Label LINK_Label { get; set; }
 
         public Label XBT_Price { get; set; }
         public Label ETH_Price { get; set; }
@@ -47,6 +49,8 @@ namespace IRTicker {
         public Label ETC_Price { get; set; }
         public Label USDT_Price { get; set; }
         public Label BSV_Price { get; set; }
+        public Label PMGT_Price { get; set; }
+        public Label LINK_Price { get; set; }
 
         public Label XBT_Spread { get; set; }
         public Label ETH_Spread { get; set; }
@@ -64,6 +68,8 @@ namespace IRTicker {
         public Label ETC_Spread { get; set; }
         public Label USDT_Spread { get; set; }
         public Label BSV_Spread { get; set; }
+        public Label PMGT_Spread { get; set; }
+        public Label LINK_Spread { get; set; }
 
         public ComboBox AvgPrice_BuySell { get; set; }
         public MaskedTextBox AvgPrice_NumCoins { get; set; }
@@ -91,6 +97,8 @@ namespace IRTicker {
         public Label Account_REP_Label { get; set; }
         public Label Account_ZRX_Label { get; set; }
         public Label Account_GNT_Label { get; set; }
+        public Label Account_PMGT_Label { get; set; }
+        public Label Account_LINK_Label { get; set; }
         public Label Account_AUD_Label { get; set; }
         public Label Account_NZD_Label { get; set; }
         public Label Account_USD_Label { get; set; }
@@ -110,6 +118,8 @@ namespace IRTicker {
         public Label Account_REP_Value { get; set; }
         public Label Account_ZRX_Value { get; set; }
         public Label Account_GNT_Value { get; set; }
+        public Label Account_PMGT_Value { get; set; }
+        public Label Account_LINK_Value { get; set; }
 
         public Label Account_XBT_Total { get; set; }
         public Label Account_ETH_Total { get; set; }
@@ -126,6 +136,8 @@ namespace IRTicker {
         public Label Account_REP_Total { get; set; }
         public Label Account_ZRX_Total { get; set; }
         public Label Account_GNT_Total { get; set; }
+        public Label Account_PMGT_Total { get; set; }
+        public Label Account_LINK_Total { get; set; }
         public Label Account_AUD_Total { get; set; }
         public Label Account_NZD_Total { get; set; }
         public Label Account_USD_Total { get; set; }
@@ -152,6 +164,8 @@ namespace IRTicker {
             if (ETC_Label != null) Label_Dict.Add("ETC_Label", ETC_Label);
             if (USDT_Label != null) Label_Dict.Add("USDT_Label", USDT_Label);
             if (BSV_Label != null) Label_Dict.Add("BSV_Label", BSV_Label);
+            if (PMGT_Label != null) Label_Dict.Add("PMGT_Label", PMGT_Label);
+            if (LINK_Label != null) Label_Dict.Add("LINK_Label", LINK_Label);
 
             if (XBT_Price != null) Label_Dict.Add("XBT_Price", XBT_Price);
             if (ETH_Price != null) Label_Dict.Add("ETH_Price", ETH_Price);
@@ -169,6 +183,8 @@ namespace IRTicker {
             if (ETC_Price != null) Label_Dict.Add("ETC_Price", ETC_Price);
             if (USDT_Price != null) Label_Dict.Add("USDT_Price", USDT_Price);
             if (BSV_Price != null) Label_Dict.Add("BSV_Price", BSV_Price);
+            if (PMGT_Price != null) Label_Dict.Add("PMGT_Price", PMGT_Price);
+            if (LINK_Price != null) Label_Dict.Add("LINK_Price", LINK_Price);
 
             if (XBT_Spread != null) Label_Dict.Add("XBT_Spread", XBT_Spread);
             if (ETH_Spread != null) Label_Dict.Add("ETH_Spread", ETH_Spread);
@@ -186,6 +202,8 @@ namespace IRTicker {
             if (ETC_Spread != null) Label_Dict.Add("ETC_Spread", ETC_Spread);
             if (USDT_Spread != null) Label_Dict.Add("USDT_Spread", USDT_Spread);
             if (BSV_Spread != null) Label_Dict.Add("BSV_Spread", BSV_Spread);
+            if (PMGT_Spread != null) Label_Dict.Add("PMGT_Spread", PMGT_Spread);
+            if (LINK_Spread != null) Label_Dict.Add("LINK_Spread", LINK_Spread);
 
 
 
@@ -204,6 +222,8 @@ namespace IRTicker {
             if (Account_REP_Label != null) Label_Dict.Add("REP_Account_Label", Account_REP_Label);
             if (Account_ZRX_Label != null) Label_Dict.Add("ZRX_Account_Label", Account_ZRX_Label);
             if (Account_GNT_Label != null) Label_Dict.Add("GNT_Account_Label", Account_GNT_Label);
+            if (Account_PMGT_Label != null) Label_Dict.Add("PMGT_Account_Label", Account_PMGT_Label);
+            if (Account_LINK_Label != null) Label_Dict.Add("LINK_Account_Label", Account_LINK_Label);
             if (Account_AUD_Label != null) Label_Dict.Add("AUD_Account_Label", Account_AUD_Label);
             if (Account_NZD_Label != null) Label_Dict.Add("NZD_Account_Label", Account_NZD_Label);
             if (Account_USD_Label != null) Label_Dict.Add("USD_Account_Label", Account_USD_Label);
@@ -223,6 +243,8 @@ namespace IRTicker {
             if (Account_REP_Value != null) Label_Dict.Add("REP_Account_Value", Account_REP_Value);
             if (Account_ZRX_Value != null) Label_Dict.Add("ZRX_Account_Value", Account_ZRX_Value);
             if (Account_GNT_Value != null) Label_Dict.Add("GNT_Account_Value", Account_GNT_Value);
+            if (Account_PMGT_Value != null) Label_Dict.Add("PMGT_Account_Value", Account_PMGT_Value);
+            if (Account_LINK_Value != null) Label_Dict.Add("LINK_Account_Value", Account_LINK_Value);
 
             if (Account_XBT_Total != null) Label_Dict.Add("XBT_Account_Total", Account_XBT_Total);
             if (Account_ETH_Total != null) Label_Dict.Add("ETH_Account_Total", Account_ETH_Total);
@@ -239,6 +261,8 @@ namespace IRTicker {
             if (Account_REP_Total != null) Label_Dict.Add("REP_Account_Total", Account_REP_Total);
             if (Account_ZRX_Total != null) Label_Dict.Add("ZRX_Account_Total", Account_ZRX_Total);
             if (Account_GNT_Total != null) Label_Dict.Add("GNT_Account_Total", Account_GNT_Total);
+            if (Account_PMGT_Total != null) Label_Dict.Add("PMGT_Account_Total", Account_PMGT_Total);
+            if (Account_LINK_Total != null) Label_Dict.Add("LINK_Account_Total", Account_LINK_Total);
             if (Account_AUD_Total != null) Label_Dict.Add("AUD_Account_Total", Account_AUD_Total);
             if (Account_NZD_Total != null) Label_Dict.Add("NZD_Account_Total", Account_NZD_Total);
             if (Account_USD_Total != null) Label_Dict.Add("USD_Account_Total", Account_USD_Total);

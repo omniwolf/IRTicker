@@ -20,7 +20,7 @@ namespace IRTicker {
         public Dictionary<string, Account> accounts = new Dictionary<string, Account>();
         private ApiCredential IRcreds;
 
-        public PrivateIR(string APIKey, string APISecret) {
+        public PrivateIR(string _BaseURL, string APIKey, string APISecret) {
 
             //string API_Key = "67a60129-033e-429b-a46a-3f0395334e19";
 
@@ -34,16 +34,22 @@ namespace IRTicker {
             IRcreds = new ApiCredential(APIKey, APISecret);
 
             var IRconf = new ApiConfig {
-                BaseUrl = "https://api.independentreserve.com/",
+                BaseUrl = _BaseURL,
                 Credential = IRcreds
             };
             IRclient = Client.Create(IRconf);
         }
 
         public Dictionary<string, Account> GetAccounts() {
-
-            accounts = IRclient.GetAccounts().ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
-            return accounts;
+            try {
+                accounts = IRclient.GetAccounts().ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
+                return accounts;
+            }
+            catch (Exception ex) {
+                MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
+                    ex.InnerException.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
         }
 
         public Task<DigitalCurrencyDepositAddress> GetDepositAddress(string crypto) {
@@ -57,8 +63,9 @@ namespace IRTicker {
                 result = IRclient.SynchDigitalCurrencyDepositAddressWithBlockchainAsync(address, convertCryptoStrToCryptoEnum(crypto));
             }
             catch (Exception ex) {
-                MessageBox.Show("API error: " + ex.InnerException.Message, "Check Address Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                result = null;
+                MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
+                    ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
             }
 
             return result;
@@ -111,7 +118,14 @@ namespace IRTicker {
         }
 
         public Task<BankOrder> CancelOrder(string guid) {
-            return IRclient.CancelOrderAsync(new Guid(guid));
+            try {
+                return IRclient.CancelOrderAsync(new Guid(guid));
+            }
+            catch (Exception ex) {
+                MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
+                    ex.InnerException.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
         }
 
         private CurrencyCode convertCryptoStrToCryptoEnum(string crypto) {

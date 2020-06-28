@@ -34,6 +34,7 @@ namespace IRTicker {
 
             Task.Factory.StartNew(() => {
                 startSockets("IR", "wss://websockets.independentreserve.com");
+                //startSockets("IR", "ws://dev.pushservice.independentreserve.net");
             })
             ;
             Debug.Print("after first start sockets");
@@ -128,7 +129,7 @@ namespace IRTicker {
         public void GetOrderBook_IR(string crypto, string fiat) {
             if (crypto == "USDT") crypto = "UST";
             string pair = crypto + "-" + fiat;
-            Tuple<bool, string> orderBookTpl = Utilities.Get("https://api.independentreserve.com/Public/GetAllOrders?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
+            Tuple<bool, string> orderBookTpl = Utilities.Get(DCEs["IR"].BaseURL + "/Public/GetAllOrders?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
 
             // have to change back ughhh
             if (crypto.ToUpper() == "UST") crypto = "USDT";
@@ -138,6 +139,10 @@ namespace IRTicker {
                 DCE.OrderBook orderBook = JsonConvert.DeserializeObject<DCE.OrderBook>(orderBookTpl.Item2);
                 if (orderBook.PrimaryCurrencyCode.ToUpper() == "UST") orderBook.PrimaryCurrencyCode = "USDT";
                 DCEs["IR"].orderBooks[pair] = orderBook;
+                if ((DCEs["IR"].orderBooks[pair].BuyOrders.Count == 0) || (DCEs["IR"].orderBooks[pair].SellOrders.Count == 0)) {
+                    Debug.Print("One of the order books is empty... not continuing.  number of buy orders: " + DCEs["IR"].orderBooks[pair].BuyOrders.Count + ", and sell orders: " + DCEs["IR"].orderBooks[pair].SellOrders.Count);
+                    return;
+                }
 
                 // next we need to convert this orderbook into a concurrent dictionary of OrderBook_IR objects
                 // so yeah.. the "orderBook" object doesn't really get used anymore.  it's just like a staging area

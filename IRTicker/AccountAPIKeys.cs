@@ -76,5 +76,12 @@ namespace IRTicker {
         private void APIKeyCloseNoSave_button_Click(object sender, EventArgs e) {
             Close();
         }
+
+        private void PubKey_textBox1_KeyUp(object sender, KeyEventArgs e) {
+            if (e.Control) {
+                if (e.KeyCode == Keys.Enter)
+                    SettingsOKButton_Click(null, null);
+            }
+        }
     }
 }

@@ -76,8 +76,9 @@
             this.PrivKey_textBox1.Name = "PrivKey_textBox1";
             this.PrivKey_textBox1.PasswordChar = '●';
             this.PrivKey_textBox1.Size = new System.Drawing.Size(338, 20);
-            this.PrivKey_textBox1.TabIndex = 34;
+            this.PrivKey_textBox1.TabIndex = 3;
             this.PrivKey_textBox1.UseSystemPasswordChar = true;
+            this.PrivKey_textBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // IRPubKey_label
             // 
@@ -97,8 +98,9 @@
             this.PubKey_textBox1.Name = "PubKey_textBox1";
             this.PubKey_textBox1.PasswordChar = '●';
             this.PubKey_textBox1.Size = new System.Drawing.Size(338, 20);
-            this.PubKey_textBox1.TabIndex = 32;
+            this.PubKey_textBox1.TabIndex = 2;
             this.PubKey_textBox1.UseSystemPasswordChar = true;
+            this.PubKey_textBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // label1
             // 
@@ -118,8 +120,9 @@
             this.PrivKey_textBox2.Name = "PrivKey_textBox2";
             this.PrivKey_textBox2.PasswordChar = '●';
             this.PrivKey_textBox2.Size = new System.Drawing.Size(338, 20);
-            this.PrivKey_textBox2.TabIndex = 38;
+            this.PrivKey_textBox2.TabIndex = 6;
             this.PrivKey_textBox2.UseSystemPasswordChar = true;
+            this.PrivKey_textBox2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // label2
             // 
@@ -139,8 +142,9 @@
             this.PubKey_textBox2.Name = "PubKey_textBox2";
             this.PubKey_textBox2.PasswordChar = '●';
             this.PubKey_textBox2.Size = new System.Drawing.Size(338, 20);
-            this.PubKey_textBox2.TabIndex = 36;
+            this.PubKey_textBox2.TabIndex = 5;
             this.PubKey_textBox2.UseSystemPasswordChar = true;
+            this.PubKey_textBox2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // label3
             // 
@@ -160,8 +164,9 @@
             this.PrivKey_textBox3.Name = "PrivKey_textBox3";
             this.PrivKey_textBox3.PasswordChar = '●';
             this.PrivKey_textBox3.Size = new System.Drawing.Size(338, 20);
-            this.PrivKey_textBox3.TabIndex = 42;
+            this.PrivKey_textBox3.TabIndex = 9;
             this.PrivKey_textBox3.UseSystemPasswordChar = true;
+            this.PrivKey_textBox3.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // label4
             // 
@@ -181,8 +186,9 @@
             this.PubKey_textBox3.Name = "PubKey_textBox3";
             this.PubKey_textBox3.PasswordChar = '●';
             this.PubKey_textBox3.Size = new System.Drawing.Size(338, 20);
-            this.PubKey_textBox3.TabIndex = 40;
+            this.PubKey_textBox3.TabIndex = 8;
             this.PubKey_textBox3.UseSystemPasswordChar = true;
+            this.PubKey_textBox3.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // label5
             // 
@@ -202,8 +208,9 @@
             this.PrivKey_textBox4.Name = "PrivKey_textBox4";
             this.PrivKey_textBox4.PasswordChar = '●';
             this.PrivKey_textBox4.Size = new System.Drawing.Size(338, 20);
-            this.PrivKey_textBox4.TabIndex = 46;
+            this.PrivKey_textBox4.TabIndex = 12;
             this.PrivKey_textBox4.UseSystemPasswordChar = true;
+            this.PrivKey_textBox4.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // label6
             // 
@@ -223,8 +230,9 @@
             this.PubKey_textBox4.Name = "PubKey_textBox4";
             this.PubKey_textBox4.PasswordChar = '●';
             this.PubKey_textBox4.Size = new System.Drawing.Size(338, 20);
-            this.PubKey_textBox4.TabIndex = 44;
+            this.PubKey_textBox4.TabIndex = 11;
             this.PubKey_textBox4.UseSystemPasswordChar = true;
+            this.PubKey_textBox4.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // label7
             // 
@@ -244,8 +252,9 @@
             this.PrivKey_textBox5.Name = "PrivKey_textBox5";
             this.PrivKey_textBox5.PasswordChar = '●';
             this.PrivKey_textBox5.Size = new System.Drawing.Size(338, 20);
-            this.PrivKey_textBox5.TabIndex = 50;
+            this.PrivKey_textBox5.TabIndex = 15;
             this.PrivKey_textBox5.UseSystemPasswordChar = true;
+            this.PrivKey_textBox5.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // label8
             // 
@@ -265,8 +274,9 @@
             this.PubKey_textBox5.Name = "PubKey_textBox5";
             this.PubKey_textBox5.PasswordChar = '●';
             this.PubKey_textBox5.Size = new System.Drawing.Size(338, 20);
-            this.PubKey_textBox5.TabIndex = 48;
+            this.PubKey_textBox5.TabIndex = 14;
             this.PubKey_textBox5.UseSystemPasswordChar = true;
+            this.PubKey_textBox5.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // SettingsOKButton
             // 
@@ -274,7 +284,7 @@
             this.SettingsOKButton.Location = new System.Drawing.Point(339, 518);
             this.SettingsOKButton.Name = "SettingsOKButton";
             this.SettingsOKButton.Size = new System.Drawing.Size(97, 23);
-            this.SettingsOKButton.TabIndex = 52;
+            this.SettingsOKButton.TabIndex = 17;
             this.SettingsOKButton.Text = "Close and Save";
             this.SettingsOKButton.UseVisualStyleBackColor = true;
             this.SettingsOKButton.Click += new System.EventHandler(this.SettingsOKButton_Click);
@@ -296,7 +306,8 @@
             this.FriendlyName_textbox5.Location = new System.Drawing.Point(98, 430);
             this.FriendlyName_textbox5.Name = "FriendlyName_textbox5";
             this.FriendlyName_textbox5.Size = new System.Drawing.Size(338, 20);
-            this.FriendlyName_textbox5.TabIndex = 53;
+            this.FriendlyName_textbox5.TabIndex = 13;
+            this.FriendlyName_textbox5.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // label10
             // 
@@ -315,7 +326,8 @@
             this.FriendlyName_textbox4.Location = new System.Drawing.Point(98, 327);
             this.FriendlyName_textbox4.Name = "FriendlyName_textbox4";
             this.FriendlyName_textbox4.Size = new System.Drawing.Size(338, 20);
-            this.FriendlyName_textbox4.TabIndex = 55;
+            this.FriendlyName_textbox4.TabIndex = 10;
+            this.FriendlyName_textbox4.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // label11
             // 
@@ -334,7 +346,8 @@
             this.FriendlyName_textbox3.Location = new System.Drawing.Point(98, 227);
             this.FriendlyName_textbox3.Name = "FriendlyName_textbox3";
             this.FriendlyName_textbox3.Size = new System.Drawing.Size(338, 20);
-            this.FriendlyName_textbox3.TabIndex = 57;
+            this.FriendlyName_textbox3.TabIndex = 7;
+            this.FriendlyName_textbox3.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // label12
             // 
@@ -353,7 +366,8 @@
             this.FriendlyName_textbox2.Location = new System.Drawing.Point(98, 123);
             this.FriendlyName_textbox2.Name = "FriendlyName_textbox2";
             this.FriendlyName_textbox2.Size = new System.Drawing.Size(338, 20);
-            this.FriendlyName_textbox2.TabIndex = 59;
+            this.FriendlyName_textbox2.TabIndex = 4;
+            this.FriendlyName_textbox2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // label13
             // 
@@ -372,7 +386,8 @@
             this.FriendlyName_textbox1.Location = new System.Drawing.Point(98, 17);
             this.FriendlyName_textbox1.Name = "FriendlyName_textbox1";
             this.FriendlyName_textbox1.Size = new System.Drawing.Size(338, 20);
-            this.FriendlyName_textbox1.TabIndex = 61;
+            this.FriendlyName_textbox1.TabIndex = 1;
+            this.FriendlyName_textbox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // APIKeyCloseNoSave_button
             // 
@@ -380,7 +395,7 @@
             this.APIKeyCloseNoSave_button.Location = new System.Drawing.Point(236, 518);
             this.APIKeyCloseNoSave_button.Name = "APIKeyCloseNoSave_button";
             this.APIKeyCloseNoSave_button.Size = new System.Drawing.Size(97, 23);
-            this.APIKeyCloseNoSave_button.TabIndex = 63;
+            this.APIKeyCloseNoSave_button.TabIndex = 16;
             this.APIKeyCloseNoSave_button.Text = "Close";
             this.APIKeyCloseNoSave_button.UseVisualStyleBackColor = true;
             this.APIKeyCloseNoSave_button.Click += new System.EventHandler(this.APIKeyCloseNoSave_button_Click);
@@ -428,6 +443,7 @@
             this.MinimumSize = new System.Drawing.Size(474, 592);
             this.Name = "AccountAPIKeys";
             this.Text = "API Keys";
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             this.ResumeLayout(false);
             this.PerformLayout();
 
