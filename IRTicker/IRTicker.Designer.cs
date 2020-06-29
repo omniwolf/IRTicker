@@ -339,6 +339,7 @@
             this.AccountWithdrawalTag_value = new System.Windows.Forms.Label();
             this.AccountWithdrawalTag_label = new System.Windows.Forms.Label();
             this.AccountWithdrawalCrypto_label = new System.Windows.Forms.Label();
+            this.IRAccountClose_button = new System.Windows.Forms.Button();
             this.GetAccounts_panel = new System.Windows.Forms.Panel();
             this.AccountLINK_total = new System.Windows.Forms.Label();
             this.AccountPMGT_total = new System.Windows.Forms.Label();
@@ -369,7 +370,6 @@
             this.AccountNZD_label = new System.Windows.Forms.Label();
             this.AccountAUD_total = new System.Windows.Forms.Label();
             this.AccountAUD_label = new System.Windows.Forms.Label();
-            this.IRAccountClose_button = new System.Windows.Forms.Button();
             this.AccountGNT_value = new System.Windows.Forms.Label();
             this.AccountGNT_label = new System.Windows.Forms.Label();
             this.AccountZRX_value = new System.Windows.Forms.Label();
@@ -4328,6 +4328,17 @@
             this.AccountWithdrawalCrypto_label.TabIndex = 0;
             this.AccountWithdrawalCrypto_label.Text = "BTC deposit address:";
             // 
+            // IRAccountClose_button
+            // 
+            this.IRAccountClose_button.BackColor = System.Drawing.Color.White;
+            this.IRAccountClose_button.Location = new System.Drawing.Point(228, 108);
+            this.IRAccountClose_button.Name = "IRAccountClose_button";
+            this.IRAccountClose_button.Size = new System.Drawing.Size(75, 23);
+            this.IRAccountClose_button.TabIndex = 30;
+            this.IRAccountClose_button.Text = "Close";
+            this.IRAccountClose_button.UseVisualStyleBackColor = false;
+            this.IRAccountClose_button.Click += new System.EventHandler(this.IRAccountClose_button_Click);
+            // 
             // GetAccounts_panel
             // 
             this.GetAccounts_panel.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
@@ -4550,7 +4561,7 @@
             this.AccountUSDT_total.AutoSize = true;
             this.AccountUSDT_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountUSDT_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountUSDT_total.Location = new System.Drawing.Point(83, 207);
+            this.AccountUSDT_total.Location = new System.Drawing.Point(83, 205);
             this.AccountUSDT_total.Name = "AccountUSDT_total";
             this.AccountUSDT_total.Size = new System.Drawing.Size(0, 24);
             this.AccountUSDT_total.TabIndex = 44;
@@ -4680,17 +4691,6 @@
             this.AccountAUD_label.Size = new System.Drawing.Size(54, 24);
             this.AccountAUD_label.TabIndex = 31;
             this.AccountAUD_label.Text = "AUD:";
-            // 
-            // IRAccountClose_button
-            // 
-            this.IRAccountClose_button.BackColor = System.Drawing.Color.White;
-            this.IRAccountClose_button.Location = new System.Drawing.Point(228, 108);
-            this.IRAccountClose_button.Name = "IRAccountClose_button";
-            this.IRAccountClose_button.Size = new System.Drawing.Size(75, 23);
-            this.IRAccountClose_button.TabIndex = 30;
-            this.IRAccountClose_button.Text = "Close";
-            this.IRAccountClose_button.UseVisualStyleBackColor = false;
-            this.IRAccountClose_button.Click += new System.EventHandler(this.IRAccountClose_button_Click);
             // 
             // AccountGNT_value
             // 
@@ -4887,7 +4887,7 @@
             this.AccountUSDT_value.AutoSize = true;
             this.AccountUSDT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountUSDT_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountUSDT_value.Location = new System.Drawing.Point(183, 207);
+            this.AccountUSDT_value.Location = new System.Drawing.Point(183, 205);
             this.AccountUSDT_value.Name = "AccountUSDT_value";
             this.AccountUSDT_value.Size = new System.Drawing.Size(0, 24);
             this.AccountUSDT_value.TabIndex = 11;

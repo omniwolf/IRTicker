@@ -381,35 +381,35 @@ namespace IRTicker {
         }
 
         private void cryptoClicked(Label clickedLabel) {
-            if (marketBaiterActive) return;  // can't let the crypto change while we're baitin'
-            Label oldLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
-            oldLabel.ForeColor = Color.Black;
-            oldLabel.Font = new Font(oldLabel.Font.FontFamily, 14.25f, FontStyle.Regular);
-            
-            oldLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Total"];
-            oldLabel.ForeColor = Color.FromArgb(64, 64, 64);
+            if (!marketBaiterActive) {  // can't let the crypto change while we're baitin'
+                Label oldLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
+                oldLabel.ForeColor = Color.Black;
+                oldLabel.Font = new Font(oldLabel.Font.FontFamily, 14.25f, FontStyle.Regular);
 
-            oldLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Value"];
-            oldLabel.ForeColor = Color.FromArgb(64, 64, 64);
+                oldLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Total"];
+                oldLabel.ForeColor = Color.FromArgb(64, 64, 64);
+
+                oldLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Value"];
+                oldLabel.ForeColor = Color.FromArgb(64, 64, 64);
 
 
-            AccountSelectedCrypto = clickedLabel.Text.Substring(0, clickedLabel.Text.IndexOf(':'));
-            if (AccountSelectedCrypto == "BTC") AccountSelectedCrypto = "XBT";
+                AccountSelectedCrypto = clickedLabel.Text.Substring(0, clickedLabel.Text.IndexOf(':'));
+                if (AccountSelectedCrypto == "BTC") AccountSelectedCrypto = "XBT";
 
-            Label newLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
-            newLabel.ForeColor = Color.DarkOrange;
-            newLabel.Font = new Font(newLabel.Font.FontFamily, 14.25f, FontStyle.Bold);
+                Label newLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
+                newLabel.ForeColor = Color.DarkOrange;
+                newLabel.Font = new Font(newLabel.Font.FontFamily, 14.25f, FontStyle.Bold);
 
-            newLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Total"];
-            newLabel.ForeColor = Color.DarkOrange;
+                newLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Total"];
+                newLabel.ForeColor = Color.DarkOrange;
 
-            newLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Value"];
-            newLabel.ForeColor = Color.DarkOrange;
-
-            updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
+                newLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Value"];
+                newLabel.ForeColor = Color.DarkOrange;
+            }
 
             bulkSequentialAPICalls(new List<PrivateIREndPoints>() { 
-                PrivateIREndPoints.GetAddress,PrivateIREndPoints.GetClosedOrders, PrivateIREndPoints.GetOpenOrders });
+                PrivateIREndPoints.GetAddress,PrivateIREndPoints.GetClosedOrders,
+                PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
         }
 
         private void IRAccountClose_button_Click(object sender, EventArgs e) {
@@ -597,7 +597,8 @@ namespace IRTicker {
             Task marketBaiterLoopTask = new Task(() => marketBaiterLoop(volume, limitPrice));
             //marketBaiterLoopTask = marketBaiterLoop(volume, limitPrice);
             marketBaiterLoopTask.Start();
-            await marketBaiterLoopTask;
+            Task.WaitAll(marketBaiterLoopTask);
+
             //if (marketBaiterLoopTask.IsCompleted) {
                 AccountBuySell_listbox.Enabled = true;
                 AccountOrderType_listbox.Enabled = true;
@@ -606,7 +607,7 @@ namespace IRTicker {
             //}
         }
 
-        private async Task marketBaiterLoop(decimal volume, decimal limitPrice) {
+        private async void marketBaiterLoop(decimal volume, decimal limitPrice) {
             string pair = AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency;
             string crypto = AccountSelectedCrypto;
             string fiat = DCEs["IR"].CurrentSecondaryCurrency;
@@ -630,7 +631,7 @@ namespace IRTicker {
                     if (OrderBookSide == "Bid") {
                         Debug.Print("MBAIT: bid order price: " + orderPrice);
                         if (orderPrice > DCEs["IR"].IR_OBs[pair].Item2.Keys.Min()) {
-                            Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is greater than the lowest bid - " + DCEs["IR"].IR_OBs[pair].Item2.Min().Key);
+                            Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is greater than the lowest bid - " + DCEs["IR"].IR_OBs[pair].Item2.Keys.Min());
                             Thread.Sleep(10000);
                             continue;  // master while loop
                         }
@@ -642,7 +643,7 @@ namespace IRTicker {
                     else {
                         Debug.Print("MBAIT: offer order price: " + orderPrice);
                         if (orderPrice < DCEs["IR"].IR_OBs[pair].Item1.Keys.Max()) {
-                            Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is less than the highest offer - " + DCEs["IR"].IR_OBs[pair].Item1.Min().Key);
+                            Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is less than the highest offer - " + DCEs["IR"].IR_OBs[pair].Item1.Keys.Max());
                             Thread.Sleep(10000);
                             continue;  // master while loop
                         }

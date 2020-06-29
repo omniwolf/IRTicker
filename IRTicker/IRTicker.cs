@@ -1063,7 +1063,7 @@ namespace IRTicker {
                         Dictionary<string, DCE.MarketSummary> cryptos = DCEs["IR"].GetCryptoPairs();
                         foreach (KeyValuePair<string, DCE.MarketSummary> mSummary in cryptos) {
 
-                            DCEs["IR"].currencyFiatDivision.Add(mSummary.Value.PrimaryCurrencyCode, 0.01M);
+                            DCEs["IR"].currencyFiatDivision.Add(mSummary.Value.PrimaryCurrencyCode, 0.00001M);
                         }
 
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
