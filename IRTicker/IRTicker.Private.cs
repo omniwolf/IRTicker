@@ -660,7 +660,7 @@ namespace IRTicker {
                     Debug.Print("MBAIT: placing order at " + orderPrice);
                     try {
                         placedOrder = await pIR.PlaceLimitOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency,
-                            (OrderBookSide == "Bid" ? OrderType.LimitBid : OrderType.LimitOffer), orderPrice, volume);
+                            (OrderBookSide == "Bid" ? OrderType.LimitBid : OrderType.LimitOffer), orderPrice, volume).ConfigureAwait(false);
                     }
                     catch (Exception ex) {
                         Debug.Print("MBAIT: trid to create an order, but it failed: " + ex.Message);
@@ -706,7 +706,7 @@ namespace IRTicker {
                     }
                     if (!foundOrder) {
                         Debug.Print("MBAIT: Our order doesn't exist in the OB, possibly filled? " + placedOrder.OrderGuid.ToString());
-                        Page<BankHistoryOrder> bhos = await pIR.GetClosedOrders(crypto, fiat);
+                        Page<BankHistoryOrder> bhos = await pIR.GetClosedOrders(crypto, fiat).ConfigureAwait(false);
                         foreach (BankHistoryOrder bho in bhos.Data) {
                             if (bho.OrderGuid == placedOrder.OrderGuid) {
                                 if (bho.Status == OrderStatus.Filled) {
@@ -729,7 +729,7 @@ namespace IRTicker {
                 Debug.Print("MBAIT: master loop finished, let's cancel the order if it still exists...");
                 BankOrder bo;
                 try {
-                    bo = await pIR.CancelOrder(placedOrder.OrderGuid.ToString());
+                    bo = await pIR.CancelOrder(placedOrder.OrderGuid.ToString()).ConfigureAwait(false);
                 }
                 catch {
                     Debug.Print("MBAIT: couldn't cancel the order, I guess will try again?");
