@@ -409,7 +409,7 @@ namespace IRTicker {
 
             bulkSequentialAPICalls(new List<PrivateIREndPoints>() { 
                 PrivateIREndPoints.GetAddress,PrivateIREndPoints.GetClosedOrders,
-                PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
+                PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.GetAccounts, PrivateIREndPoints.UpdateOrderBook });
         }
 
         private void IRAccountClose_button_Click(object sender, EventArgs e) {
@@ -483,6 +483,12 @@ namespace IRTicker {
                     AccountOrders_listview.Columns[1].Text = "Bids";
                     OrderBookSide = "Bid";
                 }
+            }
+            else {  // baitin'
+                // switch the order book to the side we're dealing in
+                if (AccountBuySell_listbox.SelectedIndex == 0) OrderBookSide = "Bid";
+                else OrderBookSide = "Offer";
+                updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
             }
             if ((AccountOrderType_listbox.SelectedIndex > 0) &&  //  limit or bait
                 decimal.TryParse(AccountLimitPrice_textbox.Text, out decimal ignore)) ValidateLimitOrder();
@@ -594,10 +600,9 @@ namespace IRTicker {
                 AccountPlaceOrder_button.Text = "Start baitin'";
                 return;                
             }
-            Task marketBaiterLoopTask = new Task(() => marketBaiterLoop(volume, limitPrice));
+            Task marketBaiterLoopTask = marketBaiterLoop(volume, limitPrice);
             //marketBaiterLoopTask = marketBaiterLoop(volume, limitPrice);
-            marketBaiterLoopTask.Start();
-            Task.WaitAll(marketBaiterLoopTask);
+            await marketBaiterLoopTask;
 
             //if (marketBaiterLoopTask.IsCompleted) {
                 AccountBuySell_listbox.Enabled = true;
@@ -607,7 +612,7 @@ namespace IRTicker {
             //}
         }
 
-        private async void marketBaiterLoop(decimal volume, decimal limitPrice) {
+        private async Task marketBaiterLoop(decimal volume, decimal limitPrice) {
             string pair = AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency;
             string crypto = AccountSelectedCrypto;
             string fiat = DCEs["IR"].CurrentSecondaryCurrency;
@@ -686,7 +691,7 @@ namespace IRTicker {
                             if (pricePointCount > 0) {  // our order has been beaten by another. lez cancel and start again.  if == 0 then we're the top of the book, do nothing.
                                 if (placedOrder.Price != limitPrice) {  // if we're at the limit price, just leave the order, do not cancel.
                                     Debug.Print("MBAIT: our order has been beaten.  cancelling it...");
-                                    BankOrder bo = await pIR.CancelOrder(placedOrder.OrderGuid.ToString());
+                                    BankOrder bo = await pIR.CancelOrder(placedOrder.OrderGuid.ToString()).ConfigureAwait(false);
                                     if (bo.Status == OrderStatus.Cancelled) {
                                         Debug.Print("MBAIT: cancel order was successful");
                                         updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
@@ -807,7 +812,7 @@ namespace IRTicker {
 
             if (res == DialogResult.Yes) {
                 bulkSequentialAPICalls(new List<PrivateIREndPoints>() {
-                    PrivateIREndPoints.CancelOrder, PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
+                    PrivateIREndPoints.CancelOrder, PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.GetAccounts, PrivateIREndPoints.UpdateOrderBook });
             }
         }
 
