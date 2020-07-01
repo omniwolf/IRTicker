@@ -519,7 +519,7 @@ namespace IRTicker {
                 if (AccountOrderType_listbox.SelectedIndex == 0) {
                     updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
                 }
-                else if (AccountOrderType_listbox.SelectedIndex == 1) {  // limit order
+                else /*if (AccountOrderType_listbox.SelectedIndex == 1)*/ {  // limit order
                     AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(
                         volume * decimal.Parse(AccountLimitPrice_textbox.Text));
                 }
@@ -696,6 +696,9 @@ namespace IRTicker {
                                         Debug.Print("MBAIT: cancel order was successful");
                                         updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
                                         placedOrder = null;
+                                    }
+                                    else {
+                                        Debug.Print("MBAIT: FAILED TO CANCEL ORDER!  why?  current status: " + bo.Status);
                                     }
                                 }
                                 //else Debug.Print("MBAIT: our order is at the limit, just gonna leave it.  price: " + placedOrder.Price);

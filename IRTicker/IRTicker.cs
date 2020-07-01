@@ -1060,10 +1060,69 @@ namespace IRTicker {
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "USD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "NZD");*/
 
-                        Dictionary<string, DCE.MarketSummary> cryptos = DCEs["IR"].GetCryptoPairs();
-                        foreach (KeyValuePair<string, DCE.MarketSummary> mSummary in cryptos) {
+                        IRCurrencies.IRCurrenciesRoot CurrencyRoot;
+                        using (StreamReader r = new StreamReader("IRCurrencyAttributes.txt")) {
+                            string json = r.ReadToEnd();
+                            CurrencyRoot = JsonConvert.DeserializeObject<IRCurrencies.IRCurrenciesRoot>(json);
+                        }
 
-                            DCEs["IR"].currencyFiatDivision.Add(mSummary.Value.PrimaryCurrencyCode, 0.00001M);
+                        //Dictionary<string, DCE.MarketSummary> cryptos = DCEs["IR"].GetCryptoPairs();
+                        foreach (string currency in DCEs["IR"].PrimaryCurrencyList) {
+                            switch (currency) {
+                                case "XBT":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Xbt.FiatPriceDecimalPlaces)).ToString()));
+                                    break;
+                                case "ETH":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Eth.FiatPriceDecimalPlaces)).ToString()));
+                                    break;
+                                case "XRP":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Xrp.FiatPriceDecimalPlaces)).ToString("0.#######################################")));
+                                    break;
+                                case "BCH":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Bch.FiatPriceDecimalPlaces)).ToString("0.#######################################")));
+                                    break;
+                                case "BSV":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Bsv.FiatPriceDecimalPlaces)).ToString("0.#######################################")));
+                                    break;
+                                case "USDT":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Ust.FiatPriceDecimalPlaces)).ToString("0.#######################################")));
+                                    break;
+                                case "LTC":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Ltc.FiatPriceDecimalPlaces)).ToString("0.#######################################")));
+                                    break;
+                                case "EOS":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Eos.FiatPriceDecimalPlaces)).ToString("0.#######################################")));
+                                    break;
+                                case "XLM":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Xlm.FiatPriceDecimalPlaces)).ToString("0.#######################################")));
+                                    break;
+                                case "ETC":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Etc.FiatPriceDecimalPlaces)).ToString("0.#######################################")));
+                                    break;
+                                case "BAT":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Bat.FiatPriceDecimalPlaces)).ToString("0.#######################################")));
+                                    break;
+                                case "OMG":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Omg.FiatPriceDecimalPlaces)).ToString("0.#######################################")));
+                                    break;
+                                case "REP":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Rep.FiatPriceDecimalPlaces)).ToString("0.#######################################")));
+                                    break;
+                                case "ZRX":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Zrx.FiatPriceDecimalPlaces)).ToString("0.#######################################")));
+                                    break;
+                                case "GNT":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Gnt.FiatPriceDecimalPlaces)).ToString("0.#######################################")));
+                                    break;
+                                case "PMGT":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Pmg.FiatPriceDecimalPlaces)).ToString("0.#######################################")));
+                                    break;
+                                case "LINK":
+                                    DCEs["IR"].currencyFiatDivision.Add(currency, decimal.Parse((Math.Pow(0.1, CurrencyRoot.Lnk.FiatPriceDecimalPlaces)).ToString("0.#######################################")));
+                                    break;
+                            }
+
+                            
                         }
 
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
