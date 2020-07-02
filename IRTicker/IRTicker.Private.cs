@@ -912,7 +912,7 @@ namespace IRTicker {
             updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
         }
 
-        enum PrivateIREndPoints {
+        public enum PrivateIREndPoints {
             GetAccounts,
             GetAddress,
             GetOpenOrders,
