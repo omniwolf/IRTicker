@@ -11,6 +11,7 @@ using IndependentReserve.DotNetClientApi.Data;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
+using System.Collections.Concurrent;
 
 namespace IRTicker {
     class PrivateIR {
@@ -19,12 +20,13 @@ namespace IRTicker {
         private Client IRclient;
         public Dictionary<string, Account> accounts = new Dictionary<string, Account>();
         private ApiCredential IRcreds;
+        private IRTicker IRT;
+        private ConcurrentQueue<IRClientData> IRQueue = new ConcurrentQueue<IRClientData>();
+        private bool isDequeuing = false;
 
-        public PrivateIR(string _BaseURL, string APIKey, string APISecret) {
+        public PrivateIR(string _BaseURL, string APIKey, string APISecret, IRTicker _IRT) {
 
-            //string API_Key = "67a60129-033e-429b-a46a-3f0395334e19";
-
-            //string API_Secret = "a031caf6c67440819cf2a15f0fbe9784";
+            IRT = _IRT;
 
             if (string.IsNullOrEmpty(APIKey) || string.IsNullOrEmpty(APISecret)) {
                 Debug.Print(DateTime.Now + " cannot do private IR stuff, missing API key(s)");
@@ -57,10 +59,10 @@ namespace IRTicker {
         }
 
         //
-        public Task<DigitalCurrencyDepositAddress> CheckAddressNow(string crypto, string address) {
+        public Task<DigitalCurrencyDepositAddress> CheckAddressNow(CurrencyCode crypto, string address) {
             Task<DigitalCurrencyDepositAddress> result;
             try {
-                result = IRclient.SynchDigitalCurrencyDepositAddressWithBlockchainAsync(address, convertCryptoStrToCryptoEnum(crypto));
+                result = IRclient.SynchDigitalCurrencyDepositAddressWithBlockchainAsync(address, crypto);
             }
             catch (Exception ex) {
                 MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
@@ -107,7 +109,7 @@ namespace IRTicker {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
-            return IRclient.GetOpenOrdersAsync(enumCrypto,enumFiat,1, 7);
+            return IRclient.GetOpenOrdersAsync(enumCrypto, enumFiat, 1, 7);
         }
 
         public Task<Page<BankHistoryOrder>> GetClosedOrders(string crypto, string fiat) {
@@ -117,9 +119,9 @@ namespace IRTicker {
             return IRclient.GetClosedFilledOrdersAsync(enumCrypto, enumFiat, 1, 7);
         }
 
-        public Task<BankOrder> CancelOrder(string guid) {
+        public Task<BankOrder> CancelOrder(Guid guid) {
             try {
-                return IRclient.CancelOrderAsync(new Guid(guid));
+                return IRclient.CancelOrderAsync(guid);
             }
             catch (Exception ex) {
                 MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
@@ -131,6 +133,55 @@ namespace IRTicker {
         private CurrencyCode convertCryptoStrToCryptoEnum(string crypto) {
             Enum.TryParse(Utilities.FirstLetterToUpper(crypto), out CurrencyCode enumCrypto);
             return enumCrypto;
+        }
+
+        public class IRClientData {
+            public IRTicker.PrivateIREndPoints EndPoint { get; set; }
+            public decimal LimitPrice { get; set; }
+            public decimal Volume { get; set; }
+            public CurrencyCode Crypto { get; set; }
+            public CurrencyCode Fiat { get; set; }
+            public int PageNum { get; set; }
+            public int PageSize { get; set; }
+            public OrderType orderType { get; set; }
+            public string CryptoAddress { get; set; }
+            public Guid guid { get; set; }
+        }
+
+        public void Enqueue(IRClientData IRdata) {
+            IRQueue.Enqueue(IRdata);
+            if (!isDequeuing) {
+                isDequeuing = true;
+                Dequeue();
+            }
+        }
+
+        public void Enqueue(List<IRClientData> IRdataList) {
+            foreach (IRClientData dat in IRdataList) {
+                IRQueue.Enqueue(dat);
+            }
+            if (!isDequeuing) {
+                isDequeuing = true;
+                Dequeue();
+            }
+        }
+
+        private async void Dequeue() {
+            while (IRQueue.Count > 0) {
+                if (IRQueue.TryDequeue(out IRClientData data)) {
+                    switch (data.EndPoint) {
+                        case IRTicker.PrivateIREndPoints.CancelOrder:
+                            BankOrder bo = await CancelOrder(data.guid);
+                            break;
+                        case IRTicker.PrivateIREndPoints.CheckAddress:
+                            await CheckAddressNow(data.Crypto, data.CryptoAddress);
+                            break;
+                        case IRTicker.PrivateIREndPoints.GetAccounts:
+                            // this one hase a result.  should capture it and then call the draw func
+                    }
+                }
+            }
+            isDequeuing = false;
         }
     }
 }

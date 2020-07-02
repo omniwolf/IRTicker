@@ -157,7 +157,7 @@ namespace IRTicker {
                 IRAccount_button.Enabled = false;
             }
             else {
-                pIR = new PrivateIR(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey);
+                pIR = new PrivateIR(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this);
                 //pIR = new PrivateIR("67a60129-033e-429b-a46a-3f0395334e19", "a031caf6c67440819cf2a15f0fbe9784");
             }
 
