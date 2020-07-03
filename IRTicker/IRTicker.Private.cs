@@ -168,7 +168,7 @@ namespace IRTicker {
                     tt += "Market offer order" + Environment.NewLine + Environment.NewLine;
                     break;
             }
-            tt += "Date created: " + order.CreatedTimestampUtc.ToString() + Environment.NewLine;
+            tt += "Date created: " + order.CreatedTimestampUtc.ToLocalTime().ToString() + Environment.NewLine;
             tt += "Volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + order.Volume + Environment.NewLine;
             if (isOrderOpen) {
                 tt += "Price: $ " + Utilities.FormatValue(order.Price.Value) + Environment.NewLine;
@@ -333,7 +333,6 @@ namespace IRTicker {
         }
 
         public async void updateAccountOrderBook(string pair) {
-
             if (AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency != pair) return;
             if (!DCEs["IR"].IR_OBs.ContainsKey(pair)) return;
 
@@ -548,6 +547,11 @@ namespace IRTicker {
                 if (marketBaiterActive) {
                     // cancel it
                     marketBaiterActive = false;
+                    AccountBuySell_listbox.Enabled = true;
+                    AccountOrderType_listbox.Enabled = true;
+                    AccountPlaceOrder_button.Text = "Start baitin'";
+                    bulkSequentialAPICalls(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.GetClosedOrders, PrivateIREndPoints.GetAccounts, PrivateIREndPoints.UpdateOrderBook });
+
                 }
                 else {
                     res = MessageBox.Show("Start the market baiter strategy?" + Environment.NewLine + Environment.NewLine +
@@ -600,16 +604,12 @@ namespace IRTicker {
                 AccountPlaceOrder_button.Text = "Start baitin'";
                 return;                
             }
-            Task marketBaiterLoopTask = marketBaiterLoop(volume, limitPrice);
-            //marketBaiterLoopTask = marketBaiterLoop(volume, limitPrice);
+            Task marketBaiterLoopTask = new Task(() => marketBaiterLoop(volume, limitPrice));
+            marketBaiterLoopTask.Start();
+            ////marketBaiterLoopTask = marketBaiterLoop(volume, limitPrice);
+            //await marketBaiterLoopTask;
+            
             await marketBaiterLoopTask;
-
-            //if (marketBaiterLoopTask.IsCompleted) {
-                AccountBuySell_listbox.Enabled = true;
-                AccountOrderType_listbox.Enabled = true;
-                AccountPlaceOrder_button.Text = "Start baitin'";
-                bulkSequentialAPICalls(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.GetClosedOrders, PrivateIREndPoints.GetAccounts, PrivateIREndPoints.UpdateOrderBook });
-            //}
         }
 
         private async Task marketBaiterLoop(decimal volume, decimal limitPrice) {
@@ -617,7 +617,7 @@ namespace IRTicker {
             string crypto = AccountSelectedCrypto;
             string fiat = DCEs["IR"].CurrentSecondaryCurrency;
 
-            bool orderFilled = false;
+            //bool orderFilled = false;
 
             BankOrder placedOrder = null;
             decimal distanceFromTopOrder = DCEs["IR"].currencyFiatDivision[AccountSelectedCrypto] * 5;  // how far infront of the best order should we be?  will be different for different cryptos
@@ -635,6 +635,8 @@ namespace IRTicker {
                     orderPrice = orderedBook.First().Key + distanceFromTopOrder;
                     if (OrderBookSide == "Bid") {
                         Debug.Print("MBAIT: bid order price: " + orderPrice);
+
+                        // here we check if the order is too high for the OB, or too high for the limit price we set
                         if (orderPrice > DCEs["IR"].IR_OBs[pair].Item2.Keys.Min()) {
                             Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is greater than the lowest bid - " + DCEs["IR"].IR_OBs[pair].Item2.Keys.Min());
                             Thread.Sleep(10000);
@@ -647,6 +649,8 @@ namespace IRTicker {
                     }
                     else {
                         Debug.Print("MBAIT: offer order price: " + orderPrice);
+
+                        // check if the order is too low for the OB or lower than our set limit
                         if (orderPrice < DCEs["IR"].IR_OBs[pair].Item1.Keys.Max()) {
                             Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is less than the highest offer - " + DCEs["IR"].IR_OBs[pair].Item1.Keys.Max());
                             Thread.Sleep(10000);
@@ -661,12 +665,13 @@ namespace IRTicker {
                     try {
                         placedOrder = await pIR.PlaceLimitOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency,
                             (OrderBookSide == "Bid" ? OrderType.LimitBid : OrderType.LimitOffer), orderPrice, volume).ConfigureAwait(false);
+                        Thread.Sleep(1050 - (Properties.Settings.Default.UITimerFreq + 50));  // an order must be left alive for at least a second or rate limiting will happen
                     }
                     catch (Exception ex) {
                         Debug.Print("MBAIT: trid to create an order, but it failed: " + ex.Message);
                     }
-                    updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { /*PrivateIREndPoints.PlaceLimitOrder,*/ PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
-
+                    updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
+                    
                 }
                 else {  // an order is in play
                     // keeps track of how many pricePoint order dictionaries we have gone through.  the first is special - 
@@ -694,6 +699,7 @@ namespace IRTicker {
                                     BankOrder bo = await pIR.CancelOrder(placedOrder.OrderGuid.ToString()).ConfigureAwait(false);
                                     if (bo.Status == OrderStatus.Cancelled) {
                                         Debug.Print("MBAIT: cancel order was successful");
+                                        volume = bo.VolumeOrdered - bo.VolumeFilled;
                                         updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
                                         placedOrder = null;
                                     }
@@ -714,28 +720,28 @@ namespace IRTicker {
                             if (bho.OrderGuid == placedOrder.OrderGuid) {
                                 if (bho.Status == OrderStatus.Filled) {
                                     Debug.Print("MBAIT: our order got filled.  sweet.");
-                                    orderFilled = true;
+                                    marketBaiterActive = false;
                                     break;  // closed orders loop
                                 }
                             }
                         }
-                        if (orderFilled) break;
-                        Debug.Print("MBAIT: nope, order not filled.  maybe cancelled?  will recreate...");
+                        //if (orderFilled) break;
+                        if (marketBaiterActive) Debug.Print("MBAIT: nope, order not filled.  maybe cancelled?  will recreate...");
                         placedOrder = null;
                     }
                 }
                 //Debug.Print("sleeping for " + (Properties.Settings.Default.UITimerFreq + 50).ToString());
                 Thread.Sleep(Properties.Settings.Default.UITimerFreq + 50);  // refresh a bit slower than our OB updates, so any updates should be made before this loop tries to read them
-            }
+            }  // end master while loop
 
-            if (!orderFilled && (placedOrder != null)) {
+            if (/*!orderFilled &&*/ (placedOrder != null)) {
                 Debug.Print("MBAIT: master loop finished, let's cancel the order if it still exists...");
                 BankOrder bo;
                 try {
                     bo = await pIR.CancelOrder(placedOrder.OrderGuid.ToString()).ConfigureAwait(false);
                 }
-                catch {
-                    Debug.Print("MBAIT: couldn't cancel the order, I guess will try again?");
+                catch (Exception ex) {
+                    Debug.Print("MBAIT: couldn't cancel the order... weird.  message: " + ex.Message);
                     bo = new BankOrder() { Status = OrderStatus.Open };  // fake it for below if statement
                 }
                 if (bo.Status == OrderStatus.Cancelled) {
@@ -744,13 +750,24 @@ namespace IRTicker {
                 }
                 else Debug.Print("MBAIT: couldn't cancel the order?? guid: " + bo.OrderGuid);
             }
-            marketBaiterActive = false;
+            //marketBaiterActive = false;
+            MarketBaiterFinished();
         }
 
         private void updateUIFromMarketBaiter(List<PrivateIREndPoints> endPoints) {
             synchronizationContext.Post(new SendOrPostCallback(o => {
                 bulkSequentialAPICalls((List<PrivateIREndPoints>)o);
             }), endPoints);
+        }
+
+        private void MarketBaiterFinished() {
+            synchronizationContext.Post(new SendOrPostCallback(o => {
+                AccountBuySell_listbox.Enabled = true;
+                AccountOrderType_listbox.Enabled = true;
+                AccountPlaceOrder_button.Text = "Start baitin'";
+                bulkSequentialAPICalls(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.GetClosedOrders, PrivateIREndPoints.GetAccounts, PrivateIREndPoints.UpdateOrderBook });
+
+            }), null);
         }
 
         // this method checks the limit price, and if it would make the order a market order, then highlight buttons and shit
