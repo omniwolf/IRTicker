@@ -138,10 +138,40 @@
   <metadata name="IRTickerTT_avgPrice.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>397, 44</value>
   </metadata>
+  <metadata name="IRTickerTT_generic.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>550, 10</value>
+  </metadata>
+  <metadata name="IRT_notification.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>615, 35</value>
+  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="IRT_notification.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAEBAAAAAAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAA
+        AABcOwD/XDsA/1w7AP9cOwD/XDsA/1w7AP9cOwD/XDsA/5J8VP/UzLz/8u/q///////7+vj/7Ojh/+Hb
+        0P/y7+r/XDsA/1w7AP9cOwD/XDsA/1w7AP9cOwD/XTwB/8K2oP//////////////////////////////
+        /////////////1w7AP9cOwD/XDsA/1w7AP9cOwD/XDsA/3leLf+3qI7/noto/5B5Uf+Eaz7/f2U3/5yI
+        ZP/Hu6f//Pv6//////9cOwD/XDsA/1w7AP9cOwD/XDsA/1w7AP9cOwD/b1Ie/56KZ//AtJ3/4dvQ//z8
+        +///////////////////////XDsA/1w7AP9cOwD/XDsA/18+BP+ciGT/3NXI////////////////////
+        /////////////////////////////1w7AP9cOwD/XDsA/2lLFf/b1Mf///////////////////////z8
+        +//Y0ML/t6mP/+7r5f////////////////9cOwD/XDsA/18/Bf/c1cj////////////l4Nf/uauS/412
+        Tf9qTBb/oY5s//Hu6f//////////////////////XDsA/1w7AP+ei2j/3tjM/6SScf9yViP/XTwB/4Jo
+        O/++sZn/9fPw///////////////////////o49v/lH9Y/1w7AP9cOwD/ZkcQ/1w7AP9dPQL/m4Zi/+Te
+        1P////////////////////////////z8+/+yoob/YUEI/1w7AP9cOwD/XDsA/1w7AP9yVSL/29TH////
+        /////////////////////////////9vTxv95Xi3/XDsA/1w7AP9cOwD/XDsA/1w7AP9/ZTf/9PLu////
+        ////////////////////////9fPv/56LaP9dPQL/XDsA/1w7AP9cOwD/XDsA/1w7AP9yViP/9fPw////
+        ///////////////////+/v7/vrGa/2pMFv9cOwD/XDsA/1w7AP9cOwD/XDsA/1w7AP9dPAH/29TH////
+        ///////////////////b08b/fWIz/1w7AP9cOwD/XDsA/1w7AP9cOwD/XDsA/1w7AP9cOwD/kHlR////
+        /////////////+/s5v+Xglz/XTwB/1w7AP9cOwD/XDsA/1w7AP9cOwD/XDsA/1w7AP9cOwD/XDsA/87F
+        s////////v7+/7qsk/9kRQ3/XDsA/1w7AP9cOwD/XDsA/1w7AP9cOwD/XDsA/1w7AP9cOwD/XDsA/1w7
+        AP/29PH/5uHY/4BnOf9cOwD/XDsA/1w7AP9cOwD/XDsA/1w7AP9cOwD/XDsA/1w7AP9cOwD/XDsA/1w7
+        AP9cOwD/AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA
+        //8AAP//AAD//w==
+</value>
+  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>83</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAUAEBAAAAEAIABoBAAAVgAAABgYAAABACAAiAkAAL4EAAAgIAAAAQAgAKgQAABGDgAAMDAAAAEA

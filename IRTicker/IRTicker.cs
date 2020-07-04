@@ -1158,32 +1158,58 @@ namespace IRTicker {
                 // let's check the IR spread.  Cycle through all the "_Spread" labels
 
                 if (Properties.Settings.Default.NegativeSpread) {
-                    foreach (KeyValuePair<string, System.Windows.Forms.Label> labelKVP in UIControls_Dict["IR"].Label_Dict) {
-                        if (labelKVP.Key.EndsWith("_Spread")) {
-                            string crypto = labelKVP.Key.Substring(0, labelKVP.Key.IndexOf('_'));  // should get the start of the string until the _
-                            string pair = crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency;
-
-                            if (labelKVP.Value.Text.StartsWith("-")) {  // we have a negative pair
-                                if (!DCEs["IR"].positiveSpread[pair]) {  // already been negative for this pair :(
-                                    Debug.Print(DateTime.Now + " - negative pair detected (" + pair + ").  let's unsub resub");
+                    Dictionary<string, DCE.MarketSummary> mSummaries = DCEs["IR"].GetCryptoPairs();
+                    foreach (var mSummary in mSummaries) {
+                        if (mSummary.Value.SecondaryCurrencyCode == DCEs["IR"].CurrentSecondaryCurrency) {
+                            if (mSummary.Value.CurrentLowestOfferPrice <= mSummary.Value.CurrentHighestBidPrice) {
+                                if (!DCEs["IR"].positiveSpread[mSummary.Value.pair]) {  // already been negative for this pair :(
+                                    Debug.Print(DateTime.Now + " - negative pair detected (" + mSummary.Value.pair + ").  let's unsub resub");
                                     // do something..
-                                    pollingThread.ReportProgress(29, pair);  // update UI to show another spread fail
-                                    wSocketConnect.WebSocket_Resubscribe("IR", crypto);
+                                    pollingThread.ReportProgress(29, mSummary.Value.pair);  // update UI to show another spread fail
+                                    wSocketConnect.WebSocket_Resubscribe("IR", mSummary.Value.PrimaryCurrencyCode);
                                 }
                                 else {
                                     // spread was positive last time, set the signal and wait for the next rotation
-                                    DCEs["IR"].positiveSpread[pair] = false;
-                                    Debug.Print(DateTime.Now + " - Negave pair (" + pair + ") signaled, waiting...");
+                                    DCEs["IR"].positiveSpread[mSummary.Value.pair] = false;
+                                    Debug.Print(DateTime.Now + " - Negave pair (" + mSummary.Value.pair + ") signaled, waiting...");
                                 }
                             }
                             else {
-                                DCEs["IR"].positiveSpread[pair] = true;  // this pair is OK.  Doesn't mean it's right, it's just not DEFINITELY wrong.
-                                                                         //Debug.Print("Negative spread check all good for " + pair);
+                                DCEs["IR"].positiveSpread[mSummary.Value.pair] = true;  // this pair is OK.  Doesn't mean it's right, it's just not DEFINITELY wrong.
+                                //Debug.Print("Negative spread check all good for " + mSummary.Value.pair);
                             }
                         }
                     }
-                    //Debug.Print("-- spread check finished");
                 }
+
+                // stopped using the label to work it out, now I use the mSummary pairs dictionary as we don't actually draw to the labes if the Main panel is invisible
+                /*foreach (KeyValuePair<string, System.Windows.Forms.Label> labelKVP in UIControls_Dict["IR"].Label_Dict) {
+
+                   if (labelKVP.Key.EndsWith("_Spread")) {
+                   string crypto = labelKVP.Key.Substring(0, labelKVP.Key.IndexOf('_'));  // should get the start of the string until the _
+                   string pair = crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency;
+
+                   if (labelKVP.Value.Text.StartsWith("-")) {  // we have a negative pair
+                       if (!DCEs["IR"].positiveSpread[pair]) {  // already been negative for this pair :(
+                           Debug.Print(DateTime.Now + " - negative pair detected (" + pair + ").  let's unsub resub");
+                           // do something..
+                           pollingThread.ReportProgress(29, pair);  // update UI to show another spread fail
+                           wSocketConnect.WebSocket_Resubscribe("IR", crypto);
+                       }
+                       else {
+                           // spread was positive last time, set the signal and wait for the next rotation
+                           DCEs["IR"].positiveSpread[pair] = false;
+                           Debug.Print(DateTime.Now + " - Negave pair (" + pair + ") signaled, waiting...");
+                       }
+                   }
+                   else {
+                       DCEs["IR"].positiveSpread[pair] = true;  // this pair is OK.  Doesn't mean it's right, it's just not DEFINITELY wrong.
+                                                                //Debug.Print("Negative spread check all good for " + pair);
+                   }
+               }
+           }
+           //Debug.Print("-- spread check finished");
+       }*/
 
                 //////// BTC Markets /////////
 
@@ -1370,6 +1396,7 @@ namespace IRTicker {
         }
 
         private void UpdateLabels(string dExchange) {
+            if (!Main.Visible) return;  // no point drawing to the UI if we can't see anything
             // get the copy of the cryptoPairs dictionary.  this is an expensive operation, so do it up here before we reset the labels
             Dictionary<string, DCE.MarketSummary> cPairs = DCEs[dExchange].GetCryptoPairs();
 
@@ -1440,6 +1467,7 @@ namespace IRTicker {
 
         // Updates labels, but just a specific pair (used for websockets because we get each pair separartely)
         private void UpdateLabels_Pair(string dExchange, DCE.MarketSummary mSummary) {
+            if (!Main.Visible) return;  // no point drawing to the UI if we can't see anything
             // first we reset the labels.  The label writing process only writes to labels of pairs that exist, so we first need to set them back in case they don't exist
 
             //DCE.MarketSummary mSummary = DCEs[dExchange].GetCryptoPairs()[crypto + "-" + fiat];
@@ -1726,7 +1754,7 @@ namespace IRTicker {
             }
 
             if (reportType == 20) {
-                if (IRAccount_panel.Visible) {
+                if (IRAccount_panel.Visible || marketBaiterActive) {
                     string pair = (string)e.UserState;
                     updateAccountOrderBook(pair);
                 }

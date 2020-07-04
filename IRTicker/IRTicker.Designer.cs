@@ -24,7 +24,7 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("oeui");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("oeui");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
@@ -402,6 +402,7 @@
             this.AccountXBT_label = new System.Windows.Forms.Label();
             this.IRTickerTT_avgPrice = new System.Windows.Forms.ToolTip(this.components);
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
+            this.IRT_notification = new System.Windows.Forms.NotifyIcon(this.components);
             this.Settings.SuspendLayout();
             this.IRAccountSettings_groupBox.SuspendLayout();
             this.SlackSettings_groupBox.SuspendLayout();
@@ -4048,7 +4049,7 @@
             this.AccountOpenOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountOpenOrders_listview.HideSelection = false;
             this.AccountOpenOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
+            listViewItem2});
             this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountOpenOrders_listview.MultiSelect = false;
             this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";
@@ -4331,6 +4332,7 @@
             // IRAccountClose_button
             // 
             this.IRAccountClose_button.BackColor = System.Drawing.Color.White;
+            this.IRAccountClose_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.IRAccountClose_button.Location = new System.Drawing.Point(228, 108);
             this.IRAccountClose_button.Name = "IRAccountClose_button";
             this.IRAccountClose_button.Size = new System.Drawing.Size(75, 23);
@@ -5014,6 +5016,12 @@
             this.IRTickerTT_avgPrice.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.IRTickerTT_avgPrice.ToolTipTitle = "Market order estimation";
             // 
+            // IRT_notification
+            // 
+            this.IRT_notification.Icon = ((System.Drawing.Icon)(resources.GetObject("IRT_notification.Icon")));
+            this.IRT_notification.Text = "notifyIcon1";
+            this.IRT_notification.Visible = true;
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5448,6 +5456,7 @@
         private System.Windows.Forms.Label AccountLINK_label;
         private System.Windows.Forms.Label AccountPMGT_value;
         private System.Windows.Forms.Label AccountPMGT_label;
+        private System.Windows.Forms.NotifyIcon IRT_notification;
     }
 }
 
