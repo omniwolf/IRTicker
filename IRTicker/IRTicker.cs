@@ -605,9 +605,9 @@ namespace IRTicker {
                 // This bit is for a) volume (we don't get vol from websockets), and b) if there have been no orders to establish a spread, then the price and spread
                 // stay at 0.  This is 
                 Dictionary<string, DCE.MarketSummary> cPairs = DCEs["IR"].GetCryptoPairs();
-                if (cPairs.ContainsKey(mSummary.pair) && cPairs[mSummary.pair].spread == 0) { 
+                if (cPairs.ContainsKey(mSummary.pair) && cPairs[mSummary.pair].spread != 0) {  // logic here is if the spread is not 0, then don't send spread info, as what we have is better
                 //if (crypto == "XBT") {  // don't want to overwrite the spread orders as they're probably out of date
-                    mSummary.CurrentHighestBidPrice = 0;
+                    mSummary.CurrentHighestBidPrice = 0;  // sending cryptoPairsAdd a 0 bid and offer will mean the previous best bid and offer remain
                     mSummary.CurrentLowestOfferPrice = 0;
                 }
                 //}
