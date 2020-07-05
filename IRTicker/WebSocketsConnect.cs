@@ -22,11 +22,13 @@ namespace IRTicker {
         private Thread UITimerThread;
         private bool UITimerThreadProceed = true;
         private ManualResetEvent startSocket_exitEvent = new ManualResetEvent(false);
+        private PrivateIR pIR;
 
         // constructor
-        public WebSocketsConnect(Dictionary<string, DCE> _DCEs, BackgroundWorker _pollingThread) {
+        public WebSocketsConnect(Dictionary<string, DCE> _DCEs, BackgroundWorker _pollingThread, PrivateIR _pIR) {
             DCEs = _DCEs;
             pollingThread = _pollingThread;
+            pIR = _pIR;
 
             // IR
 
@@ -533,6 +535,7 @@ namespace IRTicker {
             while (UITimerThreadProceed) {
                 foreach (KeyValuePair<string, ConcurrentDictionary<int, Ticker_IR>> pair in DCEs["IR"].orderBuffer_IR) {
                     if (DCEs["IR"].newOrders[pair.Key] > 0) {
+                        pIR.compileAccountOrderBook
                         pollingThread.ReportProgress(20, pair.Key);  // this will tell the accounts panel to update it's OB view
                         if ((DCEs["IR"].orderBuffer_IR[pair.Key].Count > 0) && DCEs["IR"].pulledSnapShot[pair.Key]) applyBufferToOB(pair.Key);
                         DCEs["IR"].newOrders[pair.Key] = 0;

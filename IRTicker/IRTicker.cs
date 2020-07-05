@@ -111,8 +111,6 @@ namespace IRTicker {
             DCEs["BAR"].PrimaryCurrencyCodes = "\"XBT\"";
             DCEs["BAR"].SecondaryCurrencyCodes = "\"AUD\"";
 
-            wSocketConnect = new WebSocketsConnect(DCEs, pollingThread);
-
             InitialiseUIControls();
 
             // initialise settings
@@ -155,12 +153,14 @@ namespace IRTicker {
 
             if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
                 IRAccount_button.Enabled = false;
+                pIR = null;
             }
             else {
                 pIR = new PrivateIR(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this);
                 //pIR = new PrivateIR("67a60129-033e-429b-a46a-3f0395334e19", "a031caf6c67440819cf2a15f0fbe9784");
             }
 
+            wSocketConnect = new WebSocketsConnect(DCEs, pollingThread, pIR);
 
             if (Properties.Settings.Default.ShowOB) obv.Show();
 
@@ -1728,7 +1728,7 @@ namespace IRTicker {
             if (reportType == 20) {
                 if (IRAccount_panel.Visible || marketBaiterActive) {
                     string pair = (string)e.UserState;
-                    updateAccountOrderBook(pair);
+                    pIR.updateAccountOrderBook(pair);
                 }
                 return;
             }
