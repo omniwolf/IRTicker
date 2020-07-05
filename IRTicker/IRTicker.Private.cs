@@ -632,14 +632,8 @@ namespace IRTicker {
                 AccountPlaceOrder_button.Text = "Start baitin'";
                 return;                
             }
-            //Task marketBaiterLoopTask = new Task(() => marketBaiterLoop(volume, limitPrice));
-            //marketBaiterLoopTask.Start();
-            ////marketBaiterLoopTask = marketBaiterLoop(volume, limitPrice);
-            //await marketBaiterLoopTask;
 
             await Task.Run(() => marketBaiterLoop(volume, limitPrice));
-
-            //await marketBaiterLoop(volume, limitPrice);
 
             AccountBuySell_listbox.Enabled = true;
             AccountOrderType_listbox.Enabled = true;
@@ -653,8 +647,6 @@ namespace IRTicker {
             string crypto = AccountSelectedCrypto;
             string fiat = DCEs["IR"].CurrentSecondaryCurrency;
             int OrderSearchCount = 0;  // if we can't find an order but it should be there, we increment this.  Only create a new order if we have checked twice..
-
-            //bool orderFilled = false;
 
             BankOrder placedOrder = null;
             decimal distanceFromTopOrder = DCEs["IR"].currencyFiatDivision[AccountSelectedCrypto] * 5;  // how far infront of the best order should we be?  will be different for different cryptos
@@ -757,7 +749,7 @@ namespace IRTicker {
                                     notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble...."));
                                 }
                             }
-                            break;
+                            break;  // order book foreach
                         }
                         pricePointCount++;
                     }
@@ -771,7 +763,7 @@ namespace IRTicker {
                                     notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Order filled!"));
                                     placedOrder = null;
                                     marketBaiterActive = false;
-                                    break;  // closed orders loop
+                                    break;  // closed orders foreach
                                 }
                             }
                         }
@@ -796,7 +788,7 @@ namespace IRTicker {
                 Thread.Sleep(Properties.Settings.Default.UITimerFreq + 50);  // refresh a bit slower than our OB updates, so any updates should be made before this loop tries to read them
             }  // end master while loop
 
-            if (/*!orderFilled &&*/ (placedOrder != null)) {
+            if (placedOrder != null) {
                 Debug.Print("MBAIT: master loop finished, let's cancel the order if it still exists...");
                 BankOrder bo;
                 try {
@@ -816,8 +808,6 @@ namespace IRTicker {
                     notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Market baiter stopped, but order couldn't be cancelled?"));
                 }
             }
-            //marketBaiterActive = false;
-            //MarketBaiterFinished();
         }
 
         private void updateUIFromMarketBaiter(List<PrivateIREndPoints> endPoints) {

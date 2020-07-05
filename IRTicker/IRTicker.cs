@@ -1182,34 +1182,6 @@ namespace IRTicker {
                     }
                 }
 
-                // stopped using the label to work it out, now I use the mSummary pairs dictionary as we don't actually draw to the labes if the Main panel is invisible
-                /*foreach (KeyValuePair<string, System.Windows.Forms.Label> labelKVP in UIControls_Dict["IR"].Label_Dict) {
-
-                   if (labelKVP.Key.EndsWith("_Spread")) {
-                   string crypto = labelKVP.Key.Substring(0, labelKVP.Key.IndexOf('_'));  // should get the start of the string until the _
-                   string pair = crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency;
-
-                   if (labelKVP.Value.Text.StartsWith("-")) {  // we have a negative pair
-                       if (!DCEs["IR"].positiveSpread[pair]) {  // already been negative for this pair :(
-                           Debug.Print(DateTime.Now + " - negative pair detected (" + pair + ").  let's unsub resub");
-                           // do something..
-                           pollingThread.ReportProgress(29, pair);  // update UI to show another spread fail
-                           wSocketConnect.WebSocket_Resubscribe("IR", crypto);
-                       }
-                       else {
-                           // spread was positive last time, set the signal and wait for the next rotation
-                           DCEs["IR"].positiveSpread[pair] = false;
-                           Debug.Print(DateTime.Now + " - Negave pair (" + pair + ") signaled, waiting...");
-                       }
-                   }
-                   else {
-                       DCEs["IR"].positiveSpread[pair] = true;  // this pair is OK.  Doesn't mean it's right, it's just not DEFINITELY wrong.
-                                                                //Debug.Print("Negative spread check all good for " + pair);
-                   }
-               }
-           }
-           //Debug.Print("-- spread check finished");
-       }*/
 
                 //////// BTC Markets /////////
 
