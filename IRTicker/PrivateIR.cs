@@ -18,7 +18,7 @@ namespace IRTicker {
 
         //private static readonly HttpClient client = new HttpClient();
         private Client IRclient;
-        public Dictionary<string, Account> accounts = new Dictionary<string, Account>();
+        //public Dictionary<string, Account> accounts = new Dictionary<string, Account>();
         private ApiCredential IRcreds;
         private IRTicker IRT;
         private ConcurrentQueue<IRClientData> IRQueue = new ConcurrentQueue<IRClientData>();
@@ -34,9 +34,12 @@ namespace IRTicker {
         ConcurrentBag<Guid> openOrderGuids = new ConcurrentBag<Guid>();
         private bool marketBaiterActive = false;
 
-        public PrivateIR(string _BaseURL, string APIKey, string APISecret, IRTicker _IRT) {
+        private DCE DCE_IR;
+
+        public PrivateIR(string _BaseURL, string APIKey, string APISecret, IRTicker _IRT, DCE _DCE_IR) {
 
             IRT = _IRT;
+            DCE_IR = _DCE_IR;
 
             if (string.IsNullOrEmpty(APIKey) || string.IsNullOrEmpty(APISecret)) {
                 Debug.Print(DateTime.Now + " cannot do private IR stuff, missing API key(s)");
@@ -146,7 +149,7 @@ namespace IRTicker {
         }
 
         public class IRClientData {
-            public IRTicker.PrivateIREndPoints EndPoint { get; set; }
+            public PrivateIREndPoints EndPoint { get; set; }
             public decimal LimitPrice { get; set; }
             public decimal Volume { get; set; }
             public CurrencyCode Crypto { get; set; }
@@ -201,29 +204,29 @@ namespace IRTicker {
 
             // here we grab the buy or sell order book, make a copy, and then sort it
 
-                KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCEs["IR"].IR_OBs[pair].Item2.ToArray();  // because we're buying from the sell orders
+                KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCE_IR.IR_OBs[pair].Item2.ToArray();  // because we're buying from the sell orders
                 orderedOffers = arrayBook.OrderBy(k => k.Key);
                 //Debug.Print("--- Account picked the sell side, top order is: " + orderedBook.First().Key);
 
-                KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCEs["IR"].IR_OBs[pair].Item1.ToArray();  // because we're selling to the buy orders
+                arrayBook = DCE_IR.IR_OBs[pair].Item1.ToArray();  // because we're selling to the buy orders
                 orderedBids = arrayBook.OrderByDescending(k => k.Key);
                 //Debug.Print("--- Account picked the buy side, top order is: " + orderedBook.First().Key);
 
-            if (OrderBookSide == BaiterBookSide) {  // if what we're showing on the UI is the same as what we're baitin', then just reference it directly
+            /*if (OrderBookSide == BaiterBookSide) {  // if what we're showing on the UI is the same as what we're baitin', then just reference it directly
                 baiterBook = orderedBook;
             }
             else if (marketBaiterActive) {  // otherwise we need to get the other book and sort it
                 if (BaiterBookSide == "Offer") {
-                    KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCEs["IR"].IR_OBs[pair].Item2.ToArray();  // because we're buying from the sell orders
+                    KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCE_IR.IR_OBs[pair].Item2.ToArray();  // because we're buying from the sell orders
                     baiterBook = arrayBook.OrderBy(k => k.Key);
                     //Debug.Print("--- Account picked the sell side, top order is: " + orderedBook.First().Key);
                 }
                 else {
-                    KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCEs["IR"].IR_OBs[pair].Item1.ToArray();  // because we're selling to the buy orders
+                    KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCE_IR.IR_OBs[pair].Item1.ToArray();  // because we're selling to the buy orders
                     baiterBook = arrayBook.OrderByDescending(k => k.Key);
                     //Debug.Print("--- Account picked the buy side, top order is: " + orderedBook.First().Key);
                 }
-            }
+            }*/
 
             int count = 1;
             decimal cumulativeVol = 0;
@@ -238,7 +241,7 @@ namespace IRTicker {
                 }
             }
 
-            foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> pricePoint in orderedBook) {
+            foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> pricePoint in (OrderBookSide == "Offer" ? orderedOffers : orderedBids)) {
                 decimal totalVolume = 0;
                 bool includesMyOrder = false;
 
@@ -260,7 +263,7 @@ namespace IRTicker {
                     }
                 }
 
-                if (count < 10) {  // less than 6 we haven't finished populating the listview yet
+                if (count < 10) {  // there are 9 rows on the OB listview
                     cumulativeVol += totalVolume;
                     cumulativeValue += pricePoint.Key * totalVolume;
                     accOrderListView.Add(new string[] { count.ToString(), pricePoint.Key.ToString(), Utilities.FormatValue(totalVolume), Utilities.FormatValue(cumulativeVol), Utilities.FormatValue(cumulativeValue), (includesMyOrder ? "true" : "false") });
@@ -286,13 +289,12 @@ namespace IRTicker {
         }
 
 
-        public async Task marketBaiterLoopAsync(string crypto, decimal volume, decimal limitPrice) {
-            string pair = crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency;
-            string fiat = DCEs["IR"].CurrentSecondaryCurrency;
+        public async Task marketBaiterLoopAsync(string crypto, string fiat, decimal volume, decimal limitPrice) {
+
             int OrderSearchCount = 0;  // if we can't find an order but it should be there, we increment this.  Only create a new order if we have checked twice..
 
             BankOrder placedOrder = null;
-            decimal distanceFromTopOrder = DCEs["IR"].currencyFiatDivision[crypto] * 5;  // how far infront of the best order should we be?  will be different for different cryptos
+            decimal distanceFromTopOrder = DCE_IR.currencyFiatDivision[crypto] * 5;  // how far infront of the best order should we be?  will be different for different cryptos
             if (BaiterBookSide == "Offer") distanceFromTopOrder = distanceFromTopOrder * -1;
             Debug.Print("MBAIT: distance from top: " + distanceFromTopOrder);
             IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Starting market baiter!"));

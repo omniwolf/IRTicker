@@ -535,8 +535,8 @@ namespace IRTicker {
             while (UITimerThreadProceed) {
                 foreach (KeyValuePair<string, ConcurrentDictionary<int, Ticker_IR>> pair in DCEs["IR"].orderBuffer_IR) {
                     if (DCEs["IR"].newOrders[pair.Key] > 0) {
-                        pIR.compileAccountOrderBook
-                        pollingThread.ReportProgress(20, pair.Key);  // this will tell the accounts panel to update it's OB view
+                        pIR.compileAccountOrderBook(pair.Key);
+                        //pollingThread.ReportProgress(20, pair.Key);  // this will tell the accounts panel to update it's OB view
                         if ((DCEs["IR"].orderBuffer_IR[pair.Key].Count > 0) && DCEs["IR"].pulledSnapShot[pair.Key]) applyBufferToOB(pair.Key);
                         DCEs["IR"].newOrders[pair.Key] = 0;
                     }
