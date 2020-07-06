@@ -26,13 +26,12 @@ namespace IRTicker {
 
         public string OrderBookSide = "Bid";  //  maintains which side of the order book we show in the AccountOrders_listview
         public string BaiterBookSide = "Bid"; // maintains which book we're baitin' on
-        public string OrderType = "Market";
+        public string OrderTypeStr = "Market";
         public decimal Volume = 0;
         public decimal LimitPrice = 0;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBids;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
         ConcurrentBag<Guid> openOrderGuids = new ConcurrentBag<Guid>();
-        private bool marketBaiterActive = false;
 
         private DCE DCE_IR;
 
@@ -235,7 +234,7 @@ namespace IRTicker {
             decimal trackedOrderVolume = -1;
 
             // if we can parse the volume box, and it's a market order, let's work out the order value.  No need to track for limit order, can just do simple maths
-            if (OrderType == "Market") {
+            if (OrderTypeStr == "Market") {
                 if (Volume > 0) {
                     trackedOrderVolume = Volume;
                 }
@@ -274,7 +273,7 @@ namespace IRTicker {
                 if ((count > 9) && (trackedOrderVolume <= 0)) break;
             }
 
-            if ((OrderType == "Market") && (trackedOrderVolume >= 0)) {
+            if ((OrderTypeStr == "Market") && (trackedOrderVolume >= 0)) {
                 if (trackedOrderVolume > 0) {
                     estValue = -1; //"Not enough depth!";
                 }
@@ -284,7 +283,7 @@ namespace IRTicker {
             }
             // if it's a limit order, then the AccountEstOrderValue field is calculated manually (no need for OB), so here we need to make sure we don't clear it
             // this else is saying "if it's a market order, but we didn't engage trackedOrderVolume, then they probably have unparsable text in the vol box, so clear the estimate value label"
-            else if (OrderType == "Market") estValue = -2; // ""
+            else if (OrderTypeStr == "Market") estValue = -2; // ""
             IRT.drawAccountOrderBook(new Tuple<decimal, List<string[]>>(estValue, accOrderListView));
         }
 
@@ -293,13 +292,21 @@ namespace IRTicker {
 
             int OrderSearchCount = 0;  // if we can't find an order but it should be there, we increment this.  Only create a new order if we have checked twice..
 
+            IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> baiterBook;
             BankOrder placedOrder = null;
+            string pair = crypto + "-" + fiat;
             decimal distanceFromTopOrder = DCE_IR.currencyFiatDivision[crypto] * 5;  // how far infront of the best order should we be?  will be different for different cryptos
-            if (BaiterBookSide == "Offer") distanceFromTopOrder = distanceFromTopOrder * -1;
+            if (BaiterBookSide == "Offer") {
+                distanceFromTopOrder = distanceFromTopOrder * -1;
+                baiterBook = orderedOffers;
+            }
+            else {
+                baiterBook = orderedBids;
+            }
             Debug.Print("MBAIT: distance from top: " + distanceFromTopOrder);
             IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Starting market baiter!"));
 
-            while (marketBaiterActive) {
+            while (IRT.marketBaiterActive) {
 
                 //if ((baiterBook.First().Value).ElementAt(0).Value.OrderType.EndsWith(BaiterBookSide)) {  // first make sure we have the right order book
                 if (placedOrder == null) {  // no order.  let's create one.
@@ -313,8 +320,8 @@ namespace IRTicker {
                         Debug.Print("MBAIT: bid order price: " + orderPrice);
 
                         // here we check if the order is too high for the OB, or too high for the limit price we set
-                        if (orderPrice > DCEs["IR"].IR_OBs[pair].Item2.Keys.Min()) {
-                            Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is greater than the lowest bid - " + DCEs["IR"].IR_OBs[pair].Item2.Keys.Min());
+                        if (orderPrice > DCE_IR.IR_OBs[pair].Item2.Keys.Min()) {
+                            Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is greater than the lowest bid - " + DCE_IR.IR_OBs[pair].Item2.Keys.Min());
                             IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "The spread is too toight to fit in an order!  Maybe just market sell?"));
                             Thread.Sleep(10000);
                             continue;  // master while loop
@@ -328,8 +335,8 @@ namespace IRTicker {
                         Debug.Print("MBAIT: offer order price: " + orderPrice);
 
                         // check if the order is too low for the OB or lower than our set limit
-                        if (orderPrice < DCEs["IR"].IR_OBs[pair].Item1.Keys.Max()) {
-                            Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is less than the highest offer - " + DCEs["IR"].IR_OBs[pair].Item1.Keys.Max());
+                        if (orderPrice < DCE_IR.IR_OBs[pair].Item1.Keys.Max()) {
+                            Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is less than the highest offer - " + DCE_IR.IR_OBs[pair].Item1.Keys.Max());
                             IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "The spread is too toight to fit in an order!  Maybe just market buy?"));
                             Thread.Sleep(10000);
                             continue;  // master while loop
@@ -341,7 +348,7 @@ namespace IRTicker {
                     }
                     Debug.Print("MBAIT: placing order at " + orderPrice);
                     try {
-                        placedOrder = await pIR.PlaceLimitOrder(crypto, DCEs["IR"].CurrentSecondaryCurrency,
+                        placedOrder = await PlaceLimitOrder(crypto, DCE_IR.CurrentSecondaryCurrency,
                             (BaiterBookSide == "Bid" ? OrderType.LimitBid : OrderType.LimitOffer), orderPrice, volume).ConfigureAwait(false);
                         Thread.Sleep(1050 - (Properties.Settings.Default.UITimerFreq + 50));  // an order must be left alive for at least a second or rate limiting will happen
                     }
@@ -357,30 +364,19 @@ namespace IRTicker {
                     int pricePointCount = 0;
                     bool foundOrder = false;
 
-                    if (BaiterBookSide == "Offer") {
-                        KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCEs["IR"].IR_OBs[pair].Item2.ToArray();  // because we're buying from the sell orders
-                        baiterBook = arrayBook.OrderBy(k => k.Key);
-                        //Debug.Print("--- Account picked the sell side, top order is: " + baiterBook.First().Key);
-                    }
-                    else {
-                        KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCEs["IR"].IR_OBs[pair].Item1.ToArray();  // because we're selling to the buy orders
-                        baiterBook = arrayBook.OrderByDescending(k => k.Key);
-                        //Debug.Print("--- Account picked the buy side, top order is: " + baiterBook.First().Key);
-                    }
-
                     foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> pricePoint in baiterBook) {
                         if (pricePoint.Value.ContainsKey(placedOrder.OrderGuid.ToString())) {
                             foundOrder = true;
                             if (pricePointCount > 0) {  // our order has been beaten by another. lez cancel and start again.  if == 0 then we're the top of the book, do nothing.
                                 if (placedOrder.Price != limitPrice) {  // if we're at the limit price, just leave the order, do not cancel.
                                     Debug.Print("MBAIT: our order has been beaten.  cancelling it...");
-                                    BankOrder bo = await pIR.CancelOrder(placedOrder.OrderGuid.ToString()).ConfigureAwait(false);
+                                    BankOrder bo = await CancelOrder(placedOrder.OrderGuid).ConfigureAwait(false);
                                     if (bo.Status == OrderStatus.Cancelled) {
                                         Debug.Print("MBAIT: cancel order was successful");
                                         if (bo.VolumeFilled != 0) IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble..."));
 
                                         volume = bo.VolumeOrdered - bo.VolumeFilled;
-                                        updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
+                                        IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
                                         placedOrder = null;
                                     }
                                     else {
@@ -400,21 +396,21 @@ namespace IRTicker {
                     }
                     if (!foundOrder) {
                         Debug.Print("MBAIT: Our order doesn't exist in the OB, possibly filled? " + placedOrder.OrderGuid.ToString());
-                        Page<BankHistoryOrder> bhos = await pIR.GetClosedOrders(crypto, fiat).ConfigureAwait(false);
+                        Page<BankHistoryOrder> bhos = await GetClosedOrders(crypto, fiat).ConfigureAwait(false);
                         foreach (BankHistoryOrder bho in bhos.Data) {
                             if (bho.OrderGuid == placedOrder.OrderGuid) {
                                 if (bho.Status == OrderStatus.Filled) {
                                     Debug.Print("MBAIT: our order got filled.  sweet.");
                                     IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Order filled!"));
                                     placedOrder = null;
-                                    marketBaiterActive = false;
+                                    IRT.marketBaiterActive = false;
                                     break;  // closed orders foreach
                                 }
                             }
                         }
                         // if we get here and the marketBaiterActive is still true, then either a) the order has been manually cancelled by the user, or maybe it's actually there, but it wasn't present in
                         // the order book when we searched it.. maybe too early.  let's pause and try searching again
-                        if (marketBaiterActive) {
+                        if (IRT.marketBaiterActive) {
                             Debug.Print("MBAIT: nope, order not filled.  maybe cancelled?");
                             if (OrderSearchCount > 0) {
                                 Debug.Print("MBAIT: still can't find it.  creating a new order...");
@@ -437,7 +433,7 @@ namespace IRTicker {
                 Debug.Print("MBAIT: master loop finished, let's cancel the order if it still exists...");
                 BankOrder bo;
                 try {
-                    bo = await pIR.CancelOrder(placedOrder.OrderGuid.ToString()).ConfigureAwait(false);
+                    bo = await CancelOrder(placedOrder.OrderGuid).ConfigureAwait(false);
                 }
                 catch (Exception ex) {
                     Debug.Print("MBAIT: couldn't cancel the order... weird.  message: " + ex.Message);

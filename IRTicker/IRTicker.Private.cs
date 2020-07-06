@@ -16,6 +16,7 @@ namespace IRTicker {
     partial class IRTicker {
 
         private string AccountSelectedCrypto = "XBT";
+        public bool marketBaiterActive = false;
 
         private void InitialiseAccountsPanel() {
             AccountOrderVolume_textbox.Enabled = true;
@@ -509,6 +510,8 @@ namespace IRTicker {
                 }
                 else if (AccountOrderType_listbox.SelectedIndex == 2) {  // market baiter
                     // do something that starts the market baiter
+                    if (AccountBuySell_listbox.SelectedIndex == 0) pIR.BaiterBookSide = "Bid";
+                    else pIR.BaiterBookSide = "Offer";
                     marketBaiterActive = true;
                     AccountPlaceOrder_button.Text = "Stop market baiter and cancel order";
                     Text = "IR Ticker - Market Baiter Running...";
@@ -547,9 +550,9 @@ namespace IRTicker {
             bulkSequentialAPICalls(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.GetClosedOrders, PrivateIREndPoints.GetAccounts, PrivateIREndPoints.UpdateOrderBook });
         }
 
-        private void updateUIFromMarketBaiter(List<PrivateIREndPoints> endPoints) {
+        public void updateUIFromMarketBaiter(List<PrivateIR.PrivateIREndPoints> endPoints) {
             synchronizationContext.Post(new SendOrPostCallback(o => {
-                bulkSequentialAPICalls((List<PrivateIREndPoints>)o);
+                bulkSequentialAPICalls((List<PrivateIR.PrivateIREndPoints>)o);
             }), endPoints);
         }
 
