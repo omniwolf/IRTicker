@@ -22,6 +22,8 @@ namespace IRTicker {
         private Thread UITimerThread;
         private bool UITimerThreadProceed = true;
         private ManualResetEvent startSocket_exitEvent = new ManualResetEvent(false);
+        private string IRSocketsURL = "wss://websockets.independentreserve.com";
+        //private string IRSocketsURL = "ws://dev.pushservice.independentreserve.net";
 
         // constructor
         public WebSocketsConnect(Dictionary<string, DCE> _DCEs, BackgroundWorker _pollingThread) {
@@ -33,8 +35,7 @@ namespace IRTicker {
             Debug.Print("IR websocket connecting..");
 
             Task.Factory.StartNew(() => {
-                startSockets("IR", "wss://websockets.independentreserve.com");
-                //startSockets("IR", "ws://dev.pushservice.independentreserve.net");
+                startSockets("IR", IRSocketsURL);
             })
             ;
             Debug.Print("after first start sockets");
@@ -192,8 +193,8 @@ namespace IRTicker {
                     Debug.Print("IR websocket subscribe: " + channel);
                     //wSocket_IR.Send(channel);
 
-                    //startSockets("IR", "wss://websockets.independentreserve.com", channel);
-                    
+                    //startSockets("IR", IRSocketsURL, channel);
+
 
                     foreach (Tuple<string, string> pair in pairs) {
                         GetOrderBook_IR(pair.Item1, pair.Item2);
@@ -433,7 +434,7 @@ namespace IRTicker {
             Debug.Print(DateTime.Now + " - startSockets called for " + dExchange);
 
             using (client_IR = new WebsocketClient(url)) {
-                client_IR.ReconnectTimeout = TimeSpan.FromSeconds(30);
+                client_IR.ReconnectTimeout = TimeSpan.FromSeconds(70);
                 client_IR.ReconnectionHappened.Subscribe(info => {
                     if (info.Type == ReconnectionType.Initial) {
                         Debug.Print("Initial 'reconnection', ignored");
@@ -631,7 +632,7 @@ namespace IRTicker {
                     stopUITimerThread();  // if it hasn't stopped by now, we force it.
 
                     Reinit_sockets("IR");
-                    startSockets("IR", "wss://websockets.independentreserve.com");
+                    startSockets("IR", IRSocketsURL);
                     //IR_Connect();  // create all the sockets stuff again from scratch :/
                     DCEs["IR"].HeartBeat = DateTime.Now;
                     break;
@@ -745,6 +746,7 @@ namespace IRTicker {
         }*/
         private void MessageRX_IR(string message) {
             if (message == null) return;
+            //Debug.Print("IR MSG ---- " + message);
             DCEs["IR"].socketsAlive = true;
             if (message.Contains("\"Event\":\"Subscriptions\"")) {
                 // ignore the subscriptions event.  it breaks parsing too :/
