@@ -18,7 +18,7 @@ namespace IRTicker {
 
         //private static readonly HttpClient client = new HttpClient();
         private Client IRclient;
-        //public Dictionary<string, Account> accounts = new Dictionary<string, Account>();
+        public Dictionary<string, Account> accounts = new Dictionary<string, Account>();
         private ApiCredential IRcreds;
         private IRTicker IRT;
         private ConcurrentQueue<IRClientData> IRQueue = new ConcurrentQueue<IRClientData>();
@@ -71,10 +71,10 @@ namespace IRTicker {
         }
 
         //
-        public Task<DigitalCurrencyDepositAddress> CheckAddressNow(CurrencyCode crypto, string address) {
+        public Task<DigitalCurrencyDepositAddress> CheckAddressNow(string crypto, string address) {
             Task<DigitalCurrencyDepositAddress> result;
             try {
-                result = IRclient.SynchDigitalCurrencyDepositAddressWithBlockchainAsync(address, crypto);
+                result = IRclient.SynchDigitalCurrencyDepositAddressWithBlockchainAsync(address, convertCryptoStrToCryptoEnum(crypto));
             }
             catch (Exception ex) {
                 MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
@@ -131,9 +131,9 @@ namespace IRTicker {
             return IRclient.GetClosedFilledOrdersAsync(enumCrypto, enumFiat, 1, 7);
         }
 
-        public Task<BankOrder> CancelOrder(Guid guid) {
+        public Task<BankOrder> CancelOrder(string guid) {
             try {
-                return IRclient.CancelOrderAsync(guid);
+                return IRclient.CancelOrderAsync(new Guid(guid));
             }
             catch (Exception ex) {
                 MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
@@ -182,21 +182,22 @@ namespace IRTicker {
             while (IRQueue.Count > 0) {
                 if (IRQueue.TryDequeue(out IRClientData data)) {
                     switch (data.EndPoint) {
-                        case IRTicker.PrivateIREndPoints.CancelOrder:
-                            BankOrder bo = await CancelOrder(data.guid);
+                        case PrivateIREndPoints.CancelOrder:
+                            BankOrder bo = await CancelOrder(data.guid.ToString());
                             break;
-                        case IRTicker.PrivateIREndPoints.CheckAddress:
-                            await CheckAddressNow(data.Crypto, data.CryptoAddress);
+                        case PrivateIREndPoints.CheckAddress:
+                            await CheckAddressNow(data.Crypto.ToString(), data.CryptoAddress);
                             break;
-                        case IRTicker.PrivateIREndPoints.GetAccounts:
+                        case PrivateIREndPoints.GetAccounts:
                             // this one hase a result.  should capture it and then call the draw func
+                            break;
                     }
                 }
             }
             isDequeuing = false;
         }
 
-        public void compileAccountOrderBook(string pair) {
+        public void compileAccountOrderBookAsync(string pair) {
 
             List<string[]> accOrderListView = new List<string[]>();
             decimal estValue = 0;
@@ -284,7 +285,8 @@ namespace IRTicker {
             // if it's a limit order, then the AccountEstOrderValue field is calculated manually (no need for OB), so here we need to make sure we don't clear it
             // this else is saying "if it's a market order, but we didn't engage trackedOrderVolume, then they probably have unparsable text in the vol box, so clear the estimate value label"
             else if (OrderTypeStr == "Market") estValue = -2; // ""
-            IRT.drawAccountOrderBook(new Tuple<decimal, List<string[]>>(estValue, accOrderListView));
+            IRT.drawAccountOrderBook(new Tuple<decimal, List<string[]>>(estValue, accOrderListView), pair);
+           // return Task.CompletedTask;
         }
 
 
@@ -355,7 +357,7 @@ namespace IRTicker {
                     catch (Exception ex) {
                         Debug.Print("MBAIT: trid to create an order, but it failed: " + ex.Message);
                     }
-                    Enqueue(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
+                    IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
 
                 }
                 else {  // an order is in play
@@ -370,7 +372,7 @@ namespace IRTicker {
                             if (pricePointCount > 0) {  // our order has been beaten by another. lez cancel and start again.  if == 0 then we're the top of the book, do nothing.
                                 if (placedOrder.Price != limitPrice) {  // if we're at the limit price, just leave the order, do not cancel.
                                     Debug.Print("MBAIT: our order has been beaten.  cancelling it...");
-                                    BankOrder bo = await CancelOrder(placedOrder.OrderGuid).ConfigureAwait(false);
+                                    BankOrder bo = await CancelOrder(placedOrder.OrderGuid.ToString()).ConfigureAwait(false);
                                     if (bo.Status == OrderStatus.Cancelled) {
                                         Debug.Print("MBAIT: cancel order was successful");
                                         if (bo.VolumeFilled != 0) IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble..."));
@@ -433,7 +435,7 @@ namespace IRTicker {
                 Debug.Print("MBAIT: master loop finished, let's cancel the order if it still exists...");
                 BankOrder bo;
                 try {
-                    bo = await CancelOrder(placedOrder.OrderGuid).ConfigureAwait(false);
+                    bo = await CancelOrder(placedOrder.OrderGuid.ToString()).ConfigureAwait(false);
                 }
                 catch (Exception ex) {
                     Debug.Print("MBAIT: couldn't cancel the order... weird.  message: " + ex.Message);
