@@ -121,7 +121,8 @@ namespace IRTicker {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
-            return IRclient.GetOpenOrdersAsync(enumCrypto, enumFiat, 1, 7);
+            Task<Page<BankHistoryOrder>> openOs = IRclient.GetOpenOrdersAsync(enumCrypto, enumFiat, 1, 7);
+            openOrderGuids = openOs.Result;
         }
 
         public Task<Page<BankHistoryOrder>> GetClosedOrders(string crypto, string fiat) {

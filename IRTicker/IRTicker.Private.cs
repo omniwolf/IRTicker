@@ -17,6 +17,7 @@ namespace IRTicker {
 
         private string AccountSelectedCrypto = "XBT";
         public bool marketBaiterActive = false;
+        private Task updateOBTask;
 
         private void InitialiseAccountsPanel() {
             AccountOrderVolume_textbox.Enabled = true;
@@ -144,7 +145,7 @@ namespace IRTicker {
                     Debug.Print("cancelled order status: " + cancelledOrder.Status.ToString());
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.UpdateOrderBook) {
-                    Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency));
+                    updateOBTask = Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency));
                 }
             }
         }
@@ -357,7 +358,7 @@ namespace IRTicker {
                 AccountLimitPrice_label.Visible = true;
                 AccountLimitPrice_textbox.Visible = true;
                 AccountLimitPrice_textbox_TextChanged(null, null);  // simulate a change in the limit text box to recalculate the order value
-                pIR.OrderType = "Limit";
+                pIR.OrderTypeStr = "Limit";
             }
             else if (AccountOrderType_listbox.SelectedIndex == 0) {
                 SwitchOrderBookSide_button.Enabled = true;
@@ -372,7 +373,7 @@ namespace IRTicker {
                 AccountLimitPrice_label.ForeColor = Color.Black;
                 AccountPlaceOrder_button.ForeColor = Color.Black;
                 IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "");
-                pIR.OrderType = "Market";
+                pIR.OrderTypeStr = "Market";
             }
             else if (AccountOrderType_listbox.SelectedIndex == 2) {  // market baiter!
                 AccountPlaceOrder_button.Text = "Start baitin'";
@@ -390,8 +391,9 @@ namespace IRTicker {
                     pIR.OrderBookSide = "Offer";
                     AccountOrders_listview.Columns[1].Text = "Offers";
                 }
-                pIR.OrderType = "Limit";
-                updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
+                pIR.OrderTypeStr = "Limit";
+                bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook });
+                //updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
             }
             AccountPlaceOrder_button.Enabled = VolumePriceParseable();
         }
@@ -419,11 +421,11 @@ namespace IRTicker {
                     pIR.OrderBookSide = "Offer";
                     AccountOrders_listview.Columns[1].Text = "Offers";
                 }
-                updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
+                bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook });
             }
             if ((AccountOrderType_listbox.SelectedIndex > 0) &&  //  limit or bait
                 decimal.TryParse(AccountLimitPrice_textbox.Text, out decimal ignore)) ValidateLimitOrder();
-            updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
+            bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook });
         }
 
         private bool VolumePriceParseable() {
@@ -448,7 +450,7 @@ namespace IRTicker {
             if (VolumePriceParseable()) {
                 decimal volume = decimal.Parse(AccountOrderVolume_textbox.Text);
                 if (AccountOrderType_listbox.SelectedIndex == 0) {
-                    updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
+                    bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook });
                 }
                 else /*if (AccountOrderType_listbox.SelectedIndex == 1)*/ {  // limit order
                     AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(
@@ -462,7 +464,7 @@ namespace IRTicker {
             }
         }
 
-        private void AccountPlaceOrder_button_Click(object sender, EventArgs e) {
+        private async void AccountPlaceOrder_button_Click(object sender, EventArgs e) {
             string orderSide = "";
             if (AccountBuySell_listbox.SelectedIndex == 0) orderSide = "buy";
             else orderSide = "sell";
@@ -515,7 +517,8 @@ namespace IRTicker {
                     AccountBuySell_listbox.Enabled = false;
                     AccountOrderType_listbox.Enabled = false;
                     pIR.BaiterBookSide = pIR.OrderBookSide;
-                    updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);  // build the baiterBook
+                    bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook });  // build the baiterBook
+                    await updateOBTask;  // the idea here is to await the completion of the pIR.compileAccountOrderBookAsync(...) method
                     startMarketBaiter(decimal.Parse(AccountOrderVolume_textbox.Text), decimal.Parse(AccountLimitPrice_textbox.Text));
                 }
 
@@ -528,7 +531,7 @@ namespace IRTicker {
 
         private async void startMarketBaiter(decimal volume, decimal limitPrice) {
 
-            await Task.Run(() => pIR.marketBaiterLoopAsync(AccountSelectedCrypto, volume, limitPrice));
+            await Task.Run(() => pIR.marketBaiterLoopAsync(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, volume, limitPrice));
 
             AccountBuySell_listbox.Enabled = true;
             AccountOrderType_listbox.Enabled = true;
@@ -627,16 +630,16 @@ namespace IRTicker {
         }
 
         private void SwitchOrderBookSide_button_Click(object sender, EventArgs e) {
-            if (OrderBookSide == "Bid") {
-                OrderBookSide = "Offer";
+            if (pIR.OrderBookSide == "Bid") {
+                pIR.OrderBookSide = "Offer";
                 AccountOrders_listview.Columns[1].Text = "Offers";
             }
             else {
-                OrderBookSide = "Bid";
+                pIR.OrderBookSide = "Bid";
                 AccountOrders_listview.Columns[1].Text = "Bids";
             }
 
-            updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
+            bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook });
         }
 
         private void showBalloon(string title, string body) {
