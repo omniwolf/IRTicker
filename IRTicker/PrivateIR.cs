@@ -122,7 +122,14 @@ namespace IRTicker {
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
             Task<Page<BankHistoryOrder>> openOs = IRclient.GetOpenOrdersAsync(enumCrypto, enumFiat, 1, 7);
-            openOrderGuids = openOs.Result;
+            openOrderGuids = openOs.Result; // hmm how do i get the Page<> object out of here?  need to check the guids in openOrderGuids before returning..
+
+
+            openOrderGuids = new ConcurrentBag<Guid>();
+            foreach (BankHistoryOrder order in ??) {
+                if ((order.Status != OrderStatus.Open) && (order.Status != OrderStatus.PartiallyFilled)) continue;
+                openOrderGuids.Add(order.OrderGuid);
+            }
         }
 
         public Task<Page<BankHistoryOrder>> GetClosedOrders(string crypto, string fiat) {

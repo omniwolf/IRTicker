@@ -207,7 +207,7 @@ namespace IRTicker {
             AccountOpenOrders_listview.Items.Clear();
             openOrderGuids = new ConcurrentBag<Guid>();
             foreach (BankHistoryOrder order in openOrders) {
-                if ((order.Status != OrderStatus.Open) && (order.Status != OrderStatus.PartiallyFilled)) return;
+                if ((order.Status != OrderStatus.Open) && (order.Status != OrderStatus.PartiallyFilled)) continue;
                 AccountOpenOrders_listview.Items.Add(new ListViewItem(new string[] {
                     order.CreatedTimestampUtc.ToLocalTime().ToShortDateString(),
                     Utilities.FormatValue(order.Volume),
