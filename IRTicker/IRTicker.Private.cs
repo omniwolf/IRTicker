@@ -205,7 +205,7 @@ namespace IRTicker {
         private void drawOpenOrders(IEnumerable<BankHistoryOrder> openOrders) {
             AccountOpenOrders_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " open orders";
             AccountOpenOrders_listview.Items.Clear();
-            openOrderGuids = new ConcurrentBag<Guid>();
+
             foreach (BankHistoryOrder order in openOrders) {
                 if ((order.Status != OrderStatus.Open) && (order.Status != OrderStatus.PartiallyFilled)) continue;
                 AccountOpenOrders_listview.Items.Add(new ListViewItem(new string[] {
@@ -221,7 +221,6 @@ namespace IRTicker {
                     AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].BackColor = Color.PeachPuff;
                 }
                 AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].Tag = order;
-                openOrderGuids.Add(order.OrderGuid);
             }
         }
 
@@ -306,6 +305,7 @@ namespace IRTicker {
 
                 AccountSelectedCrypto = clickedLabel.Text.Substring(0, clickedLabel.Text.IndexOf(':'));
                 if (AccountSelectedCrypto == "BTC") AccountSelectedCrypto = "XBT";
+                pIR.Crypto = AccountSelectedCrypto;
 
                 Label newLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
                 newLabel.ForeColor = Color.DarkOrange;
@@ -434,27 +434,35 @@ namespace IRTicker {
             string price = AccountLimitPrice_textbox.Text;
             if (orderType == 0) {   // market, only care about volume
                 if (decimal.TryParse(volume, out decimal orderVol)) {
-                    if (orderVol > 0) return true;
+                    if (orderVol > 0) {
+                        pIR.Volume = orderVol;
+                        return true;
+                    }
                 }
+                pIR.Volume = 0;
                 return false;
             }
             else {  // limit order or market baiter, need to check both fields
                 if (decimal.TryParse(price, out decimal orderPrice) && decimal.TryParse(volume, out decimal orderVol)) {
-                    if ((orderVol > 0) && (orderPrice > 0)) return true;
+                    if ((orderVol > 0) && (orderPrice > 0)) {
+                        pIR.Volume = orderVol;
+                        pIR.LimitPrice = orderPrice;
+                        return true;
+                    }
                 }
+                pIR.Volume = pIR.LimitPrice = 0;
                 return false;
             }
         }
 
         private void AccountOrderVolume_textbox_TextChanged(object sender, EventArgs e) {
             if (VolumePriceParseable()) {
-                decimal volume = decimal.Parse(AccountOrderVolume_textbox.Text);
                 if (AccountOrderType_listbox.SelectedIndex == 0) {
                     bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook });
                 }
                 else /*if (AccountOrderType_listbox.SelectedIndex == 1)*/ {  // limit order
                     AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(
-                        volume * decimal.Parse(AccountLimitPrice_textbox.Text));
+                        decimal.Parse(AccountOrderVolume_textbox.Text) * decimal.Parse(AccountLimitPrice_textbox.Text));
                 }
                 AccountPlaceOrder_button.Enabled = true;
             }
@@ -516,7 +524,6 @@ namespace IRTicker {
                     Text = "IR Ticker - Market Baiter Running...";
                     AccountBuySell_listbox.Enabled = false;
                     AccountOrderType_listbox.Enabled = false;
-                    pIR.BaiterBookSide = pIR.OrderBookSide;
                     bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook });  // build the baiterBook
                     await updateOBTask;  // the idea here is to await the completion of the pIR.compileAccountOrderBookAsync(...) method
                     startMarketBaiter(decimal.Parse(AccountOrderVolume_textbox.Text), decimal.Parse(AccountLimitPrice_textbox.Text));

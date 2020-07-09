@@ -29,6 +29,7 @@ namespace IRTicker {
         public string OrderTypeStr = "Market";
         public decimal Volume = 0;
         public decimal LimitPrice = 0;
+        public string Crypto = "XBT";
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBids;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
         ConcurrentBag<Guid> openOrderGuids = new ConcurrentBag<Guid>();
@@ -117,19 +118,21 @@ namespace IRTicker {
             return orderResult;
         }
 
-        public Task<Page<BankHistoryOrder>> GetOpenOrders(string crypto, string fiat) {
+        public async Task<Page<BankHistoryOrder>> GetOpenOrders(string crypto, string fiat) {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
-            Task<Page<BankHistoryOrder>> openOs = IRclient.GetOpenOrdersAsync(enumCrypto, enumFiat, 1, 7);
-            openOrderGuids = openOs.Result; // hmm how do i get the Page<> object out of here?  need to check the guids in openOrderGuids before returning..
+            Page<BankHistoryOrder> openOs = await IRclient.GetOpenOrdersAsync(enumCrypto, enumFiat, 1, 7);
+            
 
 
-            openOrderGuids = new ConcurrentBag<Guid>();
-            foreach (BankHistoryOrder order in ??) {
+            openOrderGuids = new ConcurrentBag<Guid>();  // clear the old one
+            foreach (BankHistoryOrder order in openOs.Data) {
                 if ((order.Status != OrderStatus.Open) && (order.Status != OrderStatus.PartiallyFilled)) continue;
                 openOrderGuids.Add(order.OrderGuid);
             }
+
+            return openOs;
         }
 
         public Task<Page<BankHistoryOrder>> GetClosedOrders(string crypto, string fiat) {
@@ -207,6 +210,8 @@ namespace IRTicker {
 
         public void compileAccountOrderBookAsync(string pair) {
 
+            if (pair != (Crypto + "-" + DCE_IR.CurrentSecondaryCurrency)) return;
+
             List<string[]> accOrderListView = new List<string[]>();
             decimal estValue = 0;
 
@@ -248,6 +253,7 @@ namespace IRTicker {
                     trackedOrderVolume = Volume;
                 }
             }
+            //Debug.Print("OrderBookSide: " + OrderBookSide);
 
             foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> pricePoint in (OrderBookSide == "Offer" ? orderedOffers : orderedBids)) {
                 decimal totalVolume = 0;
@@ -306,17 +312,15 @@ namespace IRTicker {
             BankOrder placedOrder = null;
             string pair = crypto + "-" + fiat;
             decimal distanceFromTopOrder = DCE_IR.currencyFiatDivision[crypto] * 5;  // how far infront of the best order should we be?  will be different for different cryptos
-            if (BaiterBookSide == "Offer") {
-                distanceFromTopOrder = distanceFromTopOrder * -1;
-                baiterBook = orderedOffers;
-            }
-            else {
-                baiterBook = orderedBids;
-            }
+            if (BaiterBookSide == "Offer") distanceFromTopOrder = distanceFromTopOrder * -1;
+
             Debug.Print("MBAIT: distance from top: " + distanceFromTopOrder);
             IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Starting market baiter!"));
 
             while (IRT.marketBaiterActive) {
+                if (BaiterBookSide == "Offer") baiterBook = orderedOffers;
+                else baiterBook = orderedBids;
+                
 
                 //if ((baiterBook.First().Value).ElementAt(0).Value.OrderType.EndsWith(BaiterBookSide)) {  // first make sure we have the right order book
                 if (placedOrder == null) {  // no order.  let's create one.
@@ -365,7 +369,7 @@ namespace IRTicker {
                     catch (Exception ex) {
                         Debug.Print("MBAIT: trid to create an order, but it failed: " + ex.Message);
                     }
-                    IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
+                    IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.GetAccounts, PrivateIREndPoints.UpdateOrderBook });
 
                 }
                 else {  // an order is in play
@@ -383,7 +387,7 @@ namespace IRTicker {
                                     BankOrder bo = await CancelOrder(placedOrder.OrderGuid.ToString()).ConfigureAwait(false);
                                     if (bo.Status == OrderStatus.Cancelled) {
                                         Debug.Print("MBAIT: cancel order was successful");
-                                        if (bo.VolumeFilled != 0) IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble..."));
+                                        //if (bo.VolumeFilled != 0) IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble..."));
 
                                         volume = bo.VolumeOrdered - bo.VolumeFilled;
                                         IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
@@ -397,6 +401,7 @@ namespace IRTicker {
                             }
                             else {
                                 if (pricePoint.Value[placedOrder.OrderGuid.ToString()].Volume != volume) {
+                                    volume = pricePoint.Value[placedOrder.OrderGuid.ToString()].Volume;
                                     IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble...."));
                                 }
                             }
