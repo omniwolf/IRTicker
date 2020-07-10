@@ -91,11 +91,17 @@ namespace IRTicker {
                     }
                     if (addressData != null) drawDepositAddress(addressData);
                 }
-                else if (endP == PrivateIR.PrivateIREndPoints.GetOpenOrders) {
-                    var openOrders = await pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
-                    drawOpenOrders(openOrders.Data);
+                else if (endP == PrivateIREndPoints.GetOpenOrders) {
+                    try {
+                        var openOrders = await pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
+                        drawOpenOrders(openOrders.Data);
+                    }
+                    catch (Exception ex) {
+                        showBalloon("Failed to get open orders", "Error: " + ex.Message);
+                        Debug.Print(DateTime.Now + " - GetOpenOrders failed with: " + ex.Message);
+                    }
                 }
-                else if (endP == PrivateIR.PrivateIREndPoints.GetClosedOrders) {
+                else if (endP == PrivateIREndPoints.GetClosedOrders) {
                     Page<BankHistoryOrder> closedOrders = await pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
                     drawClosedOrders(closedOrders.Data);
                 }

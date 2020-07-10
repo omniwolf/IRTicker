@@ -605,9 +605,9 @@ namespace IRTicker {
                 // This bit is for a) volume (we don't get vol from websockets), and b) if there have been no orders to establish a spread, then the price and spread
                 // stay at 0.  This is 
                 Dictionary<string, DCE.MarketSummary> cPairs = DCEs["IR"].GetCryptoPairs();
-                if (cPairs.ContainsKey(mSummary.pair) && cPairs[mSummary.pair].spread == 0) { 
+                if (cPairs.ContainsKey(mSummary.pair) && cPairs[mSummary.pair].spread != 0) {  // logic here is if the spread is not 0, then don't send spread info, as what we have is better
                 //if (crypto == "XBT") {  // don't want to overwrite the spread orders as they're probably out of date
-                    mSummary.CurrentHighestBidPrice = 0;
+                    mSummary.CurrentHighestBidPrice = 0;  // sending cryptoPairsAdd a 0 bid and offer will mean the previous best bid and offer remain
                     mSummary.CurrentLowestOfferPrice = 0;
                 }
                 //}
@@ -1258,7 +1258,7 @@ namespace IRTicker {
                     if (dExchange == "BAR") continue;
                     // the heartbeat is initialised as the year 2000, so if it's this year we know it must be just starting up, no need to worry
                     if ((DCEs[dExchange].HeartBeat + TimeSpan.FromSeconds(100) < DateTime.Now) && DCEs[dExchange].HeartBeat.Year != 2000) {
-                        // we haven't received a heartbeat in 10 seconds..
+                        // we haven't received a heartbeat in 100 seconds..
                         Debug.Print(DateTime.Now + " - " + dExchange + " - haven't received any messages via sockets in 100 seconds.  reconnecting..");
                         DCEs[dExchange].socketsAlive = false;
                         DCEs[dExchange].socketsReset = true;
