@@ -623,7 +623,7 @@ namespace IRTicker {
             }
             switch (dExchange) { 
                 case "IR":  // this should never be called because the IR sockets should automatically recover
-                    //break;
+                    break;
                     Debug.Print("WebSocket_Reconnect: IR?? this shouldn't be called?  shouldn't it auto-reconnect?");
                     if (client_IR.IsRunning) {
                         Debug.Print(DateTime.Now + " - IR running, will stop");

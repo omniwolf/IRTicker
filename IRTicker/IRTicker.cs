@@ -1258,7 +1258,7 @@ namespace IRTicker {
                     if (dExchange == "BAR") continue;
                     // the heartbeat is initialised as the year 2000, so if it's this year we know it must be just starting up, no need to worry
                     if ((DCEs[dExchange].HeartBeat + TimeSpan.FromSeconds(100) < DateTime.Now) && DCEs[dExchange].HeartBeat.Year != 2000) {
-                        // we haven't received a heartbeat in 10 seconds..
+                        // we haven't received a heartbeat in 100 seconds..
                         Debug.Print(DateTime.Now + " - " + dExchange + " - haven't received any messages via sockets in 100 seconds.  reconnecting..");
                         DCEs[dExchange].socketsAlive = false;
                         DCEs[dExchange].socketsReset = true;
