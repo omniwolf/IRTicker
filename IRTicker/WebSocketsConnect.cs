@@ -435,7 +435,8 @@ namespace IRTicker {
             DCEs[dExchange].socketsAlive = false;
             Debug.Print(DateTime.Now + " - startSockets called for " + dExchange);
 
-            using (client_IR = new WebsocketClient(url)) {
+            //using (client_IR = new WebsocketClient(url)) {  getting rid of using statement..
+            client_IR = new WebsocketClient(url);
                 client_IR.ReconnectTimeout = TimeSpan.FromSeconds(70);
                 client_IR.ReconnectionHappened.Subscribe(info => {
                     if (info.Type == ReconnectionType.Initial) {
@@ -522,7 +523,7 @@ namespace IRTicker {
                 //Debug.Print(DateTime.Now + " - we have moved on after the client_IR.send where we subscribe!");
 
                 startSocket_exitEvent.WaitOne();
-            }
+            //}  trying to remove the using statement
         }
 
         // shuts down the UITimerThread.  Only called when the app is terminating.
@@ -549,7 +550,7 @@ namespace IRTicker {
         }
 
         public void IR_Disconnect() {
-            UITimerThreadProceed = false;
+            //UITimerThreadProceed = false;  don't think we actually need to stop this running ever..
             if (client_IR.IsRunning) {
                 Debug.Print(DateTime.Now + " - IR_Disconnect sub: IR running, will stop");
                 stopSockets("IR");
@@ -834,21 +835,6 @@ namespace IRTicker {
                 //Debug.Print("just set the Nonce to 1 before the first we got, it is: " + DCEs["IR"].channelNonce[channel]);
             }
 
-            // we should check how full our buffer is. If there's more than 10 items (??) then it's probably too full.
-            if (((DCEs["IR"].orderBuffer_IR[pair].Count > 20) && DCEs["IR"].pulledSnapShot[pair]) || (DCEs["IR"].OBResetFlag[channel])) {
-                Debug.Print("NONCE - too many buffered nonces, can't recover " + channel + ", time to dump and restart");
-                //subscribe_unsubscribe_new("IR", false, pair);
-
-                if (Properties.Settings.Default.FlashForm) pollingThread.ReportProgress(26);  // flash the window if the setting is enabled
-                //Reinit_sockets("IR", pair);
-
-                // now subscribe back to the channel
-                //subscribe_unsubscribe_new("IR", true, pair);
-                WebSocket_Resubscribe("IR", Utilities.SplitPair(pair).Item1);
-
-                return;
-            }
-
             while (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(DCEs["IR"].channelNonce[channel] + 1)) {  // if the buffer has the next nonce...
                 DCEs["IR"].channelNonce[channel]++;  // cool, let's advance the nonce
                 if (DCEs["IR"].orderBuffer_IR[pair].TryRemove(DCEs["IR"].channelNonce[channel], out Ticker_IR ticker)) {  // pop the ticker object,
@@ -865,6 +851,16 @@ namespace IRTicker {
             if (DCEs["IR"].orderBuffer_IR[pair].Count > 0) {
                 /*if (pair == "XBT-AUD")*/ Debug.Print("(" + pair + ") ooo nonce - " + DCEs["IR"].orderBuffer_IR[pair].Count + " if only 1, it is: " + (DCEs["IR"].orderBuffer_IR[pair].Count == 1 ? DCEs["IR"].orderBuffer_IR[pair].Keys.FirstOrDefault().ToString() : "") + " and the current nonce is " + DCEs["IR"].channelNonce[channel]);
                 pollingThread.ReportProgress(27, new Tuple<bool, string>(true, Utilities.SplitPair(pair).Item1));  // update pair text colour to gray
+            }
+
+            // we should check how full our buffer is. If there's more than x items (??) then it's probably too full.
+            if (((DCEs["IR"].orderBuffer_IR[pair].Count > 5) && DCEs["IR"].pulledSnapShot[pair]) || (DCEs["IR"].OBResetFlag[channel])) {
+                Debug.Print("NONCE - too many buffered nonces, can't recover " + channel + ", or the OBResetFlag is true, time to dump and restart");
+
+                if (Properties.Settings.Default.FlashForm) pollingThread.ReportProgress(26);  // flash the window if the setting is enabled
+
+                // now subscribe back to the channel
+                WebSocket_Resubscribe("IR", Utilities.SplitPair(pair).Item1);
             }
         }
         

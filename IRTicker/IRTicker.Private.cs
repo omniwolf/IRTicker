@@ -91,7 +91,7 @@ namespace IRTicker {
                     }
                     if (addressData != null) drawDepositAddress(addressData);
                 }
-                else if (endP == PrivateIREndPoints.GetOpenOrders) {
+                else if (endP == PrivateIR.PrivateIREndPoints.GetOpenOrders) {
                     try {
                         var openOrders = await pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
                         drawOpenOrders(openOrders.Data);
@@ -101,7 +101,7 @@ namespace IRTicker {
                         Debug.Print(DateTime.Now + " - GetOpenOrders failed with: " + ex.Message);
                     }
                 }
-                else if (endP == PrivateIREndPoints.GetClosedOrders) {
+                else if (endP == PrivateIR.PrivateIREndPoints.GetClosedOrders) {
                     Page<BankHistoryOrder> closedOrders = await pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
                     drawClosedOrders(closedOrders.Data);
                 }
@@ -208,7 +208,7 @@ namespace IRTicker {
             }
         }
 
-        private void drawOpenOrders(IEnumerable<BankHistoryOrder> openOrders) {
+        public void drawOpenOrders(IEnumerable<BankHistoryOrder> openOrders) {
             AccountOpenOrders_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " open orders";
             AccountOpenOrders_listview.Items.Clear();
 
@@ -272,7 +272,7 @@ namespace IRTicker {
 
                 AccountOrders_listview.Items.Clear();
 
-                foreach (string[] lvi in accountOrders.Item2) {
+                foreach (string[] lvi in _accountOrders.Item2) {
                     AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0], Utilities.FormatValue(decimal.Parse(lvi[1]), 2), lvi[2], lvi[3], lvi[4] }));
                     AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].SubItems[1].Tag = lvi[1];  // need to store the price in an unformatted (and therefore parseable) format
                     if (lvi[5] == "true") {  // what a hack.  colourising any orders that are MINE
@@ -280,15 +280,15 @@ namespace IRTicker {
                         AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.Yellow;
                     }
                 }
-                if (accountOrders.Item1 == -1) {
+                if (_accountOrders.Item1 == -1) {
                     AccountEstOrderValue_value.Text = "Not enough depth!";
                 }
-                else if (accountOrders.Item1 == -2) {
+                else if (_accountOrders.Item1 == -2) {
                     AccountEstOrderValue_value.Text = "";
                 }
                 else {  // leave it alone if a limit order
                     if (AccountOrderType_listbox.SelectedIndex == 0) {
-                        AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(accountOrders.Item1);
+                        AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(_accountOrders.Item1);
                     }
                 }
 
@@ -557,16 +557,6 @@ namespace IRTicker {
             synchronizationContext.Post(new SendOrPostCallback(o => {
                 bulkSequentialAPICalls((List<PrivateIR.PrivateIREndPoints>)o);
             }), endPoints);
-        }
-
-        private void MarketBaiterFinished() {
-            synchronizationContext.Post(new SendOrPostCallback(o => {
-                AccountBuySell_listbox.Enabled = true;
-                AccountOrderType_listbox.Enabled = true;
-                AccountPlaceOrder_button.Text = "Start baitin'";
-                bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook });
-
-            }), null);
         }
 
         public void notificationFromMarketBaiter(Tuple<string, string> notifText) {

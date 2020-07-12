@@ -39,8 +39,8 @@ namespace IRTicker {
 
         public ConcurrentDictionary<string, SpreadGraph> SpreadGraph_Dict = new ConcurrentDictionary<string, SpreadGraph>();  // needs to be public because it gets accessed from the graphs object
 
-        PrivateIR pIR;
-        private readonly SynchronizationContext synchronizationContext;  // use this to do UI stuff from the market baiter thread
+        PrivateIR pIR = new PrivateIR();
+        public readonly SynchronizationContext synchronizationContext;  // use this to do UI stuff from the market baiter thread
 
         OBview obv = new OBview();
 
@@ -156,8 +156,7 @@ namespace IRTicker {
                 pIR = null;
             }
             else {
-                pIR = new PrivateIR(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"]);
-                //pIR = new PrivateIR("67a60129-033e-429b-a46a-3f0395334e19", "a031caf6c67440819cf2a15f0fbe9784");
+                pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"]);
             }
 
             wSocketConnect = new WebSocketsConnect(DCEs, pollingThread, pIR);
@@ -2028,7 +2027,7 @@ namespace IRTicker {
                         !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) &&
                         !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
 
-                        pIR = new PrivateIR(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"]);
+                        pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"]);
                         IRAccount_button.Enabled = true;
                     }
                     else if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
@@ -2813,7 +2812,7 @@ namespace IRTicker {
             Properties.Settings.Default.IRAPIPubKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).pubKey;
             Properties.Settings.Default.IRAPIPrivKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).privKey;
 
-            pIR = new PrivateIR(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"]);
+            pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"]);
         }
     }
 }
