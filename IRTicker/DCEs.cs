@@ -107,9 +107,8 @@ namespace IRTicker {
                     if (mSummary.DayAvgPrice != 0) cryptoPairs[pair].DayAvgPrice = mSummary.DayAvgPrice;
                     if (mSummary.DayHighestPrice != 0) cryptoPairs[pair].DayHighestPrice = mSummary.DayHighestPrice;
                     if (mSummary.DayLowestPrice != 0) cryptoPairs[pair].DayLowestPrice = mSummary.DayLowestPrice;
-                    if (mSummary.DayVolume != 0) cryptoPairs[pair].DayVolume = mSummary.DayVolume;
                     if (mSummary.DayVolumeInSecondaryCurrency != 0) cryptoPairs[pair].DayVolumeInSecondaryCurrency = mSummary.DayVolumeInSecondaryCurrency;
-                    if (mSummary.DayVolumeXbt != 0) cryptoPairs[pair].DayVolumeXbt = mSummary.DayVolumeXbt;
+                    if (mSummary.DayVolumeXbt >= 0) cryptoPairs[pair].DayVolumeXbt = mSummary.DayVolumeXbt;
                     if (mSummary.LastPrice != 0) cryptoPairs[pair].LastPrice = mSummary.LastPrice;
 
                     // these 3 will be 0 or "" if the mSummary object has come from a REST pull
@@ -617,6 +616,7 @@ namespace IRTicker {
                 mSummary.CurrentHighestBidPrice = IR_OBs[pair].Item1.Keys.Max();
                 mSummary.CurrentLowestOfferPrice = IR_OBs[pair].Item2.Keys.Min();
                 mSummary.pair = pair;
+                mSummary.DayVolumeXbt = -1;
                 CryptoPairsAdd(pair, mSummary);
                 //Debug.Print("OCE: " + order.Pair + " " + eventStr + " " + mSummary.CurrentHighestBidPrice + " " + mSummary.CurrentLowestOfferPrice);
                 var cPairs = GetCryptoPairs();  // we need to push this back to CryptoPairs first because the mSummary object here has nothing but bid and offer.  By pushing to CryptoPairs and then pulling from it we'll pull all the other info too
@@ -686,6 +686,7 @@ namespace IRTicker {
             mSummary.CurrentHighestBidPrice = bidOB.Keys.Max();
             mSummary.CurrentLowestOfferPrice = offerOB.Keys.Min();
             mSummary.pair = pair;
+            mSummary.DayVolumeXbt = -1;
             CryptoPairsAdd(pair, mSummary);
             //}
         }
@@ -803,17 +804,6 @@ namespace IRTicker {
             public decimal spread {
                 get {
                     return CurrentLowestOfferPrice - CurrentHighestBidPrice;
-                }
-            }
-
-            // whoops, originally called this property "DayVolume" when it should have been "DayVolumeXbt".  I coded everywhere to "DayVolume", so I've just
-            // added in this redirect so they both work :/
-            public decimal DayVolume {
-                get {
-                    return DayVolumeXbt;
-                }
-                set {
-                    DayVolumeXbt = value;
                 }
             }
 

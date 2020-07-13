@@ -911,48 +911,6 @@ namespace IRTicker {
             }
         }
 
-        /* Sample socket data:
-         * {
-         *      "volume24h": 21357294294,
-         *      "bestBid": 964871000000,
-         *      "bestAsk": 965578000000,
-         *      "lastPrice": 965600000000,
-         *      "timestamp": 1535538694373,
-         *      "snapshotId": 1535538694373000,
-         *      "marketId": 2001,
-         *      "currency": "AUD",
-         *      "instrument": "BTC"
-         * }
-         */
-        private void MessageRX_BTCM(string message) {
-            //Debug.Print("BTCM STREAM: " + message);
-
-            Ticker_BTCM tickerStream = new Ticker_BTCM();
-            tickerStream = JsonConvert.DeserializeObject<Ticker_BTCM>(message);
-
-            DCE.MarketSummary mSummary = new DCE.MarketSummary();
-
-            if (tickerStream.instrument.ToUpper().StartsWith("BTC")) tickerStream.instrument = tickerStream.instrument.Replace(tickerStream.instrument.Substring(0, 3), "XBT");
-            if (tickerStream.instrument.ToUpper().StartsWith("BCHABC")) tickerStream.instrument = tickerStream.instrument.Replace(tickerStream.instrument.Substring(0, 6), "BCH");
-            mSummary.DayVolume = tickerStream.volume24h / 100000000;  // 100 million
-            mSummary.CurrentHighestBidPrice = tickerStream.bestBid / 100000000; // 100 million
-            mSummary.CurrentLowestOfferPrice = tickerStream.bestAsk / 100000000;  // 100 mil
-            mSummary.LastPrice = tickerStream.lastPrice / 100000000;  // 100 mil
-
-            // had to comment this out because i changed the Ticker_BTCM class timestame property type
-            //DateTimeOffset DTO = DateTimeOffset.FromUnixTimeMilliseconds(tickerStream.timestamp);
-            //mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
-
-            mSummary.SecondaryCurrencyCode = tickerStream.currency;
-            mSummary.PrimaryCurrencyCode = tickerStream.instrument;
-
-            // market summary should be complete now
-            DCEs["BTCM"].CryptoPairsAdd(mSummary.pair, mSummary);
-
-            // BTCM only has one secondary currency, so it will always be hit.  keep this here in case they get more i guess.
-            if (DCEs["BTCM"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(31, mSummary);  // only update the UI for pairs we care about
-        }
-
     /// <summary>
         /// sample tick return payload
         /// { 
@@ -980,7 +938,7 @@ namespace IRTicker {
                 if (tickerStream.marketId.ToUpper().StartsWith("BTC")) tickerStream.marketId = tickerStream.marketId.Replace(tickerStream.marketId.Substring(0, 3), "XBT");
                 if (tickerStream.marketId.ToUpper().StartsWith("BCHABC")) tickerStream.marketId= tickerStream.marketId.Replace(tickerStream.marketId.Substring(0, 6), "BCH");
 
-                mSummary.DayVolume = tickerStream.volume24h;
+                mSummary.DayVolumeXbt = tickerStream.volume24h;
                 mSummary.CurrentHighestBidPrice = tickerStream.bestBid;
                 mSummary.CurrentLowestOfferPrice = tickerStream.bestAsk;
                 mSummary.LastPrice = tickerStream.lastPrice;
@@ -1026,7 +984,7 @@ namespace IRTicker {
                 else Debug.Print("Error GDAX sockets - couldn't convert price: " + tickerStream.price);
 
                 if (decimal.TryParse(tickerStream.volume_24h, out decimal vol)) {
-                    mSummary.DayVolume = vol;
+                    mSummary.DayVolumeXbt = vol;
                 }
                 else Debug.Print("Error GDAX sockets - couldn't convert volume: " + tickerStream.volume_24h);
 
@@ -1166,7 +1124,7 @@ namespace IRTicker {
                                         mSummary.LastPrice = result;
                                         break;
                                     case 8:  // VOLUME
-                                        mSummary.DayVolume = result;
+                                        mSummary.DayVolumeXbt = result;
                                         break;
                                     case 9:  // HIGH
                                         mSummary.DayHighestPrice = result;

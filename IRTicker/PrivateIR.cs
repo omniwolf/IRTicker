@@ -400,7 +400,7 @@ namespace IRTicker {
                                     foreach (var openO in openOrderGuids) {
                                         if ((orderAtPrice.Key == openO.ToString()) && (orderAtPrice.Key != placedOrder.OrderGuid.ToString())) {  // it's ours, but not the bait order
                                             continueBaiterLoop = true;  // the order at the spread is ours, let's not compete against it.
-                                            Debug.Print("MBAIT: It appears an order at price $" + pricePoint.Key + " is our own.  Ignore and move to the next price level");
+                                            //Debug.Print("MBAIT: It appears an order at price $" + pricePoint.Key + " is our own.  Ignore and move to the next price level");
                                             break;
                                         }
                                     }

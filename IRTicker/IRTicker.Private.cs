@@ -53,7 +53,7 @@ namespace IRTicker {
                         Utilities.FormatValue(acc.Value.AvailableBalance * mSummaries[acc.Key + "-" + DCEs["IR"].CurrentSecondaryCurrency].CurrentHighestBidPrice);
                 }
                 else {
-                    Debug.Print(DateTime.Now + " new currency (value)?? - " + acc.Key);
+                    //Debug.Print(DateTime.Now + " new currency (value)?? - " + acc.Key);
                 }
             }
         }

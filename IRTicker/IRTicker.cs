@@ -637,7 +637,7 @@ namespace IRTicker {
                 mSummary.LastPrice = mSummary_BTCM.lastPrice;
                 mSummary.PrimaryCurrencyCode = crypto;
                 mSummary.SecondaryCurrencyCode = fiat;
-                mSummary.DayVolume = mSummary_BTCM.volume24h;
+                mSummary.DayVolumeXbt = mSummary_BTCM.volume24h;
                 mSummary.DayHighestPrice = mSummary_BTCM.low24h;
                 mSummary.DayLowestPrice = mSummary_BTCM.high24h;
 
@@ -1415,7 +1415,7 @@ namespace IRTicker {
                         }
                     }
 
-                    UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(pairObj.Value.spread) + ((pairObj.Value.DayVolume == 0) ? "" : " / " + Utilities.FormatValue(pairObj.Value.DayVolume));
+                    UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(pairObj.Value.spread) + ((pairObj.Value.DayVolumeXbt == 0) ? " / 0" : " / " + Utilities.FormatValue(pairObj.Value.DayVolumeXbt));
 
                     // update tool tips.
                     IRTickerTT_spread.SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], "Best bid: " + Utilities.FormatValue(pairObj.Value.CurrentHighestBidPrice) + System.Environment.NewLine + "Best offer: " + Utilities.FormatValue(pairObj.Value.CurrentLowestOfferPrice));
@@ -1489,7 +1489,7 @@ namespace IRTicker {
                     }
                 }
 
-                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(mSummary.spread) + ((mSummary.DayVolume == 0) ? "" : " / " + Utilities.FormatValue(mSummary.DayVolume));
+                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(mSummary.spread) + ((mSummary.DayVolumeXbt == 0) ? " / 0" : " / " + Utilities.FormatValue(mSummary.DayVolumeXbt));
                 //Debug.Print("ABOUT TO CHECK ORDER BOOK STUFF:");
                 //Debug.Print("---num coins = " + UIControls_Dict[dExchange].AvgPrice_NumCoins.Text + " avgprice_crypto = " + (UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedItem == null ? "null" : UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedItem.ToString()));
 
@@ -1872,8 +1872,8 @@ namespace IRTicker {
             Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
             decimal IRvol = -1, BTCMvol = -1;
             if (IRpairs.ContainsKey("XBT-AUD") && BTCMpairs.ContainsKey("XBT-AUD")) {
-                IRvol = IRpairs["XBT-AUD"].DayVolume; ;
-                BTCMvol = BTCMpairs["XBT-AUD"].DayVolume; 
+                IRvol = IRpairs["XBT-AUD"].DayVolumeXbt; ;
+                BTCMvol = BTCMpairs["XBT-AUD"].DayVolumeXbt; 
                 
                 if (bStick == null) bStick = BlinkStick.FindFirst();
                 if (bStick != null && bStick.OpenDevice()) {
@@ -2630,8 +2630,8 @@ namespace IRTicker {
             Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
             Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
 
-            decimal IRvol = IRpairs["XBT-AUD"].DayVolume;
-            decimal BTCMvol = BTCMpairs["XBT-AUD"].DayVolume;
+            decimal IRvol = IRpairs["XBT-AUD"].DayVolumeXbt;
+            decimal BTCMvol = BTCMpairs["XBT-AUD"].DayVolumeXbt;
             //Debug.Print("hoping for FALSE here - isBusy for blink is: " + BlinkStickBW.IsBusy);
 
             setStickColour(IRvol, BTCMvol);
