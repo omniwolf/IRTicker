@@ -35,6 +35,7 @@ namespace IRTicker {
         ConcurrentBag<Guid> openOrderGuids = new ConcurrentBag<Guid>();
 
         private DCE DCE_IR;
+        private TelegramBot TGBot;
 
         /*public PrivateIR(string _BaseURL, string APIKey, string APISecret, IRTicker _IRT, DCE _DCE_IR) {
             PrivateIR_init(_BaseURL, APIKey, APISecret, _IRT, _DCE_IR);
@@ -44,9 +45,10 @@ namespace IRTicker {
             // 
         }
 
-        public void PrivateIR_init(string _BaseURL, string APIKey, string APISecret, IRTicker _IRT, DCE _DCE_IR) {
+        public void PrivateIR_init(string _BaseURL, string APIKey, string APISecret, IRTicker _IRT, DCE _DCE_IR, TelegramBot _TGBot) {
             IRT = _IRT;
             DCE_IR = _DCE_IR;
+            TGBot = _TGBot;
 
             if (string.IsNullOrEmpty(APIKey) || string.IsNullOrEmpty(APISecret)) {
                 Debug.Print(DateTime.Now + " cannot do private IR stuff, missing API key(s)");
@@ -60,6 +62,10 @@ namespace IRTicker {
                 Credential = IRcreds
             };
             IRclient = Client.Create(IRconf);
+        }
+
+        public void setTGBot(TelegramBot _TGBot) {
+            TGBot = _TGBot;
         }
 
         public Dictionary<string, Account> GetAccounts() {
@@ -142,11 +148,20 @@ namespace IRTicker {
             return openOs;
         }
 
-        public Task<Page<BankHistoryOrder>> GetClosedOrders(string crypto, string fiat) {
+        public async Task<Page<BankHistoryOrder>> GetClosedOrders(string crypto, string fiat) {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
+            Page<BankHistoryOrder> cOrders = null;
 
-            return IRclient.GetClosedFilledOrdersAsync(enumCrypto, enumFiat, 1, 7);
+            try {
+                cOrders = await IRclient.GetClosedOrdersAsync(enumCrypto, enumFiat, 1, 7);
+                if (TGBot != null) TGBot.closedOrders(cOrders);
+            }
+            catch (Exception ex) {
+                Debug.Print(DateTime.Now + " - Failed to pull GetClosedOrders - " + ex.Message);
+            }
+
+            return cOrders;
         }
 
         public Task<BankOrder> CancelOrder(string guid) {
@@ -459,6 +474,10 @@ namespace IRTicker {
                     if (!foundOrder) {
                         Debug.Print("MBAIT: Our order doesn't exist in the OB, possibly filled? " + placedOrder.OrderGuid.ToString());
                         Page<BankHistoryOrder> closedOs = await GetClosedOrders(crypto, fiat).ConfigureAwait(false);
+                        if (closedOs == null) {  // could happen if there's a nonce error
+                            Thread.Sleep(100);
+                            continue;
+                        }
                         foreach (BankHistoryOrder closedO in closedOs.Data) {
                             if (closedO.OrderGuid == placedOrder.OrderGuid) {
                                 if (closedO.Status == OrderStatus.Filled) {

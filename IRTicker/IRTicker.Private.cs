@@ -86,7 +86,7 @@ namespace IRTicker {
                     }
                     catch (Exception ex) {
                         MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                            ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            ex.Message, "Error - CheckAddress", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                     if (addressData != null) drawDepositAddress(addressData);
@@ -103,7 +103,9 @@ namespace IRTicker {
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.GetClosedOrders) {
                     Page<BankHistoryOrder> closedOrders = await pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
-                    drawClosedOrders(closedOrders.Data);
+                    if (closedOrders != null) {
+                        drawClosedOrders(closedOrders.Data);
+                    }
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.PlaceMarketOrder) {
                     OrderType oType = AccountBuySell_listbox.SelectedIndex == 0 ? OrderType.MarketBid : OrderType.MarketOffer;
@@ -114,7 +116,7 @@ namespace IRTicker {
                     }
                     catch (Exception ex) {
                         MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                            ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            ex.Message, "Error - Market order", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                     if ((orderResult != null) && (orderResult.Status == OrderStatus.Failed)) {
@@ -130,7 +132,7 @@ namespace IRTicker {
                     }
                     catch (Exception ex) {
                         MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                            ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            ex.Message, "Error - Limit order", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                     if ((orderResult != null) && (orderResult.Status == OrderStatus.Failed)) {
@@ -145,7 +147,7 @@ namespace IRTicker {
                     }
                     catch (Exception ex) {
                         MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                            ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            ex.Message, "Error - Cancel order", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                     Debug.Print("cancelled order status: " + cancelledOrder.Status.ToString());
@@ -192,6 +194,7 @@ namespace IRTicker {
             AccountClosedOrders_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " closed orders";
             AccountClosedOrders_listview.Items.Clear();
             foreach (BankHistoryOrder order in closedOrders) {
+                if ((order.Status != OrderStatus.Filled) && (order.Status != OrderStatus.PartiallyFilledAndCancelled)) continue;
                 AccountClosedOrders_listview.Items.Add(new ListViewItem(new string[] {
                     order.CreatedTimestampUtc.ToLocalTime().ToShortDateString(),
                     Utilities.FormatValue(order.Volume),
@@ -563,6 +566,7 @@ namespace IRTicker {
             synchronizationContext.Post(new SendOrPostCallback(o => {
                 Tuple<string, string> notif = (Tuple<string, string>)o;
                 showBalloon(notif.Item1, notif.Item2);
+                if (TGBot != null) TGBot.SendMessage(notif.Item2);
             }), notifText);
         }
 

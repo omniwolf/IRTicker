@@ -15,6 +15,7 @@ using System.Collections.Concurrent;
 using System.Windows.Forms.DataVisualization.Charting;
 using BlinkStickDotNet;
 using System.Runtime.InteropServices;
+using System.Reactive.Threading.Tasks;
 // todo:
 
 
@@ -41,6 +42,8 @@ namespace IRTicker {
 
         PrivateIR pIR = new PrivateIR();
         public readonly SynchronizationContext synchronizationContext;  // use this to do UI stuff from the market baiter thread
+
+        TelegramBot TGBot = null;
 
         OBview obv = new OBview();
 
@@ -138,6 +141,7 @@ namespace IRTicker {
             OB_checkBox.Checked = Properties.Settings.Default.ShowOB;
             UITimerFreq_maskedTextBox.Text = Properties.Settings.Default.UITimerFreq.ToString();
             NegativeSpread_checkBox.Checked = Properties.Settings.Default.NegativeSpread;
+            TelegramCode_textBox.Text = Properties.Settings.Default.TelegramCode;
             if (string.IsNullOrEmpty(Properties.Settings.Default.SlackNameCurrency)) Properties.Settings.Default.SlackNameCurrency = "AUD";
 
             if (Slack_checkBox.Checked) {
@@ -151,15 +155,21 @@ namespace IRTicker {
                 slackToken_textBox.Enabled = false;
             }
 
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.TelegramCode)) {
+                TGBot = new TelegramBot();
+            }
+
             if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
                 IRAccount_button.Enabled = false;
                 pIR = null;
             }
             else {
-                pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"]);
+                pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
             }
 
             wSocketConnect = new WebSocketsConnect(DCEs, pollingThread, pIR);
+
+
 
             if (Properties.Settings.Default.ShowOB) obv.Show();
 
@@ -1154,6 +1164,25 @@ namespace IRTicker {
                     ParseDCE_IR("XBT", Properties.Settings.Default.SlackNameCurrency, false);
                 }
 
+                // let's get all the closed orders and notify the user if there are new ones
+                foreach (string crypto in DCEs["IR"].PrimaryCurrencyList) {
+                    foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
+                        if (pIR != null) {
+                            //var cOrders = pIR.GetClosedOrders(crypto, fiat);
+                            /*if (cOrders != null) {
+
+                                synchronizationContext.Post(new SendOrPostCallback(o => {
+
+                                    drawClosedOrders((Task<Page<BankHistoyOrder>>)o.Result).Data);
+                                }), cOrders);*/
+                        }
+
+                    }
+                }
+
+                pIR.GetClosedOrders("XBT", "AUD");
+
+
                 // let's check the IR spread.  Cycle through all the "_Spread" labels
 
                 if (Properties.Settings.Default.NegativeSpread) {
@@ -2027,13 +2056,27 @@ namespace IRTicker {
                         !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) &&
                         !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
 
-                        pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"]);
+                        pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
                         IRAccount_button.Enabled = true;
                     }
                     else if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
                         IRAccount_button.Enabled = false;
                     }
 
+                    if (!string.IsNullOrEmpty(TelegramCode_textBox.Text)) {
+
+                        Properties.Settings.Default.TelegramCode = TelegramCode_textBox.Text;
+                        if (TGBot == null) {
+                            TGBot = new TelegramBot();
+                            pIR.setTGBot(TGBot);
+                        }
+                    }
+                    else {
+                        TGBot = null;  // hopefully this will dispose of the bot and it will responding..
+                        pIR.setTGBot(null);
+                        Properties.Settings.Default.TelegramCode = "";
+                        Properties.Settings.Default.TelegramChatID = 0;
+                    }
 
                     Properties.Settings.Default.Save();
                     Main.Visible = true;
@@ -2812,7 +2855,7 @@ namespace IRTicker {
             Properties.Settings.Default.IRAPIPubKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).pubKey;
             Properties.Settings.Default.IRAPIPrivKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).privKey;
 
-            pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"]);
+            pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
         }
     }
 }

@@ -31,6 +31,8 @@
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
             this.IRAccountSettings_groupBox = new System.Windows.Forms.GroupBox();
+            this.TelegramCode_textBox = new System.Windows.Forms.TextBox();
+            this.TelegramCode_label = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.EditKeys_button = new System.Windows.Forms.Button();
             this.APIKeys_comboBox = new System.Windows.Forms.ComboBox();
@@ -489,22 +491,44 @@
             // IRAccountSettings_groupBox
             // 
             this.IRAccountSettings_groupBox.BackColor = System.Drawing.Color.Gainsboro;
+            this.IRAccountSettings_groupBox.Controls.Add(this.TelegramCode_textBox);
+            this.IRAccountSettings_groupBox.Controls.Add(this.TelegramCode_label);
             this.IRAccountSettings_groupBox.Controls.Add(this.label2);
             this.IRAccountSettings_groupBox.Controls.Add(this.EditKeys_button);
             this.IRAccountSettings_groupBox.Controls.Add(this.APIKeys_comboBox);
             this.IRAccountSettings_groupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IRAccountSettings_groupBox.Location = new System.Drawing.Point(76, 633);
             this.IRAccountSettings_groupBox.Name = "IRAccountSettings_groupBox";
-            this.IRAccountSettings_groupBox.Size = new System.Drawing.Size(461, 102);
+            this.IRAccountSettings_groupBox.Size = new System.Drawing.Size(461, 121);
             this.IRAccountSettings_groupBox.TabIndex = 37;
             this.IRAccountSettings_groupBox.TabStop = false;
             this.IRAccountSettings_groupBox.Text = "IR account";
+            // 
+            // TelegramCode_textBox
+            // 
+            this.TelegramCode_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TelegramCode_textBox.Location = new System.Drawing.Point(174, 90);
+            this.TelegramCode_textBox.Name = "TelegramCode_textBox";
+            this.TelegramCode_textBox.Size = new System.Drawing.Size(249, 20);
+            this.TelegramCode_textBox.TabIndex = 37;
+            this.IRTickerTT_generic.SetToolTip(this.TelegramCode_textBox, "Leave blank to disable Telegram integration");
+            // 
+            // TelegramCode_label
+            // 
+            this.TelegramCode_label.AccessibleName = "";
+            this.TelegramCode_label.AutoSize = true;
+            this.TelegramCode_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TelegramCode_label.Location = new System.Drawing.Point(24, 93);
+            this.TelegramCode_label.Name = "TelegramCode_label";
+            this.TelegramCode_label.Size = new System.Drawing.Size(144, 16);
+            this.TelegramCode_label.TabIndex = 42;
+            this.TelegramCode_label.Text = "Telegram secret code:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(24, 33);
+            this.label2.Location = new System.Drawing.Point(24, 26);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(229, 16);
             this.label2.TabIndex = 43;
@@ -513,7 +537,7 @@
             // EditKeys_button
             // 
             this.EditKeys_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EditKeys_button.Location = new System.Drawing.Point(326, 60);
+            this.EditKeys_button.Location = new System.Drawing.Point(326, 53);
             this.EditKeys_button.Name = "EditKeys_button";
             this.EditKeys_button.Size = new System.Drawing.Size(97, 23);
             this.EditKeys_button.TabIndex = 42;
@@ -527,7 +551,7 @@
             this.APIKeys_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.APIKeys_comboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.APIKeys_comboBox.FormattingEnabled = true;
-            this.APIKeys_comboBox.Location = new System.Drawing.Point(19, 60);
+            this.APIKeys_comboBox.Location = new System.Drawing.Point(19, 53);
             this.APIKeys_comboBox.Name = "APIKeys_comboBox";
             this.APIKeys_comboBox.Size = new System.Drawing.Size(276, 24);
             this.APIKeys_comboBox.TabIndex = 32;
@@ -537,7 +561,7 @@
             // SettingsSeparator_label
             // 
             this.SettingsSeparator_label.AutoSize = true;
-            this.SettingsSeparator_label.Location = new System.Drawing.Point(90, 749);
+            this.SettingsSeparator_label.Location = new System.Drawing.Point(90, 754);
             this.SettingsSeparator_label.Name = "SettingsSeparator_label";
             this.SettingsSeparator_label.Size = new System.Drawing.Size(409, 13);
             this.SettingsSeparator_label.TabIndex = 41;
@@ -5456,6 +5480,8 @@
         private System.Windows.Forms.Label AccountPMGT_value;
         private System.Windows.Forms.Label AccountPMGT_label;
         private System.Windows.Forms.NotifyIcon IRT_notification;
+        private System.Windows.Forms.TextBox TelegramCode_textBox;
+        private System.Windows.Forms.Label TelegramCode_label;
     }
 }
 
