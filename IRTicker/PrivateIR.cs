@@ -32,7 +32,7 @@ namespace IRTicker {
         public string Crypto = "XBT";
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBids;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
-        ConcurrentBag<Guid> openOrderGuids = new ConcurrentBag<Guid>();
+        public ConcurrentDictionary<Guid, BankHistoryOrder> openOrders = new ConcurrentDictionary<Guid, BankHistoryOrder>();
 
         private DCE DCE_IR;
         private TelegramBot TGBot;
@@ -136,13 +136,13 @@ namespace IRTicker {
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
             Page<BankHistoryOrder> openOs = await IRclient.GetOpenOrdersAsync(enumCrypto, enumFiat, 1, 7);
-            
 
 
-            openOrderGuids = new ConcurrentBag<Guid>();  // clear the old one
+
+            openOrders.Clear(); // clear the old one
             foreach (BankHistoryOrder order in openOs.Data) {
                 if ((order.Status != OrderStatus.Open) && (order.Status != OrderStatus.PartiallyFilled)) continue;
-                openOrderGuids.Add(order.OrderGuid);
+                openOrders.TryAdd(order.OrderGuid, order);
             }
 
             return openOs;
@@ -278,7 +278,7 @@ namespace IRTicker {
                         }
                     }
 
-                    if (openOrderGuids.Contains(new Guid(order.Key))) {
+                    if (openOrders.ContainsKey(new Guid(order.Key))) {
                         includesMyOrder = true;
                     }
                 }
@@ -337,9 +337,9 @@ namespace IRTicker {
                     // this stuff doesn't work yet!  more testing and fixes needed.
                     // pulled this feature.  Would need to pull GetOpenOrders at every loop to make sure it wasn't our order at the top
                     bool OurOrderAtTop = false;  // let's try and discover if the best current order is a separate order made by this acccount.  If so, pretend it doesn't exist
-                    foreach (var openO in openOrderGuids) {
+                    foreach (var openO in openOrders) {
                         foreach (var topOrder in baiterBook.First().Value) {
-                            if (openO.ToString() == topOrder.Key) {
+                            if (openO.Key.ToString() == topOrder.Key) {
                                 OurOrderAtTop = true;
                                 Debug.Print("MBAIT: we have an order at the top already, let's try and ignore it - $" + topOrder.Value.Price);
                                 break;
@@ -412,8 +412,8 @@ namespace IRTicker {
                             if (!pricePoint.Value.ContainsKey(placedOrder.OrderGuid.ToString())) {  // before we check let's make sure our actual baiter order isn't here
                                 bool continueBaiterLoop = false;
                                 foreach (KeyValuePair<string, DCE.OrderBook_IR> orderAtPrice in pricePoint.Value) {
-                                    foreach (var openO in openOrderGuids) {
-                                        if ((orderAtPrice.Key == openO.ToString()) && (orderAtPrice.Key != placedOrder.OrderGuid.ToString())) {  // it's ours, but not the bait order
+                                    foreach (var openO in openOrders) {
+                                        if ((orderAtPrice.Key == openO.Key.ToString()) && (orderAtPrice.Key != placedOrder.OrderGuid.ToString())) {  // it's ours, but not the bait order
                                             continueBaiterLoop = true;  // the order at the spread is ours, let's not compete against it.
                                             //Debug.Print("MBAIT: It appears an order at price $" + pricePoint.Key + " is our own.  Ignore and move to the next price level");
                                             break;
@@ -426,8 +426,8 @@ namespace IRTicker {
                                 if (!continueBaiterLoop) {  // OK, we didn't find it.  let's grab the openOrders and search again, maybe we only recently created it
                                     var openOs = await GetOpenOrders(Crypto, DCE_IR.CurrentSecondaryCurrency);
                                     foreach (KeyValuePair<string, DCE.OrderBook_IR> orderAtPrice in pricePoint.Value) {
-                                        foreach (var openO in openOrderGuids) {
-                                            if ((orderAtPrice.Key == openO.ToString()) && (orderAtPrice.Key != placedOrder.OrderGuid.ToString())) {  // it's ours, but not the bait order
+                                        foreach (var openO in openOrders) {
+                                            if ((orderAtPrice.Key == openO.Key.ToString()) && (orderAtPrice.Key != placedOrder.OrderGuid.ToString())) {  // it's ours, but not the bait order
                                                 continueBaiterLoop = true;  // the order at the spread is ours, let's not compete against it.
                                                 Debug.Print("MBAIT: After pulling new open orders, it appears an order at price $" + pricePoint.Key + " is our own.  Ignore and move to the next price level");
                                                 break;
@@ -482,7 +482,7 @@ namespace IRTicker {
                             if (closedO.OrderGuid == placedOrder.OrderGuid) {
                                 if (closedO.Status == OrderStatus.Filled) {
                                     Debug.Print("MBAIT: our order got filled.  sweet.");
-                                    IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Order filled!"));
+                                    IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Order filled!"), true);
                                     placedOrder = null;
                                     IRT.marketBaiterActive = false;
                                     break;  // closed orders foreach

@@ -156,7 +156,7 @@ namespace IRTicker {
             }
 
             if (!string.IsNullOrEmpty(Properties.Settings.Default.TelegramCode)) {
-                TGBot = new TelegramBot();
+                TGBot = new TelegramBot(pIR, DCEs["IR"]);
             }
 
             if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
@@ -1168,7 +1168,7 @@ namespace IRTicker {
                 foreach (string crypto in DCEs["IR"].PrimaryCurrencyList) {
                     foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
                         if (pIR != null) {
-                            //var cOrders = pIR.GetClosedOrders(crypto, fiat);
+                            pIR.GetClosedOrders(crypto, fiat).Wait();
                             /*if (cOrders != null) {
 
                                 synchronizationContext.Post(new SendOrPostCallback(o => {
@@ -1180,7 +1180,7 @@ namespace IRTicker {
                     }
                 }
 
-                pIR.GetClosedOrders("XBT", "AUD");
+                //pIR.GetClosedOrders("XBT", "AUD");
 
 
                 // let's check the IR spread.  Cycle through all the "_Spread" labels
@@ -2067,7 +2067,7 @@ namespace IRTicker {
 
                         Properties.Settings.Default.TelegramCode = TelegramCode_textBox.Text;
                         if (TGBot == null) {
-                            TGBot = new TelegramBot();
+                            TGBot = new TelegramBot(pIR, DCEs["IR"]);
                             pIR.setTGBot(TGBot);
                         }
                     }

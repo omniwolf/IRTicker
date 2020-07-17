@@ -562,12 +562,18 @@ namespace IRTicker {
             }), endPoints);
         }
 
-        public void notificationFromMarketBaiter(Tuple<string, string> notifText) {
+        public void notificationFromMarketBaiter(Tuple<string, string> notifText, bool sendToTelegram = false) {
             synchronizationContext.Post(new SendOrPostCallback(o => {
                 Tuple<string, string> notif = (Tuple<string, string>)o;
                 showBalloon(notif.Item1, notif.Item2);
-                if (TGBot != null) TGBot.SendMessage(notif.Item2);
             }), notifText);
+
+            if (sendToTelegram  && (TGBot != null)) {
+                synchronizationContext.Post(new SendOrPostCallback(o => {
+                    Tuple<string, string> notif = (Tuple<string, string>)o;
+                    TGBot.SendMessage("*" + notif.Item1 + ":* " + notif.Item2.Replace("!", "\\!"));
+                }), notifText);
+            }
         }
 
         // this method checks the limit price, and if it would make the order a market order, then highlight buttons and shit
