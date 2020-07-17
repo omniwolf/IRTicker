@@ -21,7 +21,7 @@ namespace IRTicker
 
         static TelegramBotClient botClient;
         int authStage = 0;  // 0 = not authed, 1 = awaiting code, 2 = code accepted
-        private bool closedOrdersFirstRun = true;
+        public bool closedOrdersFirstRun = true;
         private List<Guid> notifiedOrders = new List<Guid>();
 
         public TelegramBot() {
