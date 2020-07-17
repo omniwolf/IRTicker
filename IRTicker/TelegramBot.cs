@@ -26,7 +26,7 @@ namespace IRTicker
         CommandChosen commandChosen = CommandChosen.Nothing;
         int commandSubStage = 0;
       
-        private ConcurrentDictionary<string, bool> closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
+        public ConcurrentDictionary<string, bool> closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
         private ConcurrentDictionary<string, List<Guid>> notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();
 
         public TelegramBot(PrivateIR _pIR, DCE _DCE_IR) {

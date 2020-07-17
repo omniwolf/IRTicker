@@ -2853,6 +2853,7 @@ namespace IRTicker {
 
             if (Properties.Settings.Default.APIFriendly != ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName) {
                 // a new key has been chosen, let's reset the closed orders.
+                TGBot.closedOrdersFirstRun.Clear();
             }
 
             Properties.Settings.Default.APIFriendly = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName;

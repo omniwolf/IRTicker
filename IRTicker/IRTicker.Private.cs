@@ -571,7 +571,7 @@ namespace IRTicker {
             if (sendToTelegram  && (TGBot != null)) {
                 synchronizationContext.Post(new SendOrPostCallback(o => {
                     Tuple<string, string> notif = (Tuple<string, string>)o;
-                    TGBot.SendMessage("*" + notif.Item1 + ":* " + notif.Item2.Replace("!", "\\!"));
+                    TGBot.SendMessage("*" + notif.Item1 + ":* " + notif.Item2.Replace("!", "\\!"), Telegram.Bot.Types.Enums.ParseMode.MarkdownV2);
                 }), notifText);
             }
         }
