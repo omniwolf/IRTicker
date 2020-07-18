@@ -24,13 +24,14 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("oeui");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("oeui");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
             this.IRAccountSettings_groupBox = new System.Windows.Forms.GroupBox();
+            this.TGReset_button = new System.Windows.Forms.Button();
             this.TelegramCode_textBox = new System.Windows.Forms.TextBox();
             this.TelegramCode_label = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -491,6 +492,7 @@
             // IRAccountSettings_groupBox
             // 
             this.IRAccountSettings_groupBox.BackColor = System.Drawing.Color.Gainsboro;
+            this.IRAccountSettings_groupBox.Controls.Add(this.TGReset_button);
             this.IRAccountSettings_groupBox.Controls.Add(this.TelegramCode_textBox);
             this.IRAccountSettings_groupBox.Controls.Add(this.TelegramCode_label);
             this.IRAccountSettings_groupBox.Controls.Add(this.label2);
@@ -504,12 +506,24 @@
             this.IRAccountSettings_groupBox.TabStop = false;
             this.IRAccountSettings_groupBox.Text = "IR account";
             // 
+            // TGReset_button
+            // 
+            this.TGReset_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TGReset_button.Location = new System.Drawing.Point(361, 87);
+            this.TGReset_button.Name = "TGReset_button";
+            this.TGReset_button.Size = new System.Drawing.Size(84, 23);
+            this.TGReset_button.TabIndex = 44;
+            this.TGReset_button.Text = "Reset bot";
+            this.IRTickerTT_generic.SetToolTip(this.TGReset_button, "Clicking this button will un-authenticate IR Ticker with any Telegram chat");
+            this.TGReset_button.UseVisualStyleBackColor = true;
+            this.TGReset_button.Click += new System.EventHandler(this.TGReset_button_Click);
+            // 
             // TelegramCode_textBox
             // 
             this.TelegramCode_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TelegramCode_textBox.Location = new System.Drawing.Point(174, 90);
             this.TelegramCode_textBox.Name = "TelegramCode_textBox";
-            this.TelegramCode_textBox.Size = new System.Drawing.Size(249, 20);
+            this.TelegramCode_textBox.Size = new System.Drawing.Size(168, 20);
             this.TelegramCode_textBox.TabIndex = 37;
             this.IRTickerTT_generic.SetToolTip(this.TelegramCode_textBox, "Leave blank to disable Telegram integration");
             // 
@@ -537,9 +551,9 @@
             // EditKeys_button
             // 
             this.EditKeys_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EditKeys_button.Location = new System.Drawing.Point(326, 53);
+            this.EditKeys_button.Location = new System.Drawing.Point(360, 52);
             this.EditKeys_button.Name = "EditKeys_button";
-            this.EditKeys_button.Size = new System.Drawing.Size(97, 23);
+            this.EditKeys_button.Size = new System.Drawing.Size(84, 23);
             this.EditKeys_button.TabIndex = 42;
             this.EditKeys_button.Text = "Edit keys";
             this.EditKeys_button.UseVisualStyleBackColor = true;
@@ -553,7 +567,7 @@
             this.APIKeys_comboBox.FormattingEnabled = true;
             this.APIKeys_comboBox.Location = new System.Drawing.Point(19, 53);
             this.APIKeys_comboBox.Name = "APIKeys_comboBox";
-            this.APIKeys_comboBox.Size = new System.Drawing.Size(276, 24);
+            this.APIKeys_comboBox.Size = new System.Drawing.Size(323, 24);
             this.APIKeys_comboBox.TabIndex = 32;
             this.APIKeys_comboBox.ValueMember = "friendlyName";
             this.APIKeys_comboBox.SelectedIndexChanged += new System.EventHandler(this.APIKeys_comboBox_SelectedIndexChanged);
@@ -676,7 +690,7 @@
             this.SlackNameCurrency_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.SlackNameCurrency_comboBox.Enabled = false;
             this.SlackNameCurrency_comboBox.FormattingEnabled = true;
-            this.SlackNameCurrency_comboBox.Location = new System.Drawing.Point(329, 186);
+            this.SlackNameCurrency_comboBox.Location = new System.Drawing.Point(350, 186);
             this.SlackNameCurrency_comboBox.Name = "SlackNameCurrency_comboBox";
             this.SlackNameCurrency_comboBox.Size = new System.Drawing.Size(94, 24);
             this.SlackNameCurrency_comboBox.TabIndex = 35;
@@ -698,7 +712,7 @@
             // 
             this.Slack_checkBox.AccessibleName = "";
             this.Slack_checkBox.AutoSize = true;
-            this.Slack_checkBox.Location = new System.Drawing.Point(408, 31);
+            this.Slack_checkBox.Location = new System.Drawing.Point(429, 31);
             this.Slack_checkBox.Name = "Slack_checkBox";
             this.Slack_checkBox.Size = new System.Drawing.Size(15, 14);
             this.Slack_checkBox.TabIndex = 20;
@@ -711,7 +725,7 @@
             this.slackToken_textBox.Location = new System.Drawing.Point(19, 90);
             this.slackToken_textBox.Name = "slackToken_textBox";
             this.slackToken_textBox.PasswordChar = '●';
-            this.slackToken_textBox.Size = new System.Drawing.Size(404, 20);
+            this.slackToken_textBox.Size = new System.Drawing.Size(425, 20);
             this.slackToken_textBox.TabIndex = 23;
             this.slackToken_textBox.UseSystemPasswordChar = true;
             // 
@@ -742,7 +756,7 @@
             // slackDefaultNameTextBox
             // 
             this.slackDefaultNameTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.slackDefaultNameTextBox.Location = new System.Drawing.Point(248, 149);
+            this.slackDefaultNameTextBox.Location = new System.Drawing.Point(269, 149);
             this.slackDefaultNameTextBox.Name = "slackDefaultNameTextBox";
             this.slackDefaultNameTextBox.Size = new System.Drawing.Size(175, 20);
             this.slackDefaultNameTextBox.TabIndex = 28;
@@ -753,7 +767,7 @@
             // 
             this.slackNameChangeCheckBox.AccessibleName = "";
             this.slackNameChangeCheckBox.AutoSize = true;
-            this.slackNameChangeCheckBox.Location = new System.Drawing.Point(408, 128);
+            this.slackNameChangeCheckBox.Location = new System.Drawing.Point(429, 128);
             this.slackNameChangeCheckBox.Name = "slackNameChangeCheckBox";
             this.slackNameChangeCheckBox.Size = new System.Drawing.Size(15, 14);
             this.slackNameChangeCheckBox.TabIndex = 27;
@@ -4073,7 +4087,7 @@
             this.AccountOpenOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountOpenOrders_listview.HideSelection = false;
             this.AccountOpenOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
+            listViewItem2});
             this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountOpenOrders_listview.MultiSelect = false;
             this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";
@@ -5482,6 +5496,7 @@
         private System.Windows.Forms.NotifyIcon IRT_notification;
         private System.Windows.Forms.TextBox TelegramCode_textBox;
         private System.Windows.Forms.Label TelegramCode_label;
+        public System.Windows.Forms.Button TGReset_button;
     }
 }
 

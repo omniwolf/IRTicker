@@ -127,6 +127,12 @@ namespace IRTicker {
         /// <param name="pair"></param>
         /// <returns></returns>
         public static Tuple<string, string> SplitPair(string pair) {
+
+            // if it doesn't contain a dash, or the dash is the first or last char...
+            if (!pair.Contains("-") || (pair.IndexOf("-") == 0) || (pair.Length - 1 <= pair.IndexOf("-"))) {
+                return new Tuple<string, string>("", "");
+            }
+
             string primary = pair.Substring(0, pair.IndexOf('-'));
             string secondary = pair.Substring(pair.IndexOf('-') + 1, pair.Length - pair.IndexOf('-') - 1);
             return new Tuple<string, string>(primary, secondary);

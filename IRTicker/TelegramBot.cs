@@ -12,6 +12,7 @@ using IndependentReserve.DotNetClientApi.Data;
 using System.Xml.XPath;
 using System.Runtime.Remoting;
 using System.Collections.Concurrent;
+using Telegram.Bot.Requests;
 
 namespace IRTicker
 {
@@ -20,31 +21,39 @@ namespace IRTicker
 
         PrivateIR pIR;
         DCE DCE_IR;
+        IRTicker IRT;
 
         static TelegramBotClient botClient;
-        int authStage = 0;  // 0 = not authed, 1 = awaiting code, 2 = code accepted
-        CommandChosen commandChosen = CommandChosen.Nothing;
-        int commandSubStage = 0;
-      
+        TelegramState TGstate;
+
         public ConcurrentDictionary<string, bool> closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
         private ConcurrentDictionary<string, List<Guid>> notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();
 
-        public TelegramBot(PrivateIR _pIR, DCE _DCE_IR) {
+        public TelegramBot(PrivateIR _pIR, DCE _DCE_IR, IRTicker _IRT) {
 
             DCE_IR = _DCE_IR;
             pIR = _pIR;
+            IRT = _IRT;
 
+            TGstate = new TelegramState(this);
             botClient = new TelegramBotClient("679618862:AAGxhT7BZtP0KlR13o7SKaCCNZjfDSaJqv0");
 
             botClient.OnMessage += Bot_OnMessage;
             botClient.StartReceiving();
 
             if (Properties.Settings.Default.TelegramChatID != 0) {
-                authStage = 2;
-                botClient.SendTextMessageAsync(606418720, "I'm alive!", Telegram.Bot.Types.Enums.ParseMode.Default, true, false, 0, null);
+                TGstate.authStage = 2;
+                TGstate.ResetMenu();
             }
 
 
+        }
+
+        public void ResetBot() {
+            TGstate.authStage = 0;
+            Properties.Settings.Default.TelegramChatID = 0;
+            TGstate.commandChosen = CommandChosen.Nothing;
+            Properties.Settings.Default.Save();
         }
 
         async void Bot_OnMessage(object sender, MessageEventArgs e) {
@@ -52,120 +61,421 @@ namespace IRTicker
             if (pIR == null) return;  // don't try anything if we don't have a legit account to login to
 
             if (e.Message.Text != null) {
-                Console.WriteLine($"Received a text message in chat {e.Message.Chat.Id}.");
+                Console.WriteLine($"Received a text message in chat {e.Message.Chat.Id}. - " + e.Message.Text);
 
-                switch (commandChosen) {
+                // before we go through too much, let's just check if they're quitting
+                if (TGstate.commandChosen != CommandChosen.Nothing) {
+                    if (e.Message.Text.ToLower() == "quit") {
+                        TGstate.ResetMenu();
+                        return;
+                    }
+                }
+
+                switch (TGstate.commandChosen) {
 
                     case CommandChosen.Nothing:
-                        if ((Properties.Settings.Default.TelegramChatID == 0) && (authStage == 0)) {
-                            await botClient.SendTextMessageAsync(e.Message.Chat.Id, "Hello, let's authenticate you.  Please enter your secret code", Telegram.Bot.Types.Enums.ParseMode.Default);
-                            authStage = 1;
-                            return;
+                        if (TGstate.authStage == 0) {
+                            Properties.Settings.Default.TelegramChatID = 0;
+                            await botClient.SendTextMessageAsync(e.Message.Chat.Id, "Hello " + e.Message.Chat.FirstName + ", let's authenticate you.  Please enter your secret code. 🔐", Telegram.Bot.Types.Enums.ParseMode.Default);
+                            TGstate.authStage = 1;
                         }
-
-                        if (authStage == 1) {
+                        else if (TGstate.authStage == 1) {
                             if (e.Message.Text == Properties.Settings.Default.TelegramCode) {
-                                await botClient.SendTextMessageAsync(e.Message.Chat.Id, "Code accepted, you are now authenticated", Telegram.Bot.Types.Enums.ParseMode.Default);
-                                authStage = 2;
                                 Properties.Settings.Default.TelegramChatID = e.Message.Chat.Id;
                                 Properties.Settings.Default.Save();
+                                TGstate.authStage = 2;
+                                await SendMessage("Code accepted, you are now authenticated! ✅");
+                                TGstate.ResetMenu();
                             }
                             else {
-                                await botClient.SendTextMessageAsync(e.Message.Chat.Id, "Code NOT accepted");
-                                authStage = 0;
+                                await botClient.SendTextMessageAsync(e.Message.Chat.Id, "⚠️ Code NOT accepted ⚠️");
+                                TGstate.authStage = 0;
                             }
-                            return;
                         }
+                        else if (TGstate.authStage == 2) {
 
-                        if (authStage == 2) {
+                            if (e.Message.Chat.Id != Properties.Settings.Default.TelegramChatID) {
+                                Debug.Print("TGBot: intercepted a message from an unrecognised chat!  ID: " + e.Message.Chat.Id);
+                                await botClient.SendTextMessageAsync(e.Message.Chat.Id, "Hi, someone else has already authenticated with this bot.  If you're in control of IR Ticker, reset the Telegram settings in IR Ticker to re-autheticate.");
+                                return;
+                            }
 
                             switch (e.Message.Text.ToLower()) {
+                                case "help":
+                                    SendMessage("ℹ️ *Command List*:" + Environment.NewLine + Environment.NewLine +
+                                        "*Forget*             => Will unauthenticate the bot" + Environment.NewLine +
+                                        "*Summary <fiat>*   => Market price summary (eg 'summary aud')" + Environment.NewLine + 
+                                        "*Market order*    => Place a market order" + Environment.NewLine +
+                                        "*Cancel*             => Cancel an open order" + Environment.NewLine +
+                                        "*Baiter*             => Market baiter menu");
+                                    break;
+
                                 case "forget":
-                                    await SendMessage("I have forgotten you.You will need to reauthenticate.To do so send any message");
-                                    authStage = 0;
-                                    Properties.Settings.Default.TelegramChatID = 0;
-                                    Properties.Settings.Default.Save();
+                                    await SendMessage("I have forgotten you.  You will need to reauthenticate.  To do so send any message.");
+                                    ResetBot();
+                                    break;
+
+                                case "market":
+                                case "market order":
+                                    SendMessage("`Market Order` :: ❓ Specify which pair (eg BTC-AUD):");
+                                    TGstate.commandChosen = CommandChosen.MarketOrder;
+                                    TGstate.commandSubStage = 1;
                                     break;
 
                                 case "cancel":
-                                    commandChosen = CommandChosen.CancelOrder;
-                                    SendMessage("Cancel order :: Specify which pair (eg BTC-AUD):", Telegram.Bot.Types.Enums.ParseMode.MarkdownV2);
-                                    commandSubStage = 1;
+                                    TGstate.commandChosen = CommandChosen.CancelOrder;
+                                    SendMessage("`Cancel Order` :: ❓ Specify which pair (eg BTC-AUD):");
+                                    TGstate.commandSubStage = 1;
+                                    break;
+
+                                case "summary":
+                                case "summary aud":
+                                    MarketSummary_Sub("AUD");
+                                    break;
+
+                                case "summary usd":
+                                    MarketSummary_Sub("USD");
+                                    break;
+
+                                case "summary nzd":
+                                    MarketSummary_Sub("NZD");
+                                    break;
+
+                                case "baiter":
+                                    if (pIR.marketBaiterActive) {
+                                        SendMessage("`Market Baiter` :: ⬆️ Market baiter is currently *active*" + Environment.NewLine +
+                                            "  ❓ Do you wish to stop it? (y/n)");
+                                        TGstate.commandSubStage = 1;
+                                        TGstate.commandChosen = CommandChosen.StopMarketBaiter;
+                                    }
+                                    else {
+                                        await SendMessage("`Market Baiter` :: ⬇️ Market baiter is currently *inactive*.");
+                                        TGstate.ResetMenu();
+                                    }
                                     break;
 
                                 default:
-                                    await SendMessage("*Command List*" + Environment.NewLine + Environment.NewLine +
-                                        "Forget             => Will unauthenticate the bot" + Environment.NewLine +
-                                        "Cancel             => Will cancel the most recently placed order"
-                                        , Telegram.Bot.Types.Enums.ParseMode.MarkdownV2);
+                                    TGstate.ResetMenu();  // sends the top menu message
                                     break;
                             }
                         }
+                        break;
 
+                    case CommandChosen.MarketOrder:
+
+                        if (TGstate.commandSubStage == 1) { // picking the pair
+                            Tuple<string, string> pairTup = verifyChosenPair(e.Message.Text, "Market Order");
+                            if (pairTup.Item1 != "") {
+                                TGstate.ChosenPair = pairTup;
+                                SendMessage("`Market Order` :: ❓ " + (pairTup.Item1 == "XBT" ? "BTC" : pairTup.Item1) + "-" + pairTup.Item2 + " chosen.  Is this a buy or a sell? (b/s)");
+                                TGstate.commandSubStage = 2;
+                            }  // no need for an else clause here, the verifychosenPair() sub handles it
+                        }
+                        else if (TGstate.commandSubStage == 2) {
+                            if (e.Message.Text.ToLower() == "b") {
+                                Dictionary<string, DCE.MarketSummary> mSummaries = DCE_IR.GetCryptoPairs();
+                                decimal bestOffer = -1;
+                                // if they have chosen a fiat we're not currently pulling, let's grab it manually.
+                                if (!mSummaries.ContainsKey(TGstate.ChosenPair.Item1 + "-" + TGstate.ChosenPair.Item2) ||
+                                    DCE_IR.CurrentSecondaryCurrency != TGstate.ChosenPair.Item2) {
+                                    IRT.ParseDCE_IR(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, false);
+                                    bestOffer = DCE_IR.GetCryptoPairs()[TGstate.ChosenPair.Item1 + "-" + TGstate.ChosenPair.Item2].CurrentLowestOfferPrice;
+                                }
+                                else {
+                                    bestOffer = mSummaries[TGstate.ChosenPair.Item1 + "-" + TGstate.ChosenPair.Item2].CurrentLowestOfferPrice;
+                                }
+
+                                SendMessage("`Market Order` :: BUY order chosen. Current best bid is: $" + Utilities.FormatValue(bestOffer) + Environment.NewLine + Environment.NewLine +
+                                    "  ❓ How much " + (TGstate.ChosenPair.Item1 == "XBT" ? "BTC" : TGstate.ChosenPair.Item1) + " do you want to buy?");
+
+                                TGstate.commandSubStage = 30;
+                            }
+                            else if (e.Message.Text.ToLower() == "s") {
+                                Dictionary<string, DCE.MarketSummary> mSummaries = DCE_IR.GetCryptoPairs();
+                                decimal bestBid = -1;
+                                // if they have chosen a fiat we're not currently pulling, let's grab it manually.
+                                if (!mSummaries.ContainsKey(TGstate.ChosenPair.Item1 + "-" + TGstate.ChosenPair.Item2) ||
+                                    DCE_IR.CurrentSecondaryCurrency != TGstate.ChosenPair.Item2) {
+                                    IRT.ParseDCE_IR(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, false);
+                                    bestBid = DCE_IR.GetCryptoPairs()[TGstate.ChosenPair.Item1 + "-" + TGstate.ChosenPair.Item2].CurrentHighestBidPrice;
+                                }
+                                else {
+                                    bestBid = mSummaries[TGstate.ChosenPair.Item1 + "-" + TGstate.ChosenPair.Item2].CurrentHighestBidPrice;
+                                }
+
+                                SendMessage("`Market Order` :: SELL order chosen. Current best bid is: $" + Utilities.FormatValue(bestBid) + Environment.NewLine + Environment.NewLine +
+                                    "  ❓ How much " + (TGstate.ChosenPair.Item1 == "XBT" ? "BTC" : TGstate.ChosenPair.Item1) + " do you want to sell?");
+
+                                TGstate.commandSubStage = 40;
+                            }
+                            else {
+                                SendMessage("`Market Order` :: ⚠️ Unrecognised command.  Try again or 'quit' to exit");
+                            }
+                        }
+                        else if (TGstate.commandSubStage == 30) {  // 30 is for buy orders, let's parse the vol
+                            if (decimal.TryParse(e.Message.Text, out decimal vol)) {
+
+                                // if they have chosen a fiat we're not currently pulling, let's grab it manually.
+                                if (DCE_IR.CurrentSecondaryCurrency != TGstate.ChosenPair.Item2) {
+                                    IRT.ParseDCE_IR(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, false);
+                                }
+                                decimal bestOffer = DCE_IR.GetCryptoPairs()[TGstate.ChosenPair.Item1 + "-" + TGstate.ChosenPair.Item2].CurrentLowestOfferPrice;
+
+                                SendMessage("`Market Order` :: You wish to place a market *BUY* order for " + (TGstate.ChosenPair.Item1 == "XBT" ? "BTC" : TGstate.ChosenPair.Item1) + "-" + TGstate.ChosenPair.Item2 + " of size " + vol + "." + Environment.NewLine +
+                                    "  Current best offer is: $" + Utilities.FormatValue(bestOffer) + Environment.NewLine +
+                                    "  Order approx value: $" + Utilities.FormatValue(bestOffer * vol) + Environment.NewLine + Environment.NewLine +
+                                    "❓ Do you wish to proceed? (y/n)");
+                                TGstate.Volume = vol;
+                                TGstate.commandSubStage = 31;
+                            }
+                            else {
+                                SendMessage("`Market Order` :: ⚠️ Invalid volume, please try again or 'quit' to exit.");
+                            }
+                        }
+                        else if (TGstate.commandSubStage == 31) {  // 31 is to place the buy order (or not)
+                            if (e.Message.Text.ToLower() == "y") {
+                                BankOrder marketO;
+                                try {
+                                    marketO = await pIR.PlaceMarketOrder(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, OrderType.MarketBid, TGstate.Volume);
+                                }
+                                catch (Exception ex) {
+                                    Debug.Print("TGBot: couldn't place the market buy order: " + ex.Message);
+                                    await SendMessage("`Market Order` :: ⚠️ Order failed for the following reason:" + Environment.NewLine +
+                                        ex.Message);
+                                    TGstate.ResetMenu();
+                                    return;
+                                }
+                                if ((marketO.Status == OrderStatus.Filled) || (marketO.Status == OrderStatus.Open)) {
+                                    await SendMessage("`Market Order` :: ✅ Order placed!");
+                                }
+                                else {
+                                    await SendMessage("`Market Order` :: ⁉️ Order successful, but not filled?  Status: " + marketO.Status);
+                                }
+                            }
+                            else {
+                                await SendMessage("`Market Order` :: Order not placed.");
+                            }
+                            TGstate.ResetMenu();
+                        }
+                        else if (TGstate.commandSubStage == 40) {  // 40 is for sell orders, let's parse the vol
+                            if (decimal.TryParse(e.Message.Text, out decimal vol)) {
+                                // if they have chosen a fiat we're not currently pulling, let's grab it manually.
+                                if (DCE_IR.CurrentSecondaryCurrency != TGstate.ChosenPair.Item2) {
+                                    IRT.ParseDCE_IR(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, false);
+                                }
+                                decimal bestBid = DCE_IR.GetCryptoPairs()[TGstate.ChosenPair.Item1 + "-" + TGstate.ChosenPair.Item2].CurrentHighestBidPrice;
+                                SendMessage("`Market Order` :: You wish to place a market *SELL* order for " + (TGstate.ChosenPair.Item1 == "XBT" ? "BTC" : TGstate.ChosenPair.Item1) + "-" + TGstate.ChosenPair.Item2 + " of size " + vol + "." + Environment.NewLine +
+                                    "  Current best bid is: $" + Utilities.FormatValue(bestBid) + Environment.NewLine +
+                                    "  Order approx value: $" + Utilities.FormatValue(bestBid * vol) + Environment.NewLine + Environment.NewLine +
+                                    "❓ Do you wish to proceed? (y/n)");
+
+                                TGstate.Volume = vol;
+                                TGstate.commandSubStage = 41;
+                            }
+                            else {
+                                SendMessage("`Market Order` :: ⚠️ Invalid volume, please try again or 'quit' to exit.");
+                            }
+                        }
+                        else if (TGstate.commandSubStage == 41) {  // 41 is to place the sell order (or not)
+                            if (e.Message.Text.ToLower() == "y") {
+                                BankOrder marketO;
+                                try {
+                                    marketO = await pIR.PlaceMarketOrder(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, OrderType.MarketOffer, TGstate.Volume);
+                                }
+                                catch (Exception ex) {
+                                    Debug.Print("TGBot: couldn't place the market sell order: " + ex.Message);
+                                    await SendMessage("`Market Order` :: ⚠️ Order failed for the following reason:" + Environment.NewLine +
+                                        ex.Message);
+                                    TGstate.ResetMenu();
+                                    return;
+                                }
+                                if ((marketO.Status == OrderStatus.Filled) || (marketO.Status == OrderStatus.Open)) {
+                                    await SendMessage("`Market Order` :: ✅ Order placed!");
+                                }
+                                else {
+                                    await SendMessage("`Market Order` :: ⁉️ Order successful, but not filled?  Status: " + marketO.Status);
+                                }
+                            }
+                            else {
+                                await SendMessage("`Market Order` :: Order not placed.");
+                            }
+                            TGstate.ResetMenu();
+                        }
                         break;
 
                     case CommandChosen.CancelOrder:
-                        if (e.Message.Text.ToLower() == "quit") {
-                            commandChosen = CommandChosen.Nothing;
-                            commandSubStage = 0;
-                            SendMessage("You have quit the Cancel order menu.");
-                            return;
-                        }
 
-                        if (commandSubStage == 1) {  // 1 is picking the pair
-                            string crypto = "";
-                            string fiat = "";
+                        if (TGstate.commandSubStage == 1) {
+                            Tuple<string, string> pairTup = verifyChosenPair(e.Message.Text, "Cancel order");
 
-                            // need to consider whether we sanitise the pair string before sending it to SplitPair(), or we upgrade SplitPair to deal with shitty strings
-                            Tuple<string, string> pairTup = Utilities.SplitPair(e.Message.Text);
+                            if (pairTup.Item1 != "") {
+                                // list the open orders
+                                Page<BankHistoryOrder> openOs = new Page<BankHistoryOrder>();
+                                try {
+                                    openOs = await pIR.GetOpenOrders(pairTup.Item1, pairTup.Item2);
+                                }
+                                catch (Exception ex) {
+                                    Debug.Print("TGB: failed to pull open orders due to: " + ex.Message);
+                                    SendMessage("`Cancel Order` :: ⚠️ Sorry - failed to pull open orders, probably a nonce error.  Please enter the pair again, format 'BTC-AUD'");
+                                    return;
+                                }
 
-                            foreach (string _crypto in DCE_IR.PrimaryCurrencyList) {
-                                foreach (string _fiat in DCE_IR.SecondaryCurrencyList) {
-
+                                if (openOs.Data.Count() > 0) {
+                                    SendMessage(compileOpenOrders(openOs, (pairTup.Item1 == "XBT" ? "BTC" : pairTup.Item1), pairTup.Item2));
+                                    TGstate.commandSubStage = 2;
+                                }
+                                else {
+                                    await SendMessage("`Cancel Order` :: No open orders to cancel for pair " + (pairTup.Item1 == "XBT" ? "BTC" : pairTup.Item1) + "-" + pairTup.Item2 + ".  Exiting cancel order menu.");
+                                    TGstate.ResetMenu();
                                 }
                             }
-
+                            else {
+                                SendMessage("`Cancel Order` :: ⚠️ " + (pairTup.Item1 == "XBT" ? "BTC" : pairTup.Item1) + "-" + pairTup.Item2 + " pair doesn't exist. Try again or 'quit' to exit.");
+                            }
                         }
 
-                        if (commandSubStage == 2) {  // 2 is we picking which order to cancel
+                        else if (TGstate.commandSubStage == 2) {  // 2 is we picking which order to cancel
 
                             if (int.TryParse(e.Message.Text, out int chosenOrderNumber)) {
                                 // check if it's a legit order and cancel it
-
+                                if (TGstate.openOrdersToList.ContainsKey(chosenOrderNumber)) {
+                                    // ok, it's legit number
+                                    SendMessage("`Cancel Order` :: ❓ Are you sure you wish to cancel order #" + chosenOrderNumber + "? (y/n)");
+                                    TGstate.commandSubStage = 3;
+                                    TGstate.orderToCancel = chosenOrderNumber;
+                                }
+                                else {
+                                    SendMessage("`Cancel Order` :: ⚠️ Bad choice, try again (or 'quit' to exit).");
+                                }
                             }
                             else {
-                                SendMessage("Couldn't parse your answer.  Please try again and just type the number next to the order you want to cancel, nothing else.");
-                                return;
+                                SendMessage("`Cancel Order` :: ⚠️ Couldn't parse your answer.  Please try again and just type the number next to the order you want to cancel, nothing else.");
                             }
+                        }
+                        else if (TGstate.commandSubStage == 3) {  // 3 i confirming the cancel
+                            if (e.Message.Text.ToLower() == "y") {
+                                BankOrder cancelledOrder = await pIR.CancelOrder(TGstate.openOrdersToList[TGstate.orderToCancel].OrderGuid.ToString());
+                                if (cancelledOrder.Status == OrderStatus.Cancelled) {
+                                    await SendMessage("`Cancel Order` :: ✅ Order successfully cancelled.");
+                                }
+                            }
+                            else {
+                                await SendMessage("`Cancel Order` :: Order NOT cancelled.");
+                            }
+                            TGstate.ResetMenu();
+                        }
+                        break;
+
+                    case CommandChosen.StopMarketBaiter:
+
+                         if (TGstate.commandSubStage == 1) {
+                            if (e.Message.Text.ToLower() == "y") {
+                                pIR.marketBaiterActive = false;
+                                await SendMessage("`Market Baiter` :: ✅ Market baiter stopped.");
+                            }
+                            else {
+                                await SendMessage("`Market Baiter` :: Market baiter will continue.");
+                            }
+                            TGstate.ResetMenu();
                         }
 
                         break;
                 }
-
-
-
-
-
-
-                    await botClient.SendTextMessageAsync(Properties.Settings.Default.TelegramChatID, "Available commands: " + Environment.NewLine + Environment.NewLine +
-                        "forget   :   this command will unauthenticate you");
-                
-
             }
         }
 
-        private string compileOpenOrders(string crypto, string fiat) {
+        private async void MarketSummary_Sub(string fiat) {
 
-            //var openOs = pIR.GetOpenOrders(crypto, fiat).Wait();
+            if (DCE_IR.CurrentSecondaryCurrency != fiat) {
+                // need to quick it grab 
+                foreach (string crypto in DCE_IR.PrimaryCurrencyList) {
+                    IRT.ParseDCE_IR(crypto, fiat, false);
+                }
+            }
 
-            return "";
+            Dictionary<string, DCE.MarketSummary> mSummaries = DCE_IR.GetCryptoPairs();
+            if (mSummaries.Count < 1) {
+                await SendMessage("`MarketSummary` :: ⁉️ No market data available");
+            }
+            else {
+                await SendMessage("`Market Summary` :: 📊 " + fiat + " market prices:" + Environment.NewLine + Environment.NewLine);
+                string summarySTR = "  ";
+                foreach (KeyValuePair<string, DCE.MarketSummary> mSummary in mSummaries) {
+                    if (mSummary.Value.SecondaryCurrencyCode.ToUpper() == fiat) {
+                        summarySTR += "  *" + (mSummary.Value.PrimaryCurrencyCode == "XBT" ? "BTC" : mSummary.Value.PrimaryCurrencyCode) + "*: $" + Utilities.FormatValue((mSummary.Value.CurrentLowestOfferPrice + mSummary.Value.CurrentHighestBidPrice) / 2) + Environment.NewLine;
+                    }
+                }
+                if (summarySTR.Length > 0) await SendMessage(summarySTR);
+                else await SendMessage("  ⁉️ No market data available!");
+                TGstate.ResetMenu();
+            }
         }
 
-        public async Task SendMessage(string message, Telegram.Bot.Types.Enums.ParseMode pMode = Telegram.Bot.Types.Enums.ParseMode.Default) {
-            if ((Properties.Settings.Default.TelegramChatID == 0) || (authStage != 2)) {
+        // verifies and splits a pair sent by the user is legit and exists as a real pair
+        private Tuple<string, string> verifyChosenPair(string pair, string subMenu) {
+            string crypto = "";
+            string fiat = "";
+
+            // need to consider whether we sanitise the pair string before sending it to SplitPair(), or we upgrade SplitPair to deal with shitty strings
+            Tuple<string, string> pairTup = Utilities.SplitPair(pair.ToUpper());
+            if (pairTup.Item1 == "" || pairTup.Item2 == "") {
+                SendMessage("`" + subMenu + "` :: ⚠️ Couldn't parse the pair, please try again or 'quit' to exit this menu.");
+                return new Tuple<string, string>("", "");
+            }
+
+            string pairInternal = pair.ToUpper();
+            pairInternal = pairInternal.Replace("BTC", "XBT").ToUpper();
+
+            foreach (string _crypto in DCE_IR.PrimaryCurrencyList) {
+                foreach (string _fiat in DCE_IR.SecondaryCurrencyList) {
+                    if (pairInternal == _crypto + "-" + _fiat) {
+                        // the pair exists
+                        crypto = _crypto;
+                        fiat = _fiat;
+                        break;
+                    }
+                }
+                if (crypto != "") break;
+            }
+            if (crypto == "" || fiat == "") {
+                SendMessage("`" + subMenu + "` :: ⚠️ This pair doesn't exist, please try again or 'quit' to exit this menu.");
+                return new Tuple<string, string>("", "");
+            }
+            return new Tuple<string, string>(crypto, fiat);
+        }
+
+        // crypto will be "BTC", not "XBT"
+        private string compileOpenOrders(Page<BankHistoryOrder> openOs, string crypto, string fiat) {
+
+            TGstate.openOrdersToList.Clear();
+            string masterStr = "`Cancel Order` :: ❓ Please enter the number of the order you wish to cancel." + Environment.NewLine + Environment.NewLine +
+                "  *Open " + crypto + "-" + fiat + " orders:*" + Environment.NewLine;
+
+            int count = 1;
+            foreach (BankHistoryOrder bho in openOs.Data) {
+                masterStr += Environment.NewLine + "  *" + count + "*. " + (bho.OrderType == OrderType.LimitBid ? "Limid bid  " : "Limit offer") +
+                    " | Price: $" + Utilities.FormatValue(bho.Price.Value, 2) + Environment.NewLine +
+                    "  Original vol: " + crypto + " " + bho.Original.Volume.ToString() +
+                    (bho.Outstanding.HasValue ? Environment.NewLine + "  Outstanding vol: " + crypto + " " + bho.Outstanding.Value.ToString() : "") + Environment.NewLine +
+                    "  Date created: " + bho.CreatedTimestampUtc.ToLocalTime() + Environment.NewLine;
+                TGstate.openOrdersToList.Add(count, bho);
+                count++;
+            }
+            masterStr += Environment.NewLine + "  Type 'quit' to exit this menu.";
+            return masterStr;
+        }
+
+        public async Task SendMessage(string message, Telegram.Bot.Types.Enums.ParseMode pMode = Telegram.Bot.Types.Enums.ParseMode.MarkdownV2) {
+            if ((Properties.Settings.Default.TelegramChatID == 0) || (TGstate.authStage != 2)) {
                 Debug.Print("TG: no chat ID or user not authenticated, cannot send message: " + message);
                 return;
             }
+
+            if (pMode == Telegram.Bot.Types.Enums.ParseMode.MarkdownV2) {
+                message = message.Replace("-", "\\-").Replace(".", "\\.").Replace("(", "\\(").Replace(")", "\\)").Replace("=", "\\=")
+                    .Replace(">", "\\>").Replace("!", "\\!").Replace("|", "\\|").Replace("#", "\\#");
+            }
+
             await botClient.SendTextMessageAsync(Properties.Settings.Default.TelegramChatID, message, pMode);
         }
 
@@ -189,12 +499,13 @@ namespace IRTicker
                     // send message..
                     foreach (BankHistoryOrder cOrder in ordersToNotify) {
                         if (cOrder.Status == OrderStatus.Filled) {
-                            await SendMessage("*Order Filled\\!*" + Environment.NewLine + Environment.NewLine +
-                                "Pair: " + cOrder.PrimaryCurrencyCode.ToString().ToUpper() + "\\-" + cOrder.SecondaryCurrencyCode.ToString().ToUpper() + Environment.NewLine +
-                                "Value: $" + cOrder.Value.ToString().Replace(".", "\\.") + Environment.NewLine +
-                                "Avg price: $" + cOrder.AvgPrice.Value.ToString().Replace(".", "\\.") + Environment.NewLine +
-                                "Volume: " + cOrder.PrimaryCurrencyCode.ToString().ToUpper() + ": " + cOrder.Volume.ToString().Replace(".", "\\.") + Environment.NewLine
-                                , Telegram.Bot.Types.Enums.ParseMode.MarkdownV2);
+                            string crypto = (cOrder.PrimaryCurrencyCode.ToString().ToUpper() == "XBT" ? "BTC" : cOrder.PrimaryCurrencyCode.ToString().ToUpper());
+                            await SendMessage("*Order Filled!* 🤝" + Environment.NewLine +
+                                "  Pair: " + crypto + "-" + cOrder.SecondaryCurrencyCode.ToString().ToUpper() + Environment.NewLine +
+                                "  Value: $" + Utilities.FormatValue(cOrder.Value.Value, 2) + Environment.NewLine +
+                                "  Avg price: $" + Utilities.FormatValue(cOrder.AvgPrice.Value, 2) + Environment.NewLine +
+                                "  Volume: " + crypto + ": " + cOrder.Volume.ToString() + Environment.NewLine +
+                                "  Order created: " + cOrder.CreatedTimestampUtc.ToLocalTime());
                         }
                     }
                 }
@@ -204,9 +515,37 @@ namespace IRTicker
 
         }
 
-        enum CommandChosen
-        {
-            Forget, CancelOrder, Nothing, StopMarketBaiter
+        enum CommandChosen {
+            Forget, CancelOrder, Nothing, StopMarketBaiter, MarketOrder
+        }
+
+        // this class holds the state of the bot between commands
+        class TelegramState {
+
+            TelegramBot TGBot;
+
+            public int authStage = 0;  // 0 = not authed, 1 = awaiting code, 2 = code accepted
+            public CommandChosen commandChosen = CommandChosen.Nothing;
+            public int commandSubStage = 0;
+            public Dictionary<int, BankHistoryOrder> openOrdersToList = new Dictionary<int, BankHistoryOrder>();
+            public int orderToCancel = 0;
+            public Tuple<string, string> ChosenPair { get; set; }
+            public decimal Volume { get; set; }
+
+            public TelegramState(TelegramBot _TGBot) {
+                TGBot = _TGBot;
+            }
+
+            public void ResetMenu() {
+                commandChosen = CommandChosen.Nothing;
+                commandSubStage = 0;
+                orderToCancel = 0;
+                openOrdersToList.Clear();
+                ChosenPair = new Tuple<string, string>("", "");
+                Volume = -1;
+                TGBot.SendMessage("*IR Ticker TelegramBot Top Menu*" + Environment.NewLine +
+                    "Please enter your command, or 'help' for a list of commands.");
+            }
         }
     }
 }

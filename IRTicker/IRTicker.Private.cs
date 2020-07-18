@@ -16,7 +16,6 @@ namespace IRTicker {
     partial class IRTicker {
 
         private string AccountSelectedCrypto = "XBT";
-        public bool marketBaiterActive = false;
         private Task updateOBTask;
 
         private void InitialiseAccountsPanel() {
@@ -300,7 +299,7 @@ namespace IRTicker {
         }
 
         private void cryptoClicked(Label clickedLabel) {
-            if (!marketBaiterActive) {  // can't let the crypto change while we're baitin'
+            if (!pIR.marketBaiterActive) {  // can't let the crypto change while we're baitin'
                 Label oldLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
                 oldLabel.ForeColor = Color.Black;
                 oldLabel.Font = new Font(oldLabel.Font.FontFamily, 14.25f, FontStyle.Regular);
@@ -333,7 +332,6 @@ namespace IRTicker {
         }
 
         private void IRAccountClose_button_Click(object sender, EventArgs e) {
-            //marketBaiterActive = false;
 
             // we stopped the UI from updating when the IR Accounts screen was showing, so let's update all the pairs now that we're closing the ACcounts page
             foreach (string dExchange in Exchanges) {
@@ -495,9 +493,9 @@ namespace IRTicker {
                     "Confirm order", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
             }
             else if (AccountOrderType_listbox.SelectedIndex == 2) {  // market baiter
-                if (marketBaiterActive) {
+                if (pIR.marketBaiterActive) {
                     // cancel it
-                    marketBaiterActive = false;
+                    pIR.marketBaiterActive = false;
                 }
                 else {
                     res = MessageBox.Show("Start the market baiter strategy?" + Environment.NewLine + Environment.NewLine +
@@ -528,7 +526,7 @@ namespace IRTicker {
                     // do something that starts the market baiter
                     if (AccountBuySell_listbox.SelectedIndex == 0) pIR.BaiterBookSide = "Bid";
                     else pIR.BaiterBookSide = "Offer";
-                    marketBaiterActive = true;
+                    pIR.marketBaiterActive = true;
                     AccountPlaceOrder_button.Text = "Stop market baiter and cancel order";
                     Text = "IR Ticker - Market Baiter Running...";
                     AccountBuySell_listbox.Enabled = false;
@@ -571,7 +569,7 @@ namespace IRTicker {
             if (sendToTelegram  && (TGBot != null)) {
                 synchronizationContext.Post(new SendOrPostCallback(o => {
                     Tuple<string, string> notif = (Tuple<string, string>)o;
-                    TGBot.SendMessage("*" + notif.Item1 + ":* " + notif.Item2.Replace("!", "\\!"), Telegram.Bot.Types.Enums.ParseMode.MarkdownV2);
+                    TGBot.SendMessage("*" + notif.Item1 + "*: " + notif.Item2);
                 }), notifText);
             }
         }

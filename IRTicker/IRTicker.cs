@@ -156,7 +156,7 @@ namespace IRTicker {
             }
 
             if (!string.IsNullOrEmpty(Properties.Settings.Default.TelegramCode)) {
-                TGBot = new TelegramBot(pIR, DCEs["IR"]);
+                TGBot = new TelegramBot(pIR, DCEs["IR"], this);
             }
 
             if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
@@ -593,7 +593,7 @@ namespace IRTicker {
         }
 
         // this grabs data from the API, creates a MarketSummary object, and pops it in the cryptoPairs dictionary
-        private void ParseDCE_IR(string crypto, string fiat, bool updateLabels) {
+        public void ParseDCE_IR(string crypto, string fiat, bool updateLabels) {
             Tuple<bool, string> marketSummary = Utilities.Get(DCEs["IR"].BaseURL + "/Public/GetMarketSummary?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
             if (!marketSummary.Item1) {
                 DCEs["IR"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
@@ -1992,7 +1992,7 @@ namespace IRTicker {
         // when they close the app, rename the crypto dirs to blah - old.  this way if they user happens to check the toolbar thing they'll know they're not being updated anymore
         private void IRTicker_Closing(object sender, FormClosingEventArgs e) {
 
-            if (marketBaiterActive) {
+            if (pIR.marketBaiterActive) {
                 DialogResult result = MessageBox.Show("Market Baiter still active, you should cancel it before closing the app or the order will stay on the order book!" + Environment.NewLine + Environment.NewLine +
                     "Are you sure you want to close IRTicker?",
                     "Trading bot still going", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
@@ -2067,7 +2067,7 @@ namespace IRTicker {
 
                         Properties.Settings.Default.TelegramCode = TelegramCode_textBox.Text;
                         if (TGBot == null) {
-                            TGBot = new TelegramBot(pIR, DCEs["IR"]);
+                            TGBot = new TelegramBot(pIR, DCEs["IR"], this);
                             pIR.setTGBot(TGBot);
                         }
                     }
@@ -2861,6 +2861,17 @@ namespace IRTicker {
             Properties.Settings.Default.IRAPIPrivKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).privKey;
 
             pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+        }
+
+        private void TGReset_button_Click(object sender, EventArgs e) {
+            if (TGBot != null) {
+                TGBot.SendMessage("Un-authenticating...");
+                TGBot.ResetBot();
+                showBalloon("TelegramBot", "TelegramBot has been un-authenticated.");
+            }
+            else {
+                showBalloon("TelegramBot", "No action taken - the TelegramBot is not currently authenticated");
+            }
         }
     }
 }

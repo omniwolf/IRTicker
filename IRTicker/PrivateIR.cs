@@ -34,6 +34,8 @@ namespace IRTicker {
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
         public ConcurrentDictionary<Guid, BankHistoryOrder> openOrders = new ConcurrentDictionary<Guid, BankHistoryOrder>();
 
+        public bool marketBaiterActive = false;
+
         private DCE DCE_IR;
         private TelegramBot TGBot;
 
@@ -321,7 +323,7 @@ namespace IRTicker {
             Debug.Print("MBAIT: distance from top: " + distanceFromTopOrder);
             IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Starting market baiter!"));
 
-            while (IRT.marketBaiterActive) {
+            while (marketBaiterActive) {
                 if (BaiterBookSide == "Offer") baiterBook = orderedOffers;
                 else baiterBook = orderedBids;
                 
@@ -391,9 +393,9 @@ namespace IRTicker {
                     }
                     catch (Exception ex) {
                         Debug.Print("MBAIT: trid to create an order, but it failed: " + ex.Message);
-                        MessageBox.Show("Error creating market baiter order, cancelling market baiter. Error below." + Environment.NewLine + Environment.NewLine +
-                            ex.Message, "Market baiter error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        IRT.marketBaiterActive = false;
+                        //MessageBox.Show("Error creating market baiter order, cancelling market baiter. Error below." + Environment.NewLine + Environment.NewLine +
+                         //   ex.Message, "Market baiter error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        //marketBaiterActive = false;
                     }
                     IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, /*PrivateIREndPoints.GetAccounts, */PrivateIREndPoints.UpdateOrderBook });
 
@@ -484,7 +486,7 @@ namespace IRTicker {
                                     Debug.Print("MBAIT: our order got filled.  sweet.");
                                     IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Order filled!"), true);
                                     placedOrder = null;
-                                    IRT.marketBaiterActive = false;
+                                    marketBaiterActive = false;
                                     break;  // closed orders foreach
                                 }
                                 else {
