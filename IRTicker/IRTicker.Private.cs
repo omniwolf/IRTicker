@@ -62,9 +62,10 @@ namespace IRTicker {
 
             foreach (PrivateIR.PrivateIREndPoints endP in endPoints) {
                 if (endP == PrivateIR.PrivateIREndPoints.GetAccounts) {
-                    Task<Dictionary<string, Account>> irAccountsTask = new Task<Dictionary<string, Account>>(pIR.GetAccounts);
-                    irAccountsTask.Start();
-                    Dictionary<string, Account> irAccounts = await irAccountsTask;
+                    //Task<Dictionary<string, Account>> irAccountsTask = new Task<Dictionary<string, Account>>(pIR.GetAccounts);
+                    //irAccountsTask.Start();
+                    //Dictionary<string, Account> irAccounts = await irAccountsTask;
+                    Dictionary<string, Account> irAccounts = await pIR.GetAccounts();
                     if (irAccounts == null) {
                         Debug.Print(DateTime.Now + " - there was an error, closing the accounts page");
                         Main.Visible = true;

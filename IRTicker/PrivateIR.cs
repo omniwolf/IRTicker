@@ -70,9 +70,9 @@ namespace IRTicker {
             TGBot = _TGBot;
         }
 
-        public Dictionary<string, Account> GetAccounts() {
+        public async Task<Dictionary<string, Account>> GetAccounts() {
             try {
-                accounts = IRclient.GetAccounts().ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
+                accounts = (await IRclient.GetAccountsAsync()).ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
                 return accounts;
             }
             catch (Exception ex) {
