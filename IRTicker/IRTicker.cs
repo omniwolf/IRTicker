@@ -1151,10 +1151,15 @@ namespace IRTicker {
                     if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
                         ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency, false);
                     }
-                    
-                    //if (DCEs["IR"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["IR"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
-                    //GetIROrderBook(primaryCode, );
-                    //}
+                    if (pIR != null) {
+                        foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
+                            pIR.GetClosedOrders(primaryCode, fiat).Wait();
+                            // if i want to get fancy i can call reportProgress and drawClosedOrders()...
+
+                            // once a cycle let's give the order book a nudge.. there might be new orders that we haven't seen.
+                            pIR.compileAccountOrderBookAsync(primaryCode + "-" + fiat);
+                        }
+                    }
                 }
 
                 // need to pull this other fiat currency market summary data if our chose slack currency is not the one we're looking at (and the slack stuff is enabled)
@@ -1166,18 +1171,7 @@ namespace IRTicker {
 
                 // let's get all the closed orders and notify the user if there are new ones
                 foreach (string crypto in DCEs["IR"].PrimaryCurrencyList) {
-                    foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
-                        if (pIR != null) {
-                            pIR.GetClosedOrders(crypto, fiat).Wait();
-                            /*if (cOrders != null) {
 
-                                synchronizationContext.Post(new SendOrPostCallback(o => {
-
-                                    drawClosedOrders((Task<Page<BankHistoyOrder>>)o.Result).Data);
-                                }), cOrders);*/
-                        }
-
-                    }
                 }
 
                 //pIR.GetClosedOrders("XBT", "AUD");

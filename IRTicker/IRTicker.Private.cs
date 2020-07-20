@@ -107,6 +107,7 @@ namespace IRTicker {
                         drawClosedOrders(closedOrders.Data);
                     }
                 }
+                // need to be more robust, and pull multiple pages if necessary
                 else if (endP == PrivateIR.PrivateIREndPoints.PlaceMarketOrder) {
                     OrderType oType = AccountBuySell_listbox.SelectedIndex == 0 ? OrderType.MarketBid : OrderType.MarketOffer;
 
@@ -140,6 +141,7 @@ namespace IRTicker {
                     }
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.CancelOrder) {
+                    if (AccountOpenOrders_listview.SelectedItems.Count == 0) continue;
                     string orderGuid = ((BankHistoryOrder)AccountOpenOrders_listview.SelectedItems[0].Tag).OrderGuid.ToString();
                     BankOrder cancelledOrder;
                     try { 

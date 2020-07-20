@@ -24,7 +24,7 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("oeui");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("oeui");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
@@ -4087,7 +4087,7 @@
             this.AccountOpenOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountOpenOrders_listview.HideSelection = false;
             this.AccountOpenOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem2});
+            listViewItem1});
             this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountOpenOrders_listview.MultiSelect = false;
             this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";
@@ -5376,7 +5376,6 @@
         private System.Windows.Forms.Label SettingsSeparator_label;
         private System.Windows.Forms.GroupBox IRAccountSettings_groupBox;
         private System.Windows.Forms.Button IRAccount_button;
-        private System.Windows.Forms.Panel IRAccount_panel;
         private System.Windows.Forms.Panel GetAccounts_panel;
         private System.Windows.Forms.Label AccountGNT_value;
         private System.Windows.Forms.Label AccountGNT_label;
@@ -5497,6 +5496,7 @@
         private System.Windows.Forms.TextBox TelegramCode_textBox;
         private System.Windows.Forms.Label TelegramCode_label;
         public System.Windows.Forms.Button TGReset_button;
+        public System.Windows.Forms.Panel IRAccount_panel;
     }
 }
 

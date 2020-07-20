@@ -77,7 +77,7 @@ namespace IRTicker {
             }
             catch (Exception ex) {
                 MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                    ex.InnerException.Message, "Error - GetAccounts", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ex.Message, "Error - GetAccounts", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }
@@ -156,7 +156,7 @@ namespace IRTicker {
             Page<BankHistoryOrder> cOrders = null;
 
             try {
-                cOrders = await IRclient.GetClosedOrdersAsync(enumCrypto, enumFiat, 1, 7);
+                cOrders = await IRclient.GetClosedOrdersAsync(enumCrypto, enumFiat, 1, 50);
                 if (TGBot != null) TGBot.closedOrders(cOrders);
             }
             catch (Exception ex) {
@@ -235,6 +235,9 @@ namespace IRTicker {
         public void compileAccountOrderBookAsync(string pair) {
 
             if (pair != (Crypto + "-" + DCE_IR.CurrentSecondaryCurrency)) return;
+            if (!IRT.IRAccount_panel.Visible) {
+                if (!marketBaiterActive) return;
+            }
 
             List<string[]> accOrderListView = new List<string[]>();
             decimal estValue = 0;
@@ -405,9 +408,9 @@ namespace IRTicker {
                     // if we find our order in the first it means we're still at the spread which is good.
                     int pricePointCount = 0;
                     bool foundOrder = false;
+                    bool retryRequired = false;  // set to true if we need to repeat the master loop again, probably due to nonce error
 
                     foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> pricePoint in baiterBook) {
-                        
                         // let's see if this price level has an order in it that is one of our OTHER (non-market baiter) orders.  If it is, pretend it's not there
                         // I've put this idea to rest.  would need to pull the GetOpenOrders every time we looped to see if the top order was mine.  Too inefficient
                         if (pricePointCount == 0) {
@@ -426,7 +429,15 @@ namespace IRTicker {
                                 // why do we duplicate this search?  Because if we already know about this order, then let's not pull GetOpenOrders every time.  Should only
                                 // be duplicated the first time, and then we'll know about our existing order, and we'll be good.
                                 if (!continueBaiterLoop) {  // OK, we didn't find it.  let's grab the openOrders and search again, maybe we only recently created it
-                                    var openOs = await GetOpenOrders(Crypto, DCE_IR.CurrentSecondaryCurrency);
+                                    Page<BankHistoryOrder> openOs;
+                                    try {
+                                        openOs = await GetOpenOrders(Crypto, DCE_IR.CurrentSecondaryCurrency);
+                                    }
+                                    catch (Exception ex) {
+                                        Debug.Print("MBAIT: failed to get open orders due to: " + ex.Message);
+                                        retryRequired = true;
+                                        break;
+                                    }
                                     foreach (KeyValuePair<string, DCE.OrderBook_IR> orderAtPrice in pricePoint.Value) {
                                         foreach (var openO in openOrders) {
                                             if ((orderAtPrice.Key == openO.Key.ToString()) && (orderAtPrice.Key != placedOrder.OrderGuid.ToString())) {  // it's ours, but not the bait order
@@ -448,7 +459,15 @@ namespace IRTicker {
                             if (pricePointCount > 0) {  // our order has been beaten by another. lez cancel and start again.  if == 0 then we're the top of the book, do nothing.
                                 if (placedOrder.Price != limitPrice) {  // if we're at the limit price, just leave the order, do not cancel.
                                     Debug.Print("MBAIT: our order has been beaten.  cancelling it...");
-                                    BankOrder bo = await CancelOrder(placedOrder.OrderGuid.ToString()).ConfigureAwait(false);
+                                    BankOrder bo = new BankOrder();
+                                    try {
+                                        bo = await CancelOrder(placedOrder.OrderGuid.ToString()).ConfigureAwait(false);
+                                    }
+                                    catch (Exception ex) {
+                                        Debug.Print("MBAIT: trying to cancel the order because it got beat, but failed due to: " + ex.Message);
+                                        retryRequired = true;
+                                        break;
+                                    }
                                     if (bo.Status == OrderStatus.Cancelled) {
                                         Debug.Print("MBAIT: cancel order was successful");
                                         //if (bo.VolumeFilled != 0) IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble..."));
@@ -473,6 +492,7 @@ namespace IRTicker {
                         }
                         pricePointCount++;
                     }
+                    if (retryRequired) { Thread.Sleep(100); continue; }
                     if (!foundOrder) {
                         Debug.Print("MBAIT: Our order doesn't exist in the OB, possibly filled? " + placedOrder.OrderGuid.ToString());
                         Page<BankHistoryOrder> closedOs = await GetClosedOrders(crypto, fiat).ConfigureAwait(false);

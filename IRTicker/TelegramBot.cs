@@ -147,6 +147,7 @@ namespace IRTicker
                                     MarketSummary_Sub("NZD");
                                     break;
 
+                                case "bait":
                                 case "baiter":
                                     if (pIR.marketBaiterActive) {
                                         SendMessage("`Market Baiter` :: ⬆️ Market baiter is currently *active*" + Environment.NewLine +
