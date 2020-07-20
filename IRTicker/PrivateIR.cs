@@ -154,15 +154,29 @@ namespace IRTicker {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
             Page<BankHistoryOrder> cOrders = null;
+            List<BankHistoryOrder> allCOrders = new List<BankHistoryOrder>();
 
-            try {
-                cOrders = await IRclient.GetClosedOrdersAsync(enumCrypto, enumFiat, 1, 7);
-                if (TGBot != null) TGBot.closedOrders(cOrders);
-            }
-            catch (Exception ex) {
-                Debug.Print(DateTime.Now + " - Failed to pull GetClosedOrders - " + ex.Message);
-            }
+            int page = 1;
+            int closedOrderCount = 0;
+            do {
+                try {
+                    cOrders = await IRclient.GetClosedOrdersAsync(enumCrypto, enumFiat, page, 50);
+                }
+                catch (Exception ex) {
+                    Debug.Print(DateTime.Now + " - Failed to pull GetClosedOrders on page " + page + " - " + ex.Message);
+                    break;
+                }
 
+                foreach (BankHistoryOrder order in cOrders.Data) {
+                    if (order.Status == OrderStatus.Filled) closedOrderCount++;
+                    allCOrders.Add(order);
+                }
+                page++;
+            }  while (closedOrderCount < 7);
+
+            if (closedOrderCount < 7) cOrders = null;  // we don't want to send partial results, we either get it all or die trying
+            cOrders.Data = allCOrders;
+            if (TGBot != null) TGBot.closedOrders(cOrders);
             return cOrders;
         }
 
