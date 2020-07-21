@@ -172,9 +172,9 @@ namespace IRTicker {
                     allCOrders.Add(order);
                 }
                 page++;
-            }  while (closedOrderCount < 7);
+            }  while ((closedOrderCount < 7) && (page <= cOrders.TotalPages));
 
-            if (closedOrderCount < 7) cOrders = null;  // we don't want to send partial results, we either get it all or die trying
+            if ((closedOrderCount < 7) && (page < cOrders.TotalPages)) cOrders = null;  // we don't want to send partial results, we either get it all or die trying
             cOrders.Data = allCOrders;
             if (TGBot != null) TGBot.closedOrders(cOrders);
             return cOrders;
