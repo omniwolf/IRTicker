@@ -37,6 +37,7 @@ namespace IRTicker {
         private BlinkStick bStick;
         private Slack slackObj = new Slack();
         private DateTime lastCSVWrite = DateTime.Now;  // this holds the time we last saved the CSV file
+        private System.Windows.Forms.Panel LastPanel;
 
         public ConcurrentDictionary<string, SpreadGraph> SpreadGraph_Dict = new ConcurrentDictionary<string, SpreadGraph>();  // needs to be public because it gets accessed from the graphs object
 
@@ -165,10 +166,13 @@ namespace IRTicker {
             }
             else {
                 pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
+                if (friendlyNameLen > 20) friendlyNameLen = 20;
+                AccountName_button.Text = Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + "...";
             }
 
             wSocketConnect = new WebSocketsConnect(DCEs, pollingThread, pIR);
-
+            LastPanel = Main;
 
 
             if (Properties.Settings.Default.ShowOB) obv.Show();
@@ -2073,7 +2077,7 @@ namespace IRTicker {
                     }
 
                     Properties.Settings.Default.Save();
-                    Main.Visible = true;
+                    LastPanel.Visible = true;
                     Settings.Visible = false;
                 }
                 else {
@@ -2848,13 +2852,17 @@ namespace IRTicker {
             if (Properties.Settings.Default.APIFriendly != ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName) {
                 // a new key has been chosen, let's reset the closed orders.
                 TGBot.closedOrdersFirstRun.Clear();
+
+                Properties.Settings.Default.APIFriendly = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName;
+                Properties.Settings.Default.IRAPIPubKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).pubKey;
+                Properties.Settings.Default.IRAPIPrivKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).privKey;
+
+                int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
+                if (friendlyNameLen > 20) friendlyNameLen = 20;
+                AccountName_button.Text = Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + "...";
+
+                pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
             }
-
-            Properties.Settings.Default.APIFriendly = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName;
-            Properties.Settings.Default.IRAPIPubKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).pubKey;
-            Properties.Settings.Default.IRAPIPrivKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).privKey;
-
-            pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
         }
 
         private void TGReset_button_Click(object sender, EventArgs e) {
@@ -2866,6 +2874,12 @@ namespace IRTicker {
             else {
                 showBalloon("TelegramBot", "No action taken - the TelegramBot is not currently authenticated");
             }
+        }
+
+        private void AccountName_button_Click(object sender, EventArgs e) {
+            LastPanel = IRAccount_panel;
+            Settings.Visible = true;
+            IRAccount_panel.Visible = false;
         }
     }
 }

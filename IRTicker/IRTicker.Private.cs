@@ -341,6 +341,7 @@ namespace IRTicker {
                 UpdateLabels(dExchange);
             }
 
+            LastPanel = Main;
             IRAccount_panel.Visible = false;
             Main.Visible = true;
             Label CurrentSecondaryCurrecyLabel = UIControls_Dict["IR"].Label_Dict[DCEs["IR"].CurrentSecondaryCurrency + "_Account_Label"];
