@@ -164,7 +164,7 @@ namespace IRTicker {
                 }
                 catch (Exception ex) {
                     Debug.Print(DateTime.Now + " - Failed to pull GetClosedOrders on page " + page + " - " + ex.Message);
-                    break;
+                    return null;
                 }
 
                 foreach (BankHistoryOrder order in cOrders.Data) {
@@ -174,7 +174,7 @@ namespace IRTicker {
                 page++;
             }  while ((closedOrderCount < 7) && (page <= cOrders.TotalPages));
 
-            if ((closedOrderCount < 7) && (page < cOrders.TotalPages)) cOrders = null;  // we don't want to send partial results, we either get it all or die trying
+            if ((closedOrderCount < 7) && (page < cOrders.TotalPages)) return null;  // we don't want to send partial results, we either get it all or die trying
             cOrders.Data = allCOrders;
             if (TGBot != null) TGBot.closedOrders(cOrders);
             return cOrders;
