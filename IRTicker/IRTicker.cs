@@ -2077,6 +2077,7 @@ namespace IRTicker {
                     }
 
                     Properties.Settings.Default.Save();
+                    bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetAccounts });
                     LastPanel.Visible = true;
                     Settings.Visible = false;
                 }
