@@ -22,16 +22,16 @@ namespace IRTicker {
         public Label EOS_Label { get; set; }
         public Label OMG_Label { get; set; }
         public Label ZRX_Label { get; set; }
-        public Label PLA_Label { get; set; }
         public Label XLM_Label { get; set; }
         public Label BAT_Label { get; set; }
-        public Label REP_Label { get; set; }
+        public Label MKR_Label { get; set; }
         public Label GNT_Label { get; set; }
         public Label ETC_Label { get; set; }
         public Label USDT_Label { get; set; }
         public Label BSV_Label { get; set; }
-        public Label PMGT_Label { get; set; }
+        public Label DAI_Label { get; set; }
         public Label LINK_Label { get; set; }
+        public Label USDC_Label { get; set; }
 
         public Label XBT_Price { get; set; }
         public Label ETH_Price { get; set; }
@@ -41,16 +41,16 @@ namespace IRTicker {
         public Label EOS_Price { get; set; }
         public Label OMG_Price { get; set; }
         public Label ZRX_Price { get; set; }
-        public Label PLA_Price { get; set; }
         public Label XLM_Price { get; set; }
         public Label BAT_Price { get; set; }
-        public Label REP_Price { get; set; }
+        public Label MKR_Price { get; set; }
         public Label GNT_Price { get; set; }
         public Label ETC_Price { get; set; }
         public Label USDT_Price { get; set; }
         public Label BSV_Price { get; set; }
-        public Label PMGT_Price { get; set; }
+        public Label DAI_Price { get; set; }
         public Label LINK_Price { get; set; }
+        public Label USDC_Price { get; set; }
 
         public Label XBT_Spread { get; set; }
         public Label ETH_Spread { get; set; }
@@ -60,16 +60,16 @@ namespace IRTicker {
         public Label EOS_Spread { get; set; }
         public Label OMG_Spread { get; set; }
         public Label ZRX_Spread { get; set; }
-        public Label PLA_Spread { get; set; }
         public Label XLM_Spread { get; set; }
         public Label BAT_Spread { get; set; }
-        public Label REP_Spread { get; set; }
+        public Label MKR_Spread { get; set; }
         public Label GNT_Spread { get; set; }
         public Label ETC_Spread { get; set; }
         public Label USDT_Spread { get; set; }
         public Label BSV_Spread { get; set; }
-        public Label PMGT_Spread { get; set; }
+        public Label DAI_Spread { get; set; }
         public Label LINK_Spread { get; set; }
+        public Label USDC_Spread { get; set; }
 
         public ComboBox AvgPrice_BuySell { get; set; }
         public MaskedTextBox AvgPrice_NumCoins { get; set; }
@@ -94,11 +94,12 @@ namespace IRTicker {
         public Label Account_ETC_Label { get; set; }
         public Label Account_BAT_Label { get; set; }
         public Label Account_OMG_Label { get; set; }
-        public Label Account_REP_Label { get; set; }
+        public Label Account_MKR_Label { get; set; }
         public Label Account_ZRX_Label { get; set; }
         public Label Account_GNT_Label { get; set; }
-        public Label Account_PMGT_Label { get; set; }
+        public Label Account_DAI_Label { get; set; }
         public Label Account_LINK_Label { get; set; }
+        public Label Account_USDC_Label { get; set; }
         public Label Account_AUD_Label { get; set; }
         public Label Account_NZD_Label { get; set; }
         public Label Account_USD_Label { get; set; }
@@ -115,11 +116,12 @@ namespace IRTicker {
         public Label Account_ETC_Value { get; set; }
         public Label Account_BAT_Value { get; set; }
         public Label Account_OMG_Value { get; set; }
-        public Label Account_REP_Value { get; set; }
+        public Label Account_MKR_Value { get; set; }
         public Label Account_ZRX_Value { get; set; }
         public Label Account_GNT_Value { get; set; }
-        public Label Account_PMGT_Value { get; set; }
+        public Label Account_DAI_Value { get; set; }
         public Label Account_LINK_Value { get; set; }
+        public Label Account_USDC_Value { get; set; }
 
         public Label Account_XBT_Total { get; set; }
         public Label Account_ETH_Total { get; set; }
@@ -133,11 +135,12 @@ namespace IRTicker {
         public Label Account_ETC_Total { get; set; }
         public Label Account_BAT_Total { get; set; }
         public Label Account_OMG_Total { get; set; }
-        public Label Account_REP_Total { get; set; }
+        public Label Account_MKR_Total { get; set; }
         public Label Account_ZRX_Total { get; set; }
         public Label Account_GNT_Total { get; set; }
-        public Label Account_PMGT_Total { get; set; }
+        public Label Account_DAI_Total { get; set; }
         public Label Account_LINK_Total { get; set; }
+        public Label Account_USDC_Total { get; set; }
         public Label Account_AUD_Total { get; set; }
         public Label Account_NZD_Total { get; set; }
         public Label Account_USD_Total { get; set; }
@@ -156,16 +159,16 @@ namespace IRTicker {
             if (EOS_Label != null) Label_Dict.Add("EOS_Label", EOS_Label);
             if (OMG_Label != null) Label_Dict.Add("OMG_Label", OMG_Label);
             if (ZRX_Label != null) Label_Dict.Add("ZRX_Label", ZRX_Label);
-            if (PLA_Label != null) Label_Dict.Add("PLA_Label", PLA_Label);
             if (XLM_Label != null) Label_Dict.Add("XLM_Label", XLM_Label);
             if (BAT_Label != null) Label_Dict.Add("BAT_Label", BAT_Label);
-            if (REP_Label != null) Label_Dict.Add("REP_Label", REP_Label);
+            if (MKR_Label != null) Label_Dict.Add("MKR_Label", MKR_Label);
             if (GNT_Label != null) Label_Dict.Add("GNT_Label", GNT_Label);
             if (ETC_Label != null) Label_Dict.Add("ETC_Label", ETC_Label);
             if (USDT_Label != null) Label_Dict.Add("USDT_Label", USDT_Label);
             if (BSV_Label != null) Label_Dict.Add("BSV_Label", BSV_Label);
-            if (PMGT_Label != null) Label_Dict.Add("PMGT_Label", PMGT_Label);
+            if (DAI_Label != null) Label_Dict.Add("DAI_Label", DAI_Label);
             if (LINK_Label != null) Label_Dict.Add("LINK_Label", LINK_Label);
+            if (USDC_Label != null) Label_Dict.Add("USDC_Label", USDC_Label);
 
             if (XBT_Price != null) Label_Dict.Add("XBT_Price", XBT_Price);
             if (ETH_Price != null) Label_Dict.Add("ETH_Price", ETH_Price);
@@ -175,16 +178,16 @@ namespace IRTicker {
             if (EOS_Price != null) Label_Dict.Add("EOS_Price", EOS_Price);
             if (OMG_Price != null) Label_Dict.Add("OMG_Price", OMG_Price);
             if (ZRX_Price != null) Label_Dict.Add("ZRX_Price", ZRX_Price);
-            if (PLA_Price != null) Label_Dict.Add("PLA_Price", PLA_Price);
             if (XLM_Price != null) Label_Dict.Add("XLM_Price", XLM_Price);
             if (BAT_Price != null) Label_Dict.Add("BAT_Price", BAT_Price);
-            if (REP_Price != null) Label_Dict.Add("REP_Price", REP_Price);
+            if (MKR_Price != null) Label_Dict.Add("MKR_Price", MKR_Price);
             if (GNT_Price != null) Label_Dict.Add("GNT_Price", GNT_Price);
             if (ETC_Price != null) Label_Dict.Add("ETC_Price", ETC_Price);
             if (USDT_Price != null) Label_Dict.Add("USDT_Price", USDT_Price);
             if (BSV_Price != null) Label_Dict.Add("BSV_Price", BSV_Price);
-            if (PMGT_Price != null) Label_Dict.Add("PMGT_Price", PMGT_Price);
+            if (DAI_Price != null) Label_Dict.Add("DAI_Price", DAI_Price);
             if (LINK_Price != null) Label_Dict.Add("LINK_Price", LINK_Price);
+            if (USDC_Price != null) Label_Dict.Add("USDC_Price", USDC_Price);
 
             if (XBT_Spread != null) Label_Dict.Add("XBT_Spread", XBT_Spread);
             if (ETH_Spread != null) Label_Dict.Add("ETH_Spread", ETH_Spread);
@@ -194,16 +197,16 @@ namespace IRTicker {
             if (EOS_Spread != null) Label_Dict.Add("EOS_Spread", EOS_Spread);
             if (OMG_Spread != null) Label_Dict.Add("OMG_Spread", OMG_Spread);
             if (ZRX_Spread != null) Label_Dict.Add("ZRX_Spread", ZRX_Spread);
-            if (PLA_Spread != null) Label_Dict.Add("PLA_Spread", PLA_Spread);
             if (XLM_Spread != null) Label_Dict.Add("XLM_Spread", XLM_Spread);
             if (BAT_Spread != null) Label_Dict.Add("BAT_Spread", BAT_Spread);
-            if (REP_Spread != null) Label_Dict.Add("REP_Spread", REP_Spread);
+            if (MKR_Spread != null) Label_Dict.Add("MKR_Spread", MKR_Spread);
             if (GNT_Spread != null) Label_Dict.Add("GNT_Spread", GNT_Spread);
             if (ETC_Spread != null) Label_Dict.Add("ETC_Spread", ETC_Spread);
             if (USDT_Spread != null) Label_Dict.Add("USDT_Spread", USDT_Spread);
             if (BSV_Spread != null) Label_Dict.Add("BSV_Spread", BSV_Spread);
-            if (PMGT_Spread != null) Label_Dict.Add("PMGT_Spread", PMGT_Spread);
+            if (DAI_Spread != null) Label_Dict.Add("DAI_Spread", DAI_Spread);
             if (LINK_Spread != null) Label_Dict.Add("LINK_Spread", LINK_Spread);
+            if (USDC_Spread != null) Label_Dict.Add("USDC_Spread", USDC_Spread);
 
 
 
@@ -219,11 +222,12 @@ namespace IRTicker {
             if (Account_ETC_Label != null) Label_Dict.Add("ETC_Account_Label", Account_ETC_Label);
             if (Account_BAT_Label != null) Label_Dict.Add("BAT_Account_Label", Account_BAT_Label);
             if (Account_OMG_Label != null) Label_Dict.Add("OMG_Account_Label", Account_OMG_Label);
-            if (Account_REP_Label != null) Label_Dict.Add("REP_Account_Label", Account_REP_Label);
+            if (Account_MKR_Label != null) Label_Dict.Add("MKR_Account_Label", Account_MKR_Label);
             if (Account_ZRX_Label != null) Label_Dict.Add("ZRX_Account_Label", Account_ZRX_Label);
             if (Account_GNT_Label != null) Label_Dict.Add("GNT_Account_Label", Account_GNT_Label);
-            if (Account_PMGT_Label != null) Label_Dict.Add("PMGT_Account_Label", Account_PMGT_Label);
+            if (Account_DAI_Label != null) Label_Dict.Add("DAI_Account_Label", Account_DAI_Label);
             if (Account_LINK_Label != null) Label_Dict.Add("LINK_Account_Label", Account_LINK_Label);
+            if (Account_USDC_Label != null) Label_Dict.Add("USDC_Account_Label", Account_USDC_Label);
             if (Account_AUD_Label != null) Label_Dict.Add("AUD_Account_Label", Account_AUD_Label);
             if (Account_NZD_Label != null) Label_Dict.Add("NZD_Account_Label", Account_NZD_Label);
             if (Account_USD_Label != null) Label_Dict.Add("USD_Account_Label", Account_USD_Label);
@@ -240,11 +244,12 @@ namespace IRTicker {
             if (Account_ETC_Value != null) Label_Dict.Add("ETC_Account_Value", Account_ETC_Value);
             if (Account_BAT_Value != null) Label_Dict.Add("BAT_Account_Value", Account_BAT_Value);
             if (Account_OMG_Value != null) Label_Dict.Add("OMG_Account_Value", Account_OMG_Value);
-            if (Account_REP_Value != null) Label_Dict.Add("REP_Account_Value", Account_REP_Value);
+            if (Account_MKR_Value != null) Label_Dict.Add("MKR_Account_Value", Account_MKR_Value);
             if (Account_ZRX_Value != null) Label_Dict.Add("ZRX_Account_Value", Account_ZRX_Value);
             if (Account_GNT_Value != null) Label_Dict.Add("GNT_Account_Value", Account_GNT_Value);
-            if (Account_PMGT_Value != null) Label_Dict.Add("PMGT_Account_Value", Account_PMGT_Value);
+            if (Account_DAI_Value != null) Label_Dict.Add("DAI_Account_Value", Account_DAI_Value);
             if (Account_LINK_Value != null) Label_Dict.Add("LINK_Account_Value", Account_LINK_Value);
+            if (Account_USDC_Value != null) Label_Dict.Add("USDC_Account_Value", Account_USDC_Value);
 
             if (Account_XBT_Total != null) Label_Dict.Add("XBT_Account_Total", Account_XBT_Total);
             if (Account_ETH_Total != null) Label_Dict.Add("ETH_Account_Total", Account_ETH_Total);
@@ -258,11 +263,12 @@ namespace IRTicker {
             if (Account_ETC_Total != null) Label_Dict.Add("ETC_Account_Total", Account_ETC_Total);
             if (Account_BAT_Total != null) Label_Dict.Add("BAT_Account_Total", Account_BAT_Total);
             if (Account_OMG_Total != null) Label_Dict.Add("OMG_Account_Total", Account_OMG_Total);
-            if (Account_REP_Total != null) Label_Dict.Add("REP_Account_Total", Account_REP_Total);
+            if (Account_MKR_Total != null) Label_Dict.Add("MKR_Account_Total", Account_MKR_Total);
             if (Account_ZRX_Total != null) Label_Dict.Add("ZRX_Account_Total", Account_ZRX_Total);
             if (Account_GNT_Total != null) Label_Dict.Add("GNT_Account_Total", Account_GNT_Total);
-            if (Account_PMGT_Total != null) Label_Dict.Add("PMGT_Account_Total", Account_PMGT_Total);
+            if (Account_DAI_Total != null) Label_Dict.Add("DAI_Account_Total", Account_DAI_Total);
             if (Account_LINK_Total != null) Label_Dict.Add("LINK_Account_Total", Account_LINK_Total);
+            if (Account_USDC_Total != null) Label_Dict.Add("USDC_Account_Total", Account_USDC_Total);
             if (Account_AUD_Total != null) Label_Dict.Add("AUD_Account_Total", Account_AUD_Total);
             if (Account_NZD_Total != null) Label_Dict.Add("NZD_Account_Total", Account_NZD_Total);
             if (Account_USD_Total != null) Label_Dict.Add("USD_Account_Total", Account_USD_Total);

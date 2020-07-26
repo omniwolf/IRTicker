@@ -21,9 +21,9 @@ namespace IRTicker {
         private void InitialiseAccountsPanel() {
             AccountOrderVolume_textbox.Enabled = true;
             AccountLimitPrice_textbox.Enabled = true;
-            bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAddress, PrivateIR.PrivateIREndPoints.UpdateOrderBook });
             IRAccount_panel.Visible = true;
             Main.Visible = false;
+            bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAddress, PrivateIR.PrivateIREndPoints.UpdateOrderBook });
         }
 
         private void DrawIRAccounts(Dictionary<string, Account> irAccounts) {
@@ -58,14 +58,16 @@ namespace IRTicker {
         }
 
         // runs these network calls in order
-        private async void bulkSequentialAPICalls(List<PrivateIR.PrivateIREndPoints> endPoints, decimal volume = 0, decimal price = 0) {
+        private void bulkSequentialAPICalls(List<PrivateIR.PrivateIREndPoints> endPoints, decimal volume = 0, decimal price = 0) {
 
             foreach (PrivateIR.PrivateIREndPoints endP in endPoints) {
                 if (endP == PrivateIR.PrivateIREndPoints.GetAccounts) {
                     //Task<Dictionary<string, Account>> irAccountsTask = new Task<Dictionary<string, Account>>(pIR.GetAccounts);
                     //irAccountsTask.Start();
                     //Dictionary<string, Account> irAccounts = await irAccountsTask;
-                    Dictionary<string, Account> irAccounts = await pIR.GetAccounts();
+                    //Debug.Print("PIR: about to getAccounts");
+                    Dictionary<string, Account> irAccounts = pIR.GetAccounts();
+                    //Debug.Print("PIR: gotACcounts");
                     if (irAccounts == null) {
                         Debug.Print(DateTime.Now + " - there was an error, closing the accounts page");
                         Main.Visible = true;
@@ -75,14 +77,14 @@ namespace IRTicker {
                     DrawIRAccounts(irAccounts);
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.GetAddress) {
-                    DigitalCurrencyDepositAddress addressData = await pIR.GetDepositAddress(AccountSelectedCrypto);
+                    DigitalCurrencyDepositAddress addressData = pIR.GetDepositAddress(AccountSelectedCrypto);
                     drawDepositAddress(addressData);
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.CheckAddress) {
                     string address = AccountWithdrawalAddress_label.Text;
                     DigitalCurrencyDepositAddress addressData;
                     try {
-                        addressData = await pIR.CheckAddressNow(AccountSelectedCrypto, address);
+                        addressData = pIR.CheckAddressNow(AccountSelectedCrypto, address);
                     }
                     catch (Exception ex) {
                         MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
@@ -93,7 +95,7 @@ namespace IRTicker {
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.GetOpenOrders) {
                     try {
-                        var openOrders = await pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
+                        var openOrders = pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
                         drawOpenOrders(openOrders.Data);
                     }
                     catch (Exception ex) {
@@ -102,7 +104,7 @@ namespace IRTicker {
                     }
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.GetClosedOrders) {
-                    Page<BankHistoryOrder> closedOrders = await pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
+                    Page<BankHistoryOrder> closedOrders = pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
                     if (closedOrders != null) {
                         drawClosedOrders(closedOrders.Data);
                     }
@@ -113,7 +115,7 @@ namespace IRTicker {
 
                     BankOrder orderResult;
                     try {
-                        orderResult = await pIR.PlaceMarketOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, oType, volume);
+                        orderResult = pIR.PlaceMarketOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, oType, volume);
                     }
                     catch (Exception ex) {
                         MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
@@ -129,7 +131,7 @@ namespace IRTicker {
 
                     BankOrder orderResult;
                     try {
-                        orderResult = await pIR.PlaceLimitOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, oType, price, volume);
+                        orderResult = pIR.PlaceLimitOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, oType, price, volume);
                     }
                     catch (Exception ex) {
                         MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
@@ -145,7 +147,7 @@ namespace IRTicker {
                     string orderGuid = ((BankHistoryOrder)AccountOpenOrders_listview.SelectedItems[0].Tag).OrderGuid.ToString();
                     BankOrder cancelledOrder;
                     try { 
-                    cancelledOrder = await pIR.CancelOrder(orderGuid);
+                    cancelledOrder = pIR.CancelOrder(orderGuid);
                     }
                     catch (Exception ex) {
                         MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +

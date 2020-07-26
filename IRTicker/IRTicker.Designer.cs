@@ -124,76 +124,84 @@
             this.BAR_NumCoinsTextBox = new System.Windows.Forms.MaskedTextBox();
             this.BAR_BuySellComboBox = new System.Windows.Forms.ComboBox();
             this.BFX_GroupBox = new System.Windows.Forms.GroupBox();
-            this.BFX_CurrencyBox = new System.Windows.Forms.ComboBox();
+            this.BFX_panel = new System.Windows.Forms.Panel();
+            this.BFX_DAI_Label3 = new System.Windows.Forms.Label();
+            this.BFX_DAI_Label1 = new System.Windows.Forms.Label();
+            this.BFX_DAI_Label2 = new System.Windows.Forms.Label();
+            this.BFX_XBT_Label1 = new System.Windows.Forms.Label();
             this.BFX_USDT_Label2 = new System.Windows.Forms.Label();
-            this.BFX_USDT_Label3 = new System.Windows.Forms.Label();
-            this.BFX_USDT_Label1 = new System.Windows.Forms.Label();
-            this.BFX_BSV_Label2 = new System.Windows.Forms.Label();
-            this.BFX_BSV_Label3 = new System.Windows.Forms.Label();
-            this.BFX_BSV_Label1 = new System.Windows.Forms.Label();
-            this.BFX_ETC_Label2 = new System.Windows.Forms.Label();
-            this.BFX_ETC_Label3 = new System.Windows.Forms.Label();
-            this.BFX_ETC_Label1 = new System.Windows.Forms.Label();
-            this.BFX_BAT_Label2 = new System.Windows.Forms.Label();
-            this.BFX_BAT_Label3 = new System.Windows.Forms.Label();
-            this.BFX_BAT_Label1 = new System.Windows.Forms.Label();
-            this.BFX_GNT_Label2 = new System.Windows.Forms.Label();
-            this.BFX_GNT_Label1 = new System.Windows.Forms.Label();
-            this.BFX_REP_Label2 = new System.Windows.Forms.Label();
-            this.BFX_REP_Label3 = new System.Windows.Forms.Label();
-            this.BFX_GNT_Label3 = new System.Windows.Forms.Label();
-            this.BFX_REP_Label1 = new System.Windows.Forms.Label();
-            this.BFX_XLM_Label2 = new System.Windows.Forms.Label();
-            this.BFX_XLM_Label3 = new System.Windows.Forms.Label();
-            this.BFX_XLM_Label1 = new System.Windows.Forms.Label();
-            this.BFX_EOS_Label2 = new System.Windows.Forms.Label();
-            this.BFX_EOS_Label3 = new System.Windows.Forms.Label();
-            this.BFX_EOS_Label1 = new System.Windows.Forms.Label();
             this.BFX_ZRX_Label2 = new System.Windows.Forms.Label();
             this.BFX_ZRX_Label1 = new System.Windows.Forms.Label();
+            this.BFX_USDT_Label3 = new System.Windows.Forms.Label();
+            this.BFX_EOS_Label1 = new System.Windows.Forms.Label();
             this.BFX_OMG_Label2 = new System.Windows.Forms.Label();
+            this.BFX_USDT_Label1 = new System.Windows.Forms.Label();
+            this.BFX_EOS_Label3 = new System.Windows.Forms.Label();
             this.BFX_OMG_Label3 = new System.Windows.Forms.Label();
+            this.BFX_BSV_Label2 = new System.Windows.Forms.Label();
+            this.BFX_EOS_Label2 = new System.Windows.Forms.Label();
             this.BFX_ZRX_Label3 = new System.Windows.Forms.Label();
+            this.BFX_BSV_Label3 = new System.Windows.Forms.Label();
+            this.BFX_XLM_Label1 = new System.Windows.Forms.Label();
+            this.BFX_ETH_Label1 = new System.Windows.Forms.Label();
             this.BFX_OMG_Label1 = new System.Windows.Forms.Label();
+            this.BFX_BSV_Label1 = new System.Windows.Forms.Label();
+            this.BFX_XLM_Label3 = new System.Windows.Forms.Label();
             this.BFX_XRP_Label2 = new System.Windows.Forms.Label();
+            this.BFX_ETC_Label2 = new System.Windows.Forms.Label();
+            this.BFX_XLM_Label2 = new System.Windows.Forms.Label();
+            this.BFX_BCH_Label1 = new System.Windows.Forms.Label();
             this.BFX_XRP_Label3 = new System.Windows.Forms.Label();
+            this.BFX_ETC_Label3 = new System.Windows.Forms.Label();
+            this.BFX_MKR_Label1 = new System.Windows.Forms.Label();
+            this.BFX_LTC_Label1 = new System.Windows.Forms.Label();
             this.BFX_XRP_Label1 = new System.Windows.Forms.Label();
+            this.BFX_ETC_Label1 = new System.Windows.Forms.Label();
+            this.BFX_GNT_Label3 = new System.Windows.Forms.Label();
+            this.BFX_XBT_Label3 = new System.Windows.Forms.Label();
+            this.BFX_XBT_Label2 = new System.Windows.Forms.Label();
+            this.BFX_BAT_Label2 = new System.Windows.Forms.Label();
+            this.BFX_MKR_Label3 = new System.Windows.Forms.Label();
+            this.BFX_ETH_Label3 = new System.Windows.Forms.Label();
+            this.BFX_ETH_Label2 = new System.Windows.Forms.Label();
+            this.BFX_BAT_Label3 = new System.Windows.Forms.Label();
+            this.BFX_MKR_Label2 = new System.Windows.Forms.Label();
+            this.BFX_LTC_Label3 = new System.Windows.Forms.Label();
+            this.BFX_BCH_Label2 = new System.Windows.Forms.Label();
+            this.BFX_BAT_Label1 = new System.Windows.Forms.Label();
+            this.BFX_GNT_Label1 = new System.Windows.Forms.Label();
+            this.BFX_BCH_Label3 = new System.Windows.Forms.Label();
+            this.BFX_LTC_Label2 = new System.Windows.Forms.Label();
+            this.BFX_GNT_Label2 = new System.Windows.Forms.Label();
+            this.BFX_CurrencyBox = new System.Windows.Forms.ComboBox();
             this.BFX_CryptoComboBox = new System.Windows.Forms.ComboBox();
             this.BFX_NumCoinsTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.BFX_XBT_Label2 = new System.Windows.Forms.Label();
             this.BFX_BuySellComboBox = new System.Windows.Forms.ComboBox();
-            this.BFX_ETH_Label2 = new System.Windows.Forms.Label();
-            this.BFX_BCH_Label2 = new System.Windows.Forms.Label();
-            this.BFX_LTC_Label2 = new System.Windows.Forms.Label();
-            this.BFX_BCH_Label3 = new System.Windows.Forms.Label();
-            this.BFX_LTC_Label3 = new System.Windows.Forms.Label();
-            this.BFX_ETH_Label3 = new System.Windows.Forms.Label();
-            this.BFX_XBT_Label3 = new System.Windows.Forms.Label();
-            this.BFX_LTC_Label1 = new System.Windows.Forms.Label();
-            this.BFX_BCH_Label1 = new System.Windows.Forms.Label();
-            this.BFX_ETH_Label1 = new System.Windows.Forms.Label();
-            this.BFX_XBT_Label1 = new System.Windows.Forms.Label();
             this.BFX_AvgPrice_Label = new System.Windows.Forms.Label();
             this.fiat_GroupBox = new System.Windows.Forms.GroupBox();
+            this.fiat_panel = new System.Windows.Forms.Panel();
             this.SGD_Label2 = new System.Windows.Forms.Label();
-            this.fiatRefresh_checkBox = new System.Windows.Forms.CheckBox();
-            this.SGD_Label1 = new System.Windows.Forms.Label();
-            this.USD_Label2 = new System.Windows.Forms.Label();
-            this.USD_Label1 = new System.Windows.Forms.Label();
-            this.AUD_Label2 = new System.Windows.Forms.Label();
-            this.NZD_Label2 = new System.Windows.Forms.Label();
-            this.EUR_Label2 = new System.Windows.Forms.Label();
-            this.EUR_Label1 = new System.Windows.Forms.Label();
-            this.NZD_Label1 = new System.Windows.Forms.Label();
             this.AUD_Label1 = new System.Windows.Forms.Label();
+            this.EUR_Label1 = new System.Windows.Forms.Label();
+            this.fiatRefresh_checkBox = new System.Windows.Forms.CheckBox();
+            this.NZD_Label1 = new System.Windows.Forms.Label();
+            this.SGD_Label1 = new System.Windows.Forms.Label();
+            this.EUR_Label2 = new System.Windows.Forms.Label();
+            this.NZD_Label2 = new System.Windows.Forms.Label();
+            this.USD_Label2 = new System.Windows.Forms.Label();
+            this.AUD_Label2 = new System.Windows.Forms.Label();
+            this.USD_Label1 = new System.Windows.Forms.Label();
             this.SettingsButton = new System.Windows.Forms.Button();
             this.IR_GroupBox = new System.Windows.Forms.GroupBox();
+            this.IR_USDC_Label2 = new System.Windows.Forms.Label();
+            this.IR_USDC_Label1 = new System.Windows.Forms.Label();
+            this.IR_USDC_Label3 = new System.Windows.Forms.Label();
             this.IR_LINK_Label2 = new System.Windows.Forms.Label();
             this.IR_LINK_Label1 = new System.Windows.Forms.Label();
             this.IR_LINK_Label3 = new System.Windows.Forms.Label();
-            this.IR_PMGT_Label2 = new System.Windows.Forms.Label();
-            this.IR_PMGT_Label1 = new System.Windows.Forms.Label();
-            this.IR_PMGT_Label3 = new System.Windows.Forms.Label();
+            this.IR_DAI_Label2 = new System.Windows.Forms.Label();
+            this.IR_DAI_Label1 = new System.Windows.Forms.Label();
+            this.IR_DAI_Label3 = new System.Windows.Forms.Label();
             this.IR_USDT_Label2 = new System.Windows.Forms.Label();
             this.IR_USDT_Label3 = new System.Windows.Forms.Label();
             this.IR_USDT_Label1 = new System.Windows.Forms.Label();
@@ -206,9 +214,9 @@
             this.IR_GNT_Label2 = new System.Windows.Forms.Label();
             this.IR_GNT_Label1 = new System.Windows.Forms.Label();
             this.IR_GNT_Label3 = new System.Windows.Forms.Label();
-            this.IR_REP_Label2 = new System.Windows.Forms.Label();
-            this.IR_REP_Label1 = new System.Windows.Forms.Label();
-            this.IR_REP_Label3 = new System.Windows.Forms.Label();
+            this.IR_MKR_Label2 = new System.Windows.Forms.Label();
+            this.IR_MKR_Label1 = new System.Windows.Forms.Label();
+            this.IR_MKR_Label3 = new System.Windows.Forms.Label();
             this.IR_BAT_Label2 = new System.Windows.Forms.Label();
             this.IR_BAT_Label1 = new System.Windows.Forms.Label();
             this.IR_BAT_Label3 = new System.Windows.Forms.Label();
@@ -247,41 +255,45 @@
             this.IR_XBT_Label1 = new System.Windows.Forms.Label();
             this.IR_XRP_Label3 = new System.Windows.Forms.Label();
             this.GDAX_GroupBox = new System.Windows.Forms.GroupBox();
-            this.GDAX_LINK_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_LINK_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_LINK_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_CurrencyBox = new System.Windows.Forms.ComboBox();
-            this.GDAX_ETC_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_ETC_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_ETC_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_REP_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_REP_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_REP_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_XLM_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_XLM_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_XLM_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_XRP_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_XRP_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_XRP_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_ZRX_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_ZRX_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_panel = new System.Windows.Forms.Panel();
+            this.GDAX_DAI_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_DAI_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_DAI_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_MKR_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_XBT_Label1 = new System.Windows.Forms.Label();
             this.GDAX_ZRX_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_MKR_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_ZRX_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_XBT_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_MKR_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_ZRX_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_ETH_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_XRP_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_ETC_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_BCH_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_XRP_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_ETC_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_LTC_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_XRP_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_ETC_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_LTC_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_ETH_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_XLM_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_LINK_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_BCH_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_BCH_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_XLM_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_LINK_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_ETH_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_LTC_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_XLM_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_LINK_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_XBT_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_CurrencyBox = new System.Windows.Forms.ComboBox();
             this.GDAX_AvgPrice_Label = new System.Windows.Forms.Label();
             this.GDAX_CryptoComboBox = new System.Windows.Forms.ComboBox();
             this.GDAX_NumCoinsTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.GDAX_XBT_Label2 = new System.Windows.Forms.Label();
             this.GDAX_BuySellComboBox = new System.Windows.Forms.ComboBox();
-            this.GDAX_ETH_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_BCH_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_LTC_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_LTC_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_BCH_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_ETH_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_XBT_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_LTC_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_BCH_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_ETH_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_XBT_Label1 = new System.Windows.Forms.Label();
             this.IRTickerTT_spread = new System.Windows.Forms.ToolTip(this.components);
             this.AccountWithdrawalAddress_label = new System.Windows.Forms.Label();
             this.AccountWithdrawalNextCheck_label = new System.Windows.Forms.Label();
@@ -346,14 +358,10 @@
             this.GetAccounts_panel = new System.Windows.Forms.Panel();
             this.AccountName_button = new System.Windows.Forms.Button();
             this.AccountLINK_total = new System.Windows.Forms.Label();
-            this.AccountPMGT_total = new System.Windows.Forms.Label();
             this.AccountLINK_value = new System.Windows.Forms.Label();
             this.AccountLINK_label = new System.Windows.Forms.Label();
-            this.AccountPMGT_value = new System.Windows.Forms.Label();
-            this.AccountPMGT_label = new System.Windows.Forms.Label();
             this.AccountGNT_total = new System.Windows.Forms.Label();
             this.AccountZRX_total = new System.Windows.Forms.Label();
-            this.AccountREP_total = new System.Windows.Forms.Label();
             this.AccountOMG_total = new System.Windows.Forms.Label();
             this.AccountBAT_total = new System.Windows.Forms.Label();
             this.AccountETC_total = new System.Windows.Forms.Label();
@@ -378,8 +386,6 @@
             this.AccountGNT_label = new System.Windows.Forms.Label();
             this.AccountZRX_value = new System.Windows.Forms.Label();
             this.AccountZRX_label = new System.Windows.Forms.Label();
-            this.AccountREP_value = new System.Windows.Forms.Label();
-            this.AccountREP_label = new System.Windows.Forms.Label();
             this.AccountOMG_value = new System.Windows.Forms.Label();
             this.AccountOMG_label = new System.Windows.Forms.Label();
             this.AccountBAT_value = new System.Windows.Forms.Label();
@@ -407,6 +413,15 @@
             this.IRTickerTT_avgPrice = new System.Windows.Forms.ToolTip(this.components);
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
             this.IRT_notification = new System.Windows.Forms.NotifyIcon(this.components);
+            this.AccountMKR_total = new System.Windows.Forms.Label();
+            this.AccountMKR_value = new System.Windows.Forms.Label();
+            this.AccountMKR_label = new System.Windows.Forms.Label();
+            this.AccountDAI_total = new System.Windows.Forms.Label();
+            this.AccountDAI_value = new System.Windows.Forms.Label();
+            this.AccountDAI_label = new System.Windows.Forms.Label();
+            this.AccountUSDC_total = new System.Windows.Forms.Label();
+            this.AccountUSDC_value = new System.Windows.Forms.Label();
+            this.AccountUSDC_label = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.IRAccountSettings_groupBox.SuspendLayout();
             this.SlackSettings_groupBox.SuspendLayout();
@@ -415,9 +430,12 @@
             this.BTCM_GroupBox.SuspendLayout();
             this.BAR_GroupBox.SuspendLayout();
             this.BFX_GroupBox.SuspendLayout();
+            this.BFX_panel.SuspendLayout();
             this.fiat_GroupBox.SuspendLayout();
+            this.fiat_panel.SuspendLayout();
             this.IR_GroupBox.SuspendLayout();
             this.GDAX_GroupBox.SuspendLayout();
+            this.GDAX_panel.SuspendLayout();
             this.OTCHelper.SuspendLayout();
             this.IRAccount_panel.SuspendLayout();
             this.AccountOpenOrders_panel.SuspendLayout();
@@ -1293,9 +1311,9 @@
             this.BTCM_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
             this.BTCM_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_AvgPrice_Label.Location = new System.Drawing.Point(6, 263);
+            this.BTCM_AvgPrice_Label.Location = new System.Drawing.Point(9, 263);
             this.BTCM_AvgPrice_Label.Name = "BTCM_AvgPrice_Label";
-            this.BTCM_AvgPrice_Label.Size = new System.Drawing.Size(251, 16);
+            this.BTCM_AvgPrice_Label.Size = new System.Drawing.Size(244, 16);
             this.BTCM_AvgPrice_Label.TabIndex = 16;
             // 
             // BTCM_CryptoComboBox
@@ -1542,7 +1560,7 @@
             this.BAR_GroupBox.ForeColor = System.Drawing.Color.Gray;
             this.BAR_GroupBox.Location = new System.Drawing.Point(305, 322);
             this.BAR_GroupBox.Name = "BAR_GroupBox";
-            this.BAR_GroupBox.Size = new System.Drawing.Size(262, 97);
+            this.BAR_GroupBox.Size = new System.Drawing.Size(262, 92);
             this.BAR_GroupBox.TabIndex = 16;
             this.BAR_GroupBox.TabStop = false;
             this.BAR_GroupBox.Text = "Bitaroo";
@@ -1555,7 +1573,7 @@
             this.BAR_CurrencyBox.Items.AddRange(new object[] {
             "crypto",
             "fiat"});
-            this.BAR_CurrencyBox.Location = new System.Drawing.Point(131, 72);
+            this.BAR_CurrencyBox.Location = new System.Drawing.Point(131, 65);
             this.BAR_CurrencyBox.Name = "BAR_CurrencyBox";
             this.BAR_CurrencyBox.Size = new System.Drawing.Size(58, 21);
             this.BAR_CurrencyBox.TabIndex = 60;
@@ -1566,7 +1584,7 @@
             this.BAR_XBT_Label2.BackColor = System.Drawing.Color.Transparent;
             this.BAR_XBT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BAR_XBT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BAR_XBT_Label2.Location = new System.Drawing.Point(53, 23);
+            this.BAR_XBT_Label2.Location = new System.Drawing.Point(53, 21);
             this.BAR_XBT_Label2.Name = "BAR_XBT_Label2";
             this.BAR_XBT_Label2.Size = new System.Drawing.Size(0, 13);
             this.BAR_XBT_Label2.TabIndex = 4;
@@ -1577,7 +1595,7 @@
             this.BAR_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.BAR_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BAR_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_XBT_Label3.Location = new System.Drawing.Point(117, 23);
+            this.BAR_XBT_Label3.Location = new System.Drawing.Point(117, 18);
             this.BAR_XBT_Label3.Name = "BAR_XBT_Label3";
             this.BAR_XBT_Label3.Size = new System.Drawing.Size(134, 13);
             this.BAR_XBT_Label3.TabIndex = 8;
@@ -1590,16 +1608,16 @@
             this.BAR_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
             this.BAR_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BAR_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BAR_AvgPrice_Label.Location = new System.Drawing.Point(6, 50);
+            this.BAR_AvgPrice_Label.Location = new System.Drawing.Point(9, 43);
             this.BAR_AvgPrice_Label.Name = "BAR_AvgPrice_Label";
-            this.BAR_AvgPrice_Label.Size = new System.Drawing.Size(245, 17);
+            this.BAR_AvgPrice_Label.Size = new System.Drawing.Size(242, 17);
             this.BAR_AvgPrice_Label.TabIndex = 58;
             // 
             // BAR_CryptoComboBox
             // 
             this.BAR_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BAR_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.BAR_CryptoComboBox.Location = new System.Drawing.Point(193, 72);
+            this.BAR_CryptoComboBox.Location = new System.Drawing.Point(193, 65);
             this.BAR_CryptoComboBox.Name = "BAR_CryptoComboBox";
             this.BAR_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
             this.BAR_CryptoComboBox.TabIndex = 57;
@@ -1612,7 +1630,7 @@
             this.BAR_XBT_Label1.BackColor = System.Drawing.Color.Transparent;
             this.BAR_XBT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BAR_XBT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BAR_XBT_Label1.Location = new System.Drawing.Point(6, 23);
+            this.BAR_XBT_Label1.Location = new System.Drawing.Point(6, 21);
             this.BAR_XBT_Label1.Name = "BAR_XBT_Label1";
             this.BAR_XBT_Label1.Size = new System.Drawing.Size(35, 13);
             this.BAR_XBT_Label1.TabIndex = 0;
@@ -1622,7 +1640,7 @@
             // BAR_NumCoinsTextBox
             // 
             this.BAR_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_NumCoinsTextBox.Location = new System.Drawing.Point(58, 72);
+            this.BAR_NumCoinsTextBox.Location = new System.Drawing.Point(58, 65);
             this.BAR_NumCoinsTextBox.Name = "BAR_NumCoinsTextBox";
             this.BAR_NumCoinsTextBox.PromptChar = ' ';
             this.BAR_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
@@ -1639,7 +1657,7 @@
             this.BAR_BuySellComboBox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.BAR_BuySellComboBox.Location = new System.Drawing.Point(9, 72);
+            this.BAR_BuySellComboBox.Location = new System.Drawing.Point(9, 65);
             this.BAR_BuySellComboBox.Name = "BAR_BuySellComboBox";
             this.BAR_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
             this.BAR_BuySellComboBox.TabIndex = 55;
@@ -1649,55 +1667,11 @@
             // 
             this.BFX_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.bfx_faded;
             this.BFX_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.BFX_GroupBox.Controls.Add(this.BFX_panel);
             this.BFX_GroupBox.Controls.Add(this.BFX_CurrencyBox);
-            this.BFX_GroupBox.Controls.Add(this.BFX_USDT_Label2);
-            this.BFX_GroupBox.Controls.Add(this.BFX_USDT_Label3);
-            this.BFX_GroupBox.Controls.Add(this.BFX_USDT_Label1);
-            this.BFX_GroupBox.Controls.Add(this.BFX_BSV_Label2);
-            this.BFX_GroupBox.Controls.Add(this.BFX_BSV_Label3);
-            this.BFX_GroupBox.Controls.Add(this.BFX_BSV_Label1);
-            this.BFX_GroupBox.Controls.Add(this.BFX_ETC_Label2);
-            this.BFX_GroupBox.Controls.Add(this.BFX_ETC_Label3);
-            this.BFX_GroupBox.Controls.Add(this.BFX_ETC_Label1);
-            this.BFX_GroupBox.Controls.Add(this.BFX_BAT_Label2);
-            this.BFX_GroupBox.Controls.Add(this.BFX_BAT_Label3);
-            this.BFX_GroupBox.Controls.Add(this.BFX_BAT_Label1);
-            this.BFX_GroupBox.Controls.Add(this.BFX_GNT_Label2);
-            this.BFX_GroupBox.Controls.Add(this.BFX_GNT_Label1);
-            this.BFX_GroupBox.Controls.Add(this.BFX_REP_Label2);
-            this.BFX_GroupBox.Controls.Add(this.BFX_REP_Label3);
-            this.BFX_GroupBox.Controls.Add(this.BFX_GNT_Label3);
-            this.BFX_GroupBox.Controls.Add(this.BFX_REP_Label1);
-            this.BFX_GroupBox.Controls.Add(this.BFX_XLM_Label2);
-            this.BFX_GroupBox.Controls.Add(this.BFX_XLM_Label3);
-            this.BFX_GroupBox.Controls.Add(this.BFX_XLM_Label1);
-            this.BFX_GroupBox.Controls.Add(this.BFX_EOS_Label2);
-            this.BFX_GroupBox.Controls.Add(this.BFX_EOS_Label3);
-            this.BFX_GroupBox.Controls.Add(this.BFX_EOS_Label1);
-            this.BFX_GroupBox.Controls.Add(this.BFX_ZRX_Label2);
-            this.BFX_GroupBox.Controls.Add(this.BFX_ZRX_Label1);
-            this.BFX_GroupBox.Controls.Add(this.BFX_OMG_Label2);
-            this.BFX_GroupBox.Controls.Add(this.BFX_OMG_Label3);
-            this.BFX_GroupBox.Controls.Add(this.BFX_ZRX_Label3);
-            this.BFX_GroupBox.Controls.Add(this.BFX_OMG_Label1);
-            this.BFX_GroupBox.Controls.Add(this.BFX_XRP_Label2);
-            this.BFX_GroupBox.Controls.Add(this.BFX_XRP_Label3);
-            this.BFX_GroupBox.Controls.Add(this.BFX_XRP_Label1);
             this.BFX_GroupBox.Controls.Add(this.BFX_CryptoComboBox);
             this.BFX_GroupBox.Controls.Add(this.BFX_NumCoinsTextBox);
-            this.BFX_GroupBox.Controls.Add(this.BFX_XBT_Label2);
             this.BFX_GroupBox.Controls.Add(this.BFX_BuySellComboBox);
-            this.BFX_GroupBox.Controls.Add(this.BFX_ETH_Label2);
-            this.BFX_GroupBox.Controls.Add(this.BFX_BCH_Label2);
-            this.BFX_GroupBox.Controls.Add(this.BFX_LTC_Label2);
-            this.BFX_GroupBox.Controls.Add(this.BFX_BCH_Label3);
-            this.BFX_GroupBox.Controls.Add(this.BFX_LTC_Label3);
-            this.BFX_GroupBox.Controls.Add(this.BFX_ETH_Label3);
-            this.BFX_GroupBox.Controls.Add(this.BFX_XBT_Label3);
-            this.BFX_GroupBox.Controls.Add(this.BFX_LTC_Label1);
-            this.BFX_GroupBox.Controls.Add(this.BFX_BCH_Label1);
-            this.BFX_GroupBox.Controls.Add(this.BFX_ETH_Label1);
-            this.BFX_GroupBox.Controls.Add(this.BFX_XBT_Label1);
             this.BFX_GroupBox.Controls.Add(this.BFX_AvgPrice_Label);
             this.BFX_GroupBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.BFX_GroupBox.ForeColor = System.Drawing.Color.Gray;
@@ -1708,6 +1682,661 @@
             this.BFX_GroupBox.TabStop = false;
             this.BFX_GroupBox.Text = "BitFinex";
             this.BFX_GroupBox.Click += new System.EventHandler(this.BFX_GroupBox_Click);
+            // 
+            // BFX_panel
+            // 
+            this.BFX_panel.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_panel.Controls.Add(this.BFX_DAI_Label3);
+            this.BFX_panel.Controls.Add(this.BFX_DAI_Label1);
+            this.BFX_panel.Controls.Add(this.BFX_DAI_Label2);
+            this.BFX_panel.Controls.Add(this.BFX_XBT_Label1);
+            this.BFX_panel.Controls.Add(this.BFX_USDT_Label2);
+            this.BFX_panel.Controls.Add(this.BFX_ZRX_Label2);
+            this.BFX_panel.Controls.Add(this.BFX_ZRX_Label1);
+            this.BFX_panel.Controls.Add(this.BFX_USDT_Label3);
+            this.BFX_panel.Controls.Add(this.BFX_EOS_Label1);
+            this.BFX_panel.Controls.Add(this.BFX_OMG_Label2);
+            this.BFX_panel.Controls.Add(this.BFX_USDT_Label1);
+            this.BFX_panel.Controls.Add(this.BFX_EOS_Label3);
+            this.BFX_panel.Controls.Add(this.BFX_OMG_Label3);
+            this.BFX_panel.Controls.Add(this.BFX_BSV_Label2);
+            this.BFX_panel.Controls.Add(this.BFX_EOS_Label2);
+            this.BFX_panel.Controls.Add(this.BFX_ZRX_Label3);
+            this.BFX_panel.Controls.Add(this.BFX_BSV_Label3);
+            this.BFX_panel.Controls.Add(this.BFX_XLM_Label1);
+            this.BFX_panel.Controls.Add(this.BFX_ETH_Label1);
+            this.BFX_panel.Controls.Add(this.BFX_OMG_Label1);
+            this.BFX_panel.Controls.Add(this.BFX_BSV_Label1);
+            this.BFX_panel.Controls.Add(this.BFX_XLM_Label3);
+            this.BFX_panel.Controls.Add(this.BFX_XRP_Label2);
+            this.BFX_panel.Controls.Add(this.BFX_ETC_Label2);
+            this.BFX_panel.Controls.Add(this.BFX_XLM_Label2);
+            this.BFX_panel.Controls.Add(this.BFX_BCH_Label1);
+            this.BFX_panel.Controls.Add(this.BFX_XRP_Label3);
+            this.BFX_panel.Controls.Add(this.BFX_ETC_Label3);
+            this.BFX_panel.Controls.Add(this.BFX_MKR_Label1);
+            this.BFX_panel.Controls.Add(this.BFX_LTC_Label1);
+            this.BFX_panel.Controls.Add(this.BFX_XRP_Label1);
+            this.BFX_panel.Controls.Add(this.BFX_ETC_Label1);
+            this.BFX_panel.Controls.Add(this.BFX_GNT_Label3);
+            this.BFX_panel.Controls.Add(this.BFX_XBT_Label3);
+            this.BFX_panel.Controls.Add(this.BFX_XBT_Label2);
+            this.BFX_panel.Controls.Add(this.BFX_BAT_Label2);
+            this.BFX_panel.Controls.Add(this.BFX_MKR_Label3);
+            this.BFX_panel.Controls.Add(this.BFX_ETH_Label3);
+            this.BFX_panel.Controls.Add(this.BFX_ETH_Label2);
+            this.BFX_panel.Controls.Add(this.BFX_BAT_Label3);
+            this.BFX_panel.Controls.Add(this.BFX_MKR_Label2);
+            this.BFX_panel.Controls.Add(this.BFX_LTC_Label3);
+            this.BFX_panel.Controls.Add(this.BFX_BCH_Label2);
+            this.BFX_panel.Controls.Add(this.BFX_BAT_Label1);
+            this.BFX_panel.Controls.Add(this.BFX_GNT_Label1);
+            this.BFX_panel.Controls.Add(this.BFX_BCH_Label3);
+            this.BFX_panel.Controls.Add(this.BFX_LTC_Label2);
+            this.BFX_panel.Controls.Add(this.BFX_GNT_Label2);
+            this.BFX_panel.Location = new System.Drawing.Point(0, 16);
+            this.BFX_panel.Name = "BFX_panel";
+            this.BFX_panel.Size = new System.Drawing.Size(262, 307);
+            this.BFX_panel.TabIndex = 57;
+            // 
+            // BFX_DAI_Label3
+            // 
+            this.BFX_DAI_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_DAI_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_DAI_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_DAI_Label3.Location = new System.Drawing.Point(119, 300);
+            this.BFX_DAI_Label3.Name = "BFX_DAI_Label3";
+            this.BFX_DAI_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_DAI_Label3.TabIndex = 53;
+            this.BFX_DAI_Label3.Tag = "";
+            this.BFX_DAI_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_DAI_Label1
+            // 
+            this.BFX_DAI_Label1.AutoSize = true;
+            this.BFX_DAI_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_DAI_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_DAI_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_DAI_Label1.Location = new System.Drawing.Point(6, 307);
+            this.BFX_DAI_Label1.Name = "BFX_DAI_Label1";
+            this.BFX_DAI_Label1.Size = new System.Drawing.Size(32, 13);
+            this.BFX_DAI_Label1.TabIndex = 51;
+            this.BFX_DAI_Label1.Tag = "DCECryptoLabel";
+            this.BFX_DAI_Label1.Text = "DAI:";
+            // 
+            // BFX_DAI_Label2
+            // 
+            this.BFX_DAI_Label2.AutoSize = true;
+            this.BFX_DAI_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_DAI_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_DAI_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_DAI_Label2.Location = new System.Drawing.Point(44, 307);
+            this.BFX_DAI_Label2.Name = "BFX_DAI_Label2";
+            this.BFX_DAI_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_DAI_Label2.TabIndex = 52;
+            this.BFX_DAI_Label2.Tag = "BFX";
+            // 
+            // BFX_XBT_Label1
+            // 
+            this.BFX_XBT_Label1.AutoSize = true;
+            this.BFX_XBT_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_XBT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XBT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_XBT_Label1.Location = new System.Drawing.Point(6, 7);
+            this.BFX_XBT_Label1.Name = "BFX_XBT_Label1";
+            this.BFX_XBT_Label1.Size = new System.Drawing.Size(35, 13);
+            this.BFX_XBT_Label1.TabIndex = 0;
+            this.BFX_XBT_Label1.Tag = "DCECryptoLabel";
+            this.BFX_XBT_Label1.Text = "BTC:";
+            // 
+            // BFX_USDT_Label2
+            // 
+            this.BFX_USDT_Label2.AutoSize = true;
+            this.BFX_USDT_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_USDT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_USDT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_USDT_Label2.Location = new System.Drawing.Point(45, 67);
+            this.BFX_USDT_Label2.Name = "BFX_USDT_Label2";
+            this.BFX_USDT_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_USDT_Label2.TabIndex = 49;
+            this.BFX_USDT_Label2.Tag = "BFX";
+            // 
+            // BFX_ZRX_Label2
+            // 
+            this.BFX_ZRX_Label2.AutoSize = true;
+            this.BFX_ZRX_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_ZRX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_ZRX_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_ZRX_Label2.Location = new System.Drawing.Point(45, 227);
+            this.BFX_ZRX_Label2.Name = "BFX_ZRX_Label2";
+            this.BFX_ZRX_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_ZRX_Label2.TabIndex = 25;
+            this.BFX_ZRX_Label2.Tag = "BFX";
+            // 
+            // BFX_ZRX_Label1
+            // 
+            this.BFX_ZRX_Label1.AutoSize = true;
+            this.BFX_ZRX_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_ZRX_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_ZRX_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_ZRX_Label1.Location = new System.Drawing.Point(6, 227);
+            this.BFX_ZRX_Label1.Name = "BFX_ZRX_Label1";
+            this.BFX_ZRX_Label1.Size = new System.Drawing.Size(36, 13);
+            this.BFX_ZRX_Label1.TabIndex = 23;
+            this.BFX_ZRX_Label1.Tag = "DCECryptoLabel";
+            this.BFX_ZRX_Label1.Text = "ZRX:";
+            // 
+            // BFX_USDT_Label3
+            // 
+            this.BFX_USDT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_USDT_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_USDT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_USDT_Label3.Location = new System.Drawing.Point(118, 60);
+            this.BFX_USDT_Label3.Name = "BFX_USDT_Label3";
+            this.BFX_USDT_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_USDT_Label3.TabIndex = 50;
+            this.BFX_USDT_Label3.Tag = "";
+            this.BFX_USDT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_EOS_Label1
+            // 
+            this.BFX_EOS_Label1.AutoSize = true;
+            this.BFX_EOS_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_EOS_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_EOS_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_EOS_Label1.Location = new System.Drawing.Point(6, 87);
+            this.BFX_EOS_Label1.Name = "BFX_EOS_Label1";
+            this.BFX_EOS_Label1.Size = new System.Drawing.Size(36, 13);
+            this.BFX_EOS_Label1.TabIndex = 27;
+            this.BFX_EOS_Label1.Tag = "DCECryptoLabel";
+            this.BFX_EOS_Label1.Text = "EOS:";
+            // 
+            // BFX_OMG_Label2
+            // 
+            this.BFX_OMG_Label2.AutoSize = true;
+            this.BFX_OMG_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_OMG_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_OMG_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_OMG_Label2.Location = new System.Drawing.Point(45, 207);
+            this.BFX_OMG_Label2.Name = "BFX_OMG_Label2";
+            this.BFX_OMG_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_OMG_Label2.TabIndex = 22;
+            this.BFX_OMG_Label2.Tag = "BFX";
+            // 
+            // BFX_USDT_Label1
+            // 
+            this.BFX_USDT_Label1.AutoSize = true;
+            this.BFX_USDT_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_USDT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_USDT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_USDT_Label1.Location = new System.Drawing.Point(5, 67);
+            this.BFX_USDT_Label1.Name = "BFX_USDT_Label1";
+            this.BFX_USDT_Label1.Size = new System.Drawing.Size(45, 13);
+            this.BFX_USDT_Label1.TabIndex = 48;
+            this.BFX_USDT_Label1.Tag = "DCECryptoLabel";
+            this.BFX_USDT_Label1.Text = "USDT:";
+            // 
+            // BFX_EOS_Label3
+            // 
+            this.BFX_EOS_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_EOS_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_EOS_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_EOS_Label3.Location = new System.Drawing.Point(119, 80);
+            this.BFX_EOS_Label3.Name = "BFX_EOS_Label3";
+            this.BFX_EOS_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_EOS_Label3.TabIndex = 29;
+            this.BFX_EOS_Label3.Tag = "";
+            this.BFX_EOS_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_OMG_Label3
+            // 
+            this.BFX_OMG_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_OMG_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_OMG_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_OMG_Label3.Location = new System.Drawing.Point(119, 200);
+            this.BFX_OMG_Label3.Name = "BFX_OMG_Label3";
+            this.BFX_OMG_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_OMG_Label3.TabIndex = 24;
+            this.BFX_OMG_Label3.Tag = "";
+            this.BFX_OMG_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BFX_OMG_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_OMG_Label3_MouseDoubleClick);
+            // 
+            // BFX_BSV_Label2
+            // 
+            this.BFX_BSV_Label2.AutoSize = true;
+            this.BFX_BSV_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_BSV_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_BSV_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_BSV_Label2.Location = new System.Drawing.Point(45, 127);
+            this.BFX_BSV_Label2.Name = "BFX_BSV_Label2";
+            this.BFX_BSV_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_BSV_Label2.TabIndex = 46;
+            this.BFX_BSV_Label2.Tag = "BFX";
+            // 
+            // BFX_EOS_Label2
+            // 
+            this.BFX_EOS_Label2.AutoSize = true;
+            this.BFX_EOS_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_EOS_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_EOS_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_EOS_Label2.Location = new System.Drawing.Point(45, 87);
+            this.BFX_EOS_Label2.Name = "BFX_EOS_Label2";
+            this.BFX_EOS_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_EOS_Label2.TabIndex = 28;
+            this.BFX_EOS_Label2.Tag = "BFX";
+            // 
+            // BFX_ZRX_Label3
+            // 
+            this.BFX_ZRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_ZRX_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_ZRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_ZRX_Label3.Location = new System.Drawing.Point(119, 219);
+            this.BFX_ZRX_Label3.Name = "BFX_ZRX_Label3";
+            this.BFX_ZRX_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_ZRX_Label3.TabIndex = 26;
+            this.BFX_ZRX_Label3.Tag = "";
+            this.BFX_ZRX_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BFX_ZRX_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_ZRX_Label3_MouseDoubleClick);
+            // 
+            // BFX_BSV_Label3
+            // 
+            this.BFX_BSV_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_BSV_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_BSV_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_BSV_Label3.Location = new System.Drawing.Point(119, 120);
+            this.BFX_BSV_Label3.Name = "BFX_BSV_Label3";
+            this.BFX_BSV_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_BSV_Label3.TabIndex = 47;
+            this.BFX_BSV_Label3.Tag = "";
+            this.BFX_BSV_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_XLM_Label1
+            // 
+            this.BFX_XLM_Label1.AutoSize = true;
+            this.BFX_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_XLM_Label1.Location = new System.Drawing.Point(6, 187);
+            this.BFX_XLM_Label1.Name = "BFX_XLM_Label1";
+            this.BFX_XLM_Label1.Size = new System.Drawing.Size(36, 13);
+            this.BFX_XLM_Label1.TabIndex = 30;
+            this.BFX_XLM_Label1.Tag = "DCECryptoLabel";
+            this.BFX_XLM_Label1.Text = "XLM:";
+            // 
+            // BFX_ETH_Label1
+            // 
+            this.BFX_ETH_Label1.AutoSize = true;
+            this.BFX_ETH_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_ETH_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_ETH_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_ETH_Label1.Location = new System.Drawing.Point(6, 47);
+            this.BFX_ETH_Label1.Name = "BFX_ETH_Label1";
+            this.BFX_ETH_Label1.Size = new System.Drawing.Size(36, 13);
+            this.BFX_ETH_Label1.TabIndex = 1;
+            this.BFX_ETH_Label1.Tag = "DCECryptoLabel";
+            this.BFX_ETH_Label1.Text = "ETH:";
+            // 
+            // BFX_OMG_Label1
+            // 
+            this.BFX_OMG_Label1.AutoSize = true;
+            this.BFX_OMG_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_OMG_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_OMG_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_OMG_Label1.Location = new System.Drawing.Point(6, 207);
+            this.BFX_OMG_Label1.Name = "BFX_OMG_Label1";
+            this.BFX_OMG_Label1.Size = new System.Drawing.Size(39, 13);
+            this.BFX_OMG_Label1.TabIndex = 21;
+            this.BFX_OMG_Label1.Tag = "DCECryptoLabel";
+            this.BFX_OMG_Label1.Text = "OMG:";
+            // 
+            // BFX_BSV_Label1
+            // 
+            this.BFX_BSV_Label1.AutoSize = true;
+            this.BFX_BSV_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_BSV_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_BSV_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_BSV_Label1.Location = new System.Drawing.Point(6, 127);
+            this.BFX_BSV_Label1.Name = "BFX_BSV_Label1";
+            this.BFX_BSV_Label1.Size = new System.Drawing.Size(35, 13);
+            this.BFX_BSV_Label1.TabIndex = 45;
+            this.BFX_BSV_Label1.Tag = "DCECryptoLabel";
+            this.BFX_BSV_Label1.Text = "BSV:";
+            // 
+            // BFX_XLM_Label3
+            // 
+            this.BFX_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XLM_Label3.Location = new System.Drawing.Point(119, 180);
+            this.BFX_XLM_Label3.Name = "BFX_XLM_Label3";
+            this.BFX_XLM_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_XLM_Label3.TabIndex = 32;
+            this.BFX_XLM_Label3.Tag = "";
+            this.BFX_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_XRP_Label2
+            // 
+            this.BFX_XRP_Label2.AutoSize = true;
+            this.BFX_XRP_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_XRP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XRP_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_XRP_Label2.Location = new System.Drawing.Point(45, 27);
+            this.BFX_XRP_Label2.Name = "BFX_XRP_Label2";
+            this.BFX_XRP_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_XRP_Label2.TabIndex = 19;
+            this.BFX_XRP_Label2.Tag = "BFX";
+            // 
+            // BFX_ETC_Label2
+            // 
+            this.BFX_ETC_Label2.AutoSize = true;
+            this.BFX_ETC_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_ETC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_ETC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_ETC_Label2.Location = new System.Drawing.Point(45, 167);
+            this.BFX_ETC_Label2.Name = "BFX_ETC_Label2";
+            this.BFX_ETC_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_ETC_Label2.TabIndex = 43;
+            this.BFX_ETC_Label2.Tag = "BFX";
+            // 
+            // BFX_XLM_Label2
+            // 
+            this.BFX_XLM_Label2.AutoSize = true;
+            this.BFX_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_XLM_Label2.Location = new System.Drawing.Point(45, 187);
+            this.BFX_XLM_Label2.Name = "BFX_XLM_Label2";
+            this.BFX_XLM_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_XLM_Label2.TabIndex = 31;
+            this.BFX_XLM_Label2.Tag = "BFX";
+            // 
+            // BFX_BCH_Label1
+            // 
+            this.BFX_BCH_Label1.AutoSize = true;
+            this.BFX_BCH_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_BCH_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_BCH_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_BCH_Label1.Location = new System.Drawing.Point(6, 107);
+            this.BFX_BCH_Label1.Name = "BFX_BCH_Label1";
+            this.BFX_BCH_Label1.Size = new System.Drawing.Size(36, 13);
+            this.BFX_BCH_Label1.TabIndex = 2;
+            this.BFX_BCH_Label1.Tag = "DCECryptoLabel";
+            this.BFX_BCH_Label1.Text = "BCH:";
+            // 
+            // BFX_XRP_Label3
+            // 
+            this.BFX_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XRP_Label3.Location = new System.Drawing.Point(119, 20);
+            this.BFX_XRP_Label3.Name = "BFX_XRP_Label3";
+            this.BFX_XRP_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_XRP_Label3.TabIndex = 20;
+            this.BFX_XRP_Label3.Tag = "";
+            this.BFX_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BFX_XRP_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_XRP_Label3_MouseDoubleClick);
+            // 
+            // BFX_ETC_Label3
+            // 
+            this.BFX_ETC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_ETC_Label3.Location = new System.Drawing.Point(119, 160);
+            this.BFX_ETC_Label3.Name = "BFX_ETC_Label3";
+            this.BFX_ETC_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_ETC_Label3.TabIndex = 44;
+            this.BFX_ETC_Label3.Tag = "";
+            this.BFX_ETC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_MKR_Label1
+            // 
+            this.BFX_MKR_Label1.AutoSize = true;
+            this.BFX_MKR_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_MKR_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_MKR_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_MKR_Label1.Location = new System.Drawing.Point(6, 287);
+            this.BFX_MKR_Label1.Name = "BFX_MKR_Label1";
+            this.BFX_MKR_Label1.Size = new System.Drawing.Size(38, 13);
+            this.BFX_MKR_Label1.TabIndex = 33;
+            this.BFX_MKR_Label1.Tag = "DCECryptoLabel";
+            this.BFX_MKR_Label1.Text = "MKR:";
+            // 
+            // BFX_LTC_Label1
+            // 
+            this.BFX_LTC_Label1.AutoSize = true;
+            this.BFX_LTC_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_LTC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_LTC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_LTC_Label1.Location = new System.Drawing.Point(6, 147);
+            this.BFX_LTC_Label1.Name = "BFX_LTC_Label1";
+            this.BFX_LTC_Label1.Size = new System.Drawing.Size(34, 13);
+            this.BFX_LTC_Label1.TabIndex = 3;
+            this.BFX_LTC_Label1.Tag = "DCECryptoLabel";
+            this.BFX_LTC_Label1.Text = "LTC:";
+            // 
+            // BFX_XRP_Label1
+            // 
+            this.BFX_XRP_Label1.AutoSize = true;
+            this.BFX_XRP_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_XRP_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XRP_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_XRP_Label1.Location = new System.Drawing.Point(6, 27);
+            this.BFX_XRP_Label1.Name = "BFX_XRP_Label1";
+            this.BFX_XRP_Label1.Size = new System.Drawing.Size(36, 13);
+            this.BFX_XRP_Label1.TabIndex = 18;
+            this.BFX_XRP_Label1.Tag = "DCECryptoLabel";
+            this.BFX_XRP_Label1.Text = "XRP:";
+            // 
+            // BFX_ETC_Label1
+            // 
+            this.BFX_ETC_Label1.AutoSize = true;
+            this.BFX_ETC_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_ETC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_ETC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_ETC_Label1.Location = new System.Drawing.Point(6, 167);
+            this.BFX_ETC_Label1.Name = "BFX_ETC_Label1";
+            this.BFX_ETC_Label1.Size = new System.Drawing.Size(35, 13);
+            this.BFX_ETC_Label1.TabIndex = 42;
+            this.BFX_ETC_Label1.Tag = "DCECryptoLabel";
+            this.BFX_ETC_Label1.Text = "ETC:";
+            // 
+            // BFX_GNT_Label3
+            // 
+            this.BFX_GNT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_GNT_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_GNT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_GNT_Label3.Location = new System.Drawing.Point(119, 260);
+            this.BFX_GNT_Label3.Name = "BFX_GNT_Label3";
+            this.BFX_GNT_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_GNT_Label3.TabIndex = 38;
+            this.BFX_GNT_Label3.Tag = "";
+            this.BFX_GNT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_XBT_Label3
+            // 
+            this.BFX_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XBT_Label3.Location = new System.Drawing.Point(119, 0);
+            this.BFX_XBT_Label3.Name = "BFX_XBT_Label3";
+            this.BFX_XBT_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_XBT_Label3.TabIndex = 16;
+            this.BFX_XBT_Label3.Tag = "";
+            this.BFX_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BFX_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_XBT_Label3_MouseDoubleClick);
+            // 
+            // BFX_XBT_Label2
+            // 
+            this.BFX_XBT_Label2.AutoSize = true;
+            this.BFX_XBT_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_XBT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_XBT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_XBT_Label2.Location = new System.Drawing.Point(45, 7);
+            this.BFX_XBT_Label2.Name = "BFX_XBT_Label2";
+            this.BFX_XBT_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_XBT_Label2.TabIndex = 4;
+            this.BFX_XBT_Label2.Tag = "BFX";
+            // 
+            // BFX_BAT_Label2
+            // 
+            this.BFX_BAT_Label2.AutoSize = true;
+            this.BFX_BAT_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_BAT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_BAT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_BAT_Label2.Location = new System.Drawing.Point(45, 247);
+            this.BFX_BAT_Label2.Name = "BFX_BAT_Label2";
+            this.BFX_BAT_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_BAT_Label2.TabIndex = 40;
+            this.BFX_BAT_Label2.Tag = "BFX";
+            // 
+            // BFX_MKR_Label3
+            // 
+            this.BFX_MKR_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_MKR_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_MKR_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_MKR_Label3.Location = new System.Drawing.Point(119, 280);
+            this.BFX_MKR_Label3.Name = "BFX_MKR_Label3";
+            this.BFX_MKR_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_MKR_Label3.TabIndex = 36;
+            this.BFX_MKR_Label3.Tag = "";
+            this.BFX_MKR_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_ETH_Label3
+            // 
+            this.BFX_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_ETH_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_ETH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_ETH_Label3.Location = new System.Drawing.Point(119, 40);
+            this.BFX_ETH_Label3.Name = "BFX_ETH_Label3";
+            this.BFX_ETH_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_ETH_Label3.TabIndex = 17;
+            this.BFX_ETH_Label3.Tag = "";
+            this.BFX_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BFX_ETH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_ETH_Label3_MouseDoubleClick);
+            // 
+            // BFX_ETH_Label2
+            // 
+            this.BFX_ETH_Label2.AutoSize = true;
+            this.BFX_ETH_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_ETH_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_ETH_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_ETH_Label2.Location = new System.Drawing.Point(45, 47);
+            this.BFX_ETH_Label2.Name = "BFX_ETH_Label2";
+            this.BFX_ETH_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_ETH_Label2.TabIndex = 5;
+            this.BFX_ETH_Label2.Tag = "BFX";
+            // 
+            // BFX_BAT_Label3
+            // 
+            this.BFX_BAT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_BAT_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_BAT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_BAT_Label3.Location = new System.Drawing.Point(119, 240);
+            this.BFX_BAT_Label3.Name = "BFX_BAT_Label3";
+            this.BFX_BAT_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_BAT_Label3.TabIndex = 41;
+            this.BFX_BAT_Label3.Tag = "";
+            this.BFX_BAT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BFX_MKR_Label2
+            // 
+            this.BFX_MKR_Label2.AutoSize = true;
+            this.BFX_MKR_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_MKR_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_MKR_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_MKR_Label2.Location = new System.Drawing.Point(45, 287);
+            this.BFX_MKR_Label2.Name = "BFX_MKR_Label2";
+            this.BFX_MKR_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_MKR_Label2.TabIndex = 34;
+            this.BFX_MKR_Label2.Tag = "BFX";
+            // 
+            // BFX_LTC_Label3
+            // 
+            this.BFX_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_LTC_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_LTC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_LTC_Label3.Location = new System.Drawing.Point(119, 140);
+            this.BFX_LTC_Label3.Name = "BFX_LTC_Label3";
+            this.BFX_LTC_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_LTC_Label3.TabIndex = 19;
+            this.BFX_LTC_Label3.Tag = "";
+            this.BFX_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BFX_LTC_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_LTC_Label3_MouseDoubleClick);
+            // 
+            // BFX_BCH_Label2
+            // 
+            this.BFX_BCH_Label2.AutoSize = true;
+            this.BFX_BCH_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_BCH_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_BCH_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_BCH_Label2.Location = new System.Drawing.Point(45, 107);
+            this.BFX_BCH_Label2.Name = "BFX_BCH_Label2";
+            this.BFX_BCH_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_BCH_Label2.TabIndex = 6;
+            this.BFX_BCH_Label2.Tag = "BFX";
+            // 
+            // BFX_BAT_Label1
+            // 
+            this.BFX_BAT_Label1.AutoSize = true;
+            this.BFX_BAT_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_BAT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_BAT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_BAT_Label1.Location = new System.Drawing.Point(6, 247);
+            this.BFX_BAT_Label1.Name = "BFX_BAT_Label1";
+            this.BFX_BAT_Label1.Size = new System.Drawing.Size(35, 13);
+            this.BFX_BAT_Label1.TabIndex = 39;
+            this.BFX_BAT_Label1.Tag = "DCECryptoLabel";
+            this.BFX_BAT_Label1.Text = "BAT:";
+            // 
+            // BFX_GNT_Label1
+            // 
+            this.BFX_GNT_Label1.AutoSize = true;
+            this.BFX_GNT_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_GNT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_GNT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_GNT_Label1.Location = new System.Drawing.Point(6, 267);
+            this.BFX_GNT_Label1.Name = "BFX_GNT_Label1";
+            this.BFX_GNT_Label1.Size = new System.Drawing.Size(37, 13);
+            this.BFX_GNT_Label1.TabIndex = 35;
+            this.BFX_GNT_Label1.Tag = "DCECryptoLabel";
+            this.BFX_GNT_Label1.Text = "GNT:";
+            // 
+            // BFX_BCH_Label3
+            // 
+            this.BFX_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BFX_BCH_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_BCH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_BCH_Label3.Location = new System.Drawing.Point(119, 100);
+            this.BFX_BCH_Label3.Name = "BFX_BCH_Label3";
+            this.BFX_BCH_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BFX_BCH_Label3.TabIndex = 18;
+            this.BFX_BCH_Label3.Tag = "";
+            this.BFX_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BFX_BCH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_BCH_Label3_MouseDoubleClick);
+            // 
+            // BFX_LTC_Label2
+            // 
+            this.BFX_LTC_Label2.AutoSize = true;
+            this.BFX_LTC_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_LTC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_LTC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_LTC_Label2.Location = new System.Drawing.Point(45, 147);
+            this.BFX_LTC_Label2.Name = "BFX_LTC_Label2";
+            this.BFX_LTC_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_LTC_Label2.TabIndex = 7;
+            this.BFX_LTC_Label2.Tag = "BFX";
+            // 
+            // BFX_GNT_Label2
+            // 
+            this.BFX_GNT_Label2.AutoSize = true;
+            this.BFX_GNT_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BFX_GNT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BFX_GNT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BFX_GNT_Label2.Location = new System.Drawing.Point(45, 267);
+            this.BFX_GNT_Label2.Name = "BFX_GNT_Label2";
+            this.BFX_GNT_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BFX_GNT_Label2.TabIndex = 37;
+            this.BFX_GNT_Label2.Tag = "BFX";
             // 
             // BFX_CurrencyBox
             // 
@@ -1721,416 +2350,6 @@
             this.BFX_CurrencyBox.Name = "BFX_CurrencyBox";
             this.BFX_CurrencyBox.Size = new System.Drawing.Size(58, 21);
             this.BFX_CurrencyBox.TabIndex = 56;
-            // 
-            // BFX_USDT_Label2
-            // 
-            this.BFX_USDT_Label2.AutoSize = true;
-            this.BFX_USDT_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_USDT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_USDT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_USDT_Label2.Location = new System.Drawing.Point(44, 83);
-            this.BFX_USDT_Label2.Name = "BFX_USDT_Label2";
-            this.BFX_USDT_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_USDT_Label2.TabIndex = 49;
-            this.BFX_USDT_Label2.Tag = "BFX";
-            // 
-            // BFX_USDT_Label3
-            // 
-            this.BFX_USDT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_USDT_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_USDT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_USDT_Label3.Location = new System.Drawing.Point(118, 83);
-            this.BFX_USDT_Label3.Name = "BFX_USDT_Label3";
-            this.BFX_USDT_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_USDT_Label3.TabIndex = 50;
-            this.BFX_USDT_Label3.Tag = "";
-            this.BFX_USDT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BFX_USDT_Label1
-            // 
-            this.BFX_USDT_Label1.AutoSize = true;
-            this.BFX_USDT_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_USDT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_USDT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_USDT_Label1.Location = new System.Drawing.Point(5, 83);
-            this.BFX_USDT_Label1.Name = "BFX_USDT_Label1";
-            this.BFX_USDT_Label1.Size = new System.Drawing.Size(45, 13);
-            this.BFX_USDT_Label1.TabIndex = 48;
-            this.BFX_USDT_Label1.Tag = "DCECryptoLabel";
-            this.BFX_USDT_Label1.Text = "USDT:";
-            // 
-            // BFX_BSV_Label2
-            // 
-            this.BFX_BSV_Label2.AutoSize = true;
-            this.BFX_BSV_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_BSV_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_BSV_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_BSV_Label2.Location = new System.Drawing.Point(45, 143);
-            this.BFX_BSV_Label2.Name = "BFX_BSV_Label2";
-            this.BFX_BSV_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_BSV_Label2.TabIndex = 46;
-            this.BFX_BSV_Label2.Tag = "BFX";
-            // 
-            // BFX_BSV_Label3
-            // 
-            this.BFX_BSV_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_BSV_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_BSV_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_BSV_Label3.Location = new System.Drawing.Point(119, 143);
-            this.BFX_BSV_Label3.Name = "BFX_BSV_Label3";
-            this.BFX_BSV_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_BSV_Label3.TabIndex = 47;
-            this.BFX_BSV_Label3.Tag = "";
-            this.BFX_BSV_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BFX_BSV_Label1
-            // 
-            this.BFX_BSV_Label1.AutoSize = true;
-            this.BFX_BSV_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_BSV_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_BSV_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_BSV_Label1.Location = new System.Drawing.Point(6, 143);
-            this.BFX_BSV_Label1.Name = "BFX_BSV_Label1";
-            this.BFX_BSV_Label1.Size = new System.Drawing.Size(35, 13);
-            this.BFX_BSV_Label1.TabIndex = 45;
-            this.BFX_BSV_Label1.Tag = "DCECryptoLabel";
-            this.BFX_BSV_Label1.Text = "BSV:";
-            // 
-            // BFX_ETC_Label2
-            // 
-            this.BFX_ETC_Label2.AutoSize = true;
-            this.BFX_ETC_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_ETC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_ETC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_ETC_Label2.Location = new System.Drawing.Point(45, 183);
-            this.BFX_ETC_Label2.Name = "BFX_ETC_Label2";
-            this.BFX_ETC_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_ETC_Label2.TabIndex = 43;
-            this.BFX_ETC_Label2.Tag = "BFX";
-            // 
-            // BFX_ETC_Label3
-            // 
-            this.BFX_ETC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_ETC_Label3.Location = new System.Drawing.Point(119, 183);
-            this.BFX_ETC_Label3.Name = "BFX_ETC_Label3";
-            this.BFX_ETC_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_ETC_Label3.TabIndex = 44;
-            this.BFX_ETC_Label3.Tag = "";
-            this.BFX_ETC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BFX_ETC_Label1
-            // 
-            this.BFX_ETC_Label1.AutoSize = true;
-            this.BFX_ETC_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_ETC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_ETC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_ETC_Label1.Location = new System.Drawing.Point(6, 183);
-            this.BFX_ETC_Label1.Name = "BFX_ETC_Label1";
-            this.BFX_ETC_Label1.Size = new System.Drawing.Size(35, 13);
-            this.BFX_ETC_Label1.TabIndex = 42;
-            this.BFX_ETC_Label1.Tag = "DCECryptoLabel";
-            this.BFX_ETC_Label1.Text = "ETC:";
-            // 
-            // BFX_BAT_Label2
-            // 
-            this.BFX_BAT_Label2.AutoSize = true;
-            this.BFX_BAT_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_BAT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_BAT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_BAT_Label2.Location = new System.Drawing.Point(45, 263);
-            this.BFX_BAT_Label2.Name = "BFX_BAT_Label2";
-            this.BFX_BAT_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_BAT_Label2.TabIndex = 40;
-            this.BFX_BAT_Label2.Tag = "BFX";
-            // 
-            // BFX_BAT_Label3
-            // 
-            this.BFX_BAT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_BAT_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_BAT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_BAT_Label3.Location = new System.Drawing.Point(119, 263);
-            this.BFX_BAT_Label3.Name = "BFX_BAT_Label3";
-            this.BFX_BAT_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_BAT_Label3.TabIndex = 41;
-            this.BFX_BAT_Label3.Tag = "";
-            this.BFX_BAT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BFX_BAT_Label1
-            // 
-            this.BFX_BAT_Label1.AutoSize = true;
-            this.BFX_BAT_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_BAT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_BAT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_BAT_Label1.Location = new System.Drawing.Point(6, 263);
-            this.BFX_BAT_Label1.Name = "BFX_BAT_Label1";
-            this.BFX_BAT_Label1.Size = new System.Drawing.Size(35, 13);
-            this.BFX_BAT_Label1.TabIndex = 39;
-            this.BFX_BAT_Label1.Tag = "DCECryptoLabel";
-            this.BFX_BAT_Label1.Text = "BAT:";
-            // 
-            // BFX_GNT_Label2
-            // 
-            this.BFX_GNT_Label2.AutoSize = true;
-            this.BFX_GNT_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_GNT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_GNT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_GNT_Label2.Location = new System.Drawing.Point(45, 303);
-            this.BFX_GNT_Label2.Name = "BFX_GNT_Label2";
-            this.BFX_GNT_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_GNT_Label2.TabIndex = 37;
-            this.BFX_GNT_Label2.Tag = "BFX";
-            // 
-            // BFX_GNT_Label1
-            // 
-            this.BFX_GNT_Label1.AutoSize = true;
-            this.BFX_GNT_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_GNT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_GNT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_GNT_Label1.Location = new System.Drawing.Point(6, 303);
-            this.BFX_GNT_Label1.Name = "BFX_GNT_Label1";
-            this.BFX_GNT_Label1.Size = new System.Drawing.Size(37, 13);
-            this.BFX_GNT_Label1.TabIndex = 35;
-            this.BFX_GNT_Label1.Tag = "DCECryptoLabel";
-            this.BFX_GNT_Label1.Text = "GNT:";
-            // 
-            // BFX_REP_Label2
-            // 
-            this.BFX_REP_Label2.AutoSize = true;
-            this.BFX_REP_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_REP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_REP_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_REP_Label2.Location = new System.Drawing.Point(45, 283);
-            this.BFX_REP_Label2.Name = "BFX_REP_Label2";
-            this.BFX_REP_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_REP_Label2.TabIndex = 34;
-            this.BFX_REP_Label2.Tag = "BFX";
-            // 
-            // BFX_REP_Label3
-            // 
-            this.BFX_REP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_REP_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_REP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_REP_Label3.Location = new System.Drawing.Point(119, 283);
-            this.BFX_REP_Label3.Name = "BFX_REP_Label3";
-            this.BFX_REP_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_REP_Label3.TabIndex = 36;
-            this.BFX_REP_Label3.Tag = "";
-            this.BFX_REP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BFX_GNT_Label3
-            // 
-            this.BFX_GNT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_GNT_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_GNT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_GNT_Label3.Location = new System.Drawing.Point(119, 303);
-            this.BFX_GNT_Label3.Name = "BFX_GNT_Label3";
-            this.BFX_GNT_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_GNT_Label3.TabIndex = 38;
-            this.BFX_GNT_Label3.Tag = "";
-            this.BFX_GNT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BFX_REP_Label1
-            // 
-            this.BFX_REP_Label1.AutoSize = true;
-            this.BFX_REP_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_REP_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_REP_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_REP_Label1.Location = new System.Drawing.Point(6, 283);
-            this.BFX_REP_Label1.Name = "BFX_REP_Label1";
-            this.BFX_REP_Label1.Size = new System.Drawing.Size(36, 13);
-            this.BFX_REP_Label1.TabIndex = 33;
-            this.BFX_REP_Label1.Tag = "DCECryptoLabel";
-            this.BFX_REP_Label1.Text = "REP:";
-            // 
-            // BFX_XLM_Label2
-            // 
-            this.BFX_XLM_Label2.AutoSize = true;
-            this.BFX_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_XLM_Label2.Location = new System.Drawing.Point(45, 203);
-            this.BFX_XLM_Label2.Name = "BFX_XLM_Label2";
-            this.BFX_XLM_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_XLM_Label2.TabIndex = 31;
-            this.BFX_XLM_Label2.Tag = "BFX";
-            // 
-            // BFX_XLM_Label3
-            // 
-            this.BFX_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_XLM_Label3.Location = new System.Drawing.Point(119, 203);
-            this.BFX_XLM_Label3.Name = "BFX_XLM_Label3";
-            this.BFX_XLM_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_XLM_Label3.TabIndex = 32;
-            this.BFX_XLM_Label3.Tag = "";
-            this.BFX_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BFX_XLM_Label1
-            // 
-            this.BFX_XLM_Label1.AutoSize = true;
-            this.BFX_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_XLM_Label1.Location = new System.Drawing.Point(6, 203);
-            this.BFX_XLM_Label1.Name = "BFX_XLM_Label1";
-            this.BFX_XLM_Label1.Size = new System.Drawing.Size(36, 13);
-            this.BFX_XLM_Label1.TabIndex = 30;
-            this.BFX_XLM_Label1.Tag = "DCECryptoLabel";
-            this.BFX_XLM_Label1.Text = "XLM:";
-            // 
-            // BFX_EOS_Label2
-            // 
-            this.BFX_EOS_Label2.AutoSize = true;
-            this.BFX_EOS_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_EOS_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_EOS_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_EOS_Label2.Location = new System.Drawing.Point(45, 103);
-            this.BFX_EOS_Label2.Name = "BFX_EOS_Label2";
-            this.BFX_EOS_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_EOS_Label2.TabIndex = 28;
-            this.BFX_EOS_Label2.Tag = "BFX";
-            // 
-            // BFX_EOS_Label3
-            // 
-            this.BFX_EOS_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_EOS_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_EOS_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_EOS_Label3.Location = new System.Drawing.Point(119, 103);
-            this.BFX_EOS_Label3.Name = "BFX_EOS_Label3";
-            this.BFX_EOS_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_EOS_Label3.TabIndex = 29;
-            this.BFX_EOS_Label3.Tag = "";
-            this.BFX_EOS_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // BFX_EOS_Label1
-            // 
-            this.BFX_EOS_Label1.AutoSize = true;
-            this.BFX_EOS_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_EOS_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_EOS_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_EOS_Label1.Location = new System.Drawing.Point(6, 103);
-            this.BFX_EOS_Label1.Name = "BFX_EOS_Label1";
-            this.BFX_EOS_Label1.Size = new System.Drawing.Size(36, 13);
-            this.BFX_EOS_Label1.TabIndex = 27;
-            this.BFX_EOS_Label1.Tag = "DCECryptoLabel";
-            this.BFX_EOS_Label1.Text = "EOS:";
-            // 
-            // BFX_ZRX_Label2
-            // 
-            this.BFX_ZRX_Label2.AutoSize = true;
-            this.BFX_ZRX_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_ZRX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_ZRX_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_ZRX_Label2.Location = new System.Drawing.Point(45, 243);
-            this.BFX_ZRX_Label2.Name = "BFX_ZRX_Label2";
-            this.BFX_ZRX_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_ZRX_Label2.TabIndex = 25;
-            this.BFX_ZRX_Label2.Tag = "BFX";
-            // 
-            // BFX_ZRX_Label1
-            // 
-            this.BFX_ZRX_Label1.AutoSize = true;
-            this.BFX_ZRX_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_ZRX_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_ZRX_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_ZRX_Label1.Location = new System.Drawing.Point(6, 243);
-            this.BFX_ZRX_Label1.Name = "BFX_ZRX_Label1";
-            this.BFX_ZRX_Label1.Size = new System.Drawing.Size(36, 13);
-            this.BFX_ZRX_Label1.TabIndex = 23;
-            this.BFX_ZRX_Label1.Tag = "DCECryptoLabel";
-            this.BFX_ZRX_Label1.Text = "ZRX:";
-            // 
-            // BFX_OMG_Label2
-            // 
-            this.BFX_OMG_Label2.AutoSize = true;
-            this.BFX_OMG_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_OMG_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_OMG_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_OMG_Label2.Location = new System.Drawing.Point(45, 223);
-            this.BFX_OMG_Label2.Name = "BFX_OMG_Label2";
-            this.BFX_OMG_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_OMG_Label2.TabIndex = 22;
-            this.BFX_OMG_Label2.Tag = "BFX";
-            // 
-            // BFX_OMG_Label3
-            // 
-            this.BFX_OMG_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_OMG_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_OMG_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_OMG_Label3.Location = new System.Drawing.Point(119, 223);
-            this.BFX_OMG_Label3.Name = "BFX_OMG_Label3";
-            this.BFX_OMG_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_OMG_Label3.TabIndex = 24;
-            this.BFX_OMG_Label3.Tag = "";
-            this.BFX_OMG_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.BFX_OMG_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_OMG_Label3_MouseDoubleClick);
-            // 
-            // BFX_ZRX_Label3
-            // 
-            this.BFX_ZRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_ZRX_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_ZRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_ZRX_Label3.Location = new System.Drawing.Point(119, 242);
-            this.BFX_ZRX_Label3.Name = "BFX_ZRX_Label3";
-            this.BFX_ZRX_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_ZRX_Label3.TabIndex = 26;
-            this.BFX_ZRX_Label3.Tag = "";
-            this.BFX_ZRX_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.BFX_ZRX_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_ZRX_Label3_MouseDoubleClick);
-            // 
-            // BFX_OMG_Label1
-            // 
-            this.BFX_OMG_Label1.AutoSize = true;
-            this.BFX_OMG_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_OMG_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_OMG_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_OMG_Label1.Location = new System.Drawing.Point(6, 223);
-            this.BFX_OMG_Label1.Name = "BFX_OMG_Label1";
-            this.BFX_OMG_Label1.Size = new System.Drawing.Size(39, 13);
-            this.BFX_OMG_Label1.TabIndex = 21;
-            this.BFX_OMG_Label1.Tag = "DCECryptoLabel";
-            this.BFX_OMG_Label1.Text = "OMG:";
-            // 
-            // BFX_XRP_Label2
-            // 
-            this.BFX_XRP_Label2.AutoSize = true;
-            this.BFX_XRP_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_XRP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_XRP_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_XRP_Label2.Location = new System.Drawing.Point(45, 43);
-            this.BFX_XRP_Label2.Name = "BFX_XRP_Label2";
-            this.BFX_XRP_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_XRP_Label2.TabIndex = 19;
-            this.BFX_XRP_Label2.Tag = "BFX";
-            // 
-            // BFX_XRP_Label3
-            // 
-            this.BFX_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_XRP_Label3.Location = new System.Drawing.Point(119, 43);
-            this.BFX_XRP_Label3.Name = "BFX_XRP_Label3";
-            this.BFX_XRP_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_XRP_Label3.TabIndex = 20;
-            this.BFX_XRP_Label3.Tag = "";
-            this.BFX_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.BFX_XRP_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_XRP_Label3_MouseDoubleClick);
-            // 
-            // BFX_XRP_Label1
-            // 
-            this.BFX_XRP_Label1.AutoSize = true;
-            this.BFX_XRP_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_XRP_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_XRP_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_XRP_Label1.Location = new System.Drawing.Point(6, 43);
-            this.BFX_XRP_Label1.Name = "BFX_XRP_Label1";
-            this.BFX_XRP_Label1.Size = new System.Drawing.Size(36, 13);
-            this.BFX_XRP_Label1.TabIndex = 18;
-            this.BFX_XRP_Label1.Tag = "DCECryptoLabel";
-            this.BFX_XRP_Label1.Text = "XRP:";
             // 
             // BFX_CryptoComboBox
             // 
@@ -2156,18 +2375,6 @@
             this.BFX_NumCoinsTextBox.TextChanged += new System.EventHandler(this.BFX_NumCoinsTextBox_TextChanged);
             this.BFX_NumCoinsTextBox.Enter += new System.EventHandler(this.BFX_NumCoinsTextBox_Enter);
             // 
-            // BFX_XBT_Label2
-            // 
-            this.BFX_XBT_Label2.AutoSize = true;
-            this.BFX_XBT_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_XBT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_XBT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_XBT_Label2.Location = new System.Drawing.Point(45, 23);
-            this.BFX_XBT_Label2.Name = "BFX_XBT_Label2";
-            this.BFX_XBT_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_XBT_Label2.TabIndex = 4;
-            this.BFX_XBT_Label2.Tag = "BFX";
-            // 
             // BFX_BuySellComboBox
             // 
             this.BFX_BuySellComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
@@ -2182,278 +2389,147 @@
             this.BFX_BuySellComboBox.TabIndex = 18;
             this.BFX_BuySellComboBox.SelectedIndexChanged += new System.EventHandler(this.BFX_BuySellComboBox_SelectedIndexChanged);
             // 
-            // BFX_ETH_Label2
-            // 
-            this.BFX_ETH_Label2.AutoSize = true;
-            this.BFX_ETH_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_ETH_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_ETH_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_ETH_Label2.Location = new System.Drawing.Point(45, 63);
-            this.BFX_ETH_Label2.Name = "BFX_ETH_Label2";
-            this.BFX_ETH_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_ETH_Label2.TabIndex = 5;
-            this.BFX_ETH_Label2.Tag = "BFX";
-            // 
-            // BFX_BCH_Label2
-            // 
-            this.BFX_BCH_Label2.AutoSize = true;
-            this.BFX_BCH_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_BCH_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_BCH_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_BCH_Label2.Location = new System.Drawing.Point(45, 123);
-            this.BFX_BCH_Label2.Name = "BFX_BCH_Label2";
-            this.BFX_BCH_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_BCH_Label2.TabIndex = 6;
-            this.BFX_BCH_Label2.Tag = "BFX";
-            // 
-            // BFX_LTC_Label2
-            // 
-            this.BFX_LTC_Label2.AutoSize = true;
-            this.BFX_LTC_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_LTC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_LTC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_LTC_Label2.Location = new System.Drawing.Point(45, 163);
-            this.BFX_LTC_Label2.Name = "BFX_LTC_Label2";
-            this.BFX_LTC_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BFX_LTC_Label2.TabIndex = 7;
-            this.BFX_LTC_Label2.Tag = "BFX";
-            // 
-            // BFX_BCH_Label3
-            // 
-            this.BFX_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_BCH_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_BCH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_BCH_Label3.Location = new System.Drawing.Point(119, 123);
-            this.BFX_BCH_Label3.Name = "BFX_BCH_Label3";
-            this.BFX_BCH_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_BCH_Label3.TabIndex = 18;
-            this.BFX_BCH_Label3.Tag = "";
-            this.BFX_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.BFX_BCH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_BCH_Label3_MouseDoubleClick);
-            // 
-            // BFX_LTC_Label3
-            // 
-            this.BFX_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_LTC_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_LTC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_LTC_Label3.Location = new System.Drawing.Point(119, 163);
-            this.BFX_LTC_Label3.Name = "BFX_LTC_Label3";
-            this.BFX_LTC_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_LTC_Label3.TabIndex = 19;
-            this.BFX_LTC_Label3.Tag = "";
-            this.BFX_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.BFX_LTC_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_LTC_Label3_MouseDoubleClick);
-            // 
-            // BFX_ETH_Label3
-            // 
-            this.BFX_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_ETH_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_ETH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_ETH_Label3.Location = new System.Drawing.Point(119, 63);
-            this.BFX_ETH_Label3.Name = "BFX_ETH_Label3";
-            this.BFX_ETH_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_ETH_Label3.TabIndex = 17;
-            this.BFX_ETH_Label3.Tag = "";
-            this.BFX_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.BFX_ETH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_ETH_Label3_MouseDoubleClick);
-            // 
-            // BFX_XBT_Label3
-            // 
-            this.BFX_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BFX_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_XBT_Label3.Location = new System.Drawing.Point(119, 23);
-            this.BFX_XBT_Label3.Name = "BFX_XBT_Label3";
-            this.BFX_XBT_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BFX_XBT_Label3.TabIndex = 16;
-            this.BFX_XBT_Label3.Tag = "";
-            this.BFX_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.BFX_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BFX_XBT_Label3_MouseDoubleClick);
-            // 
-            // BFX_LTC_Label1
-            // 
-            this.BFX_LTC_Label1.AutoSize = true;
-            this.BFX_LTC_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_LTC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_LTC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_LTC_Label1.Location = new System.Drawing.Point(6, 163);
-            this.BFX_LTC_Label1.Name = "BFX_LTC_Label1";
-            this.BFX_LTC_Label1.Size = new System.Drawing.Size(34, 13);
-            this.BFX_LTC_Label1.TabIndex = 3;
-            this.BFX_LTC_Label1.Tag = "DCECryptoLabel";
-            this.BFX_LTC_Label1.Text = "LTC:";
-            // 
-            // BFX_BCH_Label1
-            // 
-            this.BFX_BCH_Label1.AutoSize = true;
-            this.BFX_BCH_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_BCH_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_BCH_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_BCH_Label1.Location = new System.Drawing.Point(6, 123);
-            this.BFX_BCH_Label1.Name = "BFX_BCH_Label1";
-            this.BFX_BCH_Label1.Size = new System.Drawing.Size(36, 13);
-            this.BFX_BCH_Label1.TabIndex = 2;
-            this.BFX_BCH_Label1.Tag = "DCECryptoLabel";
-            this.BFX_BCH_Label1.Text = "BCH:";
-            // 
-            // BFX_ETH_Label1
-            // 
-            this.BFX_ETH_Label1.AutoSize = true;
-            this.BFX_ETH_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_ETH_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_ETH_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_ETH_Label1.Location = new System.Drawing.Point(6, 63);
-            this.BFX_ETH_Label1.Name = "BFX_ETH_Label1";
-            this.BFX_ETH_Label1.Size = new System.Drawing.Size(36, 13);
-            this.BFX_ETH_Label1.TabIndex = 1;
-            this.BFX_ETH_Label1.Tag = "DCECryptoLabel";
-            this.BFX_ETH_Label1.Text = "ETH:";
-            // 
-            // BFX_XBT_Label1
-            // 
-            this.BFX_XBT_Label1.AutoSize = true;
-            this.BFX_XBT_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BFX_XBT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_XBT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_XBT_Label1.Location = new System.Drawing.Point(6, 23);
-            this.BFX_XBT_Label1.Name = "BFX_XBT_Label1";
-            this.BFX_XBT_Label1.Size = new System.Drawing.Size(35, 13);
-            this.BFX_XBT_Label1.TabIndex = 0;
-            this.BFX_XBT_Label1.Tag = "DCECryptoLabel";
-            this.BFX_XBT_Label1.Text = "BTC:";
-            // 
             // BFX_AvgPrice_Label
             // 
             this.BFX_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
             this.BFX_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BFX_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_AvgPrice_Label.Location = new System.Drawing.Point(6, 326);
+            this.BFX_AvgPrice_Label.Location = new System.Drawing.Point(10, 326);
             this.BFX_AvgPrice_Label.Name = "BFX_AvgPrice_Label";
-            this.BFX_AvgPrice_Label.Size = new System.Drawing.Size(251, 16);
+            this.BFX_AvgPrice_Label.Size = new System.Drawing.Size(242, 16);
             this.BFX_AvgPrice_Label.TabIndex = 19;
             // 
             // fiat_GroupBox
             // 
-            this.fiat_GroupBox.Controls.Add(this.SGD_Label2);
-            this.fiat_GroupBox.Controls.Add(this.fiatRefresh_checkBox);
-            this.fiat_GroupBox.Controls.Add(this.SGD_Label1);
-            this.fiat_GroupBox.Controls.Add(this.USD_Label2);
-            this.fiat_GroupBox.Controls.Add(this.USD_Label1);
-            this.fiat_GroupBox.Controls.Add(this.AUD_Label2);
-            this.fiat_GroupBox.Controls.Add(this.NZD_Label2);
-            this.fiat_GroupBox.Controls.Add(this.EUR_Label2);
-            this.fiat_GroupBox.Controls.Add(this.EUR_Label1);
-            this.fiat_GroupBox.Controls.Add(this.NZD_Label1);
-            this.fiat_GroupBox.Controls.Add(this.AUD_Label1);
+            this.fiat_GroupBox.Controls.Add(this.fiat_panel);
             this.fiat_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.fiat_GroupBox.Location = new System.Drawing.Point(19, 707);
+            this.fiat_GroupBox.Location = new System.Drawing.Point(19, 731);
             this.fiat_GroupBox.Name = "fiat_GroupBox";
-            this.fiat_GroupBox.Size = new System.Drawing.Size(263, 131);
+            this.fiat_GroupBox.Size = new System.Drawing.Size(263, 102);
             this.fiat_GroupBox.TabIndex = 9;
             this.fiat_GroupBox.TabStop = false;
             this.fiat_GroupBox.Text = "Fiat rates";
             this.fiat_GroupBox.Click += new System.EventHandler(this.Fiat_GroupBox_Click);
             // 
+            // fiat_panel
+            // 
+            this.fiat_panel.BackColor = System.Drawing.Color.Transparent;
+            this.fiat_panel.Controls.Add(this.SGD_Label2);
+            this.fiat_panel.Controls.Add(this.AUD_Label1);
+            this.fiat_panel.Controls.Add(this.EUR_Label1);
+            this.fiat_panel.Controls.Add(this.fiatRefresh_checkBox);
+            this.fiat_panel.Controls.Add(this.NZD_Label1);
+            this.fiat_panel.Controls.Add(this.SGD_Label1);
+            this.fiat_panel.Controls.Add(this.EUR_Label2);
+            this.fiat_panel.Controls.Add(this.NZD_Label2);
+            this.fiat_panel.Controls.Add(this.USD_Label2);
+            this.fiat_panel.Controls.Add(this.AUD_Label2);
+            this.fiat_panel.Controls.Add(this.USD_Label1);
+            this.fiat_panel.Location = new System.Drawing.Point(0, 14);
+            this.fiat_panel.Name = "fiat_panel";
+            this.fiat_panel.Size = new System.Drawing.Size(263, 85);
+            this.fiat_panel.TabIndex = 0;
+            // 
             // SGD_Label2
             // 
             this.SGD_Label2.AutoSize = true;
-            this.SGD_Label2.Location = new System.Drawing.Point(58, 102);
+            this.SGD_Label2.Location = new System.Drawing.Point(57, 68);
             this.SGD_Label2.Name = "SGD_Label2";
             this.SGD_Label2.Size = new System.Drawing.Size(0, 13);
             this.SGD_Label2.TabIndex = 10;
-            // 
-            // fiatRefresh_checkBox
-            // 
-            this.fiatRefresh_checkBox.AutoSize = true;
-            this.fiatRefresh_checkBox.Location = new System.Drawing.Point(167, 99);
-            this.fiatRefresh_checkBox.Name = "fiatRefresh_checkBox";
-            this.fiatRefresh_checkBox.Size = new System.Drawing.Size(95, 30);
-            this.fiatRefresh_checkBox.TabIndex = 9;
-            this.fiatRefresh_checkBox.Text = "Tick to queue \r\nfiat update";
-            this.fiatRefresh_checkBox.UseVisualStyleBackColor = true;
-            this.fiatRefresh_checkBox.CheckedChanged += new System.EventHandler(this.Fiat_checkBox_CheckedChanged);
-            // 
-            // SGD_Label1
-            // 
-            this.SGD_Label1.AutoSize = true;
-            this.SGD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SGD_Label1.Location = new System.Drawing.Point(8, 103);
-            this.SGD_Label1.Name = "SGD_Label1";
-            this.SGD_Label1.Size = new System.Drawing.Size(37, 13);
-            this.SGD_Label1.TabIndex = 9;
-            this.SGD_Label1.Text = "SGD:";
-            // 
-            // USD_Label2
-            // 
-            this.USD_Label2.AutoSize = true;
-            this.USD_Label2.Location = new System.Drawing.Point(58, 82);
-            this.USD_Label2.Name = "USD_Label2";
-            this.USD_Label2.Size = new System.Drawing.Size(0, 13);
-            this.USD_Label2.TabIndex = 8;
-            // 
-            // USD_Label1
-            // 
-            this.USD_Label1.AutoSize = true;
-            this.USD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.USD_Label1.Location = new System.Drawing.Point(8, 83);
-            this.USD_Label1.Name = "USD_Label1";
-            this.USD_Label1.Size = new System.Drawing.Size(37, 13);
-            this.USD_Label1.TabIndex = 7;
-            this.USD_Label1.Text = "USD:";
-            // 
-            // AUD_Label2
-            // 
-            this.AUD_Label2.AutoSize = true;
-            this.AUD_Label2.Location = new System.Drawing.Point(57, 23);
-            this.AUD_Label2.Name = "AUD_Label2";
-            this.AUD_Label2.Size = new System.Drawing.Size(0, 13);
-            this.AUD_Label2.TabIndex = 4;
-            // 
-            // NZD_Label2
-            // 
-            this.NZD_Label2.AutoSize = true;
-            this.NZD_Label2.Location = new System.Drawing.Point(57, 43);
-            this.NZD_Label2.Name = "NZD_Label2";
-            this.NZD_Label2.Size = new System.Drawing.Size(0, 13);
-            this.NZD_Label2.TabIndex = 5;
-            // 
-            // EUR_Label2
-            // 
-            this.EUR_Label2.AutoSize = true;
-            this.EUR_Label2.Location = new System.Drawing.Point(58, 62);
-            this.EUR_Label2.Name = "EUR_Label2";
-            this.EUR_Label2.Size = new System.Drawing.Size(0, 13);
-            this.EUR_Label2.TabIndex = 6;
-            // 
-            // EUR_Label1
-            // 
-            this.EUR_Label1.AutoSize = true;
-            this.EUR_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EUR_Label1.Location = new System.Drawing.Point(8, 63);
-            this.EUR_Label1.Name = "EUR_Label1";
-            this.EUR_Label1.Size = new System.Drawing.Size(37, 13);
-            this.EUR_Label1.TabIndex = 2;
-            this.EUR_Label1.Text = "EUR:";
-            // 
-            // NZD_Label1
-            // 
-            this.NZD_Label1.AutoSize = true;
-            this.NZD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NZD_Label1.Location = new System.Drawing.Point(7, 43);
-            this.NZD_Label1.Name = "NZD_Label1";
-            this.NZD_Label1.Size = new System.Drawing.Size(37, 13);
-            this.NZD_Label1.TabIndex = 1;
-            this.NZD_Label1.Text = "NZD:";
             // 
             // AUD_Label1
             // 
             this.AUD_Label1.AutoSize = true;
             this.AUD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AUD_Label1.Location = new System.Drawing.Point(7, 23);
+            this.AUD_Label1.Location = new System.Drawing.Point(6, 9);
             this.AUD_Label1.Name = "AUD_Label1";
             this.AUD_Label1.Size = new System.Drawing.Size(37, 13);
             this.AUD_Label1.TabIndex = 0;
             this.AUD_Label1.Text = "AUD:";
+            // 
+            // EUR_Label1
+            // 
+            this.EUR_Label1.AutoSize = true;
+            this.EUR_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EUR_Label1.Location = new System.Drawing.Point(7, 89);
+            this.EUR_Label1.Name = "EUR_Label1";
+            this.EUR_Label1.Size = new System.Drawing.Size(37, 13);
+            this.EUR_Label1.TabIndex = 2;
+            this.EUR_Label1.Text = "EUR:";
+            // 
+            // fiatRefresh_checkBox
+            // 
+            this.fiatRefresh_checkBox.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.fiatRefresh_checkBox.Location = new System.Drawing.Point(178, 4);
+            this.fiatRefresh_checkBox.Name = "fiatRefresh_checkBox";
+            this.fiatRefresh_checkBox.Size = new System.Drawing.Size(66, 30);
+            this.fiatRefresh_checkBox.TabIndex = 9;
+            this.fiatRefresh_checkBox.Text = "Queue update";
+            this.fiatRefresh_checkBox.UseVisualStyleBackColor = true;
+            this.fiatRefresh_checkBox.CheckedChanged += new System.EventHandler(this.Fiat_checkBox_CheckedChanged);
+            // 
+            // NZD_Label1
+            // 
+            this.NZD_Label1.AutoSize = true;
+            this.NZD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NZD_Label1.Location = new System.Drawing.Point(6, 29);
+            this.NZD_Label1.Name = "NZD_Label1";
+            this.NZD_Label1.Size = new System.Drawing.Size(37, 13);
+            this.NZD_Label1.TabIndex = 1;
+            this.NZD_Label1.Text = "NZD:";
+            // 
+            // SGD_Label1
+            // 
+            this.SGD_Label1.AutoSize = true;
+            this.SGD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SGD_Label1.Location = new System.Drawing.Point(7, 69);
+            this.SGD_Label1.Name = "SGD_Label1";
+            this.SGD_Label1.Size = new System.Drawing.Size(37, 13);
+            this.SGD_Label1.TabIndex = 9;
+            this.SGD_Label1.Text = "SGD:";
+            // 
+            // EUR_Label2
+            // 
+            this.EUR_Label2.AutoSize = true;
+            this.EUR_Label2.Location = new System.Drawing.Point(57, 89);
+            this.EUR_Label2.Name = "EUR_Label2";
+            this.EUR_Label2.Size = new System.Drawing.Size(0, 13);
+            this.EUR_Label2.TabIndex = 6;
+            // 
+            // NZD_Label2
+            // 
+            this.NZD_Label2.AutoSize = true;
+            this.NZD_Label2.Location = new System.Drawing.Point(56, 29);
+            this.NZD_Label2.Name = "NZD_Label2";
+            this.NZD_Label2.Size = new System.Drawing.Size(0, 13);
+            this.NZD_Label2.TabIndex = 5;
+            // 
+            // USD_Label2
+            // 
+            this.USD_Label2.AutoSize = true;
+            this.USD_Label2.Location = new System.Drawing.Point(57, 48);
+            this.USD_Label2.Name = "USD_Label2";
+            this.USD_Label2.Size = new System.Drawing.Size(0, 13);
+            this.USD_Label2.TabIndex = 8;
+            // 
+            // AUD_Label2
+            // 
+            this.AUD_Label2.AutoSize = true;
+            this.AUD_Label2.Location = new System.Drawing.Point(56, 9);
+            this.AUD_Label2.Name = "AUD_Label2";
+            this.AUD_Label2.Size = new System.Drawing.Size(0, 13);
+            this.AUD_Label2.TabIndex = 4;
+            // 
+            // USD_Label1
+            // 
+            this.USD_Label1.AutoSize = true;
+            this.USD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.USD_Label1.Location = new System.Drawing.Point(7, 49);
+            this.USD_Label1.Name = "USD_Label1";
+            this.USD_Label1.Size = new System.Drawing.Size(37, 13);
+            this.USD_Label1.TabIndex = 7;
+            this.USD_Label1.Text = "USD:";
             // 
             // SettingsButton
             // 
@@ -2470,12 +2546,15 @@
             // 
             this.IR_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.IR_Eagel_Transparent___small_faded2;
             this.IR_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.IR_GroupBox.Controls.Add(this.IR_USDC_Label2);
+            this.IR_GroupBox.Controls.Add(this.IR_USDC_Label1);
+            this.IR_GroupBox.Controls.Add(this.IR_USDC_Label3);
             this.IR_GroupBox.Controls.Add(this.IR_LINK_Label2);
             this.IR_GroupBox.Controls.Add(this.IR_LINK_Label1);
             this.IR_GroupBox.Controls.Add(this.IR_LINK_Label3);
-            this.IR_GroupBox.Controls.Add(this.IR_PMGT_Label2);
-            this.IR_GroupBox.Controls.Add(this.IR_PMGT_Label1);
-            this.IR_GroupBox.Controls.Add(this.IR_PMGT_Label3);
+            this.IR_GroupBox.Controls.Add(this.IR_DAI_Label2);
+            this.IR_GroupBox.Controls.Add(this.IR_DAI_Label1);
+            this.IR_GroupBox.Controls.Add(this.IR_DAI_Label3);
             this.IR_GroupBox.Controls.Add(this.IR_USDT_Label2);
             this.IR_GroupBox.Controls.Add(this.IR_USDT_Label3);
             this.IR_GroupBox.Controls.Add(this.IR_USDT_Label1);
@@ -2488,9 +2567,9 @@
             this.IR_GroupBox.Controls.Add(this.IR_GNT_Label2);
             this.IR_GroupBox.Controls.Add(this.IR_GNT_Label1);
             this.IR_GroupBox.Controls.Add(this.IR_GNT_Label3);
-            this.IR_GroupBox.Controls.Add(this.IR_REP_Label2);
-            this.IR_GroupBox.Controls.Add(this.IR_REP_Label1);
-            this.IR_GroupBox.Controls.Add(this.IR_REP_Label3);
+            this.IR_GroupBox.Controls.Add(this.IR_MKR_Label2);
+            this.IR_GroupBox.Controls.Add(this.IR_MKR_Label1);
+            this.IR_GroupBox.Controls.Add(this.IR_MKR_Label3);
             this.IR_GroupBox.Controls.Add(this.IR_BAT_Label2);
             this.IR_GroupBox.Controls.Add(this.IR_BAT_Label1);
             this.IR_GroupBox.Controls.Add(this.IR_BAT_Label3);
@@ -2532,11 +2611,51 @@
             this.IR_GroupBox.ForeColor = System.Drawing.Color.Gray;
             this.IR_GroupBox.Location = new System.Drawing.Point(19, 4);
             this.IR_GroupBox.Name = "IR_GroupBox";
-            this.IR_GroupBox.Size = new System.Drawing.Size(263, 417);
+            this.IR_GroupBox.Size = new System.Drawing.Size(263, 437);
             this.IR_GroupBox.TabIndex = 0;
             this.IR_GroupBox.TabStop = false;
             this.IR_GroupBox.Text = "Independent Reserve";
             this.IR_GroupBox.Click += new System.EventHandler(this.IR_GroupBox_Click);
+            // 
+            // IR_USDC_Label2
+            // 
+            this.IR_USDC_Label2.AutoSize = true;
+            this.IR_USDC_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.IR_USDC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_USDC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_USDC_Label2.Location = new System.Drawing.Point(70, 369);
+            this.IR_USDC_Label2.Name = "IR_USDC_Label2";
+            this.IR_USDC_Label2.Size = new System.Drawing.Size(0, 13);
+            this.IR_USDC_Label2.TabIndex = 63;
+            this.IR_USDC_Label2.Tag = "IR";
+            this.IR_USDC_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IR_USDC_Label1
+            // 
+            this.IR_USDC_Label1.AutoSize = true;
+            this.IR_USDC_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.IR_USDC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_USDC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_USDC_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.IR_USDC_Label1.Location = new System.Drawing.Point(6, 369);
+            this.IR_USDC_Label1.Name = "IR_USDC_Label1";
+            this.IR_USDC_Label1.Size = new System.Drawing.Size(45, 13);
+            this.IR_USDC_Label1.TabIndex = 62;
+            this.IR_USDC_Label1.Tag = "DCECryptoLabel";
+            this.IR_USDC_Label1.Text = "USDC:";
+            this.IR_USDC_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IR_USDC_Label3
+            // 
+            this.IR_USDC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_USDC_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.IR_USDC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_USDC_Label3.Location = new System.Drawing.Point(119, 369);
+            this.IR_USDC_Label3.Name = "IR_USDC_Label3";
+            this.IR_USDC_Label3.Size = new System.Drawing.Size(134, 13);
+            this.IR_USDC_Label3.TabIndex = 61;
+            this.IR_USDC_Label3.Tag = "";
+            this.IR_USDC_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // IR_LINK_Label2
             // 
@@ -2544,7 +2663,7 @@
             this.IR_LINK_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_LINK_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_LINK_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_LINK_Label2.Location = new System.Drawing.Point(70, 349);
+            this.IR_LINK_Label2.Location = new System.Drawing.Point(70, 309);
             this.IR_LINK_Label2.Name = "IR_LINK_Label2";
             this.IR_LINK_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_LINK_Label2.TabIndex = 60;
@@ -2558,7 +2677,7 @@
             this.IR_LINK_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_LINK_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IR_LINK_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IR_LINK_Label1.Location = new System.Drawing.Point(6, 349);
+            this.IR_LINK_Label1.Location = new System.Drawing.Point(6, 309);
             this.IR_LINK_Label1.Name = "IR_LINK_Label1";
             this.IR_LINK_Label1.Size = new System.Drawing.Size(39, 13);
             this.IR_LINK_Label1.TabIndex = 59;
@@ -2571,52 +2690,52 @@
             this.IR_LINK_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_LINK_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_LINK_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_LINK_Label3.Location = new System.Drawing.Point(119, 349);
+            this.IR_LINK_Label3.Location = new System.Drawing.Point(119, 309);
             this.IR_LINK_Label3.Name = "IR_LINK_Label3";
             this.IR_LINK_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_LINK_Label3.TabIndex = 58;
             this.IR_LINK_Label3.Tag = "";
             this.IR_LINK_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // IR_PMGT_Label2
+            // IR_DAI_Label2
             // 
-            this.IR_PMGT_Label2.AutoSize = true;
-            this.IR_PMGT_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IR_PMGT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_PMGT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_PMGT_Label2.Location = new System.Drawing.Point(70, 329);
-            this.IR_PMGT_Label2.Name = "IR_PMGT_Label2";
-            this.IR_PMGT_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IR_PMGT_Label2.TabIndex = 57;
-            this.IR_PMGT_Label2.Tag = "IR";
-            this.IR_PMGT_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.IR_DAI_Label2.AutoSize = true;
+            this.IR_DAI_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.IR_DAI_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_DAI_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_DAI_Label2.Location = new System.Drawing.Point(70, 349);
+            this.IR_DAI_Label2.Name = "IR_DAI_Label2";
+            this.IR_DAI_Label2.Size = new System.Drawing.Size(0, 13);
+            this.IR_DAI_Label2.TabIndex = 57;
+            this.IR_DAI_Label2.Tag = "IR";
+            this.IR_DAI_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // IR_PMGT_Label1
+            // IR_DAI_Label1
             // 
-            this.IR_PMGT_Label1.AutoSize = true;
-            this.IR_PMGT_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IR_PMGT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_PMGT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_PMGT_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IR_PMGT_Label1.Location = new System.Drawing.Point(6, 329);
-            this.IR_PMGT_Label1.Name = "IR_PMGT_Label1";
-            this.IR_PMGT_Label1.Size = new System.Drawing.Size(46, 13);
-            this.IR_PMGT_Label1.TabIndex = 56;
-            this.IR_PMGT_Label1.Tag = "DCECryptoLabel";
-            this.IR_PMGT_Label1.Text = "PMGT:";
-            this.IR_PMGT_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.IR_DAI_Label1.AutoSize = true;
+            this.IR_DAI_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.IR_DAI_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_DAI_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_DAI_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.IR_DAI_Label1.Location = new System.Drawing.Point(6, 349);
+            this.IR_DAI_Label1.Name = "IR_DAI_Label1";
+            this.IR_DAI_Label1.Size = new System.Drawing.Size(32, 13);
+            this.IR_DAI_Label1.TabIndex = 56;
+            this.IR_DAI_Label1.Tag = "DCECryptoLabel";
+            this.IR_DAI_Label1.Text = "DAI:";
+            this.IR_DAI_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // IR_PMGT_Label3
+            // IR_DAI_Label3
             // 
-            this.IR_PMGT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.IR_PMGT_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IR_PMGT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_PMGT_Label3.Location = new System.Drawing.Point(119, 329);
-            this.IR_PMGT_Label3.Name = "IR_PMGT_Label3";
-            this.IR_PMGT_Label3.Size = new System.Drawing.Size(134, 13);
-            this.IR_PMGT_Label3.TabIndex = 55;
-            this.IR_PMGT_Label3.Tag = "";
-            this.IR_PMGT_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.IR_DAI_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_DAI_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.IR_DAI_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_DAI_Label3.Location = new System.Drawing.Point(119, 349);
+            this.IR_DAI_Label3.Name = "IR_DAI_Label3";
+            this.IR_DAI_Label3.Size = new System.Drawing.Size(134, 13);
+            this.IR_DAI_Label3.TabIndex = 55;
+            this.IR_DAI_Label3.Tag = "";
+            this.IR_DAI_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // IR_USDT_Label2
             // 
@@ -2744,7 +2863,7 @@
             this.IR_GNT_Label2.BackColor = System.Drawing.Color.Transparent;
             this.IR_GNT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_GNT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_GNT_Label2.Location = new System.Drawing.Point(70, 309);
+            this.IR_GNT_Label2.Location = new System.Drawing.Point(70, 289);
             this.IR_GNT_Label2.Name = "IR_GNT_Label2";
             this.IR_GNT_Label2.Size = new System.Drawing.Size(0, 13);
             this.IR_GNT_Label2.TabIndex = 45;
@@ -2758,7 +2877,7 @@
             this.IR_GNT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_GNT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IR_GNT_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IR_GNT_Label1.Location = new System.Drawing.Point(6, 309);
+            this.IR_GNT_Label1.Location = new System.Drawing.Point(6, 289);
             this.IR_GNT_Label1.Name = "IR_GNT_Label1";
             this.IR_GNT_Label1.Size = new System.Drawing.Size(37, 13);
             this.IR_GNT_Label1.TabIndex = 44;
@@ -2771,52 +2890,52 @@
             this.IR_GNT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.IR_GNT_Label3.BackColor = System.Drawing.Color.Transparent;
             this.IR_GNT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_GNT_Label3.Location = new System.Drawing.Point(119, 309);
+            this.IR_GNT_Label3.Location = new System.Drawing.Point(119, 289);
             this.IR_GNT_Label3.Name = "IR_GNT_Label3";
             this.IR_GNT_Label3.Size = new System.Drawing.Size(134, 13);
             this.IR_GNT_Label3.TabIndex = 43;
             this.IR_GNT_Label3.Tag = "";
             this.IR_GNT_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // IR_REP_Label2
+            // IR_MKR_Label2
             // 
-            this.IR_REP_Label2.AutoSize = true;
-            this.IR_REP_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IR_REP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_REP_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_REP_Label2.Location = new System.Drawing.Point(70, 289);
-            this.IR_REP_Label2.Name = "IR_REP_Label2";
-            this.IR_REP_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IR_REP_Label2.TabIndex = 42;
-            this.IR_REP_Label2.Tag = "IR";
-            this.IR_REP_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.IR_MKR_Label2.AutoSize = true;
+            this.IR_MKR_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.IR_MKR_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_MKR_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_MKR_Label2.Location = new System.Drawing.Point(70, 329);
+            this.IR_MKR_Label2.Name = "IR_MKR_Label2";
+            this.IR_MKR_Label2.Size = new System.Drawing.Size(0, 13);
+            this.IR_MKR_Label2.TabIndex = 42;
+            this.IR_MKR_Label2.Tag = "IR";
+            this.IR_MKR_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // IR_REP_Label1
+            // IR_MKR_Label1
             // 
-            this.IR_REP_Label1.AutoSize = true;
-            this.IR_REP_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IR_REP_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_REP_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_REP_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IR_REP_Label1.Location = new System.Drawing.Point(6, 289);
-            this.IR_REP_Label1.Name = "IR_REP_Label1";
-            this.IR_REP_Label1.Size = new System.Drawing.Size(36, 13);
-            this.IR_REP_Label1.TabIndex = 41;
-            this.IR_REP_Label1.Tag = "DCECryptoLabel";
-            this.IR_REP_Label1.Text = "REP:";
-            this.IR_REP_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            this.IR_MKR_Label1.AutoSize = true;
+            this.IR_MKR_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.IR_MKR_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_MKR_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_MKR_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.IR_MKR_Label1.Location = new System.Drawing.Point(6, 329);
+            this.IR_MKR_Label1.Name = "IR_MKR_Label1";
+            this.IR_MKR_Label1.Size = new System.Drawing.Size(38, 13);
+            this.IR_MKR_Label1.TabIndex = 41;
+            this.IR_MKR_Label1.Tag = "DCECryptoLabel";
+            this.IR_MKR_Label1.Text = "MKR:";
+            this.IR_MKR_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // IR_REP_Label3
+            // IR_MKR_Label3
             // 
-            this.IR_REP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.IR_REP_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IR_REP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_REP_Label3.Location = new System.Drawing.Point(119, 289);
-            this.IR_REP_Label3.Name = "IR_REP_Label3";
-            this.IR_REP_Label3.Size = new System.Drawing.Size(134, 13);
-            this.IR_REP_Label3.TabIndex = 40;
-            this.IR_REP_Label3.Tag = "";
-            this.IR_REP_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.IR_MKR_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.IR_MKR_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.IR_MKR_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_MKR_Label3.Location = new System.Drawing.Point(119, 329);
+            this.IR_MKR_Label3.Name = "IR_MKR_Label3";
+            this.IR_MKR_Label3.Size = new System.Drawing.Size(134, 13);
+            this.IR_MKR_Label3.TabIndex = 40;
+            this.IR_MKR_Label3.Tag = "";
+            this.IR_MKR_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // IR_BAT_Label2
             // 
@@ -2866,7 +2985,7 @@
             this.IR_CurrencyBox.Items.AddRange(new object[] {
             "crypto",
             "fiat"});
-            this.IR_CurrencyBox.Location = new System.Drawing.Point(131, 389);
+            this.IR_CurrencyBox.Location = new System.Drawing.Point(131, 409);
             this.IR_CurrencyBox.Name = "IR_CurrencyBox";
             this.IR_CurrencyBox.Size = new System.Drawing.Size(58, 21);
             this.IR_CurrencyBox.TabIndex = 36;
@@ -2916,7 +3035,7 @@
             // 
             this.IR_Reset_Button.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IR_Reset_Button.ForeColor = System.Drawing.Color.Black;
-            this.IR_Reset_Button.Location = new System.Drawing.Point(207, 366);
+            this.IR_Reset_Button.Location = new System.Drawing.Point(207, 386);
             this.IR_Reset_Button.Name = "IR_Reset_Button";
             this.IR_Reset_Button.Size = new System.Drawing.Size(44, 17);
             this.IR_Reset_Button.TabIndex = 32;
@@ -3089,16 +3208,16 @@
             this.IR_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
             this.IR_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_AvgPrice_Label.Location = new System.Drawing.Point(6, 367);
+            this.IR_AvgPrice_Label.Location = new System.Drawing.Point(9, 386);
             this.IR_AvgPrice_Label.Name = "IR_AvgPrice_Label";
-            this.IR_AvgPrice_Label.Size = new System.Drawing.Size(194, 16);
+            this.IR_AvgPrice_Label.Size = new System.Drawing.Size(191, 17);
             this.IR_AvgPrice_Label.TabIndex = 15;
             // 
             // IR_CryptoComboBox
             // 
             this.IR_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.IR_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.IR_CryptoComboBox.Location = new System.Drawing.Point(193, 389);
+            this.IR_CryptoComboBox.Location = new System.Drawing.Point(193, 409);
             this.IR_CryptoComboBox.Name = "IR_CryptoComboBox";
             this.IR_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
             this.IR_CryptoComboBox.TabIndex = 14;
@@ -3108,7 +3227,7 @@
             // IR_NumCoinsTextBox
             // 
             this.IR_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_NumCoinsTextBox.Location = new System.Drawing.Point(58, 389);
+            this.IR_NumCoinsTextBox.Location = new System.Drawing.Point(58, 409);
             this.IR_NumCoinsTextBox.Name = "IR_NumCoinsTextBox";
             this.IR_NumCoinsTextBox.PromptChar = ' ';
             this.IR_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
@@ -3126,7 +3245,7 @@
             this.IR_BuySellComboBox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.IR_BuySellComboBox.Location = new System.Drawing.Point(9, 389);
+            this.IR_BuySellComboBox.Location = new System.Drawing.Point(9, 409);
             this.IR_BuySellComboBox.Name = "IR_BuySellComboBox";
             this.IR_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
             this.IR_BuySellComboBox.TabIndex = 12;
@@ -3313,44 +3432,15 @@
             // 
             this.GDAX_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.coinbasepro_logo3;
             this.GDAX_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_LINK_Label2);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_LINK_Label3);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_LINK_Label1);
+            this.GDAX_GroupBox.Controls.Add(this.GDAX_panel);
             this.GDAX_GroupBox.Controls.Add(this.GDAX_CurrencyBox);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_ETC_Label2);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_ETC_Label3);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_ETC_Label1);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_REP_Label2);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_REP_Label3);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_REP_Label1);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_XLM_Label2);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_XLM_Label3);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_XLM_Label1);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_XRP_Label2);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_XRP_Label3);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_XRP_Label1);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_ZRX_Label2);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_ZRX_Label3);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_ZRX_Label1);
             this.GDAX_GroupBox.Controls.Add(this.GDAX_AvgPrice_Label);
             this.GDAX_GroupBox.Controls.Add(this.GDAX_CryptoComboBox);
             this.GDAX_GroupBox.Controls.Add(this.GDAX_NumCoinsTextBox);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_XBT_Label2);
             this.GDAX_GroupBox.Controls.Add(this.GDAX_BuySellComboBox);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_ETH_Label2);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_BCH_Label2);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_LTC_Label2);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_LTC_Label3);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_BCH_Label3);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_ETH_Label3);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_XBT_Label3);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_LTC_Label1);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_BCH_Label1);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_ETH_Label1);
-            this.GDAX_GroupBox.Controls.Add(this.GDAX_XBT_Label1);
             this.GDAX_GroupBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.GDAX_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.GDAX_GroupBox.Location = new System.Drawing.Point(19, 426);
+            this.GDAX_GroupBox.Location = new System.Drawing.Point(19, 446);
             this.GDAX_GroupBox.Name = "GDAX_GroupBox";
             this.GDAX_GroupBox.Size = new System.Drawing.Size(263, 277);
             this.GDAX_GroupBox.TabIndex = 8;
@@ -3358,29 +3448,431 @@
             this.GDAX_GroupBox.Text = "Coinbase Pro";
             this.GDAX_GroupBox.Click += new System.EventHandler(this.GDAX_GroupBox_Click);
             // 
+            // GDAX_panel
+            // 
+            this.GDAX_panel.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_panel.Controls.Add(this.GDAX_DAI_Label2);
+            this.GDAX_panel.Controls.Add(this.GDAX_DAI_Label3);
+            this.GDAX_panel.Controls.Add(this.GDAX_DAI_Label1);
+            this.GDAX_panel.Controls.Add(this.GDAX_MKR_Label2);
+            this.GDAX_panel.Controls.Add(this.GDAX_XBT_Label1);
+            this.GDAX_panel.Controls.Add(this.GDAX_ZRX_Label1);
+            this.GDAX_panel.Controls.Add(this.GDAX_MKR_Label3);
+            this.GDAX_panel.Controls.Add(this.GDAX_ZRX_Label3);
+            this.GDAX_panel.Controls.Add(this.GDAX_XBT_Label2);
+            this.GDAX_panel.Controls.Add(this.GDAX_MKR_Label1);
+            this.GDAX_panel.Controls.Add(this.GDAX_ZRX_Label2);
+            this.GDAX_panel.Controls.Add(this.GDAX_ETH_Label2);
+            this.GDAX_panel.Controls.Add(this.GDAX_XRP_Label1);
+            this.GDAX_panel.Controls.Add(this.GDAX_ETC_Label2);
+            this.GDAX_panel.Controls.Add(this.GDAX_BCH_Label2);
+            this.GDAX_panel.Controls.Add(this.GDAX_XRP_Label3);
+            this.GDAX_panel.Controls.Add(this.GDAX_ETC_Label3);
+            this.GDAX_panel.Controls.Add(this.GDAX_LTC_Label2);
+            this.GDAX_panel.Controls.Add(this.GDAX_XRP_Label2);
+            this.GDAX_panel.Controls.Add(this.GDAX_ETC_Label1);
+            this.GDAX_panel.Controls.Add(this.GDAX_LTC_Label3);
+            this.GDAX_panel.Controls.Add(this.GDAX_ETH_Label1);
+            this.GDAX_panel.Controls.Add(this.GDAX_XLM_Label1);
+            this.GDAX_panel.Controls.Add(this.GDAX_LINK_Label2);
+            this.GDAX_panel.Controls.Add(this.GDAX_BCH_Label3);
+            this.GDAX_panel.Controls.Add(this.GDAX_BCH_Label1);
+            this.GDAX_panel.Controls.Add(this.GDAX_XLM_Label3);
+            this.GDAX_panel.Controls.Add(this.GDAX_LINK_Label3);
+            this.GDAX_panel.Controls.Add(this.GDAX_ETH_Label3);
+            this.GDAX_panel.Controls.Add(this.GDAX_LTC_Label1);
+            this.GDAX_panel.Controls.Add(this.GDAX_XLM_Label2);
+            this.GDAX_panel.Controls.Add(this.GDAX_LINK_Label1);
+            this.GDAX_panel.Controls.Add(this.GDAX_XBT_Label3);
+            this.GDAX_panel.Location = new System.Drawing.Point(0, 14);
+            this.GDAX_panel.Name = "GDAX_panel";
+            this.GDAX_panel.Size = new System.Drawing.Size(262, 209);
+            this.GDAX_panel.TabIndex = 56;
+            // 
+            // GDAX_DAI_Label2
+            // 
+            this.GDAX_DAI_Label2.AutoSize = true;
+            this.GDAX_DAI_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_DAI_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_DAI_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_DAI_Label2.Location = new System.Drawing.Point(45, 212);
+            this.GDAX_DAI_Label2.Name = "GDAX_DAI_Label2";
+            this.GDAX_DAI_Label2.Size = new System.Drawing.Size(0, 13);
+            this.GDAX_DAI_Label2.TabIndex = 60;
+            this.GDAX_DAI_Label2.Tag = "GDAX";
+            // 
+            // GDAX_DAI_Label3
+            // 
+            this.GDAX_DAI_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_DAI_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_DAI_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_DAI_Label3.Location = new System.Drawing.Point(119, 204);
+            this.GDAX_DAI_Label3.Name = "GDAX_DAI_Label3";
+            this.GDAX_DAI_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_DAI_Label3.TabIndex = 61;
+            this.GDAX_DAI_Label3.Tag = "";
+            this.GDAX_DAI_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GDAX_DAI_Label1
+            // 
+            this.GDAX_DAI_Label1.AutoSize = true;
+            this.GDAX_DAI_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_DAI_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_DAI_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_DAI_Label1.Location = new System.Drawing.Point(6, 212);
+            this.GDAX_DAI_Label1.Name = "GDAX_DAI_Label1";
+            this.GDAX_DAI_Label1.Size = new System.Drawing.Size(32, 13);
+            this.GDAX_DAI_Label1.TabIndex = 59;
+            this.GDAX_DAI_Label1.Tag = "DCECryptoLabel";
+            this.GDAX_DAI_Label1.Text = "DAI:";
+            // 
+            // GDAX_MKR_Label2
+            // 
+            this.GDAX_MKR_Label2.AutoSize = true;
+            this.GDAX_MKR_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_MKR_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_MKR_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_MKR_Label2.Location = new System.Drawing.Point(45, 192);
+            this.GDAX_MKR_Label2.Name = "GDAX_MKR_Label2";
+            this.GDAX_MKR_Label2.Size = new System.Drawing.Size(0, 13);
+            this.GDAX_MKR_Label2.TabIndex = 57;
+            this.GDAX_MKR_Label2.Tag = "GDAX";
+            // 
+            // GDAX_XBT_Label1
+            // 
+            this.GDAX_XBT_Label1.AutoSize = true;
+            this.GDAX_XBT_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_XBT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_XBT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_XBT_Label1.Location = new System.Drawing.Point(6, 12);
+            this.GDAX_XBT_Label1.Name = "GDAX_XBT_Label1";
+            this.GDAX_XBT_Label1.Size = new System.Drawing.Size(35, 13);
+            this.GDAX_XBT_Label1.TabIndex = 0;
+            this.GDAX_XBT_Label1.Tag = "DCECryptoLabel";
+            this.GDAX_XBT_Label1.Text = "BTC:";
+            // 
+            // GDAX_ZRX_Label1
+            // 
+            this.GDAX_ZRX_Label1.AutoSize = true;
+            this.GDAX_ZRX_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_ZRX_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_ZRX_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_ZRX_Label1.Location = new System.Drawing.Point(6, 152);
+            this.GDAX_ZRX_Label1.Name = "GDAX_ZRX_Label1";
+            this.GDAX_ZRX_Label1.Size = new System.Drawing.Size(36, 13);
+            this.GDAX_ZRX_Label1.TabIndex = 19;
+            this.GDAX_ZRX_Label1.Tag = "DCECryptoLabel";
+            this.GDAX_ZRX_Label1.Text = "ZRX:";
+            // 
+            // GDAX_MKR_Label3
+            // 
+            this.GDAX_MKR_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_MKR_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_MKR_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_MKR_Label3.Location = new System.Drawing.Point(119, 184);
+            this.GDAX_MKR_Label3.Name = "GDAX_MKR_Label3";
+            this.GDAX_MKR_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_MKR_Label3.TabIndex = 58;
+            this.GDAX_MKR_Label3.Tag = "";
+            this.GDAX_MKR_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GDAX_ZRX_Label3
+            // 
+            this.GDAX_ZRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_ZRX_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_ZRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_ZRX_Label3.Location = new System.Drawing.Point(119, 144);
+            this.GDAX_ZRX_Label3.Name = "GDAX_ZRX_Label3";
+            this.GDAX_ZRX_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_ZRX_Label3.TabIndex = 21;
+            this.GDAX_ZRX_Label3.Tag = "";
+            this.GDAX_ZRX_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GDAX_XBT_Label2
+            // 
+            this.GDAX_XBT_Label2.AutoSize = true;
+            this.GDAX_XBT_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_XBT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_XBT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_XBT_Label2.Location = new System.Drawing.Point(45, 12);
+            this.GDAX_XBT_Label2.Name = "GDAX_XBT_Label2";
+            this.GDAX_XBT_Label2.Size = new System.Drawing.Size(0, 13);
+            this.GDAX_XBT_Label2.TabIndex = 4;
+            this.GDAX_XBT_Label2.Tag = "GDAX";
+            // 
+            // GDAX_MKR_Label1
+            // 
+            this.GDAX_MKR_Label1.AutoSize = true;
+            this.GDAX_MKR_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_MKR_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_MKR_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_MKR_Label1.Location = new System.Drawing.Point(6, 192);
+            this.GDAX_MKR_Label1.Name = "GDAX_MKR_Label1";
+            this.GDAX_MKR_Label1.Size = new System.Drawing.Size(38, 13);
+            this.GDAX_MKR_Label1.TabIndex = 56;
+            this.GDAX_MKR_Label1.Tag = "DCECryptoLabel";
+            this.GDAX_MKR_Label1.Text = "MKR:";
+            // 
+            // GDAX_ZRX_Label2
+            // 
+            this.GDAX_ZRX_Label2.AutoSize = true;
+            this.GDAX_ZRX_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_ZRX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_ZRX_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_ZRX_Label2.Location = new System.Drawing.Point(45, 152);
+            this.GDAX_ZRX_Label2.Name = "GDAX_ZRX_Label2";
+            this.GDAX_ZRX_Label2.Size = new System.Drawing.Size(0, 13);
+            this.GDAX_ZRX_Label2.TabIndex = 20;
+            this.GDAX_ZRX_Label2.Tag = "GDAX";
+            // 
+            // GDAX_ETH_Label2
+            // 
+            this.GDAX_ETH_Label2.AutoSize = true;
+            this.GDAX_ETH_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_ETH_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_ETH_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_ETH_Label2.Location = new System.Drawing.Point(45, 52);
+            this.GDAX_ETH_Label2.Name = "GDAX_ETH_Label2";
+            this.GDAX_ETH_Label2.Size = new System.Drawing.Size(0, 13);
+            this.GDAX_ETH_Label2.TabIndex = 5;
+            this.GDAX_ETH_Label2.Tag = "GDAX";
+            // 
+            // GDAX_XRP_Label1
+            // 
+            this.GDAX_XRP_Label1.AutoSize = true;
+            this.GDAX_XRP_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_XRP_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_XRP_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_XRP_Label1.Location = new System.Drawing.Point(6, 32);
+            this.GDAX_XRP_Label1.Name = "GDAX_XRP_Label1";
+            this.GDAX_XRP_Label1.Size = new System.Drawing.Size(36, 13);
+            this.GDAX_XRP_Label1.TabIndex = 22;
+            this.GDAX_XRP_Label1.Tag = "DCECryptoLabel";
+            this.GDAX_XRP_Label1.Text = "XRP:";
+            // 
+            // GDAX_ETC_Label2
+            // 
+            this.GDAX_ETC_Label2.AutoSize = true;
+            this.GDAX_ETC_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_ETC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_ETC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_ETC_Label2.Location = new System.Drawing.Point(45, 112);
+            this.GDAX_ETC_Label2.Name = "GDAX_ETC_Label2";
+            this.GDAX_ETC_Label2.Size = new System.Drawing.Size(0, 13);
+            this.GDAX_ETC_Label2.TabIndex = 32;
+            this.GDAX_ETC_Label2.Tag = "GDAX";
+            // 
+            // GDAX_BCH_Label2
+            // 
+            this.GDAX_BCH_Label2.AutoSize = true;
+            this.GDAX_BCH_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_BCH_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_BCH_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_BCH_Label2.Location = new System.Drawing.Point(45, 72);
+            this.GDAX_BCH_Label2.Name = "GDAX_BCH_Label2";
+            this.GDAX_BCH_Label2.Size = new System.Drawing.Size(0, 13);
+            this.GDAX_BCH_Label2.TabIndex = 6;
+            this.GDAX_BCH_Label2.Tag = "GDAX";
+            // 
+            // GDAX_XRP_Label3
+            // 
+            this.GDAX_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_XRP_Label3.Location = new System.Drawing.Point(119, 24);
+            this.GDAX_XRP_Label3.Name = "GDAX_XRP_Label3";
+            this.GDAX_XRP_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_XRP_Label3.TabIndex = 24;
+            this.GDAX_XRP_Label3.Tag = "";
+            this.GDAX_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GDAX_ETC_Label3
+            // 
+            this.GDAX_ETC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_ETC_Label3.Location = new System.Drawing.Point(119, 104);
+            this.GDAX_ETC_Label3.Name = "GDAX_ETC_Label3";
+            this.GDAX_ETC_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_ETC_Label3.TabIndex = 33;
+            this.GDAX_ETC_Label3.Tag = "";
+            this.GDAX_ETC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GDAX_LTC_Label2
+            // 
+            this.GDAX_LTC_Label2.AutoSize = true;
+            this.GDAX_LTC_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_LTC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_LTC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_LTC_Label2.Location = new System.Drawing.Point(45, 92);
+            this.GDAX_LTC_Label2.Name = "GDAX_LTC_Label2";
+            this.GDAX_LTC_Label2.Size = new System.Drawing.Size(0, 13);
+            this.GDAX_LTC_Label2.TabIndex = 7;
+            this.GDAX_LTC_Label2.Tag = "GDAX";
+            // 
+            // GDAX_XRP_Label2
+            // 
+            this.GDAX_XRP_Label2.AutoSize = true;
+            this.GDAX_XRP_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_XRP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_XRP_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_XRP_Label2.Location = new System.Drawing.Point(45, 32);
+            this.GDAX_XRP_Label2.Name = "GDAX_XRP_Label2";
+            this.GDAX_XRP_Label2.Size = new System.Drawing.Size(0, 13);
+            this.GDAX_XRP_Label2.TabIndex = 23;
+            this.GDAX_XRP_Label2.Tag = "GDAX";
+            // 
+            // GDAX_ETC_Label1
+            // 
+            this.GDAX_ETC_Label1.AutoSize = true;
+            this.GDAX_ETC_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_ETC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_ETC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_ETC_Label1.Location = new System.Drawing.Point(6, 112);
+            this.GDAX_ETC_Label1.Name = "GDAX_ETC_Label1";
+            this.GDAX_ETC_Label1.Size = new System.Drawing.Size(35, 13);
+            this.GDAX_ETC_Label1.TabIndex = 31;
+            this.GDAX_ETC_Label1.Tag = "DCECryptoLabel";
+            this.GDAX_ETC_Label1.Text = "ETC:";
+            // 
+            // GDAX_LTC_Label3
+            // 
+            this.GDAX_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_LTC_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_LTC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_LTC_Label3.Location = new System.Drawing.Point(119, 84);
+            this.GDAX_LTC_Label3.Name = "GDAX_LTC_Label3";
+            this.GDAX_LTC_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_LTC_Label3.TabIndex = 15;
+            this.GDAX_LTC_Label3.Tag = "";
+            this.GDAX_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.GDAX_LTC_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GDAX_LTC_Label3_MouseDoubleClick);
+            // 
+            // GDAX_ETH_Label1
+            // 
+            this.GDAX_ETH_Label1.AutoSize = true;
+            this.GDAX_ETH_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_ETH_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_ETH_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_ETH_Label1.Location = new System.Drawing.Point(6, 52);
+            this.GDAX_ETH_Label1.Name = "GDAX_ETH_Label1";
+            this.GDAX_ETH_Label1.Size = new System.Drawing.Size(36, 13);
+            this.GDAX_ETH_Label1.TabIndex = 1;
+            this.GDAX_ETH_Label1.Tag = "DCECryptoLabel";
+            this.GDAX_ETH_Label1.Text = "ETH:";
+            // 
+            // GDAX_XLM_Label1
+            // 
+            this.GDAX_XLM_Label1.AutoSize = true;
+            this.GDAX_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_XLM_Label1.Location = new System.Drawing.Point(6, 132);
+            this.GDAX_XLM_Label1.Name = "GDAX_XLM_Label1";
+            this.GDAX_XLM_Label1.Size = new System.Drawing.Size(36, 13);
+            this.GDAX_XLM_Label1.TabIndex = 25;
+            this.GDAX_XLM_Label1.Tag = "DCECryptoLabel";
+            this.GDAX_XLM_Label1.Text = "XLM:";
+            // 
             // GDAX_LINK_Label2
             // 
             this.GDAX_LINK_Label2.AutoSize = true;
             this.GDAX_LINK_Label2.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_LINK_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_LINK_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_LINK_Label2.Location = new System.Drawing.Point(45, 203);
+            this.GDAX_LINK_Label2.Location = new System.Drawing.Point(45, 172);
             this.GDAX_LINK_Label2.Name = "GDAX_LINK_Label2";
             this.GDAX_LINK_Label2.Size = new System.Drawing.Size(0, 13);
-            this.GDAX_LINK_Label2.TabIndex = 57;
+            this.GDAX_LINK_Label2.TabIndex = 29;
             this.GDAX_LINK_Label2.Tag = "GDAX";
+            // 
+            // GDAX_BCH_Label3
+            // 
+            this.GDAX_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_BCH_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_BCH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_BCH_Label3.Location = new System.Drawing.Point(119, 64);
+            this.GDAX_BCH_Label3.Name = "GDAX_BCH_Label3";
+            this.GDAX_BCH_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_BCH_Label3.TabIndex = 14;
+            this.GDAX_BCH_Label3.Tag = "";
+            this.GDAX_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.GDAX_BCH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GDAX_BCH_Label3_MouseDoubleClick);
+            // 
+            // GDAX_BCH_Label1
+            // 
+            this.GDAX_BCH_Label1.AutoSize = true;
+            this.GDAX_BCH_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_BCH_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_BCH_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_BCH_Label1.Location = new System.Drawing.Point(6, 72);
+            this.GDAX_BCH_Label1.Name = "GDAX_BCH_Label1";
+            this.GDAX_BCH_Label1.Size = new System.Drawing.Size(36, 13);
+            this.GDAX_BCH_Label1.TabIndex = 2;
+            this.GDAX_BCH_Label1.Tag = "DCECryptoLabel";
+            this.GDAX_BCH_Label1.Text = "BCH:";
+            // 
+            // GDAX_XLM_Label3
+            // 
+            this.GDAX_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_XLM_Label3.Location = new System.Drawing.Point(119, 124);
+            this.GDAX_XLM_Label3.Name = "GDAX_XLM_Label3";
+            this.GDAX_XLM_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_XLM_Label3.TabIndex = 27;
+            this.GDAX_XLM_Label3.Tag = "";
+            this.GDAX_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // GDAX_LINK_Label3
             // 
             this.GDAX_LINK_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_LINK_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_LINK_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_LINK_Label3.Location = new System.Drawing.Point(119, 201);
+            this.GDAX_LINK_Label3.Location = new System.Drawing.Point(119, 164);
             this.GDAX_LINK_Label3.Name = "GDAX_LINK_Label3";
             this.GDAX_LINK_Label3.Size = new System.Drawing.Size(134, 13);
-            this.GDAX_LINK_Label3.TabIndex = 58;
+            this.GDAX_LINK_Label3.TabIndex = 30;
             this.GDAX_LINK_Label3.Tag = "";
             this.GDAX_LINK_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // GDAX_ETH_Label3
+            // 
+            this.GDAX_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_ETH_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_ETH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_ETH_Label3.Location = new System.Drawing.Point(119, 44);
+            this.GDAX_ETH_Label3.Name = "GDAX_ETH_Label3";
+            this.GDAX_ETH_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_ETH_Label3.TabIndex = 13;
+            this.GDAX_ETH_Label3.Tag = "";
+            this.GDAX_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.GDAX_ETH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GDAX_ETH_Label3_MouseDoubleClick);
+            // 
+            // GDAX_LTC_Label1
+            // 
+            this.GDAX_LTC_Label1.AutoSize = true;
+            this.GDAX_LTC_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_LTC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_LTC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_LTC_Label1.Location = new System.Drawing.Point(6, 92);
+            this.GDAX_LTC_Label1.Name = "GDAX_LTC_Label1";
+            this.GDAX_LTC_Label1.Size = new System.Drawing.Size(34, 13);
+            this.GDAX_LTC_Label1.TabIndex = 3;
+            this.GDAX_LTC_Label1.Tag = "DCECryptoLabel";
+            this.GDAX_LTC_Label1.Text = "LTC:";
+            // 
+            // GDAX_XLM_Label2
+            // 
+            this.GDAX_XLM_Label2.AutoSize = true;
+            this.GDAX_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GDAX_XLM_Label2.Location = new System.Drawing.Point(45, 132);
+            this.GDAX_XLM_Label2.Name = "GDAX_XLM_Label2";
+            this.GDAX_XLM_Label2.Size = new System.Drawing.Size(0, 13);
+            this.GDAX_XLM_Label2.TabIndex = 26;
+            this.GDAX_XLM_Label2.Tag = "GDAX";
             // 
             // GDAX_LINK_Label1
             // 
@@ -3388,12 +3880,25 @@
             this.GDAX_LINK_Label1.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_LINK_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_LINK_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_LINK_Label1.Location = new System.Drawing.Point(6, 203);
+            this.GDAX_LINK_Label1.Location = new System.Drawing.Point(6, 172);
             this.GDAX_LINK_Label1.Name = "GDAX_LINK_Label1";
             this.GDAX_LINK_Label1.Size = new System.Drawing.Size(39, 13);
-            this.GDAX_LINK_Label1.TabIndex = 56;
+            this.GDAX_LINK_Label1.TabIndex = 28;
             this.GDAX_LINK_Label1.Tag = "DCECryptoLabel";
             this.GDAX_LINK_Label1.Text = "LINK:";
+            // 
+            // GDAX_XBT_Label3
+            // 
+            this.GDAX_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.GDAX_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.GDAX_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.GDAX_XBT_Label3.Location = new System.Drawing.Point(119, 4);
+            this.GDAX_XBT_Label3.Name = "GDAX_XBT_Label3";
+            this.GDAX_XBT_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_XBT_Label3.TabIndex = 12;
+            this.GDAX_XBT_Label3.Tag = "";
+            this.GDAX_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.GDAX_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GDAX_XBT_Label3_MouseDoubleClick);
             // 
             // GDAX_CurrencyBox
             // 
@@ -3408,199 +3913,14 @@
             this.GDAX_CurrencyBox.Size = new System.Drawing.Size(58, 21);
             this.GDAX_CurrencyBox.TabIndex = 55;
             // 
-            // GDAX_ETC_Label2
-            // 
-            this.GDAX_ETC_Label2.AutoSize = true;
-            this.GDAX_ETC_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_ETC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ETC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_ETC_Label2.Location = new System.Drawing.Point(45, 123);
-            this.GDAX_ETC_Label2.Name = "GDAX_ETC_Label2";
-            this.GDAX_ETC_Label2.Size = new System.Drawing.Size(0, 13);
-            this.GDAX_ETC_Label2.TabIndex = 32;
-            this.GDAX_ETC_Label2.Tag = "GDAX";
-            // 
-            // GDAX_ETC_Label3
-            // 
-            this.GDAX_ETC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.GDAX_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ETC_Label3.Location = new System.Drawing.Point(119, 121);
-            this.GDAX_ETC_Label3.Name = "GDAX_ETC_Label3";
-            this.GDAX_ETC_Label3.Size = new System.Drawing.Size(134, 13);
-            this.GDAX_ETC_Label3.TabIndex = 33;
-            this.GDAX_ETC_Label3.Tag = "";
-            this.GDAX_ETC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GDAX_ETC_Label1
-            // 
-            this.GDAX_ETC_Label1.AutoSize = true;
-            this.GDAX_ETC_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_ETC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ETC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_ETC_Label1.Location = new System.Drawing.Point(6, 123);
-            this.GDAX_ETC_Label1.Name = "GDAX_ETC_Label1";
-            this.GDAX_ETC_Label1.Size = new System.Drawing.Size(35, 13);
-            this.GDAX_ETC_Label1.TabIndex = 31;
-            this.GDAX_ETC_Label1.Tag = "DCECryptoLabel";
-            this.GDAX_ETC_Label1.Text = "ETC:";
-            // 
-            // GDAX_REP_Label2
-            // 
-            this.GDAX_REP_Label2.AutoSize = true;
-            this.GDAX_REP_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_REP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_REP_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_REP_Label2.Location = new System.Drawing.Point(45, 183);
-            this.GDAX_REP_Label2.Name = "GDAX_REP_Label2";
-            this.GDAX_REP_Label2.Size = new System.Drawing.Size(0, 13);
-            this.GDAX_REP_Label2.TabIndex = 29;
-            this.GDAX_REP_Label2.Tag = "GDAX";
-            // 
-            // GDAX_REP_Label3
-            // 
-            this.GDAX_REP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.GDAX_REP_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_REP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_REP_Label3.Location = new System.Drawing.Point(119, 181);
-            this.GDAX_REP_Label3.Name = "GDAX_REP_Label3";
-            this.GDAX_REP_Label3.Size = new System.Drawing.Size(134, 13);
-            this.GDAX_REP_Label3.TabIndex = 30;
-            this.GDAX_REP_Label3.Tag = "";
-            this.GDAX_REP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GDAX_REP_Label1
-            // 
-            this.GDAX_REP_Label1.AutoSize = true;
-            this.GDAX_REP_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_REP_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_REP_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_REP_Label1.Location = new System.Drawing.Point(6, 183);
-            this.GDAX_REP_Label1.Name = "GDAX_REP_Label1";
-            this.GDAX_REP_Label1.Size = new System.Drawing.Size(36, 13);
-            this.GDAX_REP_Label1.TabIndex = 28;
-            this.GDAX_REP_Label1.Tag = "DCECryptoLabel";
-            this.GDAX_REP_Label1.Text = "REP:";
-            // 
-            // GDAX_XLM_Label2
-            // 
-            this.GDAX_XLM_Label2.AutoSize = true;
-            this.GDAX_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_XLM_Label2.Location = new System.Drawing.Point(45, 143);
-            this.GDAX_XLM_Label2.Name = "GDAX_XLM_Label2";
-            this.GDAX_XLM_Label2.Size = new System.Drawing.Size(0, 13);
-            this.GDAX_XLM_Label2.TabIndex = 26;
-            this.GDAX_XLM_Label2.Tag = "GDAX";
-            // 
-            // GDAX_XLM_Label3
-            // 
-            this.GDAX_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.GDAX_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XLM_Label3.Location = new System.Drawing.Point(119, 141);
-            this.GDAX_XLM_Label3.Name = "GDAX_XLM_Label3";
-            this.GDAX_XLM_Label3.Size = new System.Drawing.Size(134, 13);
-            this.GDAX_XLM_Label3.TabIndex = 27;
-            this.GDAX_XLM_Label3.Tag = "";
-            this.GDAX_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GDAX_XLM_Label1
-            // 
-            this.GDAX_XLM_Label1.AutoSize = true;
-            this.GDAX_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_XLM_Label1.Location = new System.Drawing.Point(6, 143);
-            this.GDAX_XLM_Label1.Name = "GDAX_XLM_Label1";
-            this.GDAX_XLM_Label1.Size = new System.Drawing.Size(36, 13);
-            this.GDAX_XLM_Label1.TabIndex = 25;
-            this.GDAX_XLM_Label1.Tag = "DCECryptoLabel";
-            this.GDAX_XLM_Label1.Text = "XLM:";
-            // 
-            // GDAX_XRP_Label2
-            // 
-            this.GDAX_XRP_Label2.AutoSize = true;
-            this.GDAX_XRP_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_XRP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XRP_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_XRP_Label2.Location = new System.Drawing.Point(45, 43);
-            this.GDAX_XRP_Label2.Name = "GDAX_XRP_Label2";
-            this.GDAX_XRP_Label2.Size = new System.Drawing.Size(0, 13);
-            this.GDAX_XRP_Label2.TabIndex = 23;
-            this.GDAX_XRP_Label2.Tag = "GDAX";
-            // 
-            // GDAX_XRP_Label3
-            // 
-            this.GDAX_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.GDAX_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XRP_Label3.Location = new System.Drawing.Point(119, 41);
-            this.GDAX_XRP_Label3.Name = "GDAX_XRP_Label3";
-            this.GDAX_XRP_Label3.Size = new System.Drawing.Size(134, 13);
-            this.GDAX_XRP_Label3.TabIndex = 24;
-            this.GDAX_XRP_Label3.Tag = "";
-            this.GDAX_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GDAX_XRP_Label1
-            // 
-            this.GDAX_XRP_Label1.AutoSize = true;
-            this.GDAX_XRP_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_XRP_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XRP_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_XRP_Label1.Location = new System.Drawing.Point(6, 43);
-            this.GDAX_XRP_Label1.Name = "GDAX_XRP_Label1";
-            this.GDAX_XRP_Label1.Size = new System.Drawing.Size(36, 13);
-            this.GDAX_XRP_Label1.TabIndex = 22;
-            this.GDAX_XRP_Label1.Tag = "DCECryptoLabel";
-            this.GDAX_XRP_Label1.Text = "XRP:";
-            // 
-            // GDAX_ZRX_Label2
-            // 
-            this.GDAX_ZRX_Label2.AutoSize = true;
-            this.GDAX_ZRX_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_ZRX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ZRX_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_ZRX_Label2.Location = new System.Drawing.Point(45, 163);
-            this.GDAX_ZRX_Label2.Name = "GDAX_ZRX_Label2";
-            this.GDAX_ZRX_Label2.Size = new System.Drawing.Size(0, 13);
-            this.GDAX_ZRX_Label2.TabIndex = 20;
-            this.GDAX_ZRX_Label2.Tag = "GDAX";
-            // 
-            // GDAX_ZRX_Label3
-            // 
-            this.GDAX_ZRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.GDAX_ZRX_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_ZRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ZRX_Label3.Location = new System.Drawing.Point(119, 161);
-            this.GDAX_ZRX_Label3.Name = "GDAX_ZRX_Label3";
-            this.GDAX_ZRX_Label3.Size = new System.Drawing.Size(134, 13);
-            this.GDAX_ZRX_Label3.TabIndex = 21;
-            this.GDAX_ZRX_Label3.Tag = "";
-            this.GDAX_ZRX_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // GDAX_ZRX_Label1
-            // 
-            this.GDAX_ZRX_Label1.AutoSize = true;
-            this.GDAX_ZRX_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_ZRX_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ZRX_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_ZRX_Label1.Location = new System.Drawing.Point(6, 163);
-            this.GDAX_ZRX_Label1.Name = "GDAX_ZRX_Label1";
-            this.GDAX_ZRX_Label1.Size = new System.Drawing.Size(36, 13);
-            this.GDAX_ZRX_Label1.TabIndex = 19;
-            this.GDAX_ZRX_Label1.Tag = "DCECryptoLabel";
-            this.GDAX_ZRX_Label1.Text = "ZRX:";
-            // 
             // GDAX_AvgPrice_Label
             // 
             this.GDAX_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
             this.GDAX_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_AvgPrice_Label.Location = new System.Drawing.Point(6, 226);
+            this.GDAX_AvgPrice_Label.Location = new System.Drawing.Point(9, 221);
             this.GDAX_AvgPrice_Label.Name = "GDAX_AvgPrice_Label";
-            this.GDAX_AvgPrice_Label.Size = new System.Drawing.Size(251, 16);
+            this.GDAX_AvgPrice_Label.Size = new System.Drawing.Size(242, 21);
             this.GDAX_AvgPrice_Label.TabIndex = 18;
             // 
             // GDAX_CryptoComboBox
@@ -3627,18 +3947,6 @@
             this.GDAX_NumCoinsTextBox.TextChanged += new System.EventHandler(this.GDAX_NumCoinsTextBox_TextChanged);
             this.GDAX_NumCoinsTextBox.Enter += new System.EventHandler(this.GDAX_NumCoinsTextBox_Enter);
             // 
-            // GDAX_XBT_Label2
-            // 
-            this.GDAX_XBT_Label2.AutoSize = true;
-            this.GDAX_XBT_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_XBT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XBT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_XBT_Label2.Location = new System.Drawing.Point(45, 23);
-            this.GDAX_XBT_Label2.Name = "GDAX_XBT_Label2";
-            this.GDAX_XBT_Label2.Size = new System.Drawing.Size(0, 13);
-            this.GDAX_XBT_Label2.TabIndex = 4;
-            this.GDAX_XBT_Label2.Tag = "GDAX";
-            // 
             // GDAX_BuySellComboBox
             // 
             this.GDAX_BuySellComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
@@ -3652,146 +3960,6 @@
             this.GDAX_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
             this.GDAX_BuySellComboBox.TabIndex = 15;
             this.GDAX_BuySellComboBox.SelectedIndexChanged += new System.EventHandler(this.GDAX_BuySellComboBox_SelectedIndexChanged);
-            // 
-            // GDAX_ETH_Label2
-            // 
-            this.GDAX_ETH_Label2.AutoSize = true;
-            this.GDAX_ETH_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_ETH_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ETH_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_ETH_Label2.Location = new System.Drawing.Point(45, 63);
-            this.GDAX_ETH_Label2.Name = "GDAX_ETH_Label2";
-            this.GDAX_ETH_Label2.Size = new System.Drawing.Size(0, 13);
-            this.GDAX_ETH_Label2.TabIndex = 5;
-            this.GDAX_ETH_Label2.Tag = "GDAX";
-            // 
-            // GDAX_BCH_Label2
-            // 
-            this.GDAX_BCH_Label2.AutoSize = true;
-            this.GDAX_BCH_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_BCH_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_BCH_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_BCH_Label2.Location = new System.Drawing.Point(45, 83);
-            this.GDAX_BCH_Label2.Name = "GDAX_BCH_Label2";
-            this.GDAX_BCH_Label2.Size = new System.Drawing.Size(0, 13);
-            this.GDAX_BCH_Label2.TabIndex = 6;
-            this.GDAX_BCH_Label2.Tag = "GDAX";
-            // 
-            // GDAX_LTC_Label2
-            // 
-            this.GDAX_LTC_Label2.AutoSize = true;
-            this.GDAX_LTC_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_LTC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_LTC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_LTC_Label2.Location = new System.Drawing.Point(45, 103);
-            this.GDAX_LTC_Label2.Name = "GDAX_LTC_Label2";
-            this.GDAX_LTC_Label2.Size = new System.Drawing.Size(0, 13);
-            this.GDAX_LTC_Label2.TabIndex = 7;
-            this.GDAX_LTC_Label2.Tag = "GDAX";
-            // 
-            // GDAX_LTC_Label3
-            // 
-            this.GDAX_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.GDAX_LTC_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_LTC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_LTC_Label3.Location = new System.Drawing.Point(119, 101);
-            this.GDAX_LTC_Label3.Name = "GDAX_LTC_Label3";
-            this.GDAX_LTC_Label3.Size = new System.Drawing.Size(134, 13);
-            this.GDAX_LTC_Label3.TabIndex = 15;
-            this.GDAX_LTC_Label3.Tag = "";
-            this.GDAX_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.GDAX_LTC_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GDAX_LTC_Label3_MouseDoubleClick);
-            // 
-            // GDAX_BCH_Label3
-            // 
-            this.GDAX_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.GDAX_BCH_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_BCH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_BCH_Label3.Location = new System.Drawing.Point(119, 81);
-            this.GDAX_BCH_Label3.Name = "GDAX_BCH_Label3";
-            this.GDAX_BCH_Label3.Size = new System.Drawing.Size(134, 13);
-            this.GDAX_BCH_Label3.TabIndex = 14;
-            this.GDAX_BCH_Label3.Tag = "";
-            this.GDAX_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.GDAX_BCH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GDAX_BCH_Label3_MouseDoubleClick);
-            // 
-            // GDAX_ETH_Label3
-            // 
-            this.GDAX_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.GDAX_ETH_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_ETH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ETH_Label3.Location = new System.Drawing.Point(119, 61);
-            this.GDAX_ETH_Label3.Name = "GDAX_ETH_Label3";
-            this.GDAX_ETH_Label3.Size = new System.Drawing.Size(134, 13);
-            this.GDAX_ETH_Label3.TabIndex = 13;
-            this.GDAX_ETH_Label3.Tag = "";
-            this.GDAX_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.GDAX_ETH_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GDAX_ETH_Label3_MouseDoubleClick);
-            // 
-            // GDAX_XBT_Label3
-            // 
-            this.GDAX_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.GDAX_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XBT_Label3.Location = new System.Drawing.Point(119, 21);
-            this.GDAX_XBT_Label3.Name = "GDAX_XBT_Label3";
-            this.GDAX_XBT_Label3.Size = new System.Drawing.Size(134, 13);
-            this.GDAX_XBT_Label3.TabIndex = 12;
-            this.GDAX_XBT_Label3.Tag = "";
-            this.GDAX_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.GDAX_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.GDAX_XBT_Label3_MouseDoubleClick);
-            // 
-            // GDAX_LTC_Label1
-            // 
-            this.GDAX_LTC_Label1.AutoSize = true;
-            this.GDAX_LTC_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_LTC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_LTC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_LTC_Label1.Location = new System.Drawing.Point(6, 103);
-            this.GDAX_LTC_Label1.Name = "GDAX_LTC_Label1";
-            this.GDAX_LTC_Label1.Size = new System.Drawing.Size(34, 13);
-            this.GDAX_LTC_Label1.TabIndex = 3;
-            this.GDAX_LTC_Label1.Tag = "DCECryptoLabel";
-            this.GDAX_LTC_Label1.Text = "LTC:";
-            // 
-            // GDAX_BCH_Label1
-            // 
-            this.GDAX_BCH_Label1.AutoSize = true;
-            this.GDAX_BCH_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_BCH_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_BCH_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_BCH_Label1.Location = new System.Drawing.Point(6, 83);
-            this.GDAX_BCH_Label1.Name = "GDAX_BCH_Label1";
-            this.GDAX_BCH_Label1.Size = new System.Drawing.Size(36, 13);
-            this.GDAX_BCH_Label1.TabIndex = 2;
-            this.GDAX_BCH_Label1.Tag = "DCECryptoLabel";
-            this.GDAX_BCH_Label1.Text = "BCH:";
-            // 
-            // GDAX_ETH_Label1
-            // 
-            this.GDAX_ETH_Label1.AutoSize = true;
-            this.GDAX_ETH_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_ETH_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ETH_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_ETH_Label1.Location = new System.Drawing.Point(6, 63);
-            this.GDAX_ETH_Label1.Name = "GDAX_ETH_Label1";
-            this.GDAX_ETH_Label1.Size = new System.Drawing.Size(36, 13);
-            this.GDAX_ETH_Label1.TabIndex = 1;
-            this.GDAX_ETH_Label1.Tag = "DCECryptoLabel";
-            this.GDAX_ETH_Label1.Text = "ETH:";
-            // 
-            // GDAX_XBT_Label1
-            // 
-            this.GDAX_XBT_Label1.AutoSize = true;
-            this.GDAX_XBT_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_XBT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XBT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_XBT_Label1.Location = new System.Drawing.Point(6, 23);
-            this.GDAX_XBT_Label1.Name = "GDAX_XBT_Label1";
-            this.GDAX_XBT_Label1.Size = new System.Drawing.Size(35, 13);
-            this.GDAX_XBT_Label1.TabIndex = 0;
-            this.GDAX_XBT_Label1.Tag = "DCECryptoLabel";
-            this.GDAX_XBT_Label1.Text = "BTC:";
             // 
             // IRTickerTT_spread
             // 
@@ -4383,16 +4551,21 @@
             // GetAccounts_panel
             // 
             this.GetAccounts_panel.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.GetAccounts_panel.Controls.Add(this.AccountUSDC_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountUSDC_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountUSDC_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountDAI_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountDAI_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountDAI_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountMKR_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountMKR_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountMKR_label);
             this.GetAccounts_panel.Controls.Add(this.AccountName_button);
             this.GetAccounts_panel.Controls.Add(this.AccountLINK_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountPMGT_total);
             this.GetAccounts_panel.Controls.Add(this.AccountLINK_value);
             this.GetAccounts_panel.Controls.Add(this.AccountLINK_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountPMGT_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountPMGT_label);
             this.GetAccounts_panel.Controls.Add(this.AccountGNT_total);
             this.GetAccounts_panel.Controls.Add(this.AccountZRX_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountREP_total);
             this.GetAccounts_panel.Controls.Add(this.AccountOMG_total);
             this.GetAccounts_panel.Controls.Add(this.AccountBAT_total);
             this.GetAccounts_panel.Controls.Add(this.AccountETC_total);
@@ -4417,8 +4590,6 @@
             this.GetAccounts_panel.Controls.Add(this.AccountGNT_label);
             this.GetAccounts_panel.Controls.Add(this.AccountZRX_value);
             this.GetAccounts_panel.Controls.Add(this.AccountZRX_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountREP_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountREP_label);
             this.GetAccounts_panel.Controls.Add(this.AccountOMG_value);
             this.GetAccounts_panel.Controls.Add(this.AccountOMG_label);
             this.GetAccounts_panel.Controls.Add(this.AccountBAT_value);
@@ -4465,27 +4636,17 @@
             this.AccountLINK_total.AutoSize = true;
             this.AccountLINK_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountLINK_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountLINK_total.Location = new System.Drawing.Point(83, 679);
+            this.AccountLINK_total.Location = new System.Drawing.Point(83, 570);
             this.AccountLINK_total.Name = "AccountLINK_total";
             this.AccountLINK_total.Size = new System.Drawing.Size(0, 24);
             this.AccountLINK_total.TabIndex = 59;
-            // 
-            // AccountPMGT_total
-            // 
-            this.AccountPMGT_total.AutoSize = true;
-            this.AccountPMGT_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountPMGT_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountPMGT_total.Location = new System.Drawing.Point(83, 641);
-            this.AccountPMGT_total.Name = "AccountPMGT_total";
-            this.AccountPMGT_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountPMGT_total.TabIndex = 58;
             // 
             // AccountLINK_value
             // 
             this.AccountLINK_value.AutoSize = true;
             this.AccountLINK_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountLINK_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountLINK_value.Location = new System.Drawing.Point(183, 679);
+            this.AccountLINK_value.Location = new System.Drawing.Point(183, 570);
             this.AccountLINK_value.Name = "AccountLINK_value";
             this.AccountLINK_value.Size = new System.Drawing.Size(0, 24);
             this.AccountLINK_value.TabIndex = 57;
@@ -4494,38 +4655,18 @@
             // 
             this.AccountLINK_label.AutoSize = true;
             this.AccountLINK_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountLINK_label.Location = new System.Drawing.Point(12, 679);
+            this.AccountLINK_label.Location = new System.Drawing.Point(12, 570);
             this.AccountLINK_label.Name = "AccountLINK_label";
             this.AccountLINK_label.Size = new System.Drawing.Size(55, 24);
             this.AccountLINK_label.TabIndex = 56;
             this.AccountLINK_label.Text = "LINK:";
-            // 
-            // AccountPMGT_value
-            // 
-            this.AccountPMGT_value.AutoSize = true;
-            this.AccountPMGT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountPMGT_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountPMGT_value.Location = new System.Drawing.Point(183, 641);
-            this.AccountPMGT_value.Name = "AccountPMGT_value";
-            this.AccountPMGT_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountPMGT_value.TabIndex = 55;
-            // 
-            // AccountPMGT_label
-            // 
-            this.AccountPMGT_label.AutoSize = true;
-            this.AccountPMGT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountPMGT_label.Location = new System.Drawing.Point(12, 641);
-            this.AccountPMGT_label.Name = "AccountPMGT_label";
-            this.AccountPMGT_label.Size = new System.Drawing.Size(69, 24);
-            this.AccountPMGT_label.TabIndex = 54;
-            this.AccountPMGT_label.Text = "PMGT:";
             // 
             // AccountGNT_total
             // 
             this.AccountGNT_total.AutoSize = true;
             this.AccountGNT_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountGNT_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountGNT_total.Location = new System.Drawing.Point(83, 604);
+            this.AccountGNT_total.Location = new System.Drawing.Point(83, 534);
             this.AccountGNT_total.Name = "AccountGNT_total";
             this.AccountGNT_total.Size = new System.Drawing.Size(0, 24);
             this.AccountGNT_total.TabIndex = 53;
@@ -4535,27 +4676,17 @@
             this.AccountZRX_total.AutoSize = true;
             this.AccountZRX_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountZRX_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountZRX_total.Location = new System.Drawing.Point(83, 566);
+            this.AccountZRX_total.Location = new System.Drawing.Point(83, 500);
             this.AccountZRX_total.Name = "AccountZRX_total";
             this.AccountZRX_total.Size = new System.Drawing.Size(0, 24);
             this.AccountZRX_total.TabIndex = 52;
-            // 
-            // AccountREP_total
-            // 
-            this.AccountREP_total.AutoSize = true;
-            this.AccountREP_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountREP_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountREP_total.Location = new System.Drawing.Point(83, 528);
-            this.AccountREP_total.Name = "AccountREP_total";
-            this.AccountREP_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountREP_total.TabIndex = 51;
             // 
             // AccountOMG_total
             // 
             this.AccountOMG_total.AutoSize = true;
             this.AccountOMG_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountOMG_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountOMG_total.Location = new System.Drawing.Point(83, 490);
+            this.AccountOMG_total.Location = new System.Drawing.Point(83, 468);
             this.AccountOMG_total.Name = "AccountOMG_total";
             this.AccountOMG_total.Size = new System.Drawing.Size(0, 24);
             this.AccountOMG_total.TabIndex = 50;
@@ -4565,7 +4696,7 @@
             this.AccountBAT_total.AutoSize = true;
             this.AccountBAT_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountBAT_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBAT_total.Location = new System.Drawing.Point(83, 452);
+            this.AccountBAT_total.Location = new System.Drawing.Point(83, 432);
             this.AccountBAT_total.Name = "AccountBAT_total";
             this.AccountBAT_total.Size = new System.Drawing.Size(0, 24);
             this.AccountBAT_total.TabIndex = 49;
@@ -4575,7 +4706,7 @@
             this.AccountETC_total.AutoSize = true;
             this.AccountETC_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountETC_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountETC_total.Location = new System.Drawing.Point(83, 414);
+            this.AccountETC_total.Location = new System.Drawing.Point(83, 396);
             this.AccountETC_total.Name = "AccountETC_total";
             this.AccountETC_total.Size = new System.Drawing.Size(0, 24);
             this.AccountETC_total.TabIndex = 48;
@@ -4585,7 +4716,7 @@
             this.AccountXLM_total.AutoSize = true;
             this.AccountXLM_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountXLM_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountXLM_total.Location = new System.Drawing.Point(83, 376);
+            this.AccountXLM_total.Location = new System.Drawing.Point(83, 360);
             this.AccountXLM_total.Name = "AccountXLM_total";
             this.AccountXLM_total.Size = new System.Drawing.Size(0, 24);
             this.AccountXLM_total.TabIndex = 47;
@@ -4595,7 +4726,7 @@
             this.AccountEOS_total.AutoSize = true;
             this.AccountEOS_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountEOS_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountEOS_total.Location = new System.Drawing.Point(83, 338);
+            this.AccountEOS_total.Location = new System.Drawing.Point(83, 324);
             this.AccountEOS_total.Name = "AccountEOS_total";
             this.AccountEOS_total.Size = new System.Drawing.Size(0, 24);
             this.AccountEOS_total.TabIndex = 46;
@@ -4605,7 +4736,7 @@
             this.AccountLTC_total.AutoSize = true;
             this.AccountLTC_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountLTC_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountLTC_total.Location = new System.Drawing.Point(83, 300);
+            this.AccountLTC_total.Location = new System.Drawing.Point(83, 288);
             this.AccountLTC_total.Name = "AccountLTC_total";
             this.AccountLTC_total.Size = new System.Drawing.Size(0, 24);
             this.AccountLTC_total.TabIndex = 45;
@@ -4615,7 +4746,7 @@
             this.AccountUSDT_total.AutoSize = true;
             this.AccountUSDT_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountUSDT_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountUSDT_total.Location = new System.Drawing.Point(83, 260);
+            this.AccountUSDT_total.Location = new System.Drawing.Point(83, 250);
             this.AccountUSDT_total.Name = "AccountUSDT_total";
             this.AccountUSDT_total.Size = new System.Drawing.Size(0, 24);
             this.AccountUSDT_total.TabIndex = 44;
@@ -4625,7 +4756,7 @@
             this.AccountBSV_total.AutoSize = true;
             this.AccountBSV_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountBSV_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBSV_total.Location = new System.Drawing.Point(83, 224);
+            this.AccountBSV_total.Location = new System.Drawing.Point(83, 216);
             this.AccountBSV_total.Name = "AccountBSV_total";
             this.AccountBSV_total.Size = new System.Drawing.Size(0, 24);
             this.AccountBSV_total.TabIndex = 43;
@@ -4635,7 +4766,7 @@
             this.AccountBCH_total.AutoSize = true;
             this.AccountBCH_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountBCH_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBCH_total.Location = new System.Drawing.Point(83, 186);
+            this.AccountBCH_total.Location = new System.Drawing.Point(83, 180);
             this.AccountBCH_total.Name = "AccountBCH_total";
             this.AccountBCH_total.Size = new System.Drawing.Size(0, 24);
             this.AccountBCH_total.TabIndex = 42;
@@ -4645,7 +4776,7 @@
             this.AccountXRP_total.AutoSize = true;
             this.AccountXRP_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountXRP_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountXRP_total.Location = new System.Drawing.Point(83, 148);
+            this.AccountXRP_total.Location = new System.Drawing.Point(83, 144);
             this.AccountXRP_total.Name = "AccountXRP_total";
             this.AccountXRP_total.Size = new System.Drawing.Size(0, 24);
             this.AccountXRP_total.TabIndex = 41;
@@ -4655,7 +4786,7 @@
             this.AccountETH_total.AutoSize = true;
             this.AccountETH_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountETH_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountETH_total.Location = new System.Drawing.Point(83, 110);
+            this.AccountETH_total.Location = new System.Drawing.Point(83, 108);
             this.AccountETH_total.Name = "AccountETH_total";
             this.AccountETH_total.Size = new System.Drawing.Size(0, 24);
             this.AccountETH_total.TabIndex = 40;
@@ -4664,7 +4795,7 @@
             // 
             this.AccountXBT_total.AutoSize = true;
             this.AccountXBT_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountXBT_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountXBT_total.ForeColor = System.Drawing.Color.DarkOrange;
             this.AccountXBT_total.Location = new System.Drawing.Point(83, 72);
             this.AccountXBT_total.Name = "AccountXBT_total";
             this.AccountXBT_total.Size = new System.Drawing.Size(0, 24);
@@ -4751,7 +4882,7 @@
             this.AccountGNT_value.AutoSize = true;
             this.AccountGNT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountGNT_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountGNT_value.Location = new System.Drawing.Point(183, 604);
+            this.AccountGNT_value.Location = new System.Drawing.Point(183, 534);
             this.AccountGNT_value.Name = "AccountGNT_value";
             this.AccountGNT_value.Size = new System.Drawing.Size(0, 24);
             this.AccountGNT_value.TabIndex = 29;
@@ -4760,7 +4891,7 @@
             // 
             this.AccountGNT_label.AutoSize = true;
             this.AccountGNT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountGNT_label.Location = new System.Drawing.Point(12, 604);
+            this.AccountGNT_label.Location = new System.Drawing.Point(12, 534);
             this.AccountGNT_label.Name = "AccountGNT_label";
             this.AccountGNT_label.Size = new System.Drawing.Size(55, 24);
             this.AccountGNT_label.TabIndex = 28;
@@ -4772,7 +4903,7 @@
             this.AccountZRX_value.AutoSize = true;
             this.AccountZRX_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountZRX_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountZRX_value.Location = new System.Drawing.Point(183, 566);
+            this.AccountZRX_value.Location = new System.Drawing.Point(183, 500);
             this.AccountZRX_value.Name = "AccountZRX_value";
             this.AccountZRX_value.Size = new System.Drawing.Size(0, 24);
             this.AccountZRX_value.TabIndex = 27;
@@ -4781,40 +4912,19 @@
             // 
             this.AccountZRX_label.AutoSize = true;
             this.AccountZRX_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountZRX_label.Location = new System.Drawing.Point(12, 566);
+            this.AccountZRX_label.Location = new System.Drawing.Point(12, 500);
             this.AccountZRX_label.Name = "AccountZRX_label";
             this.AccountZRX_label.Size = new System.Drawing.Size(54, 24);
             this.AccountZRX_label.TabIndex = 26;
             this.AccountZRX_label.Text = "ZRX:";
             this.AccountZRX_label.Click += new System.EventHandler(this.Account_label_Click);
             // 
-            // AccountREP_value
-            // 
-            this.AccountREP_value.AutoSize = true;
-            this.AccountREP_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountREP_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountREP_value.Location = new System.Drawing.Point(183, 528);
-            this.AccountREP_value.Name = "AccountREP_value";
-            this.AccountREP_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountREP_value.TabIndex = 25;
-            // 
-            // AccountREP_label
-            // 
-            this.AccountREP_label.AutoSize = true;
-            this.AccountREP_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountREP_label.Location = new System.Drawing.Point(12, 528);
-            this.AccountREP_label.Name = "AccountREP_label";
-            this.AccountREP_label.Size = new System.Drawing.Size(53, 24);
-            this.AccountREP_label.TabIndex = 24;
-            this.AccountREP_label.Text = "REP:";
-            this.AccountREP_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
             // AccountOMG_value
             // 
             this.AccountOMG_value.AutoSize = true;
             this.AccountOMG_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountOMG_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountOMG_value.Location = new System.Drawing.Point(183, 490);
+            this.AccountOMG_value.Location = new System.Drawing.Point(183, 468);
             this.AccountOMG_value.Name = "AccountOMG_value";
             this.AccountOMG_value.Size = new System.Drawing.Size(0, 24);
             this.AccountOMG_value.TabIndex = 23;
@@ -4823,7 +4933,7 @@
             // 
             this.AccountOMG_label.AutoSize = true;
             this.AccountOMG_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountOMG_label.Location = new System.Drawing.Point(12, 488);
+            this.AccountOMG_label.Location = new System.Drawing.Point(12, 466);
             this.AccountOMG_label.Name = "AccountOMG_label";
             this.AccountOMG_label.Size = new System.Drawing.Size(60, 24);
             this.AccountOMG_label.TabIndex = 22;
@@ -4835,7 +4945,7 @@
             this.AccountBAT_value.AutoSize = true;
             this.AccountBAT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountBAT_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBAT_value.Location = new System.Drawing.Point(183, 452);
+            this.AccountBAT_value.Location = new System.Drawing.Point(183, 432);
             this.AccountBAT_value.Name = "AccountBAT_value";
             this.AccountBAT_value.Size = new System.Drawing.Size(0, 24);
             this.AccountBAT_value.TabIndex = 21;
@@ -4844,7 +4954,7 @@
             // 
             this.AccountBAT_label.AutoSize = true;
             this.AccountBAT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountBAT_label.Location = new System.Drawing.Point(12, 452);
+            this.AccountBAT_label.Location = new System.Drawing.Point(12, 432);
             this.AccountBAT_label.Name = "AccountBAT_label";
             this.AccountBAT_label.Size = new System.Drawing.Size(52, 24);
             this.AccountBAT_label.TabIndex = 20;
@@ -4856,7 +4966,7 @@
             this.AccountETC_value.AutoSize = true;
             this.AccountETC_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountETC_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountETC_value.Location = new System.Drawing.Point(183, 414);
+            this.AccountETC_value.Location = new System.Drawing.Point(183, 396);
             this.AccountETC_value.Name = "AccountETC_value";
             this.AccountETC_value.Size = new System.Drawing.Size(0, 24);
             this.AccountETC_value.TabIndex = 19;
@@ -4865,7 +4975,7 @@
             // 
             this.AccountETC_label.AutoSize = true;
             this.AccountETC_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountETC_label.Location = new System.Drawing.Point(12, 414);
+            this.AccountETC_label.Location = new System.Drawing.Point(12, 396);
             this.AccountETC_label.Name = "AccountETC_label";
             this.AccountETC_label.Size = new System.Drawing.Size(53, 24);
             this.AccountETC_label.TabIndex = 18;
@@ -4877,7 +4987,7 @@
             this.AccountXLM_value.AutoSize = true;
             this.AccountXLM_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountXLM_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountXLM_value.Location = new System.Drawing.Point(183, 376);
+            this.AccountXLM_value.Location = new System.Drawing.Point(183, 360);
             this.AccountXLM_value.Name = "AccountXLM_value";
             this.AccountXLM_value.Size = new System.Drawing.Size(0, 24);
             this.AccountXLM_value.TabIndex = 17;
@@ -4887,7 +4997,7 @@
             this.AccountXLM_label.AutoSize = true;
             this.AccountXLM_label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.AccountXLM_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountXLM_label.Location = new System.Drawing.Point(12, 376);
+            this.AccountXLM_label.Location = new System.Drawing.Point(12, 360);
             this.AccountXLM_label.Name = "AccountXLM_label";
             this.AccountXLM_label.Size = new System.Drawing.Size(55, 24);
             this.AccountXLM_label.TabIndex = 16;
@@ -4899,7 +5009,7 @@
             this.AccountEOS_value.AutoSize = true;
             this.AccountEOS_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountEOS_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountEOS_value.Location = new System.Drawing.Point(183, 338);
+            this.AccountEOS_value.Location = new System.Drawing.Point(183, 324);
             this.AccountEOS_value.Name = "AccountEOS_value";
             this.AccountEOS_value.Size = new System.Drawing.Size(0, 24);
             this.AccountEOS_value.TabIndex = 15;
@@ -4908,7 +5018,7 @@
             // 
             this.AccountEOS_label.AutoSize = true;
             this.AccountEOS_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountEOS_label.Location = new System.Drawing.Point(12, 338);
+            this.AccountEOS_label.Location = new System.Drawing.Point(12, 324);
             this.AccountEOS_label.Name = "AccountEOS_label";
             this.AccountEOS_label.Size = new System.Drawing.Size(55, 24);
             this.AccountEOS_label.TabIndex = 14;
@@ -4920,7 +5030,7 @@
             this.AccountLTC_value.AutoSize = true;
             this.AccountLTC_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountLTC_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountLTC_value.Location = new System.Drawing.Point(183, 300);
+            this.AccountLTC_value.Location = new System.Drawing.Point(183, 288);
             this.AccountLTC_value.Name = "AccountLTC_value";
             this.AccountLTC_value.Size = new System.Drawing.Size(0, 24);
             this.AccountLTC_value.TabIndex = 13;
@@ -4929,7 +5039,7 @@
             // 
             this.AccountLTC_label.AutoSize = true;
             this.AccountLTC_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountLTC_label.Location = new System.Drawing.Point(12, 300);
+            this.AccountLTC_label.Location = new System.Drawing.Point(12, 288);
             this.AccountLTC_label.Name = "AccountLTC_label";
             this.AccountLTC_label.Size = new System.Drawing.Size(50, 24);
             this.AccountLTC_label.TabIndex = 12;
@@ -4941,7 +5051,7 @@
             this.AccountUSDT_value.AutoSize = true;
             this.AccountUSDT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountUSDT_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountUSDT_value.Location = new System.Drawing.Point(183, 260);
+            this.AccountUSDT_value.Location = new System.Drawing.Point(183, 250);
             this.AccountUSDT_value.Name = "AccountUSDT_value";
             this.AccountUSDT_value.Size = new System.Drawing.Size(0, 24);
             this.AccountUSDT_value.TabIndex = 11;
@@ -4950,7 +5060,7 @@
             // 
             this.AccountUSDT_label.AutoSize = true;
             this.AccountUSDT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountUSDT_label.Location = new System.Drawing.Point(12, 260);
+            this.AccountUSDT_label.Location = new System.Drawing.Point(12, 250);
             this.AccountUSDT_label.Name = "AccountUSDT_label";
             this.AccountUSDT_label.Size = new System.Drawing.Size(65, 24);
             this.AccountUSDT_label.TabIndex = 10;
@@ -4962,7 +5072,7 @@
             this.AccountBSV_value.AutoSize = true;
             this.AccountBSV_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountBSV_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBSV_value.Location = new System.Drawing.Point(183, 224);
+            this.AccountBSV_value.Location = new System.Drawing.Point(183, 216);
             this.AccountBSV_value.Name = "AccountBSV_value";
             this.AccountBSV_value.Size = new System.Drawing.Size(0, 24);
             this.AccountBSV_value.TabIndex = 9;
@@ -4971,7 +5081,7 @@
             // 
             this.AccountBSV_label.AutoSize = true;
             this.AccountBSV_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountBSV_label.Location = new System.Drawing.Point(12, 224);
+            this.AccountBSV_label.Location = new System.Drawing.Point(12, 216);
             this.AccountBSV_label.Name = "AccountBSV_label";
             this.AccountBSV_label.Size = new System.Drawing.Size(52, 24);
             this.AccountBSV_label.TabIndex = 8;
@@ -4983,7 +5093,7 @@
             this.AccountBCH_value.AutoSize = true;
             this.AccountBCH_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountBCH_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBCH_value.Location = new System.Drawing.Point(183, 186);
+            this.AccountBCH_value.Location = new System.Drawing.Point(183, 180);
             this.AccountBCH_value.Name = "AccountBCH_value";
             this.AccountBCH_value.Size = new System.Drawing.Size(0, 24);
             this.AccountBCH_value.TabIndex = 7;
@@ -4992,7 +5102,7 @@
             // 
             this.AccountBCH_label.AutoSize = true;
             this.AccountBCH_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountBCH_label.Location = new System.Drawing.Point(12, 186);
+            this.AccountBCH_label.Location = new System.Drawing.Point(12, 180);
             this.AccountBCH_label.Name = "AccountBCH_label";
             this.AccountBCH_label.Size = new System.Drawing.Size(54, 24);
             this.AccountBCH_label.TabIndex = 6;
@@ -5004,7 +5114,7 @@
             this.AccountXRP_value.AutoSize = true;
             this.AccountXRP_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountXRP_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountXRP_value.Location = new System.Drawing.Point(183, 148);
+            this.AccountXRP_value.Location = new System.Drawing.Point(183, 144);
             this.AccountXRP_value.Name = "AccountXRP_value";
             this.AccountXRP_value.Size = new System.Drawing.Size(0, 24);
             this.AccountXRP_value.TabIndex = 5;
@@ -5013,7 +5123,7 @@
             // 
             this.AccountXRP_label.AutoSize = true;
             this.AccountXRP_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountXRP_label.Location = new System.Drawing.Point(12, 148);
+            this.AccountXRP_label.Location = new System.Drawing.Point(12, 144);
             this.AccountXRP_label.Name = "AccountXRP_label";
             this.AccountXRP_label.Size = new System.Drawing.Size(54, 24);
             this.AccountXRP_label.TabIndex = 4;
@@ -5025,7 +5135,7 @@
             this.AccountETH_value.AutoSize = true;
             this.AccountETH_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountETH_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountETH_value.Location = new System.Drawing.Point(183, 110);
+            this.AccountETH_value.Location = new System.Drawing.Point(183, 108);
             this.AccountETH_value.Name = "AccountETH_value";
             this.AccountETH_value.Size = new System.Drawing.Size(0, 24);
             this.AccountETH_value.TabIndex = 3;
@@ -5034,7 +5144,7 @@
             // 
             this.AccountETH_label.AutoSize = true;
             this.AccountETH_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountETH_label.Location = new System.Drawing.Point(12, 110);
+            this.AccountETH_label.Location = new System.Drawing.Point(12, 108);
             this.AccountETH_label.Name = "AccountETH_label";
             this.AccountETH_label.Size = new System.Drawing.Size(54, 24);
             this.AccountETH_label.TabIndex = 2;
@@ -5045,7 +5155,7 @@
             // 
             this.AccountXBT_value.AutoSize = true;
             this.AccountXBT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountXBT_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountXBT_value.ForeColor = System.Drawing.Color.DarkOrange;
             this.AccountXBT_value.Location = new System.Drawing.Point(183, 72);
             this.AccountXBT_value.Name = "AccountXBT_value";
             this.AccountXBT_value.Size = new System.Drawing.Size(0, 24);
@@ -5073,14 +5183,104 @@
             this.IRT_notification.Icon = ((System.Drawing.Icon)(resources.GetObject("IRT_notification.Icon")));
             this.IRT_notification.Text = "IR Ticker";
             // 
+            // AccountMKR_total
+            // 
+            this.AccountMKR_total.AutoSize = true;
+            this.AccountMKR_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountMKR_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountMKR_total.Location = new System.Drawing.Point(83, 604);
+            this.AccountMKR_total.Name = "AccountMKR_total";
+            this.AccountMKR_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountMKR_total.TabIndex = 63;
+            // 
+            // AccountMKR_value
+            // 
+            this.AccountMKR_value.AutoSize = true;
+            this.AccountMKR_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountMKR_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountMKR_value.Location = new System.Drawing.Point(183, 604);
+            this.AccountMKR_value.Name = "AccountMKR_value";
+            this.AccountMKR_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountMKR_value.TabIndex = 62;
+            // 
+            // AccountMKR_label
+            // 
+            this.AccountMKR_label.AutoSize = true;
+            this.AccountMKR_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountMKR_label.Location = new System.Drawing.Point(12, 604);
+            this.AccountMKR_label.Name = "AccountMKR_label";
+            this.AccountMKR_label.Size = new System.Drawing.Size(56, 24);
+            this.AccountMKR_label.TabIndex = 61;
+            this.AccountMKR_label.Text = "MKR:";
+            // 
+            // AccountDAI_total
+            // 
+            this.AccountDAI_total.AutoSize = true;
+            this.AccountDAI_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountDAI_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountDAI_total.Location = new System.Drawing.Point(83, 638);
+            this.AccountDAI_total.Name = "AccountDAI_total";
+            this.AccountDAI_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountDAI_total.TabIndex = 66;
+            // 
+            // AccountDAI_value
+            // 
+            this.AccountDAI_value.AutoSize = true;
+            this.AccountDAI_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountDAI_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountDAI_value.Location = new System.Drawing.Point(183, 638);
+            this.AccountDAI_value.Name = "AccountDAI_value";
+            this.AccountDAI_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountDAI_value.TabIndex = 65;
+            // 
+            // AccountDAI_label
+            // 
+            this.AccountDAI_label.AutoSize = true;
+            this.AccountDAI_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountDAI_label.Location = new System.Drawing.Point(12, 638);
+            this.AccountDAI_label.Name = "AccountDAI_label";
+            this.AccountDAI_label.Size = new System.Drawing.Size(45, 24);
+            this.AccountDAI_label.TabIndex = 64;
+            this.AccountDAI_label.Text = "DAI:";
+            // 
+            // AccountUSDC_total
+            // 
+            this.AccountUSDC_total.AutoSize = true;
+            this.AccountUSDC_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountUSDC_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountUSDC_total.Location = new System.Drawing.Point(83, 672);
+            this.AccountUSDC_total.Name = "AccountUSDC_total";
+            this.AccountUSDC_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountUSDC_total.TabIndex = 69;
+            // 
+            // AccountUSDC_value
+            // 
+            this.AccountUSDC_value.AutoSize = true;
+            this.AccountUSDC_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountUSDC_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountUSDC_value.Location = new System.Drawing.Point(183, 672);
+            this.AccountUSDC_value.Name = "AccountUSDC_value";
+            this.AccountUSDC_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountUSDC_value.TabIndex = 68;
+            // 
+            // AccountUSDC_label
+            // 
+            this.AccountUSDC_label.AutoSize = true;
+            this.AccountUSDC_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountUSDC_label.Location = new System.Drawing.Point(12, 672);
+            this.AccountUSDC_label.Name = "AccountUSDC_label";
+            this.AccountUSDC_label.Size = new System.Drawing.Size(66, 24);
+            this.AccountUSDC_label.TabIndex = 67;
+            this.AccountUSDC_label.Text = "USDC:";
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 841);
             this.Controls.Add(this.IRAccount_panel);
-            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Main);
+            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Settings);
             this.Controls.Add(this.OTCHelper);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -5107,12 +5307,17 @@
             this.BAR_GroupBox.PerformLayout();
             this.BFX_GroupBox.ResumeLayout(false);
             this.BFX_GroupBox.PerformLayout();
+            this.BFX_panel.ResumeLayout(false);
+            this.BFX_panel.PerformLayout();
             this.fiat_GroupBox.ResumeLayout(false);
-            this.fiat_GroupBox.PerformLayout();
+            this.fiat_panel.ResumeLayout(false);
+            this.fiat_panel.PerformLayout();
             this.IR_GroupBox.ResumeLayout(false);
             this.IR_GroupBox.PerformLayout();
             this.GDAX_GroupBox.ResumeLayout(false);
             this.GDAX_GroupBox.PerformLayout();
+            this.GDAX_panel.ResumeLayout(false);
+            this.GDAX_panel.PerformLayout();
             this.OTCHelper.ResumeLayout(false);
             this.OTCHelper.PerformLayout();
             this.IRAccount_panel.ResumeLayout(false);
@@ -5296,9 +5501,9 @@
         private System.Windows.Forms.Label IR_GNT_Label2;
         private System.Windows.Forms.Label IR_GNT_Label1;
         private System.Windows.Forms.Label IR_GNT_Label3;
-        private System.Windows.Forms.Label IR_REP_Label2;
-        private System.Windows.Forms.Label IR_REP_Label1;
-        private System.Windows.Forms.Label IR_REP_Label3;
+        private System.Windows.Forms.Label IR_MKR_Label2;
+        private System.Windows.Forms.Label IR_MKR_Label1;
+        private System.Windows.Forms.Label IR_MKR_Label3;
         private System.Windows.Forms.Label IR_BAT_Label2;
         private System.Windows.Forms.Label IR_BAT_Label1;
         private System.Windows.Forms.Label IR_BAT_Label3;
@@ -5308,18 +5513,18 @@
         private System.Windows.Forms.Label BTCM_GNT_Label2;
         private System.Windows.Forms.Label BTCM_GNT_Label3;
         private System.Windows.Forms.Label BTCM_GNT_Label1;
-        private System.Windows.Forms.Label GDAX_REP_Label2;
-        private System.Windows.Forms.Label GDAX_REP_Label3;
-        private System.Windows.Forms.Label GDAX_REP_Label1;
+        private System.Windows.Forms.Label GDAX_LINK_Label2;
+        private System.Windows.Forms.Label GDAX_LINK_Label3;
+        private System.Windows.Forms.Label GDAX_LINK_Label1;
         private System.Windows.Forms.Label BFX_BAT_Label2;
         private System.Windows.Forms.Label BFX_BAT_Label3;
         private System.Windows.Forms.Label BFX_BAT_Label1;
         private System.Windows.Forms.Label BFX_GNT_Label2;
         private System.Windows.Forms.Label BFX_GNT_Label1;
-        private System.Windows.Forms.Label BFX_REP_Label2;
-        private System.Windows.Forms.Label BFX_REP_Label3;
+        private System.Windows.Forms.Label BFX_MKR_Label2;
+        private System.Windows.Forms.Label BFX_MKR_Label3;
         private System.Windows.Forms.Label BFX_GNT_Label3;
-        private System.Windows.Forms.Label BFX_REP_Label1;
+        private System.Windows.Forms.Label BFX_MKR_Label1;
         private System.Windows.Forms.Label IR_ETC_Label2;
         private System.Windows.Forms.Label IR_ETC_Label3;
         private System.Windows.Forms.Label IR_ETC_Label1;
@@ -5395,8 +5600,6 @@
         private System.Windows.Forms.Label AccountGNT_label;
         private System.Windows.Forms.Label AccountZRX_value;
         private System.Windows.Forms.Label AccountZRX_label;
-        private System.Windows.Forms.Label AccountREP_value;
-        private System.Windows.Forms.Label AccountREP_label;
         private System.Windows.Forms.Label AccountOMG_value;
         private System.Windows.Forms.Label AccountOMG_label;
         private System.Windows.Forms.Label AccountBAT_value;
@@ -5432,7 +5635,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label AccountGNT_total;
         private System.Windows.Forms.Label AccountZRX_total;
-        private System.Windows.Forms.Label AccountREP_total;
         private System.Windows.Forms.Label AccountOMG_total;
         private System.Windows.Forms.Label AccountBAT_total;
         private System.Windows.Forms.Label AccountETC_total;
@@ -5494,24 +5696,42 @@
         private System.Windows.Forms.Label IR_LINK_Label2;
         private System.Windows.Forms.Label IR_LINK_Label1;
         private System.Windows.Forms.Label IR_LINK_Label3;
-        private System.Windows.Forms.Label IR_PMGT_Label2;
-        private System.Windows.Forms.Label IR_PMGT_Label1;
-        private System.Windows.Forms.Label IR_PMGT_Label3;
-        private System.Windows.Forms.Label GDAX_LINK_Label2;
-        private System.Windows.Forms.Label GDAX_LINK_Label3;
-        private System.Windows.Forms.Label GDAX_LINK_Label1;
+        private System.Windows.Forms.Label IR_DAI_Label2;
+        private System.Windows.Forms.Label IR_DAI_Label1;
+        private System.Windows.Forms.Label IR_DAI_Label3;
+        private System.Windows.Forms.Label GDAX_MKR_Label2;
+        private System.Windows.Forms.Label GDAX_MKR_Label3;
+        private System.Windows.Forms.Label GDAX_MKR_Label1;
         private System.Windows.Forms.Label AccountLINK_total;
-        private System.Windows.Forms.Label AccountPMGT_total;
         private System.Windows.Forms.Label AccountLINK_value;
         private System.Windows.Forms.Label AccountLINK_label;
-        private System.Windows.Forms.Label AccountPMGT_value;
-        private System.Windows.Forms.Label AccountPMGT_label;
         private System.Windows.Forms.NotifyIcon IRT_notification;
         private System.Windows.Forms.TextBox TelegramCode_textBox;
         private System.Windows.Forms.Label TelegramCode_label;
         public System.Windows.Forms.Button TGReset_button;
         public System.Windows.Forms.Panel IRAccount_panel;
         private System.Windows.Forms.Button AccountName_button;
+        private System.Windows.Forms.Panel GDAX_panel;
+        private System.Windows.Forms.Panel BFX_panel;
+        private System.Windows.Forms.Panel fiat_panel;
+        private System.Windows.Forms.Label IR_USDC_Label2;
+        private System.Windows.Forms.Label IR_USDC_Label1;
+        private System.Windows.Forms.Label IR_USDC_Label3;
+        private System.Windows.Forms.Label GDAX_DAI_Label2;
+        private System.Windows.Forms.Label GDAX_DAI_Label3;
+        private System.Windows.Forms.Label GDAX_DAI_Label1;
+        private System.Windows.Forms.Label BFX_DAI_Label3;
+        private System.Windows.Forms.Label BFX_DAI_Label1;
+        private System.Windows.Forms.Label BFX_DAI_Label2;
+        private System.Windows.Forms.Label AccountUSDC_total;
+        private System.Windows.Forms.Label AccountUSDC_value;
+        private System.Windows.Forms.Label AccountUSDC_label;
+        private System.Windows.Forms.Label AccountDAI_total;
+        private System.Windows.Forms.Label AccountDAI_value;
+        private System.Windows.Forms.Label AccountDAI_label;
+        private System.Windows.Forms.Label AccountMKR_total;
+        private System.Windows.Forms.Label AccountMKR_value;
+        private System.Windows.Forms.Label AccountMKR_label;
     }
 }
 

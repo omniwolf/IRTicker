@@ -23,6 +23,7 @@ namespace IRTicker {
         private IRTicker IRT;
         private ConcurrentQueue<IRClientData> IRQueue = new ConcurrentQueue<IRClientData>();
         private bool isDequeuing = false;
+        private static readonly Object pIR_Lock = new Object();
 
         public string OrderBookSide = "Bid";  //  maintains which side of the order book we show in the AccountOrders_listview
         public string BaiterBookSide = "Bid"; // maintains which book we're baitin' on
@@ -70,76 +71,88 @@ namespace IRTicker {
             TGBot = _TGBot;
         }
 
-        public async Task<Dictionary<string, Account>> GetAccounts() {
-            try {
-                accounts = (await IRclient.GetAccountsAsync()).ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
-                return accounts;
+        public Dictionary<string, Account> GetAccounts() {
+            lock (pIR_Lock) {
+                try {
+                    //accounts = (IRclient.GetAccounts()).ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
+                    accounts =(IRclient.GetAccounts()).ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
+
+                }
+                catch (Exception ex) {
+                    MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
+                        ex.Message, "Error - GetAccounts", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
             }
-            catch (Exception ex) {
-                MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                    ex.Message, "Error - GetAccounts", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
-            }
+
+            return accounts;
         }
 
-        public Task<DigitalCurrencyDepositAddress> GetDepositAddress(string crypto) {
-            return IRclient.GetDigitalCurrencyDepositAddressAsync(convertCryptoStrToCryptoEnum(crypto));
+        public DigitalCurrencyDepositAddress GetDepositAddress(string crypto) {
+            lock (pIR_Lock) {
+                return IRclient.GetDigitalCurrencyDepositAddress(convertCryptoStrToCryptoEnum(crypto));
+            }
         }
 
         //
-        public Task<DigitalCurrencyDepositAddress> CheckAddressNow(string crypto, string address) {
-            Task<DigitalCurrencyDepositAddress> result;
-            try {
-                result = IRclient.SynchDigitalCurrencyDepositAddressWithBlockchainAsync(address, convertCryptoStrToCryptoEnum(crypto));
-            }
-            catch (Exception ex) {
-                MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                    ex.Message, "Error - CheckAddressNow", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
+        public DigitalCurrencyDepositAddress CheckAddressNow(string crypto, string address) {
+            DigitalCurrencyDepositAddress result;
+            lock (pIR_Lock) {
+                try {
+                    result = IRclient.SynchDigitalCurrencyDepositAddressWithBlockchain(address, convertCryptoStrToCryptoEnum(crypto));
+                }
+                catch (Exception ex) {
+                    MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
+                        ex.Message, "Error - CheckAddressNow", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
             }
 
             return result;
         }
 
-        public Task<BankOrder> PlaceLimitOrder(string crypto, string fiat, OrderType orderType, decimal price, decimal volume) {
+        public BankOrder PlaceLimitOrder(string crypto, string fiat, OrderType orderType, decimal price, decimal volume) {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
-            Task<BankOrder> orderResult;
-
-            try {
-                orderResult = IRclient.PlaceLimitOrderAsync(enumCrypto, enumFiat, orderType, price, volume);
-            }
-            catch (Exception ex) {
-                MessageBox.Show("API error: " + ex.InnerException.Message, "Limit Order Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                orderResult = null;
+            BankOrder orderResult;
+            lock (pIR_Lock) {
+                try {
+                    orderResult = IRclient.PlaceLimitOrder(enumCrypto, enumFiat, orderType, price, volume);
+                }
+                catch (Exception ex) {
+                    MessageBox.Show("API error: " + ex.InnerException.Message, "Limit Order Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    orderResult = null;
+                }
             }
             return orderResult;
         }
 
-        public Task<BankOrder> PlaceMarketOrder(string crypto, string fiat, OrderType orderType, decimal volume) {
+        public BankOrder PlaceMarketOrder(string crypto, string fiat, OrderType orderType, decimal volume) {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
-            Task<BankOrder> orderResult;
-
-            try {
-                orderResult = IRclient.PlaceMarketOrderAsync(enumCrypto, enumFiat, orderType, volume);
-            }
-            catch (Exception ex) {
-                MessageBox.Show("API error: " + ex.InnerException.Message, "Market Order Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                orderResult = null;
+            BankOrder orderResult;
+            lock (pIR_Lock) {
+                try {
+                    orderResult = IRclient.PlaceMarketOrder(enumCrypto, enumFiat, orderType, volume);
+                }
+                catch (Exception ex) {
+                    MessageBox.Show("API error: " + ex.InnerException.Message, "Market Order Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    orderResult = null;
+                }
             }
             return orderResult;
         }
 
-        public async Task<Page<BankHistoryOrder>> GetOpenOrders(string crypto, string fiat) {
+        public Page<BankHistoryOrder> GetOpenOrders(string crypto, string fiat) {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
+            Page<BankHistoryOrder> openOs;
 
-            Page<BankHistoryOrder> openOs = await IRclient.GetOpenOrdersAsync(enumCrypto, enumFiat, 1, 7);
-
-
+            lock (pIR_Lock) {
+                openOs = IRclient.GetOpenOrders(enumCrypto, enumFiat, 1, 7);
+            }
 
             openOrders.Clear(); // clear the old one
             foreach (BankHistoryOrder order in openOs.Data) {
@@ -150,44 +163,46 @@ namespace IRTicker {
             return openOs;
         }
 
-        public async Task<Page<BankHistoryOrder>> GetClosedOrders(string crypto, string fiat) {
+        public Page<BankHistoryOrder> GetClosedOrders(string crypto, string fiat) {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
             Page<BankHistoryOrder> cOrders = null;
             List<BankHistoryOrder> allCOrders = new List<BankHistoryOrder>();
 
             int page = 1;
-            int closedOrderCount = 0;
             do {
-                try {
-                    cOrders = await IRclient.GetClosedOrdersAsync(enumCrypto, enumFiat, page, 50);
-                }
-                catch (Exception ex) {
-                    Debug.Print(DateTime.Now + " - Failed to pull GetClosedOrders on page " + page + " - " + ex.Message);
-                    return null;
+                lock (pIR_Lock) {
+                    try {
+                        cOrders = IRclient.GetClosedOrders(enumCrypto, enumFiat, page, 50);
+                    }
+                    catch (Exception ex) {
+                        Debug.Print(DateTime.Now + " - Failed to pull GetClosedOrders on page " + page + " - " + ex.Message);
+                        return null;
+                    }
                 }
 
                 foreach (BankHistoryOrder order in cOrders.Data) {
-                    if (order.Status == OrderStatus.Filled) closedOrderCount++;
                     allCOrders.Add(order);
                 }
                 page++;
-            }  while ((closedOrderCount < 7) && (page <= cOrders.TotalPages));
+            }  while (page <= cOrders.TotalPages);
 
-            if ((closedOrderCount < 7) && (page < cOrders.TotalPages)) return null;  // we don't want to send partial results, we either get it all or die trying
+            if (page < cOrders.TotalPages) return null;  // we don't want to send partial results, we either get it all or die trying
             cOrders.Data = allCOrders;
             if (TGBot != null) TGBot.closedOrders(cOrders);
             return cOrders;
         }
 
-        public Task<BankOrder> CancelOrder(string guid) {
-            try {
-                return IRclient.CancelOrderAsync(new Guid(guid));
-            }
-            catch (Exception ex) {
-                MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                    ex.InnerException.Message, "Error - CancelOrder", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
+        public BankOrder CancelOrder(string guid) {
+            lock (pIR_Lock) {
+                try {
+                    return IRclient.CancelOrder(new Guid(guid));
+                }
+                catch (Exception ex) {
+                    MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
+                        ex.InnerException.Message, "Error - CancelOrder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
             }
         }
 
@@ -232,10 +247,10 @@ namespace IRTicker {
                 if (IRQueue.TryDequeue(out IRClientData data)) {
                     switch (data.EndPoint) {
                         case PrivateIREndPoints.CancelOrder:
-                            BankOrder bo = await CancelOrder(data.guid.ToString());
+                            BankOrder bo = CancelOrder(data.guid.ToString());
                             break;
                         case PrivateIREndPoints.CheckAddress:
-                            await CheckAddressNow(data.Crypto.ToString(), data.CryptoAddress);
+                            CheckAddressNow(data.Crypto.ToString(), data.CryptoAddress);
                             break;
                         case PrivateIREndPoints.GetAccounts:
                             // this one has a result.  should capture it and then call the draw func
@@ -404,8 +419,8 @@ namespace IRTicker {
                     }
                     Debug.Print("MBAIT: placing order at " + orderPrice);
                     try {
-                        placedOrder = await PlaceLimitOrder(crypto, DCE_IR.CurrentSecondaryCurrency,
-                            (BaiterBookSide == "Bid" ? OrderType.LimitBid : OrderType.LimitOffer), orderPrice, volume).ConfigureAwait(false);
+                        placedOrder = PlaceLimitOrder(crypto, DCE_IR.CurrentSecondaryCurrency,
+                            (BaiterBookSide == "Bid" ? OrderType.LimitBid : OrderType.LimitOffer), orderPrice, volume);
                         Thread.Sleep(1050 - (Properties.Settings.Default.UITimerFreq + 50));  // an order must be left alive for at least a second or rate limiting will happen
                     }
                     catch (Exception ex) {
@@ -445,7 +460,7 @@ namespace IRTicker {
                                 if (!continueBaiterLoop) {  // OK, we didn't find it.  let's grab the openOrders and search again, maybe we only recently created it
                                     Page<BankHistoryOrder> openOs;
                                     try {
-                                        openOs = await GetOpenOrders(Crypto, DCE_IR.CurrentSecondaryCurrency);
+                                        openOs = GetOpenOrders(Crypto, DCE_IR.CurrentSecondaryCurrency);
                                     }
                                     catch (Exception ex) {
                                         Debug.Print("MBAIT: failed to get open orders due to: " + ex.Message);
@@ -475,7 +490,7 @@ namespace IRTicker {
                                     Debug.Print("MBAIT: our order has been beaten.  cancelling it...");
                                     BankOrder bo = new BankOrder();
                                     try {
-                                        bo = await CancelOrder(placedOrder.OrderGuid.ToString()).ConfigureAwait(false);
+                                        bo = CancelOrder(placedOrder.OrderGuid.ToString());
                                     }
                                     catch (Exception ex) {
                                         Debug.Print("MBAIT: trying to cancel the order because it got beat, but failed due to: " + ex.Message);
@@ -509,7 +524,7 @@ namespace IRTicker {
                     if (retryRequired) { Thread.Sleep(100); continue; }
                     if (!foundOrder) {
                         Debug.Print("MBAIT: Our order doesn't exist in the OB, possibly filled? " + placedOrder.OrderGuid.ToString());
-                        Page<BankHistoryOrder> closedOs = await GetClosedOrders(crypto, fiat).ConfigureAwait(false);
+                        Page<BankHistoryOrder> closedOs = GetClosedOrders(crypto, fiat);
                         if (closedOs == null) {  // could happen if there's a nonce error
                             Thread.Sleep(100);
                             continue;
@@ -531,7 +546,7 @@ namespace IRTicker {
 
                         if (null != placedOrder) {
                             Debug.Print("MBAIT: OK, let's see if it's still open.");
-                            Page<BankHistoryOrder> openOs = await GetOpenOrders(crypto, fiat);
+                            Page<BankHistoryOrder> openOs = GetOpenOrders(crypto, fiat);
                             foreach (BankHistoryOrder openO in openOs.Data) {
                                 if (openO.OrderGuid == placedOrder.OrderGuid) {
                                     foundOrder = true;
@@ -540,7 +555,7 @@ namespace IRTicker {
                                     }
                                     else {
                                         Debug.Print("MBAIT: the order is not open, it is: " + openO.Status + " orright, let's cancel it.  something weird is happening");
-                                        BankOrder cancelledOrder = await CancelOrder(placedOrder.OrderGuid.ToString());
+                                        BankOrder cancelledOrder = CancelOrder(placedOrder.OrderGuid.ToString());
                                         Debug.Print("MBAIT: cancelled status: " + cancelledOrder.Status);
                                         if (cancelledOrder.Status == OrderStatus.Cancelled) {
                                             placedOrder = null;
@@ -582,7 +597,7 @@ namespace IRTicker {
                 Debug.Print("MBAIT: master loop finished, let's cancel the order if it still exists...");
                 BankOrder bo;
                 try {
-                    bo = await CancelOrder(placedOrder.OrderGuid.ToString()).ConfigureAwait(false);
+                    bo = CancelOrder(placedOrder.OrderGuid.ToString());
                 }
                 catch (Exception ex) {
                     Debug.Print("MBAIT: couldn't cancel the order... weird.  message: " + ex.Message);

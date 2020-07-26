@@ -164,7 +164,7 @@ namespace IRTicker
                                 case "account":
                                     Dictionary<string, Account> accounts;
                                     try {
-                                        accounts = await pIR.GetAccounts();
+                                        accounts = pIR.GetAccounts();
                                     }
                                     catch (Exception ex) {
                                         Debug.Print("TGBot: failed to pull accounts: " + ex.Message);
@@ -268,7 +268,7 @@ namespace IRTicker
                             if (e.Message.Text.ToLower() == "y") {
                                 BankOrder marketO;
                                 try {
-                                    marketO = await pIR.PlaceMarketOrder(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, OrderType.MarketBid, TGstate.Volume);
+                                    marketO = pIR.PlaceMarketOrder(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, OrderType.MarketBid, TGstate.Volume);
                                 }
                                 catch (Exception ex) {
                                     Debug.Print("TGBot: couldn't place the market buy order: " + ex.Message);
@@ -312,7 +312,7 @@ namespace IRTicker
                             if (e.Message.Text.ToLower() == "y") {
                                 BankOrder marketO;
                                 try {
-                                    marketO = await pIR.PlaceMarketOrder(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, OrderType.MarketOffer, TGstate.Volume);
+                                    marketO = pIR.PlaceMarketOrder(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, OrderType.MarketOffer, TGstate.Volume);
                                 }
                                 catch (Exception ex) {
                                     Debug.Print("TGBot: couldn't place the market sell order: " + ex.Message);
@@ -352,7 +352,7 @@ namespace IRTicker
                                 // list the open orders
                                 Page<BankHistoryOrder> openOs = new Page<BankHistoryOrder>();
                                 try {
-                                    openOs = await pIR.GetOpenOrders(pairTup.Item1, pairTup.Item2);
+                                    openOs = pIR.GetOpenOrders(pairTup.Item1, pairTup.Item2);
                                 }
                                 catch (Exception ex) {
                                     Debug.Print("TGB: failed to pull open orders due to: " + ex.Message);
@@ -398,7 +398,7 @@ namespace IRTicker
                             if (e.Message.Text.ToLower() == "y") {
                                 BankOrder cancelledOrder;
                                 try {
-                                    cancelledOrder = await pIR.CancelOrder(TGstate.openOrdersToList[TGstate.orderToCancel].OrderGuid.ToString());
+                                    cancelledOrder = pIR.CancelOrder(TGstate.openOrdersToList[TGstate.orderToCancel].OrderGuid.ToString());
                                 }
                                 catch (Exception ex) {
                                     SendMessage("`Cancel Order` :: ⚠️ Failed to cancel the order.  Enter 'y' to try again, or anything else to quit");
