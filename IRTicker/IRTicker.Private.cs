@@ -146,8 +146,8 @@ namespace IRTicker {
                     if (AccountOpenOrders_listview.SelectedItems.Count == 0) continue;
                     string orderGuid = ((BankHistoryOrder)AccountOpenOrders_listview.SelectedItems[0].Tag).OrderGuid.ToString();
                     BankOrder cancelledOrder;
-                    try { 
-                    cancelledOrder = pIR.CancelOrder(orderGuid);
+                    try {
+                        cancelledOrder = pIR.CancelOrder(orderGuid);
                     }
                     catch (Exception ex) {
                         MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +

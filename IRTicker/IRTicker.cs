@@ -1508,8 +1508,9 @@ namespace IRTicker {
             if (mSummary.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency && mSummary.LastPrice >= 0) {
 
                 // we have a legit pair we're about to update.  if the groupBox is grey, let's black it.
-                GroupBoxAndLabelColourActive(dExchange);
-                UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")";
+                if (UIControls_Dict[dExchange].dExchange_GB.ForeColor != Color.Black) GroupBoxAndLabelColourActive(dExchange);
+                if (UIControls_Dict[dExchange].dExchange_GB.Text != DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")") 
+                    UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")";
 
                 decimal midPoint = (mSummary.CurrentHighestBidPrice + mSummary.CurrentLowestOfferPrice) / 2;  // we don't use last price anymore, instead the midpoint of the spread
 
