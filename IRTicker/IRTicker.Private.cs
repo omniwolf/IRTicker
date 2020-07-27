@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Drawing;
 using System.Collections.Concurrent;
+using System.Net;
 
 namespace IRTicker {
     // holds code to do with the IR Accounts panel
@@ -23,42 +24,46 @@ namespace IRTicker {
             AccountLimitPrice_textbox.Enabled = true;
             IRAccount_panel.Visible = true;
             Main.Visible = false;
-            bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAddress, PrivateIR.PrivateIREndPoints.UpdateOrderBook });
+            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAddress, PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
         private void DrawIRAccounts(Dictionary<string, Account> irAccounts) {
 
-            Label CurrentSecondaryCurrecyLabel = UIControls_Dict["IR"].Label_Dict[DCEs["IR"].CurrentSecondaryCurrency + "_Account_Label"];
-            CurrentSecondaryCurrecyLabel.ForeColor = Color.DarkBlue;
-            CurrentSecondaryCurrecyLabel.Font = new Font(CurrentSecondaryCurrecyLabel.Font.FontFamily, 14.25f, FontStyle.Bold);
+            synchronizationContext.Post(new SendOrPostCallback(o => {
+                Dictionary<string, Account> _irAccounts = (Dictionary<string, Account>)o;
+                Label CurrentSecondaryCurrecyLabel = UIControls_Dict["IR"].Label_Dict[DCEs["IR"].CurrentSecondaryCurrency + "_Account_Label"];
+                CurrentSecondaryCurrecyLabel.ForeColor = Color.DarkBlue;
+                CurrentSecondaryCurrecyLabel.Font = new Font(CurrentSecondaryCurrecyLabel.Font.FontFamily, 14.25f, FontStyle.Bold);
 
-            Label SelectedCrypto = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
-            SelectedCrypto.ForeColor = Color.DarkOrange;
-            SelectedCrypto.Font = new Font(SelectedCrypto.Font.FontFamily, 14.25f, FontStyle.Bold);
+                Label SelectedCrypto = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
+                SelectedCrypto.ForeColor = Color.DarkOrange;
+                SelectedCrypto.Font = new Font(SelectedCrypto.Font.FontFamily, 14.25f, FontStyle.Bold);
 
-            var mSummaries = DCEs["IR"].GetCryptoPairs();
+                var mSummaries = DCEs["IR"].GetCryptoPairs();
 
-            foreach (KeyValuePair<string, Account> acc in irAccounts) {
-                if (UIControls_Dict["IR"].Label_Dict.ContainsKey(acc.Key + "_Account_Total")) {
-                    UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Total"].Text = 
-                        Utilities.FormatValue(acc.Value.AvailableBalance);
-                }
-                else {
-                    Debug.Print(DateTime.Now + " new currency?? - " + acc.Key);
-                }
+                foreach (KeyValuePair<string, Account> acc in _irAccounts) {
+                    if (UIControls_Dict["IR"].Label_Dict.ContainsKey(acc.Key + "_Account_Total")) {
+                        UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Total"].Text =
+                            Utilities.FormatValue(acc.Value.AvailableBalance);
+                    }
+                    else {
+                        Debug.Print(DateTime.Now + " new currency?? - " + acc.Key);
+                    }
 
-                if (UIControls_Dict["IR"].Label_Dict.ContainsKey(acc.Key + "_Account_Value") && mSummaries.ContainsKey(acc.Key + "-" + DCEs["IR"].CurrentSecondaryCurrency)) {
-                    UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Value"].Text =
-                        Utilities.FormatValue(acc.Value.AvailableBalance * mSummaries[acc.Key + "-" + DCEs["IR"].CurrentSecondaryCurrency].CurrentHighestBidPrice);
+                    if (UIControls_Dict["IR"].Label_Dict.ContainsKey(acc.Key + "_Account_Value") && mSummaries.ContainsKey(acc.Key + "-" + DCEs["IR"].CurrentSecondaryCurrency)) {
+                        UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Value"].Text =
+                            Utilities.FormatValue(acc.Value.AvailableBalance * mSummaries[acc.Key + "-" + DCEs["IR"].CurrentSecondaryCurrency].CurrentHighestBidPrice);
+                    }
+                    else {
+                        //Debug.Print(DateTime.Now + " new currency (value)?? - " + acc.Key);
+                    }
                 }
-                else {
-                    //Debug.Print(DateTime.Now + " new currency (value)?? - " + acc.Key);
-                }
-            }
+            }), irAccounts);
         }
 
         // runs these network calls in order
-        private void bulkSequentialAPICalls(List<PrivateIR.PrivateIREndPoints> endPoints, decimal volume = 0, decimal price = 0) {
+        // this method should only be called on a non-UI thread
+        private void bulkSequentialAPICalls(List<PrivateIR.PrivateIREndPoints> endPoints, decimal volume = 0, decimal price = 0, string orderGuid = "") {
 
             foreach (PrivateIR.PrivateIREndPoints endP in endPoints) {
                 if (endP == PrivateIR.PrivateIREndPoints.GetAccounts) {
@@ -143,8 +148,6 @@ namespace IRTicker {
                     }
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.CancelOrder) {
-                    if (AccountOpenOrders_listview.SelectedItems.Count == 0) continue;
-                    string orderGuid = ((BankHistoryOrder)AccountOpenOrders_listview.SelectedItems[0].Tag).OrderGuid.ToString();
                     BankOrder cancelledOrder;
                     try {
                         cancelledOrder = pIR.CancelOrder(orderGuid);
@@ -195,68 +198,77 @@ namespace IRTicker {
         }
 
         private void drawClosedOrders(IEnumerable<BankHistoryOrder> closedOrders) {
-            AccountClosedOrders_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " closed orders";
-            AccountClosedOrders_listview.Items.Clear();
-            foreach (BankHistoryOrder order in closedOrders) {
-                if ((order.Status != OrderStatus.Filled) && (order.Status != OrderStatus.PartiallyFilledAndCancelled)) continue;
-                AccountClosedOrders_listview.Items.Add(new ListViewItem(new string[] {
+            synchronizationContext.Post(new SendOrPostCallback(o => {
+                IEnumerable<BankHistoryOrder> _closedOrders = (IEnumerable<BankHistoryOrder>)o;
+                AccountClosedOrders_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " closed orders";
+                AccountClosedOrders_listview.Items.Clear();
+                foreach (BankHistoryOrder order in _closedOrders) {
+                    if ((order.Status != OrderStatus.Filled) && (order.Status != OrderStatus.PartiallyFilledAndCancelled)) continue;
+                    AccountClosedOrders_listview.Items.Add(new ListViewItem(new string[] {
                     order.CreatedTimestampUtc.ToLocalTime().ToShortDateString(),
                     Utilities.FormatValue(order.Volume),
                     Utilities.FormatValue(order.AvgPrice.Value, 2),
                     Utilities.FormatValue(order.Value.Value)}));
-                AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].ToolTipText = buildOrderTT(order, false);
-                if (order.OrderType == OrderType.LimitBid || order.OrderType == OrderType.MarketBid) {
-                    AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].BackColor = Color.Thistle;
+                    AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].ToolTipText = buildOrderTT(order, false);
+                    if (order.OrderType == OrderType.LimitBid || order.OrderType == OrderType.MarketBid) {
+                        AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].BackColor = Color.Thistle;
+                    }
+                    else {
+                        AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].BackColor = Color.PeachPuff;
+                    }
+                    AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].Tag = order;
                 }
-                else {
-                    AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].BackColor = Color.PeachPuff;
-                }
-                AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].Tag = order;
-            }
+            }), closedOrders);
         }
 
         public void drawOpenOrders(IEnumerable<BankHistoryOrder> openOrders) {
-            AccountOpenOrders_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " open orders";
-            AccountOpenOrders_listview.Items.Clear();
+            synchronizationContext.Post(new SendOrPostCallback(o => {
+                IEnumerable<BankHistoryOrder> _openOrders = (IEnumerable<BankHistoryOrder>)o;
+                AccountOpenOrders_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " open orders";
+                AccountOpenOrders_listview.Items.Clear();
 
-            foreach (BankHistoryOrder order in openOrders) {
-                if ((order.Status != OrderStatus.Open) && (order.Status != OrderStatus.PartiallyFilled)) continue;
-                AccountOpenOrders_listview.Items.Add(new ListViewItem(new string[] {
+                foreach (BankHistoryOrder order in _openOrders) {
+                    if ((order.Status != OrderStatus.Open) && (order.Status != OrderStatus.PartiallyFilled)) continue;
+                    AccountOpenOrders_listview.Items.Add(new ListViewItem(new string[] {
                     order.CreatedTimestampUtc.ToLocalTime().ToShortDateString(),
                     Utilities.FormatValue(order.Volume),
                     Utilities.FormatValue(order.Price.Value, 2),
                     Utilities.FormatValue(order.Outstanding.Value)}));
-                AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].ToolTipText = buildOrderTT(order, true);
-                if (order.OrderType == OrderType.LimitBid) {
-                    AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].BackColor = Color.Thistle;
+                    AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].ToolTipText = buildOrderTT(order, true);
+                    if (order.OrderType == OrderType.LimitBid) {
+                        AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].BackColor = Color.Thistle;
+                    }
+                    else {
+                        AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].BackColor = Color.PeachPuff;
+                    }
+                    AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].Tag = order;
                 }
-                else {
-                    AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].BackColor = Color.PeachPuff;
-                }
-                AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].Tag = order;
-            }
+            }), openOrders);
         }
 
         private void drawDepositAddress(DigitalCurrencyDepositAddress deposAddress) {
-            AccountWithdrawalCrypto_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " deposit address";
+            synchronizationContext.Post(new SendOrPostCallback(o => {
+                DigitalCurrencyDepositAddress _deposAddress = (DigitalCurrencyDepositAddress)o;
+                AccountWithdrawalCrypto_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " deposit address";
 
-            AccountWithdrawalAddress_label.Text = deposAddress.DepositAddress;
+                AccountWithdrawalAddress_label.Text = _deposAddress.DepositAddress;
 
-            string nextCheck;
-            if (deposAddress.NextUpdateTimestampUtc.Value.ToLocalTime() < DateTime.Now) nextCheck = "ASAP";
-            else nextCheck = deposAddress.NextUpdateTimestampUtc.Value.ToLocalTime().ToString();
-            AccountWithdrawalNextCheck_label.Text = "Next check: " + nextCheck;
+                string nextCheck;
+                if (_deposAddress.NextUpdateTimestampUtc.Value.ToLocalTime() < DateTime.Now) nextCheck = "ASAP";
+                else nextCheck = _deposAddress.NextUpdateTimestampUtc.Value.ToLocalTime().ToString();
+                AccountWithdrawalNextCheck_label.Text = "Next check: " + nextCheck;
 
-            AccountWithdrawalLastCheck_label.Text = "Last checked: " + deposAddress.LastCheckedTimestampUtc.Value.ToLocalTime().ToString(); ;
+                AccountWithdrawalLastCheck_label.Text = "Last checked: " + _deposAddress.LastCheckedTimestampUtc.Value.ToLocalTime().ToString(); ;
 
-            if (string.IsNullOrEmpty(deposAddress.Tag)) {
-                AccountWithdrawalTag_label.Visible = false;
-                AccountWithdrawalTag_value.Text = "";
-            }
-            else {
-                AccountWithdrawalTag_label.Visible = true;
-                AccountWithdrawalTag_value.Text = deposAddress.Tag;
-            }
+                if (string.IsNullOrEmpty(_deposAddress.Tag)) {
+                    AccountWithdrawalTag_label.Visible = false;
+                    AccountWithdrawalTag_value.Text = "";
+                }
+                else {
+                    AccountWithdrawalTag_label.Visible = true;
+                    AccountWithdrawalTag_value.Text = _deposAddress.Tag;
+                }
+            }), deposAddress);
         }
 
         private void setCurrencyValues(string crypto, decimal price) {
@@ -331,9 +343,9 @@ namespace IRTicker {
                 newLabel.ForeColor = Color.DarkOrange;
             }
 
-            bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { 
+            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { 
                 PrivateIR.PrivateIREndPoints.GetAddress,PrivateIR.PrivateIREndPoints.GetClosedOrders,
-                PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook });
+                PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
         private void IRAccountClose_button_Click(object sender, EventArgs e) {
@@ -357,7 +369,7 @@ namespace IRTicker {
         }
 
         private void AccountWithdrawalNextCheck_label_Click(object sender, EventArgs e) {
-            bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.CheckAddress });
+            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.CheckAddress }));
         }
 
         private void Account_label_Click(object sender, EventArgs e) {
@@ -405,7 +417,7 @@ namespace IRTicker {
                     AccountOrders_listview.Columns[1].Text = "Offers";
                 }
                 pIR.OrderTypeStr = "Limit";
-                bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook });
+                Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
                 //updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
             }
             AccountPlaceOrder_button.Enabled = VolumePriceParseable();
@@ -434,11 +446,11 @@ namespace IRTicker {
                     pIR.OrderBookSide = "Offer";
                     AccountOrders_listview.Columns[1].Text = "Offers";
                 }
-                bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook });
+                Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
             }
             if ((AccountOrderType_listbox.SelectedIndex > 0) &&  //  limit or bait
                 decimal.TryParse(AccountLimitPrice_textbox.Text, out decimal ignore)) ValidateLimitOrder();
-            bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook });
+            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
         private bool VolumePriceParseable() {
@@ -471,7 +483,7 @@ namespace IRTicker {
         private void AccountOrderVolume_textbox_TextChanged(object sender, EventArgs e) {
             if (VolumePriceParseable()) {
                 if (AccountOrderType_listbox.SelectedIndex == 0) {
-                    bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook });
+                    Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
                 }
                 else /*if (AccountOrderType_listbox.SelectedIndex == 1)*/ {  // limit order
                     AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(
@@ -520,13 +532,13 @@ namespace IRTicker {
 
                 // no need to check if we can parse the volume value, we already checked in AccountOrderVolume_textbox_TextChanged
                 if (AccountOrderType_listbox.SelectedIndex == 0) {
-                    bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
-                    PrivateIR.PrivateIREndPoints.PlaceMarketOrder, PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAccounts }, decimal.Parse(AccountOrderVolume_textbox.Text));
+                    Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
+                    PrivateIR.PrivateIREndPoints.PlaceMarketOrder, PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAccounts }, decimal.Parse(AccountOrderVolume_textbox.Text)));
                 }
                 else if (AccountOrderType_listbox.SelectedIndex == 1)  {  // Limit order
-                    bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
+                    Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
                     PrivateIR.PrivateIREndPoints.PlaceLimitOrder, PrivateIR.PrivateIREndPoints.GetOpenOrders,
-                    PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAccounts }, decimal.Parse(AccountOrderVolume_textbox.Text), decimal.Parse(AccountLimitPrice_textbox.Text));
+                    PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAccounts }, decimal.Parse(AccountOrderVolume_textbox.Text), decimal.Parse(AccountLimitPrice_textbox.Text)));
                 }
                 else if (AccountOrderType_listbox.SelectedIndex == 2) {  // market baiter
                     // do something that starts the market baiter
@@ -537,7 +549,7 @@ namespace IRTicker {
                     Text = "IR Ticker - Market Baiter Running...";
                     AccountBuySell_listbox.Enabled = false;
                     AccountOrderType_listbox.Enabled = false;
-                    bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook });  // build the baiterBook
+                    Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));  // build the baiterBook
                     await updateOBTask;  // the idea here is to await the completion of the pIR.compileAccountOrderBookAsync(...) method
                     startMarketBaiter(decimal.Parse(AccountOrderVolume_textbox.Text), decimal.Parse(AccountLimitPrice_textbox.Text));
                 }
@@ -557,13 +569,13 @@ namespace IRTicker {
             AccountOrderType_listbox.Enabled = true;
             AccountPlaceOrder_button.Text = "Start baitin'";
             Text = "IR Ticker";
-            bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook });
+            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
         public void updateUIFromMarketBaiter(List<PrivateIR.PrivateIREndPoints> endPoints) {
-            synchronizationContext.Post(new SendOrPostCallback(o => {
-                bulkSequentialAPICalls((List<PrivateIR.PrivateIREndPoints>)o);
-            }), endPoints);
+            //synchronizationContext.Post(new SendOrPostCallback(o => {
+                bulkSequentialAPICalls(/*(List<PrivateIR.PrivateIREndPoints>)o*/endPoints);  // we are in the market baiter htread here, stay here
+            //}), endPoints);
         }
 
         public void notificationFromMarketBaiter(Tuple<string, string> notifText, bool sendToTelegram = false) {
@@ -641,8 +653,10 @@ namespace IRTicker {
                 "Cancel order", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (res == DialogResult.Yes) {
-                bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
-                    PrivateIR.PrivateIREndPoints.CancelOrder, PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook });
+                if (AccountOpenOrders_listview.SelectedItems.Count == 0) return;
+                string orderGuid = ((BankHistoryOrder)AccountOpenOrders_listview.SelectedItems[0].Tag).OrderGuid.ToString();
+                Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
+                    PrivateIR.PrivateIREndPoints.CancelOrder, PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook }, 0, 0, orderGuid));
             }
         }
 
@@ -656,7 +670,7 @@ namespace IRTicker {
                 AccountOrders_listview.Columns[1].Text = "Bids";
             }
 
-            bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook });
+            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
         private void showBalloon(string title, string body) {

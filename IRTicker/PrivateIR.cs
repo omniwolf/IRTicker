@@ -348,6 +348,7 @@ namespace IRTicker {
 
             IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> baiterBook;
             BankOrder placedOrder = null;
+            Task rateLimitPlaceOrder = Task.Delay(1);
             string pair = crypto + "-" + fiat;
             decimal distanceFromTopOrder = DCE_IR.currencyFiatDivision[crypto] * 5;  // how far infront of the best order should we be?  will be different for different cryptos
             if (BaiterBookSide == "Offer") distanceFromTopOrder = distanceFromTopOrder * -1;
@@ -419,9 +420,15 @@ namespace IRTicker {
                     }
                     Debug.Print("MBAIT: placing order at " + orderPrice);
                     try {
+                        if (!rateLimitPlaceOrder.IsCompleted) await rateLimitPlaceOrder;  // if we haven't waited a full second yet, wait.
                         placedOrder = PlaceLimitOrder(crypto, DCE_IR.CurrentSecondaryCurrency,
                             (BaiterBookSide == "Bid" ? OrderType.LimitBid : OrderType.LimitOffer), orderPrice, volume);
-                        Thread.Sleep(1050 - (Properties.Settings.Default.UITimerFreq + 50));  // an order must be left alive for at least a second or rate limiting will happen
+                        if (placedOrder == null) {
+                            var res = MessageBox.Show("Failed to place the order.  Do you want to cancel market baiter?", "Market Baiter", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                            if (res == DialogResult.Yes) marketBaiterActive = false;
+                        }
+                        //Thread.Sleep(1050 - (Properties.Settings.Default.UITimerFreq + 50));  // an order must be left alive for at least a second or rate limiting will happen
+                        rateLimitPlaceOrder = Task.Delay(1001);  // start a timer.  can only try and create a new order after a second has passed
                     }
                     catch (Exception ex) {
                         Debug.Print("MBAIT: trid to create an order, but it failed: " + ex.Message);
