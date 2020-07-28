@@ -317,6 +317,7 @@ namespace IRTicker {
 
         private void cryptoClicked(Label clickedLabel) {
             if (!pIR.marketBaiterActive) {  // can't let the crypto change while we're baitin'
+              
                 Label oldLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
                 oldLabel.ForeColor = Color.Black;
                 oldLabel.Font = new Font(oldLabel.Font.FontFamily, 14.25f, FontStyle.Regular);
@@ -329,6 +330,15 @@ namespace IRTicker {
 
 
                 AccountSelectedCrypto = clickedLabel.Text.Substring(0, clickedLabel.Text.IndexOf(':'));
+
+                AccountOpenOrders_label.Text = AccountSelectedCrypto + " open orders";
+                AccountOpenOrders_listview.Items.Clear();
+                AccountOpenOrders_listview.Items.Add(new ListViewItem("Loading..."));
+
+                AccountClosedOrders_label.Text = AccountSelectedCrypto + " closed orders";
+                AccountClosedOrders_listview.Items.Clear();
+                AccountClosedOrders_listview.Items.Add(new ListViewItem("Loading..."));
+
                 if (AccountSelectedCrypto == "BTC") AccountSelectedCrypto = "XBT";
                 pIR.Crypto = AccountSelectedCrypto;
 
