@@ -1207,13 +1207,6 @@ namespace IRTicker {
                     ParseDCE_IR("XBT", Properties.Settings.Default.SlackNameCurrency, false);
                 }
 
-                // let's get all the closed orders and notify the user if there are new ones
-                foreach (string crypto in DCEs["IR"].PrimaryCurrencyList) {
-
-                }
-
-                //pIR.GetClosedOrders("XBT", "AUD");
-
 
                 // let's check the IR spread.  Cycle through all the "_Spread" labels
 
@@ -2025,7 +2018,7 @@ namespace IRTicker {
         // when they close the app, rename the crypto dirs to blah - old.  this way if they user happens to check the toolbar thing they'll know they're not being updated anymore
         private void IRTicker_Closing(object sender, FormClosingEventArgs e) {
 
-            if (pIR.marketBaiterActive) {
+            if (pIR != null && pIR.marketBaiterActive) {
                 DialogResult result = MessageBox.Show("Market Baiter still active, you should cancel it before closing the app or the order will stay on the order book!" + Environment.NewLine + Environment.NewLine +
                     "Are you sure you want to close IRTicker?",
                     "Trading bot still going", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
@@ -2089,30 +2082,33 @@ namespace IRTicker {
                         !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) &&
                         !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
 
-                        pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
                         IRAccount_button.Enabled = true;
+
+                        if (!string.IsNullOrEmpty(TelegramCode_textBox.Text)) {
+
+                            Properties.Settings.Default.TelegramCode = TelegramCode_textBox.Text;
+                            if (TGBot == null) {
+                                TGBot = new TelegramBot(pIR, DCEs["IR"], this);
+                                if (pIR == null) {
+                                    pIR = new PrivateIR();
+                                    pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                                }
+                            }
+                            pIR.setTGBot(TGBot);
+                        }
+                        else {
+                            TGBot = null;  // hopefully this will dispose of the bot and it will responding..
+                            if (pIR != null) pIR.setTGBot(null);
+                            Properties.Settings.Default.TelegramCode = "";
+                            Properties.Settings.Default.TelegramChatID = 0;
+                        }
                     }
                     else if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
                         IRAccount_button.Enabled = false;
                     }
 
-                    if (!string.IsNullOrEmpty(TelegramCode_textBox.Text)) {
-
-                        Properties.Settings.Default.TelegramCode = TelegramCode_textBox.Text;
-                        if (TGBot == null) {
-                            TGBot = new TelegramBot(pIR, DCEs["IR"], this);
-                            pIR.setTGBot(TGBot);
-                        }
-                    }
-                    else {
-                        TGBot = null;  // hopefully this will dispose of the bot and it will responding..
-                        pIR.setTGBot(null);
-                        Properties.Settings.Default.TelegramCode = "";
-                        Properties.Settings.Default.TelegramChatID = 0;
-                    }
-
                     Properties.Settings.Default.Save();
-                    System.Threading.Tasks.Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetAccounts }));
+                    if (pIR != null) System.Threading.Tasks.Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetAccounts }));
                     LastPanel.Visible = true;
                     Settings.Visible = false;
                 }
@@ -2887,7 +2883,7 @@ namespace IRTicker {
 
             if (Properties.Settings.Default.APIFriendly != ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName) {
                 // a new key has been chosen, let's reset the closed orders.
-                TGBot.closedOrdersFirstRun.Clear();
+                if (TGBot != null) TGBot.closedOrdersFirstRun.Clear();
 
                 Properties.Settings.Default.APIFriendly = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName;
                 Properties.Settings.Default.IRAPIPubKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).pubKey;
@@ -2897,7 +2893,7 @@ namespace IRTicker {
                 if (friendlyNameLen > 20) friendlyNameLen = 20;
                 AccountName_button.Text = Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : "");
 
-                pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                if (pIR != null) pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
             }
         }
 

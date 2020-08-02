@@ -77,8 +77,10 @@ namespace IRTicker {
                 // if we don't have enough data, just go black.
                 PriceListLast = priceList.LastOrDefault();
                 PriceListFirst = priceList.FirstOrDefault();
-                PriceListLastItem1 = PriceListLast.Item1;
-                PriceListFirstItem1 = PriceListFirst.Item1;
+                if (PriceListLast != null) PriceListLastItem1 = PriceListLast.Item1;
+                else throw new Exception("null pricelistlast");
+                if (PriceListFirst != null) PriceListFirstItem1 = PriceListFirst.Item1;
+                else throw new Exception("null pricelistfirst");
             }
             catch (Exception ex) {
                 Debug.Print(DateTime.Now + " - caught an exception for pricelist: " + ex.ToString());

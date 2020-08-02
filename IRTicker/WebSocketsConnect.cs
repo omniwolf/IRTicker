@@ -299,6 +299,7 @@ namespace IRTicker {
                     else {
                         Debug.Print(DateTime.Now + " - IR sockets down when trying to " + (subscribe ? "subscribe" : "unsubscribe"));
                         DCEs["IR"].socketsReset = true;
+                        break;
                     }
                     if (subscribe) {  // if subscribing then grab the order books too.
                         if (crypto == "none") {
@@ -442,6 +443,7 @@ namespace IRTicker {
                     if (info.Type == ReconnectionType.Initial) {
                         Debug.Print("Initial 'reconnection', ignored");
                         DCEs[dExchange].socketsAlive = true;
+                        DCEs[dExchange].socketsReset = false;
                     }
                     /*else if (info.Type == ReconnectionType.Lost) {
                         Debug.Print("Lost 'reconnection' ignored, attached to a Reset button click?");
@@ -627,18 +629,19 @@ namespace IRTicker {
             }
             switch (dExchange) { 
                 case "IR":  // this should never be called because the IR sockets should automatically recover
-                    break;
-                    Debug.Print("WebSocket_Reconnect: IR?? this shouldn't be called?  shouldn't it auto-reconnect?");
-                    if (client_IR.IsRunning) {
-                        Debug.Print(DateTime.Now + " - IR running, will stop");
-                        stopSockets("IR");
-                    }
-                    stopUITimerThread();  // if it hasn't stopped by now, we force it.
+                    //if (!client_IR.IsRunning) {
+                        Debug.Print("WebSocket_Reconnect: IR?? this shouldn't be called?  shouldn't it auto-reconnect?");
+                        if (client_IR.IsRunning) {
+                            Debug.Print(DateTime.Now + " - IR running, will stop");
+                            stopSockets("IR");  
+                        }
+                        stopUITimerThread();  // if it hasn't stopped by now, we force it.
 
-                    Reinit_sockets("IR");
-                    startSockets("IR", IRSocketsURL);
-                    //IR_Connect();  // create all the sockets stuff again from scratch :/
-                    DCEs["IR"].HeartBeat = DateTime.Now;
+                        Reinit_sockets("IR");
+                        startSockets("IR", IRSocketsURL);
+                        //IR_Connect();  // create all the sockets stuff again from scratch :/
+                        DCEs["IR"].HeartBeat = DateTime.Now;
+                    //}
                     break;
                 case "BTCM":
                     wSocket_BTCM.Close();

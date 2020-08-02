@@ -4230,7 +4230,7 @@
             this.AccountOrderType_listbox.Location = new System.Drawing.Point(330, 12);
             this.AccountOrderType_listbox.Name = "AccountOrderType_listbox";
             this.AccountOrderType_listbox.ShowScrollbar = false;
-            this.AccountOrderType_listbox.Size = new System.Drawing.Size(101, 44);
+            this.AccountOrderType_listbox.Size = new System.Drawing.Size(101, 24);
             this.AccountOrderType_listbox.TabIndex = 15;
             this.AccountOrderType_listbox.SelectedIndexChanged += new System.EventHandler(this.AcccountOrderType_listbox_SelectedIndexChanged);
             // 
@@ -4486,7 +4486,7 @@
             "Sell"});
             this.AccountBuySell_listbox.Location = new System.Drawing.Point(282, 12);
             this.AccountBuySell_listbox.Name = "AccountBuySell_listbox";
-            this.AccountBuySell_listbox.Size = new System.Drawing.Size(42, 44);
+            this.AccountBuySell_listbox.Size = new System.Drawing.Size(42, 24);
             this.AccountBuySell_listbox.TabIndex = 2;
             this.AccountBuySell_listbox.Click += new System.EventHandler(this.AccountBuySell_listbox_Click);
             // 
@@ -5278,8 +5278,8 @@
             // 
             // IRTicker
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(584, 841);
             this.Controls.Add(this.IRAccount_panel);
             this.Controls.Add(this.LoadingPanel);

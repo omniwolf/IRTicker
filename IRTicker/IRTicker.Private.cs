@@ -408,7 +408,7 @@ namespace IRTicker {
                 AccountLimitPrice_label.ForeColor = Color.Black;
                 AccountPlaceOrder_button.ForeColor = Color.Black;
                 IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "");
-                pIR.OrderTypeStr = "Market";
+                if (pIR != null) pIR.OrderTypeStr = "Market";
             }
             else if (AccountOrderType_listbox.SelectedIndex == 2) {  // market baiter!
                 AccountPlaceOrder_button.Text = "Start baitin'";
@@ -474,7 +474,7 @@ namespace IRTicker {
                         return true;
                     }
                 }
-                pIR.Volume = 0;
+                if (pIR != null) pIR.Volume = 0;
                 return false;
             }
             else {  // limit order or market baiter, need to check both fields
