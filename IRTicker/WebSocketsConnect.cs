@@ -80,7 +80,7 @@ namespace IRTicker {
                 
                // trying to comment this out in the hope that it will stop the reconnect loop we get into after hibernation
                 /*DCEs["BFX"].socketsAlive = false;
-                DCEs["BFX"].socketsReset = true;
+                DCEs["BFX"].socketsReset = true;*/
                 DCEs["BFX"].CurrentDCEStatus = "Socket error";
                 pollingThread.ReportProgress(12, "BFX");  // 12 is error*/
                 //WebSocket_Reconnect("BFX");
@@ -121,7 +121,7 @@ namespace IRTicker {
                 Debug.Print("GDAX stream was closed.. should be because we disconnected on purpose. preceeded by ded?  " + DateTime.Now.ToString());
                 // trying to comment this out in the hope that it will stop the reconnect loop we get into after hibernation
                 /*DCEs["GDAX"].socketsAlive = false;
-                DCEs["GDAX"].socketsReset = true;
+                DCEs["GDAX"].socketsReset = true;*/
                 DCEs["GDAX"].CurrentDCEStatus = "Socket error";
                 pollingThread.ReportProgress(12, "GDAX");  // 12 is error*/
                 //WebSocket_Disconnect("GDAX");
@@ -380,7 +380,7 @@ namespace IRTicker {
                             }
                         }
                         else {
-                            Debug.Print(DateTime.Now + " - BFX - trying to " + (subscribe ? "subscribe" : "unsubscribe" + " from channel(s) but BFX websockets is dead"));
+                            Debug.Print(DateTime.Now + " - BFX - trying to " + (subscribe ? "subscribe" : "unsubscribe") + " from channel(s) but BFX websockets is dead");
                             DCEs[dExchange].socketsReset = true;
                         }
                     }
@@ -411,7 +411,7 @@ namespace IRTicker {
                         wSocket_GDAX.Send(channel);
                     }
                     else {
-                        Debug.Print(DateTime.Now + " - GDAX - trying to " + (subscribe ? "subscribe" : "unsubscribe" + " from channel(s) but GDAX websockets is dead"));
+                        Debug.Print(DateTime.Now + " - GDAX - trying to " + (subscribe ? "subscribe" : "unsubscribe") + " from channel(s) but GDAX websockets is dead");
                         DCEs[dExchange].socketsReset = true;
                     }
 
@@ -513,7 +513,7 @@ namespace IRTicker {
                     }
                 });
 
-                client_IR.Start();
+                Task.Run(() => client_IR.Start());
 
                 Debug.Print(DateTime.Now + " - about to start the UI timer!");
                                 
@@ -524,7 +524,7 @@ namespace IRTicker {
                 //await Task.Run(() => client_IR.Send("1"));
                 //Debug.Print(DateTime.Now + " - we have moved on after the client_IR.send where we subscribe!");
 
-                startSocket_exitEvent.WaitOne();
+                //startSocket_exitEvent.WaitOne();
             //}  trying to remove the using statement
         }
 
@@ -971,6 +971,7 @@ namespace IRTicker {
 
             if (message.Contains("\"type\":\"ticker\"")) {
                 DCEs["GDAX"].CurrentDCEStatus = "Online";
+                DCEs["GDAX"].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
                 Ticker_GDAX tickerStream = new Ticker_GDAX();
                 tickerStream = JsonConvert.DeserializeObject<Ticker_GDAX>(message);
 
@@ -1105,6 +1106,7 @@ namespace IRTicker {
             else if (message.StartsWith("[")) {  // is this how I tell if it's real socket data?  seems dodgy
                 //Debug.Print("BFX MESSAGE: " + message);
                 DCEs["BFX"].CurrentDCEStatus = "Online";
+                DCEs["BFX"].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
                 message = Utilities.TrimEnds(message);  // remove the [ ] characters from the ends
                 string[] streamParts = message.Split(',');
                 if (channel_Dict_BFX.ContainsKey(streamParts[0])) {
