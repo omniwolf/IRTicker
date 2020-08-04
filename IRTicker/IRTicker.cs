@@ -1191,7 +1191,12 @@ namespace IRTicker {
                     }
                     if (pIR != null) {
                         foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
-                            pIR.GetClosedOrders(primaryCode, fiat);
+                            try {
+                                pIR.GetClosedOrders(primaryCode, fiat);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
+                            }
+                            catch (Exception ex) {
+                                Debug.Print(DateTime.Now + " - In BGW thread loop, trying to pull closed orders, but it failed: " + ex.Message);
+                            }
                             // if i want to get fancy i can call reportProgress and drawClosedOrders()...
 
                             // once a cycle let's give the order book a nudge.. there might be new orders that we haven't seen.
@@ -2910,6 +2915,8 @@ namespace IRTicker {
 
         private void AccountName_button_Click(object sender, EventArgs e) {
             LastPanel = IRAccount_panel;
+            populateIRAPIKeysSettings();  // populate the api keys drop down.
+
             Settings.Visible = true;
             IRAccount_panel.Visible = false;
         }

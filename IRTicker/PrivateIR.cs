@@ -177,7 +177,7 @@ namespace IRTicker {
                     }
                     catch (Exception ex) {
                         Debug.Print(DateTime.Now + " - Failed to pull GetClosedOrders on page " + page + " - " + ex.Message);
-                        return null;
+                        throw ex;
                     }
                 }
 
@@ -201,7 +201,7 @@ namespace IRTicker {
                 catch (Exception ex) {
                     MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
                         ex.InnerException.Message, "Error - CancelOrder", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return null;
+                    throw ex;
                 }
             }
         }
@@ -531,11 +531,16 @@ namespace IRTicker {
                     if (retryRequired) { Thread.Sleep(100); continue; }
                     if (!foundOrder) {
                         Debug.Print("MBAIT: Our order doesn't exist in the OB, possibly filled? " + placedOrder.OrderGuid.ToString());
-                        Page<BankHistoryOrder> closedOs = GetClosedOrders(crypto, fiat);
-                        if (closedOs == null) {  // could happen if there's a nonce error
+                        Page<BankHistoryOrder> closedOs;
+                        try {
+                            closedOs = GetClosedOrders(crypto, fiat);
+                        }
+                        catch (Exception ex) {
+                            Debug.Print("MBAIT: Damnit, can't pull closed orders for some reason: " + ex.Message);
                             Thread.Sleep(100);
                             continue;
                         }
+                        
                         foreach (BankHistoryOrder closedO in closedOs.Data) {
                             if (closedO.OrderGuid == placedOrder.OrderGuid) {
                                 if (closedO.Status == OrderStatus.Filled) {
@@ -562,7 +567,15 @@ namespace IRTicker {
                                     }
                                     else {
                                         Debug.Print("MBAIT: the order is not open, it is: " + openO.Status + " orright, let's cancel it.  something weird is happening");
-                                        BankOrder cancelledOrder = CancelOrder(placedOrder.OrderGuid.ToString());
+                                        BankOrder cancelledOrder;
+                                        try {
+                                            cancelledOrder = CancelOrder(placedOrder.OrderGuid.ToString());
+                                        }
+                                        catch (Exception ex) {
+                                            Debug.Print("MBAIT: couldn't cancel the order?? will try again.  Error:" + ex.Message);
+                                            Thread.Sleep(100);
+                                            continue;
+                                        }
                                         Debug.Print("MBAIT: cancelled status: " + cancelledOrder.Status);
                                         if (cancelledOrder.Status == OrderStatus.Cancelled) {
                                             placedOrder = null;

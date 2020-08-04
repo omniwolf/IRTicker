@@ -109,7 +109,14 @@ namespace IRTicker {
                     }
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.GetClosedOrders) {
-                    Page<BankHistoryOrder> closedOrders = pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
+                    Page<BankHistoryOrder> closedOrders;
+                    try {
+                        closedOrders = pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
+                    }
+                    catch (Exception ex) {
+                        Debug.Print("Bulk method: couldn't pull closed orders: " + ex.Message);
+                        continue;
+                    }
                     if (closedOrders != null) {
                         drawClosedOrders(closedOrders.Data);
                     }
