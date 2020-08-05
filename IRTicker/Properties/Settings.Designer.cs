@@ -418,5 +418,29 @@ namespace IRTicker.Properties {
                 this["TelegramChatID"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public string EnableWindowsFormsHighDpiAutoResizing {
+            get {
+                return ((string)(this["EnableWindowsFormsHighDpiAutoResizing"]));
+            }
+            set {
+                this["EnableWindowsFormsHighDpiAutoResizing"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TelegramAPIToken {
+            get {
+                return ((string)(this["TelegramAPIToken"]));
+            }
+            set {
+                this["TelegramAPIToken"] = value;
+            }
+        }
     }
 }

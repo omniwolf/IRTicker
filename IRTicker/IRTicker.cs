@@ -143,6 +143,7 @@ namespace IRTicker {
             UITimerFreq_maskedTextBox.Text = Properties.Settings.Default.UITimerFreq.ToString();
             NegativeSpread_checkBox.Checked = Properties.Settings.Default.NegativeSpread;
             TelegramCode_textBox.Text = Properties.Settings.Default.TelegramCode;
+            TelegramBotAPIToken_textBox.Text = Properties.Settings.Default.TelegramAPIToken;
             if (string.IsNullOrEmpty(Properties.Settings.Default.SlackNameCurrency)) Properties.Settings.Default.SlackNameCurrency = "AUD";
 
             if (Slack_checkBox.Checked) {
@@ -156,8 +157,18 @@ namespace IRTicker {
                 slackToken_textBox.Enabled = false;
             }
 
-            if (!string.IsNullOrEmpty(Properties.Settings.Default.TelegramCode)) {
-                TGBot = new TelegramBot(pIR, DCEs["IR"], this);
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.TelegramCode) && !string.IsNullOrEmpty(Properties.Settings.Default.TelegramAPIToken)) {
+                try {
+                    TGBot = new TelegramBot(pIR, DCEs["IR"], this);
+                }
+                catch (Exception ex) {
+                    MessageBox.Show("Error creating TelegramBot.  Maybe wrong API token?  Error mesage: " + Environment.NewLine + Environment.NewLine +
+                        ex.Message, "Telegram Bot error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (TGBot != null) {
+                        TGBot.StopBot();
+                        TGBot = null;
+                    }
+                }
             }
 
             if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
@@ -2083,34 +2094,61 @@ namespace IRTicker {
                         UITimerFreq_maskedTextBox.Text = Properties.Settings.Default.UITimerFreq.ToString();  // set it back to the last save value
                     }
 
-                    if (!IRAccount_button.Enabled && 
+                    if (!IRAccount_button.Enabled &&
                         !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) &&
                         !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
 
                         IRAccount_button.Enabled = true;
 
-                        if (!string.IsNullOrEmpty(TelegramCode_textBox.Text)) {
+                        pIR = new PrivateIR();
+                        pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                    }
 
-                            Properties.Settings.Default.TelegramCode = TelegramCode_textBox.Text;
-                            if (TGBot == null) {
+                    if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
+                        IRAccount_button.Enabled = false;
+                        pIR = null;
+                    }
+
+
+                    // if we have a tg code, a tg api token, and pIR isn't null, it means we can start the tgbot
+                    if (!string.IsNullOrEmpty(TelegramCode_textBox.Text) && !string.IsNullOrEmpty(TelegramBotAPIToken_textBox.Text) && (pIR != null)) {
+
+                        Properties.Settings.Default.TelegramCode = TelegramCode_textBox.Text;
+                        Properties.Settings.Default.TelegramAPIToken = TelegramBotAPIToken_textBox.Text;
+
+                        if (TGBot == null) {
+                            try {
                                 TGBot = new TelegramBot(pIR, DCEs["IR"], this);
-                                if (pIR == null) {
-                                    pIR = new PrivateIR();
-                                    pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                            }
+                            catch (Exception ex) {
+                                MessageBox.Show("Error creating TelegramBot.  Maybe wrong API token?  Error mesage: " + Environment.NewLine + Environment.NewLine +
+                                    ex.Message);
+                                if (TGBot != null) {
+                                    TGBot.StopBot();
+                                    TGBot = null;
                                 }
                             }
                             pIR.setTGBot(TGBot);
                         }
                         else {
-                            TGBot = null;  // hopefully this will dispose of the bot and it will responding..
-                            if (pIR != null) pIR.setTGBot(null);
-                            Properties.Settings.Default.TelegramCode = "";
-                            Properties.Settings.Default.TelegramChatID = 0;
+                            if (Properties.Settings.Default.TelegramAPIToken != TelegramBotAPIToken_textBox.Text) {
+                                TGBot.NewClient();  // changes the bot api token
+                            }
                         }
                     }
-                    else if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
-                        IRAccount_button.Enabled = false;
+                    else {  // we can't start tgbot, so kill it if it's running
+                        if (TGBot != null) {
+                            TGBot.StopBot();
+                            TGBot = null;  // hopefully this will dispose of the bot and it will responding..
+                        }
+                        if (pIR != null) pIR.setTGBot(null);
+                        Properties.Settings.Default.TelegramCode = "";
+                        Properties.Settings.Default.TelegramChatID = 0;
                     }
+                    
+
+
+                    Properties.Settings.Default.TelegramAPIToken = TelegramBotAPIToken_textBox.Text;
 
                     Properties.Settings.Default.Save();
                     if (pIR != null) System.Threading.Tasks.Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetAccounts }));

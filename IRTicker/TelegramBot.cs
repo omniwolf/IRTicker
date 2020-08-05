@@ -15,6 +15,7 @@ using System.Collections.Concurrent;
 using Telegram.Bot.Requests;
 using System.IO.Ports;
 using System.Reactive.Linq;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace IRTicker
 {
@@ -38,17 +39,26 @@ namespace IRTicker
             IRT = _IRT;
 
             TGstate = new TelegramState(this);
-            botClient = new TelegramBotClient("679618862:AAGxhT7BZtP0KlR13o7SKaCCNZjfDSaJqv0");
+            Debug.Print("starting tgbot with: " + Properties.Settings.Default.TelegramAPIToken);
+            botClient = new TelegramBotClient(Properties.Settings.Default.TelegramAPIToken);
 
             botClient.OnMessage += Bot_OnMessage;
             botClient.StartReceiving();
+
+            /*botClient.SendTextMessageAsync("aoeu", "hi", Telegram.Bot.Types.Enums.ParseMode.Default, false, false, 0, Buttons(), );
+            botClient.EditMessageReplyMarkupAsync()*/
 
             if (Properties.Settings.Default.TelegramChatID != 0) {
                 TGstate.authStage = 2;
                 TGstate.ResetMenu();
             }
+        }
 
-
+        public void NewClient() {
+            ResetBot();
+            botClient = new TelegramBotClient(Properties.Settings.Default.TelegramAPIToken);
+            botClient.OnMessage += Bot_OnMessage;
+            botClient.StartReceiving();
         }
 
         public void ResetBot() {
@@ -57,6 +67,24 @@ namespace IRTicker
             TGstate.commandChosen = CommandChosen.Nothing;
             Properties.Settings.Default.Save();
         }
+
+        public void StopBot() {
+            botClient.StopReceiving();
+        }
+
+        public static InlineKeyboardMarkup Buttons() {
+            return new InlineKeyboardMarkup(
+                new InlineKeyboardButton[][] {
+                    new InlineKeyboardButton[] {
+                        InlineKeyboardButton.WithCallbackData(""),
+                        InlineKeyboardButton.WithCallbackData("")
+                    },
+                    new InlineKeyboardButton[] {
+                        InlineKeyboardButton.WithCallbackData(""),
+                        InlineKeyboardButton.WithCallbackData("")},
+                    }
+                );
+         }
 
         async void Bot_OnMessage(object sender, MessageEventArgs e) {
 

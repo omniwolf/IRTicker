@@ -32,6 +32,8 @@
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
             this.IRAccountSettings_groupBox = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.TelegramBotAPIToken_textBox = new System.Windows.Forms.TextBox();
             this.TGReset_button = new System.Windows.Forms.Button();
             this.TelegramCode_textBox = new System.Windows.Forms.TextBox();
             this.TelegramCode_label = new System.Windows.Forms.Label();
@@ -512,6 +514,8 @@
             // IRAccountSettings_groupBox
             // 
             this.IRAccountSettings_groupBox.BackColor = System.Drawing.Color.Gainsboro;
+            this.IRAccountSettings_groupBox.Controls.Add(this.label3);
+            this.IRAccountSettings_groupBox.Controls.Add(this.TelegramBotAPIToken_textBox);
             this.IRAccountSettings_groupBox.Controls.Add(this.TGReset_button);
             this.IRAccountSettings_groupBox.Controls.Add(this.TelegramCode_textBox);
             this.IRAccountSettings_groupBox.Controls.Add(this.TelegramCode_label);
@@ -519,17 +523,38 @@
             this.IRAccountSettings_groupBox.Controls.Add(this.EditKeys_button);
             this.IRAccountSettings_groupBox.Controls.Add(this.APIKeys_comboBox);
             this.IRAccountSettings_groupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRAccountSettings_groupBox.Location = new System.Drawing.Point(76, 633);
+            this.IRAccountSettings_groupBox.Location = new System.Drawing.Point(76, 613);
             this.IRAccountSettings_groupBox.Name = "IRAccountSettings_groupBox";
-            this.IRAccountSettings_groupBox.Size = new System.Drawing.Size(461, 121);
+            this.IRAccountSettings_groupBox.Size = new System.Drawing.Size(461, 141);
             this.IRAccountSettings_groupBox.TabIndex = 37;
             this.IRAccountSettings_groupBox.TabStop = false;
             this.IRAccountSettings_groupBox.Text = "IR account";
             // 
+            // label3
+            // 
+            this.label3.AccessibleName = "";
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(24, 85);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(152, 16);
+            this.label3.TabIndex = 45;
+            this.label3.Text = "Telegram bot API token:";
+            // 
+            // TelegramBotAPIToken_textBox
+            // 
+            this.TelegramBotAPIToken_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TelegramBotAPIToken_textBox.Location = new System.Drawing.Point(188, 83);
+            this.TelegramBotAPIToken_textBox.Name = "TelegramBotAPIToken_textBox";
+            this.TelegramBotAPIToken_textBox.PasswordChar = '●';
+            this.TelegramBotAPIToken_textBox.Size = new System.Drawing.Size(256, 20);
+            this.TelegramBotAPIToken_textBox.TabIndex = 37;
+            this.TelegramBotAPIToken_textBox.UseSystemPasswordChar = true;
+            // 
             // TGReset_button
             // 
             this.TGReset_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TGReset_button.Location = new System.Drawing.Point(361, 87);
+            this.TGReset_button.Location = new System.Drawing.Point(360, 109);
             this.TGReset_button.Name = "TGReset_button";
             this.TGReset_button.Size = new System.Drawing.Size(84, 23);
             this.TGReset_button.TabIndex = 44;
@@ -541,7 +566,7 @@
             // TelegramCode_textBox
             // 
             this.TelegramCode_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TelegramCode_textBox.Location = new System.Drawing.Point(174, 90);
+            this.TelegramCode_textBox.Location = new System.Drawing.Point(188, 112);
             this.TelegramCode_textBox.Name = "TelegramCode_textBox";
             this.TelegramCode_textBox.Size = new System.Drawing.Size(168, 20);
             this.TelegramCode_textBox.TabIndex = 37;
@@ -552,7 +577,7 @@
             this.TelegramCode_label.AccessibleName = "";
             this.TelegramCode_label.AutoSize = true;
             this.TelegramCode_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TelegramCode_label.Location = new System.Drawing.Point(24, 93);
+            this.TelegramCode_label.Location = new System.Drawing.Point(24, 113);
             this.TelegramCode_label.Name = "TelegramCode_label";
             this.TelegramCode_label.Size = new System.Drawing.Size(144, 16);
             this.TelegramCode_label.TabIndex = 42;
@@ -657,7 +682,7 @@
             this.NegativeSpread_checkBox.AutoSize = true;
             this.NegativeSpread_checkBox.Checked = true;
             this.NegativeSpread_checkBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.NegativeSpread_checkBox.Location = new System.Drawing.Point(490, 595);
+            this.NegativeSpread_checkBox.Location = new System.Drawing.Point(490, 575);
             this.NegativeSpread_checkBox.Name = "NegativeSpread_checkBox";
             this.NegativeSpread_checkBox.Size = new System.Drawing.Size(15, 14);
             this.NegativeSpread_checkBox.TabIndex = 34;
@@ -668,7 +693,7 @@
             // 
             this.NegativeSpread_label.AccessibleName = "";
             this.NegativeSpread_label.AutoSize = true;
-            this.NegativeSpread_label.Location = new System.Drawing.Point(73, 595);
+            this.NegativeSpread_label.Location = new System.Drawing.Point(73, 575);
             this.NegativeSpread_label.Name = "NegativeSpread_label";
             this.NegativeSpread_label.Size = new System.Drawing.Size(226, 13);
             this.NegativeSpread_label.TabIndex = 33;
@@ -796,7 +821,7 @@
             // 
             // UITimerFreq_maskedTextBox
             // 
-            this.UITimerFreq_maskedTextBox.Location = new System.Drawing.Point(405, 554);
+            this.UITimerFreq_maskedTextBox.Location = new System.Drawing.Point(405, 539);
             this.UITimerFreq_maskedTextBox.Mask = "0000";
             this.UITimerFreq_maskedTextBox.Name = "UITimerFreq_maskedTextBox";
             this.UITimerFreq_maskedTextBox.PromptChar = ' ';
@@ -807,7 +832,7 @@
             // 
             this.UITimerFreq_label.AccessibleName = "";
             this.UITimerFreq_label.AutoSize = true;
-            this.UITimerFreq_label.Location = new System.Drawing.Point(73, 557);
+            this.UITimerFreq_label.Location = new System.Drawing.Point(73, 542);
             this.UITimerFreq_label.Name = "UITimerFreq_label";
             this.UITimerFreq_label.Size = new System.Drawing.Size(252, 13);
             this.UITimerFreq_label.TabIndex = 30;
@@ -817,7 +842,7 @@
             // 
             this.OB_checkBox.AccessibleName = "";
             this.OB_checkBox.AutoSize = true;
-            this.OB_checkBox.Location = new System.Drawing.Point(490, 509);
+            this.OB_checkBox.Location = new System.Drawing.Point(490, 499);
             this.OB_checkBox.Name = "OB_checkBox";
             this.OB_checkBox.Size = new System.Drawing.Size(15, 14);
             this.OB_checkBox.TabIndex = 25;
@@ -828,7 +853,7 @@
             // 
             this.OB_label.AccessibleName = "";
             this.OB_label.AutoSize = true;
-            this.OB_label.Location = new System.Drawing.Point(73, 509);
+            this.OB_label.Location = new System.Drawing.Point(73, 499);
             this.OB_label.Name = "OB_label";
             this.OB_label.Size = new System.Drawing.Size(372, 26);
             this.OB_label.TabIndex = 24;
@@ -5735,6 +5760,8 @@
         private System.Windows.Forms.Label AccountMKR_total;
         private System.Windows.Forms.Label AccountMKR_value;
         private System.Windows.Forms.Label AccountMKR_label;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox TelegramBotAPIToken_textBox;
     }
 }
 
