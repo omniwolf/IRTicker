@@ -28,6 +28,7 @@ namespace IRTicker {
         public string OrderBookSide = "Bid";  //  maintains which side of the order book we show in the AccountOrders_listview
         public string BaiterBookSide = "Bid"; // maintains which book we're baitin' on
         public string OrderTypeStr = "Market";
+        public string BuySell = "Buy";
         public decimal Volume = 0;
         public decimal LimitPrice = 0;
         public string Crypto = "XBT";
@@ -111,14 +112,18 @@ namespace IRTicker {
             return result;
         }
 
-        public BankOrder PlaceLimitOrder(string crypto, string fiat, OrderType orderType, decimal price, decimal volume) {
+        public BankOrder PlaceLimitOrder(string crypto, string fiat, OrderType? orderType, decimal price, decimal volume) {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
+
+            if (orderType == null) orderType = (BuySell == "Buy" ? OrderType.LimitBid : OrderType.LimitOffer);
+            if (price < 0) price = LimitPrice;
+            if (volume < 0) volume = Volume;
 
             BankOrder orderResult;
             lock (pIR_Lock) {
                 try {
-                    orderResult = IRclient.PlaceLimitOrder(enumCrypto, enumFiat, orderType, price, volume);
+                    orderResult = IRclient.PlaceLimitOrder(enumCrypto, enumFiat, orderType.Value, price, volume);
                 }
                 catch (Exception ex) {
                     MessageBox.Show("API error: " + ex.InnerException.Message, "Limit Order Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -128,14 +133,17 @@ namespace IRTicker {
             return orderResult;
         }
 
-        public BankOrder PlaceMarketOrder(string crypto, string fiat, OrderType orderType, decimal volume) {
+        public BankOrder PlaceMarketOrder(string crypto, string fiat, OrderType? orderType, decimal volume) {
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
+
+            if (orderType == null) orderType = (BuySell == "Buy" ? OrderType.MarketBid : OrderType.MarketOffer);
+            if (volume < 0) volume = Volume;
 
             BankOrder orderResult;
             lock (pIR_Lock) {
                 try {
-                    orderResult = IRclient.PlaceMarketOrder(enumCrypto, enumFiat, orderType, volume);
+                    orderResult = IRclient.PlaceMarketOrder(enumCrypto, enumFiat, orderType.Value, volume);
                 }
                 catch (Exception ex) {
                     MessageBox.Show("API error: " + ex.InnerException.Message, "Market Order Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

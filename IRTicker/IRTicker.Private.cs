@@ -123,11 +123,11 @@ namespace IRTicker {
                 }
                 // need to be more robust, and pull multiple pages if necessary
                 else if (endP == PrivateIR.PrivateIREndPoints.PlaceMarketOrder) {
-                    OrderType oType = AccountBuySell_listbox.SelectedIndex == 0 ? OrderType.MarketBid : OrderType.MarketOffer;
+                    //OrderType oType = AccountBuySell_listbox.SelectedIndex == 0 ? OrderType.MarketBid : OrderType.MarketOffer;
 
                     BankOrder orderResult;
                     try {
-                        orderResult = pIR.PlaceMarketOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, oType, volume);
+                        orderResult = pIR.PlaceMarketOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, null, -1);
                     }
                     catch (Exception ex) {
                         MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
@@ -139,11 +139,11 @@ namespace IRTicker {
                     }
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.PlaceLimitOrder) {
-                    OrderType oType = AccountBuySell_listbox.SelectedIndex == 0 ? OrderType.LimitBid : OrderType.LimitOffer;
+                    //OrderType oType = AccountBuySell_listbox.SelectedIndex == 0 ? OrderType.LimitBid : OrderType.LimitOffer;
 
                     BankOrder orderResult;
                     try {
-                        orderResult = pIR.PlaceLimitOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, oType, price, volume);
+                        orderResult = pIR.PlaceLimitOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, null, -1, -1);
                     }
                     catch (Exception ex) {
                         MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
@@ -446,11 +446,13 @@ namespace IRTicker {
                     AccountPlaceOrder_button.Text = "Buy now";
                     AccountOrders_listview.Columns[1].Text = "Offers";
                     pIR.OrderBookSide = "Offer";
+                    pIR.BuySell = "Buy";
                 }
                 else {
                     AccountPlaceOrder_button.Text = "Sell now";
                     AccountOrders_listview.Columns[1].Text = "Bids";
                     pIR.OrderBookSide = "Bid";
+                    pIR.BuySell = "Sell";
                 }
             }
             else {  // baitin'
@@ -458,10 +460,12 @@ namespace IRTicker {
                 if (AccountBuySell_listbox.SelectedIndex == 0) {
                     pIR.OrderBookSide = "Bid";
                     AccountOrders_listview.Columns[1].Text = "Bids";
+                    pIR.BuySell = "Buy";
                 }
                 else {
                     pIR.OrderBookSide = "Offer";
                     AccountOrders_listview.Columns[1].Text = "Offers";
+                    pIR.BuySell = "Sell";
                 }
                 Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
             }
