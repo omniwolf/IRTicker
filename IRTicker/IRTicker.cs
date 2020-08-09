@@ -1195,57 +1195,59 @@ namespace IRTicker {
                 }
 
                 // still need to run this to get volume data (and all coins except BTC)
-                foreach (string primaryCode in DCEs["IR"].PrimaryCurrencyList) {
-                    // if there's no crypto selected in the drop down or there's no number of coins entered, then just pull the market summary
-                    if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
-                        ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency, false);
-                    }
-                    if (pIR != null) {
-                        foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
-                            try {
-                                pIR.GetClosedOrders(primaryCode, fiat);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
-                            }
-                            catch (Exception ex) {
-                                Debug.Print(DateTime.Now + " - In BGW thread loop, trying to pull closed orders, but it failed: " + ex.Message);
-                            }
-                            // if i want to get fancy i can call reportProgress and drawClosedOrders()...
+                if (DCEs["IR"].HasStaticData) {
+                    foreach (string primaryCode in DCEs["IR"].PrimaryCurrencyList) {
+                        // if there's no crypto selected in the drop down or there's no number of coins entered, then just pull the market summary
+                        if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
+                            ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency, false);
+                        }
+                        if (pIR != null) {
+                            foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
+                                try {
+                                    pIR.GetClosedOrders(primaryCode, fiat);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
+                                }
+                                catch (Exception ex) {
+                                    Debug.Print(DateTime.Now + " - In BGW thread loop, trying to pull closed orders, but it failed: " + ex.Message);
+                                }
+                                // if i want to get fancy i can call reportProgress and drawClosedOrders()...
 
-                            // once a cycle let's give the order book a nudge.. there might be new orders that we haven't seen.
-                            pIR.compileAccountOrderBookAsync(primaryCode + "-" + fiat);
+                                // once a cycle let's give the order book a nudge.. there might be new orders that we haven't seen.
+                                pIR.compileAccountOrderBookAsync(primaryCode + "-" + fiat);
+                            }
                         }
                     }
-                }
 
-                // need to pull this other fiat currency market summary data if our chose slack currency is not the one we're looking at (and the slack stuff is enabled)
-                if ((Properties.Settings.Default.SlackNameCurrency != DCEs["IR"].CurrentSecondaryCurrency) && 
-                    Properties.Settings.Default.Slack && Properties.Settings.Default.SlackNameChange) {
+                    // need to pull this other fiat currency market summary data if our chose slack currency is not the one we're looking at (and the slack stuff is enabled)
+                    if ((Properties.Settings.Default.SlackNameCurrency != DCEs["IR"].CurrentSecondaryCurrency) &&
+                        Properties.Settings.Default.Slack && Properties.Settings.Default.SlackNameChange) {
 
-                    ParseDCE_IR("XBT", Properties.Settings.Default.SlackNameCurrency, false);
-                }
+                        ParseDCE_IR("XBT", Properties.Settings.Default.SlackNameCurrency, false);
+                    }
 
 
-                // let's check the IR spread.  Cycle through all the "_Spread" labels
+                    // let's check the IR spread.  Cycle through all the "_Spread" labels
 
-                if (Properties.Settings.Default.NegativeSpread) {
-                    Dictionary<string, DCE.MarketSummary> mSummaries = DCEs["IR"].GetCryptoPairs();
-                    foreach (var mSummary in mSummaries) {
-                        if (mSummary.Value.SecondaryCurrencyCode == DCEs["IR"].CurrentSecondaryCurrency) {
-                            if (mSummary.Value.CurrentLowestOfferPrice <= mSummary.Value.CurrentHighestBidPrice) {
-                                if (!DCEs["IR"].positiveSpread[mSummary.Value.pair]) {  // already been negative for this pair :(
-                                    Debug.Print(DateTime.Now + " - negative pair detected (" + mSummary.Value.pair + ").  let's unsub resub");
-                                    // do something..
-                                    pollingThread.ReportProgress(29, mSummary.Value.pair);  // update UI to show another spread fail
-                                    wSocketConnect.WebSocket_Resubscribe("IR", mSummary.Value.PrimaryCurrencyCode);
+                    if (Properties.Settings.Default.NegativeSpread) {
+                        Dictionary<string, DCE.MarketSummary> mSummaries = DCEs["IR"].GetCryptoPairs();
+                        foreach (var mSummary in mSummaries) {
+                            if (mSummary.Value.SecondaryCurrencyCode == DCEs["IR"].CurrentSecondaryCurrency) {
+                                if (mSummary.Value.CurrentLowestOfferPrice <= mSummary.Value.CurrentHighestBidPrice) {
+                                    if (!DCEs["IR"].positiveSpread[mSummary.Value.pair]) {  // already been negative for this pair :(
+                                        Debug.Print(DateTime.Now + " - negative pair detected (" + mSummary.Value.pair + ").  let's unsub resub");
+                                        // do something..
+                                        pollingThread.ReportProgress(29, mSummary.Value.pair);  // update UI to show another spread fail
+                                        wSocketConnect.WebSocket_Resubscribe("IR", mSummary.Value.PrimaryCurrencyCode);
+                                    }
+                                    else {
+                                        // spread was positive last time, set the signal and wait for the next rotation
+                                        DCEs["IR"].positiveSpread[mSummary.Value.pair] = false;
+                                        Debug.Print(DateTime.Now + " - Negave pair (" + mSummary.Value.pair + ") signaled, waiting...");
+                                    }
                                 }
                                 else {
-                                    // spread was positive last time, set the signal and wait for the next rotation
-                                    DCEs["IR"].positiveSpread[mSummary.Value.pair] = false;
-                                    Debug.Print(DateTime.Now + " - Negave pair (" + mSummary.Value.pair + ") signaled, waiting...");
+                                    DCEs["IR"].positiveSpread[mSummary.Value.pair] = true;  // this pair is OK.  Doesn't mean it's right, it's just not DEFINITELY wrong.
+                                                                                            //Debug.Print("Negative spread check all good for " + mSummary.Value.pair);
                                 }
-                            }
-                            else {
-                                DCEs["IR"].positiveSpread[mSummary.Value.pair] = true;  // this pair is OK.  Doesn't mean it's right, it's just not DEFINITELY wrong.
-                                //Debug.Print("Negative spread check all good for " + mSummary.Value.pair);
                             }
                         }
                     }
@@ -2372,6 +2374,7 @@ namespace IRTicker {
             StreamWriter dataWriter;
             try {
                 foreach (KeyValuePair<string, DCE> Exchange in DCEs) {  // spin through all the exchanges
+                    if (!Exchange.Value.HasStaticData) continue;
                     ConcurrentDictionary<string, List<DataPoint>> spreadHistory = Exchange.Value.GetSpreadHistory();  // DataPoint: OADate, spread
                     foreach (string pair in Exchange.Value.UsablePairs()) {  // spin through all the pairs of this exchange
                         if (spreadHistory.ContainsKey(pair)) {
