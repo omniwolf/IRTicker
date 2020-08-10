@@ -358,7 +358,8 @@ namespace IRTicker {
             BankOrder placedOrder = null;
             Task rateLimitPlaceOrder = Task.Delay(1);
             string pair = crypto + "-" + fiat;
-            decimal distanceFromTopOrder = DCE_IR.currencyFiatDivision[crypto] * 5;  // how far infront of the best order should we be?  will be different for different cryptos
+            
+            decimal distanceFromTopOrder = (decimal)(Math.Pow(0.1, DCE_IR.currencyFiatDivision[crypto]) * 5);  // how far infront of the best order should we be?  will be different for different cryptos
             if (BaiterBookSide == "Offer") distanceFromTopOrder = distanceFromTopOrder * -1;
 
             Debug.Print("MBAIT: distance from top: " + distanceFromTopOrder);

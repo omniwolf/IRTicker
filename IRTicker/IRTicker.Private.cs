@@ -299,7 +299,8 @@ namespace IRTicker {
                 AccountOrders_listview.Items.Clear();
 
                 foreach (string[] lvi in _accountOrders.Item2) {
-                    AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0], Utilities.FormatValue(decimal.Parse(lvi[1]), 2), lvi[2], lvi[3], lvi[4] }));
+                    Tuple<string, string> pairTup = Utilities.SplitPair(pair);
+                    AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0], Utilities.FormatValue(decimal.Parse(lvi[1]), DCEs["IR"].currencyFiatDivision[pairTup.Item1], false), lvi[2], lvi[3], lvi[4] }));
                     AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].SubItems[1].Tag = lvi[1];  // need to store the price in an unformatted (and therefore parseable) format
                     if (lvi[5] == "true") {  // what a hack.  colourising any orders that are MINE
                         AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].ForeColor = Color.RoyalBlue;
