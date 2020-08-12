@@ -24,8 +24,8 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Loading...");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("Loading...");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
@@ -4024,7 +4024,7 @@
             this.AccountWithdrawalLastCheck_label.Location = new System.Drawing.Point(11, 90);
             this.AccountWithdrawalLastCheck_label.Name = "AccountWithdrawalLastCheck_label";
             this.AccountWithdrawalLastCheck_label.Size = new System.Drawing.Size(0, 12);
-            this.AccountWithdrawalLastCheck_label.TabIndex = 3;
+            this.AccountWithdrawalLastCheck_label.TabIndex = 47;
             // 
             // OTCHelper
             // 
@@ -4256,7 +4256,7 @@
             this.AccountOrderType_listbox.Name = "AccountOrderType_listbox";
             this.AccountOrderType_listbox.ShowScrollbar = false;
             this.AccountOrderType_listbox.Size = new System.Drawing.Size(101, 44);
-            this.AccountOrderType_listbox.TabIndex = 15;
+            this.AccountOrderType_listbox.TabIndex = 3;
             this.AccountOrderType_listbox.SelectedIndexChanged += new System.EventHandler(this.AcccountOrderType_listbox_SelectedIndexChanged);
             // 
             // AccountOpenOrders_panel
@@ -4282,7 +4282,7 @@
             this.AccountOpenOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountOpenOrders_listview.HideSelection = false;
             this.AccountOpenOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
+            listViewItem5});
             this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountOpenOrders_listview.MultiSelect = false;
             this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";
@@ -4348,7 +4348,7 @@
             this.AccountClosedOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountClosedOrders_listview.HideSelection = false;
             this.AccountClosedOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem2});
+            listViewItem6});
             this.AccountClosedOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountClosedOrders_listview.MultiSelect = false;
             this.AccountClosedOrders_listview.Name = "AccountClosedOrders_listview";
@@ -4492,6 +4492,7 @@
             this.AccountOrderVolume_label.Size = new System.Drawing.Size(42, 13);
             this.AccountOrderVolume_label.TabIndex = 5;
             this.AccountOrderVolume_label.Text = "Volume";
+            this.IRTickerTT_generic.SetToolTip(this.AccountOrderVolume_label, "Double click to set max volume for this crypto");
             this.AccountOrderVolume_label.DoubleClick += new System.EventHandler(this.AccountOrderVolume_label_DoubleClick);
             // 
             // AccountOrderVolume_textbox
