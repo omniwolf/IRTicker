@@ -295,18 +295,18 @@ namespace IRTicker {
             UIControls_Dict["IR"].Account_BAT_Label = AccountBAT_label;
             UIControls_Dict["IR"].Account_OMG_Value = AccountOMG_value;
             UIControls_Dict["IR"].Account_OMG_Label = AccountOMG_label;
-            //UIControls_Dict["IR"].Account_MKR_Value = AccountMKR_value;
-            //UIControls_Dict["IR"].Account_MKR_Label = AccountMKR_label;
+            UIControls_Dict["IR"].Account_MKR_Value = AccountMKR_value;
+            UIControls_Dict["IR"].Account_MKR_Label = AccountMKR_label;
             UIControls_Dict["IR"].Account_ZRX_Value = AccountZRX_value;
             UIControls_Dict["IR"].Account_ZRX_Label = AccountZRX_label;
             UIControls_Dict["IR"].Account_GNT_Value = AccountGNT_value;
             UIControls_Dict["IR"].Account_GNT_Label = AccountGNT_label;
-            //UIControls_Dict["IR"].Account_DAI_Value = AccountDAI_value;
-            //UIControls_Dict["IR"].Account_DAI_Label = AccountDAI_label;
+            UIControls_Dict["IR"].Account_DAI_Value = AccountDAI_value;
+            UIControls_Dict["IR"].Account_DAI_Label = AccountDAI_label;
             UIControls_Dict["IR"].Account_LINK_Value = AccountLINK_value;
             UIControls_Dict["IR"].Account_LINK_Label = AccountLINK_label;
-            //UIControls_Dict["IR"].Account_USDC_Value = AccountUSDC_value;
-            //UIControls_Dict["IR"].Account_USDC_Label = AccountUSDC_label;
+            UIControls_Dict["IR"].Account_USDC_Value = AccountUSDC_value;
+            UIControls_Dict["IR"].Account_USDC_Label = AccountUSDC_label;
             UIControls_Dict["IR"].Account_XBT_Total = AccountXBT_total;
             UIControls_Dict["IR"].Account_ETH_Total = AccountETH_total;
             UIControls_Dict["IR"].Account_XRP_Total = AccountXRP_total;
@@ -319,11 +319,12 @@ namespace IRTicker {
             UIControls_Dict["IR"].Account_ETC_Total = AccountETC_total;
             UIControls_Dict["IR"].Account_BAT_Total = AccountBAT_total;
             UIControls_Dict["IR"].Account_OMG_Total = AccountOMG_total;
-            //UIControls_Dict["IR"].Account_MKR_Total = AccountMKR_total;
+            UIControls_Dict["IR"].Account_MKR_Total = AccountMKR_total;
             UIControls_Dict["IR"].Account_ZRX_Total = AccountZRX_total;
             UIControls_Dict["IR"].Account_GNT_Total = AccountGNT_total;
-            //UIControls_Dict["IR"].Account_DAI_Total = AccountDAI_total;
+            UIControls_Dict["IR"].Account_DAI_Total = AccountDAI_total;
             UIControls_Dict["IR"].Account_LINK_Total = AccountLINK_total;
+            UIControls_Dict["IR"].Account_USDC_Total = AccountUSDC_total;
             UIControls_Dict["IR"].Account_AUD_Total = AccountAUD_total;
             UIControls_Dict["IR"].Account_AUD_Label = AccountAUD_label;
             UIControls_Dict["IR"].Account_NZD_Total = AccountNZD_total;
@@ -1118,69 +1119,18 @@ namespace IRTicker {
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "USD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "NZD");*/
 
-                        IRCurrencies.IRCurrenciesRoot CurrencyRoot;
+                        IRCurrencies CurrencyRoot;
                         using (StreamReader r = new StreamReader("IRCurrencyAttributes.txt")) {
                             string json = r.ReadToEnd();
-                            CurrencyRoot = JsonConvert.DeserializeObject<IRCurrencies.IRCurrenciesRoot>(json);
+                            CurrencyRoot = JsonConvert.DeserializeObject<IRCurrencies>(json);
                         }
 
-                        //Dictionary<string, DCE.MarketSummary> cryptos = DCEs["IR"].GetCryptoPairs();
-                        foreach (string currency in DCEs["IR"].PrimaryCurrencyList) {
-                            switch (currency) {
-                                case "XBT":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Xbt.FiatPriceDecimalPlaces);
-                                    break;
-                                case "ETH":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Eth.FiatPriceDecimalPlaces);
-                                    break;
-                                case "XRP":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Xrp.FiatPriceDecimalPlaces);
-                                    break;
-                                case "BCH":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Bch.FiatPriceDecimalPlaces);
-                                    break;
-                                case "BSV":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Bsv.FiatPriceDecimalPlaces);
-                                    break;
-                                case "USDT":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Ust.FiatPriceDecimalPlaces);
-                                    break;
-                                case "LTC":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Ltc.FiatPriceDecimalPlaces);
-                                    break;
-                                case "EOS":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Eos.FiatPriceDecimalPlaces);
-                                    break;
-                                case "XLM":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Xlm.FiatPriceDecimalPlaces);
-                                    break;
-                                case "ETC":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Etc.FiatPriceDecimalPlaces);
-                                    break;
-                                case "BAT":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Bat.FiatPriceDecimalPlaces);
-                                    break;
-                                case "OMG":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Omg.FiatPriceDecimalPlaces);
-                                    break;
-                                case "REP":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Rep.FiatPriceDecimalPlaces);
-                                    break;
-                                case "ZRX":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Zrx.FiatPriceDecimalPlaces);
-                                    break;
-                                case "GNT":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Gnt.FiatPriceDecimalPlaces);
-                                    break;
-                                case "PMGT":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Pmg.FiatPriceDecimalPlaces);
-                                    break;
-                                case "LINK":
-                                    DCEs["IR"].currencyFiatDivision.Add(currency, CurrencyRoot.Lnk.FiatPriceDecimalPlaces);
-                                    break;
-                            }
-
-                            
+                        foreach (Currency curr in CurrencyRoot.Currencies) {
+                            string crypto = curr.IrCommonAttributesCurrencyConfiguration.Code.ToUpper();
+                            if (crypto == "UST") crypto = "USDT";
+                            if (crypto == "USC") crypto = "USDC";
+                            if (crypto == "LNK") crypto = "LINK";
+                            DCEs["IR"].currencyFiatDivision.Add(crypto, curr.IrCommonAttributesCurrencyConfiguration.FiatPriceDecimalPlaces);
                         }
 
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;

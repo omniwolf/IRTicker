@@ -131,16 +131,19 @@ namespace IRTicker {
 
         public void GetOrderBook_IR(string crypto, string fiat) {
             if (crypto == "USDT") crypto = "UST";
+            //if (crypto == "USDC") crypto = "USC";
             string pair = crypto + "-" + fiat;
             Tuple<bool, string> orderBookTpl = Utilities.Get(DCEs["IR"].BaseURL + "/Public/GetAllOrders?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
 
             // have to change back ughhh
             if (crypto.ToUpper() == "UST") crypto = "USDT";
+            //if (crypto.ToUpper() == "USC") crypto = "USDC";
             pair = crypto + "-" + fiat;
 
             if (orderBookTpl.Item1) {
                 DCE.OrderBook orderBook = JsonConvert.DeserializeObject<DCE.OrderBook>(orderBookTpl.Item2);
                 if (orderBook.PrimaryCurrencyCode.ToUpper() == "UST") orderBook.PrimaryCurrencyCode = "USDT";
+                //if (orderBook.PrimaryCurrencyCode.ToUpper() == "USC") orderBook.PrimaryCurrencyCode = "USDC";
                 DCEs["IR"].orderBooks[pair] = orderBook;
                 if ((DCEs["IR"].orderBooks[pair].BuyOrders.Count == 0) || (DCEs["IR"].orderBooks[pair].SellOrders.Count == 0)) {
                     Debug.Print("One of the order books is empty... not continuing.  number of buy orders: " + DCEs["IR"].orderBooks[pair].BuyOrders.Count + ", and sell orders: " + DCEs["IR"].orderBooks[pair].SellOrders.Count);
@@ -176,8 +179,10 @@ namespace IRTicker {
                         DCEs["IR"].positiveSpread[crypto + "-" + fiat] = true;  // initialise the positiveSpread variable for this pair, always assume the spread is positive
                         DCEs["IR"].negSpreadCount[crypto + "-" + fiat] = 0;  // init
                         if (crypto == "USDT") crypto = "UST";
+                        //if (crypto == "USDC") crypto = "USC";
                         channel += "\"orderbook-" + crypto + "-" + fiat + "\", ";
                         if (crypto == "UST") crypto = "USDT";
+                        //if (crypto == "USC") crypto = "USDC";
                         DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat)] = 0;  // initialise the nonce dictionary
                         DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;  // false means no error, no need to dump OB
 
@@ -281,6 +286,7 @@ namespace IRTicker {
                             if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
                                 string crypto1 = primaryCode;
                                 if (crypto1 == "USDT") crypto1 = "UST";
+                                //if (crypto1 == "USDC") crypto1 = "USC";
                                 channel += "\"orderbook-" + crypto1.ToLower() + "-" + fiat.ToLower() + "\", ";
                             }
                         }
@@ -289,6 +295,7 @@ namespace IRTicker {
                     }
                     else {  // or just one pair
                         if (crypto.ToUpper() == "USDT") crypto = "ust";
+                        //if (crypto.ToUpper() == "USDC") crypto = "usc";
                         channel += "\"orderbook-" + crypto.ToLower() + "-" + fiat.ToLower() + "\"]}";
                     }
                     Debug.Print("IR websocket subcribe/unsubscribe - " + (subscribe ? "subscribe" : "unsubscribe") + " event: " + channel);
@@ -784,7 +791,9 @@ namespace IRTicker {
             Ticker_IR tickerStream = new Ticker_IR();
             tickerStream = JsonConvert.DeserializeObject<Ticker_IR>(message);
             if (tickerStream.Data.Pair.ToUpper().Contains("UST")) tickerStream.Data.Pair = tickerStream.Data.Pair.Replace(tickerStream.Data.Pair.Substring(0, 3), "USDT");
+            //if (tickerStream.Data.Pair.ToUpper().Contains("USC")) tickerStream.Data.Pair = tickerStream.Data.Pair.Replace(tickerStream.Data.Pair.Substring(0, 3), "USDC");
             if (tickerStream.Channel.ToUpper().Contains("-UST-")) tickerStream.Channel = tickerStream.Channel.Replace(tickerStream.Channel.Substring(10, 3), "USDT");
+            //if (tickerStream.Channel.ToUpper().Contains("-USC-")) tickerStream.Channel = tickerStream.Channel.Replace(tickerStream.Channel.Substring(10, 3), "USDC");
 
             // still trying to get to the bottom of orders that should be deleted that aren't
             /*if (tickerStream.Data.Pair == "xbt-aud") {

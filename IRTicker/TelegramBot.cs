@@ -658,7 +658,7 @@ namespace IRTicker
                 string masterStr = "------------------------------" + Environment.NewLine;
                 foreach (KeyValuePair<string, DCE.MarketSummary> mSummary in mSummaries) {
                     if (mSummary.Value.SecondaryCurrencyCode.ToUpper() == fiat) {
-                        masterStr += "  *" + mSummary.Value.PrimaryCurrencyCode + "*: $" + Utilities.FormatValue((mSummary.Value.CurrentLowestOfferPrice + mSummary.Value.CurrentHighestBidPrice) / 2) + Environment.NewLine;
+                        masterStr += "  *" + mSummary.Value.PrimaryCurrencyCode + "*: $" + Utilities.FormatValue((mSummary.Value.CurrentLowestOfferPrice + mSummary.Value.CurrentHighestBidPrice) / 2) + " / " + Utilities.FormatValue(mSummary.Value.DayVolumeXbt) + Environment.NewLine;
                     }
                 }
                 masterStr += "------------------------------";

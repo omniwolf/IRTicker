@@ -115,7 +115,7 @@ namespace IRTicker {
                     JsonConvert.DeserializeObject<SlackMessageResponse>(responseJson);
 
                 // throw exception if sending failed
-                if (messageResponse.ok == false) {
+                if ((messageResponse == null) || (messageResponse.ok == false)) {
                     throw new Exception(
                         "failed to send message. error: " + messageResponse.error
                     );

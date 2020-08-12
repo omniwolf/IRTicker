@@ -75,8 +75,10 @@ namespace IRTicker {
                     //Debug.Print("PIR: gotACcounts");
                     if (irAccounts == null) {
                         Debug.Print(DateTime.Now + " - there was an error, closing the accounts page");
-                        Main.Visible = true;
-                        IRAccount_panel.Visible = false;
+                        synchronizationContext.Post(new SendOrPostCallback(o => {
+                            Main.Visible = true;
+                            IRAccount_panel.Visible = false;
+                        }), null);
                         return;
                     }
                     DrawIRAccounts(irAccounts);
@@ -708,6 +710,16 @@ namespace IRTicker {
             }
 
             IRT_notification.ShowBalloonTip(10000);
+        }
+
+        private void AccountOrderVolume_textbox_KeyUp(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Tab) {
+                AccountLimitPrice_textbox.SelectAll();
+            }
+        }
+
+        private void AccountOrderVolume_label_DoubleClick(object sender, EventArgs e) {
+            AccountOrderVolume_textbox.Text = pIR.accounts[AccountSelectedCrypto].AvailableBalance.ToString();
         }
     }
 }
