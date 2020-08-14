@@ -758,7 +758,7 @@ namespace IRTicker
         public async void closedOrders(Page<BankHistoryOrder> cOrders) {
 
             if (cOrders.Data.Count() > 0) {
-                string pair = cOrders.Data.First().PrimaryCurrencyCode + "-" + cOrders.Data.First().SecondaryCurrencyCode;
+                string pair = (cOrders.Data.First().PrimaryCurrencyCode + "-" + cOrders.Data.First().SecondaryCurrencyCode).ToUpper();
                 List<BankHistoryOrder> ordersToNotify = new List<BankHistoryOrder>();
 
                 if (!notifiedOrders.ContainsKey(pair)) notifiedOrders.TryAdd(pair, new List<Guid>());
@@ -820,7 +820,8 @@ namespace IRTicker
                 ChosenPair = new Tuple<string, string>("", "");
                 Volume = -1;
                 TGBot.SendMessage("*IR Ticker TelegramBot Top Menu*" + Environment.NewLine +
-                    "Please enter your command, or 'help' for a list of commands.", buttons: MainMenuButtons(), editMessage: editMsg);
+                    "Account: `" + Properties.Settings.Default.APIFriendly + "`" + Environment.NewLine +
+                    "Please enter your command, or 'help' for a list of commands.", buttons: MainMenuButtons(), editMessage: editMsg); ; ;
                 //botClient.SendTextMessageAsync(Properties.Settings.Default.TelegramChatID, "Common commands:", Telegram.Bot.Types.Enums.ParseMode.Default, false, false, 0, MainMenuButtons());
 
             }

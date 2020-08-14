@@ -339,7 +339,7 @@ namespace IRTicker {
                     //OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
                     //Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item1;
                     TopPrice = IR_OBs[pair].Item1.Keys.Max();
-                    TopOrder = (IR_OBs[pair].Item1)[TopPrice];
+                    TopOrder = (IR_OBs[pair].Item1)[TopPrice];  // if you get a crash here (or the other TopOrder line just below), see if pulledSnapShot is false.  If so, maybe we should be returning null above in the pulledSnapShot test so the code doesn't continue...
                     break;
                 case "LimitOffer":
                     //OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
