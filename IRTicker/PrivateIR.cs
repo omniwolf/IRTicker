@@ -142,13 +142,7 @@ namespace IRTicker {
 
             BankOrder orderResult;
             lock (pIR_Lock) {
-                try {
-                    orderResult = IRclient.PlaceMarketOrder(enumCrypto, enumFiat, orderType.Value, volume);
-                }
-                catch (Exception ex) {
-                    MessageBox.Show("API error: " + ex.InnerException.Message, "Market Order Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    orderResult = null;
-                }
+                orderResult = IRclient.PlaceMarketOrder(enumCrypto, enumFiat, orderType.Value, volume);
             }
             return orderResult;
         }
@@ -197,7 +191,7 @@ namespace IRTicker {
 
             if (page < cOrders.TotalPages) return null;  // we don't want to send partial results, we either get it all or die trying
             cOrders.Data = allCOrders;
-            if (TGBot != null) TGBot.closedOrders(cOrders);
+            if ((TGBot != null) && ((cOrders.Data.Count() > 0))) TGBot.closedOrders(cOrders);
             return cOrders;
         }
 
