@@ -2065,9 +2065,6 @@ namespace IRTicker {
                     // if we have a tg code, a tg api token, and pIR isn't null, it means we can start the tgbot
                     if (!string.IsNullOrEmpty(TelegramCode_textBox.Text) && !string.IsNullOrEmpty(TelegramBotAPIToken_textBox.Text) && (pIR != null)) {
 
-                        Properties.Settings.Default.TelegramCode = TelegramCode_textBox.Text;
-                        Properties.Settings.Default.TelegramAPIToken = TelegramBotAPIToken_textBox.Text;
-
                         if (TGBot == null) {
                             try {
                                 TGBot = new TelegramBot(pIR, DCEs["IR"], this);
@@ -2084,9 +2081,12 @@ namespace IRTicker {
                         }
                         else {
                             if (Properties.Settings.Default.TelegramAPIToken != TelegramBotAPIToken_textBox.Text) {
-                                TGBot.NewClient();  // changes the bot api token
+                                TGBot.NewClient(TelegramBotAPIToken_textBox.Text);  // changes the bot api token
                             }
                         }
+                        Properties.Settings.Default.TelegramCode = TelegramCode_textBox.Text;
+                        Properties.Settings.Default.TelegramAPIToken = TelegramBotAPIToken_textBox.Text;
+
                     }
                     else {  // we can't start tgbot, so kill it if it's running
                         if (TGBot != null) {

@@ -63,14 +63,15 @@ namespace IRTicker
             }
         }
 
-        public void NewClient() {
+        public void NewClient(string newToken) {
             ResetBot();
             var cts = new CancellationTokenSource();
             var cancellationToken = cts.Token;
 
-            botClient = new TelegramBotClient(Properties.Settings.Default.TelegramAPIToken);
+            botClient = new TelegramBotClient(newToken);
             //botClient.OnMessage += Bot_OnMessage;
             botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync), cancellationToken);
+            TGstate.ResetMenu();
         }
 
         public void ResetBot() {
