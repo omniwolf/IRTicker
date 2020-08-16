@@ -33,6 +33,7 @@ namespace IRTicker
         static ITelegramBotClient botClient;
         TelegramState TGstate;
         int LatestMessageID;
+        bool NextMsgIsNew = false;  // set to true to disable the edit functionality for the next message (eg when an async message has come through like the order filled message)
 
         public ConcurrentDictionary<string, bool> closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
         private ConcurrentDictionary<string, List<Guid>> notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();
@@ -139,6 +140,15 @@ namespace IRTicker
                 );
         }
 
+        public static InlineKeyboardMarkup QuitToMain() {
+            return new InlineKeyboardMarkup(
+                new InlineKeyboardButton[][] {
+                    new InlineKeyboardButton[] {
+                        InlineKeyboardButton.WithCallbackData("Quit to main menu", "quit") }
+                    }
+                );
+        }
+
         async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken) {
             if ((update.CallbackQuery != null) && (update.CallbackQuery is CallbackQuery cbq)) {
                 try {
@@ -199,11 +209,16 @@ namespace IRTicker
                                             marketO = pIR.PlaceMarketOrder(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, OrderType.MarketBid, TGstate.Volume);
                                         }
                                         catch (Exception ex) {
-                                            Debug.Print("TGBot: couldn't place the market buy order: " + ex.Message);
+                                            string errorMsg = ex.Message;
+                                            if (ex.InnerException != null) {
+                                                errorMsg = ex.InnerException.Message;
+                                            }
+                                            Debug.Print("TGBot: couldn't place the market buy order: " + errorMsg);
                                             await SendMessage("`Market Order` :: ⚠️ Order failed for the following reason:" + Environment.NewLine +
-                                                ex.Message + Environment.NewLine + Environment.NewLine +
+                                                errorMsg + Environment.NewLine + Environment.NewLine +
                                                 "Try again?", buttons: YesNoButtons(), editMessage: true);
                                             return;
+                                            
                                         }
                                         if ((marketO.Status == OrderStatus.Filled) || (marketO.Status == OrderStatus.Open)) {
                                             await SendMessage("`Market Order` :: ✅ Order placed!", editMessage: true);
@@ -219,9 +234,13 @@ namespace IRTicker
                                             marketO = pIR.PlaceMarketOrder(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, OrderType.MarketOffer, TGstate.Volume);
                                         }
                                         catch (Exception ex) {
-                                            Debug.Print("TGBot: couldn't place the market sell order: " + ex.Message);
+                                            string errorMsg = ex.Message;
+                                            if (ex.InnerException != null) {
+                                                errorMsg = ex.InnerException.Message;
+                                            }
+                                            Debug.Print("TGBot: couldn't place the market sell order: " + errorMsg);
                                             await SendMessage("`Market Order` :: ⚠️ Order failed for the following reason:" + Environment.NewLine +
-                                                ex.Message + Environment.NewLine + Environment.NewLine +
+                                                errorMsg + Environment.NewLine + Environment.NewLine +
                                                 "Try again?", buttons: YesNoButtons(), editMessage: true);
                                             return;
                                         }
@@ -242,7 +261,13 @@ namespace IRTicker
                                             cancelledOrder = pIR.CancelOrder(TGstate.openOrdersToList[TGstate.orderToCancel].OrderGuid.ToString());
                                         }
                                         catch (Exception ex) {
-                                            SendMessage("`Cancel Order` :: ⚠️ Failed to cancel the order.  Try again?", buttons: YesNoButtons(), editMessage: true);
+                                            string errorMsg = ex.Message;
+                                            if (ex.InnerException != null) {
+                                                errorMsg = ex.InnerException.Message;
+                                            }
+                                            SendMessage("`Cancel Order` :: ⚠️ Failed to cancel the order.  Failure reason:" + Environment.NewLine +
+                                                errorMsg + Environment.NewLine + Environment.NewLine +
+                                                "Try again?", buttons: YesNoButtons(), editMessage: true);
                                             return;
                                         }
                                         if (cancelledOrder.Status == OrderStatus.Cancelled) {
@@ -420,9 +445,14 @@ namespace IRTicker
                                         IRT.ParseDCE_IR(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, false);
                                     }
                                     decimal bestOffer = DCE_IR.GetCryptoPairs()[TGstate.ChosenPair.Item1 + "-" + TGstate.ChosenPair.Item2].CurrentLowestOfferPrice;
+                                    string accBal = "";
+                                    if (pIR.accounts.ContainsKey(TGstate.ChosenPair.Item2)) {
+                                        accBal += "  " + TGstate.ChosenPair.Item2.ToUpper() + " account balance: $" + Utilities.FormatValue(pIR.accounts[TGstate.ChosenPair.Item2].AvailableBalance) + Environment.NewLine;
+                                    }
 
-                                    SendMessage("`Market Order` :: You wish to place a market *BUY* order for " + TGstate.ChosenPair.Item1 + "-" + TGstate.ChosenPair.Item2 + " of size " + vol + "." + Environment.NewLine +
+                                    SendMessage("`Market Order` :: You wish to place a market *BUY* order for " + TGstate.ChosenPair.Item1 + "-" + TGstate.ChosenPair.Item2 + " of size "  + TGstate.ChosenPair.Item1 + " " + vol + "." + Environment.NewLine +
                                         "  Current best offer is: $" + Utilities.FormatValue(bestOffer) + Environment.NewLine +
+                                        accBal + 
                                         "  Order approx value: $" + Utilities.FormatValue(bestOffer * vol) + Environment.NewLine + Environment.NewLine +
                                         "❓ Do you wish to proceed?", buttons: YesNoButtons());
                                     TGstate.Volume = vol;
@@ -444,15 +474,20 @@ namespace IRTicker
                                         IRT.ParseDCE_IR(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, false);
                                     }
                                     decimal bestBid = DCE_IR.GetCryptoPairs()[TGstate.ChosenPair.Item1 + "-" + TGstate.ChosenPair.Item2].CurrentHighestBidPrice;
-                                    SendMessage("`Market Order` :: You wish to place a market *SELL* order for " + TGstate.ChosenPair.Item1 + "-" + TGstate.ChosenPair.Item2 + " of size " + vol + "." + Environment.NewLine +
+                                    string accBal = "";
+                                    if (pIR.accounts.ContainsKey(TGstate.ChosenPair.Item1)) {  // don't bother pulling the balance again, it's probably the same as when we just pulled it a second ago for the previous question
+                                        accBal += "  " + TGstate.ChosenPair.Item1.ToUpper() + " account balance: " + TGstate.ChosenPair.Item1.ToUpper() + " " + Utilities.FormatValue(pIR.accounts[TGstate.ChosenPair.Item1].AvailableBalance) + Environment.NewLine;
+                                    }
+                                    SendMessage("`Market Order` :: You wish to place a market *SELL* order for " + TGstate.ChosenPair.Item1 + "-" + TGstate.ChosenPair.Item2 + " of size " + TGstate.ChosenPair.Item1 + " " + vol + "." + Environment.NewLine +
                                         "  Current best bid is: $" + Utilities.FormatValue(bestBid) + Environment.NewLine +
+                                        accBal +
                                         "  Order approx value: $" + Utilities.FormatValue(bestBid * vol) + Environment.NewLine + Environment.NewLine +
                                         "❓ Do you wish to proceed?", buttons: YesNoButtons());
 
                                     TGstate.Volume = vol;
                                     TGstate.commandSubStage = 41;
                                 }
-                                else {
+                                else {  
                                     SendMessage("`Market Order` :: ⚠️ Invalid volume, please try again or 'quit' to exit.");
                                 }
                             }
@@ -522,7 +557,7 @@ namespace IRTicker
                 }
 
                 if (openOs.Data.Count() > 0) {
-                    SendMessage(compileOpenOrders(openOs, pairTup.Item1, pairTup.Item2), editMessage: editMsg);
+                    SendMessage(compileOpenOrders(openOs, pairTup.Item1, pairTup.Item2), buttons: QuitToMain(), editMessage: editMsg);
                     TGstate.commandSubStage = 2;
                 }
                 else {
@@ -531,19 +566,19 @@ namespace IRTicker
                 }
             }
             else {
-                SendMessage("`Cancel Order` :: ⚠️ " + pairTup.Item1 + "-" + pairTup.Item2 + " pair doesn't exist. Try again or 'quit' to exit.", editMessage: editMsg);
+                SendMessage("`Cancel Order` :: ⚠️ " + pairTup.Item1 + "-" + pairTup.Item2 + " pair doesn't exist. Try again or 'quit' to exit.", buttons: QuitToMain(), editMessage: editMsg);
             }
         }
 
         private void MarketOrder_InvalidVolume(bool editMsg = false) {
-            SendMessage("`Market Order` :: ⚠️ Invalid volume, please try again or enter 'quit' to exit to the main menu.", editMessage: editMsg);
+            SendMessage("`Market Order` :: ⚠️ Invalid volume, please try again or enter 'quit' to exit to the main menu.", buttons: QuitToMain(), editMessage: editMsg);
         }
 
         private void MarketOrder_SubStage1(string message, bool editMsg = false) {
             Tuple<string, string> pairTup = verifyChosenPair(message, "Market Order");
             if (pairTup.Item1 != "") {
                 TGstate.ChosenPair = pairTup;
-                SendMessage("`Market Order` :: ❓ " + pairTup.Item1 + "-" + pairTup.Item2 + " chosen.  Is this a buy or a sell? (b/s)", buttons: BuySellButtons(), editMessage: editMsg);
+                SendMessage("`Market Order` :: ❓ " + pairTup.Item1 + "-" + pairTup.Item2 + " chosen.  Is this a buy or a sell?", buttons: BuySellButtons(), editMessage: editMsg);
                 TGstate.commandSubStage = 2;
             }  // no need for an else clause here, the verifychosenPair() sub handles it
         }
@@ -567,10 +602,8 @@ namespace IRTicker
             Dictionary<string, Account> accounts;
             try {
                 accounts = pIR.GetAccounts();
-                foreach (KeyValuePair<string, Account> acc in accounts) {
-                    if (TGstate.ChosenPair.Item2 == acc.Key) {
-                        msg += "  " + acc.Key.ToUpper() + " account balance: $" + Utilities.FormatValue(acc.Value.AvailableBalance) + Environment.NewLine;
-                    }
+                if (accounts.ContainsKey(TGstate.ChosenPair.Item2)) {
+                    msg += "  " + TGstate.ChosenPair.Item2.ToUpper() + " account balance: $" + Utilities.FormatValue(accounts[TGstate.ChosenPair.Item2].AvailableBalance) + Environment.NewLine;
                 }
             }
             catch (Exception ex) {
@@ -578,7 +611,7 @@ namespace IRTicker
             }
 
             msg += Environment.NewLine + "  ❓ How much " + TGstate.ChosenPair.Item1 + " do you want to buy?";
-            SendMessage(msg, editMessage: editMsg);
+            SendMessage(msg, buttons: QuitToMain(), editMessage: editMsg);
 
             TGstate.commandSubStage = 30;
         }
@@ -602,16 +635,14 @@ namespace IRTicker
             Dictionary<string, Account> accounts;
             try {
                 accounts = pIR.GetAccounts();
-                foreach (KeyValuePair<string, Account> acc in accounts) {
-                    if (TGstate.ChosenPair.Item1 == acc.Key) {
-                        msg += "  " + acc.Key.ToUpper() + " account balance: " + Utilities.FormatValue(acc.Value.AvailableBalance) + Environment.NewLine;
-                    }
+                if (accounts.ContainsKey(TGstate.ChosenPair.Item1)) {
+                    msg += "  " + TGstate.ChosenPair.Item1.ToUpper() + " account balance: " + TGstate.ChosenPair.Item1.ToUpper() + " "  + Utilities.FormatValue(accounts[TGstate.ChosenPair.Item1].AvailableBalance) + Environment.NewLine;
                 }
             }
             catch (Exception ex) {
                 Debug.Print("TGBot: couldn't get account balance for buy, will just continue without it.  error: " + ex.Message);
             }
-            SendMessage(msg + Environment.NewLine + "  ❓ How much " + TGstate.ChosenPair.Item1 + " do you want to sell?", editMessage: editMsg);
+            SendMessage(msg + Environment.NewLine + "  ❓ How much " + TGstate.ChosenPair.Item1 + " do you want to sell?", buttons: QuitToMain(), editMessage: editMsg);
 
             TGstate.commandSubStage = 40;
         }
@@ -736,7 +767,6 @@ namespace IRTicker
                 TGstate.openOrdersToList.Add(count, bho);
                 count++;
             }
-            masterStr += Environment.NewLine + "  Type 'quit' to exit this menu.";
             return masterStr;
         }
 
@@ -749,6 +779,11 @@ namespace IRTicker
             if (pMode == Telegram.Bot.Types.Enums.ParseMode.MarkdownV2) {
                 message = message.Replace("-", "\\-").Replace(".", "\\.").Replace("(", "\\(").Replace(")", "\\)").Replace("=", "\\=")
                     .Replace(">", "\\>").Replace("!", "\\!").Replace("|", "\\|").Replace("#", "\\#").Replace("XBT", "BTC");
+            }
+
+            if (NextMsgIsNew) {  // don't edit the message, instead post a new one
+                NextMsgIsNew = false;
+                editMessage = false;
             }
 
             if (editMessage) LatestMessageID = (await botClient.EditMessageTextAsync(Properties.Settings.Default.TelegramChatID, LatestMessageID, message, pMode, false, buttons)).MessageId;
@@ -782,6 +817,7 @@ namespace IRTicker
                                 "  Avg price: $" + Utilities.FormatValue(cOrder.AvgPrice.Value, 2) + Environment.NewLine +
                                 "  Volume: " + crypto + ": " + cOrder.Volume.ToString() + Environment.NewLine +
                                 "  Order created: " + cOrder.CreatedTimestampUtc.ToLocalTime());
+                            NextMsgIsNew = true;  // don't edit this message if the next message normally would
                         }
                     }
                 }

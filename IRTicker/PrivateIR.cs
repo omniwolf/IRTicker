@@ -74,18 +74,8 @@ namespace IRTicker {
 
         public Dictionary<string, Account> GetAccounts() {
             lock (pIR_Lock) {
-                try {
-                    //accounts = (IRclient.GetAccounts()).ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
-                    accounts =(IRclient.GetAccounts()).ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
-
-                }
-                catch (Exception ex) {
-                    MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                        ex.Message, "Error - GetAccounts", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return null;
-                }
+                accounts = (IRclient.GetAccounts()).ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
             }
-
             return accounts;
         }
 
@@ -201,8 +191,8 @@ namespace IRTicker {
                     return IRclient.CancelOrder(new Guid(guid));
                 }
                 catch (Exception ex) {
-                    MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                        ex.InnerException.Message, "Error - CancelOrder", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
+                    //    ex.InnerException.Message, "Error - CancelOrder", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     throw ex;
                 }
             }
@@ -426,20 +416,25 @@ namespace IRTicker {
                         if (!rateLimitPlaceOrder.IsCompleted) await rateLimitPlaceOrder;  // if we haven't waited a full second yet, wait.
                         placedOrder = PlaceLimitOrder(crypto, DCE_IR.CurrentSecondaryCurrency,
                             (BaiterBookSide == "Bid" ? OrderType.LimitBid : OrderType.LimitOffer), orderPrice, volume);
-                        if (placedOrder == null) {
+                        /*if (placedOrder == null) {  // i don't think we should have this.  IF the result is somehow null and doesn't throw to the catch block, then just loop and try again.
                             var res = MessageBox.Show("Failed to place the order.  Do you want to cancel market baiter?", "Market Baiter", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                             if (res == DialogResult.Yes) marketBaiterActive = false;
-                        }
+                        }*/
                         //Thread.Sleep(1050 - (Properties.Settings.Default.UITimerFreq + 50));  // an order must be left alive for at least a second or rate limiting will happen
                         rateLimitPlaceOrder = Task.Delay(1001);  // start a timer.  can only try and create a new order after a second has passed
                     }
                     catch (Exception ex) {
-                        Debug.Print("MBAIT: trid to create an order, but it failed: " + ex.Message);
-                        //MessageBox.Show("Error creating market baiter order, cancelling market baiter. Error below." + Environment.NewLine + Environment.NewLine +
-                         //   ex.Message, "Market baiter error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        //marketBaiterActive = false;
+                        Debug.Print("MBAIT: trid to create an order, but it failed.  Will retry.  Error: " + ex.Message);
                     }
-                    IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, /*PrivateIREndPoints.GetAccounts, */PrivateIREndPoints.UpdateOrderBook });
+                    // sholudnt' call the bulkupdate method from here, it should only be called from the UI as it can result in messageboxes, etc.  Also I shouldn't need to cal UpdateOrderBook...
+                    //IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, /*PrivateIREndPoints.GetAccounts, */PrivateIREndPoints.UpdateOrderBook });
+                    try {
+                        Page<BankHistoryOrder> oOrders = GetOpenOrders(crypto, fiat);
+                        IRT.drawOpenOrders(oOrders.Data);
+                    }
+                    catch (Exception ex) {
+                        Debug.Print("MBAIT: failed to pull GetOpenOrders after placing a new order.. error: " + ex.Message);
+                    }
 
                 }
                 else {  // an order is in play
@@ -512,7 +507,15 @@ namespace IRTicker {
                                         //if (bo.VolumeFilled != 0) IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble..."));
 
                                         volume = bo.VolumeOrdered - bo.VolumeFilled;
-                                        IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
+                                        // bulkupdate thingo should only be called from the UI as it can result in messageboxes.  also I think we don't need to call updateOrderBook, there should have already been a new event comet through the websockets that would update it?
+                                        //IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
+                                        try {
+                                            Page<BankHistoryOrder> oOrders = GetOpenOrders(crypto, fiat);
+                                            IRT.drawOpenOrders(oOrders.Data);
+                                        }
+                                        catch (Exception ex) {
+                                            Debug.Print("MBAIT: failed to pull GetOpenOrders after cancelling an order.. error: " + ex.Message);
+                                        }
                                         placedOrder = null;
                                     }
                                     else {

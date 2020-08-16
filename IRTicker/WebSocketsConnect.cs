@@ -152,7 +152,13 @@ namespace IRTicker {
 
                 // next we need to convert this orderbook into a concurrent dictionary of OrderBook_IR objects
                 // so yeah.. the "orderBook" object doesn't really get used anymore.  it's just like a staging area
-                DCEs["IR"].ConvertOrderBook_IR(pair);
+                bool OBPulled = DCEs["IR"].ConvertOrderBook_IR(pair);
+
+                if (!OBPulled) {  // if the ob conversion process failed, then try again
+                    Debug.Print(DateTime.Now + " - IR OB conversion (" + crypto + "-" + fiat + ") failed for some reason, trying again.");
+                    subscribe_unsubscribe_new("IR", true, crypto, fiat);
+                    return;
+                }
 
                 Debug.Print(DateTime.Now.ToString() + " IR OB " + pair + " pulled, " + (DCEs["IR"].orderBuffer_IR.ContainsKey(pair) ? DCEs["IR"].orderBuffer_IR[pair].Count.ToString() : "n/a") + " ordes in the buffer");
 

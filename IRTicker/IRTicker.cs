@@ -1157,7 +1157,11 @@ namespace IRTicker {
                                     pIR.GetClosedOrders(primaryCode, fiat);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
                                 }
                                 catch (Exception ex) {
-                                    Debug.Print(DateTime.Now + " - In BGW thread loop, trying to pull closed orders, but it failed: " + ex.Message);
+                                    string errorMsg = ex.Message;
+                                    if (ex.InnerException != null) {
+                                        errorMsg = ex.InnerException.Message;
+                                    }
+                                    Debug.Print(DateTime.Now + " - In BGW thread loop, trying to pull closed orders, but it failed: " + errorMsg);
                                 }
                                 // if i want to get fancy i can call reportProgress and drawClosedOrders()...
 
@@ -2103,7 +2107,12 @@ namespace IRTicker {
                     Properties.Settings.Default.TelegramAPIToken = TelegramBotAPIToken_textBox.Text;
 
                     Properties.Settings.Default.Save();
-                    if (pIR != null) System.Threading.Tasks.Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetAccounts }));
+                    try {
+                        if (pIR != null) System.Threading.Tasks.Task.Run(() => pIR.GetAccounts());
+                    }
+                    catch (Exception ex) {
+                        Debug.Print("Tried to getAccounts on closing the settings screen, but it failed.  oh well: " + ex.Message);
+                    }
                     LastPanel.Visible = true;
                     Settings.Visible = false;
                 }

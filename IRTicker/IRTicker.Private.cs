@@ -18,13 +18,20 @@ namespace IRTicker {
 
         private string AccountSelectedCrypto = "XBT";
         private Task updateOBTask;
+        private bool IRAccountsButtonJustClicked = true;  // true if the use has just clicked the IR Accounts button.  If true and GetAccounts fails, then we close the IR Accounts panel and head back to the Main panel.  If false and GetAccounts fails, we just do it silently
 
         private void InitialiseAccountsPanel() {
             AccountOrderVolume_textbox.Enabled = true;
             AccountLimitPrice_textbox.Enabled = true;
             IRAccount_panel.Visible = true;
             Main.Visible = false;
-            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAddress, PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
+            IRAccountsButtonJustClicked = true;
+            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { 
+                PrivateIR.PrivateIREndPoints.GetAccounts, 
+                PrivateIR.PrivateIREndPoints.GetOpenOrders, 
+                PrivateIR.PrivateIREndPoints.GetClosedOrders, 
+                PrivateIR.PrivateIREndPoints.GetAddress, 
+                PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
         private void DrawIRAccounts(Dictionary<string, Account> irAccounts) {
@@ -62,29 +69,46 @@ namespace IRTicker {
         }
 
         // runs these network calls in order
-        // this method should only be called on a non-UI thread
+        // this method should only be called from the UI because it can surface messageboxes
+        // eg baiter and telegram should never use this.
         private void bulkSequentialAPICalls(List<PrivateIR.PrivateIREndPoints> endPoints, decimal volume = 0, decimal price = 0, string orderGuid = "") {
 
             foreach (PrivateIR.PrivateIREndPoints endP in endPoints) {
                 if (endP == PrivateIR.PrivateIREndPoints.GetAccounts) {
-                    //Task<Dictionary<string, Account>> irAccountsTask = new Task<Dictionary<string, Account>>(pIR.GetAccounts);
-                    //irAccountsTask.Start();
-                    //Dictionary<string, Account> irAccounts = await irAccountsTask;
-                    //Debug.Print("PIR: about to getAccounts");
-                    Dictionary<string, Account> irAccounts = pIR.GetAccounts();
+
+                    Dictionary<string, Account> irAccounts;
+                    try {
+                        irAccounts = pIR.GetAccounts();
+                    }
+                    catch (Exception ex) {
+                        Debug.Print(DateTime.Now + " - couldn't pull getAccounts pIR because: " + ex.Message);
+                        irAccounts = null;
+                        MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
+                            ex.Message, "Error - GetAccounts", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                     //Debug.Print("PIR: gotACcounts");
-                    if (irAccounts == null) {
+                    if ((irAccounts == null) && IRAccountsButtonJustClicked) {
                         Debug.Print(DateTime.Now + " - there was an error, closing the accounts page");
                         synchronizationContext.Post(new SendOrPostCallback(o => {
                             Main.Visible = true;
                             IRAccount_panel.Visible = false;
                         }), null);
-                        return;
+                        return;  // close the IRAccounts panel
                     }
+                    else if ((irAccounts == null) && !IRAccountsButtonJustClicked) continue;
                     DrawIRAccounts(irAccounts);
+                    IRAccountsButtonJustClicked = false;  // we have now run this successfully once after opening the panel, can set this to false.
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.GetAddress) {
-                    DigitalCurrencyDepositAddress addressData = pIR.GetDepositAddress(AccountSelectedCrypto);
+
+                    DigitalCurrencyDepositAddress addressData;
+                    try {
+                        addressData = pIR.GetDepositAddress(AccountSelectedCrypto);
+                    }
+                    catch (Exception ex) {
+                        Debug.Print(DateTime.Now + " - failed to call GetDepositAddress properly: " + ex.Message);
+                        continue;
+                    }
                     drawDepositAddress(addressData);
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.CheckAddress) {
@@ -596,11 +620,11 @@ namespace IRTicker {
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
-        public void updateUIFromMarketBaiter(List<PrivateIR.PrivateIREndPoints> endPoints) {
+        //public void updateUIFromMarketBaiter(List<PrivateIR.PrivateIREndPoints> endPoints) {
             //synchronizationContext.Post(new SendOrPostCallback(o => {
-                bulkSequentialAPICalls(/*(List<PrivateIR.PrivateIREndPoints>)o*/endPoints);  // we are in the market baiter htread here, stay here
+       //         bulkSequentialAPICalls(/*(List<PrivateIR.PrivateIREndPoints>)o*/endPoints);  // we are in the market baiter htread here, stay here
             //}), endPoints);
-        }
+        //}
 
         public void notificationFromMarketBaiter(Tuple<string, string> notifText, bool sendToTelegram = false) {
             synchronizationContext.Post(new SendOrPostCallback(o => {
