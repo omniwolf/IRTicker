@@ -24,8 +24,8 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Loading...");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("Loading...");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
@@ -4235,12 +4235,14 @@
             // 
             // SwitchOrderBookSide_button
             // 
+            this.SwitchOrderBookSide_button.BackColor = System.Drawing.Color.White;
+            this.SwitchOrderBookSide_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SwitchOrderBookSide_button.Location = new System.Drawing.Point(499, 114);
             this.SwitchOrderBookSide_button.Name = "SwitchOrderBookSide_button";
             this.SwitchOrderBookSide_button.Size = new System.Drawing.Size(77, 24);
             this.SwitchOrderBookSide_button.TabIndex = 16;
             this.SwitchOrderBookSide_button.Text = "Switch sides";
-            this.SwitchOrderBookSide_button.UseVisualStyleBackColor = true;
+            this.SwitchOrderBookSide_button.UseVisualStyleBackColor = false;
             this.SwitchOrderBookSide_button.Click += new System.EventHandler(this.SwitchOrderBookSide_button_Click);
             // 
             // AccountOrderType_listbox
@@ -4282,7 +4284,7 @@
             this.AccountOpenOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountOpenOrders_listview.HideSelection = false;
             this.AccountOpenOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem5});
+            listViewItem11});
             this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountOpenOrders_listview.MultiSelect = false;
             this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";
@@ -4348,7 +4350,7 @@
             this.AccountClosedOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountClosedOrders_listview.HideSelection = false;
             this.AccountClosedOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem6});
+            listViewItem12});
             this.AccountClosedOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountClosedOrders_listview.MultiSelect = false;
             this.AccountClosedOrders_listview.Name = "AccountClosedOrders_listview";
@@ -4411,6 +4413,7 @@
             // AccountOrders_listview
             // 
             this.AccountOrders_listview.AllowColumnReorder = true;
+            this.AccountOrders_listview.BackColor = System.Drawing.Color.PeachPuff;
             this.AccountOrders_listview.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.OrderNumber,
             this.OrderPrice,
@@ -4457,12 +4460,14 @@
             // 
             // AccountPlaceOrder_button
             // 
+            this.AccountPlaceOrder_button.BackColor = System.Drawing.Color.White;
+            this.AccountPlaceOrder_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.AccountPlaceOrder_button.Location = new System.Drawing.Point(282, 65);
             this.AccountPlaceOrder_button.Name = "AccountPlaceOrder_button";
             this.AccountPlaceOrder_button.Size = new System.Drawing.Size(294, 39);
             this.AccountPlaceOrder_button.TabIndex = 8;
             this.AccountPlaceOrder_button.Text = "Buy now";
-            this.AccountPlaceOrder_button.UseVisualStyleBackColor = true;
+            this.AccountPlaceOrder_button.UseVisualStyleBackColor = false;
             this.AccountPlaceOrder_button.Click += new System.EventHandler(this.AccountPlaceOrder_button_Click);
             // 
             // AccountLimitPrice_label

@@ -52,6 +52,7 @@ namespace IRTicker {
                     if (UIControls_Dict["IR"].Label_Dict.ContainsKey(acc.Key + "_Account_Total")) {
                         UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Total"].Text =
                             Utilities.FormatValue(acc.Value.AvailableBalance);
+                        IRTickerTT_generic.SetToolTip(UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Total"], acc.Value.AvailableBalance.ToString());
                     }
                     else {
                         Debug.Print(DateTime.Now + " new currency?? - " + acc.Key);
@@ -474,12 +475,14 @@ namespace IRTicker {
                     AccountOrders_listview.Columns[1].Text = "Offers";
                     pIR.OrderBookSide = "Offer";
                     pIR.BuySell = "Buy";
+                    AccountOrders_listview.BackColor = Color.PeachPuff;
                 }
                 else {
                     AccountPlaceOrder_button.Text = "Sell now";
                     AccountOrders_listview.Columns[1].Text = "Bids";
                     pIR.OrderBookSide = "Bid";
                     pIR.BuySell = "Sell";
+                    AccountOrders_listview.BackColor = Color.Thistle;
                 }
             }
             else {  // baitin'
@@ -488,11 +491,13 @@ namespace IRTicker {
                     pIR.OrderBookSide = "Bid";
                     AccountOrders_listview.Columns[1].Text = "Bids";
                     pIR.BuySell = "Buy";
+                    AccountOrders_listview.BackColor = Color.Thistle;
                 }
                 else {
                     pIR.OrderBookSide = "Offer";
                     AccountOrders_listview.Columns[1].Text = "Offers";
                     pIR.BuySell = "Sell";
+                    AccountOrders_listview.BackColor = Color.PeachPuff;
                 }
                 Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
             }
@@ -712,10 +717,12 @@ namespace IRTicker {
             if (pIR.OrderBookSide == "Bid") {
                 pIR.OrderBookSide = "Offer";
                 AccountOrders_listview.Columns[1].Text = "Offers";
+                AccountOrders_listview.BackColor = Color.PeachPuff;
             }
             else {
                 pIR.OrderBookSide = "Bid";
                 AccountOrders_listview.Columns[1].Text = "Bids";
+                AccountOrders_listview.BackColor = Color.Thistle;
             }
 
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
