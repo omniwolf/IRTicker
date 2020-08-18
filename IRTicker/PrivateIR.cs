@@ -551,7 +551,7 @@ namespace IRTicker {
                             if (closedO.OrderGuid == placedOrder.OrderGuid) {
                                 if (closedO.Status == OrderStatus.Filled) {
                                     Debug.Print("MBAIT: our order got filled.  sweet.");
-                                    IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Order filled!"), true);
+                                    IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter 🎣", crypto.ToUpper() + "-" + fiat.ToUpper() + " order filled!"), true);
                                     placedOrder = null;
                                     marketBaiterActive = false;
                                     break;  // closed orders foreach

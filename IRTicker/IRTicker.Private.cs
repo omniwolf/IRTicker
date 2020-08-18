@@ -640,7 +640,7 @@ namespace IRTicker {
             if (sendToTelegram  && (TGBot != null)) {
                 synchronizationContext.Post(new SendOrPostCallback(o => {
                     Tuple<string, string> notif = (Tuple<string, string>)o;
-                    TGBot.SendMessage("*" + notif.Item1 + "*: " + notif.Item2);
+                    TGBot.SendMessage("*" + notif.Item1 + "*" + Environment.NewLine + "  " + notif.Item2);
                 }), notifText);
             }
         }
