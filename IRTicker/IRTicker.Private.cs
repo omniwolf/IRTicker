@@ -456,10 +456,12 @@ namespace IRTicker {
                 if (AccountBuySell_listbox.SelectedIndex == 0) {
                     pIR.OrderBookSide = "Bid";
                     AccountOrders_listview.Columns[1].Text = "Bids";
+                    AccountOrders_listview.BackColor = Color.Thistle;
                 }
                 else {
                     pIR.OrderBookSide = "Offer";
                     AccountOrders_listview.Columns[1].Text = "Offers";
+                    AccountOrders_listview.BackColor = Color.PeachPuff;
                 }
                 pIR.OrderTypeStr = "Limit";
                 Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
