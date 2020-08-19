@@ -95,7 +95,7 @@ namespace IRTicker
                     },
                     new InlineKeyboardButton[] {
                         InlineKeyboardButton.WithCallbackData("Market buy BTC/AUD", "main-market-buy-btc"),
-                        InlineKeyboardButton.WithCallbackData("Cancel order", "main-cancel")
+                        InlineKeyboardButton.WithCallbackData("View closed BTC/AUD orders", "main-closed-btc")
                     } 
                 }
                 );
@@ -173,24 +173,39 @@ namespace IRTicker
                             SendMessage("`Cancel Order` :: ❓ Specify which pair (eg BTC-AUD):", buttons: CommonPairsButtons(), editMessage: true);
                             TGstate.commandSubStage = 1;
                             break;
+                        case "main-closed-btc":
+                            TGstate.commandChosen = CommandChosen.ViewClosed;
+                            TGstate.commandSubStage = 1;
+                            ViewClosed_PairSub("BTC-AUD", true);
+                            break;
                         case "pair-btcaud":
                             if (TGstate.commandChosen == CommandChosen.MarketOrder) MarketOrder_SubStage1("BTC-AUD", true);
                             else if (TGstate.commandChosen == CommandChosen.CancelOrder) CancelOrder_Sub("BTC-AUD", true);
+                            else if (TGstate.commandChosen == CommandChosen.ViewClosed) ViewClosed_PairSub("BTC-AUD", true);
                             break;
                         case "pair-ethaud":
                             if (TGstate.commandChosen == CommandChosen.MarketOrder) MarketOrder_SubStage1("ETH-AUD", true);
-                            else if (TGstate.commandChosen == CommandChosen.CancelOrder) CancelOrder_Sub("ETH-AUD", true); break;
+                            else if (TGstate.commandChosen == CommandChosen.CancelOrder) CancelOrder_Sub("ETH-AUD", true);
+                            else if (TGstate.commandChosen == CommandChosen.ViewClosed) ViewClosed_PairSub("ETH-AUD", true);
+                            break;
                         case "pair-xrpaud":
                             if (TGstate.commandChosen == CommandChosen.MarketOrder) MarketOrder_SubStage1("XRP-AUD", true);
-                            else if (TGstate.commandChosen == CommandChosen.CancelOrder) CancelOrder_Sub("XRP-AUD", true); break;
+                            else if (TGstate.commandChosen == CommandChosen.CancelOrder) CancelOrder_Sub("XRP-AUD", true);
+                            else if (TGstate.commandChosen == CommandChosen.ViewClosed) ViewClosed_PairSub("XRP-AUD", true);
+                            break;
                         case "pair-usdtaud":
                             if (TGstate.commandChosen == CommandChosen.MarketOrder) MarketOrder_SubStage1("USDT-AUD", true);
-                            else if (TGstate.commandChosen == CommandChosen.CancelOrder) CancelOrder_Sub("USDT-AUD", true); break;
+                            else if (TGstate.commandChosen == CommandChosen.CancelOrder) CancelOrder_Sub("USDT-AUD", true);
+                            else if (TGstate.commandChosen == CommandChosen.ViewClosed) ViewClosed_PairSub("USDT-AUD", true);
+                            break;
                         case "buy-order":
                             MarketBuy_Sub(true);
                             break;
                         case "sell-order":
                             MarketSell_Sub(true);
+                            break;
+                        case "view-closed":
+                            ViewClosed_Sub();
                             break;
                         case "yes":
                             switch (TGstate.commandChosen) {
@@ -354,6 +369,7 @@ namespace IRTicker
                                             "*Cancel*            => Cancel an open order" + Environment.NewLine +
                                             "*Baiter*             => Market baiter menu" + Environment.NewLine +
                                             "*Account*         => Currency balances" + Environment.NewLine + Environment.NewLine +
+                                            "*Closed*         => View closed orders" + Environment.NewLine + Environment.NewLine +
                                             "💡 If unique, the first word can be used instead of the whole command, eg 'market'" + Environment.NewLine +
                                             "💡 When entering a pair, you can be lazy and enter 'btc aud' or 'btcaud' rather than 'BTC-AUD'" + Environment.NewLine +
                                             "💡 At any time type 'quit' to return to the top menu");
@@ -408,6 +424,10 @@ namespace IRTicker
 
                                     case "account":
                                         AccountBalances_Sub();
+                                        break;
+
+                                    case "closed":
+                                        ViewClosed_Sub();
                                         break;
 
                                     default:
@@ -519,6 +539,10 @@ namespace IRTicker
                                 }
                             }
                             break;
+
+                        case CommandChosen.ViewClosed:
+                            if (TGstate.commandSubStage == 1) ViewClosed_PairSub(message.Text);
+                            break;
                     }
                 }
             }
@@ -531,6 +555,65 @@ namespace IRTicker
             }
         }
 
+        private void ViewClosed_Sub() {
+            TGstate.commandChosen = CommandChosen.ViewClosed;
+            TGstate.commandSubStage = 1;
+            SendMessage("`View Closed Orders` :: ❓ Specify which pair (eg BTC-AUD):", buttons: CommonPairsButtons(), editMessage: true);
+        }
+
+        private async void ViewClosed_PairSub(string message, bool editMsg = false) {
+
+            Tuple<string, string> pairTup;
+            // if we failed because of nonces, but we have a legit pair, we can retry (if they send 'r')
+            if ((message.ToUpper() == "R") && (!string.IsNullOrEmpty(TGstate.ChosenPair.Item1)) && (!string.IsNullOrEmpty(TGstate.ChosenPair.Item1))) {
+                pairTup = TGstate.ChosenPair;
+            }
+            else {
+                pairTup = verifyChosenPair(message, "View Closed Orders");
+            }
+
+            if (!string.IsNullOrEmpty(pairTup.Item1) && !string.IsNullOrEmpty(pairTup.Item2)) {
+                TGstate.ChosenPair = pairTup;
+                // list the closed orders
+                Page<BankHistoryOrder> closedOs;
+                try {
+                    closedOs = pIR.GetClosedOrders(pairTup.Item1, pairTup.Item2);
+                }
+                catch (Exception ex) {
+                    Debug.Print("TGB: failed to pull closed orders due to: " + ex.Message);
+                    SendMessage("`View Closed Orders` :: ⚠️ Sorry - failed to pull open closed for the following reason:" + Environment.NewLine +
+                        ex.Message + Environment.NewLine + Environment.NewLine +
+                        "Please enter the pair again, or send 'r' to retry with " + pairTup.Item1 + "-" + pairTup.Item2 + ".", editMessage: editMsg);
+                    return;
+                }
+
+                if (closedOs.Data.Count() > 0) {
+
+                    int count = 1;
+                    string masterStr = "`View Closed Orders` :: " + pairTup.Item1.ToUpper() + "-" + pairTup.Item2.ToUpper() + Environment.NewLine;
+                    foreach (BankHistoryOrder bho in closedOs.Data) {
+                        masterStr += Environment.NewLine + "  *" + count + "*. " + (bho.OrderType == OrderType.LimitBid ? "Limid bid  " : "Limit offer") +
+                            " | Price: $" + Utilities.FormatValue(bho.AvgPrice.Value, 2) + Environment.NewLine +
+                            "  Original vol: " + pairTup.Item1.ToUpper() + " " + bho.Original.Volume.ToString() +
+                            (bho.Outstanding.HasValue ? Environment.NewLine + "  Outstanding vol: " + pairTup.Item1.ToUpper() + " " + bho.Outstanding.Value.ToString() : "") + Environment.NewLine +
+                            "  Date created: " + bho.CreatedTimestampUtc.ToLocalTime() + Environment.NewLine;
+                        TGstate.openOrdersToList.Add(count, bho);
+                        count++;
+                        if (count > 10) break;
+                    }
+
+                    await SendMessage(masterStr, buttons: QuitToMain(), editMessage: editMsg);
+                }
+                else {
+                    await SendMessage("`View Closed Orders` :: No open closed orders to view for " + pairTup.Item1 + "-" + pairTup.Item2 + ".  Exiting view closed orders menu.");
+                }
+                TGstate.ResetMenu();
+            }
+            else {
+                SendMessage("`View Closed Orders` :: ⚠️ " + pairTup.Item1 + "-" + pairTup.Item2 + " pair doesn't exist. Try again or 'quit' to exit.", buttons: QuitToMain(), editMessage: editMsg);
+            }
+        }
+
         private async void CancelOrder_Sub(string message, bool editMsg = false) {
             Tuple<string, string> pairTup;
             // if we failed because of nonces, but we have a legit pair, we can retry (if they send 'r')
@@ -538,13 +621,13 @@ namespace IRTicker
                 pairTup = TGstate.ChosenPair;
             }
             else {
-                pairTup = verifyChosenPair(message, "Cancel order");
+                pairTup = verifyChosenPair(message, "Cancel Order");
             }
 
             if (!string.IsNullOrEmpty(pairTup.Item1) && !string.IsNullOrEmpty(pairTup.Item2)) {
                 TGstate.ChosenPair = pairTup;
                 // list the open orders
-                Page<BankHistoryOrder> openOs = new Page<BankHistoryOrder>();
+                Page<BankHistoryOrder> openOs;
                 try {
                     openOs = pIR.GetOpenOrders(pairTup.Item1, pairTup.Item2);
                 }
@@ -828,7 +911,7 @@ namespace IRTicker
         }
 
         enum CommandChosen {
-            Forget, CancelOrder, Nothing, StopMarketBaiter, MarketOrder
+            Forget, CancelOrder, Nothing, StopMarketBaiter, MarketOrder, ViewClosed
         }
 
         // this class holds the state of the bot between commands
