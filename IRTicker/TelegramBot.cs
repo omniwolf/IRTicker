@@ -609,9 +609,6 @@ namespace IRTicker
                 }
                 TGstate.ResetMenu();
             }
-            else {
-                SendMessage("`View Closed Orders` :: ⚠️ " + pairTup.Item1 + "-" + pairTup.Item2 + " pair doesn't exist. Try again or 'quit' to exit.", buttons: QuitToMain(), editMessage: editMsg);
-            }
         }
 
         private async void CancelOrder_Sub(string message, bool editMsg = false) {
@@ -647,9 +644,6 @@ namespace IRTicker
                     await SendMessage("`Cancel Order` :: No open orders to cancel for pair " + pairTup.Item1 + "-" + pairTup.Item2 + ".  Exiting cancel order menu.");
                     TGstate.ResetMenu();
                 }
-            }
-            else {
-                SendMessage("`Cancel Order` :: ⚠️ " + pairTup.Item1 + "-" + pairTup.Item2 + " pair doesn't exist. Try again or 'quit' to exit.", buttons: QuitToMain(), editMessage: editMsg);
             }
         }
 
@@ -788,31 +782,32 @@ namespace IRTicker
             string fiat = "";
 
             pair = pair.Trim();
+            string pair2 = pair;
 
             // let's see if we can massage the string into the right format
-            if (pair.IndexOf("-") == -1) {
-                if (pair.IndexOf(" ") == -1) {
+            if (pair2.IndexOf("-") == -1) {
+                if (pair2.IndexOf(" ") == -1) {
                     // try and solve for crypto and fiat run together eg BTCAUD
-                    if (pair.Length == 6) {  // assuming something like BTCAUD
-                        pair = pair.Substring(0, 3) + "-" + pair.Substring(3, 3);
+                    if (pair2.Length == 6) {  // assuming something like BTCAUD
+                        pair2 = pair2.Substring(0, 3) + "-" + pair2.Substring(3, 3);
                     }
-                    else if (pair.Length == 7) {  // assuming something like USDTAUD
-                        pair = pair.Substring(0, 4) + "-" + pair.Substring(4, 3);
+                    else if (pair2.Length == 7) {  // assuming something like USDTAUD
+                        pair2 = pair2.Substring(0, 4) + "-" + pair2.Substring(4, 3);
                     }
                 }
                 else {  // ok we have a space, so maybe something liek "BTC AUD"
-                    pair = pair.Replace(" ", "-");
+                    pair2 = pair2.Replace(" ", "-");
                 }
             }
 
             // need to consider whether we sanitise the pair string before sending it to SplitPair(), or we upgrade SplitPair to deal with shitty strings
-            Tuple<string, string> pairTup = Utilities.SplitPair(pair.ToUpper());
+            Tuple<string, string> pairTup = Utilities.SplitPair(pair2.ToUpper());
             if (pairTup.Item1 == "" || pairTup.Item2 == "") {
                 SendMessage("`" + subMenu + "` :: ⚠️ Couldn't parse the pair, please try again or 'quit' to exit this menu.");
                 return new Tuple<string, string>("", "");
             }
 
-            string pairInternal = pair.ToUpper();
+            string pairInternal = pair2.ToUpper();
             pairInternal = pairInternal.Replace("BTC", "XBT").ToUpper();
 
             foreach (string _crypto in DCE_IR.PrimaryCurrencyList) {
@@ -827,7 +822,7 @@ namespace IRTicker
                 if (crypto != "") break;
             }
             if (crypto == "" || fiat == "") {
-                SendMessage("`" + subMenu + "` :: ⚠️ This pair doesn't exist, please try again or 'quit' to exit this menu.");
+                SendMessage("`" + subMenu + "` :: ⚠️ This pair (" + pair  + ") doesn't exist, please try again or 'quit' to exit this menu.");
                 return new Tuple<string, string>("", "");
             }
             return new Tuple<string, string>(crypto, fiat);

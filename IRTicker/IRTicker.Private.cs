@@ -620,6 +620,7 @@ namespace IRTicker {
 
             await Task.Run(() => pIR.marketBaiterLoopAsync(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, volume, limitPrice));
 
+            ValidateLimitOrder();
             AccountBuySell_listbox.Enabled = true;
             AccountOrderType_listbox.Enabled = true;
             AccountPlaceOrder_button.Text = "Start baitin'";
@@ -649,6 +650,7 @@ namespace IRTicker {
 
         // this method checks the limit price, and if it would make the order a market order, then highlight buttons and shit
         private void ValidateLimitOrder() {
+            if (pIR.marketBaiterActive) return;  // we don't want to really look at anything if baitin'
             decimal price = decimal.Parse(AccountLimitPrice_textbox.Text);
             if (AccountOrders_listview.Items.Count > 0) {
                 if (AccountBuySell_listbox.SelectedIndex == 0) {  // buy
