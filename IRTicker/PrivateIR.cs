@@ -34,8 +34,8 @@ namespace IRTicker {
         public string Crypto = "XBT";
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBids;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
-        public ConcurrentDictionary<Guid, BankHistoryOrder> openOrders = new ConcurrentDictionary<Guid, BankHistoryOrder>();
-
+        private ConcurrentBag<Guid> openOrders = new ConcurrentBag<Guid>();
+        
         public bool marketBaiterActive = false;
 
         private DCE DCE_IR;
@@ -114,6 +114,7 @@ namespace IRTicker {
             lock (pIR_Lock) {
                 try {
                     orderResult = IRclient.PlaceLimitOrder(enumCrypto, enumFiat, orderType.Value, price, volume);
+                    openOrders.Add(orderResult.OrderGuid);
                 }
                 catch (Exception ex) {
                     MessageBox.Show("API error: " + ex.InnerException.Message, "Limit Order Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -146,10 +147,10 @@ namespace IRTicker {
                 openOs = IRclient.GetOpenOrders(enumCrypto, enumFiat, 1, 7);
             }
 
-            openOrders.Clear(); // clear the old one
+            openOrders = new ConcurrentBag<Guid>(); // clear the old one
             foreach (BankHistoryOrder order in openOs.Data) {
                 if ((order.Status != OrderStatus.Open) && (order.Status != OrderStatus.PartiallyFilled)) continue;
-                openOrders.TryAdd(order.OrderGuid, order);
+                openOrders.Add(order.OrderGuid);
             }
 
             return openOs;
@@ -304,7 +305,7 @@ namespace IRTicker {
                         }
                     }
 
-                    if (openOrders.ContainsKey(new Guid(order.Key))) {
+                    if (openOrders.Contains(new Guid(order.Key))) {
                         includesMyOrder = true;
                     }
                 }
@@ -367,7 +368,7 @@ namespace IRTicker {
                     bool OurOrderAtTop = false;  // let's try and discover if the best current order is a separate order made by this acccount.  If so, pretend it doesn't exist
                     foreach (var openO in openOrders) {
                         foreach (var topOrder in baiterBook.First().Value) {
-                            if (openO.Key.ToString() == topOrder.Key) {
+                            if (openO.ToString() == topOrder.Key) {
                                 OurOrderAtTop = true;
                                 Debug.Print("MBAIT: we have an order at the top already, let's try and ignore it - $" + topOrder.Value.Price);
                                 break;
@@ -452,7 +453,7 @@ namespace IRTicker {
                                 bool continueBaiterLoop = false;
                                 foreach (KeyValuePair<string, DCE.OrderBook_IR> orderAtPrice in pricePoint.Value) {
                                     foreach (var openO in openOrders) {
-                                        if ((orderAtPrice.Key == openO.Key.ToString()) && (orderAtPrice.Key != placedOrder.OrderGuid.ToString())) {  // it's ours, but not the bait order
+                                        if ((orderAtPrice.Key == openO.ToString()) && (orderAtPrice.Key != placedOrder.OrderGuid.ToString())) {  // it's ours, but not the bait order
                                             continueBaiterLoop = true;  // the order at the spread is ours, let's not compete against it.
                                             //Debug.Print("MBAIT: It appears an order at price $" + pricePoint.Key + " is our own.  Ignore and move to the next price level");
                                             break;
@@ -474,7 +475,7 @@ namespace IRTicker {
                                     }
                                     foreach (KeyValuePair<string, DCE.OrderBook_IR> orderAtPrice in pricePoint.Value) {
                                         foreach (var openO in openOrders) {
-                                            if ((orderAtPrice.Key == openO.Key.ToString()) && (orderAtPrice.Key != placedOrder.OrderGuid.ToString())) {  // it's ours, but not the bait order
+                                            if ((orderAtPrice.Key == openO.ToString()) && (orderAtPrice.Key != placedOrder.OrderGuid.ToString())) {  // it's ours, but not the bait order
                                                 continueBaiterLoop = true;  // the order at the spread is ours, let's not compete against it.
                                                 Debug.Print("MBAIT: After pulling new open orders, it appears an order at price $" + pricePoint.Key + " is our own.  Ignore and move to the next price level");
                                                 break;
