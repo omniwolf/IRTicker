@@ -594,15 +594,16 @@ namespace IRTicker
                     foreach (BankHistoryOrder bho in closedOs.Data) {
                         masterStr += Environment.NewLine + "  *" + count + "*. " + (bho.OrderType == OrderType.LimitBid ? "Limid bid  " : "Limit offer") +
                             " | Price: $" + Utilities.FormatValue(bho.AvgPrice.Value, 2) + Environment.NewLine +
-                            "  Original vol: " + pairTup.Item1.ToUpper() + " " + bho.Original.Volume.ToString() +
-                            (bho.Outstanding.HasValue ? Environment.NewLine + "  Outstanding vol: " + pairTup.Item1.ToUpper() + " " + bho.Outstanding.Value.ToString() : "") + Environment.NewLine +
+                            "  Vol: " + pairTup.Item1.ToUpper() + " " + (bho.Outstanding.HasValue ? (bho.Volume - bho.Outstanding.Value).ToString() : bho.Volume.ToString()) + Environment.NewLine +
+                            ((bho.Outstanding.HasValue && (bho.Outstanding.Value > 0)) ? "  Outstanding vol: " + pairTup.Item1.ToUpper() + " " + bho.Outstanding.Value.ToString() + Environment.NewLine : "") +
+                            "  Value: $" + Utilities.FormatValue(bho.Value.Value, 2) + Environment.NewLine +
                             "  Date created: " + bho.CreatedTimestampUtc.ToLocalTime() + Environment.NewLine;
                         TGstate.openOrdersToList.Add(count, bho);
                         count++;
                         if (count > 10) break;
                     }
 
-                    await SendMessage(masterStr, buttons: QuitToMain(), editMessage: editMsg);
+                    await SendMessage(masterStr, editMessage: editMsg);
                 }
                 else {
                     await SendMessage("`View Closed Orders` :: No open closed orders to view for " + pairTup.Item1 + "-" + pairTup.Item2 + ".  Exiting view closed orders menu.");
