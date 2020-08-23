@@ -34,6 +34,7 @@ namespace IRTicker
         TelegramState TGstate;
         int LatestMessageID;
         bool NextMsgIsNew = false;  // set to true to disable the edit functionality for the next message (eg when an async message has come through like the order filled message)
+        private string bTCMemoji = "";
 
         public ConcurrentDictionary<string, bool> closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
         private ConcurrentDictionary<string, List<Guid>> notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();
@@ -85,6 +86,18 @@ namespace IRTicker
         public void StopBot() {
             botClient.StopReceiving();
         }
+
+        public string BTCMemoji {
+            get {
+                return bTCMemoji;
+            }
+            set {
+                bTCMemoji = value;
+                BTCMemojiLastSet = DateTime.Now;
+            }
+        }
+
+        private DateTime BTCMemojiLastSet { get; set; }
 
         public static InlineKeyboardMarkup MainMenuButtons() {
             return new InlineKeyboardMarkup(
@@ -592,9 +605,10 @@ namespace IRTicker
                     int count = 1;
                     string masterStr = "`View Closed Orders` :: " + pairTup.Item1.ToUpper() + "-" + pairTup.Item2.ToUpper() + Environment.NewLine;
                     foreach (BankHistoryOrder bho in closedOs.Data) {
-                        masterStr += Environment.NewLine + "  *" + count + "*. " + (bho.OrderType == OrderType.LimitBid ? "Limid bid  " : "Limit offer") +
+                        if (bho.Status == OrderStatus.Cancelled) continue;
+                        masterStr += Environment.NewLine + "  *" + count + "*. " + (bho.OrderType == OrderType.LimitBid ? "Limit bid  " : "Limit offer") +
                             " | Price: $" + Utilities.FormatValue(bho.AvgPrice.Value, 2) + Environment.NewLine +
-                            "  Original vol: " + pairTup.Item1.ToUpper() + " " + bho.Original.Volume.ToString() +
+                            "  Vol: " + pairTup.Item1.ToUpper() + " " + bho.Volume.ToString() +
                             (bho.Outstanding.HasValue ? Environment.NewLine + "  Outstanding vol: " + pairTup.Item1.ToUpper() + " " + bho.Outstanding.Value.ToString() : "") + Environment.NewLine +
                             "  Date created: " + bho.CreatedTimestampUtc.ToLocalTime() + Environment.NewLine;
                         TGstate.openOrdersToList.Add(count, bho);
@@ -602,7 +616,7 @@ namespace IRTicker
                         if (count > 10) break;
                     }
 
-                    await SendMessage(masterStr, buttons: QuitToMain(), editMessage: editMsg);
+                    await SendMessage(masterStr, editMessage: editMsg);
                 }
                 else {
                     await SendMessage("`View Closed Orders` :: No open closed orders to view for " + pairTup.Item1 + "-" + pairTup.Item2 + ".  Exiting view closed orders menu.");
@@ -767,7 +781,12 @@ namespace IRTicker
                 string masterStr = "------------------------------" + Environment.NewLine;
                 foreach (KeyValuePair<string, DCE.MarketSummary> mSummary in mSummaries) {
                     if (mSummary.Value.SecondaryCurrencyCode.ToUpper() == fiat) {
-                        masterStr += "  *" + mSummary.Value.PrimaryCurrencyCode + "*: $" + Utilities.FormatValue((mSummary.Value.CurrentLowestOfferPrice + mSummary.Value.CurrentHighestBidPrice) / 2) + " / " + Utilities.FormatValue(mSummary.Value.DayVolumeXbt) + Environment.NewLine;
+                        masterStr += "  *" + mSummary.Value.PrimaryCurrencyCode + "*: $" + Utilities.FormatValue((mSummary.Value.CurrentLowestOfferPrice + mSummary.Value.CurrentHighestBidPrice) / 2) + " / " + Utilities.FormatValue(mSummary.Value.DayVolumeXbt);
+                        // if this is BTC, and the last time we compared IR vol against BTCM was less than a minute ago, and we have a set emoji...
+                        if ((mSummary.Value.PrimaryCurrencyCode.ToUpper() == "XBT") && (BTCMemojiLastSet + TimeSpan.FromMinutes(1) > DateTime.Now) && !string.IsNullOrEmpty(BTCMemoji)) {
+                            masterStr += " " + BTCMemoji;
+                        }
+                        masterStr += Environment.NewLine;
                     }
                 }
                 masterStr += "------------------------------";

@@ -394,7 +394,7 @@ namespace IRTicker {
         }
 
         private void IRAccountClose_button_Click(object sender, EventArgs e) {
-
+            Main.Visible = true;  // this has to be above the UpdateLabel() call, because UpdateLabels() exits if main is invisible.
             // we stopped the UI from updating when the IR Accounts screen was showing, so let's update all the pairs now that we're closing the ACcounts page
             foreach (string dExchange in Exchanges) {
                 UpdateLabels(dExchange);
@@ -402,7 +402,7 @@ namespace IRTicker {
 
             LastPanel = Main;
             IRAccount_panel.Visible = false;
-            Main.Visible = true;
+
             Label CurrentSecondaryCurrecyLabel = UIControls_Dict["IR"].Label_Dict[DCEs["IR"].CurrentSecondaryCurrency + "_Account_Label"];
             CurrentSecondaryCurrecyLabel.ForeColor = Color.Black;
             CurrentSecondaryCurrecyLabel.Font = new Font(CurrentSecondaryCurrecyLabel.Font.FontFamily, 14.25f, FontStyle.Regular);
@@ -450,6 +450,7 @@ namespace IRTicker {
                 AccountLimitPrice_label.Visible = true;
                 AccountLimitPrice_textbox.Visible = true;
                 AccountLimitPrice_textbox_TextChanged(null, null);  // simulate a change in the limit text box to recalculate the order value
+                pIR.OrderTypeStr = "Limit";  // we can now place limit orders while baitin'
 
                 // switch the order book to the side we're dealing in
                 //SwitchOrderBookSide_button.Enabled = false;  // we're now monitoring this side, no changes allowed.
@@ -501,7 +502,15 @@ namespace IRTicker {
                     pIR.BuySell = "Sell";
                     AccountOrders_listview.BackColor = Color.PeachPuff;
                 }
-                Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
+                if (pIR.marketBaiterActive) {
+                    if (AccountBuySell_listbox.SelectedIndex == 0) {
+                        AccountPlaceOrder_button.Text = "Buy now";
+                    }
+                    else {
+                        AccountPlaceOrder_button.Text = "Sell now";
+                    }
+                }
+                    Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
             }
             if ((AccountOrderType_listbox.SelectedIndex > 0) &&  //  limit or bait
                 decimal.TryParse(AccountLimitPrice_textbox.Text, out decimal ignore)) ValidateLimitOrder();
@@ -552,31 +561,37 @@ namespace IRTicker {
             }
         }
 
+        private void StopBaitin_button_Click(object sender, EventArgs e) {
+            if (!pIR.marketBaiterActive) return;  // this button should only be able to be clicked if we're baitin'
+            pIR.marketBaiterActive = false;
+            AccountPlaceOrder_button.Size = new Size(294, 39);
+            StopBaitin_button.Visible = false;
+            StopBaitin_button.Enabled = false;
+        }
+
         private async void AccountPlaceOrder_button_Click(object sender, EventArgs e) {
             string orderSide = "";
             if (AccountBuySell_listbox.SelectedIndex == 0) orderSide = "buy";
             else orderSide = "sell";
 
+            int oType = AccountOrderType_listbox.SelectedIndex;
+            if (pIR.marketBaiterActive) oType = 1;  // if they click this button while baitin', then we treat it like a limit order
+
             DialogResult res = DialogResult.Cancel;
-            if (AccountOrderType_listbox.SelectedIndex < 2) {
+            if ((oType < 2) || pIR.marketBaiterActive) {  // assume limit order if we're baitin' and user tries to place a new order
                 res = MessageBox.Show("Placing " + orderSide + " order!" + Environment.NewLine + Environment.NewLine +
                     "Size of order: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + AccountOrderVolume_textbox.Text + Environment.NewLine +
-                    (AccountOrderType_listbox.SelectedIndex == 0 ? "" : AccountOrderType_listbox.SelectedIndex == 1 ? Utilities.FirstLetterToUpper(orderSide) + " price: $ " + Utilities.FormatValue(decimal.Parse(AccountLimitPrice_textbox.Text)) + Environment.NewLine : "") +
+                    (oType == 0 ? "" : oType == 1 ? Utilities.FirstLetterToUpper(orderSide) + " price: $ " + Utilities.FormatValue(decimal.Parse(AccountLimitPrice_textbox.Text)) + Environment.NewLine : "") +
                     "Estimated value of order: " + AccountEstOrderValue_value.Text,
                     "Confirm order", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
             }
-            else if (AccountOrderType_listbox.SelectedIndex == 2) {  // market baiter
-                if (pIR.marketBaiterActive) {
-                    // cancel it
-                    pIR.marketBaiterActive = false;
-                }
-                else {
-                    res = MessageBox.Show("Start the market baiter strategy?" + Environment.NewLine + Environment.NewLine +
-                        "This will create a " + orderSide + " order that will automatically move with the best order " +
-                        "on the market, never going beyond $ " + Utilities.FormatValue(decimal.Parse(AccountLimitPrice_textbox.Text)) + Environment.NewLine + Environment.NewLine +
-                        "Size of moving order: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + AccountOrderVolume_textbox.Text,
-                        "Confirm market baiter order", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
-                }
+            else if ((oType == 2) && !pIR.marketBaiterActive) {  // start market baiter
+
+                res = MessageBox.Show("Start the market baiter strategy?" + Environment.NewLine + Environment.NewLine +
+                    "This will create a " + orderSide + " order that will automatically move with the best order " +
+                    "on the market, never going beyond $ " + Utilities.FormatValue(decimal.Parse(AccountLimitPrice_textbox.Text)) + Environment.NewLine + Environment.NewLine +
+                    "Size of moving order: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + AccountOrderVolume_textbox.Text,
+                    "Confirm market baiter order", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
             }
 
             if (res == DialogResult.OK) {
@@ -584,24 +599,30 @@ namespace IRTicker {
                 AccountPlaceOrder_button.Enabled = false;
                 AccountOrderVolume_textbox.Enabled = false;
                 AccountLimitPrice_textbox.Enabled = false;
+                AccountPlaceOrder_button.Size = new Size(170, 39);
+                StopBaitin_button.Enabled = true;
+                StopBaitin_button.Visible = true;
+
 
                 // no need to check if we can parse the volume value, we already checked in AccountOrderVolume_textbox_TextChanged
-                if (AccountOrderType_listbox.SelectedIndex == 0) {
+                if (oType == 0) {
                     Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
                     PrivateIR.PrivateIREndPoints.PlaceMarketOrder, PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAccounts }, decimal.Parse(AccountOrderVolume_textbox.Text)));
                 }
-                else if (AccountOrderType_listbox.SelectedIndex == 1)  {  // Limit order
+                else if (oType == 1)  {  // Limit order
                     Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
                     PrivateIR.PrivateIREndPoints.PlaceLimitOrder, PrivateIR.PrivateIREndPoints.GetOpenOrders,
                     PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAccounts }, decimal.Parse(AccountOrderVolume_textbox.Text), decimal.Parse(AccountLimitPrice_textbox.Text)));
                 }
-                else if (AccountOrderType_listbox.SelectedIndex == 2) {  // market baiter
+                else if (oType == 2) {  // market baiter
                     // do something that starts the market baiter
                     if (AccountBuySell_listbox.SelectedIndex == 0) pIR.BaiterBookSide = "Bid";
                     else pIR.BaiterBookSide = "Offer";
                     pIR.marketBaiterActive = true;
-                    AccountPlaceOrder_button.Text = "Stop market baiter and cancel order";
-                    Text = "IR Ticker - Market Baiter Running...";
+                    //AccountPlaceOrder_button.Text = "Stop market baiter and cancel order";
+                    AccountBuySell_listbox_Click(null, null); // simulate changing the buy/sell so we set the button name corretly
+                    ValidateLimitOrder();
+                    Text = "IR Ticker - Market Baiter Running...";  // this is the form title bar
                     AccountBuySell_listbox.Enabled = false;
                     AccountOrderType_listbox.Enabled = false;
                     Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));  // build the baiterBook
@@ -624,6 +645,9 @@ namespace IRTicker {
             AccountBuySell_listbox.Enabled = true;
             AccountOrderType_listbox.Enabled = true;
             AccountPlaceOrder_button.Text = "Start baitin'";
+            AccountPlaceOrder_button.Size = new Size(294, 39);
+            StopBaitin_button.Visible = false;
+            StopBaitin_button.Enabled = false;
             Text = "IR Ticker";
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
@@ -649,32 +673,49 @@ namespace IRTicker {
         }
 
         // this method checks the limit price, and if it would make the order a market order, then highlight buttons and shit
+        // can only be called if AccountOrderType_listbox.SelectedIndex is 1 or 2 (limit or bait)
         private void ValidateLimitOrder() {
-            if (pIR.marketBaiterActive) return;  // we don't want to really look at anything if baitin'
+            //if (pIR.marketBaiterActive) return;  // we don't want to really look at anything if baitin'
             decimal price = decimal.Parse(AccountLimitPrice_textbox.Text);
-            if (AccountOrders_listview.Items.Count > 0) {
+            if (AccountOrders_listview.Items.Count > 0) {  // only continue if we have orders in the OB
                 if (AccountBuySell_listbox.SelectedIndex == 0) {  // buy
                     if (price >= decimal.Parse(AccountOrders_listview.Items[0].SubItems[1].Tag.ToString())) {
-                        AccountPlaceOrder_button.Text = (AccountOrderType_listbox.SelectedIndex == 1 ? "MARKET buy now" : "Start baitin'");
-                        AccountLimitPrice_label.ForeColor = AccountPlaceOrder_button.ForeColor = (AccountOrderType_listbox.SelectedIndex == 1 ? Color.Red : Color.Black);
+                        AccountPlaceOrder_button.Text = "MARKET buy now";
+                        AccountLimitPrice_label.ForeColor = AccountPlaceOrder_button.ForeColor = Color.Red;
                         IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "Price is higher than the lowest offer, this will be a market order!");
+                        if (!pIR.marketBaiterActive && (AccountOrderType_listbox.SelectedIndex == 2)) {
+                            AccountPlaceOrder_button.Text = "Start baitin'";
+                            AccountLimitPrice_label.ForeColor = AccountPlaceOrder_button.ForeColor = Color.Black;
+                            IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "");
+                        }
                     }
                     else {
+                        AccountPlaceOrder_button.Text = "Buy now";
+                        if (!pIR.marketBaiterActive && (AccountOrderType_listbox.SelectedIndex == 2)) { // actually ..
+                            AccountPlaceOrder_button.Text = "Start baitin'";
+                        }
                         AccountLimitPrice_label.ForeColor = Color.Black;
-                        AccountPlaceOrder_button.Text = (AccountOrderType_listbox.SelectedIndex == 1 ? "Buy now" : "Start baitin'");
                         AccountPlaceOrder_button.ForeColor = Color.Black;
                         IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "");
                     }
                 }
                 else {  // sell
                     if (price <= decimal.Parse(AccountOrders_listview.Items[0].SubItems[1].Tag.ToString())) {
-                        AccountPlaceOrder_button.Text = (AccountOrderType_listbox.SelectedIndex == 1 ? "MARKET sell now" : "Start baitin'");
-                        AccountLimitPrice_label.ForeColor = AccountPlaceOrder_button.ForeColor = (AccountOrderType_listbox.SelectedIndex == 1 ? Color.Red : Color.Black);
+                        AccountPlaceOrder_button.Text = "MARKET sell now";
+                        AccountLimitPrice_label.ForeColor = AccountPlaceOrder_button.ForeColor = Color.Red;
                         IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "Price is lower than the higest bid, this will be a market order!");
+                        if (!pIR.marketBaiterActive && (AccountOrderType_listbox.SelectedIndex == 2)) {
+                            AccountPlaceOrder_button.Text = "Start baitin'";
+                            AccountLimitPrice_label.ForeColor = AccountPlaceOrder_button.ForeColor = Color.Black;
+                            IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "");
+                        }
                     }
                     else {
                         AccountLimitPrice_label.ForeColor = Color.Black;
-                        AccountPlaceOrder_button.Text = (AccountOrderType_listbox.SelectedIndex == 1 ? "Sell now" : "Start baitin'");
+                        AccountPlaceOrder_button.Text = "Sell now";
+                        if (!pIR.marketBaiterActive && (AccountOrderType_listbox.SelectedIndex == 2)) { // actually ..
+                            AccountPlaceOrder_button.Text = "Start baitin'";
+                        }
                         AccountPlaceOrder_button.ForeColor = Color.Black;
                         IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "");
                     }

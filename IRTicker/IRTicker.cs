@@ -612,21 +612,27 @@ namespace IRTicker {
 
             if (IRBTCvol < 0 || BTCMBTCvol < 0) {
                 slackObj.setStatus("", ":question:", 120, name);
+                if (TGBot != null) TGBot.BTCMemoji = "";
             }
             else if (IRBTCvol > BTCMBTCvol * 2) {
                 slackObj.setStatus("", ":danbizan:", 120, name);
+                if (TGBot != null) TGBot.BTCMemoji = "🥳";
             }
             else if (IRBTCvol * 2 < BTCMBTCvol) {
                 slackObj.setStatus("", ":sob:", 120, name);
+                if (TGBot != null) TGBot.BTCMemoji = "😭";
             }
             else if (IRBTCvol > BTCMBTCvol + 5) {
                 slackObj.setStatus("", ":sunglasses:", 120, name);
+                if (TGBot != null) TGBot.BTCMemoji = "😎";
             }
             else if ((IRBTCvol <= BTCMBTCvol + 5) && (IRBTCvol >= BTCMBTCvol - 5)) {
                 slackObj.setStatus("", ":neutral_face:", 120, name);
+                if (TGBot != null) TGBot.BTCMemoji = "😐";
             }
             else if (IRBTCvol < BTCMBTCvol - 5) {
                 slackObj.setStatus("", ":slightly_frowning_face:", 120, name);
+                if (TGBot != null) TGBot.BTCMemoji = "🙁";
             }
         }
 

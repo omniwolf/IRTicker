@@ -24,8 +24,8 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("Loading...");
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Loading...");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
@@ -323,6 +323,7 @@
             this.BlinkStickWhite_Thread = new System.ComponentModel.BackgroundWorker();
             this.spreadHistory_FolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.IRAccount_panel = new System.Windows.Forms.Panel();
+            this.StopBaitin_button = new System.Windows.Forms.Button();
             this.SwitchOrderBookSide_button = new System.Windows.Forms.Button();
             this.AccountOrderType_listbox = new NoScrollListBox.NoScrollListBox();
             this.AccountOpenOrders_panel = new System.Windows.Forms.Panel();
@@ -3532,9 +3533,9 @@
             this.GDAX_DAI_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_DAI_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_DAI_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_DAI_Label3.Location = new System.Drawing.Point(119, 204);
+            this.GDAX_DAI_Label3.Location = new System.Drawing.Point(129, 204);
             this.GDAX_DAI_Label3.Name = "GDAX_DAI_Label3";
-            this.GDAX_DAI_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_DAI_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_DAI_Label3.TabIndex = 61;
             this.GDAX_DAI_Label3.Tag = "";
             this.GDAX_DAI_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3595,9 +3596,9 @@
             this.GDAX_MKR_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_MKR_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_MKR_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_MKR_Label3.Location = new System.Drawing.Point(119, 184);
+            this.GDAX_MKR_Label3.Location = new System.Drawing.Point(129, 184);
             this.GDAX_MKR_Label3.Name = "GDAX_MKR_Label3";
-            this.GDAX_MKR_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_MKR_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_MKR_Label3.TabIndex = 58;
             this.GDAX_MKR_Label3.Tag = "";
             this.GDAX_MKR_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3607,9 +3608,9 @@
             this.GDAX_ZRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_ZRX_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ZRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ZRX_Label3.Location = new System.Drawing.Point(119, 144);
+            this.GDAX_ZRX_Label3.Location = new System.Drawing.Point(129, 144);
             this.GDAX_ZRX_Label3.Name = "GDAX_ZRX_Label3";
-            this.GDAX_ZRX_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_ZRX_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_ZRX_Label3.TabIndex = 21;
             this.GDAX_ZRX_Label3.Tag = "";
             this.GDAX_ZRX_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3705,9 +3706,9 @@
             this.GDAX_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XRP_Label3.Location = new System.Drawing.Point(119, 24);
+            this.GDAX_XRP_Label3.Location = new System.Drawing.Point(129, 24);
             this.GDAX_XRP_Label3.Name = "GDAX_XRP_Label3";
-            this.GDAX_XRP_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_XRP_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_XRP_Label3.TabIndex = 24;
             this.GDAX_XRP_Label3.Tag = "";
             this.GDAX_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3717,9 +3718,9 @@
             this.GDAX_ETC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ETC_Label3.Location = new System.Drawing.Point(119, 104);
+            this.GDAX_ETC_Label3.Location = new System.Drawing.Point(129, 104);
             this.GDAX_ETC_Label3.Name = "GDAX_ETC_Label3";
-            this.GDAX_ETC_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_ETC_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_ETC_Label3.TabIndex = 33;
             this.GDAX_ETC_Label3.Tag = "";
             this.GDAX_ETC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3766,9 +3767,9 @@
             this.GDAX_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_LTC_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_LTC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_LTC_Label3.Location = new System.Drawing.Point(119, 84);
+            this.GDAX_LTC_Label3.Location = new System.Drawing.Point(129, 84);
             this.GDAX_LTC_Label3.Name = "GDAX_LTC_Label3";
-            this.GDAX_LTC_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_LTC_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_LTC_Label3.TabIndex = 15;
             this.GDAX_LTC_Label3.Tag = "";
             this.GDAX_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3817,9 +3818,9 @@
             this.GDAX_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_BCH_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_BCH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_BCH_Label3.Location = new System.Drawing.Point(119, 64);
+            this.GDAX_BCH_Label3.Location = new System.Drawing.Point(129, 64);
             this.GDAX_BCH_Label3.Name = "GDAX_BCH_Label3";
-            this.GDAX_BCH_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_BCH_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_BCH_Label3.TabIndex = 14;
             this.GDAX_BCH_Label3.Tag = "";
             this.GDAX_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3843,9 +3844,9 @@
             this.GDAX_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XLM_Label3.Location = new System.Drawing.Point(119, 124);
+            this.GDAX_XLM_Label3.Location = new System.Drawing.Point(129, 124);
             this.GDAX_XLM_Label3.Name = "GDAX_XLM_Label3";
-            this.GDAX_XLM_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_XLM_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_XLM_Label3.TabIndex = 27;
             this.GDAX_XLM_Label3.Tag = "";
             this.GDAX_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3855,9 +3856,9 @@
             this.GDAX_LINK_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_LINK_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_LINK_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_LINK_Label3.Location = new System.Drawing.Point(119, 164);
+            this.GDAX_LINK_Label3.Location = new System.Drawing.Point(129, 164);
             this.GDAX_LINK_Label3.Name = "GDAX_LINK_Label3";
-            this.GDAX_LINK_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_LINK_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_LINK_Label3.TabIndex = 30;
             this.GDAX_LINK_Label3.Tag = "";
             this.GDAX_LINK_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3867,9 +3868,9 @@
             this.GDAX_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_ETH_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ETH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ETH_Label3.Location = new System.Drawing.Point(119, 44);
+            this.GDAX_ETH_Label3.Location = new System.Drawing.Point(129, 44);
             this.GDAX_ETH_Label3.Name = "GDAX_ETH_Label3";
-            this.GDAX_ETH_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_ETH_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_ETH_Label3.TabIndex = 13;
             this.GDAX_ETH_Label3.Tag = "";
             this.GDAX_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -3918,9 +3919,9 @@
             this.GDAX_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.GDAX_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XBT_Label3.Location = new System.Drawing.Point(119, 4);
+            this.GDAX_XBT_Label3.Location = new System.Drawing.Point(129, 4);
             this.GDAX_XBT_Label3.Name = "GDAX_XBT_Label3";
-            this.GDAX_XBT_Label3.Size = new System.Drawing.Size(134, 13);
+            this.GDAX_XBT_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_XBT_Label3.TabIndex = 12;
             this.GDAX_XBT_Label3.Tag = "";
             this.GDAX_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -4212,6 +4213,7 @@
             // 
             // IRAccount_panel
             // 
+            this.IRAccount_panel.Controls.Add(this.StopBaitin_button);
             this.IRAccount_panel.Controls.Add(this.SwitchOrderBookSide_button);
             this.IRAccount_panel.Controls.Add(this.AccountOrderType_listbox);
             this.IRAccount_panel.Controls.Add(this.AccountOpenOrders_panel);
@@ -4232,6 +4234,20 @@
             this.IRAccount_panel.Size = new System.Drawing.Size(585, 843);
             this.IRAccount_panel.TabIndex = 61;
             this.IRAccount_panel.Visible = false;
+            // 
+            // StopBaitin_button
+            // 
+            this.StopBaitin_button.BackColor = System.Drawing.Color.White;
+            this.StopBaitin_button.Enabled = false;
+            this.StopBaitin_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.StopBaitin_button.Location = new System.Drawing.Point(455, 65);
+            this.StopBaitin_button.Name = "StopBaitin_button";
+            this.StopBaitin_button.Size = new System.Drawing.Size(121, 39);
+            this.StopBaitin_button.TabIndex = 17;
+            this.StopBaitin_button.Text = "Stop market baiter and cancel order";
+            this.StopBaitin_button.UseVisualStyleBackColor = false;
+            this.StopBaitin_button.Visible = false;
+            this.StopBaitin_button.Click += new System.EventHandler(this.StopBaitin_button_Click);
             // 
             // SwitchOrderBookSide_button
             // 
@@ -4284,7 +4300,7 @@
             this.AccountOpenOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountOpenOrders_listview.HideSelection = false;
             this.AccountOpenOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem11});
+            listViewItem1});
             this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountOpenOrders_listview.MultiSelect = false;
             this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";
@@ -4350,7 +4366,7 @@
             this.AccountClosedOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountClosedOrders_listview.HideSelection = false;
             this.AccountClosedOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem12});
+            listViewItem2});
             this.AccountClosedOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountClosedOrders_listview.MultiSelect = false;
             this.AccountClosedOrders_listview.Name = "AccountClosedOrders_listview";
@@ -5774,6 +5790,7 @@
         private System.Windows.Forms.Label AccountMKR_label;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox TelegramBotAPIToken_textBox;
+        private System.Windows.Forms.Button StopBaitin_button;
     }
 }
 
