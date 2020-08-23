@@ -237,10 +237,14 @@ namespace IRTicker {
                 AccountClosedOrders_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " closed orders";
                 AccountClosedOrders_listview.Items.Clear();
                 foreach (BankHistoryOrder order in _closedOrders) {
-                    if ((order.Status != OrderStatus.Filled) && (order.Status != OrderStatus.PartiallyFilledAndCancelled)) continue;
+                    if ((order.Status != OrderStatus.Filled) && (order.Status != OrderStatus.PartiallyFilledAndCancelled) && (order.Status != OrderStatus.PartiallyFilledAndFailed)) continue;
+                    decimal vol = order.Volume;
+                    if (order.Outstanding.HasValue && order.Outstanding.Value > 0) {
+                        vol = order.Volume - order.Outstanding.Value;
+                    }
                     AccountClosedOrders_listview.Items.Add(new ListViewItem(new string[] {
                     order.CreatedTimestampUtc.ToLocalTime().ToShortDateString(),
-                    Utilities.FormatValue(order.Volume),
+                    Utilities.FormatValue(vol),
                     Utilities.FormatValue(order.AvgPrice.Value, 2),
                     Utilities.FormatValue(order.Value.Value)}));
                     AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].ToolTipText = buildOrderTT(order, false);
