@@ -1583,7 +1583,6 @@ namespace IRTicker {
                             weightedAverage += (usedCoinsInThisOrder / coins) * subOrder.Value.Price;
                             string tTip = buildAvgPriceTooltip(orderSide, fiatSelected, subOrder.Value.Price, orderCount, totalCost, crypto);
                             IRTickerTT_avgPrice.SetToolTip(UIControls_Dict["IR"].AvgPrice, tTip);
-                            
                             return "Average price for " + crypto + ": " + (fiatSelected ? "$" : "") + Utilities.FormatValue(weightedAverage);  // we have finished filling the hypothetical order
                         }
                         else {  // this whole sub order is required, factor it in and then loop
