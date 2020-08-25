@@ -536,6 +536,31 @@
       "IsDelisted": false,
       "UrlProtocol": "ether"
     }
+  },
+{
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Com",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Com",
+        "ContractAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+        "DecimalPlaces": 18
+      },
+      "Name": "Comp",
+      "Ticker": "Comp",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 2350,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 2,
+      "FiatPriceStringFormat": "0.00",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
   }
 ] 
 }
