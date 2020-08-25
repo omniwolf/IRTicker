@@ -859,8 +859,8 @@ namespace IRTicker
             foreach (BankHistoryOrder bho in openOs.Data) {
                 masterStr += Environment.NewLine + "  *" + count + "*. " + (bho.OrderType == OrderType.LimitBid ? "Limid bid  " : "Limit offer") +
                     " | Price: $" + Utilities.FormatValue(bho.Price.Value, 2) + Environment.NewLine +
-                    "  Original vol: " + crypto + " " + bho.Original.Volume.ToString() +
-                    (bho.Outstanding.HasValue ? Environment.NewLine + "  Outstanding vol: " + crypto + " " + bho.Outstanding.Value.ToString() : "") + Environment.NewLine +
+                    "  Original vol: " + crypto + " " + Utilities.FormatValue(bho.Original.Volume, 8, false) +
+                    (bho.Outstanding.HasValue ? Environment.NewLine + "  Outstanding vol: " + crypto + " " + Utilities.FormatValue(bho.Outstanding.Value, 8, false) : "") + Environment.NewLine +
                     "  Date created: " + bho.CreatedTimestampUtc.ToLocalTime() + Environment.NewLine;
                 TGstate.openOrdersToList.Add(count, bho);
                 count++;
@@ -913,7 +913,7 @@ namespace IRTicker
                                 "  Pair: " + crypto + "-" + cOrder.SecondaryCurrencyCode.ToString().ToUpper() + Environment.NewLine +
                                 "  Value: $" + Utilities.FormatValue(cOrder.Value.Value, 2) + Environment.NewLine +
                                 "  Avg price: $" + Utilities.FormatValue(cOrder.AvgPrice.Value, 2) + Environment.NewLine +
-                                "  Volume: " + crypto + ": " + cOrder.Volume.ToString() + Environment.NewLine +
+                                "  Volume: " + crypto + ": " + Utilities.FormatValue(cOrder.Volume, 8, false) + Environment.NewLine +
                                 "  Order created: " + cOrder.CreatedTimestampUtc.ToLocalTime());
                             NextMsgIsNew = true;  // don't edit this message if the next message normally would
                         }

@@ -216,13 +216,22 @@ namespace IRTicker {
                     break;
             }
             tt += "Date created: " + order.CreatedTimestampUtc.ToLocalTime().ToString() + Environment.NewLine;
-            tt += "Volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + order.Volume + Environment.NewLine;
+
+            decimal vol = order.Volume;
+            if (order.Outstanding.HasValue && (order.Outstanding.Value > 0)) {
+
+            }
+
             if (isOrderOpen) {
+                tt += "Original volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + order.Original.Volume + Environment.NewLine;
                 tt += "Price: $ " + Utilities.FormatValue(order.Price.Value) + Environment.NewLine;
-                tt += "Outstanding volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + order.Outstanding + Environment.NewLine;
+                if (order.Outstanding.HasValue && (order.Outstanding.Value > 0)) {
+                    tt += "Outstanding volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + order.Outstanding.Value + Environment.NewLine;
+                }
             }
 
             else {
+                tt += "Volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + order.Volume + Environment.NewLine;
                 tt += "Avg price: $ " + Utilities.FormatValue(order.AvgPrice.Value) + Environment.NewLine;
                 tt += "Notional value: $ " + Utilities.FormatValue(order.Value.Value) + Environment.NewLine;
                 tt += "Fee: " + Utilities.FormatValue(order.FeePercent, 2, false) + "%" + Environment.NewLine;
@@ -603,9 +612,11 @@ namespace IRTicker {
                 AccountPlaceOrder_button.Enabled = false;
                 AccountOrderVolume_textbox.Enabled = false;
                 AccountLimitPrice_textbox.Enabled = false;
-                AccountPlaceOrder_button.Size = new Size(170, 39);
-                StopBaitin_button.Enabled = true;
-                StopBaitin_button.Visible = true;
+                if (oType == 2) {
+                    AccountPlaceOrder_button.Size = new Size(170, 39);
+                    StopBaitin_button.Enabled = true;
+                    StopBaitin_button.Visible = true;
+                }
 
 
                 // no need to check if we can parse the volume value, we already checked in AccountOrderVolume_textbox_TextChanged

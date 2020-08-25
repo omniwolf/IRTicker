@@ -32,6 +32,7 @@ namespace IRTicker {
         public Label DAI_Label { get; set; }
         public Label LINK_Label { get; set; }
         public Label USDC_Label { get; set; }
+        public Label COMP_Label { get; set; }
 
         public Label XBT_Price { get; set; }
         public Label ETH_Price { get; set; }
@@ -51,6 +52,7 @@ namespace IRTicker {
         public Label DAI_Price { get; set; }
         public Label LINK_Price { get; set; }
         public Label USDC_Price { get; set; }
+        public Label COMP_Price { get; set; }
 
         public Label XBT_Spread { get; set; }
         public Label ETH_Spread { get; set; }
@@ -70,6 +72,7 @@ namespace IRTicker {
         public Label DAI_Spread { get; set; }
         public Label LINK_Spread { get; set; }
         public Label USDC_Spread { get; set; }
+        public Label COMP_Spread { get; set; }
 
         public ComboBox AvgPrice_BuySell { get; set; }
         public MaskedTextBox AvgPrice_NumCoins { get; set; }
@@ -103,6 +106,7 @@ namespace IRTicker {
         public Label Account_AUD_Label { get; set; }
         public Label Account_NZD_Label { get; set; }
         public Label Account_USD_Label { get; set; }
+        public Label Account_COMP_Label { get; set; }
 
         public Label Account_XBT_Value { get; set; }
         public Label Account_ETH_Value { get; set; }
@@ -122,6 +126,7 @@ namespace IRTicker {
         public Label Account_DAI_Value { get; set; }
         public Label Account_LINK_Value { get; set; }
         public Label Account_USDC_Value { get; set; }
+        public Label Account_COMP_Value { get; set; }
 
         public Label Account_XBT_Total { get; set; }
         public Label Account_ETH_Total { get; set; }
@@ -144,6 +149,7 @@ namespace IRTicker {
         public Label Account_AUD_Total { get; set; }
         public Label Account_NZD_Total { get; set; }
         public Label Account_USD_Total { get; set; }
+        public Label Account_COMP_Total { get; set; }
 
 
 
@@ -169,6 +175,7 @@ namespace IRTicker {
             if (DAI_Label != null) Label_Dict.Add("DAI_Label", DAI_Label);
             if (LINK_Label != null) Label_Dict.Add("LINK_Label", LINK_Label);
             if (USDC_Label != null) Label_Dict.Add("USDC_Label", USDC_Label);
+            if (COMP_Label != null) Label_Dict.Add("COMP_Label", COMP_Label);
 
             if (XBT_Price != null) Label_Dict.Add("XBT_Price", XBT_Price);
             if (ETH_Price != null) Label_Dict.Add("ETH_Price", ETH_Price);
@@ -188,6 +195,7 @@ namespace IRTicker {
             if (DAI_Price != null) Label_Dict.Add("DAI_Price", DAI_Price);
             if (LINK_Price != null) Label_Dict.Add("LINK_Price", LINK_Price);
             if (USDC_Price != null) Label_Dict.Add("USDC_Price", USDC_Price);
+            if (COMP_Price != null) Label_Dict.Add("COMP_Price", COMP_Price);
 
             if (XBT_Spread != null) Label_Dict.Add("XBT_Spread", XBT_Spread);
             if (ETH_Spread != null) Label_Dict.Add("ETH_Spread", ETH_Spread);
@@ -207,6 +215,7 @@ namespace IRTicker {
             if (DAI_Spread != null) Label_Dict.Add("DAI_Spread", DAI_Spread);
             if (LINK_Spread != null) Label_Dict.Add("LINK_Spread", LINK_Spread);
             if (USDC_Spread != null) Label_Dict.Add("USDC_Spread", USDC_Spread);
+            if (COMP_Spread != null) Label_Dict.Add("COMP_Spread", COMP_Spread);
 
 
 
@@ -231,6 +240,7 @@ namespace IRTicker {
             if (Account_AUD_Label != null) Label_Dict.Add("AUD_Account_Label", Account_AUD_Label);
             if (Account_NZD_Label != null) Label_Dict.Add("NZD_Account_Label", Account_NZD_Label);
             if (Account_USD_Label != null) Label_Dict.Add("USD_Account_Label", Account_USD_Label);
+            if (Account_COMP_Label != null) Label_Dict.Add("COMP_Account_Label", Account_COMP_Label);
 
             if (Account_XBT_Value != null) Label_Dict.Add("XBT_Account_Value", Account_XBT_Value);
             if (Account_ETH_Value != null) Label_Dict.Add("ETH_Account_Value", Account_ETH_Value);
@@ -250,6 +260,7 @@ namespace IRTicker {
             if (Account_DAI_Value != null) Label_Dict.Add("DAI_Account_Value", Account_DAI_Value);
             if (Account_LINK_Value != null) Label_Dict.Add("LINK_Account_Value", Account_LINK_Value);
             if (Account_USDC_Value != null) Label_Dict.Add("USDC_Account_Value", Account_USDC_Value);
+            if (Account_COMP_Value != null) Label_Dict.Add("COMP_Account_Value", Account_COMP_Value);
 
             if (Account_XBT_Total != null) Label_Dict.Add("XBT_Account_Total", Account_XBT_Total);
             if (Account_ETH_Total != null) Label_Dict.Add("ETH_Account_Total", Account_ETH_Total);
@@ -272,7 +283,7 @@ namespace IRTicker {
             if (Account_AUD_Total != null) Label_Dict.Add("AUD_Account_Total", Account_AUD_Total);
             if (Account_NZD_Total != null) Label_Dict.Add("NZD_Account_Total", Account_NZD_Total);
             if (Account_USD_Total != null) Label_Dict.Add("USD_Account_Total", Account_USD_Total);
-
+            if (Account_COMP_Total != null) Label_Dict.Add("COMP_Account_Total", Account_COMP_Total);
         }
     }
 }

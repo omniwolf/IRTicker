@@ -112,14 +112,8 @@ namespace IRTicker {
 
             BankOrder orderResult;
             lock (pIR_Lock) {
-                try {
-                    orderResult = IRclient.PlaceLimitOrder(enumCrypto, enumFiat, orderType.Value, price, volume);
-                    openOrders.Add(orderResult.OrderGuid);
-                }
-                catch (Exception ex) {
-                    MessageBox.Show("API error: " + ex.InnerException.Message, "Limit Order Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    orderResult = null;
-                }
+                orderResult = IRclient.PlaceLimitOrder(enumCrypto, enumFiat, orderType.Value, price, volume);
+                openOrders.Add(orderResult.OrderGuid);
             }
             return orderResult;
         }
