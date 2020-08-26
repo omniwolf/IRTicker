@@ -117,7 +117,7 @@ namespace IRTicker {
                 // throw exception if sending failed
                 if ((messageResponse == null) || (messageResponse.ok == false)) {
                     throw new Exception(
-                        "failed to send message. error: " + messageResponse.error
+                        "Failed to send Slack message."
                     );
                 }
             }
