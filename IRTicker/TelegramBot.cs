@@ -230,77 +230,14 @@ namespace IRTicker
                                     break;
 
                                 case CommandChosen.MarketOrder:
-                                    if (TGstate.commandSubStage == 31) {  // 31 is to place the buy order (or not)
-
-                                        BankOrder marketO;
-                                        try {
-                                            marketO = pIR.PlaceMarketOrder(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, OrderType.MarketBid, TGstate.Volume);
-                                        }
-                                        catch (Exception ex) {
-                                            string errorMsg = ex.Message;
-                                            if (ex.InnerException != null) {
-                                                errorMsg = ex.InnerException.Message;
-                                            }
-                                            Debug.Print("TGBot: couldn't place the market buy order: " + errorMsg);
-                                            await SendMessage("`Market Order` :: ⚠️ Order failed for the following reason:" + Environment.NewLine +
-                                                errorMsg + Environment.NewLine + Environment.NewLine +
-                                                "Try again?", buttons: YesNoButtons(), editMessage: true);
-                                            return;
-                                            
-                                        }
-                                        if ((marketO.Status == OrderStatus.Filled) || (marketO.Status == OrderStatus.Open)) {
-                                            await SendMessage("`Market Order` :: ✅ Order placed!", editMessage: true);
-                                        }
-                                        else {
-                                            await SendMessage("`Market Order` :: ⁉️ Order successful, but not filled?  Status: " + marketO.Status, editMessage: true);
-                                        }
-                                    }
-                                    else if (TGstate.commandSubStage == 41) {  // 41 is to place the sell order (or not)
-
-                                        BankOrder marketO;
-                                        try {
-                                            marketO = pIR.PlaceMarketOrder(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, OrderType.MarketOffer, TGstate.Volume);
-                                        }
-                                        catch (Exception ex) {
-                                            string errorMsg = ex.Message;
-                                            if (ex.InnerException != null) {
-                                                errorMsg = ex.InnerException.Message;
-                                            }
-                                            Debug.Print("TGBot: couldn't place the market sell order: " + errorMsg);
-                                            await SendMessage("`Market Order` :: ⚠️ Order failed for the following reason:" + Environment.NewLine +
-                                                errorMsg + Environment.NewLine + Environment.NewLine +
-                                                "Try again?", buttons: YesNoButtons(), editMessage: true);
-                                            return;
-                                        }
-                                        if ((marketO.Status == OrderStatus.Filled) || (marketO.Status == OrderStatus.Open)) {
-                                            await SendMessage("`Market Order` :: ✅ Order placed!", editMessage: true);
-                                        }
-                                        else {
-                                            await SendMessage("`Market Order` :: ⁉️ Order successful, but not filled?  Status: " + marketO.Status, editMessage: true);
-                                        }
+                                    if ((TGstate.commandSubStage == 31) || (TGstate.commandSubStage == 41)) {  // 31 is to place the buy order (or not), 41 is sell
+                                        MarketOrderConfirm_Sub();
                                     }
                                     break;
 
                                 case CommandChosen.CancelOrder:
                                     if (TGstate.commandSubStage == 3) {  // 3 i confirming the cancel
-
-                                        BankOrder cancelledOrder;
-                                        try {
-                                            cancelledOrder = pIR.CancelOrder(TGstate.openOrdersToList[TGstate.orderToCancel].OrderGuid.ToString());
-                                        }
-                                        catch (Exception ex) {
-                                            string errorMsg = ex.Message;
-                                            if (ex.InnerException != null) {
-                                                errorMsg = ex.InnerException.Message;
-                                            }
-                                            SendMessage("`Cancel Order` :: ⚠️ Failed to cancel the order.  Failure reason:" + Environment.NewLine +
-                                                errorMsg + Environment.NewLine + Environment.NewLine +
-                                                "Try again?", buttons: YesNoButtons(), editMessage: true);
-                                            return;
-                                        }
-                                        if (cancelledOrder.Status == OrderStatus.Cancelled) {
-                                            await SendMessage("`Cancel Order` :: ✅ Order successfully cancelled.", editMessage: true);
-                                        }
+                                        CancelOrderConfirm_Sub();
                                     }
                                     break;
                             }
@@ -525,6 +462,16 @@ namespace IRTicker
                                 }
                             }
 
+                            else if ((TGstate.commandSubStage == 31) || (TGstate.commandSubStage == 41)) {
+                                if ((message.Text.ToUpper() == "YES") || (message.Text.ToUpper() == "Y")) {
+                                    MarketOrderConfirm_Sub();
+                                }
+                                else {
+                                    await SendMessage("`Market Order` :: Order not placed.", editMessage: true);
+                                    TGstate.ResetMenu();
+                                }
+                            }
+
                             break;
 
                         case CommandChosen.CancelOrder:
@@ -551,6 +498,16 @@ namespace IRTicker
                                     SendMessage("`Cancel Order` :: ⚠️ Couldn't parse your answer.  Please try again and just type the number next to the order you want to cancel, nothing else.");
                                 }
                             }
+
+                            else if (TGstate.commandSubStage == 3) {
+                                if ((message.Text.ToUpper() == "YES") || (message.Text.ToUpper() == "Y")) {
+                                    CancelOrderConfirm_Sub();
+                                }
+                                else {
+                                    await SendMessage("`Cancel Order` :: Order NOT cancelled.", editMessage: true);
+                                    TGstate.ResetMenu();
+                                }
+                            }
                             break;
 
                         case CommandChosen.ViewClosed:
@@ -565,6 +522,69 @@ namespace IRTicker
             if (exception is ApiRequestException apiRequestException) {
                 SendMessage("Error: " + apiRequestException.ToString() + Environment.NewLine + "Resetting menu...");
                 TGstate.ResetMenu();
+            }
+        }
+
+        private async void MarketOrderConfirm_Sub() {
+            string oTypeStr;
+            OrderType oType;
+            if (TGstate.commandSubStage == 31) {
+                oTypeStr = "buy";
+                oType = OrderType.MarketBid;
+            }
+            else if (TGstate.commandSubStage == 41) {
+                oTypeStr = "sell";
+                oType = OrderType.MarketOffer;
+            }
+            else return;
+
+            BankOrder marketO;
+            try {
+                marketO = pIR.PlaceMarketOrder(TGstate.ChosenPair.Item1, TGstate.ChosenPair.Item2, oType, TGstate.Volume);
+            }
+            catch (Exception ex) {
+                string errorMsg = ex.Message;
+                if (ex.InnerException != null) {
+                    errorMsg = ex.InnerException.Message;
+                }
+                Debug.Print("TGBot: couldn't place the market " + oTypeStr + " order: " + errorMsg);
+                await SendMessage("`Market Order` :: ⚠️ Order failed for the following reason:" + Environment.NewLine +
+                    errorMsg + Environment.NewLine + Environment.NewLine +
+                    "Try again?", buttons: YesNoButtons(), editMessage: true);
+                return;
+
+            }
+            if ((marketO.Status == OrderStatus.Filled) || (marketO.Status == OrderStatus.Open)) {
+                await SendMessage("`Market Order` :: ✅ Order placed!", editMessage: true);
+            }
+            else {
+                await SendMessage("`Market Order` :: ⁉️ Order successful, but not filled?  Status: " + marketO.Status, editMessage: true);
+            }
+            TGstate.ResetMenu();
+        }
+
+        private async void CancelOrderConfirm_Sub() {
+            BankOrder cancelledOrder;
+            try {
+                cancelledOrder = pIR.CancelOrder(TGstate.openOrdersToList[TGstate.orderToCancel].OrderGuid.ToString());
+            }
+            catch (Exception ex) {
+                string errorMsg = ex.Message;
+                if (ex.InnerException != null) {
+                    errorMsg = ex.InnerException.Message;
+                }
+                SendMessage("`Cancel Order` :: ⚠️ Failed to cancel the order.  Failure reason:" + Environment.NewLine +
+                    errorMsg + Environment.NewLine + Environment.NewLine +
+                    "Try again?", buttons: YesNoButtons(), editMessage: true);
+                return;
+            }
+            if (cancelledOrder.Status == OrderStatus.Cancelled) {
+                await SendMessage("`Cancel Order` :: ✅ Order successfully cancelled.", editMessage: true);
+            }
+            else {
+                await SendMessage("`Cancel Order` :: ⚠️ Order not cancelled, current status: " + Environment.NewLine +
+                    cancelledOrder.Status.ToString() + Environment.NewLine +
+                    "Try again?", buttons: YesNoButtons(), editMessage: true);
             }
         }
 

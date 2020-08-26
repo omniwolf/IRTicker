@@ -1156,6 +1156,7 @@ namespace IRTicker {
                             if (crypto == "UST") crypto = "USDT";
                             if (crypto == "USC") crypto = "USDC";
                             if (crypto == "LNK") crypto = "LINK";
+                            if (crypto == "COM") crypto = "COMP";
                             DCEs["IR"].currencyFiatDivision.Add(crypto, curr.IrCommonAttributesCurrencyConfiguration.FiatPriceDecimalPlaces);
                         }
 
