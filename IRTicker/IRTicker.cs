@@ -119,6 +119,13 @@ namespace IRTicker {
 
             // initialise settings
 
+            Settings.AutoScroll = false;
+            Settings.HorizontalScroll.Enabled = false;
+            Settings.HorizontalScroll.Visible = false;
+            Settings.HorizontalScroll.Maximum = 0;
+            Settings.VerticalScroll.Visible = false;
+            Settings.AutoScroll = true;
+
             // if they have somehow set it below 20 secs, force back to 20... or 10
             if (int.TryParse(Properties.Settings.Default.RefreshFreq, out int freq)) {
                 if (freq < minRefreshFrequency) Properties.Settings.Default.RefreshFreq = minRefreshFrequency.ToString();
@@ -144,6 +151,7 @@ namespace IRTicker {
             NegativeSpread_checkBox.Checked = Properties.Settings.Default.NegativeSpread;
             TelegramCode_textBox.Text = Properties.Settings.Default.TelegramCode;
             TelegramBotAPIToken_textBox.Text = Properties.Settings.Default.TelegramAPIToken;
+            TelegramNewMessages_checkBox.Checked = Properties.Settings.Default.TelegramAllNewMessages;
             if (string.IsNullOrEmpty(Properties.Settings.Default.SlackNameCurrency)) Properties.Settings.Default.SlackNameCurrency = "AUD";
 
             if (Slack_checkBox.Checked) {
@@ -2127,8 +2135,8 @@ namespace IRTicker {
                         Properties.Settings.Default.TelegramCode = "";
                         Properties.Settings.Default.TelegramChatID = 0;
                     }
-                    
 
+                    Properties.Settings.Default.TelegramAllNewMessages = TelegramNewMessages_checkBox.Checked;
 
                     Properties.Settings.Default.TelegramAPIToken = TelegramBotAPIToken_textBox.Text;
 

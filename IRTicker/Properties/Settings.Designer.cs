@@ -442,5 +442,17 @@ namespace IRTicker.Properties {
                 this["TelegramAPIToken"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TelegramAllNewMessages {
+            get {
+                return ((bool)(this["TelegramAllNewMessages"]));
+            }
+            set {
+                this["TelegramAllNewMessages"] = value;
+            }
+        }
     }
 }

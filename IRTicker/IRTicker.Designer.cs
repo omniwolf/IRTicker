@@ -24,14 +24,16 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Loading...");
             System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Loading...");
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
             this.IRAccountSettings_groupBox = new System.Windows.Forms.GroupBox();
+            this.TelegramNewMessages_checkBox = new System.Windows.Forms.CheckBox();
+            this.TelegramNewMessages_label = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.TelegramBotAPIToken_textBox = new System.Windows.Forms.TextBox();
             this.TGReset_button = new System.Windows.Forms.Button();
@@ -495,6 +497,7 @@
             // 
             // Settings
             // 
+            this.Settings.AutoScroll = true;
             this.Settings.BackColor = System.Drawing.Color.White;
             this.Settings.Controls.Add(this.IRAccountSettings_groupBox);
             this.Settings.Controls.Add(this.SettingsSeparator_label);
@@ -529,6 +532,8 @@
             // IRAccountSettings_groupBox
             // 
             this.IRAccountSettings_groupBox.BackColor = System.Drawing.Color.Gainsboro;
+            this.IRAccountSettings_groupBox.Controls.Add(this.TelegramNewMessages_checkBox);
+            this.IRAccountSettings_groupBox.Controls.Add(this.TelegramNewMessages_label);
             this.IRAccountSettings_groupBox.Controls.Add(this.label3);
             this.IRAccountSettings_groupBox.Controls.Add(this.TelegramBotAPIToken_textBox);
             this.IRAccountSettings_groupBox.Controls.Add(this.TGReset_button);
@@ -538,12 +543,34 @@
             this.IRAccountSettings_groupBox.Controls.Add(this.EditKeys_button);
             this.IRAccountSettings_groupBox.Controls.Add(this.APIKeys_comboBox);
             this.IRAccountSettings_groupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRAccountSettings_groupBox.Location = new System.Drawing.Point(76, 613);
+            this.IRAccountSettings_groupBox.Location = new System.Drawing.Point(76, 586);
             this.IRAccountSettings_groupBox.Name = "IRAccountSettings_groupBox";
-            this.IRAccountSettings_groupBox.Size = new System.Drawing.Size(461, 141);
+            this.IRAccountSettings_groupBox.Size = new System.Drawing.Size(461, 170);
             this.IRAccountSettings_groupBox.TabIndex = 37;
             this.IRAccountSettings_groupBox.TabStop = false;
             this.IRAccountSettings_groupBox.Text = "IR account";
+            // 
+            // TelegramNewMessages_checkBox
+            // 
+            this.TelegramNewMessages_checkBox.AccessibleName = "";
+            this.TelegramNewMessages_checkBox.AutoSize = true;
+            this.TelegramNewMessages_checkBox.Location = new System.Drawing.Point(429, 144);
+            this.TelegramNewMessages_checkBox.Name = "TelegramNewMessages_checkBox";
+            this.TelegramNewMessages_checkBox.Size = new System.Drawing.Size(15, 14);
+            this.TelegramNewMessages_checkBox.TabIndex = 43;
+            this.TelegramNewMessages_checkBox.UseVisualStyleBackColor = true;
+            // 
+            // TelegramNewMessages_label
+            // 
+            this.TelegramNewMessages_label.AccessibleName = "";
+            this.TelegramNewMessages_label.AutoSize = true;
+            this.TelegramNewMessages_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TelegramNewMessages_label.Location = new System.Drawing.Point(24, 142);
+            this.TelegramNewMessages_label.Name = "TelegramNewMessages_label";
+            this.TelegramNewMessages_label.Size = new System.Drawing.Size(289, 16);
+            this.TelegramNewMessages_label.TabIndex = 42;
+            this.TelegramNewMessages_label.Text = "Make all Telegram messages new for dictation:";
+            this.IRTickerTT_generic.SetToolTip(this.TelegramNewMessages_label, resources.GetString("TelegramNewMessages_label.ToolTip"));
             // 
             // label3
             // 
@@ -635,7 +662,7 @@
             // SettingsSeparator_label
             // 
             this.SettingsSeparator_label.AutoSize = true;
-            this.SettingsSeparator_label.Location = new System.Drawing.Point(90, 754);
+            this.SettingsSeparator_label.Location = new System.Drawing.Point(90, 759);
             this.SettingsSeparator_label.Name = "SettingsSeparator_label";
             this.SettingsSeparator_label.Size = new System.Drawing.Size(409, 13);
             this.SettingsSeparator_label.TabIndex = 41;
@@ -644,7 +671,7 @@
             // SessionStartedRel_label
             // 
             this.SessionStartedRel_label.AutoSize = true;
-            this.SessionStartedRel_label.Location = new System.Drawing.Point(309, 813);
+            this.SessionStartedRel_label.Location = new System.Drawing.Point(271, 818);
             this.SessionStartedRel_label.Name = "SessionStartedRel_label";
             this.SessionStartedRel_label.Size = new System.Drawing.Size(0, 13);
             this.SessionStartedRel_label.TabIndex = 40;
@@ -652,7 +679,7 @@
             // SessionStartedAbs_label
             // 
             this.SessionStartedAbs_label.AutoSize = true;
-            this.SessionStartedAbs_label.Location = new System.Drawing.Point(309, 784);
+            this.SessionStartedAbs_label.Location = new System.Drawing.Point(271, 789);
             this.SessionStartedAbs_label.Name = "SessionStartedAbs_label";
             this.SessionStartedAbs_label.Size = new System.Drawing.Size(0, 13);
             this.SessionStartedAbs_label.TabIndex = 39;
@@ -660,7 +687,7 @@
             // SessionStart_label
             // 
             this.SessionStart_label.AutoSize = true;
-            this.SessionStart_label.Location = new System.Drawing.Point(223, 784);
+            this.SessionStart_label.Location = new System.Drawing.Point(185, 789);
             this.SessionStart_label.Name = "SessionStart_label";
             this.SessionStart_label.Size = new System.Drawing.Size(82, 13);
             this.SessionStart_label.TabIndex = 38;
@@ -670,7 +697,7 @@
             // 
             this.spreadHistoryCustomFolderValue_Textbox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.spreadHistoryCustomFolderValue_Textbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.spreadHistoryCustomFolderValue_Textbox.Location = new System.Drawing.Point(226, 170);
+            this.spreadHistoryCustomFolderValue_Textbox.Location = new System.Drawing.Point(226, 143);
             this.spreadHistoryCustomFolderValue_Textbox.Name = "spreadHistoryCustomFolderValue_Textbox";
             this.spreadHistoryCustomFolderValue_Textbox.ReadOnly = true;
             this.spreadHistoryCustomFolderValue_Textbox.Size = new System.Drawing.Size(279, 20);
@@ -683,7 +710,7 @@
             // 
             this.spreadHistoryCustomFolder_label.AccessibleName = "";
             this.spreadHistoryCustomFolder_label.AutoSize = true;
-            this.spreadHistoryCustomFolder_label.Location = new System.Drawing.Point(73, 170);
+            this.spreadHistoryCustomFolder_label.Location = new System.Drawing.Point(73, 143);
             this.spreadHistoryCustomFolder_label.Name = "spreadHistoryCustomFolder_label";
             this.spreadHistoryCustomFolder_label.Size = new System.Drawing.Size(144, 26);
             this.spreadHistoryCustomFolder_label.TabIndex = 35;
@@ -697,7 +724,7 @@
             this.NegativeSpread_checkBox.AutoSize = true;
             this.NegativeSpread_checkBox.Checked = true;
             this.NegativeSpread_checkBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.NegativeSpread_checkBox.Location = new System.Drawing.Point(490, 575);
+            this.NegativeSpread_checkBox.Location = new System.Drawing.Point(490, 548);
             this.NegativeSpread_checkBox.Name = "NegativeSpread_checkBox";
             this.NegativeSpread_checkBox.Size = new System.Drawing.Size(15, 14);
             this.NegativeSpread_checkBox.TabIndex = 34;
@@ -708,7 +735,7 @@
             // 
             this.NegativeSpread_label.AccessibleName = "";
             this.NegativeSpread_label.AutoSize = true;
-            this.NegativeSpread_label.Location = new System.Drawing.Point(73, 575);
+            this.NegativeSpread_label.Location = new System.Drawing.Point(73, 548);
             this.NegativeSpread_label.Name = "NegativeSpread_label";
             this.NegativeSpread_label.Size = new System.Drawing.Size(226, 13);
             this.NegativeSpread_label.TabIndex = 33;
@@ -727,7 +754,7 @@
             this.SlackSettings_groupBox.Controls.Add(this.slackDefaultNameTextBox);
             this.SlackSettings_groupBox.Controls.Add(this.slackNameChangeCheckBox);
             this.SlackSettings_groupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SlackSettings_groupBox.Location = new System.Drawing.Point(76, 212);
+            this.SlackSettings_groupBox.Location = new System.Drawing.Point(76, 185);
             this.SlackSettings_groupBox.Name = "SlackSettings_groupBox";
             this.SlackSettings_groupBox.Size = new System.Drawing.Size(461, 222);
             this.SlackSettings_groupBox.TabIndex = 32;
@@ -836,7 +863,7 @@
             // 
             // UITimerFreq_maskedTextBox
             // 
-            this.UITimerFreq_maskedTextBox.Location = new System.Drawing.Point(405, 539);
+            this.UITimerFreq_maskedTextBox.Location = new System.Drawing.Point(405, 512);
             this.UITimerFreq_maskedTextBox.Mask = "0000";
             this.UITimerFreq_maskedTextBox.Name = "UITimerFreq_maskedTextBox";
             this.UITimerFreq_maskedTextBox.PromptChar = ' ';
@@ -847,7 +874,7 @@
             // 
             this.UITimerFreq_label.AccessibleName = "";
             this.UITimerFreq_label.AutoSize = true;
-            this.UITimerFreq_label.Location = new System.Drawing.Point(73, 542);
+            this.UITimerFreq_label.Location = new System.Drawing.Point(73, 515);
             this.UITimerFreq_label.Name = "UITimerFreq_label";
             this.UITimerFreq_label.Size = new System.Drawing.Size(252, 13);
             this.UITimerFreq_label.TabIndex = 30;
@@ -857,7 +884,7 @@
             // 
             this.OB_checkBox.AccessibleName = "";
             this.OB_checkBox.AutoSize = true;
-            this.OB_checkBox.Location = new System.Drawing.Point(490, 499);
+            this.OB_checkBox.Location = new System.Drawing.Point(490, 472);
             this.OB_checkBox.Name = "OB_checkBox";
             this.OB_checkBox.Size = new System.Drawing.Size(15, 14);
             this.OB_checkBox.TabIndex = 25;
@@ -868,7 +895,7 @@
             // 
             this.OB_label.AccessibleName = "";
             this.OB_label.AutoSize = true;
-            this.OB_label.Location = new System.Drawing.Point(73, 499);
+            this.OB_label.Location = new System.Drawing.Point(73, 472);
             this.OB_label.Name = "OB_label";
             this.OB_label.Size = new System.Drawing.Size(372, 26);
             this.OB_label.TabIndex = 24;
@@ -879,7 +906,7 @@
             // 
             this.flashForm_checkBox.AccessibleName = "";
             this.flashForm_checkBox.AutoSize = true;
-            this.flashForm_checkBox.Location = new System.Drawing.Point(490, 454);
+            this.flashForm_checkBox.Location = new System.Drawing.Point(490, 427);
             this.flashForm_checkBox.Name = "flashForm_checkBox";
             this.flashForm_checkBox.Size = new System.Drawing.Size(15, 14);
             this.flashForm_checkBox.TabIndex = 22;
@@ -890,7 +917,7 @@
             // 
             this.flashForm_label.AccessibleName = "";
             this.flashForm_label.AutoSize = true;
-            this.flashForm_label.Location = new System.Drawing.Point(73, 454);
+            this.flashForm_label.Location = new System.Drawing.Point(73, 427);
             this.flashForm_label.Name = "flashForm_label";
             this.flashForm_label.Size = new System.Drawing.Size(198, 26);
             this.flashForm_label.TabIndex = 21;
@@ -913,16 +940,15 @@
             this.ExportSummarised_Label.AutoSize = true;
             this.ExportSummarised_Label.Location = new System.Drawing.Point(73, 114);
             this.ExportSummarised_Label.Name = "ExportSummarised_Label";
-            this.ExportSummarised_Label.Size = new System.Drawing.Size(393, 39);
+            this.ExportSummarised_Label.Size = new System.Drawing.Size(146, 13);
             this.ExportSummarised_Label.TabIndex = 17;
-            this.ExportSummarised_Label.Text = "Export summary spread data?\r\nWill be saved to G:\\My Drive\\IR\\IRTicker\\Spread hist" +
-    "ory data\\<your username>\\\r\nThis will save one datapoint per hour, which is avera" +
-    "ged over the last hour.";
+            this.ExportSummarised_Label.Text = "Export summary spread data?";
+            this.IRTickerTT_generic.SetToolTip(this.ExportSummarised_Label, "This will save one datapoint per hour, which is averaged over the last hour.");
             // 
             // Help_Button
             // 
             this.Help_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Help_Button.Location = new System.Drawing.Point(477, 779);
+            this.Help_Button.Location = new System.Drawing.Point(439, 784);
             this.Help_Button.Name = "Help_Button";
             this.Help_Button.Size = new System.Drawing.Size(97, 23);
             this.Help_Button.TabIndex = 14;
@@ -956,7 +982,7 @@
             // VersionLabel
             // 
             this.VersionLabel.AutoSize = true;
-            this.VersionLabel.Location = new System.Drawing.Point(73, 817);
+            this.VersionLabel.Location = new System.Drawing.Point(35, 817);
             this.VersionLabel.Name = "VersionLabel";
             this.VersionLabel.Size = new System.Drawing.Size(0, 13);
             this.VersionLabel.TabIndex = 11;
@@ -964,7 +990,7 @@
             // SettingsOKButton
             // 
             this.SettingsOKButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsOKButton.Location = new System.Drawing.Point(477, 808);
+            this.SettingsOKButton.Location = new System.Drawing.Point(439, 813);
             this.SettingsOKButton.Name = "SettingsOKButton";
             this.SettingsOKButton.Size = new System.Drawing.Size(97, 23);
             this.SettingsOKButton.TabIndex = 4;
@@ -1102,9 +1128,9 @@
             this.BTCM_COMP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_COMP_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_COMP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_COMP_Label3.Location = new System.Drawing.Point(116, 245);
+            this.BTCM_COMP_Label3.Location = new System.Drawing.Point(119, 245);
             this.BTCM_COMP_Label3.Name = "BTCM_COMP_Label3";
-            this.BTCM_COMP_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BTCM_COMP_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_COMP_Label3.TabIndex = 67;
             this.BTCM_COMP_Label3.Tag = "";
             this.BTCM_COMP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1152,9 +1178,9 @@
             this.BTCM_LINK_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_LINK_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_LINK_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_LINK_Label3.Location = new System.Drawing.Point(116, 225);
+            this.BTCM_LINK_Label3.Location = new System.Drawing.Point(119, 225);
             this.BTCM_LINK_Label3.Name = "BTCM_LINK_Label3";
-            this.BTCM_LINK_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BTCM_LINK_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_LINK_Label3.TabIndex = 64;
             this.BTCM_LINK_Label3.Tag = "";
             this.BTCM_LINK_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1241,9 +1267,9 @@
             this.BTCM_BSV_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_BSV_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_BSV_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_BSV_Label3.Location = new System.Drawing.Point(116, 85);
+            this.BTCM_BSV_Label3.Location = new System.Drawing.Point(119, 85);
             this.BTCM_BSV_Label3.Name = "BTCM_BSV_Label3";
-            this.BTCM_BSV_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BTCM_BSV_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_BSV_Label3.TabIndex = 34;
             this.BTCM_BSV_Label3.Tag = "";
             this.BTCM_BSV_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1253,9 +1279,9 @@
             this.BTCM_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_XBT_Label3.Location = new System.Drawing.Point(116, 5);
+            this.BTCM_XBT_Label3.Location = new System.Drawing.Point(119, 5);
             this.BTCM_XBT_Label3.Name = "BTCM_XBT_Label3";
-            this.BTCM_XBT_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BTCM_XBT_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_XBT_Label3.TabIndex = 12;
             this.BTCM_XBT_Label3.Tag = "";
             this.BTCM_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1279,9 +1305,9 @@
             this.BTCM_ETH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_ETH_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_ETH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_ETH_Label3.Location = new System.Drawing.Point(116, 45);
+            this.BTCM_ETH_Label3.Location = new System.Drawing.Point(119, 45);
             this.BTCM_ETH_Label3.Name = "BTCM_ETH_Label3";
-            this.BTCM_ETH_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BTCM_ETH_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_ETH_Label3.TabIndex = 13;
             this.BTCM_ETH_Label3.Tag = "";
             this.BTCM_ETH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1304,9 +1330,9 @@
             this.BTCM_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_BCH_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_BCH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_BCH_Label3.Location = new System.Drawing.Point(116, 65);
+            this.BTCM_BCH_Label3.Location = new System.Drawing.Point(119, 65);
             this.BTCM_BCH_Label3.Name = "BTCM_BCH_Label3";
-            this.BTCM_BCH_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BTCM_BCH_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_BCH_Label3.TabIndex = 14;
             this.BTCM_BCH_Label3.Tag = "";
             this.BTCM_BCH_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1317,9 +1343,9 @@
             this.BTCM_ETC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_ETC_Label3.Location = new System.Drawing.Point(116, 125);
+            this.BTCM_ETC_Label3.Location = new System.Drawing.Point(119, 125);
             this.BTCM_ETC_Label3.Name = "BTCM_ETC_Label3";
-            this.BTCM_ETC_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BTCM_ETC_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_ETC_Label3.TabIndex = 31;
             this.BTCM_ETC_Label3.Tag = "";
             this.BTCM_ETC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1329,9 +1355,9 @@
             this.BTCM_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_LTC_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_LTC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_LTC_Label3.Location = new System.Drawing.Point(116, 105);
+            this.BTCM_LTC_Label3.Location = new System.Drawing.Point(119, 105);
             this.BTCM_LTC_Label3.Name = "BTCM_LTC_Label3";
-            this.BTCM_LTC_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BTCM_LTC_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_LTC_Label3.TabIndex = 15;
             this.BTCM_LTC_Label3.Tag = "";
             this.BTCM_LTC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1355,9 +1381,9 @@
             this.BTCM_XRP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_XRP_Label3.Location = new System.Drawing.Point(116, 25);
+            this.BTCM_XRP_Label3.Location = new System.Drawing.Point(119, 25);
             this.BTCM_XRP_Label3.Name = "BTCM_XRP_Label3";
-            this.BTCM_XRP_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BTCM_XRP_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_XRP_Label3.TabIndex = 16;
             this.BTCM_XRP_Label3.Tag = "";
             this.BTCM_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1392,9 +1418,9 @@
             this.BTCM_BAT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_BAT_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_BAT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_BAT_Label3.Location = new System.Drawing.Point(116, 185);
+            this.BTCM_BAT_Label3.Location = new System.Drawing.Point(119, 185);
             this.BTCM_BAT_Label3.Name = "BTCM_BAT_Label3";
-            this.BTCM_BAT_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BTCM_BAT_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_BAT_Label3.TabIndex = 28;
             this.BTCM_BAT_Label3.Tag = "";
             this.BTCM_BAT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1465,9 +1491,9 @@
             this.BTCM_GNT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_GNT_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_GNT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_GNT_Label3.Location = new System.Drawing.Point(116, 205);
+            this.BTCM_GNT_Label3.Location = new System.Drawing.Point(119, 205);
             this.BTCM_GNT_Label3.Name = "BTCM_GNT_Label3";
-            this.BTCM_GNT_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BTCM_GNT_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_GNT_Label3.TabIndex = 26;
             this.BTCM_GNT_Label3.Tag = "";
             this.BTCM_GNT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1527,9 +1553,9 @@
             this.BTCM_OMG_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_OMG_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_OMG_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_OMG_Label3.Location = new System.Drawing.Point(116, 165);
+            this.BTCM_OMG_Label3.Location = new System.Drawing.Point(119, 165);
             this.BTCM_OMG_Label3.Name = "BTCM_OMG_Label3";
-            this.BTCM_OMG_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BTCM_OMG_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_OMG_Label3.TabIndex = 20;
             this.BTCM_OMG_Label3.Tag = "";
             this.BTCM_OMG_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1540,9 +1566,9 @@
             this.BTCM_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_XLM_Label3.Location = new System.Drawing.Point(116, 145);
+            this.BTCM_XLM_Label3.Location = new System.Drawing.Point(119, 145);
             this.BTCM_XLM_Label3.Name = "BTCM_XLM_Label3";
-            this.BTCM_XLM_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BTCM_XLM_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_XLM_Label3.TabIndex = 22;
             this.BTCM_XLM_Label3.Tag = "";
             this.BTCM_XLM_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -5486,9 +5512,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(584, 841);
+            this.Controls.Add(this.Main);
             this.Controls.Add(this.IRAccount_panel);
             this.Controls.Add(this.LoadingPanel);
-            this.Controls.Add(this.Main);
             this.Controls.Add(this.Settings);
             this.Controls.Add(this.OTCHelper);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -5958,6 +5984,8 @@
         private System.Windows.Forms.Label GDAX_COMP_Label2;
         private System.Windows.Forms.Label GDAX_COMP_Label3;
         private System.Windows.Forms.Label GDAX_COMP_Label1;
+        private System.Windows.Forms.CheckBox TelegramNewMessages_checkBox;
+        private System.Windows.Forms.Label TelegramNewMessages_label;
     }
 }
 

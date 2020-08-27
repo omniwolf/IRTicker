@@ -393,14 +393,14 @@ namespace IRTicker
                                 MarketOrder_SubStage1(message.Text);
                             }
                             else if (TGstate.commandSubStage == 2) {
-                                if (message.Text.ToLower() == "b") {
+                                if ((message.Text.ToLower() == "b") || (message.Text.ToLower() == "buy")) {
                                     MarketBuy_Sub();  // we have a sub for this because it gets called by a button too.  the sell side has no button, so we can just code directly into the parent sub
                                 }
-                                else if (message.Text.ToLower() == "s") {
+                                else if ((message.Text.ToLower() == "s") || (message.Text.ToLower() == "sell")) {
                                     MarketSell_Sub();
                                 }
                                 else {
-                                    SendMessage("`Market Order` :: ⚠️ Unrecognised command.  Try again or 'quit' to exit");
+                                    SendMessage("`Market Order` :: ⚠️ Unrecognised command.  Try again or 'quit' to exit", buttons: BuySellButtons());
                                 }
                             }
                             else if (TGstate.commandSubStage == 30) {  // 30 is for buy orders, let's parse the vol
@@ -580,6 +580,7 @@ namespace IRTicker
             }
             if (cancelledOrder.Status == OrderStatus.Cancelled) {
                 await SendMessage("`Cancel Order` :: ✅ Order successfully cancelled.", editMessage: true);
+                TGstate.ResetMenu();
             }
             else {
                 await SendMessage("`Cancel Order` :: ⚠️ Order not cancelled, current status: " + Environment.NewLine +
@@ -894,6 +895,8 @@ namespace IRTicker
                 return;
             }
 
+            if (Properties.Settings.Default.TelegramAllNewMessages) editMessage = false;  // ignore what's sent, we don't want to edit anything
+
             if (pMode == Telegram.Bot.Types.Enums.ParseMode.MarkdownV2) {
                 message = message.Replace("-", "\\-").Replace(".", "\\.").Replace("(", "\\(").Replace(")", "\\)").Replace("=", "\\=")
                     .Replace(">", "\\>").Replace("!", "\\!").Replace("|", "\\|").Replace("#", "\\#").Replace("XBT", "BTC");
@@ -938,6 +941,7 @@ namespace IRTicker
                             NextMsgIsNew = true;  // don't edit this message if the next message normally would
                         }
                     }
+                    pIR.GetAccounts();
                 }
                 else closedOrdersFirstRun[pair] = false;
             }
