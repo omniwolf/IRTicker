@@ -1428,7 +1428,7 @@ namespace IRTicker {
         }
 
         private void UpdateLabels(string dExchange) {
-            if (!Main.Visible) return;  // no point drawing to the UI if we can't see anything
+            if (!Main.Visible && !LoadingPanel.Visible) return;  // no point drawing to the UI if we can't see anything
             // get the copy of the cryptoPairs dictionary.  this is an expensive operation, so do it up here before we reset the labels
             Dictionary<string, DCE.MarketSummary> cPairs = DCEs[dExchange].GetCryptoPairs();
 
@@ -1499,7 +1499,7 @@ namespace IRTicker {
 
         // Updates labels, but just a specific pair (used for websockets because we get each pair separartely)
         private void UpdateLabels_Pair(string dExchange, DCE.MarketSummary mSummary) {
-            if (!Main.Visible) return;  // no point drawing to the UI if we can't see anything
+            if (!Main.Visible && !LoadingPanel.Visible) return;  // no point drawing to the UI if we can't see anything
             // first we reset the labels.  The label writing process only writes to labels of pairs that exist, so we first need to set them back in case they don't exist
 
             //DCE.MarketSummary mSummary = DCEs[dExchange].GetCryptoPairs()[crypto + "-" + fiat];
@@ -2006,6 +2006,7 @@ namespace IRTicker {
                 }
             }
 
+            if (reportType == 1) Main.Visible = true;
             LoadingPanel.Visible = false;  // OK, all UI data is written, let's remove the loading panel.
 
             foreach (KeyValuePair<string, SpreadGraph> sGraph in SpreadGraph_Dict) sGraph.Value.Redraw();  // update the graph
