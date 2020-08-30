@@ -19,7 +19,7 @@ namespace IRTicker.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -136,6 +136,16 @@ namespace IRTicker.Properties {
         internal static System.Drawing.Bitmap IR_Eagel_Transparent___small_faded2 {
             get {
                 object obj = ResourceManager.GetObject("IR_Eagel_Transparent___small_faded2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap pink_clouds {
+            get {
+                object obj = ResourceManager.GetObject("pink_clouds", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -74,55 +74,8 @@
             this.VersionLabel = new System.Windows.Forms.Label();
             this.SettingsOKButton = new System.Windows.Forms.Button();
             this.LoadingPanel = new System.Windows.Forms.Panel();
-            this.GIFLabel = new System.Windows.Forms.Label();
             this.Main = new System.Windows.Forms.Panel();
             this.IRAccount_button = new System.Windows.Forms.Button();
-            this.BTCM_GroupBox = new System.Windows.Forms.GroupBox();
-            this.BTCM_panel = new System.Windows.Forms.Panel();
-            this.BTCM_COMP_Label2 = new System.Windows.Forms.Label();
-            this.BTCM_COMP_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_COMP_Label1 = new System.Windows.Forms.Label();
-            this.BTCM_LINK_Label2 = new System.Windows.Forms.Label();
-            this.BTCM_XBT_Label1 = new System.Windows.Forms.Label();
-            this.BTCM_LINK_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_LTC_Label1 = new System.Windows.Forms.Label();
-            this.BTCM_LINK_Label1 = new System.Windows.Forms.Label();
-            this.BTCM_BCH_Label1 = new System.Windows.Forms.Label();
-            this.BTCM_ETH_Label1 = new System.Windows.Forms.Label();
-            this.BTCM_BSV_Label2 = new System.Windows.Forms.Label();
-            this.BTCM_XRP_Label1 = new System.Windows.Forms.Label();
-            this.BTCM_BSV_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_XBT_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_BSV_Label1 = new System.Windows.Forms.Label();
-            this.BTCM_ETH_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_ETC_Label2 = new System.Windows.Forms.Label();
-            this.BTCM_BCH_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_ETC_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_LTC_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_ETC_Label1 = new System.Windows.Forms.Label();
-            this.BTCM_XRP_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_BAT_Label2 = new System.Windows.Forms.Label();
-            this.BTCM_LTC_Label2 = new System.Windows.Forms.Label();
-            this.BTCM_BAT_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_BCH_Label2 = new System.Windows.Forms.Label();
-            this.BTCM_BAT_Label1 = new System.Windows.Forms.Label();
-            this.BTCM_ETH_Label2 = new System.Windows.Forms.Label();
-            this.BTCM_GNT_Label2 = new System.Windows.Forms.Label();
-            this.BTCM_XBT_Label2 = new System.Windows.Forms.Label();
-            this.BTCM_GNT_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_XRP_Label2 = new System.Windows.Forms.Label();
-            this.BTCM_GNT_Label1 = new System.Windows.Forms.Label();
-            this.BTCM_OMG_Label1 = new System.Windows.Forms.Label();
-            this.BTCM_XLM_Label2 = new System.Windows.Forms.Label();
-            this.BTCM_OMG_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_XLM_Label3 = new System.Windows.Forms.Label();
-            this.BTCM_OMG_Label2 = new System.Windows.Forms.Label();
-            this.BTCM_XLM_Label1 = new System.Windows.Forms.Label();
-            this.BTCM_CurrencyBox = new System.Windows.Forms.ComboBox();
-            this.BTCM_AvgPrice_Label = new System.Windows.Forms.Label();
-            this.BTCM_CryptoComboBox = new System.Windows.Forms.ComboBox();
-            this.BTCM_NumCoinsTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.BTCM_BuySellComboBox = new System.Windows.Forms.ComboBox();
             this.BAR_GroupBox = new System.Windows.Forms.GroupBox();
             this.BAR_CurrencyBox = new System.Windows.Forms.ComboBox();
             this.BAR_XBT_Label2 = new System.Windows.Forms.Label();
@@ -132,61 +85,6 @@
             this.BAR_XBT_Label1 = new System.Windows.Forms.Label();
             this.BAR_NumCoinsTextBox = new System.Windows.Forms.MaskedTextBox();
             this.BAR_BuySellComboBox = new System.Windows.Forms.ComboBox();
-            this.BFX_GroupBox = new System.Windows.Forms.GroupBox();
-            this.BFX_panel = new System.Windows.Forms.Panel();
-            this.BFX_DAI_Label3 = new System.Windows.Forms.Label();
-            this.BFX_DAI_Label1 = new System.Windows.Forms.Label();
-            this.BFX_DAI_Label2 = new System.Windows.Forms.Label();
-            this.BFX_XBT_Label1 = new System.Windows.Forms.Label();
-            this.BFX_USDT_Label2 = new System.Windows.Forms.Label();
-            this.BFX_ZRX_Label2 = new System.Windows.Forms.Label();
-            this.BFX_ZRX_Label1 = new System.Windows.Forms.Label();
-            this.BFX_USDT_Label3 = new System.Windows.Forms.Label();
-            this.BFX_EOS_Label1 = new System.Windows.Forms.Label();
-            this.BFX_OMG_Label2 = new System.Windows.Forms.Label();
-            this.BFX_USDT_Label1 = new System.Windows.Forms.Label();
-            this.BFX_EOS_Label3 = new System.Windows.Forms.Label();
-            this.BFX_OMG_Label3 = new System.Windows.Forms.Label();
-            this.BFX_BSV_Label2 = new System.Windows.Forms.Label();
-            this.BFX_EOS_Label2 = new System.Windows.Forms.Label();
-            this.BFX_ZRX_Label3 = new System.Windows.Forms.Label();
-            this.BFX_BSV_Label3 = new System.Windows.Forms.Label();
-            this.BFX_XLM_Label1 = new System.Windows.Forms.Label();
-            this.BFX_ETH_Label1 = new System.Windows.Forms.Label();
-            this.BFX_OMG_Label1 = new System.Windows.Forms.Label();
-            this.BFX_BSV_Label1 = new System.Windows.Forms.Label();
-            this.BFX_XLM_Label3 = new System.Windows.Forms.Label();
-            this.BFX_XRP_Label2 = new System.Windows.Forms.Label();
-            this.BFX_ETC_Label2 = new System.Windows.Forms.Label();
-            this.BFX_XLM_Label2 = new System.Windows.Forms.Label();
-            this.BFX_BCH_Label1 = new System.Windows.Forms.Label();
-            this.BFX_XRP_Label3 = new System.Windows.Forms.Label();
-            this.BFX_ETC_Label3 = new System.Windows.Forms.Label();
-            this.BFX_MKR_Label1 = new System.Windows.Forms.Label();
-            this.BFX_LTC_Label1 = new System.Windows.Forms.Label();
-            this.BFX_XRP_Label1 = new System.Windows.Forms.Label();
-            this.BFX_ETC_Label1 = new System.Windows.Forms.Label();
-            this.BFX_GNT_Label3 = new System.Windows.Forms.Label();
-            this.BFX_XBT_Label3 = new System.Windows.Forms.Label();
-            this.BFX_XBT_Label2 = new System.Windows.Forms.Label();
-            this.BFX_BAT_Label2 = new System.Windows.Forms.Label();
-            this.BFX_MKR_Label3 = new System.Windows.Forms.Label();
-            this.BFX_ETH_Label3 = new System.Windows.Forms.Label();
-            this.BFX_ETH_Label2 = new System.Windows.Forms.Label();
-            this.BFX_BAT_Label3 = new System.Windows.Forms.Label();
-            this.BFX_MKR_Label2 = new System.Windows.Forms.Label();
-            this.BFX_LTC_Label3 = new System.Windows.Forms.Label();
-            this.BFX_BCH_Label2 = new System.Windows.Forms.Label();
-            this.BFX_BAT_Label1 = new System.Windows.Forms.Label();
-            this.BFX_GNT_Label1 = new System.Windows.Forms.Label();
-            this.BFX_BCH_Label3 = new System.Windows.Forms.Label();
-            this.BFX_LTC_Label2 = new System.Windows.Forms.Label();
-            this.BFX_GNT_Label2 = new System.Windows.Forms.Label();
-            this.BFX_CurrencyBox = new System.Windows.Forms.ComboBox();
-            this.BFX_CryptoComboBox = new System.Windows.Forms.ComboBox();
-            this.BFX_NumCoinsTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.BFX_BuySellComboBox = new System.Windows.Forms.ComboBox();
-            this.BFX_AvgPrice_Label = new System.Windows.Forms.Label();
             this.fiat_GroupBox = new System.Windows.Forms.GroupBox();
             this.fiat_panel = new System.Windows.Forms.Panel();
             this.SGD_Label2 = new System.Windows.Forms.Label();
@@ -201,114 +99,6 @@
             this.AUD_Label2 = new System.Windows.Forms.Label();
             this.USD_Label1 = new System.Windows.Forms.Label();
             this.SettingsButton = new System.Windows.Forms.Button();
-            this.IR_GroupBox = new System.Windows.Forms.GroupBox();
-            this.IR_COMP_Label2 = new System.Windows.Forms.Label();
-            this.IR_COMP_Label1 = new System.Windows.Forms.Label();
-            this.IR_COMP_Label3 = new System.Windows.Forms.Label();
-            this.IR_USDC_Label2 = new System.Windows.Forms.Label();
-            this.IR_USDC_Label1 = new System.Windows.Forms.Label();
-            this.IR_USDC_Label3 = new System.Windows.Forms.Label();
-            this.IR_LINK_Label2 = new System.Windows.Forms.Label();
-            this.IR_LINK_Label1 = new System.Windows.Forms.Label();
-            this.IR_LINK_Label3 = new System.Windows.Forms.Label();
-            this.IR_DAI_Label2 = new System.Windows.Forms.Label();
-            this.IR_DAI_Label1 = new System.Windows.Forms.Label();
-            this.IR_DAI_Label3 = new System.Windows.Forms.Label();
-            this.IR_USDT_Label2 = new System.Windows.Forms.Label();
-            this.IR_USDT_Label3 = new System.Windows.Forms.Label();
-            this.IR_USDT_Label1 = new System.Windows.Forms.Label();
-            this.IR_BSV_Label2 = new System.Windows.Forms.Label();
-            this.IR_BSV_Label3 = new System.Windows.Forms.Label();
-            this.IR_BSV_Label1 = new System.Windows.Forms.Label();
-            this.IR_ETC_Label2 = new System.Windows.Forms.Label();
-            this.IR_ETC_Label3 = new System.Windows.Forms.Label();
-            this.IR_ETC_Label1 = new System.Windows.Forms.Label();
-            this.IR_GNT_Label2 = new System.Windows.Forms.Label();
-            this.IR_GNT_Label1 = new System.Windows.Forms.Label();
-            this.IR_GNT_Label3 = new System.Windows.Forms.Label();
-            this.IR_MKR_Label2 = new System.Windows.Forms.Label();
-            this.IR_MKR_Label1 = new System.Windows.Forms.Label();
-            this.IR_MKR_Label3 = new System.Windows.Forms.Label();
-            this.IR_BAT_Label2 = new System.Windows.Forms.Label();
-            this.IR_BAT_Label1 = new System.Windows.Forms.Label();
-            this.IR_BAT_Label3 = new System.Windows.Forms.Label();
-            this.IR_CurrencyBox = new System.Windows.Forms.ComboBox();
-            this.IR_XLM_Label2 = new System.Windows.Forms.Label();
-            this.IR_XLM_Label3 = new System.Windows.Forms.Label();
-            this.IR_XLM_Label1 = new System.Windows.Forms.Label();
-            this.IR_Reset_Button = new System.Windows.Forms.Button();
-            this.IR_EOS_Label2 = new System.Windows.Forms.Label();
-            this.IR_EOS_Label3 = new System.Windows.Forms.Label();
-            this.IR_EOS_Label1 = new System.Windows.Forms.Label();
-            this.SpreadVolumeTitle_Label = new System.Windows.Forms.Label();
-            this.IR_ZRX_Label2 = new System.Windows.Forms.Label();
-            this.IR_ZRX_Label1 = new System.Windows.Forms.Label();
-            this.IR_OMG_Label2 = new System.Windows.Forms.Label();
-            this.IR_OMG_Label3 = new System.Windows.Forms.Label();
-            this.IR_OMG_Label1 = new System.Windows.Forms.Label();
-            this.IR_XRP_Label2 = new System.Windows.Forms.Label();
-            this.IR_ZRX_Label3 = new System.Windows.Forms.Label();
-            this.IR_XRP_Label1 = new System.Windows.Forms.Label();
-            this.IR_AvgPrice_Label = new System.Windows.Forms.Label();
-            this.IR_CryptoComboBox = new System.Windows.Forms.ComboBox();
-            this.IR_NumCoinsTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.IR_BuySellComboBox = new System.Windows.Forms.ComboBox();
-            this.IR_XBT_Label2 = new System.Windows.Forms.Label();
-            this.IR_ETH_Label2 = new System.Windows.Forms.Label();
-            this.IR_BCH_Label2 = new System.Windows.Forms.Label();
-            this.IR_LTC_Label2 = new System.Windows.Forms.Label();
-            this.IR_LTC_Label3 = new System.Windows.Forms.Label();
-            this.IR_BCH_Label3 = new System.Windows.Forms.Label();
-            this.IR_ETH_Label3 = new System.Windows.Forms.Label();
-            this.IR_XBT_Label3 = new System.Windows.Forms.Label();
-            this.IR_LTC_Label1 = new System.Windows.Forms.Label();
-            this.IR_BCH_Label1 = new System.Windows.Forms.Label();
-            this.IR_ETH_Label1 = new System.Windows.Forms.Label();
-            this.IR_XBT_Label1 = new System.Windows.Forms.Label();
-            this.IR_XRP_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_GroupBox = new System.Windows.Forms.GroupBox();
-            this.GDAX_panel = new System.Windows.Forms.Panel();
-            this.GDAX_COMP_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_COMP_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_COMP_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_DAI_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_DAI_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_DAI_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_MKR_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_XBT_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_ZRX_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_MKR_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_ZRX_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_XBT_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_MKR_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_ZRX_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_ETH_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_XRP_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_ETC_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_BCH_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_XRP_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_ETC_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_LTC_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_XRP_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_ETC_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_LTC_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_ETH_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_XLM_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_LINK_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_BCH_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_BCH_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_XLM_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_LINK_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_ETH_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_LTC_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_XLM_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_LINK_Label1 = new System.Windows.Forms.Label();
-            this.GDAX_XBT_Label3 = new System.Windows.Forms.Label();
-            this.GDAX_CurrencyBox = new System.Windows.Forms.ComboBox();
-            this.GDAX_AvgPrice_Label = new System.Windows.Forms.Label();
-            this.GDAX_CryptoComboBox = new System.Windows.Forms.ComboBox();
-            this.GDAX_NumCoinsTextBox = new System.Windows.Forms.MaskedTextBox();
-            this.GDAX_BuySellComboBox = new System.Windows.Forms.ComboBox();
             this.IRTickerTT_spread = new System.Windows.Forms.ToolTip(this.components);
             this.AccountWithdrawalAddress_label = new System.Windows.Forms.Label();
             this.AccountWithdrawalNextCheck_label = new System.Windows.Forms.Label();
@@ -441,27 +231,237 @@
             this.IRTickerTT_avgPrice = new System.Windows.Forms.ToolTip(this.components);
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
             this.IRT_notification = new System.Windows.Forms.NotifyIcon(this.components);
+            this.GIFLabel = new System.Windows.Forms.Label();
+            this.BTCM_GroupBox = new System.Windows.Forms.GroupBox();
+            this.BTCM_panel = new System.Windows.Forms.Panel();
+            this.BTCM_COMP_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_COMP_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_COMP_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_LINK_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_XBT_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_LINK_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_LTC_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_LINK_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_BCH_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_ETH_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_BSV_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_XRP_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_BSV_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_XBT_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_BSV_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_ETH_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_ETC_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_BCH_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_ETC_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_LTC_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_ETC_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_XRP_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_BAT_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_LTC_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_BAT_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_BCH_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_BAT_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_ETH_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_GNT_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_XBT_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_GNT_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_XRP_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_GNT_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_OMG_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_XLM_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_OMG_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_XLM_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_OMG_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_XLM_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_CurrencyBox = new System.Windows.Forms.ComboBox();
+            this.BTCM_AvgPrice_Label = new System.Windows.Forms.Label();
+            this.BTCM_CryptoComboBox = new System.Windows.Forms.ComboBox();
+            this.BTCM_NumCoinsTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.BTCM_BuySellComboBox = new System.Windows.Forms.ComboBox();
+            this.BFX_GroupBox = new System.Windows.Forms.GroupBox();
+            this.BFX_panel = new System.Windows.Forms.Panel();
+            this.BFX_DAI_Label3 = new System.Windows.Forms.Label();
+            this.BFX_DAI_Label1 = new System.Windows.Forms.Label();
+            this.BFX_DAI_Label2 = new System.Windows.Forms.Label();
+            this.BFX_XBT_Label1 = new System.Windows.Forms.Label();
+            this.BFX_USDT_Label2 = new System.Windows.Forms.Label();
+            this.BFX_ZRX_Label2 = new System.Windows.Forms.Label();
+            this.BFX_ZRX_Label1 = new System.Windows.Forms.Label();
+            this.BFX_USDT_Label3 = new System.Windows.Forms.Label();
+            this.BFX_EOS_Label1 = new System.Windows.Forms.Label();
+            this.BFX_OMG_Label2 = new System.Windows.Forms.Label();
+            this.BFX_USDT_Label1 = new System.Windows.Forms.Label();
+            this.BFX_EOS_Label3 = new System.Windows.Forms.Label();
+            this.BFX_OMG_Label3 = new System.Windows.Forms.Label();
+            this.BFX_BSV_Label2 = new System.Windows.Forms.Label();
+            this.BFX_EOS_Label2 = new System.Windows.Forms.Label();
+            this.BFX_ZRX_Label3 = new System.Windows.Forms.Label();
+            this.BFX_BSV_Label3 = new System.Windows.Forms.Label();
+            this.BFX_XLM_Label1 = new System.Windows.Forms.Label();
+            this.BFX_ETH_Label1 = new System.Windows.Forms.Label();
+            this.BFX_OMG_Label1 = new System.Windows.Forms.Label();
+            this.BFX_BSV_Label1 = new System.Windows.Forms.Label();
+            this.BFX_XLM_Label3 = new System.Windows.Forms.Label();
+            this.BFX_XRP_Label2 = new System.Windows.Forms.Label();
+            this.BFX_ETC_Label2 = new System.Windows.Forms.Label();
+            this.BFX_XLM_Label2 = new System.Windows.Forms.Label();
+            this.BFX_BCH_Label1 = new System.Windows.Forms.Label();
+            this.BFX_XRP_Label3 = new System.Windows.Forms.Label();
+            this.BFX_ETC_Label3 = new System.Windows.Forms.Label();
+            this.BFX_MKR_Label1 = new System.Windows.Forms.Label();
+            this.BFX_LTC_Label1 = new System.Windows.Forms.Label();
+            this.BFX_XRP_Label1 = new System.Windows.Forms.Label();
+            this.BFX_ETC_Label1 = new System.Windows.Forms.Label();
+            this.BFX_GNT_Label3 = new System.Windows.Forms.Label();
+            this.BFX_XBT_Label3 = new System.Windows.Forms.Label();
+            this.BFX_XBT_Label2 = new System.Windows.Forms.Label();
+            this.BFX_BAT_Label2 = new System.Windows.Forms.Label();
+            this.BFX_MKR_Label3 = new System.Windows.Forms.Label();
+            this.BFX_ETH_Label3 = new System.Windows.Forms.Label();
+            this.BFX_ETH_Label2 = new System.Windows.Forms.Label();
+            this.BFX_BAT_Label3 = new System.Windows.Forms.Label();
+            this.BFX_MKR_Label2 = new System.Windows.Forms.Label();
+            this.BFX_LTC_Label3 = new System.Windows.Forms.Label();
+            this.BFX_BCH_Label2 = new System.Windows.Forms.Label();
+            this.BFX_BAT_Label1 = new System.Windows.Forms.Label();
+            this.BFX_GNT_Label1 = new System.Windows.Forms.Label();
+            this.BFX_BCH_Label3 = new System.Windows.Forms.Label();
+            this.BFX_LTC_Label2 = new System.Windows.Forms.Label();
+            this.BFX_GNT_Label2 = new System.Windows.Forms.Label();
+            this.BFX_CurrencyBox = new System.Windows.Forms.ComboBox();
+            this.BFX_CryptoComboBox = new System.Windows.Forms.ComboBox();
+            this.BFX_NumCoinsTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.BFX_BuySellComboBox = new System.Windows.Forms.ComboBox();
+            this.BFX_AvgPrice_Label = new System.Windows.Forms.Label();
+            this.IR_GroupBox = new System.Windows.Forms.GroupBox();
+            this.IR_COMP_Label2 = new System.Windows.Forms.Label();
+            this.IR_COMP_Label1 = new System.Windows.Forms.Label();
+            this.IR_COMP_Label3 = new System.Windows.Forms.Label();
+            this.IR_USDC_Label2 = new System.Windows.Forms.Label();
+            this.IR_USDC_Label1 = new System.Windows.Forms.Label();
+            this.IR_USDC_Label3 = new System.Windows.Forms.Label();
+            this.IR_LINK_Label2 = new System.Windows.Forms.Label();
+            this.IR_LINK_Label1 = new System.Windows.Forms.Label();
+            this.IR_LINK_Label3 = new System.Windows.Forms.Label();
+            this.IR_DAI_Label2 = new System.Windows.Forms.Label();
+            this.IR_DAI_Label1 = new System.Windows.Forms.Label();
+            this.IR_DAI_Label3 = new System.Windows.Forms.Label();
+            this.IR_USDT_Label2 = new System.Windows.Forms.Label();
+            this.IR_USDT_Label3 = new System.Windows.Forms.Label();
+            this.IR_USDT_Label1 = new System.Windows.Forms.Label();
+            this.IR_BSV_Label2 = new System.Windows.Forms.Label();
+            this.IR_BSV_Label3 = new System.Windows.Forms.Label();
+            this.IR_BSV_Label1 = new System.Windows.Forms.Label();
+            this.IR_ETC_Label2 = new System.Windows.Forms.Label();
+            this.IR_ETC_Label3 = new System.Windows.Forms.Label();
+            this.IR_ETC_Label1 = new System.Windows.Forms.Label();
+            this.IR_GNT_Label2 = new System.Windows.Forms.Label();
+            this.IR_GNT_Label1 = new System.Windows.Forms.Label();
+            this.IR_GNT_Label3 = new System.Windows.Forms.Label();
+            this.IR_MKR_Label2 = new System.Windows.Forms.Label();
+            this.IR_MKR_Label1 = new System.Windows.Forms.Label();
+            this.IR_MKR_Label3 = new System.Windows.Forms.Label();
+            this.IR_BAT_Label2 = new System.Windows.Forms.Label();
+            this.IR_BAT_Label1 = new System.Windows.Forms.Label();
+            this.IR_BAT_Label3 = new System.Windows.Forms.Label();
+            this.IR_CurrencyBox = new System.Windows.Forms.ComboBox();
+            this.IR_XLM_Label2 = new System.Windows.Forms.Label();
+            this.IR_XLM_Label3 = new System.Windows.Forms.Label();
+            this.IR_XLM_Label1 = new System.Windows.Forms.Label();
+            this.IR_Reset_Button = new System.Windows.Forms.Button();
+            this.IR_EOS_Label2 = new System.Windows.Forms.Label();
+            this.IR_EOS_Label3 = new System.Windows.Forms.Label();
+            this.IR_EOS_Label1 = new System.Windows.Forms.Label();
+            this.SpreadVolumeTitle_Label = new System.Windows.Forms.Label();
+            this.IR_ZRX_Label2 = new System.Windows.Forms.Label();
+            this.IR_ZRX_Label1 = new System.Windows.Forms.Label();
+            this.IR_OMG_Label2 = new System.Windows.Forms.Label();
+            this.IR_OMG_Label3 = new System.Windows.Forms.Label();
+            this.IR_OMG_Label1 = new System.Windows.Forms.Label();
+            this.IR_XRP_Label2 = new System.Windows.Forms.Label();
+            this.IR_ZRX_Label3 = new System.Windows.Forms.Label();
+            this.IR_XRP_Label1 = new System.Windows.Forms.Label();
+            this.IR_AvgPrice_Label = new System.Windows.Forms.Label();
+            this.IR_CryptoComboBox = new System.Windows.Forms.ComboBox();
+            this.IR_NumCoinsTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.IR_BuySellComboBox = new System.Windows.Forms.ComboBox();
+            this.IR_XBT_Label2 = new System.Windows.Forms.Label();
+            this.IR_ETH_Label2 = new System.Windows.Forms.Label();
+            this.IR_BCH_Label2 = new System.Windows.Forms.Label();
+            this.IR_LTC_Label2 = new System.Windows.Forms.Label();
+            this.IR_LTC_Label3 = new System.Windows.Forms.Label();
+            this.IR_BCH_Label3 = new System.Windows.Forms.Label();
+            this.IR_ETH_Label3 = new System.Windows.Forms.Label();
+            this.IR_XBT_Label3 = new System.Windows.Forms.Label();
+            this.IR_LTC_Label1 = new System.Windows.Forms.Label();
+            this.IR_BCH_Label1 = new System.Windows.Forms.Label();
+            this.IR_ETH_Label1 = new System.Windows.Forms.Label();
+            this.IR_XBT_Label1 = new System.Windows.Forms.Label();
+            this.IR_XRP_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_GroupBox = new System.Windows.Forms.GroupBox();
+            this.GDAX_panel = new System.Windows.Forms.Panel();
+            this.GDAX_COMP_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_COMP_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_COMP_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_DAI_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_DAI_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_DAI_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_MKR_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_XBT_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_ZRX_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_MKR_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_ZRX_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_XBT_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_MKR_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_ZRX_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_ETH_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_XRP_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_ETC_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_BCH_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_XRP_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_ETC_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_LTC_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_XRP_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_ETC_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_LTC_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_ETH_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_XLM_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_LINK_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_BCH_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_BCH_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_XLM_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_LINK_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_ETH_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_LTC_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_XLM_Label2 = new System.Windows.Forms.Label();
+            this.GDAX_LINK_Label1 = new System.Windows.Forms.Label();
+            this.GDAX_XBT_Label3 = new System.Windows.Forms.Label();
+            this.GDAX_CurrencyBox = new System.Windows.Forms.ComboBox();
+            this.GDAX_AvgPrice_Label = new System.Windows.Forms.Label();
+            this.GDAX_CryptoComboBox = new System.Windows.Forms.ComboBox();
+            this.GDAX_NumCoinsTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.GDAX_BuySellComboBox = new System.Windows.Forms.ComboBox();
             this.Settings.SuspendLayout();
             this.IRAccountSettings_groupBox.SuspendLayout();
             this.SlackSettings_groupBox.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
-            this.BTCM_GroupBox.SuspendLayout();
-            this.BTCM_panel.SuspendLayout();
             this.BAR_GroupBox.SuspendLayout();
-            this.BFX_GroupBox.SuspendLayout();
-            this.BFX_panel.SuspendLayout();
             this.fiat_GroupBox.SuspendLayout();
             this.fiat_panel.SuspendLayout();
-            this.IR_GroupBox.SuspendLayout();
-            this.GDAX_GroupBox.SuspendLayout();
-            this.GDAX_panel.SuspendLayout();
             this.OTCHelper.SuspendLayout();
             this.IRAccount_panel.SuspendLayout();
             this.AccountOpenOrders_panel.SuspendLayout();
             this.AccountClosedOrders_panel.SuspendLayout();
             this.IRAccountAddress_panel.SuspendLayout();
             this.GetAccounts_panel.SuspendLayout();
+            this.BTCM_GroupBox.SuspendLayout();
+            this.BTCM_panel.SuspendLayout();
+            this.BFX_GroupBox.SuspendLayout();
+            this.BFX_panel.SuspendLayout();
+            this.IR_GroupBox.SuspendLayout();
+            this.GDAX_GroupBox.SuspendLayout();
+            this.GDAX_panel.SuspendLayout();
             this.SuspendLayout();
             // 
             // refreshFrequencyTextbox
@@ -1006,18 +1006,6 @@
             this.LoadingPanel.Size = new System.Drawing.Size(585, 843);
             this.LoadingPanel.TabIndex = 10;
             // 
-            // GIFLabel
-            // 
-            this.GIFLabel.BackColor = System.Drawing.Color.Black;
-            this.GIFLabel.ForeColor = System.Drawing.Color.Red;
-            this.GIFLabel.Image = global::IRTicker.Properties.Resources.rainbow_space_bricks_jpg;
-            this.GIFLabel.Location = new System.Drawing.Point(0, 0);
-            this.GIFLabel.Name = "GIFLabel";
-            this.GIFLabel.Size = new System.Drawing.Size(585, 843);
-            this.GIFLabel.TabIndex = 0;
-            this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
-            this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
             // Main
             // 
             this.Main.BackColor = System.Drawing.Color.White;
@@ -1045,6 +1033,1654 @@
             this.IRAccount_button.Text = "IR Account";
             this.IRAccount_button.UseVisualStyleBackColor = true;
             this.IRAccount_button.Click += new System.EventHandler(this.IRAccount_button_Click);
+            // 
+            // BAR_GroupBox
+            // 
+            this.BAR_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.BAR_GroupBox.Controls.Add(this.BAR_CurrencyBox);
+            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label2);
+            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label3);
+            this.BAR_GroupBox.Controls.Add(this.BAR_AvgPrice_Label);
+            this.BAR_GroupBox.Controls.Add(this.BAR_CryptoComboBox);
+            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label1);
+            this.BAR_GroupBox.Controls.Add(this.BAR_NumCoinsTextBox);
+            this.BAR_GroupBox.Controls.Add(this.BAR_BuySellComboBox);
+            this.BAR_GroupBox.Cursor = System.Windows.Forms.Cursors.Default;
+            this.BAR_GroupBox.ForeColor = System.Drawing.Color.Gray;
+            this.BAR_GroupBox.Location = new System.Drawing.Point(305, 322);
+            this.BAR_GroupBox.Name = "BAR_GroupBox";
+            this.BAR_GroupBox.Size = new System.Drawing.Size(262, 92);
+            this.BAR_GroupBox.TabIndex = 16;
+            this.BAR_GroupBox.TabStop = false;
+            this.BAR_GroupBox.Text = "Bitaroo";
+            // 
+            // BAR_CurrencyBox
+            // 
+            this.BAR_CurrencyBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_CurrencyBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BAR_CurrencyBox.FormattingEnabled = true;
+            this.BAR_CurrencyBox.Items.AddRange(new object[] {
+            "crypto",
+            "fiat"});
+            this.BAR_CurrencyBox.Location = new System.Drawing.Point(131, 65);
+            this.BAR_CurrencyBox.Name = "BAR_CurrencyBox";
+            this.BAR_CurrencyBox.Size = new System.Drawing.Size(58, 21);
+            this.BAR_CurrencyBox.TabIndex = 60;
+            // 
+            // BAR_XBT_Label2
+            // 
+            this.BAR_XBT_Label2.AutoSize = true;
+            this.BAR_XBT_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BAR_XBT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_XBT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BAR_XBT_Label2.Location = new System.Drawing.Point(53, 21);
+            this.BAR_XBT_Label2.Name = "BAR_XBT_Label2";
+            this.BAR_XBT_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BAR_XBT_Label2.TabIndex = 4;
+            this.BAR_XBT_Label2.Tag = "BAR";
+            // 
+            // BAR_XBT_Label3
+            // 
+            this.BAR_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.BAR_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BAR_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_XBT_Label3.Location = new System.Drawing.Point(117, 18);
+            this.BAR_XBT_Label3.Name = "BAR_XBT_Label3";
+            this.BAR_XBT_Label3.Size = new System.Drawing.Size(134, 13);
+            this.BAR_XBT_Label3.TabIndex = 8;
+            this.BAR_XBT_Label3.Tag = "";
+            this.BAR_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.BAR_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_XBT_Label3_MouseDoubleClick);
+            // 
+            // BAR_AvgPrice_Label
+            // 
+            this.BAR_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
+            this.BAR_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BAR_AvgPrice_Label.Location = new System.Drawing.Point(9, 43);
+            this.BAR_AvgPrice_Label.Name = "BAR_AvgPrice_Label";
+            this.BAR_AvgPrice_Label.Size = new System.Drawing.Size(242, 17);
+            this.BAR_AvgPrice_Label.TabIndex = 58;
+            // 
+            // BAR_CryptoComboBox
+            // 
+            this.BAR_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BAR_CryptoComboBox.Location = new System.Drawing.Point(193, 65);
+            this.BAR_CryptoComboBox.Name = "BAR_CryptoComboBox";
+            this.BAR_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
+            this.BAR_CryptoComboBox.TabIndex = 57;
+            this.BAR_CryptoComboBox.DropDown += new System.EventHandler(this.BAR_CryptoComboBox_DropDown);
+            this.BAR_CryptoComboBox.SelectedIndexChanged += new System.EventHandler(this.BAR_CryptoComboBox_SelectedIndexChanged);
+            // 
+            // BAR_XBT_Label1
+            // 
+            this.BAR_XBT_Label1.AutoSize = true;
+            this.BAR_XBT_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BAR_XBT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_XBT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BAR_XBT_Label1.Location = new System.Drawing.Point(6, 21);
+            this.BAR_XBT_Label1.Name = "BAR_XBT_Label1";
+            this.BAR_XBT_Label1.Size = new System.Drawing.Size(35, 13);
+            this.BAR_XBT_Label1.TabIndex = 0;
+            this.BAR_XBT_Label1.Tag = "DCECryptoLabel";
+            this.BAR_XBT_Label1.Text = "BTC:";
+            // 
+            // BAR_NumCoinsTextBox
+            // 
+            this.BAR_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_NumCoinsTextBox.Location = new System.Drawing.Point(58, 65);
+            this.BAR_NumCoinsTextBox.Name = "BAR_NumCoinsTextBox";
+            this.BAR_NumCoinsTextBox.PromptChar = ' ';
+            this.BAR_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
+            this.BAR_NumCoinsTextBox.TabIndex = 56;
+            this.BAR_NumCoinsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.BAR_NumCoinsTextBox.ValidatingType = typeof(System.DateTime);
+            this.BAR_NumCoinsTextBox.TextChanged += new System.EventHandler(this.BAR_NumCoinsTextBox_TextChanged);
+            // 
+            // BAR_BuySellComboBox
+            // 
+            this.BAR_BuySellComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BAR_BuySellComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BAR_BuySellComboBox.FormattingEnabled = true;
+            this.BAR_BuySellComboBox.Items.AddRange(new object[] {
+            "Buy",
+            "Sell"});
+            this.BAR_BuySellComboBox.Location = new System.Drawing.Point(9, 65);
+            this.BAR_BuySellComboBox.Name = "BAR_BuySellComboBox";
+            this.BAR_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
+            this.BAR_BuySellComboBox.TabIndex = 55;
+            this.BAR_BuySellComboBox.SelectedIndexChanged += new System.EventHandler(this.BAR_BuySellComboBox_SelectedIndexChanged);
+            // 
+            // fiat_GroupBox
+            // 
+            this.fiat_GroupBox.Controls.Add(this.fiat_panel);
+            this.fiat_GroupBox.ForeColor = System.Drawing.Color.Gray;
+            this.fiat_GroupBox.Location = new System.Drawing.Point(19, 731);
+            this.fiat_GroupBox.Name = "fiat_GroupBox";
+            this.fiat_GroupBox.Size = new System.Drawing.Size(263, 102);
+            this.fiat_GroupBox.TabIndex = 9;
+            this.fiat_GroupBox.TabStop = false;
+            this.fiat_GroupBox.Text = "Fiat rates";
+            this.fiat_GroupBox.Click += new System.EventHandler(this.Fiat_GroupBox_Click);
+            // 
+            // fiat_panel
+            // 
+            this.fiat_panel.BackColor = System.Drawing.Color.Transparent;
+            this.fiat_panel.Controls.Add(this.SGD_Label2);
+            this.fiat_panel.Controls.Add(this.AUD_Label1);
+            this.fiat_panel.Controls.Add(this.EUR_Label1);
+            this.fiat_panel.Controls.Add(this.fiatRefresh_checkBox);
+            this.fiat_panel.Controls.Add(this.NZD_Label1);
+            this.fiat_panel.Controls.Add(this.SGD_Label1);
+            this.fiat_panel.Controls.Add(this.EUR_Label2);
+            this.fiat_panel.Controls.Add(this.NZD_Label2);
+            this.fiat_panel.Controls.Add(this.USD_Label2);
+            this.fiat_panel.Controls.Add(this.AUD_Label2);
+            this.fiat_panel.Controls.Add(this.USD_Label1);
+            this.fiat_panel.Location = new System.Drawing.Point(0, 14);
+            this.fiat_panel.Name = "fiat_panel";
+            this.fiat_panel.Size = new System.Drawing.Size(263, 85);
+            this.fiat_panel.TabIndex = 0;
+            // 
+            // SGD_Label2
+            // 
+            this.SGD_Label2.AutoSize = true;
+            this.SGD_Label2.Location = new System.Drawing.Point(57, 68);
+            this.SGD_Label2.Name = "SGD_Label2";
+            this.SGD_Label2.Size = new System.Drawing.Size(0, 13);
+            this.SGD_Label2.TabIndex = 10;
+            // 
+            // AUD_Label1
+            // 
+            this.AUD_Label1.AutoSize = true;
+            this.AUD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AUD_Label1.Location = new System.Drawing.Point(6, 9);
+            this.AUD_Label1.Name = "AUD_Label1";
+            this.AUD_Label1.Size = new System.Drawing.Size(37, 13);
+            this.AUD_Label1.TabIndex = 0;
+            this.AUD_Label1.Text = "AUD:";
+            // 
+            // EUR_Label1
+            // 
+            this.EUR_Label1.AutoSize = true;
+            this.EUR_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EUR_Label1.Location = new System.Drawing.Point(7, 89);
+            this.EUR_Label1.Name = "EUR_Label1";
+            this.EUR_Label1.Size = new System.Drawing.Size(37, 13);
+            this.EUR_Label1.TabIndex = 2;
+            this.EUR_Label1.Text = "EUR:";
+            // 
+            // fiatRefresh_checkBox
+            // 
+            this.fiatRefresh_checkBox.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.fiatRefresh_checkBox.Location = new System.Drawing.Point(178, 4);
+            this.fiatRefresh_checkBox.Name = "fiatRefresh_checkBox";
+            this.fiatRefresh_checkBox.Size = new System.Drawing.Size(66, 30);
+            this.fiatRefresh_checkBox.TabIndex = 9;
+            this.fiatRefresh_checkBox.Text = "Queue update";
+            this.fiatRefresh_checkBox.UseVisualStyleBackColor = true;
+            this.fiatRefresh_checkBox.CheckedChanged += new System.EventHandler(this.Fiat_checkBox_CheckedChanged);
+            // 
+            // NZD_Label1
+            // 
+            this.NZD_Label1.AutoSize = true;
+            this.NZD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NZD_Label1.Location = new System.Drawing.Point(6, 29);
+            this.NZD_Label1.Name = "NZD_Label1";
+            this.NZD_Label1.Size = new System.Drawing.Size(37, 13);
+            this.NZD_Label1.TabIndex = 1;
+            this.NZD_Label1.Text = "NZD:";
+            // 
+            // SGD_Label1
+            // 
+            this.SGD_Label1.AutoSize = true;
+            this.SGD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SGD_Label1.Location = new System.Drawing.Point(7, 69);
+            this.SGD_Label1.Name = "SGD_Label1";
+            this.SGD_Label1.Size = new System.Drawing.Size(37, 13);
+            this.SGD_Label1.TabIndex = 9;
+            this.SGD_Label1.Text = "SGD:";
+            // 
+            // EUR_Label2
+            // 
+            this.EUR_Label2.AutoSize = true;
+            this.EUR_Label2.Location = new System.Drawing.Point(57, 89);
+            this.EUR_Label2.Name = "EUR_Label2";
+            this.EUR_Label2.Size = new System.Drawing.Size(0, 13);
+            this.EUR_Label2.TabIndex = 6;
+            // 
+            // NZD_Label2
+            // 
+            this.NZD_Label2.AutoSize = true;
+            this.NZD_Label2.Location = new System.Drawing.Point(56, 29);
+            this.NZD_Label2.Name = "NZD_Label2";
+            this.NZD_Label2.Size = new System.Drawing.Size(0, 13);
+            this.NZD_Label2.TabIndex = 5;
+            // 
+            // USD_Label2
+            // 
+            this.USD_Label2.AutoSize = true;
+            this.USD_Label2.Location = new System.Drawing.Point(57, 48);
+            this.USD_Label2.Name = "USD_Label2";
+            this.USD_Label2.Size = new System.Drawing.Size(0, 13);
+            this.USD_Label2.TabIndex = 8;
+            // 
+            // AUD_Label2
+            // 
+            this.AUD_Label2.AutoSize = true;
+            this.AUD_Label2.Location = new System.Drawing.Point(56, 9);
+            this.AUD_Label2.Name = "AUD_Label2";
+            this.AUD_Label2.Size = new System.Drawing.Size(0, 13);
+            this.AUD_Label2.TabIndex = 4;
+            // 
+            // USD_Label1
+            // 
+            this.USD_Label1.AutoSize = true;
+            this.USD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.USD_Label1.Location = new System.Drawing.Point(7, 49);
+            this.USD_Label1.Name = "USD_Label1";
+            this.USD_Label1.Size = new System.Drawing.Size(37, 13);
+            this.USD_Label1.TabIndex = 7;
+            this.USD_Label1.Text = "USD:";
+            // 
+            // SettingsButton
+            // 
+            this.SettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SettingsButton.Location = new System.Drawing.Point(492, 810);
+            this.SettingsButton.Name = "SettingsButton";
+            this.SettingsButton.Size = new System.Drawing.Size(75, 23);
+            this.SettingsButton.TabIndex = 2;
+            this.SettingsButton.Text = "Settings";
+            this.SettingsButton.UseVisualStyleBackColor = true;
+            this.SettingsButton.Click += new System.EventHandler(this.SettingsButton_Click);
+            // 
+            // IRTickerTT_spread
+            // 
+            this.IRTickerTT_spread.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.IRTickerTT_spread.ToolTipTitle = "Spread details";
+            // 
+            // AccountWithdrawalAddress_label
+            // 
+            this.AccountWithdrawalAddress_label.AutoEllipsis = true;
+            this.AccountWithdrawalAddress_label.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.AccountWithdrawalAddress_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountWithdrawalAddress_label.Location = new System.Drawing.Point(11, 40);
+            this.AccountWithdrawalAddress_label.Name = "AccountWithdrawalAddress_label";
+            this.AccountWithdrawalAddress_label.Size = new System.Drawing.Size(289, 14);
+            this.AccountWithdrawalAddress_label.TabIndex = 1;
+            this.IRTickerTT_generic.SetToolTip(this.AccountWithdrawalAddress_label, "Click to copy");
+            this.AccountWithdrawalAddress_label.Click += new System.EventHandler(this.AccountWithdrawalAddress_label_Click);
+            // 
+            // AccountWithdrawalNextCheck_label
+            // 
+            this.AccountWithdrawalNextCheck_label.AutoSize = true;
+            this.AccountWithdrawalNextCheck_label.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.AccountWithdrawalNextCheck_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountWithdrawalNextCheck_label.Location = new System.Drawing.Point(11, 115);
+            this.AccountWithdrawalNextCheck_label.Name = "AccountWithdrawalNextCheck_label";
+            this.AccountWithdrawalNextCheck_label.Size = new System.Drawing.Size(0, 12);
+            this.AccountWithdrawalNextCheck_label.TabIndex = 2;
+            this.IRTickerTT_generic.SetToolTip(this.AccountWithdrawalNextCheck_label, "Click to check address now");
+            this.AccountWithdrawalNextCheck_label.Click += new System.EventHandler(this.AccountWithdrawalNextCheck_label_Click);
+            // 
+            // AccountWithdrawalLastCheck_label
+            // 
+            this.AccountWithdrawalLastCheck_label.AutoSize = true;
+            this.AccountWithdrawalLastCheck_label.Cursor = System.Windows.Forms.Cursors.Default;
+            this.AccountWithdrawalLastCheck_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountWithdrawalLastCheck_label.Location = new System.Drawing.Point(11, 90);
+            this.AccountWithdrawalLastCheck_label.Name = "AccountWithdrawalLastCheck_label";
+            this.AccountWithdrawalLastCheck_label.Size = new System.Drawing.Size(0, 12);
+            this.AccountWithdrawalLastCheck_label.TabIndex = 47;
+            // 
+            // OTCHelper
+            // 
+            this.OTCHelper.Controls.Add(this.StepVolume_Label7);
+            this.OTCHelper.Controls.Add(this.StepPrice_Label7);
+            this.OTCHelper.Controls.Add(this.StepVolume_Label6);
+            this.OTCHelper.Controls.Add(this.StepPrice_Label6);
+            this.OTCHelper.Controls.Add(this.StepVolume_Label5);
+            this.OTCHelper.Controls.Add(this.StepPrice_Label5);
+            this.OTCHelper.Controls.Add(this.StepVolume_Label4);
+            this.OTCHelper.Controls.Add(this.StepPrice_Label4);
+            this.OTCHelper.Controls.Add(this.StepPrice_Label3);
+            this.OTCHelper.Controls.Add(this.StepVolume_Label3);
+            this.OTCHelper.Controls.Add(this.StepVolume_Label2);
+            this.OTCHelper.Controls.Add(this.StepPrice_Label2);
+            this.OTCHelper.Controls.Add(this.StepVolume_Label1);
+            this.OTCHelper.Controls.Add(this.StepPrice_Label1);
+            this.OTCHelper.Controls.Add(this.MarketBuyCrypto_Label);
+            this.OTCHelper.Controls.Add(this.CashInput_MaskedTextBox);
+            this.OTCHelper.Controls.Add(this.CryptoChooser_ComboBox);
+            this.OTCHelper.Location = new System.Drawing.Point(0, 0);
+            this.OTCHelper.Name = "OTCHelper";
+            this.OTCHelper.Size = new System.Drawing.Size(585, 613);
+            this.OTCHelper.TabIndex = 1;
+            // 
+            // StepVolume_Label7
+            // 
+            this.StepVolume_Label7.AutoSize = true;
+            this.StepVolume_Label7.Location = new System.Drawing.Point(136, 312);
+            this.StepVolume_Label7.Name = "StepVolume_Label7";
+            this.StepVolume_Label7.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label7.TabIndex = 16;
+            this.StepVolume_Label7.Text = "label1";
+            // 
+            // StepPrice_Label7
+            // 
+            this.StepPrice_Label7.AutoSize = true;
+            this.StepPrice_Label7.Location = new System.Drawing.Point(51, 312);
+            this.StepPrice_Label7.Name = "StepPrice_Label7";
+            this.StepPrice_Label7.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label7.TabIndex = 15;
+            this.StepPrice_Label7.Text = "label1";
+            // 
+            // StepVolume_Label6
+            // 
+            this.StepVolume_Label6.AutoSize = true;
+            this.StepVolume_Label6.Location = new System.Drawing.Point(136, 274);
+            this.StepVolume_Label6.Name = "StepVolume_Label6";
+            this.StepVolume_Label6.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label6.TabIndex = 14;
+            this.StepVolume_Label6.Text = "label1";
+            // 
+            // StepPrice_Label6
+            // 
+            this.StepPrice_Label6.AutoSize = true;
+            this.StepPrice_Label6.Location = new System.Drawing.Point(51, 274);
+            this.StepPrice_Label6.Name = "StepPrice_Label6";
+            this.StepPrice_Label6.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label6.TabIndex = 13;
+            this.StepPrice_Label6.Text = "label1";
+            // 
+            // StepVolume_Label5
+            // 
+            this.StepVolume_Label5.AutoSize = true;
+            this.StepVolume_Label5.Location = new System.Drawing.Point(136, 240);
+            this.StepVolume_Label5.Name = "StepVolume_Label5";
+            this.StepVolume_Label5.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label5.TabIndex = 12;
+            this.StepVolume_Label5.Text = "label1";
+            // 
+            // StepPrice_Label5
+            // 
+            this.StepPrice_Label5.AutoSize = true;
+            this.StepPrice_Label5.Location = new System.Drawing.Point(51, 240);
+            this.StepPrice_Label5.Name = "StepPrice_Label5";
+            this.StepPrice_Label5.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label5.TabIndex = 11;
+            this.StepPrice_Label5.Text = "label1";
+            // 
+            // StepVolume_Label4
+            // 
+            this.StepVolume_Label4.AutoSize = true;
+            this.StepVolume_Label4.Location = new System.Drawing.Point(136, 214);
+            this.StepVolume_Label4.Name = "StepVolume_Label4";
+            this.StepVolume_Label4.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label4.TabIndex = 10;
+            this.StepVolume_Label4.Text = "label1";
+            // 
+            // StepPrice_Label4
+            // 
+            this.StepPrice_Label4.AutoSize = true;
+            this.StepPrice_Label4.Location = new System.Drawing.Point(51, 214);
+            this.StepPrice_Label4.Name = "StepPrice_Label4";
+            this.StepPrice_Label4.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label4.TabIndex = 9;
+            this.StepPrice_Label4.Text = "label1";
+            // 
+            // StepPrice_Label3
+            // 
+            this.StepPrice_Label3.AutoSize = true;
+            this.StepPrice_Label3.Location = new System.Drawing.Point(51, 182);
+            this.StepPrice_Label3.Name = "StepPrice_Label3";
+            this.StepPrice_Label3.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label3.TabIndex = 8;
+            this.StepPrice_Label3.Text = "label1";
+            // 
+            // StepVolume_Label3
+            // 
+            this.StepVolume_Label3.AutoSize = true;
+            this.StepVolume_Label3.Location = new System.Drawing.Point(136, 182);
+            this.StepVolume_Label3.Name = "StepVolume_Label3";
+            this.StepVolume_Label3.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label3.TabIndex = 7;
+            this.StepVolume_Label3.Text = "label1";
+            // 
+            // StepVolume_Label2
+            // 
+            this.StepVolume_Label2.AutoSize = true;
+            this.StepVolume_Label2.Location = new System.Drawing.Point(136, 150);
+            this.StepVolume_Label2.Name = "StepVolume_Label2";
+            this.StepVolume_Label2.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label2.TabIndex = 6;
+            this.StepVolume_Label2.Text = "label1";
+            // 
+            // StepPrice_Label2
+            // 
+            this.StepPrice_Label2.AutoSize = true;
+            this.StepPrice_Label2.Location = new System.Drawing.Point(51, 150);
+            this.StepPrice_Label2.Name = "StepPrice_Label2";
+            this.StepPrice_Label2.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label2.TabIndex = 5;
+            this.StepPrice_Label2.Text = "label1";
+            // 
+            // StepVolume_Label1
+            // 
+            this.StepVolume_Label1.AutoSize = true;
+            this.StepVolume_Label1.Location = new System.Drawing.Point(136, 116);
+            this.StepVolume_Label1.Name = "StepVolume_Label1";
+            this.StepVolume_Label1.Size = new System.Drawing.Size(35, 13);
+            this.StepVolume_Label1.TabIndex = 4;
+            this.StepVolume_Label1.Text = "label1";
+            // 
+            // StepPrice_Label1
+            // 
+            this.StepPrice_Label1.AutoSize = true;
+            this.StepPrice_Label1.Location = new System.Drawing.Point(51, 116);
+            this.StepPrice_Label1.Name = "StepPrice_Label1";
+            this.StepPrice_Label1.Size = new System.Drawing.Size(35, 13);
+            this.StepPrice_Label1.TabIndex = 3;
+            this.StepPrice_Label1.Text = "label1";
+            // 
+            // MarketBuyCrypto_Label
+            // 
+            this.MarketBuyCrypto_Label.AutoSize = true;
+            this.MarketBuyCrypto_Label.Location = new System.Drawing.Point(325, 43);
+            this.MarketBuyCrypto_Label.Name = "MarketBuyCrypto_Label";
+            this.MarketBuyCrypto_Label.Size = new System.Drawing.Size(35, 13);
+            this.MarketBuyCrypto_Label.TabIndex = 2;
+            this.MarketBuyCrypto_Label.Text = "label1";
+            // 
+            // CashInput_MaskedTextBox
+            // 
+            this.CashInput_MaskedTextBox.Location = new System.Drawing.Point(200, 37);
+            this.CashInput_MaskedTextBox.Name = "CashInput_MaskedTextBox";
+            this.CashInput_MaskedTextBox.Size = new System.Drawing.Size(100, 20);
+            this.CashInput_MaskedTextBox.TabIndex = 1;
+            // 
+            // CryptoChooser_ComboBox
+            // 
+            this.CryptoChooser_ComboBox.FormattingEnabled = true;
+            this.CryptoChooser_ComboBox.Location = new System.Drawing.Point(41, 36);
+            this.CryptoChooser_ComboBox.Name = "CryptoChooser_ComboBox";
+            this.CryptoChooser_ComboBox.Size = new System.Drawing.Size(121, 21);
+            this.CryptoChooser_ComboBox.TabIndex = 0;
+            // 
+            // BlinkStickBW
+            // 
+            this.BlinkStickBW.WorkerSupportsCancellation = true;
+            this.BlinkStickBW.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickBW_DoWork);
+            this.BlinkStickBW.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BlinkStickBW_RunWorkerCompleted);
+            // 
+            // BlinkStickWhite_Thread
+            // 
+            this.BlinkStickWhite_Thread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickWhite_Thread_DoWork);
+            // 
+            // IRAccount_panel
+            // 
+            this.IRAccount_panel.Controls.Add(this.StopBaitin_button);
+            this.IRAccount_panel.Controls.Add(this.SwitchOrderBookSide_button);
+            this.IRAccount_panel.Controls.Add(this.AccountOrderType_listbox);
+            this.IRAccount_panel.Controls.Add(this.AccountOpenOrders_panel);
+            this.IRAccount_panel.Controls.Add(this.AccountClosedOrders_panel);
+            this.IRAccount_panel.Controls.Add(this.AccountEstOrderValue_value);
+            this.IRAccount_panel.Controls.Add(this.AccountEstOrderValue_label);
+            this.IRAccount_panel.Controls.Add(this.AccountOrders_listview);
+            this.IRAccount_panel.Controls.Add(this.AccountPlaceOrder_button);
+            this.IRAccount_panel.Controls.Add(this.AccountLimitPrice_label);
+            this.IRAccount_panel.Controls.Add(this.AccountLimitPrice_textbox);
+            this.IRAccount_panel.Controls.Add(this.AccountOrderVolume_label);
+            this.IRAccount_panel.Controls.Add(this.AccountOrderVolume_textbox);
+            this.IRAccount_panel.Controls.Add(this.AccountBuySell_listbox);
+            this.IRAccount_panel.Controls.Add(this.IRAccountAddress_panel);
+            this.IRAccount_panel.Controls.Add(this.GetAccounts_panel);
+            this.IRAccount_panel.Location = new System.Drawing.Point(0, 0);
+            this.IRAccount_panel.Name = "IRAccount_panel";
+            this.IRAccount_panel.Size = new System.Drawing.Size(585, 843);
+            this.IRAccount_panel.TabIndex = 61;
+            this.IRAccount_panel.Visible = false;
+            // 
+            // StopBaitin_button
+            // 
+            this.StopBaitin_button.BackColor = System.Drawing.Color.White;
+            this.StopBaitin_button.Enabled = false;
+            this.StopBaitin_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.StopBaitin_button.Location = new System.Drawing.Point(455, 65);
+            this.StopBaitin_button.Name = "StopBaitin_button";
+            this.StopBaitin_button.Size = new System.Drawing.Size(121, 39);
+            this.StopBaitin_button.TabIndex = 17;
+            this.StopBaitin_button.Text = "Stop market baiter and cancel order";
+            this.StopBaitin_button.UseVisualStyleBackColor = false;
+            this.StopBaitin_button.Visible = false;
+            this.StopBaitin_button.Click += new System.EventHandler(this.StopBaitin_button_Click);
+            // 
+            // SwitchOrderBookSide_button
+            // 
+            this.SwitchOrderBookSide_button.BackColor = System.Drawing.Color.White;
+            this.SwitchOrderBookSide_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SwitchOrderBookSide_button.Location = new System.Drawing.Point(499, 114);
+            this.SwitchOrderBookSide_button.Name = "SwitchOrderBookSide_button";
+            this.SwitchOrderBookSide_button.Size = new System.Drawing.Size(77, 24);
+            this.SwitchOrderBookSide_button.TabIndex = 16;
+            this.SwitchOrderBookSide_button.Text = "Switch sides";
+            this.SwitchOrderBookSide_button.UseVisualStyleBackColor = false;
+            this.SwitchOrderBookSide_button.Click += new System.EventHandler(this.SwitchOrderBookSide_button_Click);
+            // 
+            // AccountOrderType_listbox
+            // 
+            this.AccountOrderType_listbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.AccountOrderType_listbox.FormattingEnabled = true;
+            this.AccountOrderType_listbox.ItemHeight = 20;
+            this.AccountOrderType_listbox.Items.AddRange(new object[] {
+            "Market order",
+            "Limit order",
+            "Market baiter"});
+            this.AccountOrderType_listbox.Location = new System.Drawing.Point(330, 12);
+            this.AccountOrderType_listbox.Name = "AccountOrderType_listbox";
+            this.AccountOrderType_listbox.ShowScrollbar = false;
+            this.AccountOrderType_listbox.Size = new System.Drawing.Size(101, 44);
+            this.AccountOrderType_listbox.TabIndex = 3;
+            this.AccountOrderType_listbox.SelectedIndexChanged += new System.EventHandler(this.AcccountOrderType_listbox_SelectedIndexChanged);
+            // 
+            // AccountOpenOrders_panel
+            // 
+            this.AccountOpenOrders_panel.BackColor = System.Drawing.Color.LightGreen;
+            this.AccountOpenOrders_panel.Controls.Add(this.AccountOpenOrders_listview);
+            this.AccountOpenOrders_panel.Controls.Add(this.AccountOpenOrders_label);
+            this.AccountOpenOrders_panel.Location = new System.Drawing.Point(276, 335);
+            this.AccountOpenOrders_panel.Name = "AccountOpenOrders_panel";
+            this.AccountOpenOrders_panel.Size = new System.Drawing.Size(309, 185);
+            this.AccountOpenOrders_panel.TabIndex = 14;
+            // 
+            // AccountOpenOrders_listview
+            // 
+            this.AccountOpenOrders_listview.AllowColumnReorder = true;
+            this.AccountOpenOrders_listview.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader5,
+            this.columnHeader6,
+            this.columnHeader7,
+            this.columnHeader8});
+            this.AccountOpenOrders_listview.FullRowSelect = true;
+            this.AccountOpenOrders_listview.GridLines = true;
+            this.AccountOpenOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.AccountOpenOrders_listview.HideSelection = false;
+            this.AccountOpenOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem1});
+            this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 32);
+            this.AccountOpenOrders_listview.MultiSelect = false;
+            this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";
+            this.AccountOpenOrders_listview.Scrollable = false;
+            this.AccountOpenOrders_listview.ShowGroups = false;
+            this.AccountOpenOrders_listview.ShowItemToolTips = true;
+            this.AccountOpenOrders_listview.Size = new System.Drawing.Size(291, 148);
+            this.AccountOpenOrders_listview.TabIndex = 13;
+            this.AccountOpenOrders_listview.UseCompatibleStateImageBehavior = false;
+            this.AccountOpenOrders_listview.View = System.Windows.Forms.View.Details;
+            this.AccountOpenOrders_listview.DoubleClick += new System.EventHandler(this.AccountOpenOrders_listview_DoubleClick);
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "Date";
+            this.columnHeader5.Width = 80;
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "Volume";
+            this.columnHeader6.Width = 70;
+            // 
+            // columnHeader7
+            // 
+            this.columnHeader7.Text = "Price";
+            this.columnHeader7.Width = 70;
+            // 
+            // columnHeader8
+            // 
+            this.columnHeader8.Text = "Outstanding";
+            this.columnHeader8.Width = 69;
+            // 
+            // AccountOpenOrders_label
+            // 
+            this.AccountOpenOrders_label.AutoSize = true;
+            this.AccountOpenOrders_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountOpenOrders_label.Location = new System.Drawing.Point(7, 8);
+            this.AccountOpenOrders_label.Name = "AccountOpenOrders_label";
+            this.AccountOpenOrders_label.Size = new System.Drawing.Size(129, 20);
+            this.AccountOpenOrders_label.TabIndex = 6;
+            this.AccountOpenOrders_label.Text = "BTC open orders";
+            // 
+            // AccountClosedOrders_panel
+            // 
+            this.AccountClosedOrders_panel.BackColor = System.Drawing.Color.DodgerBlue;
+            this.AccountClosedOrders_panel.Controls.Add(this.AccountClosedOrders_listview);
+            this.AccountClosedOrders_panel.Controls.Add(this.AccountClosedOrders_label);
+            this.AccountClosedOrders_panel.Location = new System.Drawing.Point(276, 520);
+            this.AccountClosedOrders_panel.Name = "AccountClosedOrders_panel";
+            this.AccountClosedOrders_panel.Size = new System.Drawing.Size(309, 185);
+            this.AccountClosedOrders_panel.TabIndex = 12;
+            // 
+            // AccountClosedOrders_listview
+            // 
+            this.AccountClosedOrders_listview.AllowColumnReorder = true;
+            this.AccountClosedOrders_listview.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3,
+            this.columnHeader4});
+            this.AccountClosedOrders_listview.FullRowSelect = true;
+            this.AccountClosedOrders_listview.GridLines = true;
+            this.AccountClosedOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.AccountClosedOrders_listview.HideSelection = false;
+            this.AccountClosedOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem2});
+            this.AccountClosedOrders_listview.Location = new System.Drawing.Point(9, 32);
+            this.AccountClosedOrders_listview.MultiSelect = false;
+            this.AccountClosedOrders_listview.Name = "AccountClosedOrders_listview";
+            this.AccountClosedOrders_listview.Scrollable = false;
+            this.AccountClosedOrders_listview.ShowGroups = false;
+            this.AccountClosedOrders_listview.ShowItemToolTips = true;
+            this.AccountClosedOrders_listview.Size = new System.Drawing.Size(291, 148);
+            this.AccountClosedOrders_listview.TabIndex = 13;
+            this.AccountClosedOrders_listview.UseCompatibleStateImageBehavior = false;
+            this.AccountClosedOrders_listview.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Date";
+            this.columnHeader1.Width = 80;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Volume";
+            this.columnHeader2.Width = 70;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Avg price";
+            this.columnHeader3.Width = 70;
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "Notional";
+            this.columnHeader4.Width = 70;
+            // 
+            // AccountClosedOrders_label
+            // 
+            this.AccountClosedOrders_label.AutoSize = true;
+            this.AccountClosedOrders_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountClosedOrders_label.Location = new System.Drawing.Point(7, 8);
+            this.AccountClosedOrders_label.Name = "AccountClosedOrders_label";
+            this.AccountClosedOrders_label.Size = new System.Drawing.Size(139, 20);
+            this.AccountClosedOrders_label.TabIndex = 6;
+            this.AccountClosedOrders_label.Text = "BTC closed orders";
+            // 
+            // AccountEstOrderValue_value
+            // 
+            this.AccountEstOrderValue_value.AutoSize = true;
+            this.AccountEstOrderValue_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountEstOrderValue_value.Location = new System.Drawing.Point(371, 117);
+            this.AccountEstOrderValue_value.Name = "AccountEstOrderValue_value";
+            this.AccountEstOrderValue_value.Size = new System.Drawing.Size(0, 16);
+            this.AccountEstOrderValue_value.TabIndex = 11;
+            // 
+            // AccountEstOrderValue_label
+            // 
+            this.AccountEstOrderValue_label.AutoSize = true;
+            this.AccountEstOrderValue_label.Location = new System.Drawing.Point(280, 118);
+            this.AccountEstOrderValue_label.Name = "AccountEstOrderValue_label";
+            this.AccountEstOrderValue_label.Size = new System.Drawing.Size(76, 13);
+            this.AccountEstOrderValue_label.TabIndex = 10;
+            this.AccountEstOrderValue_label.Text = "Value of order:";
+            // 
+            // AccountOrders_listview
+            // 
+            this.AccountOrders_listview.AllowColumnReorder = true;
+            this.AccountOrders_listview.BackColor = System.Drawing.Color.PeachPuff;
+            this.AccountOrders_listview.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.OrderNumber,
+            this.OrderPrice,
+            this.OrderVolume,
+            this.CumulativeVol,
+            this.Value});
+            this.AccountOrders_listview.FullRowSelect = true;
+            this.AccountOrders_listview.GridLines = true;
+            this.AccountOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.AccountOrders_listview.HideSelection = false;
+            this.AccountOrders_listview.Location = new System.Drawing.Point(282, 148);
+            this.AccountOrders_listview.MultiSelect = false;
+            this.AccountOrders_listview.Name = "AccountOrders_listview";
+            this.AccountOrders_listview.Scrollable = false;
+            this.AccountOrders_listview.ShowGroups = false;
+            this.AccountOrders_listview.Size = new System.Drawing.Size(294, 182);
+            this.AccountOrders_listview.TabIndex = 9;
+            this.AccountOrders_listview.UseCompatibleStateImageBehavior = false;
+            this.AccountOrders_listview.View = System.Windows.Forms.View.Details;
+            // 
+            // OrderNumber
+            // 
+            this.OrderNumber.Text = "#";
+            this.OrderNumber.Width = 20;
+            // 
+            // OrderPrice
+            // 
+            this.OrderPrice.Text = "Price";
+            // 
+            // OrderVolume
+            // 
+            this.OrderVolume.Text = "Volume";
+            this.OrderVolume.Width = 70;
+            // 
+            // CumulativeVol
+            // 
+            this.CumulativeVol.Text = "Cum. vol";
+            this.CumulativeVol.Width = 70;
+            // 
+            // Value
+            // 
+            this.Value.Text = "Cum. value";
+            this.Value.Width = 70;
+            // 
+            // AccountPlaceOrder_button
+            // 
+            this.AccountPlaceOrder_button.BackColor = System.Drawing.Color.White;
+            this.AccountPlaceOrder_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.AccountPlaceOrder_button.Location = new System.Drawing.Point(282, 65);
+            this.AccountPlaceOrder_button.Name = "AccountPlaceOrder_button";
+            this.AccountPlaceOrder_button.Size = new System.Drawing.Size(294, 39);
+            this.AccountPlaceOrder_button.TabIndex = 8;
+            this.AccountPlaceOrder_button.Text = "Buy now";
+            this.AccountPlaceOrder_button.UseVisualStyleBackColor = false;
+            this.AccountPlaceOrder_button.Click += new System.EventHandler(this.AccountPlaceOrder_button_Click);
+            // 
+            // AccountLimitPrice_label
+            // 
+            this.AccountLimitPrice_label.AutoSize = true;
+            this.AccountLimitPrice_label.Location = new System.Drawing.Point(537, 41);
+            this.AccountLimitPrice_label.Name = "AccountLimitPrice_label";
+            this.AccountLimitPrice_label.Size = new System.Drawing.Size(31, 13);
+            this.AccountLimitPrice_label.TabIndex = 7;
+            this.AccountLimitPrice_label.Text = "Price";
+            this.AccountLimitPrice_label.Visible = false;
+            // 
+            // AccountLimitPrice_textbox
+            // 
+            this.AccountLimitPrice_textbox.Location = new System.Drawing.Point(437, 36);
+            this.AccountLimitPrice_textbox.Name = "AccountLimitPrice_textbox";
+            this.AccountLimitPrice_textbox.Size = new System.Drawing.Size(93, 20);
+            this.AccountLimitPrice_textbox.TabIndex = 6;
+            this.AccountLimitPrice_textbox.Visible = false;
+            this.AccountLimitPrice_textbox.TextChanged += new System.EventHandler(this.AccountLimitPrice_textbox_TextChanged);
+            // 
+            // AccountOrderVolume_label
+            // 
+            this.AccountOrderVolume_label.AutoSize = true;
+            this.AccountOrderVolume_label.Location = new System.Drawing.Point(537, 17);
+            this.AccountOrderVolume_label.Name = "AccountOrderVolume_label";
+            this.AccountOrderVolume_label.Size = new System.Drawing.Size(42, 13);
+            this.AccountOrderVolume_label.TabIndex = 5;
+            this.AccountOrderVolume_label.Text = "Volume";
+            this.IRTickerTT_generic.SetToolTip(this.AccountOrderVolume_label, "Double click to set max volume for this crypto");
+            this.AccountOrderVolume_label.DoubleClick += new System.EventHandler(this.AccountOrderVolume_label_DoubleClick);
+            // 
+            // AccountOrderVolume_textbox
+            // 
+            this.AccountOrderVolume_textbox.Location = new System.Drawing.Point(437, 12);
+            this.AccountOrderVolume_textbox.Name = "AccountOrderVolume_textbox";
+            this.AccountOrderVolume_textbox.Size = new System.Drawing.Size(93, 20);
+            this.AccountOrderVolume_textbox.TabIndex = 4;
+            this.AccountOrderVolume_textbox.TextChanged += new System.EventHandler(this.AccountOrderVolume_textbox_TextChanged);
+            this.AccountOrderVolume_textbox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.AccountOrderVolume_textbox_KeyUp);
+            // 
+            // AccountBuySell_listbox
+            // 
+            this.AccountBuySell_listbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountBuySell_listbox.FormattingEnabled = true;
+            this.AccountBuySell_listbox.ItemHeight = 20;
+            this.AccountBuySell_listbox.Items.AddRange(new object[] {
+            "Buy",
+            "Sell"});
+            this.AccountBuySell_listbox.Location = new System.Drawing.Point(282, 12);
+            this.AccountBuySell_listbox.Name = "AccountBuySell_listbox";
+            this.AccountBuySell_listbox.Size = new System.Drawing.Size(42, 44);
+            this.AccountBuySell_listbox.TabIndex = 2;
+            this.AccountBuySell_listbox.Click += new System.EventHandler(this.AccountBuySell_listbox_Click);
+            // 
+            // IRAccountAddress_panel
+            // 
+            this.IRAccountAddress_panel.BackColor = System.Drawing.Color.Salmon;
+            this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalTag_value);
+            this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalTag_label);
+            this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalLastCheck_label);
+            this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalNextCheck_label);
+            this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalAddress_label);
+            this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalCrypto_label);
+            this.IRAccountAddress_panel.Controls.Add(this.IRAccountClose_button);
+            this.IRAccountAddress_panel.Location = new System.Drawing.Point(276, 705);
+            this.IRAccountAddress_panel.Name = "IRAccountAddress_panel";
+            this.IRAccountAddress_panel.Size = new System.Drawing.Size(309, 137);
+            this.IRAccountAddress_panel.TabIndex = 1;
+            // 
+            // AccountWithdrawalTag_value
+            // 
+            this.AccountWithdrawalTag_value.AutoSize = true;
+            this.AccountWithdrawalTag_value.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.AccountWithdrawalTag_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountWithdrawalTag_value.Location = new System.Drawing.Point(39, 65);
+            this.AccountWithdrawalTag_value.Name = "AccountWithdrawalTag_value";
+            this.AccountWithdrawalTag_value.Size = new System.Drawing.Size(0, 12);
+            this.AccountWithdrawalTag_value.TabIndex = 5;
+            this.IRTickerTT_generic.SetToolTip(this.AccountWithdrawalTag_value, "Click to copy");
+            this.AccountWithdrawalTag_value.Click += new System.EventHandler(this.AccountWithdrawalAddress_label_Click);
+            // 
+            // AccountWithdrawalTag_label
+            // 
+            this.AccountWithdrawalTag_label.AutoSize = true;
+            this.AccountWithdrawalTag_label.Cursor = System.Windows.Forms.Cursors.Default;
+            this.AccountWithdrawalTag_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountWithdrawalTag_label.Location = new System.Drawing.Point(11, 65);
+            this.AccountWithdrawalTag_label.Name = "AccountWithdrawalTag_label";
+            this.AccountWithdrawalTag_label.Size = new System.Drawing.Size(23, 12);
+            this.AccountWithdrawalTag_label.TabIndex = 4;
+            this.AccountWithdrawalTag_label.Text = "Tag:";
+            this.AccountWithdrawalTag_label.Visible = false;
+            // 
+            // AccountWithdrawalCrypto_label
+            // 
+            this.AccountWithdrawalCrypto_label.AutoSize = true;
+            this.AccountWithdrawalCrypto_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountWithdrawalCrypto_label.Location = new System.Drawing.Point(7, 11);
+            this.AccountWithdrawalCrypto_label.Name = "AccountWithdrawalCrypto_label";
+            this.AccountWithdrawalCrypto_label.Size = new System.Drawing.Size(161, 20);
+            this.AccountWithdrawalCrypto_label.TabIndex = 0;
+            this.AccountWithdrawalCrypto_label.Text = "BTC deposit address:";
+            // 
+            // IRAccountClose_button
+            // 
+            this.IRAccountClose_button.BackColor = System.Drawing.Color.White;
+            this.IRAccountClose_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.IRAccountClose_button.Location = new System.Drawing.Point(228, 108);
+            this.IRAccountClose_button.Name = "IRAccountClose_button";
+            this.IRAccountClose_button.Size = new System.Drawing.Size(75, 23);
+            this.IRAccountClose_button.TabIndex = 30;
+            this.IRAccountClose_button.Text = "Close";
+            this.IRAccountClose_button.UseVisualStyleBackColor = false;
+            this.IRAccountClose_button.Click += new System.EventHandler(this.IRAccountClose_button_Click);
+            // 
+            // GetAccounts_panel
+            // 
+            this.GetAccounts_panel.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.GetAccounts_panel.Controls.Add(this.AccountCOMP_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountCOMP_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountCOMP_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountUSDC_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountUSDC_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountUSDC_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountDAI_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountDAI_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountDAI_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountMKR_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountMKR_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountMKR_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountName_button);
+            this.GetAccounts_panel.Controls.Add(this.AccountLINK_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountLINK_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountLINK_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountGNT_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountZRX_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountOMG_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountBAT_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountETC_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountXLM_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountEOS_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountLTC_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountUSDT_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountBSV_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountBCH_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountXRP_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountETH_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountXBT_total);
+            this.GetAccounts_panel.Controls.Add(this.label1);
+            this.GetAccounts_panel.Controls.Add(this.label7);
+            this.GetAccounts_panel.Controls.Add(this.AccountUSD_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountUSD_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountNZD_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountNZD_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountAUD_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountAUD_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountGNT_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountGNT_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountZRX_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountZRX_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountOMG_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountOMG_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountBAT_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountBAT_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountETC_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountETC_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountXLM_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountXLM_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountEOS_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountEOS_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountLTC_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountLTC_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountUSDT_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountUSDT_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountBSV_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountBSV_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountBCH_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountBCH_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountXRP_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountXRP_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountETH_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountETH_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountXBT_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountXBT_label);
+            this.GetAccounts_panel.Location = new System.Drawing.Point(0, 0);
+            this.GetAccounts_panel.Name = "GetAccounts_panel";
+            this.GetAccounts_panel.Size = new System.Drawing.Size(276, 843);
+            this.GetAccounts_panel.TabIndex = 0;
+            // 
+            // AccountCOMP_total
+            // 
+            this.AccountCOMP_total.AutoSize = true;
+            this.AccountCOMP_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountCOMP_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountCOMP_total.Location = new System.Drawing.Point(83, 706);
+            this.AccountCOMP_total.Name = "AccountCOMP_total";
+            this.AccountCOMP_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountCOMP_total.TabIndex = 72;
+            // 
+            // AccountCOMP_value
+            // 
+            this.AccountCOMP_value.AutoSize = true;
+            this.AccountCOMP_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountCOMP_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountCOMP_value.Location = new System.Drawing.Point(183, 706);
+            this.AccountCOMP_value.Name = "AccountCOMP_value";
+            this.AccountCOMP_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountCOMP_value.TabIndex = 71;
+            // 
+            // AccountCOMP_label
+            // 
+            this.AccountCOMP_label.AutoSize = true;
+            this.AccountCOMP_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountCOMP_label.Location = new System.Drawing.Point(12, 706);
+            this.AccountCOMP_label.Name = "AccountCOMP_label";
+            this.AccountCOMP_label.Size = new System.Drawing.Size(71, 24);
+            this.AccountCOMP_label.TabIndex = 70;
+            this.AccountCOMP_label.Text = "COMP:";
+            this.AccountCOMP_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountUSDC_total
+            // 
+            this.AccountUSDC_total.AutoSize = true;
+            this.AccountUSDC_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountUSDC_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountUSDC_total.Location = new System.Drawing.Point(83, 672);
+            this.AccountUSDC_total.Name = "AccountUSDC_total";
+            this.AccountUSDC_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountUSDC_total.TabIndex = 69;
+            // 
+            // AccountUSDC_value
+            // 
+            this.AccountUSDC_value.AutoSize = true;
+            this.AccountUSDC_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountUSDC_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountUSDC_value.Location = new System.Drawing.Point(183, 672);
+            this.AccountUSDC_value.Name = "AccountUSDC_value";
+            this.AccountUSDC_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountUSDC_value.TabIndex = 68;
+            // 
+            // AccountUSDC_label
+            // 
+            this.AccountUSDC_label.AutoSize = true;
+            this.AccountUSDC_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountUSDC_label.Location = new System.Drawing.Point(12, 672);
+            this.AccountUSDC_label.Name = "AccountUSDC_label";
+            this.AccountUSDC_label.Size = new System.Drawing.Size(66, 24);
+            this.AccountUSDC_label.TabIndex = 67;
+            this.AccountUSDC_label.Text = "USDC:";
+            this.AccountUSDC_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountDAI_total
+            // 
+            this.AccountDAI_total.AutoSize = true;
+            this.AccountDAI_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountDAI_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountDAI_total.Location = new System.Drawing.Point(83, 638);
+            this.AccountDAI_total.Name = "AccountDAI_total";
+            this.AccountDAI_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountDAI_total.TabIndex = 66;
+            // 
+            // AccountDAI_value
+            // 
+            this.AccountDAI_value.AutoSize = true;
+            this.AccountDAI_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountDAI_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountDAI_value.Location = new System.Drawing.Point(183, 638);
+            this.AccountDAI_value.Name = "AccountDAI_value";
+            this.AccountDAI_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountDAI_value.TabIndex = 65;
+            // 
+            // AccountDAI_label
+            // 
+            this.AccountDAI_label.AutoSize = true;
+            this.AccountDAI_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountDAI_label.Location = new System.Drawing.Point(12, 638);
+            this.AccountDAI_label.Name = "AccountDAI_label";
+            this.AccountDAI_label.Size = new System.Drawing.Size(45, 24);
+            this.AccountDAI_label.TabIndex = 64;
+            this.AccountDAI_label.Text = "DAI:";
+            this.AccountDAI_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountMKR_total
+            // 
+            this.AccountMKR_total.AutoSize = true;
+            this.AccountMKR_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountMKR_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountMKR_total.Location = new System.Drawing.Point(83, 604);
+            this.AccountMKR_total.Name = "AccountMKR_total";
+            this.AccountMKR_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountMKR_total.TabIndex = 63;
+            // 
+            // AccountMKR_value
+            // 
+            this.AccountMKR_value.AutoSize = true;
+            this.AccountMKR_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountMKR_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountMKR_value.Location = new System.Drawing.Point(183, 604);
+            this.AccountMKR_value.Name = "AccountMKR_value";
+            this.AccountMKR_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountMKR_value.TabIndex = 62;
+            // 
+            // AccountMKR_label
+            // 
+            this.AccountMKR_label.AutoSize = true;
+            this.AccountMKR_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountMKR_label.Location = new System.Drawing.Point(12, 604);
+            this.AccountMKR_label.Name = "AccountMKR_label";
+            this.AccountMKR_label.Size = new System.Drawing.Size(56, 24);
+            this.AccountMKR_label.TabIndex = 61;
+            this.AccountMKR_label.Text = "MKR:";
+            this.AccountMKR_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountName_button
+            // 
+            this.AccountName_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.AccountName_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountName_button.Location = new System.Drawing.Point(16, 9);
+            this.AccountName_button.Name = "AccountName_button";
+            this.AccountName_button.Size = new System.Drawing.Size(228, 31);
+            this.AccountName_button.TabIndex = 60;
+            this.AccountName_button.Text = "IR account";
+            this.AccountName_button.UseVisualStyleBackColor = true;
+            this.AccountName_button.Click += new System.EventHandler(this.AccountName_button_Click);
+            // 
+            // AccountLINK_total
+            // 
+            this.AccountLINK_total.AutoSize = true;
+            this.AccountLINK_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountLINK_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountLINK_total.Location = new System.Drawing.Point(83, 570);
+            this.AccountLINK_total.Name = "AccountLINK_total";
+            this.AccountLINK_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountLINK_total.TabIndex = 59;
+            // 
+            // AccountLINK_value
+            // 
+            this.AccountLINK_value.AutoSize = true;
+            this.AccountLINK_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountLINK_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountLINK_value.Location = new System.Drawing.Point(183, 570);
+            this.AccountLINK_value.Name = "AccountLINK_value";
+            this.AccountLINK_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountLINK_value.TabIndex = 57;
+            // 
+            // AccountLINK_label
+            // 
+            this.AccountLINK_label.AutoSize = true;
+            this.AccountLINK_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountLINK_label.Location = new System.Drawing.Point(12, 570);
+            this.AccountLINK_label.Name = "AccountLINK_label";
+            this.AccountLINK_label.Size = new System.Drawing.Size(55, 24);
+            this.AccountLINK_label.TabIndex = 56;
+            this.AccountLINK_label.Text = "LINK:";
+            this.AccountLINK_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountGNT_total
+            // 
+            this.AccountGNT_total.AutoSize = true;
+            this.AccountGNT_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountGNT_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountGNT_total.Location = new System.Drawing.Point(83, 534);
+            this.AccountGNT_total.Name = "AccountGNT_total";
+            this.AccountGNT_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountGNT_total.TabIndex = 53;
+            // 
+            // AccountZRX_total
+            // 
+            this.AccountZRX_total.AutoSize = true;
+            this.AccountZRX_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountZRX_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountZRX_total.Location = new System.Drawing.Point(83, 500);
+            this.AccountZRX_total.Name = "AccountZRX_total";
+            this.AccountZRX_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountZRX_total.TabIndex = 52;
+            // 
+            // AccountOMG_total
+            // 
+            this.AccountOMG_total.AutoSize = true;
+            this.AccountOMG_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountOMG_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountOMG_total.Location = new System.Drawing.Point(83, 468);
+            this.AccountOMG_total.Name = "AccountOMG_total";
+            this.AccountOMG_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountOMG_total.TabIndex = 50;
+            // 
+            // AccountBAT_total
+            // 
+            this.AccountBAT_total.AutoSize = true;
+            this.AccountBAT_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountBAT_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountBAT_total.Location = new System.Drawing.Point(83, 432);
+            this.AccountBAT_total.Name = "AccountBAT_total";
+            this.AccountBAT_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountBAT_total.TabIndex = 49;
+            // 
+            // AccountETC_total
+            // 
+            this.AccountETC_total.AutoSize = true;
+            this.AccountETC_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountETC_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountETC_total.Location = new System.Drawing.Point(83, 396);
+            this.AccountETC_total.Name = "AccountETC_total";
+            this.AccountETC_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountETC_total.TabIndex = 48;
+            // 
+            // AccountXLM_total
+            // 
+            this.AccountXLM_total.AutoSize = true;
+            this.AccountXLM_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountXLM_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountXLM_total.Location = new System.Drawing.Point(83, 360);
+            this.AccountXLM_total.Name = "AccountXLM_total";
+            this.AccountXLM_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountXLM_total.TabIndex = 47;
+            // 
+            // AccountEOS_total
+            // 
+            this.AccountEOS_total.AutoSize = true;
+            this.AccountEOS_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountEOS_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountEOS_total.Location = new System.Drawing.Point(83, 324);
+            this.AccountEOS_total.Name = "AccountEOS_total";
+            this.AccountEOS_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountEOS_total.TabIndex = 46;
+            // 
+            // AccountLTC_total
+            // 
+            this.AccountLTC_total.AutoSize = true;
+            this.AccountLTC_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountLTC_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountLTC_total.Location = new System.Drawing.Point(83, 288);
+            this.AccountLTC_total.Name = "AccountLTC_total";
+            this.AccountLTC_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountLTC_total.TabIndex = 45;
+            // 
+            // AccountUSDT_total
+            // 
+            this.AccountUSDT_total.AutoSize = true;
+            this.AccountUSDT_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountUSDT_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountUSDT_total.Location = new System.Drawing.Point(83, 250);
+            this.AccountUSDT_total.Name = "AccountUSDT_total";
+            this.AccountUSDT_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountUSDT_total.TabIndex = 44;
+            // 
+            // AccountBSV_total
+            // 
+            this.AccountBSV_total.AutoSize = true;
+            this.AccountBSV_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountBSV_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountBSV_total.Location = new System.Drawing.Point(83, 216);
+            this.AccountBSV_total.Name = "AccountBSV_total";
+            this.AccountBSV_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountBSV_total.TabIndex = 43;
+            // 
+            // AccountBCH_total
+            // 
+            this.AccountBCH_total.AutoSize = true;
+            this.AccountBCH_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountBCH_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountBCH_total.Location = new System.Drawing.Point(83, 180);
+            this.AccountBCH_total.Name = "AccountBCH_total";
+            this.AccountBCH_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountBCH_total.TabIndex = 42;
+            // 
+            // AccountXRP_total
+            // 
+            this.AccountXRP_total.AutoSize = true;
+            this.AccountXRP_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountXRP_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountXRP_total.Location = new System.Drawing.Point(83, 144);
+            this.AccountXRP_total.Name = "AccountXRP_total";
+            this.AccountXRP_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountXRP_total.TabIndex = 41;
+            // 
+            // AccountETH_total
+            // 
+            this.AccountETH_total.AutoSize = true;
+            this.AccountETH_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountETH_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountETH_total.Location = new System.Drawing.Point(83, 108);
+            this.AccountETH_total.Name = "AccountETH_total";
+            this.AccountETH_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountETH_total.TabIndex = 40;
+            // 
+            // AccountXBT_total
+            // 
+            this.AccountXBT_total.AutoSize = true;
+            this.AccountXBT_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountXBT_total.ForeColor = System.Drawing.Color.DarkOrange;
+            this.AccountXBT_total.Location = new System.Drawing.Point(83, 72);
+            this.AccountXBT_total.Name = "AccountXBT_total";
+            this.AccountXBT_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountXBT_total.TabIndex = 39;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(98, 60);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(129, 9);
+            this.label1.TabIndex = 38;
+            this.label1.Text = "T o t a l                                    V a l u e";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(4, 731);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(271, 13);
+            this.label7.TabIndex = 37;
+            this.label7.Text = "____________________________________________";
+            // 
+            // AccountUSD_total
+            // 
+            this.AccountUSD_total.AutoSize = true;
+            this.AccountUSD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountUSD_total.Location = new System.Drawing.Point(83, 812);
+            this.AccountUSD_total.Name = "AccountUSD_total";
+            this.AccountUSD_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountUSD_total.TabIndex = 36;
+            // 
+            // AccountUSD_label
+            // 
+            this.AccountUSD_label.AutoSize = true;
+            this.AccountUSD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountUSD_label.Location = new System.Drawing.Point(12, 812);
+            this.AccountUSD_label.Name = "AccountUSD_label";
+            this.AccountUSD_label.Size = new System.Drawing.Size(53, 24);
+            this.AccountUSD_label.TabIndex = 35;
+            this.AccountUSD_label.Text = "USD:";
+            // 
+            // AccountNZD_total
+            // 
+            this.AccountNZD_total.AutoSize = true;
+            this.AccountNZD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountNZD_total.Location = new System.Drawing.Point(83, 784);
+            this.AccountNZD_total.Name = "AccountNZD_total";
+            this.AccountNZD_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountNZD_total.TabIndex = 34;
+            // 
+            // AccountNZD_label
+            // 
+            this.AccountNZD_label.AutoSize = true;
+            this.AccountNZD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountNZD_label.Location = new System.Drawing.Point(12, 784);
+            this.AccountNZD_label.Name = "AccountNZD_label";
+            this.AccountNZD_label.Size = new System.Drawing.Size(54, 24);
+            this.AccountNZD_label.TabIndex = 33;
+            this.AccountNZD_label.Text = "NZD:";
+            // 
+            // AccountAUD_total
+            // 
+            this.AccountAUD_total.AutoSize = true;
+            this.AccountAUD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountAUD_total.Location = new System.Drawing.Point(83, 756);
+            this.AccountAUD_total.Name = "AccountAUD_total";
+            this.AccountAUD_total.Size = new System.Drawing.Size(0, 24);
+            this.AccountAUD_total.TabIndex = 32;
+            // 
+            // AccountAUD_label
+            // 
+            this.AccountAUD_label.AutoSize = true;
+            this.AccountAUD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountAUD_label.Location = new System.Drawing.Point(12, 756);
+            this.AccountAUD_label.Name = "AccountAUD_label";
+            this.AccountAUD_label.Size = new System.Drawing.Size(54, 24);
+            this.AccountAUD_label.TabIndex = 31;
+            this.AccountAUD_label.Text = "AUD:";
+            // 
+            // AccountGNT_value
+            // 
+            this.AccountGNT_value.AutoSize = true;
+            this.AccountGNT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountGNT_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountGNT_value.Location = new System.Drawing.Point(183, 534);
+            this.AccountGNT_value.Name = "AccountGNT_value";
+            this.AccountGNT_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountGNT_value.TabIndex = 29;
+            // 
+            // AccountGNT_label
+            // 
+            this.AccountGNT_label.AutoSize = true;
+            this.AccountGNT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountGNT_label.Location = new System.Drawing.Point(12, 534);
+            this.AccountGNT_label.Name = "AccountGNT_label";
+            this.AccountGNT_label.Size = new System.Drawing.Size(55, 24);
+            this.AccountGNT_label.TabIndex = 28;
+            this.AccountGNT_label.Text = "GNT:";
+            this.AccountGNT_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountZRX_value
+            // 
+            this.AccountZRX_value.AutoSize = true;
+            this.AccountZRX_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountZRX_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountZRX_value.Location = new System.Drawing.Point(183, 500);
+            this.AccountZRX_value.Name = "AccountZRX_value";
+            this.AccountZRX_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountZRX_value.TabIndex = 27;
+            // 
+            // AccountZRX_label
+            // 
+            this.AccountZRX_label.AutoSize = true;
+            this.AccountZRX_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountZRX_label.Location = new System.Drawing.Point(12, 500);
+            this.AccountZRX_label.Name = "AccountZRX_label";
+            this.AccountZRX_label.Size = new System.Drawing.Size(54, 24);
+            this.AccountZRX_label.TabIndex = 26;
+            this.AccountZRX_label.Text = "ZRX:";
+            this.AccountZRX_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountOMG_value
+            // 
+            this.AccountOMG_value.AutoSize = true;
+            this.AccountOMG_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountOMG_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountOMG_value.Location = new System.Drawing.Point(183, 468);
+            this.AccountOMG_value.Name = "AccountOMG_value";
+            this.AccountOMG_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountOMG_value.TabIndex = 23;
+            // 
+            // AccountOMG_label
+            // 
+            this.AccountOMG_label.AutoSize = true;
+            this.AccountOMG_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountOMG_label.Location = new System.Drawing.Point(12, 466);
+            this.AccountOMG_label.Name = "AccountOMG_label";
+            this.AccountOMG_label.Size = new System.Drawing.Size(60, 24);
+            this.AccountOMG_label.TabIndex = 22;
+            this.AccountOMG_label.Text = "OMG:";
+            this.AccountOMG_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountBAT_value
+            // 
+            this.AccountBAT_value.AutoSize = true;
+            this.AccountBAT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountBAT_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountBAT_value.Location = new System.Drawing.Point(183, 432);
+            this.AccountBAT_value.Name = "AccountBAT_value";
+            this.AccountBAT_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountBAT_value.TabIndex = 21;
+            // 
+            // AccountBAT_label
+            // 
+            this.AccountBAT_label.AutoSize = true;
+            this.AccountBAT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountBAT_label.Location = new System.Drawing.Point(12, 432);
+            this.AccountBAT_label.Name = "AccountBAT_label";
+            this.AccountBAT_label.Size = new System.Drawing.Size(52, 24);
+            this.AccountBAT_label.TabIndex = 20;
+            this.AccountBAT_label.Text = "BAT:";
+            this.AccountBAT_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountETC_value
+            // 
+            this.AccountETC_value.AutoSize = true;
+            this.AccountETC_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountETC_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountETC_value.Location = new System.Drawing.Point(183, 396);
+            this.AccountETC_value.Name = "AccountETC_value";
+            this.AccountETC_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountETC_value.TabIndex = 19;
+            // 
+            // AccountETC_label
+            // 
+            this.AccountETC_label.AutoSize = true;
+            this.AccountETC_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountETC_label.Location = new System.Drawing.Point(12, 396);
+            this.AccountETC_label.Name = "AccountETC_label";
+            this.AccountETC_label.Size = new System.Drawing.Size(53, 24);
+            this.AccountETC_label.TabIndex = 18;
+            this.AccountETC_label.Text = "ETC:";
+            this.AccountETC_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountXLM_value
+            // 
+            this.AccountXLM_value.AutoSize = true;
+            this.AccountXLM_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountXLM_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountXLM_value.Location = new System.Drawing.Point(183, 360);
+            this.AccountXLM_value.Name = "AccountXLM_value";
+            this.AccountXLM_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountXLM_value.TabIndex = 17;
+            // 
+            // AccountXLM_label
+            // 
+            this.AccountXLM_label.AutoSize = true;
+            this.AccountXLM_label.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.AccountXLM_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountXLM_label.Location = new System.Drawing.Point(12, 360);
+            this.AccountXLM_label.Name = "AccountXLM_label";
+            this.AccountXLM_label.Size = new System.Drawing.Size(55, 24);
+            this.AccountXLM_label.TabIndex = 16;
+            this.AccountXLM_label.Text = "XLM:";
+            this.AccountXLM_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountEOS_value
+            // 
+            this.AccountEOS_value.AutoSize = true;
+            this.AccountEOS_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountEOS_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountEOS_value.Location = new System.Drawing.Point(183, 324);
+            this.AccountEOS_value.Name = "AccountEOS_value";
+            this.AccountEOS_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountEOS_value.TabIndex = 15;
+            // 
+            // AccountEOS_label
+            // 
+            this.AccountEOS_label.AutoSize = true;
+            this.AccountEOS_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountEOS_label.Location = new System.Drawing.Point(12, 324);
+            this.AccountEOS_label.Name = "AccountEOS_label";
+            this.AccountEOS_label.Size = new System.Drawing.Size(55, 24);
+            this.AccountEOS_label.TabIndex = 14;
+            this.AccountEOS_label.Text = "EOS:";
+            this.AccountEOS_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountLTC_value
+            // 
+            this.AccountLTC_value.AutoSize = true;
+            this.AccountLTC_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountLTC_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountLTC_value.Location = new System.Drawing.Point(183, 288);
+            this.AccountLTC_value.Name = "AccountLTC_value";
+            this.AccountLTC_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountLTC_value.TabIndex = 13;
+            // 
+            // AccountLTC_label
+            // 
+            this.AccountLTC_label.AutoSize = true;
+            this.AccountLTC_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountLTC_label.Location = new System.Drawing.Point(12, 288);
+            this.AccountLTC_label.Name = "AccountLTC_label";
+            this.AccountLTC_label.Size = new System.Drawing.Size(50, 24);
+            this.AccountLTC_label.TabIndex = 12;
+            this.AccountLTC_label.Text = "LTC:";
+            this.AccountLTC_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountUSDT_value
+            // 
+            this.AccountUSDT_value.AutoSize = true;
+            this.AccountUSDT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountUSDT_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountUSDT_value.Location = new System.Drawing.Point(183, 250);
+            this.AccountUSDT_value.Name = "AccountUSDT_value";
+            this.AccountUSDT_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountUSDT_value.TabIndex = 11;
+            // 
+            // AccountUSDT_label
+            // 
+            this.AccountUSDT_label.AutoSize = true;
+            this.AccountUSDT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountUSDT_label.Location = new System.Drawing.Point(12, 250);
+            this.AccountUSDT_label.Name = "AccountUSDT_label";
+            this.AccountUSDT_label.Size = new System.Drawing.Size(65, 24);
+            this.AccountUSDT_label.TabIndex = 10;
+            this.AccountUSDT_label.Text = "USDT:";
+            this.AccountUSDT_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountBSV_value
+            // 
+            this.AccountBSV_value.AutoSize = true;
+            this.AccountBSV_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountBSV_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountBSV_value.Location = new System.Drawing.Point(183, 216);
+            this.AccountBSV_value.Name = "AccountBSV_value";
+            this.AccountBSV_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountBSV_value.TabIndex = 9;
+            // 
+            // AccountBSV_label
+            // 
+            this.AccountBSV_label.AutoSize = true;
+            this.AccountBSV_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountBSV_label.Location = new System.Drawing.Point(12, 216);
+            this.AccountBSV_label.Name = "AccountBSV_label";
+            this.AccountBSV_label.Size = new System.Drawing.Size(52, 24);
+            this.AccountBSV_label.TabIndex = 8;
+            this.AccountBSV_label.Text = "BSV:";
+            this.AccountBSV_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountBCH_value
+            // 
+            this.AccountBCH_value.AutoSize = true;
+            this.AccountBCH_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountBCH_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountBCH_value.Location = new System.Drawing.Point(183, 180);
+            this.AccountBCH_value.Name = "AccountBCH_value";
+            this.AccountBCH_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountBCH_value.TabIndex = 7;
+            // 
+            // AccountBCH_label
+            // 
+            this.AccountBCH_label.AutoSize = true;
+            this.AccountBCH_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountBCH_label.Location = new System.Drawing.Point(12, 180);
+            this.AccountBCH_label.Name = "AccountBCH_label";
+            this.AccountBCH_label.Size = new System.Drawing.Size(54, 24);
+            this.AccountBCH_label.TabIndex = 6;
+            this.AccountBCH_label.Text = "BCH:";
+            this.AccountBCH_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountXRP_value
+            // 
+            this.AccountXRP_value.AutoSize = true;
+            this.AccountXRP_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountXRP_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountXRP_value.Location = new System.Drawing.Point(183, 144);
+            this.AccountXRP_value.Name = "AccountXRP_value";
+            this.AccountXRP_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountXRP_value.TabIndex = 5;
+            // 
+            // AccountXRP_label
+            // 
+            this.AccountXRP_label.AutoSize = true;
+            this.AccountXRP_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountXRP_label.Location = new System.Drawing.Point(12, 144);
+            this.AccountXRP_label.Name = "AccountXRP_label";
+            this.AccountXRP_label.Size = new System.Drawing.Size(54, 24);
+            this.AccountXRP_label.TabIndex = 4;
+            this.AccountXRP_label.Text = "XRP:";
+            this.AccountXRP_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountETH_value
+            // 
+            this.AccountETH_value.AutoSize = true;
+            this.AccountETH_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountETH_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountETH_value.Location = new System.Drawing.Point(183, 108);
+            this.AccountETH_value.Name = "AccountETH_value";
+            this.AccountETH_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountETH_value.TabIndex = 3;
+            // 
+            // AccountETH_label
+            // 
+            this.AccountETH_label.AutoSize = true;
+            this.AccountETH_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountETH_label.Location = new System.Drawing.Point(12, 108);
+            this.AccountETH_label.Name = "AccountETH_label";
+            this.AccountETH_label.Size = new System.Drawing.Size(54, 24);
+            this.AccountETH_label.TabIndex = 2;
+            this.AccountETH_label.Text = "ETH:";
+            this.AccountETH_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountXBT_value
+            // 
+            this.AccountXBT_value.AutoSize = true;
+            this.AccountXBT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountXBT_value.ForeColor = System.Drawing.Color.DarkOrange;
+            this.AccountXBT_value.Location = new System.Drawing.Point(183, 72);
+            this.AccountXBT_value.Name = "AccountXBT_value";
+            this.AccountXBT_value.Size = new System.Drawing.Size(0, 24);
+            this.AccountXBT_value.TabIndex = 1;
+            // 
+            // AccountXBT_label
+            // 
+            this.AccountXBT_label.AutoSize = true;
+            this.AccountXBT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountXBT_label.ForeColor = System.Drawing.Color.DarkOrange;
+            this.AccountXBT_label.Location = new System.Drawing.Point(12, 72);
+            this.AccountXBT_label.Name = "AccountXBT_label";
+            this.AccountXBT_label.Size = new System.Drawing.Size(56, 24);
+            this.AccountXBT_label.TabIndex = 0;
+            this.AccountXBT_label.Text = "BTC:";
+            this.AccountXBT_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // IRTickerTT_avgPrice
+            // 
+            this.IRTickerTT_avgPrice.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.IRTickerTT_avgPrice.ToolTipTitle = "Market order estimation";
+            // 
+            // IRT_notification
+            // 
+            this.IRT_notification.Icon = ((System.Drawing.Icon)(resources.GetObject("IRT_notification.Icon")));
+            this.IRT_notification.Text = "IR Ticker";
+            // 
+            // GIFLabel
+            // 
+            this.GIFLabel.BackColor = System.Drawing.Color.Black;
+            this.GIFLabel.ForeColor = System.Drawing.Color.Red;
+            this.GIFLabel.Image = global::IRTicker.Properties.Resources.pink_clouds;
+            this.GIFLabel.Location = new System.Drawing.Point(0, 0);
+            this.GIFLabel.Name = "GIFLabel";
+            this.GIFLabel.Size = new System.Drawing.Size(585, 843);
+            this.GIFLabel.TabIndex = 0;
+            this.GIFLabel.Text = "\r\n\r\n\r\n\r\n\r\n\r\nDownloading bitcoins...";
+            this.GIFLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // BTCM_GroupBox
             // 
@@ -1661,124 +3297,6 @@
             this.BTCM_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
             this.BTCM_BuySellComboBox.TabIndex = 15;
             this.BTCM_BuySellComboBox.SelectedIndexChanged += new System.EventHandler(this.BTCM_BuySellComboBox_SelectedIndexChanged);
-            // 
-            // BAR_GroupBox
-            // 
-            this.BAR_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.BAR_GroupBox.Controls.Add(this.BAR_CurrencyBox);
-            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label2);
-            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label3);
-            this.BAR_GroupBox.Controls.Add(this.BAR_AvgPrice_Label);
-            this.BAR_GroupBox.Controls.Add(this.BAR_CryptoComboBox);
-            this.BAR_GroupBox.Controls.Add(this.BAR_XBT_Label1);
-            this.BAR_GroupBox.Controls.Add(this.BAR_NumCoinsTextBox);
-            this.BAR_GroupBox.Controls.Add(this.BAR_BuySellComboBox);
-            this.BAR_GroupBox.Cursor = System.Windows.Forms.Cursors.Default;
-            this.BAR_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.BAR_GroupBox.Location = new System.Drawing.Point(305, 322);
-            this.BAR_GroupBox.Name = "BAR_GroupBox";
-            this.BAR_GroupBox.Size = new System.Drawing.Size(262, 92);
-            this.BAR_GroupBox.TabIndex = 16;
-            this.BAR_GroupBox.TabStop = false;
-            this.BAR_GroupBox.Text = "Bitaroo";
-            // 
-            // BAR_CurrencyBox
-            // 
-            this.BAR_CurrencyBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_CurrencyBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.BAR_CurrencyBox.FormattingEnabled = true;
-            this.BAR_CurrencyBox.Items.AddRange(new object[] {
-            "crypto",
-            "fiat"});
-            this.BAR_CurrencyBox.Location = new System.Drawing.Point(131, 65);
-            this.BAR_CurrencyBox.Name = "BAR_CurrencyBox";
-            this.BAR_CurrencyBox.Size = new System.Drawing.Size(58, 21);
-            this.BAR_CurrencyBox.TabIndex = 60;
-            // 
-            // BAR_XBT_Label2
-            // 
-            this.BAR_XBT_Label2.AutoSize = true;
-            this.BAR_XBT_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.BAR_XBT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_XBT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BAR_XBT_Label2.Location = new System.Drawing.Point(53, 21);
-            this.BAR_XBT_Label2.Name = "BAR_XBT_Label2";
-            this.BAR_XBT_Label2.Size = new System.Drawing.Size(0, 13);
-            this.BAR_XBT_Label2.TabIndex = 4;
-            this.BAR_XBT_Label2.Tag = "BAR";
-            // 
-            // BAR_XBT_Label3
-            // 
-            this.BAR_XBT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.BAR_XBT_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.BAR_XBT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_XBT_Label3.Location = new System.Drawing.Point(117, 18);
-            this.BAR_XBT_Label3.Name = "BAR_XBT_Label3";
-            this.BAR_XBT_Label3.Size = new System.Drawing.Size(134, 13);
-            this.BAR_XBT_Label3.TabIndex = 8;
-            this.BAR_XBT_Label3.Tag = "";
-            this.BAR_XBT_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.BAR_XBT_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.CSPT_XBT_Label3_MouseDoubleClick);
-            // 
-            // BAR_AvgPrice_Label
-            // 
-            this.BAR_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
-            this.BAR_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BAR_AvgPrice_Label.Location = new System.Drawing.Point(9, 43);
-            this.BAR_AvgPrice_Label.Name = "BAR_AvgPrice_Label";
-            this.BAR_AvgPrice_Label.Size = new System.Drawing.Size(242, 17);
-            this.BAR_AvgPrice_Label.TabIndex = 58;
-            // 
-            // BAR_CryptoComboBox
-            // 
-            this.BAR_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.BAR_CryptoComboBox.Location = new System.Drawing.Point(193, 65);
-            this.BAR_CryptoComboBox.Name = "BAR_CryptoComboBox";
-            this.BAR_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
-            this.BAR_CryptoComboBox.TabIndex = 57;
-            this.BAR_CryptoComboBox.DropDown += new System.EventHandler(this.BAR_CryptoComboBox_DropDown);
-            this.BAR_CryptoComboBox.SelectedIndexChanged += new System.EventHandler(this.BAR_CryptoComboBox_SelectedIndexChanged);
-            // 
-            // BAR_XBT_Label1
-            // 
-            this.BAR_XBT_Label1.AutoSize = true;
-            this.BAR_XBT_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.BAR_XBT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_XBT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BAR_XBT_Label1.Location = new System.Drawing.Point(6, 21);
-            this.BAR_XBT_Label1.Name = "BAR_XBT_Label1";
-            this.BAR_XBT_Label1.Size = new System.Drawing.Size(35, 13);
-            this.BAR_XBT_Label1.TabIndex = 0;
-            this.BAR_XBT_Label1.Tag = "DCECryptoLabel";
-            this.BAR_XBT_Label1.Text = "BTC:";
-            // 
-            // BAR_NumCoinsTextBox
-            // 
-            this.BAR_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_NumCoinsTextBox.Location = new System.Drawing.Point(58, 65);
-            this.BAR_NumCoinsTextBox.Name = "BAR_NumCoinsTextBox";
-            this.BAR_NumCoinsTextBox.PromptChar = ' ';
-            this.BAR_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
-            this.BAR_NumCoinsTextBox.TabIndex = 56;
-            this.BAR_NumCoinsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.BAR_NumCoinsTextBox.ValidatingType = typeof(System.DateTime);
-            this.BAR_NumCoinsTextBox.TextChanged += new System.EventHandler(this.BAR_NumCoinsTextBox_TextChanged);
-            // 
-            // BAR_BuySellComboBox
-            // 
-            this.BAR_BuySellComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BAR_BuySellComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.BAR_BuySellComboBox.FormattingEnabled = true;
-            this.BAR_BuySellComboBox.Items.AddRange(new object[] {
-            "Buy",
-            "Sell"});
-            this.BAR_BuySellComboBox.Location = new System.Drawing.Point(9, 65);
-            this.BAR_BuySellComboBox.Name = "BAR_BuySellComboBox";
-            this.BAR_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
-            this.BAR_BuySellComboBox.TabIndex = 55;
-            this.BAR_BuySellComboBox.SelectedIndexChanged += new System.EventHandler(this.BAR_BuySellComboBox_SelectedIndexChanged);
             // 
             // BFX_GroupBox
             // 
@@ -2499,149 +4017,6 @@
             this.BFX_AvgPrice_Label.Name = "BFX_AvgPrice_Label";
             this.BFX_AvgPrice_Label.Size = new System.Drawing.Size(242, 16);
             this.BFX_AvgPrice_Label.TabIndex = 19;
-            // 
-            // fiat_GroupBox
-            // 
-            this.fiat_GroupBox.Controls.Add(this.fiat_panel);
-            this.fiat_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.fiat_GroupBox.Location = new System.Drawing.Point(19, 731);
-            this.fiat_GroupBox.Name = "fiat_GroupBox";
-            this.fiat_GroupBox.Size = new System.Drawing.Size(263, 102);
-            this.fiat_GroupBox.TabIndex = 9;
-            this.fiat_GroupBox.TabStop = false;
-            this.fiat_GroupBox.Text = "Fiat rates";
-            this.fiat_GroupBox.Click += new System.EventHandler(this.Fiat_GroupBox_Click);
-            // 
-            // fiat_panel
-            // 
-            this.fiat_panel.BackColor = System.Drawing.Color.Transparent;
-            this.fiat_panel.Controls.Add(this.SGD_Label2);
-            this.fiat_panel.Controls.Add(this.AUD_Label1);
-            this.fiat_panel.Controls.Add(this.EUR_Label1);
-            this.fiat_panel.Controls.Add(this.fiatRefresh_checkBox);
-            this.fiat_panel.Controls.Add(this.NZD_Label1);
-            this.fiat_panel.Controls.Add(this.SGD_Label1);
-            this.fiat_panel.Controls.Add(this.EUR_Label2);
-            this.fiat_panel.Controls.Add(this.NZD_Label2);
-            this.fiat_panel.Controls.Add(this.USD_Label2);
-            this.fiat_panel.Controls.Add(this.AUD_Label2);
-            this.fiat_panel.Controls.Add(this.USD_Label1);
-            this.fiat_panel.Location = new System.Drawing.Point(0, 14);
-            this.fiat_panel.Name = "fiat_panel";
-            this.fiat_panel.Size = new System.Drawing.Size(263, 85);
-            this.fiat_panel.TabIndex = 0;
-            // 
-            // SGD_Label2
-            // 
-            this.SGD_Label2.AutoSize = true;
-            this.SGD_Label2.Location = new System.Drawing.Point(57, 68);
-            this.SGD_Label2.Name = "SGD_Label2";
-            this.SGD_Label2.Size = new System.Drawing.Size(0, 13);
-            this.SGD_Label2.TabIndex = 10;
-            // 
-            // AUD_Label1
-            // 
-            this.AUD_Label1.AutoSize = true;
-            this.AUD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AUD_Label1.Location = new System.Drawing.Point(6, 9);
-            this.AUD_Label1.Name = "AUD_Label1";
-            this.AUD_Label1.Size = new System.Drawing.Size(37, 13);
-            this.AUD_Label1.TabIndex = 0;
-            this.AUD_Label1.Text = "AUD:";
-            // 
-            // EUR_Label1
-            // 
-            this.EUR_Label1.AutoSize = true;
-            this.EUR_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EUR_Label1.Location = new System.Drawing.Point(7, 89);
-            this.EUR_Label1.Name = "EUR_Label1";
-            this.EUR_Label1.Size = new System.Drawing.Size(37, 13);
-            this.EUR_Label1.TabIndex = 2;
-            this.EUR_Label1.Text = "EUR:";
-            // 
-            // fiatRefresh_checkBox
-            // 
-            this.fiatRefresh_checkBox.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.fiatRefresh_checkBox.Location = new System.Drawing.Point(178, 4);
-            this.fiatRefresh_checkBox.Name = "fiatRefresh_checkBox";
-            this.fiatRefresh_checkBox.Size = new System.Drawing.Size(66, 30);
-            this.fiatRefresh_checkBox.TabIndex = 9;
-            this.fiatRefresh_checkBox.Text = "Queue update";
-            this.fiatRefresh_checkBox.UseVisualStyleBackColor = true;
-            this.fiatRefresh_checkBox.CheckedChanged += new System.EventHandler(this.Fiat_checkBox_CheckedChanged);
-            // 
-            // NZD_Label1
-            // 
-            this.NZD_Label1.AutoSize = true;
-            this.NZD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NZD_Label1.Location = new System.Drawing.Point(6, 29);
-            this.NZD_Label1.Name = "NZD_Label1";
-            this.NZD_Label1.Size = new System.Drawing.Size(37, 13);
-            this.NZD_Label1.TabIndex = 1;
-            this.NZD_Label1.Text = "NZD:";
-            // 
-            // SGD_Label1
-            // 
-            this.SGD_Label1.AutoSize = true;
-            this.SGD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SGD_Label1.Location = new System.Drawing.Point(7, 69);
-            this.SGD_Label1.Name = "SGD_Label1";
-            this.SGD_Label1.Size = new System.Drawing.Size(37, 13);
-            this.SGD_Label1.TabIndex = 9;
-            this.SGD_Label1.Text = "SGD:";
-            // 
-            // EUR_Label2
-            // 
-            this.EUR_Label2.AutoSize = true;
-            this.EUR_Label2.Location = new System.Drawing.Point(57, 89);
-            this.EUR_Label2.Name = "EUR_Label2";
-            this.EUR_Label2.Size = new System.Drawing.Size(0, 13);
-            this.EUR_Label2.TabIndex = 6;
-            // 
-            // NZD_Label2
-            // 
-            this.NZD_Label2.AutoSize = true;
-            this.NZD_Label2.Location = new System.Drawing.Point(56, 29);
-            this.NZD_Label2.Name = "NZD_Label2";
-            this.NZD_Label2.Size = new System.Drawing.Size(0, 13);
-            this.NZD_Label2.TabIndex = 5;
-            // 
-            // USD_Label2
-            // 
-            this.USD_Label2.AutoSize = true;
-            this.USD_Label2.Location = new System.Drawing.Point(57, 48);
-            this.USD_Label2.Name = "USD_Label2";
-            this.USD_Label2.Size = new System.Drawing.Size(0, 13);
-            this.USD_Label2.TabIndex = 8;
-            // 
-            // AUD_Label2
-            // 
-            this.AUD_Label2.AutoSize = true;
-            this.AUD_Label2.Location = new System.Drawing.Point(56, 9);
-            this.AUD_Label2.Name = "AUD_Label2";
-            this.AUD_Label2.Size = new System.Drawing.Size(0, 13);
-            this.AUD_Label2.TabIndex = 4;
-            // 
-            // USD_Label1
-            // 
-            this.USD_Label1.AutoSize = true;
-            this.USD_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.USD_Label1.Location = new System.Drawing.Point(7, 49);
-            this.USD_Label1.Name = "USD_Label1";
-            this.USD_Label1.Size = new System.Drawing.Size(37, 13);
-            this.USD_Label1.TabIndex = 7;
-            this.USD_Label1.Text = "USD:";
-            // 
-            // SettingsButton
-            // 
-            this.SettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsButton.Location = new System.Drawing.Point(492, 810);
-            this.SettingsButton.Name = "SettingsButton";
-            this.SettingsButton.Size = new System.Drawing.Size(75, 23);
-            this.SettingsButton.TabIndex = 2;
-            this.SettingsButton.Text = "Settings";
-            this.SettingsButton.UseVisualStyleBackColor = true;
-            this.SettingsButton.Click += new System.EventHandler(this.SettingsButton_Click);
             // 
             // IR_GroupBox
             // 
@@ -4133,1381 +5508,6 @@
             this.GDAX_BuySellComboBox.TabIndex = 15;
             this.GDAX_BuySellComboBox.SelectedIndexChanged += new System.EventHandler(this.GDAX_BuySellComboBox_SelectedIndexChanged);
             // 
-            // IRTickerTT_spread
-            // 
-            this.IRTickerTT_spread.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IRTickerTT_spread.ToolTipTitle = "Spread details";
-            // 
-            // AccountWithdrawalAddress_label
-            // 
-            this.AccountWithdrawalAddress_label.AutoEllipsis = true;
-            this.AccountWithdrawalAddress_label.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.AccountWithdrawalAddress_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountWithdrawalAddress_label.Location = new System.Drawing.Point(11, 40);
-            this.AccountWithdrawalAddress_label.Name = "AccountWithdrawalAddress_label";
-            this.AccountWithdrawalAddress_label.Size = new System.Drawing.Size(289, 14);
-            this.AccountWithdrawalAddress_label.TabIndex = 1;
-            this.IRTickerTT_generic.SetToolTip(this.AccountWithdrawalAddress_label, "Click to copy");
-            this.AccountWithdrawalAddress_label.Click += new System.EventHandler(this.AccountWithdrawalAddress_label_Click);
-            // 
-            // AccountWithdrawalNextCheck_label
-            // 
-            this.AccountWithdrawalNextCheck_label.AutoSize = true;
-            this.AccountWithdrawalNextCheck_label.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.AccountWithdrawalNextCheck_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountWithdrawalNextCheck_label.Location = new System.Drawing.Point(11, 115);
-            this.AccountWithdrawalNextCheck_label.Name = "AccountWithdrawalNextCheck_label";
-            this.AccountWithdrawalNextCheck_label.Size = new System.Drawing.Size(0, 12);
-            this.AccountWithdrawalNextCheck_label.TabIndex = 2;
-            this.IRTickerTT_generic.SetToolTip(this.AccountWithdrawalNextCheck_label, "Click to check address now");
-            this.AccountWithdrawalNextCheck_label.Click += new System.EventHandler(this.AccountWithdrawalNextCheck_label_Click);
-            // 
-            // AccountWithdrawalLastCheck_label
-            // 
-            this.AccountWithdrawalLastCheck_label.AutoSize = true;
-            this.AccountWithdrawalLastCheck_label.Cursor = System.Windows.Forms.Cursors.Default;
-            this.AccountWithdrawalLastCheck_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountWithdrawalLastCheck_label.Location = new System.Drawing.Point(11, 90);
-            this.AccountWithdrawalLastCheck_label.Name = "AccountWithdrawalLastCheck_label";
-            this.AccountWithdrawalLastCheck_label.Size = new System.Drawing.Size(0, 12);
-            this.AccountWithdrawalLastCheck_label.TabIndex = 47;
-            // 
-            // OTCHelper
-            // 
-            this.OTCHelper.Controls.Add(this.StepVolume_Label7);
-            this.OTCHelper.Controls.Add(this.StepPrice_Label7);
-            this.OTCHelper.Controls.Add(this.StepVolume_Label6);
-            this.OTCHelper.Controls.Add(this.StepPrice_Label6);
-            this.OTCHelper.Controls.Add(this.StepVolume_Label5);
-            this.OTCHelper.Controls.Add(this.StepPrice_Label5);
-            this.OTCHelper.Controls.Add(this.StepVolume_Label4);
-            this.OTCHelper.Controls.Add(this.StepPrice_Label4);
-            this.OTCHelper.Controls.Add(this.StepPrice_Label3);
-            this.OTCHelper.Controls.Add(this.StepVolume_Label3);
-            this.OTCHelper.Controls.Add(this.StepVolume_Label2);
-            this.OTCHelper.Controls.Add(this.StepPrice_Label2);
-            this.OTCHelper.Controls.Add(this.StepVolume_Label1);
-            this.OTCHelper.Controls.Add(this.StepPrice_Label1);
-            this.OTCHelper.Controls.Add(this.MarketBuyCrypto_Label);
-            this.OTCHelper.Controls.Add(this.CashInput_MaskedTextBox);
-            this.OTCHelper.Controls.Add(this.CryptoChooser_ComboBox);
-            this.OTCHelper.Location = new System.Drawing.Point(0, 0);
-            this.OTCHelper.Name = "OTCHelper";
-            this.OTCHelper.Size = new System.Drawing.Size(585, 613);
-            this.OTCHelper.TabIndex = 1;
-            // 
-            // StepVolume_Label7
-            // 
-            this.StepVolume_Label7.AutoSize = true;
-            this.StepVolume_Label7.Location = new System.Drawing.Point(136, 312);
-            this.StepVolume_Label7.Name = "StepVolume_Label7";
-            this.StepVolume_Label7.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label7.TabIndex = 16;
-            this.StepVolume_Label7.Text = "label1";
-            // 
-            // StepPrice_Label7
-            // 
-            this.StepPrice_Label7.AutoSize = true;
-            this.StepPrice_Label7.Location = new System.Drawing.Point(51, 312);
-            this.StepPrice_Label7.Name = "StepPrice_Label7";
-            this.StepPrice_Label7.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label7.TabIndex = 15;
-            this.StepPrice_Label7.Text = "label1";
-            // 
-            // StepVolume_Label6
-            // 
-            this.StepVolume_Label6.AutoSize = true;
-            this.StepVolume_Label6.Location = new System.Drawing.Point(136, 274);
-            this.StepVolume_Label6.Name = "StepVolume_Label6";
-            this.StepVolume_Label6.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label6.TabIndex = 14;
-            this.StepVolume_Label6.Text = "label1";
-            // 
-            // StepPrice_Label6
-            // 
-            this.StepPrice_Label6.AutoSize = true;
-            this.StepPrice_Label6.Location = new System.Drawing.Point(51, 274);
-            this.StepPrice_Label6.Name = "StepPrice_Label6";
-            this.StepPrice_Label6.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label6.TabIndex = 13;
-            this.StepPrice_Label6.Text = "label1";
-            // 
-            // StepVolume_Label5
-            // 
-            this.StepVolume_Label5.AutoSize = true;
-            this.StepVolume_Label5.Location = new System.Drawing.Point(136, 240);
-            this.StepVolume_Label5.Name = "StepVolume_Label5";
-            this.StepVolume_Label5.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label5.TabIndex = 12;
-            this.StepVolume_Label5.Text = "label1";
-            // 
-            // StepPrice_Label5
-            // 
-            this.StepPrice_Label5.AutoSize = true;
-            this.StepPrice_Label5.Location = new System.Drawing.Point(51, 240);
-            this.StepPrice_Label5.Name = "StepPrice_Label5";
-            this.StepPrice_Label5.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label5.TabIndex = 11;
-            this.StepPrice_Label5.Text = "label1";
-            // 
-            // StepVolume_Label4
-            // 
-            this.StepVolume_Label4.AutoSize = true;
-            this.StepVolume_Label4.Location = new System.Drawing.Point(136, 214);
-            this.StepVolume_Label4.Name = "StepVolume_Label4";
-            this.StepVolume_Label4.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label4.TabIndex = 10;
-            this.StepVolume_Label4.Text = "label1";
-            // 
-            // StepPrice_Label4
-            // 
-            this.StepPrice_Label4.AutoSize = true;
-            this.StepPrice_Label4.Location = new System.Drawing.Point(51, 214);
-            this.StepPrice_Label4.Name = "StepPrice_Label4";
-            this.StepPrice_Label4.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label4.TabIndex = 9;
-            this.StepPrice_Label4.Text = "label1";
-            // 
-            // StepPrice_Label3
-            // 
-            this.StepPrice_Label3.AutoSize = true;
-            this.StepPrice_Label3.Location = new System.Drawing.Point(51, 182);
-            this.StepPrice_Label3.Name = "StepPrice_Label3";
-            this.StepPrice_Label3.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label3.TabIndex = 8;
-            this.StepPrice_Label3.Text = "label1";
-            // 
-            // StepVolume_Label3
-            // 
-            this.StepVolume_Label3.AutoSize = true;
-            this.StepVolume_Label3.Location = new System.Drawing.Point(136, 182);
-            this.StepVolume_Label3.Name = "StepVolume_Label3";
-            this.StepVolume_Label3.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label3.TabIndex = 7;
-            this.StepVolume_Label3.Text = "label1";
-            // 
-            // StepVolume_Label2
-            // 
-            this.StepVolume_Label2.AutoSize = true;
-            this.StepVolume_Label2.Location = new System.Drawing.Point(136, 150);
-            this.StepVolume_Label2.Name = "StepVolume_Label2";
-            this.StepVolume_Label2.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label2.TabIndex = 6;
-            this.StepVolume_Label2.Text = "label1";
-            // 
-            // StepPrice_Label2
-            // 
-            this.StepPrice_Label2.AutoSize = true;
-            this.StepPrice_Label2.Location = new System.Drawing.Point(51, 150);
-            this.StepPrice_Label2.Name = "StepPrice_Label2";
-            this.StepPrice_Label2.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label2.TabIndex = 5;
-            this.StepPrice_Label2.Text = "label1";
-            // 
-            // StepVolume_Label1
-            // 
-            this.StepVolume_Label1.AutoSize = true;
-            this.StepVolume_Label1.Location = new System.Drawing.Point(136, 116);
-            this.StepVolume_Label1.Name = "StepVolume_Label1";
-            this.StepVolume_Label1.Size = new System.Drawing.Size(35, 13);
-            this.StepVolume_Label1.TabIndex = 4;
-            this.StepVolume_Label1.Text = "label1";
-            // 
-            // StepPrice_Label1
-            // 
-            this.StepPrice_Label1.AutoSize = true;
-            this.StepPrice_Label1.Location = new System.Drawing.Point(51, 116);
-            this.StepPrice_Label1.Name = "StepPrice_Label1";
-            this.StepPrice_Label1.Size = new System.Drawing.Size(35, 13);
-            this.StepPrice_Label1.TabIndex = 3;
-            this.StepPrice_Label1.Text = "label1";
-            // 
-            // MarketBuyCrypto_Label
-            // 
-            this.MarketBuyCrypto_Label.AutoSize = true;
-            this.MarketBuyCrypto_Label.Location = new System.Drawing.Point(325, 43);
-            this.MarketBuyCrypto_Label.Name = "MarketBuyCrypto_Label";
-            this.MarketBuyCrypto_Label.Size = new System.Drawing.Size(35, 13);
-            this.MarketBuyCrypto_Label.TabIndex = 2;
-            this.MarketBuyCrypto_Label.Text = "label1";
-            // 
-            // CashInput_MaskedTextBox
-            // 
-            this.CashInput_MaskedTextBox.Location = new System.Drawing.Point(200, 37);
-            this.CashInput_MaskedTextBox.Name = "CashInput_MaskedTextBox";
-            this.CashInput_MaskedTextBox.Size = new System.Drawing.Size(100, 20);
-            this.CashInput_MaskedTextBox.TabIndex = 1;
-            // 
-            // CryptoChooser_ComboBox
-            // 
-            this.CryptoChooser_ComboBox.FormattingEnabled = true;
-            this.CryptoChooser_ComboBox.Location = new System.Drawing.Point(41, 36);
-            this.CryptoChooser_ComboBox.Name = "CryptoChooser_ComboBox";
-            this.CryptoChooser_ComboBox.Size = new System.Drawing.Size(121, 21);
-            this.CryptoChooser_ComboBox.TabIndex = 0;
-            // 
-            // BlinkStickBW
-            // 
-            this.BlinkStickBW.WorkerSupportsCancellation = true;
-            this.BlinkStickBW.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickBW_DoWork);
-            this.BlinkStickBW.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BlinkStickBW_RunWorkerCompleted);
-            // 
-            // BlinkStickWhite_Thread
-            // 
-            this.BlinkStickWhite_Thread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickWhite_Thread_DoWork);
-            // 
-            // IRAccount_panel
-            // 
-            this.IRAccount_panel.Controls.Add(this.StopBaitin_button);
-            this.IRAccount_panel.Controls.Add(this.SwitchOrderBookSide_button);
-            this.IRAccount_panel.Controls.Add(this.AccountOrderType_listbox);
-            this.IRAccount_panel.Controls.Add(this.AccountOpenOrders_panel);
-            this.IRAccount_panel.Controls.Add(this.AccountClosedOrders_panel);
-            this.IRAccount_panel.Controls.Add(this.AccountEstOrderValue_value);
-            this.IRAccount_panel.Controls.Add(this.AccountEstOrderValue_label);
-            this.IRAccount_panel.Controls.Add(this.AccountOrders_listview);
-            this.IRAccount_panel.Controls.Add(this.AccountPlaceOrder_button);
-            this.IRAccount_panel.Controls.Add(this.AccountLimitPrice_label);
-            this.IRAccount_panel.Controls.Add(this.AccountLimitPrice_textbox);
-            this.IRAccount_panel.Controls.Add(this.AccountOrderVolume_label);
-            this.IRAccount_panel.Controls.Add(this.AccountOrderVolume_textbox);
-            this.IRAccount_panel.Controls.Add(this.AccountBuySell_listbox);
-            this.IRAccount_panel.Controls.Add(this.IRAccountAddress_panel);
-            this.IRAccount_panel.Controls.Add(this.GetAccounts_panel);
-            this.IRAccount_panel.Location = new System.Drawing.Point(0, 0);
-            this.IRAccount_panel.Name = "IRAccount_panel";
-            this.IRAccount_panel.Size = new System.Drawing.Size(585, 843);
-            this.IRAccount_panel.TabIndex = 61;
-            this.IRAccount_panel.Visible = false;
-            // 
-            // StopBaitin_button
-            // 
-            this.StopBaitin_button.BackColor = System.Drawing.Color.White;
-            this.StopBaitin_button.Enabled = false;
-            this.StopBaitin_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.StopBaitin_button.Location = new System.Drawing.Point(455, 65);
-            this.StopBaitin_button.Name = "StopBaitin_button";
-            this.StopBaitin_button.Size = new System.Drawing.Size(121, 39);
-            this.StopBaitin_button.TabIndex = 17;
-            this.StopBaitin_button.Text = "Stop market baiter and cancel order";
-            this.StopBaitin_button.UseVisualStyleBackColor = false;
-            this.StopBaitin_button.Visible = false;
-            this.StopBaitin_button.Click += new System.EventHandler(this.StopBaitin_button_Click);
-            // 
-            // SwitchOrderBookSide_button
-            // 
-            this.SwitchOrderBookSide_button.BackColor = System.Drawing.Color.White;
-            this.SwitchOrderBookSide_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SwitchOrderBookSide_button.Location = new System.Drawing.Point(499, 114);
-            this.SwitchOrderBookSide_button.Name = "SwitchOrderBookSide_button";
-            this.SwitchOrderBookSide_button.Size = new System.Drawing.Size(77, 24);
-            this.SwitchOrderBookSide_button.TabIndex = 16;
-            this.SwitchOrderBookSide_button.Text = "Switch sides";
-            this.SwitchOrderBookSide_button.UseVisualStyleBackColor = false;
-            this.SwitchOrderBookSide_button.Click += new System.EventHandler(this.SwitchOrderBookSide_button_Click);
-            // 
-            // AccountOrderType_listbox
-            // 
-            this.AccountOrderType_listbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.AccountOrderType_listbox.FormattingEnabled = true;
-            this.AccountOrderType_listbox.ItemHeight = 20;
-            this.AccountOrderType_listbox.Items.AddRange(new object[] {
-            "Market order",
-            "Limit order",
-            "Market baiter"});
-            this.AccountOrderType_listbox.Location = new System.Drawing.Point(330, 12);
-            this.AccountOrderType_listbox.Name = "AccountOrderType_listbox";
-            this.AccountOrderType_listbox.ShowScrollbar = false;
-            this.AccountOrderType_listbox.Size = new System.Drawing.Size(101, 44);
-            this.AccountOrderType_listbox.TabIndex = 3;
-            this.AccountOrderType_listbox.SelectedIndexChanged += new System.EventHandler(this.AcccountOrderType_listbox_SelectedIndexChanged);
-            // 
-            // AccountOpenOrders_panel
-            // 
-            this.AccountOpenOrders_panel.BackColor = System.Drawing.Color.LightGreen;
-            this.AccountOpenOrders_panel.Controls.Add(this.AccountOpenOrders_listview);
-            this.AccountOpenOrders_panel.Controls.Add(this.AccountOpenOrders_label);
-            this.AccountOpenOrders_panel.Location = new System.Drawing.Point(276, 335);
-            this.AccountOpenOrders_panel.Name = "AccountOpenOrders_panel";
-            this.AccountOpenOrders_panel.Size = new System.Drawing.Size(309, 185);
-            this.AccountOpenOrders_panel.TabIndex = 14;
-            // 
-            // AccountOpenOrders_listview
-            // 
-            this.AccountOpenOrders_listview.AllowColumnReorder = true;
-            this.AccountOpenOrders_listview.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader5,
-            this.columnHeader6,
-            this.columnHeader7,
-            this.columnHeader8});
-            this.AccountOpenOrders_listview.FullRowSelect = true;
-            this.AccountOpenOrders_listview.GridLines = true;
-            this.AccountOpenOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.AccountOpenOrders_listview.HideSelection = false;
-            this.AccountOpenOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
-            this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 32);
-            this.AccountOpenOrders_listview.MultiSelect = false;
-            this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";
-            this.AccountOpenOrders_listview.Scrollable = false;
-            this.AccountOpenOrders_listview.ShowGroups = false;
-            this.AccountOpenOrders_listview.ShowItemToolTips = true;
-            this.AccountOpenOrders_listview.Size = new System.Drawing.Size(291, 148);
-            this.AccountOpenOrders_listview.TabIndex = 13;
-            this.AccountOpenOrders_listview.UseCompatibleStateImageBehavior = false;
-            this.AccountOpenOrders_listview.View = System.Windows.Forms.View.Details;
-            this.AccountOpenOrders_listview.DoubleClick += new System.EventHandler(this.AccountOpenOrders_listview_DoubleClick);
-            // 
-            // columnHeader5
-            // 
-            this.columnHeader5.Text = "Date";
-            this.columnHeader5.Width = 80;
-            // 
-            // columnHeader6
-            // 
-            this.columnHeader6.Text = "Volume";
-            this.columnHeader6.Width = 70;
-            // 
-            // columnHeader7
-            // 
-            this.columnHeader7.Text = "Price";
-            this.columnHeader7.Width = 70;
-            // 
-            // columnHeader8
-            // 
-            this.columnHeader8.Text = "Outstanding";
-            this.columnHeader8.Width = 69;
-            // 
-            // AccountOpenOrders_label
-            // 
-            this.AccountOpenOrders_label.AutoSize = true;
-            this.AccountOpenOrders_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountOpenOrders_label.Location = new System.Drawing.Point(7, 8);
-            this.AccountOpenOrders_label.Name = "AccountOpenOrders_label";
-            this.AccountOpenOrders_label.Size = new System.Drawing.Size(129, 20);
-            this.AccountOpenOrders_label.TabIndex = 6;
-            this.AccountOpenOrders_label.Text = "BTC open orders";
-            // 
-            // AccountClosedOrders_panel
-            // 
-            this.AccountClosedOrders_panel.BackColor = System.Drawing.Color.DodgerBlue;
-            this.AccountClosedOrders_panel.Controls.Add(this.AccountClosedOrders_listview);
-            this.AccountClosedOrders_panel.Controls.Add(this.AccountClosedOrders_label);
-            this.AccountClosedOrders_panel.Location = new System.Drawing.Point(276, 520);
-            this.AccountClosedOrders_panel.Name = "AccountClosedOrders_panel";
-            this.AccountClosedOrders_panel.Size = new System.Drawing.Size(309, 185);
-            this.AccountClosedOrders_panel.TabIndex = 12;
-            // 
-            // AccountClosedOrders_listview
-            // 
-            this.AccountClosedOrders_listview.AllowColumnReorder = true;
-            this.AccountClosedOrders_listview.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3,
-            this.columnHeader4});
-            this.AccountClosedOrders_listview.FullRowSelect = true;
-            this.AccountClosedOrders_listview.GridLines = true;
-            this.AccountClosedOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.AccountClosedOrders_listview.HideSelection = false;
-            this.AccountClosedOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem2});
-            this.AccountClosedOrders_listview.Location = new System.Drawing.Point(9, 32);
-            this.AccountClosedOrders_listview.MultiSelect = false;
-            this.AccountClosedOrders_listview.Name = "AccountClosedOrders_listview";
-            this.AccountClosedOrders_listview.Scrollable = false;
-            this.AccountClosedOrders_listview.ShowGroups = false;
-            this.AccountClosedOrders_listview.ShowItemToolTips = true;
-            this.AccountClosedOrders_listview.Size = new System.Drawing.Size(291, 148);
-            this.AccountClosedOrders_listview.TabIndex = 13;
-            this.AccountClosedOrders_listview.UseCompatibleStateImageBehavior = false;
-            this.AccountClosedOrders_listview.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Date";
-            this.columnHeader1.Width = 80;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Volume";
-            this.columnHeader2.Width = 70;
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Avg price";
-            this.columnHeader3.Width = 70;
-            // 
-            // columnHeader4
-            // 
-            this.columnHeader4.Text = "Notional";
-            this.columnHeader4.Width = 70;
-            // 
-            // AccountClosedOrders_label
-            // 
-            this.AccountClosedOrders_label.AutoSize = true;
-            this.AccountClosedOrders_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountClosedOrders_label.Location = new System.Drawing.Point(7, 8);
-            this.AccountClosedOrders_label.Name = "AccountClosedOrders_label";
-            this.AccountClosedOrders_label.Size = new System.Drawing.Size(139, 20);
-            this.AccountClosedOrders_label.TabIndex = 6;
-            this.AccountClosedOrders_label.Text = "BTC closed orders";
-            // 
-            // AccountEstOrderValue_value
-            // 
-            this.AccountEstOrderValue_value.AutoSize = true;
-            this.AccountEstOrderValue_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountEstOrderValue_value.Location = new System.Drawing.Point(371, 117);
-            this.AccountEstOrderValue_value.Name = "AccountEstOrderValue_value";
-            this.AccountEstOrderValue_value.Size = new System.Drawing.Size(0, 16);
-            this.AccountEstOrderValue_value.TabIndex = 11;
-            // 
-            // AccountEstOrderValue_label
-            // 
-            this.AccountEstOrderValue_label.AutoSize = true;
-            this.AccountEstOrderValue_label.Location = new System.Drawing.Point(280, 118);
-            this.AccountEstOrderValue_label.Name = "AccountEstOrderValue_label";
-            this.AccountEstOrderValue_label.Size = new System.Drawing.Size(76, 13);
-            this.AccountEstOrderValue_label.TabIndex = 10;
-            this.AccountEstOrderValue_label.Text = "Value of order:";
-            // 
-            // AccountOrders_listview
-            // 
-            this.AccountOrders_listview.AllowColumnReorder = true;
-            this.AccountOrders_listview.BackColor = System.Drawing.Color.PeachPuff;
-            this.AccountOrders_listview.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.OrderNumber,
-            this.OrderPrice,
-            this.OrderVolume,
-            this.CumulativeVol,
-            this.Value});
-            this.AccountOrders_listview.FullRowSelect = true;
-            this.AccountOrders_listview.GridLines = true;
-            this.AccountOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.AccountOrders_listview.HideSelection = false;
-            this.AccountOrders_listview.Location = new System.Drawing.Point(282, 148);
-            this.AccountOrders_listview.MultiSelect = false;
-            this.AccountOrders_listview.Name = "AccountOrders_listview";
-            this.AccountOrders_listview.Scrollable = false;
-            this.AccountOrders_listview.ShowGroups = false;
-            this.AccountOrders_listview.Size = new System.Drawing.Size(294, 182);
-            this.AccountOrders_listview.TabIndex = 9;
-            this.AccountOrders_listview.UseCompatibleStateImageBehavior = false;
-            this.AccountOrders_listview.View = System.Windows.Forms.View.Details;
-            // 
-            // OrderNumber
-            // 
-            this.OrderNumber.Text = "#";
-            this.OrderNumber.Width = 20;
-            // 
-            // OrderPrice
-            // 
-            this.OrderPrice.Text = "Price";
-            // 
-            // OrderVolume
-            // 
-            this.OrderVolume.Text = "Volume";
-            this.OrderVolume.Width = 70;
-            // 
-            // CumulativeVol
-            // 
-            this.CumulativeVol.Text = "Cum. vol";
-            this.CumulativeVol.Width = 70;
-            // 
-            // Value
-            // 
-            this.Value.Text = "Cum. value";
-            this.Value.Width = 70;
-            // 
-            // AccountPlaceOrder_button
-            // 
-            this.AccountPlaceOrder_button.BackColor = System.Drawing.Color.White;
-            this.AccountPlaceOrder_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AccountPlaceOrder_button.Location = new System.Drawing.Point(282, 65);
-            this.AccountPlaceOrder_button.Name = "AccountPlaceOrder_button";
-            this.AccountPlaceOrder_button.Size = new System.Drawing.Size(294, 39);
-            this.AccountPlaceOrder_button.TabIndex = 8;
-            this.AccountPlaceOrder_button.Text = "Buy now";
-            this.AccountPlaceOrder_button.UseVisualStyleBackColor = false;
-            this.AccountPlaceOrder_button.Click += new System.EventHandler(this.AccountPlaceOrder_button_Click);
-            // 
-            // AccountLimitPrice_label
-            // 
-            this.AccountLimitPrice_label.AutoSize = true;
-            this.AccountLimitPrice_label.Location = new System.Drawing.Point(537, 41);
-            this.AccountLimitPrice_label.Name = "AccountLimitPrice_label";
-            this.AccountLimitPrice_label.Size = new System.Drawing.Size(31, 13);
-            this.AccountLimitPrice_label.TabIndex = 7;
-            this.AccountLimitPrice_label.Text = "Price";
-            this.AccountLimitPrice_label.Visible = false;
-            // 
-            // AccountLimitPrice_textbox
-            // 
-            this.AccountLimitPrice_textbox.Location = new System.Drawing.Point(437, 36);
-            this.AccountLimitPrice_textbox.Name = "AccountLimitPrice_textbox";
-            this.AccountLimitPrice_textbox.Size = new System.Drawing.Size(93, 20);
-            this.AccountLimitPrice_textbox.TabIndex = 6;
-            this.AccountLimitPrice_textbox.Visible = false;
-            this.AccountLimitPrice_textbox.TextChanged += new System.EventHandler(this.AccountLimitPrice_textbox_TextChanged);
-            // 
-            // AccountOrderVolume_label
-            // 
-            this.AccountOrderVolume_label.AutoSize = true;
-            this.AccountOrderVolume_label.Location = new System.Drawing.Point(537, 17);
-            this.AccountOrderVolume_label.Name = "AccountOrderVolume_label";
-            this.AccountOrderVolume_label.Size = new System.Drawing.Size(42, 13);
-            this.AccountOrderVolume_label.TabIndex = 5;
-            this.AccountOrderVolume_label.Text = "Volume";
-            this.IRTickerTT_generic.SetToolTip(this.AccountOrderVolume_label, "Double click to set max volume for this crypto");
-            this.AccountOrderVolume_label.DoubleClick += new System.EventHandler(this.AccountOrderVolume_label_DoubleClick);
-            // 
-            // AccountOrderVolume_textbox
-            // 
-            this.AccountOrderVolume_textbox.Location = new System.Drawing.Point(437, 12);
-            this.AccountOrderVolume_textbox.Name = "AccountOrderVolume_textbox";
-            this.AccountOrderVolume_textbox.Size = new System.Drawing.Size(93, 20);
-            this.AccountOrderVolume_textbox.TabIndex = 4;
-            this.AccountOrderVolume_textbox.TextChanged += new System.EventHandler(this.AccountOrderVolume_textbox_TextChanged);
-            this.AccountOrderVolume_textbox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.AccountOrderVolume_textbox_KeyUp);
-            // 
-            // AccountBuySell_listbox
-            // 
-            this.AccountBuySell_listbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountBuySell_listbox.FormattingEnabled = true;
-            this.AccountBuySell_listbox.ItemHeight = 20;
-            this.AccountBuySell_listbox.Items.AddRange(new object[] {
-            "Buy",
-            "Sell"});
-            this.AccountBuySell_listbox.Location = new System.Drawing.Point(282, 12);
-            this.AccountBuySell_listbox.Name = "AccountBuySell_listbox";
-            this.AccountBuySell_listbox.Size = new System.Drawing.Size(42, 44);
-            this.AccountBuySell_listbox.TabIndex = 2;
-            this.AccountBuySell_listbox.Click += new System.EventHandler(this.AccountBuySell_listbox_Click);
-            // 
-            // IRAccountAddress_panel
-            // 
-            this.IRAccountAddress_panel.BackColor = System.Drawing.Color.Salmon;
-            this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalTag_value);
-            this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalTag_label);
-            this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalLastCheck_label);
-            this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalNextCheck_label);
-            this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalAddress_label);
-            this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalCrypto_label);
-            this.IRAccountAddress_panel.Controls.Add(this.IRAccountClose_button);
-            this.IRAccountAddress_panel.Location = new System.Drawing.Point(276, 705);
-            this.IRAccountAddress_panel.Name = "IRAccountAddress_panel";
-            this.IRAccountAddress_panel.Size = new System.Drawing.Size(309, 137);
-            this.IRAccountAddress_panel.TabIndex = 1;
-            // 
-            // AccountWithdrawalTag_value
-            // 
-            this.AccountWithdrawalTag_value.AutoSize = true;
-            this.AccountWithdrawalTag_value.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.AccountWithdrawalTag_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountWithdrawalTag_value.Location = new System.Drawing.Point(39, 65);
-            this.AccountWithdrawalTag_value.Name = "AccountWithdrawalTag_value";
-            this.AccountWithdrawalTag_value.Size = new System.Drawing.Size(0, 12);
-            this.AccountWithdrawalTag_value.TabIndex = 5;
-            this.IRTickerTT_generic.SetToolTip(this.AccountWithdrawalTag_value, "Click to copy");
-            this.AccountWithdrawalTag_value.Click += new System.EventHandler(this.AccountWithdrawalAddress_label_Click);
-            // 
-            // AccountWithdrawalTag_label
-            // 
-            this.AccountWithdrawalTag_label.AutoSize = true;
-            this.AccountWithdrawalTag_label.Cursor = System.Windows.Forms.Cursors.Default;
-            this.AccountWithdrawalTag_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountWithdrawalTag_label.Location = new System.Drawing.Point(11, 65);
-            this.AccountWithdrawalTag_label.Name = "AccountWithdrawalTag_label";
-            this.AccountWithdrawalTag_label.Size = new System.Drawing.Size(23, 12);
-            this.AccountWithdrawalTag_label.TabIndex = 4;
-            this.AccountWithdrawalTag_label.Text = "Tag:";
-            this.AccountWithdrawalTag_label.Visible = false;
-            // 
-            // AccountWithdrawalCrypto_label
-            // 
-            this.AccountWithdrawalCrypto_label.AutoSize = true;
-            this.AccountWithdrawalCrypto_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountWithdrawalCrypto_label.Location = new System.Drawing.Point(7, 11);
-            this.AccountWithdrawalCrypto_label.Name = "AccountWithdrawalCrypto_label";
-            this.AccountWithdrawalCrypto_label.Size = new System.Drawing.Size(161, 20);
-            this.AccountWithdrawalCrypto_label.TabIndex = 0;
-            this.AccountWithdrawalCrypto_label.Text = "BTC deposit address:";
-            // 
-            // IRAccountClose_button
-            // 
-            this.IRAccountClose_button.BackColor = System.Drawing.Color.White;
-            this.IRAccountClose_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.IRAccountClose_button.Location = new System.Drawing.Point(228, 108);
-            this.IRAccountClose_button.Name = "IRAccountClose_button";
-            this.IRAccountClose_button.Size = new System.Drawing.Size(75, 23);
-            this.IRAccountClose_button.TabIndex = 30;
-            this.IRAccountClose_button.Text = "Close";
-            this.IRAccountClose_button.UseVisualStyleBackColor = false;
-            this.IRAccountClose_button.Click += new System.EventHandler(this.IRAccountClose_button_Click);
-            // 
-            // GetAccounts_panel
-            // 
-            this.GetAccounts_panel.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.GetAccounts_panel.Controls.Add(this.AccountCOMP_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountCOMP_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountCOMP_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountUSDC_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountUSDC_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountUSDC_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountDAI_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountDAI_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountDAI_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountMKR_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountMKR_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountMKR_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountName_button);
-            this.GetAccounts_panel.Controls.Add(this.AccountLINK_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountLINK_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountLINK_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountGNT_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountZRX_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountOMG_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountBAT_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountETC_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountXLM_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountEOS_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountLTC_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountUSDT_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountBSV_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountBCH_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountXRP_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountETH_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountXBT_total);
-            this.GetAccounts_panel.Controls.Add(this.label1);
-            this.GetAccounts_panel.Controls.Add(this.label7);
-            this.GetAccounts_panel.Controls.Add(this.AccountUSD_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountUSD_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountNZD_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountNZD_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountAUD_total);
-            this.GetAccounts_panel.Controls.Add(this.AccountAUD_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountGNT_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountGNT_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountZRX_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountZRX_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountOMG_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountOMG_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountBAT_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountBAT_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountETC_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountETC_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountXLM_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountXLM_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountEOS_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountEOS_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountLTC_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountLTC_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountUSDT_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountUSDT_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountBSV_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountBSV_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountBCH_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountBCH_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountXRP_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountXRP_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountETH_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountETH_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountXBT_value);
-            this.GetAccounts_panel.Controls.Add(this.AccountXBT_label);
-            this.GetAccounts_panel.Location = new System.Drawing.Point(0, 0);
-            this.GetAccounts_panel.Name = "GetAccounts_panel";
-            this.GetAccounts_panel.Size = new System.Drawing.Size(276, 843);
-            this.GetAccounts_panel.TabIndex = 0;
-            // 
-            // AccountCOMP_total
-            // 
-            this.AccountCOMP_total.AutoSize = true;
-            this.AccountCOMP_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountCOMP_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountCOMP_total.Location = new System.Drawing.Point(83, 706);
-            this.AccountCOMP_total.Name = "AccountCOMP_total";
-            this.AccountCOMP_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountCOMP_total.TabIndex = 72;
-            // 
-            // AccountCOMP_value
-            // 
-            this.AccountCOMP_value.AutoSize = true;
-            this.AccountCOMP_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountCOMP_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountCOMP_value.Location = new System.Drawing.Point(183, 706);
-            this.AccountCOMP_value.Name = "AccountCOMP_value";
-            this.AccountCOMP_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountCOMP_value.TabIndex = 71;
-            // 
-            // AccountCOMP_label
-            // 
-            this.AccountCOMP_label.AutoSize = true;
-            this.AccountCOMP_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountCOMP_label.Location = new System.Drawing.Point(12, 706);
-            this.AccountCOMP_label.Name = "AccountCOMP_label";
-            this.AccountCOMP_label.Size = new System.Drawing.Size(71, 24);
-            this.AccountCOMP_label.TabIndex = 70;
-            this.AccountCOMP_label.Text = "COMP:";
-            this.AccountCOMP_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountUSDC_total
-            // 
-            this.AccountUSDC_total.AutoSize = true;
-            this.AccountUSDC_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountUSDC_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountUSDC_total.Location = new System.Drawing.Point(83, 672);
-            this.AccountUSDC_total.Name = "AccountUSDC_total";
-            this.AccountUSDC_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountUSDC_total.TabIndex = 69;
-            // 
-            // AccountUSDC_value
-            // 
-            this.AccountUSDC_value.AutoSize = true;
-            this.AccountUSDC_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountUSDC_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountUSDC_value.Location = new System.Drawing.Point(183, 672);
-            this.AccountUSDC_value.Name = "AccountUSDC_value";
-            this.AccountUSDC_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountUSDC_value.TabIndex = 68;
-            // 
-            // AccountUSDC_label
-            // 
-            this.AccountUSDC_label.AutoSize = true;
-            this.AccountUSDC_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountUSDC_label.Location = new System.Drawing.Point(12, 672);
-            this.AccountUSDC_label.Name = "AccountUSDC_label";
-            this.AccountUSDC_label.Size = new System.Drawing.Size(66, 24);
-            this.AccountUSDC_label.TabIndex = 67;
-            this.AccountUSDC_label.Text = "USDC:";
-            this.AccountUSDC_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountDAI_total
-            // 
-            this.AccountDAI_total.AutoSize = true;
-            this.AccountDAI_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountDAI_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountDAI_total.Location = new System.Drawing.Point(83, 638);
-            this.AccountDAI_total.Name = "AccountDAI_total";
-            this.AccountDAI_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountDAI_total.TabIndex = 66;
-            // 
-            // AccountDAI_value
-            // 
-            this.AccountDAI_value.AutoSize = true;
-            this.AccountDAI_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountDAI_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountDAI_value.Location = new System.Drawing.Point(183, 638);
-            this.AccountDAI_value.Name = "AccountDAI_value";
-            this.AccountDAI_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountDAI_value.TabIndex = 65;
-            // 
-            // AccountDAI_label
-            // 
-            this.AccountDAI_label.AutoSize = true;
-            this.AccountDAI_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountDAI_label.Location = new System.Drawing.Point(12, 638);
-            this.AccountDAI_label.Name = "AccountDAI_label";
-            this.AccountDAI_label.Size = new System.Drawing.Size(45, 24);
-            this.AccountDAI_label.TabIndex = 64;
-            this.AccountDAI_label.Text = "DAI:";
-            this.AccountDAI_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountMKR_total
-            // 
-            this.AccountMKR_total.AutoSize = true;
-            this.AccountMKR_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountMKR_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountMKR_total.Location = new System.Drawing.Point(83, 604);
-            this.AccountMKR_total.Name = "AccountMKR_total";
-            this.AccountMKR_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountMKR_total.TabIndex = 63;
-            // 
-            // AccountMKR_value
-            // 
-            this.AccountMKR_value.AutoSize = true;
-            this.AccountMKR_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountMKR_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountMKR_value.Location = new System.Drawing.Point(183, 604);
-            this.AccountMKR_value.Name = "AccountMKR_value";
-            this.AccountMKR_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountMKR_value.TabIndex = 62;
-            // 
-            // AccountMKR_label
-            // 
-            this.AccountMKR_label.AutoSize = true;
-            this.AccountMKR_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountMKR_label.Location = new System.Drawing.Point(12, 604);
-            this.AccountMKR_label.Name = "AccountMKR_label";
-            this.AccountMKR_label.Size = new System.Drawing.Size(56, 24);
-            this.AccountMKR_label.TabIndex = 61;
-            this.AccountMKR_label.Text = "MKR:";
-            this.AccountMKR_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountName_button
-            // 
-            this.AccountName_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AccountName_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountName_button.Location = new System.Drawing.Point(16, 9);
-            this.AccountName_button.Name = "AccountName_button";
-            this.AccountName_button.Size = new System.Drawing.Size(228, 31);
-            this.AccountName_button.TabIndex = 60;
-            this.AccountName_button.Text = "IR account";
-            this.AccountName_button.UseVisualStyleBackColor = true;
-            this.AccountName_button.Click += new System.EventHandler(this.AccountName_button_Click);
-            // 
-            // AccountLINK_total
-            // 
-            this.AccountLINK_total.AutoSize = true;
-            this.AccountLINK_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountLINK_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountLINK_total.Location = new System.Drawing.Point(83, 570);
-            this.AccountLINK_total.Name = "AccountLINK_total";
-            this.AccountLINK_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountLINK_total.TabIndex = 59;
-            // 
-            // AccountLINK_value
-            // 
-            this.AccountLINK_value.AutoSize = true;
-            this.AccountLINK_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountLINK_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountLINK_value.Location = new System.Drawing.Point(183, 570);
-            this.AccountLINK_value.Name = "AccountLINK_value";
-            this.AccountLINK_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountLINK_value.TabIndex = 57;
-            // 
-            // AccountLINK_label
-            // 
-            this.AccountLINK_label.AutoSize = true;
-            this.AccountLINK_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountLINK_label.Location = new System.Drawing.Point(12, 570);
-            this.AccountLINK_label.Name = "AccountLINK_label";
-            this.AccountLINK_label.Size = new System.Drawing.Size(55, 24);
-            this.AccountLINK_label.TabIndex = 56;
-            this.AccountLINK_label.Text = "LINK:";
-            this.AccountLINK_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountGNT_total
-            // 
-            this.AccountGNT_total.AutoSize = true;
-            this.AccountGNT_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountGNT_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountGNT_total.Location = new System.Drawing.Point(83, 534);
-            this.AccountGNT_total.Name = "AccountGNT_total";
-            this.AccountGNT_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountGNT_total.TabIndex = 53;
-            // 
-            // AccountZRX_total
-            // 
-            this.AccountZRX_total.AutoSize = true;
-            this.AccountZRX_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountZRX_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountZRX_total.Location = new System.Drawing.Point(83, 500);
-            this.AccountZRX_total.Name = "AccountZRX_total";
-            this.AccountZRX_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountZRX_total.TabIndex = 52;
-            // 
-            // AccountOMG_total
-            // 
-            this.AccountOMG_total.AutoSize = true;
-            this.AccountOMG_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountOMG_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountOMG_total.Location = new System.Drawing.Point(83, 468);
-            this.AccountOMG_total.Name = "AccountOMG_total";
-            this.AccountOMG_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountOMG_total.TabIndex = 50;
-            // 
-            // AccountBAT_total
-            // 
-            this.AccountBAT_total.AutoSize = true;
-            this.AccountBAT_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountBAT_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBAT_total.Location = new System.Drawing.Point(83, 432);
-            this.AccountBAT_total.Name = "AccountBAT_total";
-            this.AccountBAT_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountBAT_total.TabIndex = 49;
-            // 
-            // AccountETC_total
-            // 
-            this.AccountETC_total.AutoSize = true;
-            this.AccountETC_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountETC_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountETC_total.Location = new System.Drawing.Point(83, 396);
-            this.AccountETC_total.Name = "AccountETC_total";
-            this.AccountETC_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountETC_total.TabIndex = 48;
-            // 
-            // AccountXLM_total
-            // 
-            this.AccountXLM_total.AutoSize = true;
-            this.AccountXLM_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountXLM_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountXLM_total.Location = new System.Drawing.Point(83, 360);
-            this.AccountXLM_total.Name = "AccountXLM_total";
-            this.AccountXLM_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountXLM_total.TabIndex = 47;
-            // 
-            // AccountEOS_total
-            // 
-            this.AccountEOS_total.AutoSize = true;
-            this.AccountEOS_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountEOS_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountEOS_total.Location = new System.Drawing.Point(83, 324);
-            this.AccountEOS_total.Name = "AccountEOS_total";
-            this.AccountEOS_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountEOS_total.TabIndex = 46;
-            // 
-            // AccountLTC_total
-            // 
-            this.AccountLTC_total.AutoSize = true;
-            this.AccountLTC_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountLTC_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountLTC_total.Location = new System.Drawing.Point(83, 288);
-            this.AccountLTC_total.Name = "AccountLTC_total";
-            this.AccountLTC_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountLTC_total.TabIndex = 45;
-            // 
-            // AccountUSDT_total
-            // 
-            this.AccountUSDT_total.AutoSize = true;
-            this.AccountUSDT_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountUSDT_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountUSDT_total.Location = new System.Drawing.Point(83, 250);
-            this.AccountUSDT_total.Name = "AccountUSDT_total";
-            this.AccountUSDT_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountUSDT_total.TabIndex = 44;
-            // 
-            // AccountBSV_total
-            // 
-            this.AccountBSV_total.AutoSize = true;
-            this.AccountBSV_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountBSV_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBSV_total.Location = new System.Drawing.Point(83, 216);
-            this.AccountBSV_total.Name = "AccountBSV_total";
-            this.AccountBSV_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountBSV_total.TabIndex = 43;
-            // 
-            // AccountBCH_total
-            // 
-            this.AccountBCH_total.AutoSize = true;
-            this.AccountBCH_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountBCH_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBCH_total.Location = new System.Drawing.Point(83, 180);
-            this.AccountBCH_total.Name = "AccountBCH_total";
-            this.AccountBCH_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountBCH_total.TabIndex = 42;
-            // 
-            // AccountXRP_total
-            // 
-            this.AccountXRP_total.AutoSize = true;
-            this.AccountXRP_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountXRP_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountXRP_total.Location = new System.Drawing.Point(83, 144);
-            this.AccountXRP_total.Name = "AccountXRP_total";
-            this.AccountXRP_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountXRP_total.TabIndex = 41;
-            // 
-            // AccountETH_total
-            // 
-            this.AccountETH_total.AutoSize = true;
-            this.AccountETH_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountETH_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountETH_total.Location = new System.Drawing.Point(83, 108);
-            this.AccountETH_total.Name = "AccountETH_total";
-            this.AccountETH_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountETH_total.TabIndex = 40;
-            // 
-            // AccountXBT_total
-            // 
-            this.AccountXBT_total.AutoSize = true;
-            this.AccountXBT_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountXBT_total.ForeColor = System.Drawing.Color.DarkOrange;
-            this.AccountXBT_total.Location = new System.Drawing.Point(83, 72);
-            this.AccountXBT_total.Name = "AccountXBT_total";
-            this.AccountXBT_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountXBT_total.TabIndex = 39;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(98, 60);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(129, 9);
-            this.label1.TabIndex = 38;
-            this.label1.Text = "T o t a l                                    V a l u e";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(4, 731);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(271, 13);
-            this.label7.TabIndex = 37;
-            this.label7.Text = "____________________________________________";
-            // 
-            // AccountUSD_total
-            // 
-            this.AccountUSD_total.AutoSize = true;
-            this.AccountUSD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountUSD_total.Location = new System.Drawing.Point(83, 812);
-            this.AccountUSD_total.Name = "AccountUSD_total";
-            this.AccountUSD_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountUSD_total.TabIndex = 36;
-            // 
-            // AccountUSD_label
-            // 
-            this.AccountUSD_label.AutoSize = true;
-            this.AccountUSD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountUSD_label.Location = new System.Drawing.Point(12, 812);
-            this.AccountUSD_label.Name = "AccountUSD_label";
-            this.AccountUSD_label.Size = new System.Drawing.Size(53, 24);
-            this.AccountUSD_label.TabIndex = 35;
-            this.AccountUSD_label.Text = "USD:";
-            // 
-            // AccountNZD_total
-            // 
-            this.AccountNZD_total.AutoSize = true;
-            this.AccountNZD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountNZD_total.Location = new System.Drawing.Point(83, 784);
-            this.AccountNZD_total.Name = "AccountNZD_total";
-            this.AccountNZD_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountNZD_total.TabIndex = 34;
-            // 
-            // AccountNZD_label
-            // 
-            this.AccountNZD_label.AutoSize = true;
-            this.AccountNZD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountNZD_label.Location = new System.Drawing.Point(12, 784);
-            this.AccountNZD_label.Name = "AccountNZD_label";
-            this.AccountNZD_label.Size = new System.Drawing.Size(54, 24);
-            this.AccountNZD_label.TabIndex = 33;
-            this.AccountNZD_label.Text = "NZD:";
-            // 
-            // AccountAUD_total
-            // 
-            this.AccountAUD_total.AutoSize = true;
-            this.AccountAUD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountAUD_total.Location = new System.Drawing.Point(83, 756);
-            this.AccountAUD_total.Name = "AccountAUD_total";
-            this.AccountAUD_total.Size = new System.Drawing.Size(0, 24);
-            this.AccountAUD_total.TabIndex = 32;
-            // 
-            // AccountAUD_label
-            // 
-            this.AccountAUD_label.AutoSize = true;
-            this.AccountAUD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountAUD_label.Location = new System.Drawing.Point(12, 756);
-            this.AccountAUD_label.Name = "AccountAUD_label";
-            this.AccountAUD_label.Size = new System.Drawing.Size(54, 24);
-            this.AccountAUD_label.TabIndex = 31;
-            this.AccountAUD_label.Text = "AUD:";
-            // 
-            // AccountGNT_value
-            // 
-            this.AccountGNT_value.AutoSize = true;
-            this.AccountGNT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountGNT_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountGNT_value.Location = new System.Drawing.Point(183, 534);
-            this.AccountGNT_value.Name = "AccountGNT_value";
-            this.AccountGNT_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountGNT_value.TabIndex = 29;
-            // 
-            // AccountGNT_label
-            // 
-            this.AccountGNT_label.AutoSize = true;
-            this.AccountGNT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountGNT_label.Location = new System.Drawing.Point(12, 534);
-            this.AccountGNT_label.Name = "AccountGNT_label";
-            this.AccountGNT_label.Size = new System.Drawing.Size(55, 24);
-            this.AccountGNT_label.TabIndex = 28;
-            this.AccountGNT_label.Text = "GNT:";
-            this.AccountGNT_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountZRX_value
-            // 
-            this.AccountZRX_value.AutoSize = true;
-            this.AccountZRX_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountZRX_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountZRX_value.Location = new System.Drawing.Point(183, 500);
-            this.AccountZRX_value.Name = "AccountZRX_value";
-            this.AccountZRX_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountZRX_value.TabIndex = 27;
-            // 
-            // AccountZRX_label
-            // 
-            this.AccountZRX_label.AutoSize = true;
-            this.AccountZRX_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountZRX_label.Location = new System.Drawing.Point(12, 500);
-            this.AccountZRX_label.Name = "AccountZRX_label";
-            this.AccountZRX_label.Size = new System.Drawing.Size(54, 24);
-            this.AccountZRX_label.TabIndex = 26;
-            this.AccountZRX_label.Text = "ZRX:";
-            this.AccountZRX_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountOMG_value
-            // 
-            this.AccountOMG_value.AutoSize = true;
-            this.AccountOMG_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountOMG_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountOMG_value.Location = new System.Drawing.Point(183, 468);
-            this.AccountOMG_value.Name = "AccountOMG_value";
-            this.AccountOMG_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountOMG_value.TabIndex = 23;
-            // 
-            // AccountOMG_label
-            // 
-            this.AccountOMG_label.AutoSize = true;
-            this.AccountOMG_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountOMG_label.Location = new System.Drawing.Point(12, 466);
-            this.AccountOMG_label.Name = "AccountOMG_label";
-            this.AccountOMG_label.Size = new System.Drawing.Size(60, 24);
-            this.AccountOMG_label.TabIndex = 22;
-            this.AccountOMG_label.Text = "OMG:";
-            this.AccountOMG_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountBAT_value
-            // 
-            this.AccountBAT_value.AutoSize = true;
-            this.AccountBAT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountBAT_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBAT_value.Location = new System.Drawing.Point(183, 432);
-            this.AccountBAT_value.Name = "AccountBAT_value";
-            this.AccountBAT_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountBAT_value.TabIndex = 21;
-            // 
-            // AccountBAT_label
-            // 
-            this.AccountBAT_label.AutoSize = true;
-            this.AccountBAT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountBAT_label.Location = new System.Drawing.Point(12, 432);
-            this.AccountBAT_label.Name = "AccountBAT_label";
-            this.AccountBAT_label.Size = new System.Drawing.Size(52, 24);
-            this.AccountBAT_label.TabIndex = 20;
-            this.AccountBAT_label.Text = "BAT:";
-            this.AccountBAT_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountETC_value
-            // 
-            this.AccountETC_value.AutoSize = true;
-            this.AccountETC_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountETC_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountETC_value.Location = new System.Drawing.Point(183, 396);
-            this.AccountETC_value.Name = "AccountETC_value";
-            this.AccountETC_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountETC_value.TabIndex = 19;
-            // 
-            // AccountETC_label
-            // 
-            this.AccountETC_label.AutoSize = true;
-            this.AccountETC_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountETC_label.Location = new System.Drawing.Point(12, 396);
-            this.AccountETC_label.Name = "AccountETC_label";
-            this.AccountETC_label.Size = new System.Drawing.Size(53, 24);
-            this.AccountETC_label.TabIndex = 18;
-            this.AccountETC_label.Text = "ETC:";
-            this.AccountETC_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountXLM_value
-            // 
-            this.AccountXLM_value.AutoSize = true;
-            this.AccountXLM_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountXLM_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountXLM_value.Location = new System.Drawing.Point(183, 360);
-            this.AccountXLM_value.Name = "AccountXLM_value";
-            this.AccountXLM_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountXLM_value.TabIndex = 17;
-            // 
-            // AccountXLM_label
-            // 
-            this.AccountXLM_label.AutoSize = true;
-            this.AccountXLM_label.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.AccountXLM_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountXLM_label.Location = new System.Drawing.Point(12, 360);
-            this.AccountXLM_label.Name = "AccountXLM_label";
-            this.AccountXLM_label.Size = new System.Drawing.Size(55, 24);
-            this.AccountXLM_label.TabIndex = 16;
-            this.AccountXLM_label.Text = "XLM:";
-            this.AccountXLM_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountEOS_value
-            // 
-            this.AccountEOS_value.AutoSize = true;
-            this.AccountEOS_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountEOS_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountEOS_value.Location = new System.Drawing.Point(183, 324);
-            this.AccountEOS_value.Name = "AccountEOS_value";
-            this.AccountEOS_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountEOS_value.TabIndex = 15;
-            // 
-            // AccountEOS_label
-            // 
-            this.AccountEOS_label.AutoSize = true;
-            this.AccountEOS_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountEOS_label.Location = new System.Drawing.Point(12, 324);
-            this.AccountEOS_label.Name = "AccountEOS_label";
-            this.AccountEOS_label.Size = new System.Drawing.Size(55, 24);
-            this.AccountEOS_label.TabIndex = 14;
-            this.AccountEOS_label.Text = "EOS:";
-            this.AccountEOS_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountLTC_value
-            // 
-            this.AccountLTC_value.AutoSize = true;
-            this.AccountLTC_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountLTC_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountLTC_value.Location = new System.Drawing.Point(183, 288);
-            this.AccountLTC_value.Name = "AccountLTC_value";
-            this.AccountLTC_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountLTC_value.TabIndex = 13;
-            // 
-            // AccountLTC_label
-            // 
-            this.AccountLTC_label.AutoSize = true;
-            this.AccountLTC_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountLTC_label.Location = new System.Drawing.Point(12, 288);
-            this.AccountLTC_label.Name = "AccountLTC_label";
-            this.AccountLTC_label.Size = new System.Drawing.Size(50, 24);
-            this.AccountLTC_label.TabIndex = 12;
-            this.AccountLTC_label.Text = "LTC:";
-            this.AccountLTC_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountUSDT_value
-            // 
-            this.AccountUSDT_value.AutoSize = true;
-            this.AccountUSDT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountUSDT_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountUSDT_value.Location = new System.Drawing.Point(183, 250);
-            this.AccountUSDT_value.Name = "AccountUSDT_value";
-            this.AccountUSDT_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountUSDT_value.TabIndex = 11;
-            // 
-            // AccountUSDT_label
-            // 
-            this.AccountUSDT_label.AutoSize = true;
-            this.AccountUSDT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountUSDT_label.Location = new System.Drawing.Point(12, 250);
-            this.AccountUSDT_label.Name = "AccountUSDT_label";
-            this.AccountUSDT_label.Size = new System.Drawing.Size(65, 24);
-            this.AccountUSDT_label.TabIndex = 10;
-            this.AccountUSDT_label.Text = "USDT:";
-            this.AccountUSDT_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountBSV_value
-            // 
-            this.AccountBSV_value.AutoSize = true;
-            this.AccountBSV_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountBSV_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBSV_value.Location = new System.Drawing.Point(183, 216);
-            this.AccountBSV_value.Name = "AccountBSV_value";
-            this.AccountBSV_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountBSV_value.TabIndex = 9;
-            // 
-            // AccountBSV_label
-            // 
-            this.AccountBSV_label.AutoSize = true;
-            this.AccountBSV_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountBSV_label.Location = new System.Drawing.Point(12, 216);
-            this.AccountBSV_label.Name = "AccountBSV_label";
-            this.AccountBSV_label.Size = new System.Drawing.Size(52, 24);
-            this.AccountBSV_label.TabIndex = 8;
-            this.AccountBSV_label.Text = "BSV:";
-            this.AccountBSV_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountBCH_value
-            // 
-            this.AccountBCH_value.AutoSize = true;
-            this.AccountBCH_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountBCH_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBCH_value.Location = new System.Drawing.Point(183, 180);
-            this.AccountBCH_value.Name = "AccountBCH_value";
-            this.AccountBCH_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountBCH_value.TabIndex = 7;
-            // 
-            // AccountBCH_label
-            // 
-            this.AccountBCH_label.AutoSize = true;
-            this.AccountBCH_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountBCH_label.Location = new System.Drawing.Point(12, 180);
-            this.AccountBCH_label.Name = "AccountBCH_label";
-            this.AccountBCH_label.Size = new System.Drawing.Size(54, 24);
-            this.AccountBCH_label.TabIndex = 6;
-            this.AccountBCH_label.Text = "BCH:";
-            this.AccountBCH_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountXRP_value
-            // 
-            this.AccountXRP_value.AutoSize = true;
-            this.AccountXRP_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountXRP_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountXRP_value.Location = new System.Drawing.Point(183, 144);
-            this.AccountXRP_value.Name = "AccountXRP_value";
-            this.AccountXRP_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountXRP_value.TabIndex = 5;
-            // 
-            // AccountXRP_label
-            // 
-            this.AccountXRP_label.AutoSize = true;
-            this.AccountXRP_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountXRP_label.Location = new System.Drawing.Point(12, 144);
-            this.AccountXRP_label.Name = "AccountXRP_label";
-            this.AccountXRP_label.Size = new System.Drawing.Size(54, 24);
-            this.AccountXRP_label.TabIndex = 4;
-            this.AccountXRP_label.Text = "XRP:";
-            this.AccountXRP_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountETH_value
-            // 
-            this.AccountETH_value.AutoSize = true;
-            this.AccountETH_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountETH_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountETH_value.Location = new System.Drawing.Point(183, 108);
-            this.AccountETH_value.Name = "AccountETH_value";
-            this.AccountETH_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountETH_value.TabIndex = 3;
-            // 
-            // AccountETH_label
-            // 
-            this.AccountETH_label.AutoSize = true;
-            this.AccountETH_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountETH_label.Location = new System.Drawing.Point(12, 108);
-            this.AccountETH_label.Name = "AccountETH_label";
-            this.AccountETH_label.Size = new System.Drawing.Size(54, 24);
-            this.AccountETH_label.TabIndex = 2;
-            this.AccountETH_label.Text = "ETH:";
-            this.AccountETH_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountXBT_value
-            // 
-            this.AccountXBT_value.AutoSize = true;
-            this.AccountXBT_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountXBT_value.ForeColor = System.Drawing.Color.DarkOrange;
-            this.AccountXBT_value.Location = new System.Drawing.Point(183, 72);
-            this.AccountXBT_value.Name = "AccountXBT_value";
-            this.AccountXBT_value.Size = new System.Drawing.Size(0, 24);
-            this.AccountXBT_value.TabIndex = 1;
-            // 
-            // AccountXBT_label
-            // 
-            this.AccountXBT_label.AutoSize = true;
-            this.AccountXBT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountXBT_label.ForeColor = System.Drawing.Color.DarkOrange;
-            this.AccountXBT_label.Location = new System.Drawing.Point(12, 72);
-            this.AccountXBT_label.Name = "AccountXBT_label";
-            this.AccountXBT_label.Size = new System.Drawing.Size(56, 24);
-            this.AccountXBT_label.TabIndex = 0;
-            this.AccountXBT_label.Text = "BTC:";
-            this.AccountXBT_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // IRTickerTT_avgPrice
-            // 
-            this.IRTickerTT_avgPrice.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.IRTickerTT_avgPrice.ToolTipTitle = "Market order estimation";
-            // 
-            // IRT_notification
-            // 
-            this.IRT_notification.Icon = ((System.Drawing.Icon)(resources.GetObject("IRT_notification.Icon")));
-            this.IRT_notification.Text = "IR Ticker";
-            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -5536,25 +5536,11 @@
             this.SlackSettings_groupBox.PerformLayout();
             this.LoadingPanel.ResumeLayout(false);
             this.Main.ResumeLayout(false);
-            this.BTCM_GroupBox.ResumeLayout(false);
-            this.BTCM_GroupBox.PerformLayout();
-            this.BTCM_panel.ResumeLayout(false);
-            this.BTCM_panel.PerformLayout();
             this.BAR_GroupBox.ResumeLayout(false);
             this.BAR_GroupBox.PerformLayout();
-            this.BFX_GroupBox.ResumeLayout(false);
-            this.BFX_GroupBox.PerformLayout();
-            this.BFX_panel.ResumeLayout(false);
-            this.BFX_panel.PerformLayout();
             this.fiat_GroupBox.ResumeLayout(false);
             this.fiat_panel.ResumeLayout(false);
             this.fiat_panel.PerformLayout();
-            this.IR_GroupBox.ResumeLayout(false);
-            this.IR_GroupBox.PerformLayout();
-            this.GDAX_GroupBox.ResumeLayout(false);
-            this.GDAX_GroupBox.PerformLayout();
-            this.GDAX_panel.ResumeLayout(false);
-            this.GDAX_panel.PerformLayout();
             this.OTCHelper.ResumeLayout(false);
             this.OTCHelper.PerformLayout();
             this.IRAccount_panel.ResumeLayout(false);
@@ -5567,6 +5553,20 @@
             this.IRAccountAddress_panel.PerformLayout();
             this.GetAccounts_panel.ResumeLayout(false);
             this.GetAccounts_panel.PerformLayout();
+            this.BTCM_GroupBox.ResumeLayout(false);
+            this.BTCM_GroupBox.PerformLayout();
+            this.BTCM_panel.ResumeLayout(false);
+            this.BTCM_panel.PerformLayout();
+            this.BFX_GroupBox.ResumeLayout(false);
+            this.BFX_GroupBox.PerformLayout();
+            this.BFX_panel.ResumeLayout(false);
+            this.BFX_panel.PerformLayout();
+            this.IR_GroupBox.ResumeLayout(false);
+            this.IR_GroupBox.PerformLayout();
+            this.GDAX_GroupBox.ResumeLayout(false);
+            this.GDAX_GroupBox.PerformLayout();
+            this.GDAX_panel.ResumeLayout(false);
+            this.GDAX_panel.PerformLayout();
             this.ResumeLayout(false);
 
         }

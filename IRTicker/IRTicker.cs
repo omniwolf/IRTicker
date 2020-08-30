@@ -2006,8 +2006,10 @@ namespace IRTicker {
                 }
             }
 
-            if (reportType == 1) Main.Visible = true;
-            LoadingPanel.Visible = false;  // OK, all UI data is written, let's remove the loading panel.
+            if ((reportType == 1) && LoadingPanel.Visible) {
+                Main.Visible = true;
+                LoadingPanel.Visible = false;  // OK, all UI data is written, let's remove the loading panel.
+            }
 
             foreach (KeyValuePair<string, SpreadGraph> sGraph in SpreadGraph_Dict) sGraph.Value.Redraw();  // update the graph
         }
@@ -2709,7 +2711,7 @@ namespace IRTicker {
             DCEs["IR"].CurrentDCEStatus = "Resetting...";
             Debug.Print(DateTime.Now + " - IR reset button clicked");
             APIDown(UIControls_Dict["IR"].dExchange_GB, "IR");
-            //DCEs["IR"].socketsReset = true;
+            DCEs["IR"].socketsReset = true;
         }
 
         private void BlinkStickBW_DoWork(object sender, DoWorkEventArgs e) {

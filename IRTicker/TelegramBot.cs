@@ -866,7 +866,7 @@ namespace IRTicker
                 SendMessage("`" + subMenu + "` :: ⚠️ This pair (" + pair  + ") doesn't exist, please try again or 'quit' to exit this menu.");
                 return new Tuple<string, string>("", "");
             }
-            return new Tuple<string, string>(crypto, fiat);
+            return new Tuple<string, string>(crypto.ToUpper(), fiat.ToUpper());
         }
 
         // crypto will be "BTC", not "XBT"
@@ -887,6 +887,53 @@ namespace IRTicker
                 count++;
             }
             return masterStr;
+        }
+
+        // This will build a text version of the order book for the user to check out
+        private void ShowOrderBook(Tuple<string, string> pairTup) {
+
+            string pair = pairTup.Item1 + "-" + pairTup.Item2;
+
+            if (!string.IsNullOrEmpty(pairTup.Item1) && !string.IsNullOrEmpty(pairTup.Item2)) {
+                ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> buyOrders = DCE_IR.IR_OBs[pair].Item1;
+                ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> sellOrders = DCE_IR.IR_OBs[pair].Item2;
+                if ((buyOrders.Count > 0) && (sellOrders.Count > 0)) {
+                    string masterStr = "`View Order Book` :: " + pairTup.Item1 + "-" + pairTup.Item2 + Environment.NewLine + Environment.NewLine;
+                    masterStr += "*Bids                            Offers*" + Environment.NewLine + "```";
+
+                    IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBids;
+                    IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
+                    KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] tempArrayBook = DCE_IR.IR_OBs[pair].Item2.ToArray();  // because we're buying from the sell orders
+                    orderedOffers = tempArrayBook.OrderBy(k => k.Key);
+                    tempArrayBook = DCE_IR.IR_OBs[pair].Item1.ToArray();  // because we're selling to the buy orders
+                    orderedBids = tempArrayBook.OrderByDescending(k => k.Key);
+
+                    for (int i = 0; i < 11; i++) {
+                        // the price should be padded out to 11 characters to cover "$999 999.99"
+                        string price = "$" + orderedBids.ElementAt(i).Key.ToString();
+                        int pricePadding = 11 - (price.Length);
+                        for (int h = 1; h < pricePadding; h++) {
+                            price += " ";
+                        }
+
+                        // now let's get the volume and pad it out
+                        decimal volume = 0;
+                        foreach (KeyValuePair<string, DCE.OrderBook_IR> orderGuid in orderedBids.ElementAt(i).Value) {
+                            volume += orderGuid.Value.Volume;
+                        }
+
+                        string volumeStr = Utilities.FormatValue(volume, 8, false);
+                    }
+
+                }
+                else {  // one of the order books was empty
+
+                }
+
+            }
+            else {  // verifyChosenPair sent an empty tuple - the pair was not verified.
+
+            }
         }
 
         public async Task SendMessage(string message, Telegram.Bot.Types.Enums.ParseMode pMode = Telegram.Bot.Types.Enums.ParseMode.MarkdownV2, InlineKeyboardMarkup buttons = null, bool editMessage = false) {
@@ -941,7 +988,12 @@ namespace IRTicker
                             NextMsgIsNew = true;  // don't edit this message if the next message normally would
                         }
                     }
-                    pIR.GetAccounts();
+                    try {
+                        pIR.GetAccounts();
+                    }
+                    catch (Exception ex) {
+                        Debug.Print("Tried to grab the accounts after checking if we have any new closed orders but it failed: " + ex.Message);
+                    }
                 }
                 else closedOrdersFirstRun[pair] = false;
             }

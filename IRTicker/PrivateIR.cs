@@ -347,10 +347,12 @@ namespace IRTicker {
             while (marketBaiterActive) {
                 if (BaiterBookSide == "Offer") baiterBook = orderedOffers;
                 else baiterBook = orderedBids;
-                
 
+                if ((baiterBook == null) || (baiterBook.Count() == 0)) {
+                    Debug.Print("MBAIT: no orders in the order book to evaluate..");
+                }
                 //if ((baiterBook.First().Value).ElementAt(0).Value.OrderType.EndsWith(BaiterBookSide)) {  // first make sure we have the right order book
-                if (placedOrder == null) {  // no order.  let's create one.
+                else if (placedOrder == null) {  // no order.  let's create one.
                     Debug.Print(DateTime.Now + " - MBAIT: no bait guid, lets create it. Top order: " + baiterBook.FirstOrDefault().Key);
 
                     decimal orderPrice;

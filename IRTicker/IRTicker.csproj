@@ -278,6 +278,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ir_eagel_transparent___small_Oe3_icon.ico" />
+    <None Include="Resources\pink-clouds.gif" />
     <None Include="Resources\btcm3.jpg" />
     <None Include="Resources\coinbasepro-logo3.jpg" />
     <None Include="Resources\rainbow-space-bricks.jpg.gif" />
