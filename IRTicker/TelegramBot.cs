@@ -195,21 +195,25 @@ namespace IRTicker
                             if (TGstate.commandChosen == CommandChosen.MarketOrder) MarketOrder_SubStage1("BTC-AUD", true);
                             else if (TGstate.commandChosen == CommandChosen.CancelOrder) CancelOrder_Sub("BTC-AUD", true);
                             else if (TGstate.commandChosen == CommandChosen.ViewClosed) ViewClosed_PairSub("BTC-AUD", true);
+                            else if (TGstate.commandChosen == CommandChosen.ShowOrderBook) ShowOrderBook_Sub("BTC-AUD", true);
                             break;
                         case "pair-ethaud":
                             if (TGstate.commandChosen == CommandChosen.MarketOrder) MarketOrder_SubStage1("ETH-AUD", true);
                             else if (TGstate.commandChosen == CommandChosen.CancelOrder) CancelOrder_Sub("ETH-AUD", true);
                             else if (TGstate.commandChosen == CommandChosen.ViewClosed) ViewClosed_PairSub("ETH-AUD", true);
+                            else if (TGstate.commandChosen == CommandChosen.ShowOrderBook) ShowOrderBook_Sub("ETH-AUD", true);
                             break;
                         case "pair-xrpaud":
                             if (TGstate.commandChosen == CommandChosen.MarketOrder) MarketOrder_SubStage1("XRP-AUD", true);
                             else if (TGstate.commandChosen == CommandChosen.CancelOrder) CancelOrder_Sub("XRP-AUD", true);
                             else if (TGstate.commandChosen == CommandChosen.ViewClosed) ViewClosed_PairSub("XRP-AUD", true);
+                            else if (TGstate.commandChosen == CommandChosen.ShowOrderBook) ShowOrderBook_Sub("XRP-AUD", true);
                             break;
                         case "pair-usdtaud":
                             if (TGstate.commandChosen == CommandChosen.MarketOrder) MarketOrder_SubStage1("USDT-AUD", true);
                             else if (TGstate.commandChosen == CommandChosen.CancelOrder) CancelOrder_Sub("USDT-AUD", true);
                             else if (TGstate.commandChosen == CommandChosen.ViewClosed) ViewClosed_PairSub("USDT-AUD", true);
+                            else if (TGstate.commandChosen == CommandChosen.ShowOrderBook) ShowOrderBook_Sub("USDT-AUD", true);
                             break;
                         case "buy-order":
                             MarketBuy_Sub(true);
@@ -320,6 +324,7 @@ namespace IRTicker
                                             "*Baiter*             => Market baiter menu" + Environment.NewLine +
                                             "*Account*         => Currency balances" + Environment.NewLine + Environment.NewLine +
                                             "*Closed*         => View closed orders" + Environment.NewLine + Environment.NewLine +
+                                            "*Order book*         => Quick view of the order book" + Environment.NewLine + Environment.NewLine +
                                             "💡 If unique, the first word can be used instead of the whole command, eg 'market'" + Environment.NewLine +
                                             "💡 When entering a pair, you can be lazy and enter 'btc aud' or 'btcaud' rather than 'BTC-AUD'" + Environment.NewLine +
                                             "💡 At any time type 'quit' to return to the top menu");
@@ -378,6 +383,14 @@ namespace IRTicker
 
                                     case "closed":
                                         ViewClosed_Sub();
+                                        break;
+
+                                    case "order book":
+                                    case "show orders":
+                                    case "show":
+                                        TGstate.commandChosen = CommandChosen.ShowOrderBook;
+                                        TGstate.commandSubStage = 1;
+                                        await SendMessage("`Show Order Book` :: ❓ Specify which pair (eg BTC-AUD):", buttons: CommonPairsButtons());
                                         break;
 
                                     default:
@@ -513,6 +526,12 @@ namespace IRTicker
                         case CommandChosen.ViewClosed:
                             if (TGstate.commandSubStage == 1) ViewClosed_PairSub(message.Text);
                             break;
+
+                        case CommandChosen.ShowOrderBook:
+                            if (TGstate.commandSubStage == 1) {
+                                CancelOrder_Sub(message.Text);
+                            }
+                            break;
                     }
                 }
             }
@@ -647,7 +666,23 @@ namespace IRTicker
             }
         }
 
-        private async void CancelOrder_Sub(string message, bool editMsg = false) {
+        private void ShowOrderBook_Sub (string message, bool editMsg = false) {
+            Tuple<string, string> pairTup;
+            // if we failed because of nonces, but we have a legit pair, we can retry (if they send 'r')
+            if ((message.ToUpper() == "R") && (!string.IsNullOrEmpty(TGstate.ChosenPair.Item1)) && (!string.IsNullOrEmpty(TGstate.ChosenPair.Item1))) {
+                pairTup = TGstate.ChosenPair;
+            }
+            else {
+                pairTup = verifyChosenPair(message, "Show Order Book");
+            }
+
+            if (!string.IsNullOrEmpty(pairTup.Item1) && !string.IsNullOrEmpty(pairTup.Item2)) {
+                TGstate.ChosenPair = pairTup;
+                ShowOrderBook(pairTup);
+            }
+        }
+
+                private async void CancelOrder_Sub(string message, bool editMsg = false) {
             Tuple<string, string> pairTup;
             // if we failed because of nonces, but we have a legit pair, we can retry (if they send 'r')
             if ((message.ToUpper() == "R") && (!string.IsNullOrEmpty(TGstate.ChosenPair.Item1)) && (!string.IsNullOrEmpty(TGstate.ChosenPair.Item1))) {
@@ -898,8 +933,7 @@ namespace IRTicker
                 ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> buyOrders = DCE_IR.IR_OBs[pair].Item1;
                 ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> sellOrders = DCE_IR.IR_OBs[pair].Item2;
                 if ((buyOrders.Count > 0) && (sellOrders.Count > 0)) {
-                    string masterStr = "`View Order Book` :: " + pairTup.Item1 + "-" + pairTup.Item2 + Environment.NewLine + Environment.NewLine;
-                    masterStr += "*Bids                            Offers*" + Environment.NewLine + "```";
+                    string masterStr = "`View Order Book` :: 📚 " + pairTup.Item1 + "-" + pairTup.Item2 + Environment.NewLine + Environment.NewLine;
 
                     IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBids;
                     IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
@@ -908,23 +942,54 @@ namespace IRTicker
                     tempArrayBook = DCE_IR.IR_OBs[pair].Item1.ToArray();  // because we're selling to the buy orders
                     orderedBids = tempArrayBook.OrderByDescending(k => k.Key);
 
-                    for (int i = 0; i < 11; i++) {
-                        // the price should be padded out to 11 characters to cover "$999 999.99"
-                        string price = "$" + orderedBids.ElementAt(i).Key.ToString();
-                        int pricePadding = 11 - (price.Length);
-                        for (int h = 1; h < pricePadding; h++) {
+                    masterStr += "```";
+
+                    string tempOffers = "";
+
+                    // let's show 10 orders per book
+                    for (int i = 0; i < 10; i++) {
+                        // the price should be padded out to 12 characters to cover "$ 999 999.99"
+                        string price = "$ " + Utilities.FormatValue(orderedOffers.ElementAt(i).Key, 2, false);
+                        int padding = 12 - (price.Length);
+                        for (int h = 1; h < padding; h++) {
                             price += " ";
                         }
 
-                        // now let's get the volume and pad it out
+                        // now let's get the volume
+                        decimal volume = 0;
+                        foreach (KeyValuePair<string, DCE.OrderBook_IR> orderGuid in orderedOffers.ElementAt(i).Value) {
+                            volume += orderGuid.Value.Volume;
+                        }
+
+                        string volumeStr = Utilities.FormatValue(volume, 8, false);
+                        string tempLine = price + "   " + volumeStr + Environment.NewLine;
+                        tempOffers = tempLine + tempOffers;  // gotta work this one backwards
+                    }
+                    masterStr += tempOffers + "```" + Environment.NewLine + "👆 Offers      Bids 👇" + Environment.NewLine + "```";
+                    string tempBids = "";
+
+                    // let's show 10 orders per book
+                    for (int i = 0; i < 10; i++) {
+                        // the price should be padded out to 12 characters to cover "$ 999 999.99"
+                        string price = "$ " + Utilities.FormatValue(orderedBids.ElementAt(i).Key, 2, false);
+                        int padding = 12 - (price.Length);
+                        for (int h = 1; h < padding; h++) {
+                            price += " ";
+                        }
+
+                        // now let's get the volume 
                         decimal volume = 0;
                         foreach (KeyValuePair<string, DCE.OrderBook_IR> orderGuid in orderedBids.ElementAt(i).Value) {
                             volume += orderGuid.Value.Volume;
                         }
 
                         string volumeStr = Utilities.FormatValue(volume, 8, false);
+                        string tempLine = price + "   " + volumeStr + Environment.NewLine;
+                        tempBids += tempLine;  
                     }
-
+                    masterStr += tempBids + "```";
+                    SendMessage(masterStr);
+                    TGstate.ResetMenu();
                 }
                 else {  // one of the order books was empty
 
@@ -1002,7 +1067,7 @@ namespace IRTicker
         }
 
         enum CommandChosen {
-            Forget, CancelOrder, Nothing, StopMarketBaiter, MarketOrder, ViewClosed
+            Forget, CancelOrder, Nothing, StopMarketBaiter, MarketOrder, ViewClosed, ShowOrderBook
         }
 
         // this class holds the state of the bot between commands
