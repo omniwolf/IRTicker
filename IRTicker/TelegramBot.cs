@@ -143,6 +143,19 @@ namespace IRTicker
                 );
         }
 
+        public static InlineKeyboardMarkup BaitinButtons() {
+            return new InlineKeyboardMarkup(
+                new InlineKeyboardButton[][] {
+                    new InlineKeyboardButton[] {
+                        InlineKeyboardButton.WithCallbackData("Stop baitin'", "stop-baitin"),
+                        InlineKeyboardButton.WithCallbackData("Cancel order menu", "main-cancel")
+                    },
+                    new InlineKeyboardButton[] {
+                        InlineKeyboardButton.WithCallbackData("Quit to main menu", "quit")},
+                    }
+                );
+        }
+
         public static InlineKeyboardMarkup YesNoButtons() {
             return new InlineKeyboardMarkup(
                 new InlineKeyboardButton[][] {
@@ -183,7 +196,7 @@ namespace IRTicker
                             break;
                         case "main-cancel":
                             TGstate.commandChosen = CommandChosen.CancelOrder;
-                            SendMessage("`Cancel Order` :: ❓ Specify which pair (eg BTC-AUD):", buttons: CommonPairsButtons(), editMessage: true);
+                            SendMessage("`Cancel Order` :: ❓ Specify which pair (eg BTC-AUD):", buttons: CommonPairsButtons(), editMessage: false);
                             TGstate.commandSubStage = 1;
                             break;
                         case "main-closed-btc":
@@ -224,15 +237,13 @@ namespace IRTicker
                         case "view-closed":
                             ViewClosed_Sub();
                             break;
+                        case "stop-baitin":
+                            pIR.marketBaiterActive = false;
+                            await SendMessage("`Market Baiter` :: ✅ Market baiter stopped.", editMessage: true);
+
+                            break;
                         case "yes":
                             switch (TGstate.commandChosen) {
-                                case CommandChosen.StopMarketBaiter:
-                                    if (TGstate.commandSubStage == 1) {
-                                        pIR.marketBaiterActive = false;
-                                        await SendMessage("`Market Baiter` :: ✅ Market baiter stopped.", editMessage: true);
-                                    }
-                                    break;
-
                                 case CommandChosen.MarketOrder:
                                     if ((TGstate.commandSubStage == 31) || (TGstate.commandSubStage == 41)) {  // 31 is to place the buy order (or not), 41 is sell
                                         MarketOrderConfirm_Sub();
@@ -244,15 +255,14 @@ namespace IRTicker
                                         CancelOrderConfirm_Sub();
                                     }
                                     break;
+                                case CommandChosen.MarketBaiter:
+                                    MarketBaiter_Sub();
+                                    break;
                             }
                             TGstate.ResetMenu();
                             break;
                         case "no":
                             switch (TGstate.commandChosen) {
-                                case CommandChosen.StopMarketBaiter:
-                                    await SendMessage("`Market Baiter` :: Market baiter will continue.", editMessage: true);
-                                    break;
-
                                 case CommandChosen.MarketOrder:
                                     await SendMessage("`Market Order` :: Order not placed.", editMessage: true);
                                     break;
@@ -365,16 +375,7 @@ namespace IRTicker
 
                                     case "bait":
                                     case "baiter":
-                                        if (pIR.marketBaiterActive) {
-                                            SendMessage("`Market Baiter` :: ⬆️ Market baiter is currently *active*" + Environment.NewLine +
-                                                "  ❓ Do you wish to stop it?", buttons: YesNoButtons());
-                                            TGstate.commandSubStage = 1;
-                                            TGstate.commandChosen = CommandChosen.StopMarketBaiter;
-                                        }
-                                        else {
-                                            await SendMessage("`Market Baiter` :: ⬇️ Market baiter is currently *inactive*.");
-                                            TGstate.ResetMenu();
-                                        }
+                                        MarketBaiter_Sub();
                                         break;
 
                                     case "account":
@@ -540,6 +541,62 @@ namespace IRTicker
         async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken) {
             if (exception is ApiRequestException apiRequestException) {
                 SendMessage("Error: " + apiRequestException.ToString() + Environment.NewLine + "Resetting menu...");
+                TGstate.ResetMenu();
+            }
+        }
+
+        private async void MarketBaiter_Sub() {
+            if (pIR.marketBaiterActive) {
+                TGstate.commandChosen = CommandChosen.MarketBaiter;
+
+                decimal price = -1;
+                decimal volume = -1;
+                string masterStr = "`Market Baiter` :: ⬆️ Market baiter is currently *active*" + Environment.NewLine + Environment.NewLine;
+
+                if (pIR.placedOrder != null) {
+                    if (pIR.placedOrder.Price.HasValue) {
+                        price = pIR.placedOrder.Price.Value;
+                    }
+                    volume = pIR.placedOrder.VolumeOrdered;
+                    if (pIR.placedOrder.VolumeFilled > 0) volume = pIR.placedOrder.VolumeOrdered - pIR.placedOrder.VolumeFilled;
+
+                    masterStr += "  Volume: " + Utilities.FormatValue(volume, 8, false) + Environment.NewLine;
+                    masterStr += "  Price: $ " + Utilities.FormatValue(price, 2, false) + Environment.NewLine;
+
+                    // now we find the closest order.. what a mish
+
+                    string pair = pIR.placedOrder.PrimaryCurrencyCode.ToString().ToUpper() + "-" + pIR.placedOrder.SecondaryCurrencyCode.ToString().ToUpper();
+
+                    IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOrders;
+                    KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] tempArrayBook;
+
+                    if (pIR.placedOrder.Type == OrderType.LimitBid) {
+                        tempArrayBook = DCE_IR.IR_OBs[pair].Item1.ToArray();
+                        orderedOrders = tempArrayBook.OrderByDescending(k => k.Key);
+                    }
+                    else {
+                        tempArrayBook = DCE_IR.IR_OBs[pair].Item2.ToArray();
+                        orderedOrders = tempArrayBook.OrderBy(k => k.Key);
+                    }
+
+                    if (pIR.placedOrder.Price == orderedOrders.ElementAt(0).Key) {
+                        decimal nextClosestPrice = orderedOrders.ElementAt(1).Key;
+                        masterStr += "  Next closest order is: $ " + Utilities.FormatValue(nextClosestPrice, 5, false);
+                    }
+                    else {  // our order is not at the top at this moment
+                        decimal topOrderPrice = orderedOrders.ElementAt(0).Key;
+                        masterStr += "  Baitin' order not at the top, top order is: $ " + Utilities.FormatValue(topOrderPrice, 5, false);
+                    }
+
+                    SendMessage(masterStr, buttons: BaitinButtons());
+                }
+                else {  // placedOrder is null
+                    masterStr += "  No active order at this point in time.  Retry?";
+                    SendMessage(masterStr, buttons: YesNoButtons());
+                }
+            }
+            else {
+                await SendMessage("`Market Baiter` :: ⬇️ Market baiter is currently *inactive*.");
                 TGstate.ResetMenu();
             }
         }
@@ -925,11 +982,15 @@ namespace IRTicker
         }
 
         // This will build a text version of the order book for the user to check out
-        private void ShowOrderBook(Tuple<string, string> pairTup) {
+        // assumes that the pairTup tuple is not empty and has been checked in the verifyChosenPair method
+        private async void ShowOrderBook(Tuple<string, string> pairTup) {
 
             string pair = pairTup.Item1 + "-" + pairTup.Item2;
 
-            if (!string.IsNullOrEmpty(pairTup.Item1) && !string.IsNullOrEmpty(pairTup.Item2)) {
+            bool firstRun = true;
+            TGstate.RefreshingOrderBook = true;
+            do {
+
                 ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> buyOrders = DCE_IR.IR_OBs[pair].Item1;
                 ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> sellOrders = DCE_IR.IR_OBs[pair].Item2;
                 if ((buyOrders.Count > 0) && (sellOrders.Count > 0)) {
@@ -942,7 +1003,7 @@ namespace IRTicker
                     tempArrayBook = DCE_IR.IR_OBs[pair].Item1.ToArray();  // because we're selling to the buy orders
                     orderedBids = tempArrayBook.OrderByDescending(k => k.Key);
 
-                    masterStr += "```";
+                    masterStr += "```" + Environment.NewLine;
 
                     string tempOffers = "";
 
@@ -965,7 +1026,7 @@ namespace IRTicker
                         string tempLine = price + "   " + volumeStr + Environment.NewLine;
                         tempOffers = tempLine + tempOffers;  // gotta work this one backwards
                     }
-                    masterStr += tempOffers + "```" + Environment.NewLine + "👆 Offers      Bids 👇" + Environment.NewLine + "```";
+                    masterStr += tempOffers + "```" + Environment.NewLine + "👆 Offers      Bids 👇" + Environment.NewLine + Environment.NewLine + "```" + Environment.NewLine;
                     string tempBids = "";
 
                     // let's show 10 orders per book
@@ -985,20 +1046,23 @@ namespace IRTicker
 
                         string volumeStr = Utilities.FormatValue(volume, 8, false);
                         string tempLine = price + "   " + volumeStr + Environment.NewLine;
-                        tempBids += tempLine;  
+                        tempBids += tempLine;
                     }
                     masterStr += tempBids + "```";
-                    SendMessage(masterStr);
-                    TGstate.ResetMenu();
+                    await SendMessage(masterStr, buttons: QuitToMain(), editMessage: !firstRun);
+                    if (firstRun) firstRun = false;  // not our first run anymoawah
+
                 }
                 else {  // one of the order books was empty
-
+                    await SendMessage("`View Order Book` :: ⚠️ This order book was empty, cannot display anything.");
+                    break;
                 }
 
-            }
-            else {  // verifyChosenPair sent an empty tuple - the pair was not verified.
+                Thread.Sleep(Properties.Settings.Default.UITimerFreq + 50);
+            } while (TGstate.RefreshingOrderBook);
 
-            }
+            TGstate.ResetMenu();
+
         }
 
         public async Task SendMessage(string message, Telegram.Bot.Types.Enums.ParseMode pMode = Telegram.Bot.Types.Enums.ParseMode.MarkdownV2, InlineKeyboardMarkup buttons = null, bool editMessage = false) {
@@ -1067,7 +1131,7 @@ namespace IRTicker
         }
 
         enum CommandChosen {
-            Forget, CancelOrder, Nothing, StopMarketBaiter, MarketOrder, ViewClosed, ShowOrderBook
+            Forget, CancelOrder, Nothing, MarketBaiter, MarketOrder, ViewClosed, ShowOrderBook
         }
 
         // this class holds the state of the bot between commands
@@ -1082,22 +1146,25 @@ namespace IRTicker
             public int orderToCancel = 0;
             public Tuple<string, string> ChosenPair { get; set; }
             public decimal Volume { get; set; }
+            public bool RefreshingOrderBook { get; set; } = false;
 
             public TelegramState(TelegramBot _TGBot) {
                 TGBot = _TGBot;
             }
 
             public void ResetMenu(bool editMsg = false) {
-                commandChosen = CommandChosen.Nothing;
-                commandSubStage = 0;
-                orderToCancel = 0;
-                openOrdersToList.Clear();
-                ChosenPair = new Tuple<string, string>("", "");
-                Volume = -1;
-                TGBot.SendMessage("*IR Ticker TelegramBot Top Menu*" + Environment.NewLine +
-                    "Account: `" + Properties.Settings.Default.APIFriendly + "`" + Environment.NewLine +
-                    "Please enter your command, or 'help' for a list of commands.", buttons: MainMenuButtons(), editMessage: editMsg); ; ;
-                //botClient.SendTextMessageAsync(Properties.Settings.Default.TelegramChatID, "Common commands:", Telegram.Bot.Types.Enums.ParseMode.Default, false, false, 0, MainMenuButtons());
+                if (RefreshingOrderBook) RefreshingOrderBook = false;  // if we're refreshing the order book then don't reset yet, first let it quit.  once quit we'll call this again.
+                else {
+                    commandChosen = CommandChosen.Nothing;
+                    commandSubStage = 0;
+                    orderToCancel = 0;
+                    openOrdersToList.Clear();
+                    ChosenPair = new Tuple<string, string>("", "");
+                    Volume = -1;
+                    TGBot.SendMessage("*IR Ticker TelegramBot Top Menu*" + Environment.NewLine +
+                        "Account: `" + Properties.Settings.Default.APIFriendly + "`" + Environment.NewLine +
+                        "Please enter your command, or 'help' for a list of commands.", buttons: MainMenuButtons(), editMessage: editMsg); ; ;
+                }
 
             }
         }

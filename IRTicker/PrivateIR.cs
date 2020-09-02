@@ -35,7 +35,9 @@ namespace IRTicker {
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBids;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
         private ConcurrentBag<Guid> openOrders = new ConcurrentBag<Guid>();
-        
+
+        public BankOrder placedOrder = null;
+
         public bool marketBaiterActive = false;
 
         private DCE DCE_IR;
@@ -334,7 +336,6 @@ namespace IRTicker {
         public async Task marketBaiterLoopAsync(string crypto, string fiat, decimal volume, decimal limitPrice) {
 
             IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> baiterBook;
-            BankOrder placedOrder = null;
             Task rateLimitPlaceOrder = Task.Delay(1);
             string pair = crypto + "-" + fiat;
             
