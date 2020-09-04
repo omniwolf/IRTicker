@@ -33,6 +33,7 @@ namespace IRTicker
         static ITelegramBotClient botClient;
         TelegramState TGstate;
         int LatestMessageID;
+        string LastMessage = "";  // need to track our previous message so we don't try and edit a message with the same message
         bool NextMsgIsNew = false;  // set to true to disable the edit functionality for the next message (eg when an async message has come through like the order filled message)
         private string bTCMemoji = "";
 
@@ -109,7 +110,11 @@ namespace IRTicker
                     new InlineKeyboardButton[] {
                         InlineKeyboardButton.WithCallbackData("Market buy BTC/AUD", "main-market-buy-btc"),
                         InlineKeyboardButton.WithCallbackData("View closed BTC/AUD orders", "main-closed-btc")
-                    } 
+                    } ,
+                    new InlineKeyboardButton[] {
+                        InlineKeyboardButton.WithCallbackData("Show BTC/AUD order book", "main-orderbook-btc"),
+                        InlineKeyboardButton.WithCallbackData("Market baiter status", "bait-refresh")
+                    }
                 }
                 );
          }
@@ -126,8 +131,9 @@ namespace IRTicker
                         InlineKeyboardButton.WithCallbackData("USDT/AUD", "pair-usdtaud"),
                     },
                     new InlineKeyboardButton[] {
-                        InlineKeyboardButton.WithCallbackData("Quit to main menu", "quit")},
-                    }
+                        InlineKeyboardButton.WithCallbackData("Quit to main menu", "quit")
+                    },
+                }
                 );
         }
         public static InlineKeyboardMarkup BuySellButtons() {
@@ -138,8 +144,9 @@ namespace IRTicker
                         InlineKeyboardButton.WithCallbackData("SELL", "sell-order")
                     },
                     new InlineKeyboardButton[] {
-                        InlineKeyboardButton.WithCallbackData("Quit to main menu", "quit")},
-                    }
+                        InlineKeyboardButton.WithCallbackData("Quit to main menu", "quit")
+                    },
+                }
                 );
         }
 
@@ -148,11 +155,13 @@ namespace IRTicker
                 new InlineKeyboardButton[][] {
                     new InlineKeyboardButton[] {
                         InlineKeyboardButton.WithCallbackData("Stop baitin'", "stop-baitin"),
-                        InlineKeyboardButton.WithCallbackData("Cancel order menu", "main-cancel")
+                        InlineKeyboardButton.WithCallbackData("Cancel order menu", "bait-cancel")
                     },
                     new InlineKeyboardButton[] {
-                        InlineKeyboardButton.WithCallbackData("Quit to main menu", "quit")},
-                    }
+                        InlineKeyboardButton.WithCallbackData("Refresh", "bait-refresh"),
+                        InlineKeyboardButton.WithCallbackData("Quit to main menu", "quit")
+                    },
+                }
                 );
         }
 
@@ -204,6 +213,9 @@ namespace IRTicker
                             TGstate.commandSubStage = 1;
                             ViewClosed_PairSub("BTC-AUD", true);
                             break;
+                        case "main-orderbook-btc":
+                            ShowOrderBook(new Tuple<string, string>("XBT", "AUD"));
+                            break;
                         case "pair-btcaud":
                             if (TGstate.commandChosen == CommandChosen.MarketOrder) MarketOrder_SubStage1("BTC-AUD", true);
                             else if (TGstate.commandChosen == CommandChosen.CancelOrder) CancelOrder_Sub("BTC-AUD", true);
@@ -240,7 +252,13 @@ namespace IRTicker
                         case "stop-baitin":
                             pIR.marketBaiterActive = false;
                             await SendMessage("`Market Baiter` :: ✅ Market baiter stopped.", editMessage: true);
-
+                            break;
+                        case "bait-refresh":
+                            MarketBaiter_Sub(true);
+                            break;
+                        case "bait-cancel":
+                            TGstate.commandChosen = CommandChosen.CancelOrder;
+                            CancelOrder_Sub(TGstate.ChosenPair.Item1 + "-" + TGstate.ChosenPair.Item2);
                             break;
                         case "yes":
                             switch (TGstate.commandChosen) {
@@ -256,7 +274,7 @@ namespace IRTicker
                                     }
                                     break;
                                 case CommandChosen.MarketBaiter:
-                                    MarketBaiter_Sub();
+                                    MarketBaiter_Sub(true);  // mbait is true, but there is no open order
                                     break;
                             }
                             TGstate.ResetMenu();
@@ -375,7 +393,7 @@ namespace IRTicker
 
                                     case "bait":
                                     case "baiter":
-                                        MarketBaiter_Sub();
+                                        MarketBaiter_Sub(false);
                                         break;
 
                                     case "account":
@@ -530,7 +548,24 @@ namespace IRTicker
 
                         case CommandChosen.ShowOrderBook:
                             if (TGstate.commandSubStage == 1) {
-                                CancelOrder_Sub(message.Text);
+                                Tuple<string, string> pairTup = verifyChosenPair(message.Text, "Show Order Book");
+
+                                if (!string.IsNullOrEmpty(pairTup.Item1) && !string.IsNullOrEmpty(pairTup.Item2)) {
+                                    TGstate.ChosenPair = pairTup;
+                                    ShowOrderBook(pairTup);
+                                }
+                            }
+                            break;
+
+                        case CommandChosen.MarketBaiter:
+                            if ((message.Text.ToUpper() == "YES") || (message.Text.ToUpper() == "Y") || (message.Text.ToUpper() == "REFRESH") || (message.Text.ToUpper() == "REF")) {
+                                MarketBaiter_Sub(true);
+                            }
+                            else if (message.Text.ToUpper() == "CANCEL") {
+                                CancelOrder_Sub(TGstate.ChosenPair.Item1 + "-" + TGstate.ChosenPair.Item2);
+                            }
+                            else {
+                                TGstate.ResetMenu();
                             }
                             break;
                     }
@@ -545,7 +580,7 @@ namespace IRTicker
             }
         }
 
-        private async void MarketBaiter_Sub() {
+        private async void MarketBaiter_Sub(bool editMsg) {
             if (pIR.marketBaiterActive) {
                 TGstate.commandChosen = CommandChosen.MarketBaiter;
 
@@ -560,14 +595,16 @@ namespace IRTicker
                     volume = pIR.placedOrder.VolumeOrdered;
                     if (pIR.placedOrder.VolumeFilled > 0) volume = pIR.placedOrder.VolumeOrdered - pIR.placedOrder.VolumeFilled;
 
-                    masterStr += "  Volume: " + Utilities.FormatValue(volume, 8, false) + Environment.NewLine;
+                    string pair = pIR.placedOrder.PrimaryCurrencyCode.ToString().ToUpper() + "-" + pIR.placedOrder.SecondaryCurrencyCode.ToString().ToUpper();
+                    // also store this in the state object in case we want to cancel
+                    TGstate.ChosenPair = new Tuple<string, string>(pIR.placedOrder.PrimaryCurrencyCode.ToString().ToUpper(), pIR.placedOrder.SecondaryCurrencyCode.ToString().ToUpper());
+
+                    masterStr += "  Volume: " + (TGstate.ChosenPair.Item1 == "XBT" ? "BTC" : TGstate.ChosenPair.Item1) + " " + Utilities.FormatValue(volume, 8, false) + Environment.NewLine;
                     masterStr += "  Price: $ " + Utilities.FormatValue(price, 2, false) + Environment.NewLine;
 
                     // now we find the closest order.. what a mish
 
-                    string pair = pIR.placedOrder.PrimaryCurrencyCode.ToString().ToUpper() + "-" + pIR.placedOrder.SecondaryCurrencyCode.ToString().ToUpper();
-
-                    IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOrders;
+                    IOrderedEnumerable <KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOrders;
                     KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] tempArrayBook;
 
                     if (pIR.placedOrder.Type == OrderType.LimitBid) {
@@ -588,7 +625,7 @@ namespace IRTicker
                         masterStr += "  Baitin' order not at the top, top order is: $ " + Utilities.FormatValue(topOrderPrice, 5, false);
                     }
 
-                    SendMessage(masterStr, buttons: BaitinButtons());
+                    SendMessage(masterStr, buttons: BaitinButtons(), editMessage: editMsg);
                 }
                 else {  // placedOrder is null
                     masterStr += "  No active order at this point in time.  Retry?";
@@ -739,7 +776,7 @@ namespace IRTicker
             }
         }
 
-                private async void CancelOrder_Sub(string message, bool editMsg = false) {
+        private async void CancelOrder_Sub(string message, bool editMsg = false) {
             Tuple<string, string> pairTup;
             // if we failed because of nonces, but we have a legit pair, we can retry (if they send 'r')
             if ((message.ToUpper() == "R") && (!string.IsNullOrEmpty(TGstate.ChosenPair.Item1)) && (!string.IsNullOrEmpty(TGstate.ChosenPair.Item1))) {
@@ -986,15 +1023,20 @@ namespace IRTicker
         private async void ShowOrderBook(Tuple<string, string> pairTup) {
 
             string pair = pairTup.Item1 + "-" + pairTup.Item2;
+            int sleepBuffer = 50;  // we sleep for a bit, if the API complains we start blowing this out
 
             bool firstRun = true;
             TGstate.RefreshingOrderBook = true;
             do {
 
+                if (!DCE_IR.IR_OBs.ContainsKey(pair)) {
+                    await SendMessage("`Show Order Book` :: ⚠️ This order book was empty, cannot display anything.");
+                    break;
+                }
                 ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> buyOrders = DCE_IR.IR_OBs[pair].Item1;
                 ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> sellOrders = DCE_IR.IR_OBs[pair].Item2;
                 if ((buyOrders.Count > 0) && (sellOrders.Count > 0)) {
-                    string masterStr = "`View Order Book` :: 📚 " + pairTup.Item1 + "-" + pairTup.Item2 + Environment.NewLine + Environment.NewLine;
+                    string masterStr = "`Show Order Book` :: 📚 " + pairTup.Item1 + "-" + pairTup.Item2 + Environment.NewLine + Environment.NewLine;
 
                     IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBids;
                     IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
@@ -1018,12 +1060,23 @@ namespace IRTicker
 
                         // now let's get the volume
                         decimal volume = 0;
+                        bool myOrder = false;
                         foreach (KeyValuePair<string, DCE.OrderBook_IR> orderGuid in orderedOffers.ElementAt(i).Value) {
                             volume += orderGuid.Value.Volume;
+
+                            // while we're spinning through the sub orders, let's see if one of them is my order
+                            if (pIR.openOrders.Contains(new Guid(orderGuid.Key))) {
+                                myOrder = true;
+                            }
                         }
 
                         string volumeStr = Utilities.FormatValue(volume, 8, false);
-                        string tempLine = price + "   " + volumeStr + Environment.NewLine;
+                        string tempLine = price + "   " + volumeStr;
+
+                        if (myOrder) tempLine += "  <<";
+
+                        tempLine += Environment.NewLine;
+
                         tempOffers = tempLine + tempOffers;  // gotta work this one backwards
                     }
                     masterStr += tempOffers + "```" + Environment.NewLine + "👆 Offers      Bids 👇" + Environment.NewLine + Environment.NewLine + "```" + Environment.NewLine;
@@ -1040,32 +1093,48 @@ namespace IRTicker
 
                         // now let's get the volume 
                         decimal volume = 0;
+                        bool myOrder = false;
                         foreach (KeyValuePair<string, DCE.OrderBook_IR> orderGuid in orderedBids.ElementAt(i).Value) {
                             volume += orderGuid.Value.Volume;
+
+                            // while we're spinning through the sub orders, let's see if one of them is my order
+                            if (pIR.openOrders.Contains(new Guid(orderGuid.Key))) {
+                                myOrder = true;
+                            }
                         }
 
                         string volumeStr = Utilities.FormatValue(volume, 8, false);
-                        string tempLine = price + "   " + volumeStr + Environment.NewLine;
+                        string tempLine = price + "   " + volumeStr;
+                        if (myOrder) tempLine += "  <<";
+                        tempLine += Environment.NewLine;
                         tempBids += tempLine;
                     }
                     masterStr += tempBids + "```";
-                    await SendMessage(masterStr, buttons: QuitToMain(), editMessage: !firstRun);
+                    try {
+                        await SendMessage(masterStr, buttons: QuitToMain(), editMessage: !firstRun);
+                    }
+                    catch (Exception ex) {
+                        Debug.Print("TGBot: whoops, probably getting rate limited.  In the order book refresh loop.  Error:  " + ex.Message);
+                        Thread.Sleep(2000);
+                        sleepBuffer += 200;
+                    }
                     if (firstRun) firstRun = false;  // not our first run anymoawah
 
                 }
                 else {  // one of the order books was empty
-                    await SendMessage("`View Order Book` :: ⚠️ This order book was empty, cannot display anything.");
+                    await SendMessage("`Show Order Book` :: ⚠️ This order book was empty, cannot display anything.");
                     break;
                 }
 
-                Thread.Sleep(Properties.Settings.Default.UITimerFreq + 50);
-            } while (TGstate.RefreshingOrderBook);
+                Thread.Sleep(Properties.Settings.Default.UITimerFreq + sleepBuffer);
+            } while (TGstate.RefreshingOrderBook && !Properties.Settings.Default.TelegramAllNewMessages);
 
             TGstate.ResetMenu();
 
         }
 
         public async Task SendMessage(string message, Telegram.Bot.Types.Enums.ParseMode pMode = Telegram.Bot.Types.Enums.ParseMode.MarkdownV2, InlineKeyboardMarkup buttons = null, bool editMessage = false) {
+
             if ((Properties.Settings.Default.TelegramChatID == 0) || (TGstate.authStage != 2)) {
                 Debug.Print("TG: no chat ID or user not authenticated, cannot send message: " + message);
                 return;
@@ -1082,6 +1151,9 @@ namespace IRTicker
                 NextMsgIsNew = false;
                 editMessage = false;
             }
+
+            if (message.Equals(LastMessage) && editMessage) return;  // if we're editing, we're not allowed to try and send exactly the same message
+            LastMessage = message;
 
             if (editMessage) LatestMessageID = (await botClient.EditMessageTextAsync(Properties.Settings.Default.TelegramChatID, LatestMessageID, message, pMode, false, buttons)).MessageId;
             else LatestMessageID = (await botClient.SendTextMessageAsync(Properties.Settings.Default.TelegramChatID, message, pMode, false, false, 0, buttons)).MessageId;

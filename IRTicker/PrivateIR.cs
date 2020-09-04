@@ -34,7 +34,7 @@ namespace IRTicker {
         public string Crypto = "XBT";
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBids;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
-        private ConcurrentBag<Guid> openOrders = new ConcurrentBag<Guid>();
+        public ConcurrentBag<Guid> openOrders = new ConcurrentBag<Guid>();
 
         public BankOrder placedOrder = null;
 
