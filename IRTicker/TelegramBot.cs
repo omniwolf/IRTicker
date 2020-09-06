@@ -109,10 +109,10 @@ namespace IRTicker
                     },
                     new InlineKeyboardButton[] {
                         InlineKeyboardButton.WithCallbackData("Market buy BTC/AUD", "main-market-buy-btc"),
-                        InlineKeyboardButton.WithCallbackData("View closed BTC/AUD orders", "main-closed-btc")
+                        InlineKeyboardButton.WithCallbackData("View closed orders BTC/AUD", "main-closed-btc")
                     } ,
                     new InlineKeyboardButton[] {
-                        InlineKeyboardButton.WithCallbackData("Show BTC/AUD order book", "main-orderbook-btc"),
+                        InlineKeyboardButton.WithCallbackData("Show order book BTC/AUD", "main-orderbook-btc"),
                         InlineKeyboardButton.WithCallbackData("Market baiter status", "bait-refresh")
                     }
                 }
@@ -277,7 +277,6 @@ namespace IRTicker
                                     MarketBaiter_Sub(true);  // mbait is true, but there is no open order
                                     break;
                             }
-                            TGstate.ResetMenu();
                             break;
                         case "no":
                             switch (TGstate.commandChosen) {
@@ -1027,6 +1026,7 @@ namespace IRTicker
 
             bool firstRun = true;
             TGstate.RefreshingOrderBook = true;
+            DateTime startLoop = DateTime.Now;
             do {
 
                 if (!DCE_IR.IR_OBs.ContainsKey(pair)) {
@@ -1114,7 +1114,7 @@ namespace IRTicker
                         await SendMessage(masterStr, buttons: QuitToMain(), editMessage: !firstRun);
                     }
                     catch (Exception ex) {
-                        Debug.Print("TGBot: whoops, probably getting rate limited.  In the order book refresh loop.  Error:  " + ex.Message);
+                        Debug.Print("TGBot: whoops, probably getting rate limited.  In the order book refresh loop.  new loop pause is: " + (Properties.Settings.Default.UITimerFreq + sleepBuffer).ToString() + ", error:  " + ex.Message);
                         Thread.Sleep(2000);
                         sleepBuffer += 200;
                     }
@@ -1127,7 +1127,7 @@ namespace IRTicker
                 }
 
                 Thread.Sleep(Properties.Settings.Default.UITimerFreq + sleepBuffer);
-            } while (TGstate.RefreshingOrderBook && !Properties.Settings.Default.TelegramAllNewMessages);
+            } while (TGstate.RefreshingOrderBook && !Properties.Settings.Default.TelegramAllNewMessages && (startLoop + TimeSpan.FromMinutes(1) > DateTime.Now));
 
             TGstate.ResetMenu();
 

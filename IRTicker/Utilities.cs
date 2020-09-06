@@ -73,20 +73,23 @@ namespace IRTicker {
             DateTime PriceListLastItem1;
             DateTime PriceListFirstItem1;
 
-            try {
-                // if we don't have enough data, just go black.
-                PriceListLast = priceList.LastOrDefault();
+            //try {
+            // if we don't have enough data, just go black.
+            if (priceList.Count == 1) PriceListLast = priceList.FirstOrDefault();
+            else PriceListLast = priceList.LastOrDefault();
                 PriceListFirst = priceList.FirstOrDefault();
-                if (PriceListLast != null) PriceListLastItem1 = PriceListLast.Item1;
-                else throw new Exception("null pricelistlast");
-                if (PriceListFirst != null) PriceListFirstItem1 = PriceListFirst.Item1;
-                else throw new Exception("null pricelistfirst");
-            }
+            if (PriceListLast != null) PriceListLastItem1 = PriceListLast.Item1;
+            else return Color.Black;
+            //else throw new Exception("null pricelistlast");
+            if (PriceListFirst != null) PriceListFirstItem1 = PriceListFirst.Item1;
+            else return Color.Black;
+                //else throw new Exception("null pricelistfirst");
+            /*}
             catch (Exception ex) {
                 Debug.Print(DateTime.Now + " - caught an exception for pricelist: " + ex.ToString());
                 return Color.Black;
             }
-
+            */
 
             if (priceList == null || priceList.Count == 0 || PriceListLast == null || PriceListFirst == null || PriceListLastItem1 == null || PriceListFirstItem1 == null) return Color.Black;
             if (priceList.Count < 5) return Color.Black;
