@@ -64,8 +64,10 @@ namespace IRTicker {
 
         public List<Tuple<DateTime, decimal>> GetPriceList(string pair) {
             if (priceHistory.ContainsKey(pair.ToUpper())) {
-                priceHistory.TryGetValue(pair.ToUpper(), out List<Tuple<DateTime, decimal>> result);
-                return result;
+                lock (priceHistory[pair]) {
+                    priceHistory.TryGetValue(pair.ToUpper(), out List<Tuple<DateTime, decimal>> result);
+                    return result.ToList();
+                }
             }
             else {
                 return new List<Tuple<DateTime, decimal>>();

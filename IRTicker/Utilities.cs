@@ -63,26 +63,18 @@ namespace IRTicker {
         // this list will be sorted from earliest time to latest time
         public static Color PriceColour(List<Tuple<DateTime, decimal>> priceList) {
 
+            //var priceList = priceListSource.ToList();
             if (priceList.Count <= 1) {  // if there's 1 price, well we can't compare that with anything, so just bail.  if there's no prices, well shit you know you gotta bail
                 //Debug.Print("PriceColour function was sent an empty list.  bailing.");
                 return Color.Black;
             }
 
-            Tuple<DateTime, decimal> PriceListLast ;
-            Tuple<DateTime, decimal> PriceListFirst;
-            DateTime PriceListLastItem1;
-            DateTime PriceListFirstItem1;
+            var priceListFirst = priceList.FirstOrDefault();
+            var priceListLast = priceList.LastOrDefault();
 
-            //try {
-            // if we don't have enough data, just go black.
-            if (priceList.Count == 1) PriceListLast = priceList.FirstOrDefault();
-            else PriceListLast = priceList.LastOrDefault();
-                PriceListFirst = priceList.FirstOrDefault();
-            if (PriceListLast != null) PriceListLastItem1 = PriceListLast.Item1;
-            else return Color.Black;
+            if (priceListLast == null) return Color.Black;
             //else throw new Exception("null pricelistlast");
-            if (PriceListFirst != null) PriceListFirstItem1 = PriceListFirst.Item1;
-            else return Color.Black;
+            if (priceListFirst == null) return Color.Black;
                 //else throw new Exception("null pricelistfirst");
             /*}
             catch (Exception ex) {
@@ -91,38 +83,38 @@ namespace IRTicker {
             }
             */
 
-            if (priceList == null || priceList.Count == 0 || PriceListLast == null || PriceListFirst == null || PriceListLastItem1 == null || PriceListFirstItem1 == null) return Color.Black;
+            //if (priceList == null || priceList.Count == 0 || PriceListLast == null || PriceListFirst == null || PriceListLastItem1 == null || PriceListFirstItem1 == null) return Color.Black;
             if (priceList.Count < 5) return Color.Black;
-            if (PriceListLast.Item1 - PriceListFirst.Item1 < TimeSpan.FromMinutes(5)) return Color.Black;
+            if (priceListLast.Item1 - priceListFirst.Item1 < TimeSpan.FromMinutes(5)) return Color.Black;
 
-            lock (priceList) {
-                foreach (Tuple<DateTime, decimal> pricePoint in priceList) {
-                    if (pricePoint.Item1 >= DateTime.Now - TimeSpan.FromMinutes(5)) {
-                        decimal lastPrice = priceList.LastOrDefault().Item2;
-                        if (lastPrice > pricePoint.Item2 * 1.01m) {
-                            // colour dark green
-                            //return Color.Lime;
-                            return Color.Lime;
-                        }
-                        else if (lastPrice > pricePoint.Item2 * 1.005m) {
-                            // colour light green etc
-                            //return Color.PaleGreen;
-                            return Color.MediumAquamarine;
-                        }
-                        else if (lastPrice < pricePoint.Item2 * 0.99m) {
-                            // colur red
-                            return Color.Red;
-                        }
-                        else if (lastPrice < pricePoint.Item2 * 0.995m) {
-                            // colour light red
-                            return Color.LightCoral;
-                        }
-                        else {  // anything between 99.5% and 100.5% is not much movement, so we say black.
-                            return Color.Black;
-                        }
+
+            foreach (Tuple<DateTime, decimal> pricePoint in priceList) {
+                if (pricePoint.Item1 >= DateTime.Now - TimeSpan.FromMinutes(5)) {
+                    decimal lastPrice = priceList.LastOrDefault().Item2;
+                    if (lastPrice > pricePoint.Item2 * 1.01m) {
+                        // colour dark green
+                        //return Color.Lime;
+                        return Color.Lime;
+                    }
+                    else if (lastPrice > pricePoint.Item2 * 1.005m) {
+                        // colour light green etc
+                        //return Color.PaleGreen;
+                        return Color.MediumAquamarine;
+                    }
+                    else if (lastPrice < pricePoint.Item2 * 0.99m) {
+                        // colur red
+                        return Color.Red;
+                    }
+                    else if (lastPrice < pricePoint.Item2 * 0.995m) {
+                        // colour light red
+                        return Color.LightCoral;
+                    }
+                    else {  // anything between 99.5% and 100.5% is not much movement, so we say black.
+                        return Color.Black;
                     }
                 }
             }
+
             return Color.Black;
         }
 
