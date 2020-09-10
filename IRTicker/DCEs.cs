@@ -340,16 +340,32 @@ namespace IRTicker {
                 case "LimitBid":
                     //OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
                     //Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item1;
-                    TopPrice = IR_OBs[pair].Item1.Keys.Max();
-                    TopOrder = (IR_OBs[pair].Item1)[TopPrice];  // if you get a crash here (or the other TopOrder line just below), see if pulledSnapShot is false.  If so, maybe we should be returning null above in the pulledSnapShot test so the code doesn't continue...
+                    lock (IR_OBs[pair].Item1) {
+                        if (IR_OBs[pair].Item2.Any()) {
+                            TopPrice = IR_OBs[pair].Item1.Keys.Max();
+                            TopOrder = (IR_OBs[pair].Item1)[TopPrice];  // if you get a crash here (or the other TopOrder line just below), see if pulledSnapShot is false.  If so, maybe we should be returning null above in the pulledSnapShot test so the code doesn't continue...
+                        }
+                        else {
+                            TopPrice = -1;
+                            TopOrder = null;
+                        }
+                    }
                     break;
                 case "LimitOffer":
                     //OB_IR = IR_OBs[order.Pair.ToUpper()].Item2;
                     //Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item2;
-                    TopPrice = IR_OBs[pair].Item2.Keys.Min();
-                    TopOrder = (IR_OBs[pair].Item2)[TopPrice];
+                    lock (IR_OBs[pair].Item2) {
+                        if (IR_OBs[pair].Item2.Any()) {
+                            TopPrice = IR_OBs[pair].Item2.Keys.Min();
+                            TopOrder = (IR_OBs[pair].Item2)[TopPrice];
+                        }
+                        else {
+                            TopPrice = -1;
+                            TopOrder = null;
+                        }
+                    }
                     break;
-                default:
+                default:  // this is actually not called, we filter out market orders in websockets class
                     Debug.Print(DateTime.Now + " - we have a marketOrder in the OrderbookEvent_IR method.  this should never happen!");
                     // ok this is a market order i guess, which probably means it's an orderchanged event
                     if (eventStr == "OrderChanged") {
@@ -373,26 +389,32 @@ namespace IRTicker {
                     break;
             }
 
-            // if it's the first order, so this changes the spread
-            // i need to discover this up here, because if the event is a OrderChanged (with vol of 0) or OrderCanceled then I delete the orderbook_IR object, so i have nothing to compare to. 
-
-            
-            if (eventStr == "OrderChanged" && TopOrder.ContainsKey(order.OrderGuid) && order.Volume == 0 && TopOrder.Count == 1) {
-                // this is a spread changing event... do something?
-                OrderWillChangeSpread = true;
-
+            if (TopPrice < 0) {
+                Debug.Print(DateTime.Now + " - the IR order book was empty for + " + pair + ", just ignoring this");
+                OrderWillChangeSpread = false;
             }
-            else if (eventStr == "NewOrder" && order.OrderType == "LimitBid" && order.Price > TopPrice) { // pick the "First()" one just arbitrary - all elements of this dictionary have the same price
-                // spread changing order
-                OrderWillChangeSpread = true;
-            }
+            else {
+                // if it's the first order, so this changes the spread
+                // i need to discover this up here, because if the event is a OrderChanged (with vol of 0) or OrderCanceled then I delete the orderbook_IR object, so i have nothing to compare to. 
 
-            else if (eventStr == "NewOrder" && order.OrderType == "LimitOffer" && order.Price < TopPrice) { 
-                // spread changing order
-                OrderWillChangeSpread = true;
-            }
-            else if (eventStr == "OrderCanceled" && TopOrder.ContainsKey(order.OrderGuid) && TopOrder.Count == 1) {  // if the cancelled order is at the top, and it's the only one at that price, spread will change.
-                OrderWillChangeSpread = true;
+
+                if (eventStr == "OrderChanged" && TopOrder.ContainsKey(order.OrderGuid) && order.Volume == 0 && TopOrder.Count == 1) {
+                    // this is a spread changing event... do something?
+                    OrderWillChangeSpread = true;
+
+                }
+                else if (eventStr == "NewOrder" && order.OrderType == "LimitBid" && order.Price > TopPrice) { // pick the "First()" one just arbitrary - all elements of this dictionary have the same price
+                                                                                                              // spread changing order
+                    OrderWillChangeSpread = true;
+                }
+
+                else if (eventStr == "NewOrder" && order.OrderType == "LimitOffer" && order.Price < TopPrice) {
+                    // spread changing order
+                    OrderWillChangeSpread = true;
+                }
+                else if (eventStr == "OrderCanceled" && TopOrder.ContainsKey(order.OrderGuid) && TopOrder.Count == 1) {  // if the cancelled order is at the top, and it's the only one at that price, spread will change.
+                    OrderWillChangeSpread = true;
+                }
             }
 
             // if either OB is empty, then we won't change the spread
@@ -727,34 +749,54 @@ namespace IRTicker {
         public void ClearOrderBookSubDicts(string crypto = "none", string fiat = "none") {
             if (crypto == "none" && fiat == "none") {  // clear them all
                 foreach (KeyValuePair<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>> pair in IR_OBs) {
-                    pair.Value.Item1.Clear();
-                    pair.Value.Item2.Clear();
+                    lock (pair.Value.Item1) {
+                        pair.Value.Item1.Clear();
+                    }
+                    lock (pair.Value.Item2) {
+                        pair.Value.Item2.Clear();
+                    }
                 }
                 foreach (KeyValuePair<string, Tuple<ConcurrentDictionary<string, decimal>, ConcurrentDictionary<string, decimal>>> pair in OrderGuid_IR_OBs) {
-                    pair.Value.Item1.Clear();
-                    pair.Value.Item2.Clear();
+                    lock (pair.Value.Item1) {
+                        pair.Value.Item1.Clear();
+                    }
+                    lock (pair.Value.Item2) {
+                        pair.Value.Item2.Clear();
+                    }
                 }
             }
             else if (crypto == "none" && fiat != "none") {
                 foreach (KeyValuePair<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>>>> pair in IR_OBs) {
                     if (pair.Key.EndsWith(fiat)) {
                         Debug.Print("clearOrderBookSubDicts sub, clearing: " + pair.Key);
-                        pair.Value.Item1.Clear();
-                        pair.Value.Item2.Clear();
+                        lock (pair.Value.Item1) {
+                            pair.Value.Item1.Clear();
+                        }
+                        lock (pair.Value.Item2) {
+                            pair.Value.Item2.Clear();
+                        }
                     }
                 }
                 foreach (KeyValuePair<string, Tuple<ConcurrentDictionary<string, decimal>, ConcurrentDictionary<string, decimal>>> pair in OrderGuid_IR_OBs) {
                     if (pair.Key.EndsWith(fiat)) {
-                        pair.Value.Item1.Clear();
-                        pair.Value.Item2.Clear();
+                        lock (pair.Value.Item1) {
+                            pair.Value.Item1.Clear();
+                        }
+                        lock (pair.Value.Item2) {
+                            pair.Value.Item2.Clear();
+                        }
                     }
                 }
             }
             else {
                 string pairStr = (crypto + "-" + fiat).ToUpper();
                 if (IR_OBs.ContainsKey(pairStr)) {
-                    IR_OBs[pairStr].Item1.Clear();
-                    IR_OBs[pairStr].Item2.Clear();
+                    lock (IR_OBs[pairStr].Item1) {
+                        IR_OBs[pairStr].Item1.Clear();
+                    }
+                    lock (IR_OBs[pairStr].Item2) {
+                        IR_OBs[pairStr].Item2.Clear();
+                    }
                     OrderGuid_IR_OBs[pairStr].Item1.Clear();
                     OrderGuid_IR_OBs[pairStr].Item2.Clear();
                 }
