@@ -167,7 +167,7 @@ namespace IRTicker {
 
             if (!string.IsNullOrEmpty(Properties.Settings.Default.TelegramCode) && !string.IsNullOrEmpty(Properties.Settings.Default.TelegramAPIToken)) {
                 try {
-                    TGBot = new TelegramBot(pIR, DCEs["IR"], this);
+                    TGBot = new TelegramBot(Properties.Settings.Default.TelegramAPIToken, pIR, DCEs["IR"], this);
                 }
                 catch (Exception ex) {
                     MessageBox.Show("Error creating TelegramBot.  Maybe wrong API token?  Error mesage: " + Environment.NewLine + Environment.NewLine +
@@ -277,6 +277,12 @@ namespace IRTicker {
             UIControls_Dict["IR"].COMP_Label = IR_COMP_Label1;
             UIControls_Dict["IR"].COMP_Price = IR_COMP_Label2;
             UIControls_Dict["IR"].COMP_Spread = IR_COMP_Label3;
+            UIControls_Dict["IR"].SNX_Label = IR_SNX_Label1;
+            UIControls_Dict["IR"].SNX_Price = IR_SNX_Label2;
+            UIControls_Dict["IR"].SNX_Spread = IR_SNX_Label3;
+            UIControls_Dict["IR"].PMGT_Label = IR_PMGT_Label1;
+            UIControls_Dict["IR"].PMGT_Price = IR_PMGT_Label2;
+            UIControls_Dict["IR"].PMGT_Spread = IR_PMGT_Label3;
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
             UIControls_Dict["IR"].AvgPrice_Crypto = IR_CryptoComboBox;
@@ -345,6 +351,12 @@ namespace IRTicker {
             UIControls_Dict["IR"].Account_COMP_Total = AccountCOMP_total;
             UIControls_Dict["IR"].Account_COMP_Value = AccountCOMP_value;
             UIControls_Dict["IR"].Account_COMP_Label = AccountCOMP_label;
+            UIControls_Dict["IR"].Account_SNX_Total = AccountSNX_total;
+            UIControls_Dict["IR"].Account_SNX_Value = AccountSNX_value;
+            UIControls_Dict["IR"].Account_SNX_Label = AccountSNX_label;
+            UIControls_Dict["IR"].Account_PMGT_Total = AccountPMGT_total;
+            UIControls_Dict["IR"].Account_PMGT_Value = AccountPMGT_value;
+            UIControls_Dict["IR"].Account_PMGT_Label = AccountPMGT_label;
 
             // BTCM
 
@@ -1152,6 +1164,13 @@ namespace IRTicker {
                         /*DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "AUD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "USD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "NZD");*/
+
+                        if (!File.Exists("IRCurrencyAttributes.txt")) {
+                            MessageBox.Show("IRCurrencyAttributes.txt can't be found in the root application folder.  Grab it from Resources folder if you can, or ask Nick.  App will close now.",
+                                "Error: can't find currency file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Application.Exit();
+                            return;
+                        }
 
                         IRCurrencies CurrencyRoot;
                         using (StreamReader r = new StreamReader("IRCurrencyAttributes.txt")) {
@@ -2108,7 +2127,8 @@ namespace IRTicker {
 
                         if (TGBot == null) {
                             try {
-                                TGBot = new TelegramBot(pIR, DCEs["IR"], this);
+
+                                TGBot = new TelegramBot(TelegramBotAPIToken_textBox.Text, pIR, DCEs["IR"], this);
                             }
                             catch (Exception ex) {
                                 MessageBox.Show("Error creating TelegramBot.  Maybe wrong API token?  Error mesage: " + Environment.NewLine + Environment.NewLine +

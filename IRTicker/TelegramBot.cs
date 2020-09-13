@@ -40,19 +40,19 @@ namespace IRTicker
         public ConcurrentDictionary<string, bool> closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
         private ConcurrentDictionary<string, List<Guid>> notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();
 
-        public TelegramBot(PrivateIR _pIR, DCE _DCE_IR, IRTicker _IRT) {
+        public TelegramBot(string TGAPIKey, PrivateIR _pIR, DCE _DCE_IR, IRTicker _IRT) {
 
             DCE_IR = _DCE_IR;
             pIR = _pIR;
             IRT = _IRT;
 
             TGstate = new TelegramState(this);
-            Debug.Print("starting tgbot with: " + Properties.Settings.Default.TelegramAPIToken);
+            Debug.Print("starting tgbot with: " + TGAPIKey);
 
             var cts = new CancellationTokenSource();
             var cancellationToken = cts.Token;
 
-            botClient = new TelegramBotClient(Properties.Settings.Default.TelegramAPIToken);
+            botClient = new TelegramBotClient(TGAPIKey);
 
             //botClient.OnMessage += Bot_OnMessage;
             //botClient.OnCallbackQuery += OnCallbackQueryReceived;
