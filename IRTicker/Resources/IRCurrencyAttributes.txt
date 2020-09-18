@@ -561,6 +561,31 @@
       "IsDelisted": false,
       "UrlProtocol": "ether"
     }
+  },
+{
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Snx",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Snx",
+        "ContractAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+        "DecimalPlaces": 18
+      },
+      "Name": "Snx",
+      "Ticker": "Snx",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 2450,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 5,
+      "FiatPriceStringFormat": "0.00",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
   }
 ] 
 }
