@@ -35,6 +35,7 @@ namespace IRTicker {
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
         private BlinkStick bStick;
+        private BlinkStick bStickETH;
         private Slack slackObj = new Slack();
         private DateTime lastCSVWrite = DateTime.Now;  // this holds the time we last saved the CSV file
         private System.Windows.Forms.Panel LastPanel;
@@ -60,7 +61,20 @@ namespace IRTicker {
             // populate Session started labels
             SessionStartedAbs_label.Text = DateTime.Now.ToString("g");
 
-            bStick = BlinkStick.FindFirst();
+            //bStick = BlinkStick.FindFirst();
+            var bSticks = BlinkStick.FindAll();
+            Debug.Print("bs1: " + bSticks[0].Serial);
+            Debug.Print("bs2: " + bSticks[1].Serial);
+
+            if (bSticks[0].Meta.Serial == "BS028603-3.0") {
+                bStick = bSticks[0];
+                bStickETH = bSticks[1];
+            }
+            else {
+                bStick = bSticks[1];
+                bStickETH = bSticks[0];
+            }
+
 
             if (bStick != null && bStick.OpenDevice()) {
                 bStick.Blink("yellow",1,200);
@@ -560,7 +574,7 @@ namespace IRTicker {
             fiat_panel.AutoScroll = true;
         }
 
-        private void setStickColour(decimal IRBTCvol, decimal BTCMBTCvol) {
+        private void setStickColour(decimal IRBTCvol, decimal BTCMBTCvol, decimal IRETHvol, decimal BTCMETHvol) {
             //IRBTCvol = 98;
             //BTCMBTCvol = 99;
             if (bStick != null && bStick.OpenDevice()) {
@@ -1950,15 +1964,29 @@ namespace IRTicker {
 
             Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
             Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
-            decimal IRvol = -1, BTCMvol = -1;
-            if (IRpairs.ContainsKey("XBT-AUD") && BTCMpairs.ContainsKey("XBT-AUD")) {
+            decimal IRvol = -1, BTCMvol = -1, IRETHvol = -1, BTCMETHvol = -1;
+            if (IRpairs.ContainsKey("XBT-AUD") && BTCMpairs.ContainsKey("XBT-AUD") && IRpairs.ContainsKey("ETH-AUD") && BTCMpairs.ContainsKey("ETH-AUD")) {
                 IRvol = IRpairs["XBT-AUD"].DayVolumeXbt; ;
-                BTCMvol = BTCMpairs["XBT-AUD"].DayVolumeXbt; 
-                
-                if (bStick == null) bStick = BlinkStick.FindFirst();
+                BTCMvol = BTCMpairs["XBT-AUD"].DayVolumeXbt;
+                IRETHvol = IRpairs["ETH-AUD"].DayVolumeXbt; ;
+                BTCMETHvol = BTCMpairs["ETH-AUD"].DayVolumeXbt;
+
+
+                if ((bStick == null) || (bStickETH == null)) {
+                    var bSticks = BlinkStick.FindAll();
+
+                    if (bSticks[0].Meta.Serial == "BS028603-3.0") {
+                        bStick = bSticks[0];
+                        bStickETH = bSticks[1];
+                    }
+                    else {
+                        bStick = bSticks[1];
+                        bStickETH = bSticks[0];
+                    }
+                }
                 if (bStick != null && bStick.OpenDevice()) {
                     // update blink stick
-                    setStickColour(IRvol, BTCMvol);
+                    setStickColour(IRvol, BTCMvol, IRETHvol, BTCMETHvol);
                 }
             }
 
@@ -2769,7 +2797,7 @@ namespace IRTicker {
             decimal BTCMvol = BTCMpairs["XBT-AUD"].DayVolumeXbt;
             //Debug.Print("hoping for FALSE here - isBusy for blink is: " + BlinkStickBW.IsBusy);
 
-            setStickColour(IRvol, BTCMvol);
+            setStickColour(IRvol, BTCMvol, 0, 0);
         }
 
         private void BlinkStickWhite_Thread_DoWork(object sender, DoWorkEventArgs e) {
