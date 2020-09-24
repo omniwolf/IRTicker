@@ -635,12 +635,23 @@ namespace IRTicker {
             // if this order has changed the spread, then let's update the cryptoPairs dictionary.
             // somehow had a situation where the OB we're looking at was empty, not sure how we got here as we should have returned null.  maybe it was emptied
             // after the 0 check at the top.. in any case let's just double check here before trying to do stuff.
+            decimal highBid = 0;
+            decimal lowOffer = 0;
+            lock (IR_OBs[pair].Item1) {
+                if (IR_OBs[pair].Item1.Count > 0) highBid = IR_OBs[pair].Item1.Keys.Max();
+            }
+            lock (IR_OBs[pair].Item2) {
+                if (IR_OBs[pair].Item2.Count > 0) lowOffer = IR_OBs[pair].Item2.Keys.Min();
+            }
+
+            if ((highBid == 0) || (lowOffer == 0)) return null;
+
             if (OrderWillChangeSpread && OB_IR.Count > 0) {
                 DateTimeOffset DTO = DateTimeOffset.Now;
                 MarketSummary mSummary = new MarketSummary();
                 mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
-                mSummary.CurrentHighestBidPrice = IR_OBs[pair].Item1.Keys.Max();
-                mSummary.CurrentLowestOfferPrice = IR_OBs[pair].Item2.Keys.Min();
+                mSummary.CurrentHighestBidPrice = highBid;
+                mSummary.CurrentLowestOfferPrice = lowOffer;
                 mSummary.pair = pair;
                 mSummary.DayVolumeXbt = -1;
                 CryptoPairsAdd(pair, mSummary);
