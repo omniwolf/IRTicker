@@ -595,7 +595,7 @@ namespace IRTicker {
                 res = MessageBox.Show("Placing " + orderSide + " order!" + Environment.NewLine + Environment.NewLine +
                     "Size of order: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + AccountOrderVolume_textbox.Text + Environment.NewLine +
                     (oType == 0 ? "" : oType == 1 ? Utilities.FirstLetterToUpper(orderSide) + " price: $ " + Utilities.FormatValue(decimal.Parse(AccountLimitPrice_textbox.Text)) + Environment.NewLine : "") +
-                    "Estimated value of order: " + Utilities.FormatValue(decimal.Parse(AccountEstOrderValue_value.Text), 2, false),
+                    "Estimated value of order: " + AccountEstOrderValue_value.Text,
                     "Confirm order", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
             }
             else if ((oType == 2) && !pIR.marketBaiterActive) {  // start market baiter
