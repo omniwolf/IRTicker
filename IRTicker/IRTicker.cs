@@ -63,16 +63,18 @@ namespace IRTicker {
 
             //bStick = BlinkStick.FindFirst();
             var bSticks = BlinkStick.FindAll();
-            Debug.Print("bs1: " + bSticks[0].Serial);
-            Debug.Print("bs2: " + bSticks[1].Serial);
+            if (bSticks.Length > 1) {
+                Debug.Print("bs1: " + bSticks[0].Meta.Serial);
+                Debug.Print("bs2: " + bSticks[1].Meta.Serial);
 
-            if (bSticks[0].Meta.Serial == "BS028603-3.0") {
-                bStick = bSticks[0];
-                bStickETH = bSticks[1];
-            }
-            else {
-                bStick = bSticks[1];
-                bStickETH = bSticks[0];
+                if (bSticks[0].Meta.Serial == "BS028603-3.0") {
+                    bStick = bSticks[0];
+                    bStickETH = bSticks[1];
+                }
+                else {
+                    bStick = bSticks[1];
+                    bStickETH = bSticks[0];
+                }
             }
 
 
@@ -1974,14 +1976,15 @@ namespace IRTicker {
 
                 if ((bStick == null) || (bStickETH == null)) {
                     var bSticks = BlinkStick.FindAll();
-
-                    if (bSticks[0].Meta.Serial == "BS028603-3.0") {
-                        bStick = bSticks[0];
-                        bStickETH = bSticks[1];
-                    }
-                    else {
-                        bStick = bSticks[1];
-                        bStickETH = bSticks[0];
+                    if (bSticks.Length > 1) {
+                        if (bSticks[0].Meta.Serial == "BS028603-3.0") {
+                            bStick = bSticks[0];
+                            bStickETH = bSticks[1];
+                        }
+                        else {
+                            bStick = bSticks[1];
+                            bStickETH = bSticks[0];
+                        }
                     }
                 }
                 if (bStick != null && bStick.OpenDevice()) {
