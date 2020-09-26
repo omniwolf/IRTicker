@@ -603,7 +603,7 @@ namespace IRTicker {
                 res = MessageBox.Show("Start the market baiter strategy?" + Environment.NewLine + Environment.NewLine +
                     "This will create a " + orderSide + " order that will automatically move with the best order " +
                     "on the market, never going beyond $ " + Utilities.FormatValue(decimal.Parse(AccountLimitPrice_textbox.Text)) + Environment.NewLine + Environment.NewLine +
-                    "Size of moving order: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + AccountOrderVolume_textbox.Text,
+                    "Size of moving order: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + Utilities.FormatValue(decimal.Parse(AccountOrderVolume_textbox.Text), -1, false),
                     "Confirm market baiter order", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
             }
 
