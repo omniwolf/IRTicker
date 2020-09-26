@@ -25,8 +25,8 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Loading...");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Loading...");
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
@@ -453,6 +453,8 @@
             this.IRTickerTT_avgPrice = new System.Windows.Forms.ToolTip(this.components);
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
             this.IRT_notification = new System.Windows.Forms.NotifyIcon(this.components);
+            this.BlinkStickETHBW = new System.ComponentModel.BackgroundWorker();
+            this.BlinkStickETHWhite_Thread = new System.ComponentModel.BackgroundWorker();
             this.Settings.SuspendLayout();
             this.IRAccountSettings_groupBox.SuspendLayout();
             this.SlackSettings_groupBox.SuspendLayout();
@@ -4543,7 +4545,7 @@
             this.AccountOpenOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountOpenOrders_listview.HideSelection = false;
             this.AccountOpenOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem3});
+            listViewItem1});
             this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountOpenOrders_listview.MultiSelect = false;
             this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";
@@ -4609,7 +4611,7 @@
             this.AccountClosedOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountClosedOrders_listview.HideSelection = false;
             this.AccountClosedOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem4});
+            listViewItem2});
             this.AccountClosedOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountClosedOrders_listview.MultiSelect = false;
             this.AccountClosedOrders_listview.Name = "AccountClosedOrders_listview";
@@ -5674,6 +5676,16 @@
             this.IRT_notification.Icon = ((System.Drawing.Icon)(resources.GetObject("IRT_notification.Icon")));
             this.IRT_notification.Text = "IR Ticker";
             // 
+            // BlinkStickETHBW
+            // 
+            this.BlinkStickETHBW.WorkerSupportsCancellation = true;
+            this.BlinkStickETHBW.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickETHBW_DoWork);
+            this.BlinkStickETHBW.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BlinkStickETHBW_RunWorkerCompleted);
+            // 
+            // BlinkStickETHWhite_Thread
+            // 
+            this.BlinkStickETHWhite_Thread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BlinkStickETHWhite_Thread_DoWork);
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -6165,6 +6177,8 @@
         private System.Windows.Forms.Label AccountSNX_total;
         private System.Windows.Forms.Label AccountSNX_value;
         private System.Windows.Forms.Label AccountSNX_label;
+        private System.ComponentModel.BackgroundWorker BlinkStickETHBW;
+        private System.ComponentModel.BackgroundWorker BlinkStickETHWhite_Thread;
     }
 }
 

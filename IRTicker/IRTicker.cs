@@ -34,8 +34,10 @@ namespace IRTicker {
         private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "REP", "GNT", "BSV", "USDT" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
-        private BlinkStick bStick;
+        private BlinkStick bStick;  // BTC blink stick
         private BlinkStick bStickETH;
+        private bool cancelBStick = false;  // used for cancelling the forever loop when pulsing for double volume
+        private bool cancelBStickETH = false;  // used for cancelling the forever loop when pulsing for double volume
         private Slack slackObj = new Slack();
         private DateTime lastCSVWrite = DateTime.Now;  // this holds the time we last saved the CSV file
         private System.Windows.Forms.Panel LastPanel;
@@ -62,21 +64,27 @@ namespace IRTicker {
             SessionStartedAbs_label.Text = DateTime.Now.ToString("g");
 
             //bStick = BlinkStick.FindFirst();
-            var bSticks = BlinkStick.FindAll();
-            Debug.Print("bs1: " + bSticks[0].Serial);
-            Debug.Print("bs2: " + bSticks[1].Serial);
+            BlinkStick[] bSticks = BlinkStick.FindAll();
 
-            if (bSticks[0].Meta.Serial == "BS028603-3.0") {
+            if (bSticks.Length == 2) {
+                Debug.Print("bs1: " + bSticks[0].Meta.Serial);
+                Debug.Print("bs2: " + bSticks[1].Meta.Serial);
+
+                if (bSticks[0].Meta.Serial == "BS028603-3.0") {
+                    bStick = bSticks[0];
+                    bStickETH = bSticks[1];
+                }
+                else {  // assume the ETH blink stick is the first
+                    bStick = bSticks[1];
+                    bStickETH = bSticks[0];
+                }
+            }
+            else if (bSticks.Length == 1) {  // if there's only one connected blinkstick, make it for BTC
                 bStick = bSticks[0];
-                bStickETH = bSticks[1];
-            }
-            else {
-                bStick = bSticks[1];
-                bStickETH = bSticks[0];
             }
 
 
-            if (bStick != null && bStick.OpenDevice()) {
+            if ((bStick != null) && bStick.OpenDevice()) {
                 bStick.Blink("yellow",1,200);
                 bStick.Blink("blue",1,200);
                 //bStick.Pulse("purple", 1, 300, 50);
@@ -84,7 +92,15 @@ namespace IRTicker {
                 //BlinkStickBW.RunWorkerAsync(argument: RgbColor.FromRgb(69, 114, 69));
             }
             else {
-                Debug.Print("BlinkStick couldn't be accessed or opened");
+                Debug.Print("BTC BlinkStick couldn't be accessed or opened");
+            }
+
+            if ((bStickETH != null) && bStickETH.OpenDevice()) {
+                bStickETH.Blink("red", 1, 200);
+                bStickETH.Blink("green", 1, 200);
+            }
+            else {
+                Debug.Print("ETH BlinkStick couldn't be accessed or opened");
             }
 
             if (refreshFrequencyTextbox.Text == "1") refreshFrequencyTextbox.Text = minRefreshFrequency.ToString();  // design time default is 1, we set to our actual min
@@ -574,10 +590,10 @@ namespace IRTicker {
             fiat_panel.AutoScroll = true;
         }
 
-        private void setStickColour(decimal IRBTCvol, decimal BTCMBTCvol, decimal IRETHvol, decimal BTCMETHvol) {
+        private void setStickColour(BlinkStick _bStick, decimal IRvol, decimal BTCMvol) {
             //IRBTCvol = 98;
             //BTCMBTCvol = 99;
-            if (bStick != null && bStick.OpenDevice()) {
+            if (_bStick != null && _bStick.OpenDevice()) {
                 //RgbColor col = new RgbColor();
                 //RgbColor.FromRgb(69, 114, 69);
                 if (BlinkStickBW.IsBusy) {
@@ -586,30 +602,30 @@ namespace IRTicker {
                 }
 
                 try {
-                    if (IRBTCvol > BTCMBTCvol * 2) {
+                    if (IRvol > BTCMvol * 2) {
                         if (!BlinkStickBW.IsBusy) {
                             BlinkStickBW.RunWorkerAsync(RgbColor.FromString("#0079FF"));
                             //Debug.Print(DateTime.Now + " -- BS -- started the IR GOOOOOD thread");
                         }
                     }
-                    else if (IRBTCvol * 2 < BTCMBTCvol) {
+                    else if (IRvol * 2 < BTCMvol) {
                         if (!BlinkStickBW.IsBusy) {
                             BlinkStickBW.RunWorkerAsync(RgbColor.FromString("#00FF00"));
                             //Debug.Print(DateTime.Now + " -- BS -- started the IR BAAAD thread");
                         }
                     }
-                    else if (IRBTCvol > BTCMBTCvol + 5) {
+                    else if (IRvol > BTCMvol + 5) {
                         //Debug.Print(DateTime.Now + " -- BS -- IR winning");
-                        bStick.Morph("#3176BC");
+                        _bStick.Morph("#3176BC");
                     }
-                    else if ((IRBTCvol <= BTCMBTCvol + 5) && (IRBTCvol >= BTCMBTCvol - 5)) {
+                    else if ((IRvol <= BTCMvol + 5) && (IRvol >= BTCMvol - 5)) {
                         //Debug.Print(DateTime.Now + " -- BS -- trying to go white");
-                        bStick.Morph("#C19E6E");
-                        if (!BlinkStickWhite_Thread.IsBusy) BlinkStickWhite_Thread.RunWorkerAsync(RgbColor.FromString((BTCMBTCvol > IRBTCvol ? "#42953A" : "#B6CBE1")));
+                        _bStick.Morph("#C19E6E");
+                        if (!BlinkStickWhite_Thread.IsBusy) BlinkStickWhite_Thread.RunWorkerAsync(RgbColor.FromString((BTCMvol > IRvol ? "#42953A" : "#B6CBE1")));
                     }
-                    else if (IRBTCvol < BTCMBTCvol - 5) {
+                    else if (IRvol < BTCMvol - 5) {
                         //Debug.Print(DateTime.Now + " -- BS -- BTCM is winning");
-                        bStick.Morph("#00A607");
+                        _bStick.Morph("#00A607");
                     }
                 }
                 catch (Exception ex) {
@@ -2788,6 +2804,25 @@ namespace IRTicker {
             } while (true);
         }
 
+        private void BlinkStickDubVolPulseAsync(BlinkStick _bStick, RgbColor col, CancellationToken cToken) {
+            int pulseLength = 700;
+            //int repeats = 15000 / pulseLength;
+
+            //bStick.Pulse(col, repeats, pulseLength, 50);
+
+            do {
+                cToken.ThrowIfCancellationRequested();
+                if (_bStick != null && _bStick.OpenDevice()) {
+                    try {
+                        _bStick.Pulse(col, 1, pulseLength, 50);
+                    }
+                    catch (Exception ex) {
+                        Debug.Print(DateTime.Now + " -- BS -- caught an exception in BW: " + ex.Message);
+                    }
+                }
+            } while (true);
+        }
+
         private void BlinkStickBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
             // update blink stick
             Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
@@ -2795,6 +2830,44 @@ namespace IRTicker {
 
             decimal IRvol = IRpairs["XBT-AUD"].DayVolumeXbt;
             decimal BTCMvol = BTCMpairs["XBT-AUD"].DayVolumeXbt;
+            //Debug.Print("hoping for FALSE here - isBusy for blink is: " + BlinkStickBW.IsBusy);
+
+            setStickColour(IRvol, BTCMvol, 0, 0);
+        }
+
+        private void BlinkStickETHBW_DoWork(object sender, DoWorkEventArgs e) {
+            RgbColor col = (RgbColor)e.Argument;
+
+            int pulseLength = 700;
+            //int repeats = 15000 / pulseLength;
+
+            //bStick.Pulse(col, repeats, pulseLength, 50);
+
+            do {
+                if (BlinkStickETHBW.CancellationPending == true) {
+                    break;
+                }
+                if (bStickETH != null && bStickETH.OpenDevice()) {
+                    try {
+                        bStickETH.Pulse(col, 1, pulseLength, 50);
+                    }
+                    catch (Exception ex) {
+                        Debug.Print(DateTime.Now + " -- BS ETH -- caught an exception in BW: " + ex.Message);
+                    }
+                }
+                if (BlinkStickETHBW.CancellationPending == true) {
+                    break;
+                }
+            } while (true);
+        }
+
+        private void BlinkStickETHBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
+            // update blink stick
+            Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
+            Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
+
+            decimal IRvol = IRpairs["ETH-AUD"].DayVolumeXbt;
+            decimal BTCMvol = BTCMpairs["ETH-AUD"].DayVolumeXbt;
             //Debug.Print("hoping for FALSE here - isBusy for blink is: " + BlinkStickBW.IsBusy);
 
             setStickColour(IRvol, BTCMvol, 0, 0);
@@ -2815,6 +2888,24 @@ namespace IRTicker {
                 }
                 catch (Exception ex) {
                     Debug.Print(DateTime.Now + " -- BS -- caught an exception in white thread: " + ex.Message);
+                }
+            }
+        }
+
+        private void BlinkStickETHWhite_Thread_DoWork(object sender, DoWorkEventArgs e) {
+            RgbColor col = (RgbColor)e.Argument;
+
+            int pulseLength = 200;
+            //Debug.Print(DateTime.Now + " - BS - white thread should pulse a colour");
+
+            if (bStickETH != null && bStickETH.OpenDevice()) {
+                try {
+                    //bStick.Pulse(col, 1, pulseLength, 50);
+                    bStickETH.Morph(col, pulseLength);
+                    bStickETH.Morph("#C19E6E", pulseLength);
+                }
+                catch (Exception ex) {
+                    Debug.Print(DateTime.Now + " -- BS ETH -- caught an exception in white thread: " + ex.Message);
                 }
             }
         }
