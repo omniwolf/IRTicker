@@ -808,6 +808,11 @@ namespace IRTicker {
                 AccountLimitPrice_textbox.SelectAll();
             }
         }
+        private void AccountLimitPrice_textbox_KeyUp(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Tab) {
+                AccountLimitPrice_textbox.SelectAll();
+            }
+        }
 
         private void AccountOrderVolume_label_DoubleClick(object sender, EventArgs e) {
             AccountOrderVolume_textbox.Text = pIR.accounts[AccountSelectedCrypto].AvailableBalance.ToString();

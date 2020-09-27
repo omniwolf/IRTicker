@@ -581,7 +581,7 @@
       "Family": "Erc20",
       "DepositType": "Address",
       "FiatPriceDecimalPlaces": 5,
-      "FiatPriceStringFormat": "0.00",
+      "FiatPriceStringFormat": "0.00000",
       "AlwaysEnforceMinimumWithdrawal": false,
       "IsDelisted": false,
       "UrlProtocol": "ether"

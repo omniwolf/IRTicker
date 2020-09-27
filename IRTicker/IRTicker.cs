@@ -16,6 +16,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using BlinkStickDotNet;
 using System.Runtime.InteropServices;
 using System.Reactive.Threading.Tasks;
+using System.Threading.Tasks;
 // todo:
 
 
@@ -36,6 +37,10 @@ namespace IRTicker {
         private WebSocketsConnect wSocketConnect;
         private BlinkStick bStick;
         private BlinkStick bStickETH;
+        private Task taskPulseBTC;
+        private Task taskPulseETH;
+        private CancellationTokenSource cTokenPulseBTC;
+        private CancellationTokenSource cTokenPulseETH;
         private Slack slackObj = new Slack();
         private DateTime lastCSVWrite = DateTime.Now;  // this holds the time we last saved the CSV file
         private System.Windows.Forms.Panel LastPanel;
@@ -618,6 +623,79 @@ namespace IRTicker {
                     Debug.Print(DateTime.Now + " -- BS -- caught an exception: " + ex.Message);
                 }
             }
+        }
+
+        private CancellationTokenSource setStickColourAsync(BlinkStick _bStick, CancellationTokenSource cTokenSrc, ref Task pulseTask, decimal IRvol, decimal BTCMvol) {
+            //IRBTCvol = 98;
+            //BTCMBTCvol = 99;
+            if (_bStick != null && _bStick.OpenDevice()) {
+
+                try {
+                    if (IRvol > BTCMvol * 2) {
+                        if (pulseTask.IsCompleted || (pulseTask == null)) {
+                            cTokenSrc = new CancellationTokenSource();
+                            pulseTask = Task.Run(() => BWPulseforDubVol(RgbColor.FromString("#0079FF"), _bStick, cTokenSrc.Token));
+                            Debug.Print(DateTime.Now + " -- BS -- started the IR GOOOOOD thread");
+                        }
+                    }
+                    else if (IRvol * 2 < BTCMvol) {
+                        if (pulseTask.IsCompleted || (pulseTask == null)) {
+                            cTokenSrc = new CancellationTokenSource();
+                            pulseTask = Task.Run(() => BWPulseforDubVol(RgbColor.FromString("#00FF00"), _bStick, cTokenSrc.Token));
+
+                            Debug.Print(DateTime.Now + " -- BS -- started the IR BAAAD thread");
+                        }
+                    }
+                    else if (IRvol > BTCMvol + 5) {
+                        Debug.Print(DateTime.Now + " -- BS -- IR winning");
+                        if (!pulseTask.IsCompleted) cTokenSrc.Cancel();
+                        else _bStick.Morph("#3176BC");
+                        cTokenSrc = null;
+                    }
+                    else if ((IRvol <= BTCMvol + 5) && (IRvol >= BTCMvol - 5)) {
+                        Debug.Print(DateTime.Now + " -- BS -- trying to go white");
+                        if (!pulseTask.IsCompleted) cTokenSrc.Cancel();
+                        else _bStick.Morph("#C19E6E");
+                        if (!BlinkStickWhite_Thread.IsBusy) BlinkStickWhite_Thread.RunWorkerAsync(RgbColor.FromString((BTCMvol > IRvol ? "#42953A" : "#B6CBE1")));
+                    }
+                    else if (IRvol < BTCMvol - 5) {
+                        Debug.Print(DateTime.Now + " -- BS -- BTCM is winning");
+                        if (!pulseTask.IsCompleted) cTokenSrc.Cancel();
+                        else _bStick.Morph("#00A607");
+
+                        cTokenSrc = null;
+                    }
+                }
+                catch (Exception ex) {
+                    Debug.Print(DateTime.Now + " -- BS -- caught an exception: " + ex.Message);
+                    cTokenSrc = null;
+                }
+            }
+            return cTokenSrc;
+        }
+
+        private void BWPulseforDubVol(RgbColor col, BlinkStick _bStick, CancellationToken cToken) {
+
+            int pulseLength = 700;
+            //int repeats = 15000 / pulseLength;
+
+            //bStick.Pulse(col, repeats, pulseLength, 50);
+
+            do {
+
+                if (_bStick != null && bStick.OpenDevice()) {
+                    try {
+                        _bStick.Pulse(col, 1, pulseLength, 50);
+                    }
+                    catch (Exception ex) {
+                        Debug.Print(DateTime.Now + " -- BS -- caught an exception in BW: " + ex.Message);
+                    }
+                }
+                if (cToken.IsCancellationRequested) {
+                    _bStick.Morph(col);
+                    throw new TaskCanceledException();
+                }
+            } while (true);
         }
 
         private void setSlackStatus(decimal IRBTCvol, decimal BTCMBTCvol, bool disable = false) {
@@ -1989,7 +2067,13 @@ namespace IRTicker {
                 }
                 if (bStick != null && bStick.OpenDevice()) {
                     // update blink stick
-                    setStickColour(IRvol, BTCMvol, IRETHvol, BTCMETHvol);
+                    //setStickColour(IRvol, BTCMvol, IRETHvol, BTCMETHvol);
+                    cTokenPulseBTC = setStickColourAsync(bStick, cTokenPulseBTC, ref taskPulseBTC, IRvol, BTCMvol);
+                }
+                if (bStickETH != null && bStickETH.OpenDevice()) {
+                    // update blink stick
+                    //setStickColour(IRvol, BTCMvol, IRETHvol, BTCMETHvol);
+                    cTokenPulseETH = setStickColourAsync(bStickETH, cTokenPulseETH, ref taskPulseETH, IRETHvol, BTCMETHvol);
                 }
             }
 

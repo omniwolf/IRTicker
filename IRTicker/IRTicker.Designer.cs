@@ -25,8 +25,8 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Loading...");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Loading...");
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
@@ -4543,7 +4543,7 @@
             this.AccountOpenOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountOpenOrders_listview.HideSelection = false;
             this.AccountOpenOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem3});
+            listViewItem1});
             this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountOpenOrders_listview.MultiSelect = false;
             this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";
@@ -4609,7 +4609,7 @@
             this.AccountClosedOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountClosedOrders_listview.HideSelection = false;
             this.AccountClosedOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem4});
+            listViewItem2});
             this.AccountClosedOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountClosedOrders_listview.MultiSelect = false;
             this.AccountClosedOrders_listview.Name = "AccountClosedOrders_listview";
@@ -4747,6 +4747,7 @@
             this.AccountLimitPrice_textbox.TabIndex = 6;
             this.AccountLimitPrice_textbox.Visible = false;
             this.AccountLimitPrice_textbox.TextChanged += new System.EventHandler(this.AccountLimitPrice_textbox_TextChanged);
+            this.AccountLimitPrice_textbox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.AccountLimitPrice_textbox_KeyUp);
             // 
             // AccountOrderVolume_label
             // 
