@@ -178,8 +178,9 @@ namespace IRTicker {
             NegativeSpread_checkBox.Checked = Properties.Settings.Default.NegativeSpread;
             TelegramCode_textBox.Text = Properties.Settings.Default.TelegramCode;
             TelegramBotAPIToken_textBox.Text = Properties.Settings.Default.TelegramAPIToken;
+            TGBot_Enable_checkBox.Checked = Properties.Settings.Default.TGBot_Enable;
             TelegramNewMessages_checkBox.Checked = Properties.Settings.Default.TelegramAllNewMessages;
-            if (string.IsNullOrEmpty(Properties.Settings.Default.SlackNameCurrency)) Properties.Settings.Default.SlackNameCurrency = "AUD";
+            if (string.IsNullOrEmpty(Properties.Settings.Default.SlackNameFiatCurrency)) Properties.Settings.Default.SlackNameFiatCurrency = "AUD";
 
             if (Slack_checkBox.Checked) {
                 slackDefaultNameTextBox.Enabled = true;
@@ -192,7 +193,7 @@ namespace IRTicker {
                 slackToken_textBox.Enabled = false;
             }
 
-            if (!string.IsNullOrEmpty(Properties.Settings.Default.TelegramCode) && !string.IsNullOrEmpty(Properties.Settings.Default.TelegramAPIToken)) {
+            if (Properties.Settings.Default.TGBot_Enable && !string.IsNullOrEmpty(Properties.Settings.Default.TelegramCode) && !string.IsNullOrEmpty(Properties.Settings.Default.TelegramAPIToken)) {
                 try {
                     TGBot = new TelegramBot(Properties.Settings.Default.TelegramAPIToken, pIR, DCEs["IR"], this);
                 }
@@ -637,14 +638,14 @@ namespace IRTicker {
             if (_bStick != null && _bStick.OpenDevice()) {
 
                 try {
-                    if (IRvol > BTCMvol * 2) {
+                    if (IRvol > (BTCMvol * 2)) {
                         if ((pulseTask == null) || pulseTask.IsCompleted) {
                             cTokenSrc = new CancellationTokenSource();
                             pulseTask = Task.Run(() => BWPulseforDubVol(RgbColor.FromString("#0079FF"), _bStick, cTokenSrc.Token));
                             Debug.Print(DateTime.Now + " -- BS -- started the IR GOOOOOD thread");
                         }
                     }
-                    else if (IRvol * 2 < BTCMvol) {
+                    else if ((IRvol * 2) < BTCMvol) {
                         if ((pulseTask == null) || pulseTask.IsCompleted) {
                             cTokenSrc = new CancellationTokenSource();
                             pulseTask = Task.Run(() => BWPulseforDubVol(RgbColor.FromString("#00FF00"), _bStick, cTokenSrc.Token));
@@ -652,19 +653,19 @@ namespace IRTicker {
                             Debug.Print(DateTime.Now + " -- BS -- started the IR BAAAD thread");
                         }
                     }
-                    else if (IRvol > BTCMvol + 5) {
+                    else if (IRvol > (BTCMvol * 1.05M)) {  // more than 5%, IR winning
                         Debug.Print(DateTime.Now + " -- BS -- IR winning");
                         if ((pulseTask != null) && !pulseTask.IsCompleted) cTokenSrc.Cancel();
                         _bStick.Morph("#3176BC");
                         cTokenSrc = null;
                     }
-                    else if ((IRvol <= BTCMvol + 5) && (IRvol >= BTCMvol - 5)) {
+                    else if ((IRvol <= (BTCMvol * 1.05M)) && (IRvol >= (BTCMvol * 0.95M))) {
                         Debug.Print(DateTime.Now + " -- BS -- trying to go white");
                         if ((pulseTask != null) && !pulseTask.IsCompleted) cTokenSrc.Cancel();
                         _bStick.Morph("#C19E6E");
                         if (!BlinkStickWhite_Thread.IsBusy) BlinkStickWhite_Thread.RunWorkerAsync(RgbColor.FromString((BTCMvol > IRvol ? "#42953A" : "#B6CBE1")));
                     }
-                    else if (IRvol < BTCMvol - 5) {
+                    else if (IRvol < BTCMvol * 0.95M) {
                         Debug.Print(DateTime.Now + " -- BS -- BTCM is winning");
                         if ((pulseTask != null) && !pulseTask.IsCompleted) cTokenSrc.Cancel();
                         _bStick.Morph("#00A607");
@@ -704,7 +705,7 @@ namespace IRTicker {
             } while (true);
         }
 
-        private void setSlackStatus(decimal IRBTCvol, decimal BTCMBTCvol, bool disable = false) {
+        private void setSlackStatus(bool disable = false) {
             // now we set slack stuff
             /*if (IRBTCvol > (BTCMBTCvol + 5)) {  // IR is winning :D
                 slackObj.setStatus("", ":large_blue_diamond:", 120);
@@ -716,6 +717,16 @@ namespace IRTicker {
                 slackObj.setStatus("", ":white_square:", 120);
             }*/
 
+            if (string.IsNullOrEmpty(Properties.Settings.Default.SlackNameEmojiCrypto) || string.IsNullOrEmpty(Properties.Settings.Default.SlackNameFiatCurrency)) return;
+            string crypto = (Properties.Settings.Default.SlackNameEmojiCrypto == "BTC" ? "XBT" : Properties.Settings.Default.SlackNameEmojiCrypto);
+
+            Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
+            Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
+            decimal IRvol = -1, BTCMvol = -1;
+            if (IRpairs.ContainsKey(crypto + "-AUD")) IRvol = IRpairs[crypto + "-AUD"].DayVolumeXbt;
+            if (BTCMpairs.ContainsKey(crypto + "-AUD")) BTCMvol = BTCMpairs[crypto + "-AUD"].DayVolumeXbt;
+
+
             string name = "";
 
             if (Properties.Settings.Default.SlackNameChange && (Properties.Settings.Default.SlackDefaultName != string.Empty)) {
@@ -726,51 +737,60 @@ namespace IRTicker {
                 }
 
                 name = Properties.Settings.Default.SlackDefaultName;
-                if (!DCEs["IR"].socketsAlive || !DCEs["IR"].NetworkAvailable || IRBTCvol < 0) {
+                if (!DCEs["IR"].socketsAlive || !DCEs["IR"].NetworkAvailable) {
                     slackObj.setStatus("", ":exclamation:", 120, name + " - IR API down");
                     return;
                 }
-                else if (!DCEs["BTCM"].socketsAlive || !DCEs["BTCM"].NetworkAvailable || BTCMBTCvol < 0) {
+                else if (!DCEs["BTCM"].socketsAlive || !DCEs["BTCM"].NetworkAvailable) {
                     slackObj.setStatus("", ":face_with_rolling_eyes:", 120, name + " - BTCM API down");
                     return;
                 }
 
+                // can't continue if we somehow don't have crypto and fiat chosen for slack
+
                 //string tempName = UIControls_Dict["IR"].Label_Dict["XBT_Price"].Text;
                 Dictionary<string, DCE.MarketSummary> cPairs = DCEs["IR"].GetCryptoPairs();
-                if (cPairs.ContainsKey("XBT-" + Properties.Settings.Default.SlackNameCurrency)) {
-                    decimal bid = cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentHighestBidPrice;
-                    decimal offer = cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentLowestOfferPrice;
-                    string midPoint = Utilities.FormatValue(Math.Round(((bid + offer) / 2), 0));
+                if (cPairs.ContainsKey(crypto + "-" + Properties.Settings.Default.SlackNameFiatCurrency)) {
+                    decimal bid = cPairs[crypto + "-" + Properties.Settings.Default.SlackNameFiatCurrency].CurrentHighestBidPrice;
+                    decimal offer = cPairs[crypto + "-" + Properties.Settings.Default.SlackNameFiatCurrency].CurrentLowestOfferPrice;
+                    //string midPoint = Utilities.FormatValue(Math.Round(((bid + offer) / 2), 0), 5);
+                    string midPoint = Utilities.FormatValue(((bid + offer) / 2), 5);
 
                     //string tempName = ((cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentLowestOfferPrice - cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentHighestBidPrice) / 2).ToString();
 
                     //if (tempName.Length >= 3) tempName = tempName.Substring(0, tempName.Length - 3);  // remove decimal places from the price
-                    name += " - " + Properties.Settings.Default.SlackNameCurrency + " " + midPoint;
+                    name += " - " + Properties.Settings.Default.SlackNameFiatCurrency + " " + midPoint;
                 }
             }
             //Debug.Print("slack name is: " + name);
 
-            if (IRBTCvol < 0 || BTCMBTCvol < 0) {
+
+
+            if (IRvol < 0) {
                 slackObj.setStatus("", ":question:", 120, name);
                 if (TGBot != null) TGBot.BTCMemoji = "";
             }
-            else if (IRBTCvol > BTCMBTCvol * 2) {
+            else if (BTCMvol < 0) {
+                slackObj.setStatus("", "", 120, name);
+                if (TGBot != null) TGBot.BTCMemoji = "";
+            }
+            else if (IRvol > BTCMvol * 2) {
                 slackObj.setStatus("", ":danbizan:", 120, name);
                 if (TGBot != null) TGBot.BTCMemoji = "🥳";
             }
-            else if (IRBTCvol * 2 < BTCMBTCvol) {
+            else if (IRvol * 2 < BTCMvol) {
                 slackObj.setStatus("", ":sob:", 120, name);
                 if (TGBot != null) TGBot.BTCMemoji = "😭";
             }
-            else if (IRBTCvol > BTCMBTCvol + 5) {
+            else if (IRvol > BTCMvol * 1.05M) {
                 slackObj.setStatus("", ":sunglasses:", 120, name);
                 if (TGBot != null) TGBot.BTCMemoji = "😎";
             }
-            else if ((IRBTCvol <= BTCMBTCvol + 5) && (IRBTCvol >= BTCMBTCvol - 5)) {
+            else if ((IRvol <= BTCMvol * 1.05M) && (IRvol >= BTCMvol * 0.95M)) {
                 slackObj.setStatus("", ":neutral_face:", 120, name);
                 if (TGBot != null) TGBot.BTCMemoji = "😐";
             }
-            else if (IRBTCvol < BTCMBTCvol - 5) {
+            else if (IRvol < BTCMvol * 0.95M) {
                 slackObj.setStatus("", ":slightly_frowning_face:", 120, name);
                 if (TGBot != null) TGBot.BTCMemoji = "🙁";
             }
@@ -1246,7 +1266,6 @@ namespace IRTicker {
                         DCEs["IR"].SecondaryCurrencyCodes = Utilities.TrimEnds(secondaryCurrencyCodesTpl.Item2);
                         //DCEs["IR"].SecondaryCurrencyCodes = "\"AUD\"";
 
-                        pollingThread.ReportProgress(28, "IR");  // populate slack name currency combobox in settnigs
                     }
                     if (DCEs["IR"].NetworkAvailable) {
                         DCEs["IR"].HasStaticData = true;  // we got here with the network up?  then we got the static data!
@@ -1261,6 +1280,7 @@ namespace IRTicker {
                                 if (DCEs["IR"].CurrentSecondaryCurrency == fiat) ParseDCE_IR(crypto, fiat, true);  // initial data pull and display
                             }
                         }
+
                         /*DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "AUD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "USD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "NZD");*/
@@ -1288,6 +1308,8 @@ namespace IRTicker {
                         }
 
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
+                        pollingThread.ReportProgress(28, "IR");  // populate slack name currency comboboxes in settnigs
+
 
                         wSocketConnect.Reinit_sockets("IR");  // this will setup all the necessary dictionaries
                         SubscribeTickerSocket("IR");
@@ -1326,10 +1348,10 @@ namespace IRTicker {
                     }
 
                     // need to pull this other fiat currency market summary data if our chose slack currency is not the one we're looking at (and the slack stuff is enabled)
-                    if ((Properties.Settings.Default.SlackNameCurrency != DCEs["IR"].CurrentSecondaryCurrency) &&
+                    if ((Properties.Settings.Default.SlackNameFiatCurrency != DCEs["IR"].CurrentSecondaryCurrency) &&
                         Properties.Settings.Default.Slack && Properties.Settings.Default.SlackNameChange) {
 
-                        ParseDCE_IR("XBT", Properties.Settings.Default.SlackNameCurrency, false);
+                        ParseDCE_IR("XBT", Properties.Settings.Default.SlackNameFiatCurrency, false);
                     }
 
 
@@ -1959,18 +1981,37 @@ namespace IRTicker {
 
                 // now we populate the slack name currency combobox in settings
                 foreach (string irFiat in DCEs["IR"].SecondaryCurrencyList) {
-                    if (SlackNameCurrency_comboBox.Items.Contains(irFiat)) continue;
-                    SlackNameCurrency_comboBox.Items.Add(irFiat);
+                    if (SlackNameFiatCurrency_comboBox.Items.Contains(irFiat)) continue;
+                    SlackNameFiatCurrency_comboBox.Items.Add(irFiat);
                 }
 
-                SlackNameCurrency_comboBox.Enabled = true;  // have to enable it to change the value :/
+                SlackNameFiatCurrency_comboBox.Enabled = true;  // have to enable it to change the value :/
                 //Debug.Print("properties slack name currency: " + Properties.Settings.Default.SlackNameCurrency + "find string index: " + SlackNameCurrency_comboBox.FindStringExact(Properties.Settings.Default.SlackNameCurrency));
-                if (SlackNameCurrency_comboBox.FindStringExact(Properties.Settings.Default.SlackNameCurrency) > -1)
-                    SlackNameCurrency_comboBox.SelectedIndex = SlackNameCurrency_comboBox.FindStringExact(Properties.Settings.Default.SlackNameCurrency);
+                if (SlackNameFiatCurrency_comboBox.FindStringExact(Properties.Settings.Default.SlackNameFiatCurrency) > -1)
+                    SlackNameFiatCurrency_comboBox.SelectedIndex = SlackNameFiatCurrency_comboBox.FindStringExact(Properties.Settings.Default.SlackNameFiatCurrency);
 
                 // after setting the default value, if this control shouldn't be enabled, disable it.
-                if (!Properties.Settings.Default.Slack || !Properties.Settings.Default.SlackNameChange || (SlackNameCurrency_comboBox.Items.Count == 0))
-                    SlackNameCurrency_comboBox.Enabled = false;
+                if (!Properties.Settings.Default.Slack || !Properties.Settings.Default.SlackNameChange || (SlackNameFiatCurrency_comboBox.Items.Count == 0))
+                    SlackNameFiatCurrency_comboBox.Enabled = false;
+
+
+                // now we populate the crypto box
+                foreach (string pair in DCEs["IR"].UsablePairs()) {
+                    Tuple<string, string> splitPair = Utilities.SplitPair(pair);  // splits "XBT-AUD" into a tuple ("XBT","AUD")
+                    if (splitPair.Item2 == DCEs["IR"].CurrentSecondaryCurrency) {
+                        SlackNameEmojiCrypto_comboBox.Items.Add(splitPair.Item1 == "XBT" ? "BTC" : splitPair.Item1);
+                    }
+                }
+
+                SlackNameEmojiCrypto_comboBox.Enabled = true;  // have to enable it to change the value :/
+                //Debug.Print("properties slack name currency: " + Properties.Settings.Default.SlackNameCurrency + "find string index: " + SlackNameCurrency_comboBox.FindStringExact(Properties.Settings.Default.SlackNameCurrency));
+                if (SlackNameEmojiCrypto_comboBox.FindStringExact(Properties.Settings.Default.SlackNameEmojiCrypto) > -1)
+                    SlackNameEmojiCrypto_comboBox.SelectedIndex = SlackNameEmojiCrypto_comboBox.FindStringExact(Properties.Settings.Default.SlackNameEmojiCrypto);
+
+                // after setting the default value, if this control shouldn't be enabled, disable it.
+                if (!Properties.Settings.Default.Slack || !Properties.Settings.Default.SlackNameChange || (SlackNameEmojiCrypto_comboBox.Items.Count == 0))
+                    SlackNameEmojiCrypto_comboBox.Enabled = false;
+
 
                 return;
             }
@@ -2084,7 +2125,7 @@ namespace IRTicker {
             }
 
             if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "")) {
-                setSlackStatus(IRvol, BTCMvol);
+                setSlackStatus();
             }
 
             // update the UI
@@ -2250,7 +2291,7 @@ namespace IRTicker {
 
 
                     // if we have a tg code, a tg api token, and pIR isn't null, it means we can start the tgbot
-                    if (!string.IsNullOrEmpty(TelegramCode_textBox.Text) && !string.IsNullOrEmpty(TelegramBotAPIToken_textBox.Text) && (pIR != null)) {
+                    if (TGBot_Enable_checkBox.Checked && !string.IsNullOrEmpty(TelegramCode_textBox.Text) && !string.IsNullOrEmpty(TelegramBotAPIToken_textBox.Text) && (pIR != null)) {
 
                         if (TGBot == null) {
                             try {
@@ -2287,7 +2328,7 @@ namespace IRTicker {
                     }
 
                     Properties.Settings.Default.TelegramAllNewMessages = TelegramNewMessages_checkBox.Checked;
-
+                    Properties.Settings.Default.TGBot_Enable = TGBot_Enable_checkBox.Checked;
                     Properties.Settings.Default.TelegramAPIToken = TelegramBotAPIToken_textBox.Text;
 
                     Properties.Settings.Default.Save();
@@ -2959,14 +3000,17 @@ namespace IRTicker {
                 slackDefaultNameTextBox.Enabled = true;
                 slackNameChangeCheckBox.Enabled = true;
                 slackToken_textBox.Enabled = true;
-                if (Properties.Settings.Default.SlackNameChange && (SlackNameCurrency_comboBox.Items.Count > 0)) SlackNameCurrency_comboBox.Enabled = true;
+                if (Properties.Settings.Default.SlackNameChange && (SlackNameFiatCurrency_comboBox.Items.Count > 0)) SlackNameFiatCurrency_comboBox.Enabled = true;
+                if (Properties.Settings.Default.SlackNameChange && (SlackNameEmojiCrypto_comboBox.Items.Count > 0)) SlackNameEmojiCrypto_comboBox.Enabled = true;
             }
+
             else {
                 slackDefaultNameTextBox.Enabled = false;
                 slackNameChangeCheckBox.Enabled = false;
                 slackToken_textBox.Enabled = false;
-                setSlackStatus(0, 0, true);  // reset the slack name to the default
-                SlackNameCurrency_comboBox.Enabled = false;
+                setSlackStatus(true);  // reset the slack name to the default
+                SlackNameFiatCurrency_comboBox.Enabled = false;
+                SlackNameEmojiCrypto_comboBox.Enabled = false;
             }
             Properties.Settings.Default.Save();
         }
@@ -2988,8 +3032,11 @@ namespace IRTicker {
                 MessageBox.Show("If you leave the name blank here and the app has already changed your name, then the app won't know what to change it back to and your display name will be blank (meaning your display name will default to your real name).  I recommend you leave your preferred display name in here", "No name?", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-            if (Properties.Settings.Default.SlackNameChange && (SlackNameCurrency_comboBox.Items.Count > 0)) SlackNameCurrency_comboBox.Enabled = true;
-            else SlackNameCurrency_comboBox.Enabled = false;
+            if (Properties.Settings.Default.SlackNameChange && (SlackNameFiatCurrency_comboBox.Items.Count > 0)) SlackNameFiatCurrency_comboBox.Enabled = true;
+            else SlackNameFiatCurrency_comboBox.Enabled = false;
+
+            if (Properties.Settings.Default.SlackNameChange && (SlackNameEmojiCrypto_comboBox.Items.Count > 0)) SlackNameEmojiCrypto_comboBox.Enabled = true;
+            else SlackNameEmojiCrypto_comboBox.Enabled = false;
         }
 
         private void NegativeSpread_checkBox_CheckedChanged(object sender, EventArgs e) {
@@ -2998,7 +3045,12 @@ namespace IRTicker {
         }
 
         private void SlackNameCurrency_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
-            Properties.Settings.Default.SlackNameCurrency = (string)SlackNameCurrency_comboBox.SelectedItem;
+            Properties.Settings.Default.SlackNameFiatCurrency = (string)SlackNameFiatCurrency_comboBox.SelectedItem;
+            Properties.Settings.Default.Save();
+        }
+
+        private void SlackNameEmojiCrypto_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            Properties.Settings.Default.SlackNameEmojiCrypto = (string)SlackNameEmojiCrypto_comboBox.SelectedItem;
             Properties.Settings.Default.Save();
         }
 

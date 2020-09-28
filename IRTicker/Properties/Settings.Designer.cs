@@ -12,7 +12,7 @@ namespace IRTicker.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.6.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -158,12 +158,12 @@ namespace IRTicker.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("AUD")]
-        public string SlackNameCurrency {
+        public string SlackNameFiatCurrency {
             get {
-                return ((string)(this["SlackNameCurrency"]));
+                return ((string)(this["SlackNameFiatCurrency"]));
             }
             set {
-                this["SlackNameCurrency"] = value;
+                this["SlackNameFiatCurrency"] = value;
             }
         }
         
@@ -452,6 +452,30 @@ namespace IRTicker.Properties {
             }
             set {
                 this["TelegramAllNewMessages"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BTC")]
+        public string SlackNameEmojiCrypto {
+            get {
+                return ((string)(this["SlackNameEmojiCrypto"]));
+            }
+            set {
+                this["SlackNameEmojiCrypto"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TGBot_Enable {
+            get {
+                return ((bool)(this["TGBot_Enable"]));
+            }
+            set {
+                this["TGBot_Enable"] = value;
             }
         }
     }

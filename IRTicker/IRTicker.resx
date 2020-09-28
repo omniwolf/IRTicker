@@ -123,6 +123,9 @@
   <metadata name="IRTickerTT_generic.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>550, 10</value>
   </metadata>
+  <data name="TGBot_Enable_label.ToolTip" xml:space="preserve">
+    <value>By default the Telegram bot will sometimes edit the previous message instead of sending a new message just to try and reduce button spam in the Telegram chat.  If you're using an app that's reading out message to you then this won't work as the app won't read edited messages.  Enable this to make every message come through as a new message.</value>
+  </data>
   <data name="TelegramNewMessages_label.ToolTip" xml:space="preserve">
     <value>By default the Telegram bot will sometimes edit the previous message instead of sending a new message just to try and reduce button spam in the Telegram chat.  If you're using an app that's reading out message to you then this won't work as the app won't read edited messages.  Enable this to make every message come through as a new message.</value>
   </data>

@@ -24,9 +24,9 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Loading...");
             System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
@@ -34,12 +34,12 @@
             this.IRAccountSettings_groupBox = new System.Windows.Forms.GroupBox();
             this.TelegramNewMessages_checkBox = new System.Windows.Forms.CheckBox();
             this.TelegramNewMessages_label = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.TGBot_APIToken_label = new System.Windows.Forms.Label();
             this.TelegramBotAPIToken_textBox = new System.Windows.Forms.TextBox();
             this.TGReset_button = new System.Windows.Forms.Button();
             this.TelegramCode_textBox = new System.Windows.Forms.TextBox();
             this.TelegramCode_label = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.IR_APIKey_label = new System.Windows.Forms.Label();
             this.EditKeys_button = new System.Windows.Forms.Button();
             this.APIKeys_comboBox = new System.Windows.Forms.ComboBox();
             this.SettingsSeparator_label = new System.Windows.Forms.Label();
@@ -51,8 +51,10 @@
             this.NegativeSpread_checkBox = new System.Windows.Forms.CheckBox();
             this.NegativeSpread_label = new System.Windows.Forms.Label();
             this.SlackSettings_groupBox = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.SlackNameEmojiCrypto_comboBox = new System.Windows.Forms.ComboBox();
             this.SlackNameCurrency_label = new System.Windows.Forms.Label();
-            this.SlackNameCurrency_comboBox = new System.Windows.Forms.ComboBox();
+            this.SlackNameFiatCurrency_comboBox = new System.Windows.Forms.ComboBox();
             this.Slack_label = new System.Windows.Forms.Label();
             this.Slack_checkBox = new System.Windows.Forms.CheckBox();
             this.slackToken_textBox = new System.Windows.Forms.TextBox();
@@ -453,6 +455,8 @@
             this.IRTickerTT_avgPrice = new System.Windows.Forms.ToolTip(this.components);
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
             this.IRT_notification = new System.Windows.Forms.NotifyIcon(this.components);
+            this.TGBot_Enable_checkBox = new System.Windows.Forms.CheckBox();
+            this.TGBot_Enable_label = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.IRAccountSettings_groupBox.SuspendLayout();
             this.SlackSettings_groupBox.SuspendLayout();
@@ -509,7 +513,6 @@
             // 
             // Settings
             // 
-            this.Settings.AutoScroll = true;
             this.Settings.BackColor = System.Drawing.Color.White;
             this.Settings.Controls.Add(this.IRAccountSettings_groupBox);
             this.Settings.Controls.Add(this.SettingsSeparator_label);
@@ -538,26 +541,28 @@
             this.Settings.Controls.Add(this.refreshFrequencyTextbox);
             this.Settings.Location = new System.Drawing.Point(0, 0);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(585, 843);
+            this.Settings.Size = new System.Drawing.Size(582, 840);
             this.Settings.TabIndex = 4;
             // 
             // IRAccountSettings_groupBox
             // 
             this.IRAccountSettings_groupBox.BackColor = System.Drawing.Color.Gainsboro;
+            this.IRAccountSettings_groupBox.Controls.Add(this.TGBot_Enable_checkBox);
+            this.IRAccountSettings_groupBox.Controls.Add(this.TGBot_Enable_label);
             this.IRAccountSettings_groupBox.Controls.Add(this.TelegramNewMessages_checkBox);
             this.IRAccountSettings_groupBox.Controls.Add(this.TelegramNewMessages_label);
-            this.IRAccountSettings_groupBox.Controls.Add(this.label3);
+            this.IRAccountSettings_groupBox.Controls.Add(this.TGBot_APIToken_label);
             this.IRAccountSettings_groupBox.Controls.Add(this.TelegramBotAPIToken_textBox);
             this.IRAccountSettings_groupBox.Controls.Add(this.TGReset_button);
             this.IRAccountSettings_groupBox.Controls.Add(this.TelegramCode_textBox);
             this.IRAccountSettings_groupBox.Controls.Add(this.TelegramCode_label);
-            this.IRAccountSettings_groupBox.Controls.Add(this.label2);
+            this.IRAccountSettings_groupBox.Controls.Add(this.IR_APIKey_label);
             this.IRAccountSettings_groupBox.Controls.Add(this.EditKeys_button);
             this.IRAccountSettings_groupBox.Controls.Add(this.APIKeys_comboBox);
             this.IRAccountSettings_groupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRAccountSettings_groupBox.Location = new System.Drawing.Point(76, 586);
+            this.IRAccountSettings_groupBox.Location = new System.Drawing.Point(76, 551);
             this.IRAccountSettings_groupBox.Name = "IRAccountSettings_groupBox";
-            this.IRAccountSettings_groupBox.Size = new System.Drawing.Size(461, 170);
+            this.IRAccountSettings_groupBox.Size = new System.Drawing.Size(461, 190);
             this.IRAccountSettings_groupBox.TabIndex = 37;
             this.IRAccountSettings_groupBox.TabStop = false;
             this.IRAccountSettings_groupBox.Text = "IR account";
@@ -566,7 +571,7 @@
             // 
             this.TelegramNewMessages_checkBox.AccessibleName = "";
             this.TelegramNewMessages_checkBox.AutoSize = true;
-            this.TelegramNewMessages_checkBox.Location = new System.Drawing.Point(429, 144);
+            this.TelegramNewMessages_checkBox.Location = new System.Drawing.Point(429, 164);
             this.TelegramNewMessages_checkBox.Name = "TelegramNewMessages_checkBox";
             this.TelegramNewMessages_checkBox.Size = new System.Drawing.Size(15, 14);
             this.TelegramNewMessages_checkBox.TabIndex = 43;
@@ -577,28 +582,28 @@
             this.TelegramNewMessages_label.AccessibleName = "";
             this.TelegramNewMessages_label.AutoSize = true;
             this.TelegramNewMessages_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TelegramNewMessages_label.Location = new System.Drawing.Point(24, 142);
+            this.TelegramNewMessages_label.Location = new System.Drawing.Point(24, 162);
             this.TelegramNewMessages_label.Name = "TelegramNewMessages_label";
             this.TelegramNewMessages_label.Size = new System.Drawing.Size(289, 16);
             this.TelegramNewMessages_label.TabIndex = 42;
             this.TelegramNewMessages_label.Text = "Make all Telegram messages new for dictation:";
             this.IRTickerTT_generic.SetToolTip(this.TelegramNewMessages_label, resources.GetString("TelegramNewMessages_label.ToolTip"));
             // 
-            // label3
+            // TGBot_APIToken_label
             // 
-            this.label3.AccessibleName = "";
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(24, 85);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(152, 16);
-            this.label3.TabIndex = 45;
-            this.label3.Text = "Telegram bot API token:";
+            this.TGBot_APIToken_label.AccessibleName = "";
+            this.TGBot_APIToken_label.AutoSize = true;
+            this.TGBot_APIToken_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TGBot_APIToken_label.Location = new System.Drawing.Point(24, 105);
+            this.TGBot_APIToken_label.Name = "TGBot_APIToken_label";
+            this.TGBot_APIToken_label.Size = new System.Drawing.Size(152, 16);
+            this.TGBot_APIToken_label.TabIndex = 45;
+            this.TGBot_APIToken_label.Text = "Telegram bot API token:";
             // 
             // TelegramBotAPIToken_textBox
             // 
             this.TelegramBotAPIToken_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TelegramBotAPIToken_textBox.Location = new System.Drawing.Point(188, 83);
+            this.TelegramBotAPIToken_textBox.Location = new System.Drawing.Point(188, 103);
             this.TelegramBotAPIToken_textBox.Name = "TelegramBotAPIToken_textBox";
             this.TelegramBotAPIToken_textBox.PasswordChar = '●';
             this.TelegramBotAPIToken_textBox.Size = new System.Drawing.Size(256, 20);
@@ -608,7 +613,7 @@
             // TGReset_button
             // 
             this.TGReset_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TGReset_button.Location = new System.Drawing.Point(360, 109);
+            this.TGReset_button.Location = new System.Drawing.Point(360, 129);
             this.TGReset_button.Name = "TGReset_button";
             this.TGReset_button.Size = new System.Drawing.Size(84, 23);
             this.TGReset_button.TabIndex = 44;
@@ -620,7 +625,7 @@
             // TelegramCode_textBox
             // 
             this.TelegramCode_textBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TelegramCode_textBox.Location = new System.Drawing.Point(188, 112);
+            this.TelegramCode_textBox.Location = new System.Drawing.Point(188, 132);
             this.TelegramCode_textBox.Name = "TelegramCode_textBox";
             this.TelegramCode_textBox.Size = new System.Drawing.Size(168, 20);
             this.TelegramCode_textBox.TabIndex = 37;
@@ -631,21 +636,21 @@
             this.TelegramCode_label.AccessibleName = "";
             this.TelegramCode_label.AutoSize = true;
             this.TelegramCode_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TelegramCode_label.Location = new System.Drawing.Point(24, 113);
+            this.TelegramCode_label.Location = new System.Drawing.Point(24, 133);
             this.TelegramCode_label.Name = "TelegramCode_label";
             this.TelegramCode_label.Size = new System.Drawing.Size(144, 16);
             this.TelegramCode_label.TabIndex = 42;
             this.TelegramCode_label.Text = "Telegram secret code:";
             // 
-            // label2
+            // IR_APIKey_label
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(24, 26);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(229, 16);
-            this.label2.TabIndex = 43;
-            this.label2.Text = "Choose which API keyto connect with:";
+            this.IR_APIKey_label.AutoSize = true;
+            this.IR_APIKey_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_APIKey_label.Location = new System.Drawing.Point(24, 26);
+            this.IR_APIKey_label.Name = "IR_APIKey_label";
+            this.IR_APIKey_label.Size = new System.Drawing.Size(229, 16);
+            this.IR_APIKey_label.TabIndex = 43;
+            this.IR_APIKey_label.Text = "Choose which API keyto connect with:";
             // 
             // EditKeys_button
             // 
@@ -674,7 +679,7 @@
             // SettingsSeparator_label
             // 
             this.SettingsSeparator_label.AutoSize = true;
-            this.SettingsSeparator_label.Location = new System.Drawing.Point(90, 759);
+            this.SettingsSeparator_label.Location = new System.Drawing.Point(90, 749);
             this.SettingsSeparator_label.Name = "SettingsSeparator_label";
             this.SettingsSeparator_label.Size = new System.Drawing.Size(409, 13);
             this.SettingsSeparator_label.TabIndex = 41;
@@ -683,7 +688,7 @@
             // SessionStartedRel_label
             // 
             this.SessionStartedRel_label.AutoSize = true;
-            this.SessionStartedRel_label.Location = new System.Drawing.Point(271, 818);
+            this.SessionStartedRel_label.Location = new System.Drawing.Point(271, 838);
             this.SessionStartedRel_label.Name = "SessionStartedRel_label";
             this.SessionStartedRel_label.Size = new System.Drawing.Size(0, 13);
             this.SessionStartedRel_label.TabIndex = 40;
@@ -691,7 +696,7 @@
             // SessionStartedAbs_label
             // 
             this.SessionStartedAbs_label.AutoSize = true;
-            this.SessionStartedAbs_label.Location = new System.Drawing.Point(271, 789);
+            this.SessionStartedAbs_label.Location = new System.Drawing.Point(271, 779);
             this.SessionStartedAbs_label.Name = "SessionStartedAbs_label";
             this.SessionStartedAbs_label.Size = new System.Drawing.Size(0, 13);
             this.SessionStartedAbs_label.TabIndex = 39;
@@ -699,7 +704,7 @@
             // SessionStart_label
             // 
             this.SessionStart_label.AutoSize = true;
-            this.SessionStart_label.Location = new System.Drawing.Point(185, 789);
+            this.SessionStart_label.Location = new System.Drawing.Point(185, 779);
             this.SessionStart_label.Name = "SessionStart_label";
             this.SessionStart_label.Size = new System.Drawing.Size(82, 13);
             this.SessionStart_label.TabIndex = 38;
@@ -709,7 +714,7 @@
             // 
             this.spreadHistoryCustomFolderValue_Textbox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.spreadHistoryCustomFolderValue_Textbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.spreadHistoryCustomFolderValue_Textbox.Location = new System.Drawing.Point(226, 143);
+            this.spreadHistoryCustomFolderValue_Textbox.Location = new System.Drawing.Point(226, 113);
             this.spreadHistoryCustomFolderValue_Textbox.Name = "spreadHistoryCustomFolderValue_Textbox";
             this.spreadHistoryCustomFolderValue_Textbox.ReadOnly = true;
             this.spreadHistoryCustomFolderValue_Textbox.Size = new System.Drawing.Size(279, 20);
@@ -722,7 +727,7 @@
             // 
             this.spreadHistoryCustomFolder_label.AccessibleName = "";
             this.spreadHistoryCustomFolder_label.AutoSize = true;
-            this.spreadHistoryCustomFolder_label.Location = new System.Drawing.Point(73, 143);
+            this.spreadHistoryCustomFolder_label.Location = new System.Drawing.Point(73, 113);
             this.spreadHistoryCustomFolder_label.Name = "spreadHistoryCustomFolder_label";
             this.spreadHistoryCustomFolder_label.Size = new System.Drawing.Size(144, 26);
             this.spreadHistoryCustomFolder_label.TabIndex = 35;
@@ -736,7 +741,7 @@
             this.NegativeSpread_checkBox.AutoSize = true;
             this.NegativeSpread_checkBox.Checked = true;
             this.NegativeSpread_checkBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.NegativeSpread_checkBox.Location = new System.Drawing.Point(490, 548);
+            this.NegativeSpread_checkBox.Location = new System.Drawing.Point(490, 518);
             this.NegativeSpread_checkBox.Name = "NegativeSpread_checkBox";
             this.NegativeSpread_checkBox.Size = new System.Drawing.Size(15, 14);
             this.NegativeSpread_checkBox.TabIndex = 34;
@@ -747,7 +752,7 @@
             // 
             this.NegativeSpread_label.AccessibleName = "";
             this.NegativeSpread_label.AutoSize = true;
-            this.NegativeSpread_label.Location = new System.Drawing.Point(73, 548);
+            this.NegativeSpread_label.Location = new System.Drawing.Point(73, 518);
             this.NegativeSpread_label.Name = "NegativeSpread_label";
             this.NegativeSpread_label.Size = new System.Drawing.Size(226, 13);
             this.NegativeSpread_label.TabIndex = 33;
@@ -756,8 +761,10 @@
             // SlackSettings_groupBox
             // 
             this.SlackSettings_groupBox.BackColor = System.Drawing.Color.Gainsboro;
+            this.SlackSettings_groupBox.Controls.Add(this.label4);
+            this.SlackSettings_groupBox.Controls.Add(this.SlackNameEmojiCrypto_comboBox);
             this.SlackSettings_groupBox.Controls.Add(this.SlackNameCurrency_label);
-            this.SlackSettings_groupBox.Controls.Add(this.SlackNameCurrency_comboBox);
+            this.SlackSettings_groupBox.Controls.Add(this.SlackNameFiatCurrency_comboBox);
             this.SlackSettings_groupBox.Controls.Add(this.Slack_label);
             this.SlackSettings_groupBox.Controls.Add(this.Slack_checkBox);
             this.SlackSettings_groupBox.Controls.Add(this.slackToken_textBox);
@@ -766,34 +773,56 @@
             this.SlackSettings_groupBox.Controls.Add(this.slackDefaultNameTextBox);
             this.SlackSettings_groupBox.Controls.Add(this.slackNameChangeCheckBox);
             this.SlackSettings_groupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SlackSettings_groupBox.Location = new System.Drawing.Point(76, 185);
+            this.SlackSettings_groupBox.Location = new System.Drawing.Point(76, 155);
             this.SlackSettings_groupBox.Name = "SlackSettings_groupBox";
-            this.SlackSettings_groupBox.Size = new System.Drawing.Size(461, 222);
+            this.SlackSettings_groupBox.Size = new System.Drawing.Size(461, 242);
             this.SlackSettings_groupBox.TabIndex = 32;
             this.SlackSettings_groupBox.TabStop = false;
             this.SlackSettings_groupBox.Text = "Slack";
+            // 
+            // label4
+            // 
+            this.label4.AccessibleName = "";
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label4.Location = new System.Drawing.Point(16, 182);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(203, 13);
+            this.label4.TabIndex = 38;
+            this.label4.Text = "Crypto to show in name and use for emoji:";
+            // 
+            // SlackNameEmojiCrypto_comboBox
+            // 
+            this.SlackNameEmojiCrypto_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SlackNameEmojiCrypto_comboBox.Enabled = false;
+            this.SlackNameEmojiCrypto_comboBox.FormattingEnabled = true;
+            this.SlackNameEmojiCrypto_comboBox.Location = new System.Drawing.Point(350, 177);
+            this.SlackNameEmojiCrypto_comboBox.Name = "SlackNameEmojiCrypto_comboBox";
+            this.SlackNameEmojiCrypto_comboBox.Size = new System.Drawing.Size(94, 24);
+            this.SlackNameEmojiCrypto_comboBox.TabIndex = 37;
+            this.SlackNameEmojiCrypto_comboBox.SelectedIndexChanged += new System.EventHandler(this.SlackNameEmojiCrypto_comboBox_SelectedIndexChanged);
             // 
             // SlackNameCurrency_label
             // 
             this.SlackNameCurrency_label.AccessibleName = "";
             this.SlackNameCurrency_label.AutoSize = true;
             this.SlackNameCurrency_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.SlackNameCurrency_label.Location = new System.Drawing.Point(16, 191);
+            this.SlackNameCurrency_label.Location = new System.Drawing.Point(16, 211);
             this.SlackNameCurrency_label.Name = "SlackNameCurrency_label";
-            this.SlackNameCurrency_label.Size = new System.Drawing.Size(193, 13);
+            this.SlackNameCurrency_label.Size = new System.Drawing.Size(181, 13);
             this.SlackNameCurrency_label.TabIndex = 36;
-            this.SlackNameCurrency_label.Text = "Base pair for BTC price shown in name:";
+            this.SlackNameCurrency_label.Text = "Secondary currency for name crypto:";
             // 
-            // SlackNameCurrency_comboBox
+            // SlackNameFiatCurrency_comboBox
             // 
-            this.SlackNameCurrency_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.SlackNameCurrency_comboBox.Enabled = false;
-            this.SlackNameCurrency_comboBox.FormattingEnabled = true;
-            this.SlackNameCurrency_comboBox.Location = new System.Drawing.Point(350, 186);
-            this.SlackNameCurrency_comboBox.Name = "SlackNameCurrency_comboBox";
-            this.SlackNameCurrency_comboBox.Size = new System.Drawing.Size(94, 24);
-            this.SlackNameCurrency_comboBox.TabIndex = 35;
-            this.SlackNameCurrency_comboBox.SelectedIndexChanged += new System.EventHandler(this.SlackNameCurrency_comboBox_SelectedIndexChanged);
+            this.SlackNameFiatCurrency_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SlackNameFiatCurrency_comboBox.Enabled = false;
+            this.SlackNameFiatCurrency_comboBox.FormattingEnabled = true;
+            this.SlackNameFiatCurrency_comboBox.Location = new System.Drawing.Point(350, 206);
+            this.SlackNameFiatCurrency_comboBox.Name = "SlackNameFiatCurrency_comboBox";
+            this.SlackNameFiatCurrency_comboBox.Size = new System.Drawing.Size(94, 24);
+            this.SlackNameFiatCurrency_comboBox.TabIndex = 35;
+            this.SlackNameFiatCurrency_comboBox.SelectedIndexChanged += new System.EventHandler(this.SlackNameCurrency_comboBox_SelectedIndexChanged);
             // 
             // Slack_label
             // 
@@ -875,7 +904,7 @@
             // 
             // UITimerFreq_maskedTextBox
             // 
-            this.UITimerFreq_maskedTextBox.Location = new System.Drawing.Point(405, 512);
+            this.UITimerFreq_maskedTextBox.Location = new System.Drawing.Point(405, 487);
             this.UITimerFreq_maskedTextBox.Mask = "0000";
             this.UITimerFreq_maskedTextBox.Name = "UITimerFreq_maskedTextBox";
             this.UITimerFreq_maskedTextBox.PromptChar = ' ';
@@ -886,7 +915,7 @@
             // 
             this.UITimerFreq_label.AccessibleName = "";
             this.UITimerFreq_label.AutoSize = true;
-            this.UITimerFreq_label.Location = new System.Drawing.Point(73, 515);
+            this.UITimerFreq_label.Location = new System.Drawing.Point(73, 490);
             this.UITimerFreq_label.Name = "UITimerFreq_label";
             this.UITimerFreq_label.Size = new System.Drawing.Size(252, 13);
             this.UITimerFreq_label.TabIndex = 30;
@@ -896,7 +925,7 @@
             // 
             this.OB_checkBox.AccessibleName = "";
             this.OB_checkBox.AutoSize = true;
-            this.OB_checkBox.Location = new System.Drawing.Point(490, 472);
+            this.OB_checkBox.Location = new System.Drawing.Point(490, 452);
             this.OB_checkBox.Name = "OB_checkBox";
             this.OB_checkBox.Size = new System.Drawing.Size(15, 14);
             this.OB_checkBox.TabIndex = 25;
@@ -907,7 +936,7 @@
             // 
             this.OB_label.AccessibleName = "";
             this.OB_label.AutoSize = true;
-            this.OB_label.Location = new System.Drawing.Point(73, 472);
+            this.OB_label.Location = new System.Drawing.Point(73, 452);
             this.OB_label.Name = "OB_label";
             this.OB_label.Size = new System.Drawing.Size(372, 26);
             this.OB_label.TabIndex = 24;
@@ -918,7 +947,7 @@
             // 
             this.flashForm_checkBox.AccessibleName = "";
             this.flashForm_checkBox.AutoSize = true;
-            this.flashForm_checkBox.Location = new System.Drawing.Point(490, 427);
+            this.flashForm_checkBox.Location = new System.Drawing.Point(490, 412);
             this.flashForm_checkBox.Name = "flashForm_checkBox";
             this.flashForm_checkBox.Size = new System.Drawing.Size(15, 14);
             this.flashForm_checkBox.TabIndex = 22;
@@ -929,7 +958,7 @@
             // 
             this.flashForm_label.AccessibleName = "";
             this.flashForm_label.AutoSize = true;
-            this.flashForm_label.Location = new System.Drawing.Point(73, 427);
+            this.flashForm_label.Location = new System.Drawing.Point(73, 412);
             this.flashForm_label.Name = "flashForm_label";
             this.flashForm_label.Size = new System.Drawing.Size(198, 26);
             this.flashForm_label.TabIndex = 21;
@@ -939,7 +968,7 @@
             // 
             this.ExportSummarised_Checkbox.AccessibleName = "";
             this.ExportSummarised_Checkbox.AutoSize = true;
-            this.ExportSummarised_Checkbox.Location = new System.Drawing.Point(490, 114);
+            this.ExportSummarised_Checkbox.Location = new System.Drawing.Point(490, 84);
             this.ExportSummarised_Checkbox.Name = "ExportSummarised_Checkbox";
             this.ExportSummarised_Checkbox.Size = new System.Drawing.Size(15, 14);
             this.ExportSummarised_Checkbox.TabIndex = 18;
@@ -950,7 +979,7 @@
             // 
             this.ExportSummarised_Label.AccessibleName = "";
             this.ExportSummarised_Label.AutoSize = true;
-            this.ExportSummarised_Label.Location = new System.Drawing.Point(73, 114);
+            this.ExportSummarised_Label.Location = new System.Drawing.Point(73, 84);
             this.ExportSummarised_Label.Name = "ExportSummarised_Label";
             this.ExportSummarised_Label.Size = new System.Drawing.Size(146, 13);
             this.ExportSummarised_Label.TabIndex = 17;
@@ -960,7 +989,7 @@
             // Help_Button
             // 
             this.Help_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Help_Button.Location = new System.Drawing.Point(439, 784);
+            this.Help_Button.Location = new System.Drawing.Point(439, 774);
             this.Help_Button.Name = "Help_Button";
             this.Help_Button.Size = new System.Drawing.Size(97, 23);
             this.Help_Button.TabIndex = 14;
@@ -986,15 +1015,16 @@
             this.EnableGDAXLevel3.AutoSize = true;
             this.EnableGDAXLevel3.Location = new System.Drawing.Point(73, 56);
             this.EnableGDAXLevel3.Name = "EnableGDAXLevel3";
-            this.EnableGDAXLevel3.Size = new System.Drawing.Size(241, 39);
+            this.EnableGDAXLevel3.Size = new System.Drawing.Size(166, 13);
             this.EnableGDAXLevel3.TabIndex = 12;
-            this.EnableGDAXLevel3.Text = "Pull full Coinbase Pro order book?\r\n(Not recommended if you\'re doing lots of aver" +
-    "age \r\ncoin price checks - you will be rate limited)";
+            this.EnableGDAXLevel3.Text = "Pull full Coinbase Pro order book?";
+            this.IRTickerTT_generic.SetToolTip(this.EnableGDAXLevel3, "Not recommended if you\'re doing lots of average price calculations - you will get" +
+        " rate limited");
             // 
             // VersionLabel
             // 
             this.VersionLabel.AutoSize = true;
-            this.VersionLabel.Location = new System.Drawing.Point(35, 817);
+            this.VersionLabel.Location = new System.Drawing.Point(35, 787);
             this.VersionLabel.Name = "VersionLabel";
             this.VersionLabel.Size = new System.Drawing.Size(0, 13);
             this.VersionLabel.TabIndex = 11;
@@ -1002,7 +1032,7 @@
             // SettingsOKButton
             // 
             this.SettingsOKButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingsOKButton.Location = new System.Drawing.Point(439, 813);
+            this.SettingsOKButton.Location = new System.Drawing.Point(439, 803);
             this.SettingsOKButton.Name = "SettingsOKButton";
             this.SettingsOKButton.Size = new System.Drawing.Size(97, 23);
             this.SettingsOKButton.TabIndex = 4;
@@ -5675,15 +5705,37 @@
             this.IRT_notification.Icon = ((System.Drawing.Icon)(resources.GetObject("IRT_notification.Icon")));
             this.IRT_notification.Text = "IR Ticker";
             // 
+            // TGBot_Enable_checkBox
+            // 
+            this.TGBot_Enable_checkBox.AccessibleName = "";
+            this.TGBot_Enable_checkBox.AutoSize = true;
+            this.TGBot_Enable_checkBox.Location = new System.Drawing.Point(429, 82);
+            this.TGBot_Enable_checkBox.Name = "TGBot_Enable_checkBox";
+            this.TGBot_Enable_checkBox.Size = new System.Drawing.Size(15, 14);
+            this.TGBot_Enable_checkBox.TabIndex = 47;
+            this.TGBot_Enable_checkBox.UseVisualStyleBackColor = true;
+            // 
+            // TGBot_Enable_label
+            // 
+            this.TGBot_Enable_label.AccessibleName = "";
+            this.TGBot_Enable_label.AutoSize = true;
+            this.TGBot_Enable_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TGBot_Enable_label.Location = new System.Drawing.Point(24, 80);
+            this.TGBot_Enable_label.Name = "TGBot_Enable_label";
+            this.TGBot_Enable_label.Size = new System.Drawing.Size(178, 16);
+            this.TGBot_Enable_label.TabIndex = 46;
+            this.TGBot_Enable_label.Text = "Enable Telegram integration";
+            this.IRTickerTT_generic.SetToolTip(this.TGBot_Enable_label, resources.GetString("TGBot_Enable_label.ToolTip"));
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(584, 841);
-            this.Controls.Add(this.IRAccount_panel);
-            this.Controls.Add(this.Main);
-            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Settings);
+            this.Controls.Add(this.Main);
+            this.Controls.Add(this.IRAccount_panel);
+            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.OTCHelper);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HelpButton = true;
@@ -5981,7 +6033,7 @@
         private System.Windows.Forms.CheckBox NegativeSpread_checkBox;
         private System.Windows.Forms.Label NegativeSpread_label;
         private System.Windows.Forms.Label SlackNameCurrency_label;
-        private System.Windows.Forms.ComboBox SlackNameCurrency_comboBox;
+        private System.Windows.Forms.ComboBox SlackNameFiatCurrency_comboBox;
         private System.Windows.Forms.ComboBox BAR_CurrencyBox;
         private System.Windows.Forms.Label BAR_AvgPrice_Label;
         private System.Windows.Forms.ComboBox BAR_CryptoComboBox;
@@ -6093,7 +6145,7 @@
         private System.Windows.Forms.Button SwitchOrderBookSide_button;
         private System.Windows.Forms.ComboBox APIKeys_comboBox;
         public System.Windows.Forms.Button EditKeys_button;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label IR_APIKey_label;
         private System.Windows.Forms.Label BTCM_LINK_Label2;
         private System.Windows.Forms.Label BTCM_LINK_Label3;
         private System.Windows.Forms.Label BTCM_LINK_Label1;
@@ -6136,7 +6188,7 @@
         private System.Windows.Forms.Label AccountMKR_total;
         private System.Windows.Forms.Label AccountMKR_value;
         private System.Windows.Forms.Label AccountMKR_label;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label TGBot_APIToken_label;
         private System.Windows.Forms.TextBox TelegramBotAPIToken_textBox;
         private System.Windows.Forms.Button StopBaitin_button;
         private System.Windows.Forms.Label AccountCOMP_total;
@@ -6166,6 +6218,10 @@
         private System.Windows.Forms.Label AccountSNX_total;
         private System.Windows.Forms.Label AccountSNX_value;
         private System.Windows.Forms.Label AccountSNX_label;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox SlackNameEmojiCrypto_comboBox;
+        private System.Windows.Forms.CheckBox TGBot_Enable_checkBox;
+        private System.Windows.Forms.Label TGBot_Enable_label;
     }
 }
 

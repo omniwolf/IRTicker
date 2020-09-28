@@ -35,7 +35,7 @@
     <Setting Name="NegativeSpread" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="SlackNameCurrency" Type="System.String" Scope="User">
+    <Setting Name="SlackNameFiatCurrency" Type="System.String" Scope="User">
       <Value Profile="(Default)">AUD</Value>
     </Setting>
     <Setting Name="SpreadHistoryCustomFolder" Type="System.String" Scope="User">
@@ -108,6 +108,12 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="TelegramAllNewMessages" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SlackNameEmojiCrypto" Type="System.String" Scope="User">
+      <Value Profile="(Default)">BTC</Value>
+    </Setting>
+    <Setting Name="TGBot_Enable" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
