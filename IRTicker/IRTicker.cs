@@ -632,14 +632,14 @@ namespace IRTicker {
 
                 try {
                     if (IRvol > BTCMvol * 2) {
-                        if (pulseTask.IsCompleted || (pulseTask == null)) {
+                        if ((pulseTask == null) || pulseTask.IsCompleted) {
                             cTokenSrc = new CancellationTokenSource();
                             pulseTask = Task.Run(() => BWPulseforDubVol(RgbColor.FromString("#0079FF"), _bStick, cTokenSrc.Token));
                             Debug.Print(DateTime.Now + " -- BS -- started the IR GOOOOOD thread");
                         }
                     }
                     else if (IRvol * 2 < BTCMvol) {
-                        if (pulseTask.IsCompleted || (pulseTask == null)) {
+                        if ((pulseTask == null) || pulseTask.IsCompleted) {
                             cTokenSrc = new CancellationTokenSource();
                             pulseTask = Task.Run(() => BWPulseforDubVol(RgbColor.FromString("#00FF00"), _bStick, cTokenSrc.Token));
 
@@ -648,20 +648,20 @@ namespace IRTicker {
                     }
                     else if (IRvol > BTCMvol + 5) {
                         Debug.Print(DateTime.Now + " -- BS -- IR winning");
-                        if (!pulseTask.IsCompleted) cTokenSrc.Cancel();
-                        else _bStick.Morph("#3176BC");
+                        if ((pulseTask != null) && !pulseTask.IsCompleted) cTokenSrc.Cancel();
+                        _bStick.Morph("#3176BC");
                         cTokenSrc = null;
                     }
                     else if ((IRvol <= BTCMvol + 5) && (IRvol >= BTCMvol - 5)) {
                         Debug.Print(DateTime.Now + " -- BS -- trying to go white");
-                        if (!pulseTask.IsCompleted) cTokenSrc.Cancel();
-                        else _bStick.Morph("#C19E6E");
+                        if ((pulseTask != null) && !pulseTask.IsCompleted) cTokenSrc.Cancel();
+                        _bStick.Morph("#C19E6E");
                         if (!BlinkStickWhite_Thread.IsBusy) BlinkStickWhite_Thread.RunWorkerAsync(RgbColor.FromString((BTCMvol > IRvol ? "#42953A" : "#B6CBE1")));
                     }
                     else if (IRvol < BTCMvol - 5) {
                         Debug.Print(DateTime.Now + " -- BS -- BTCM is winning");
-                        if (!pulseTask.IsCompleted) cTokenSrc.Cancel();
-                        else _bStick.Morph("#00A607");
+                        if ((pulseTask != null) && !pulseTask.IsCompleted) cTokenSrc.Cancel();
+                        _bStick.Morph("#00A607");
 
                         cTokenSrc = null;
                     }
