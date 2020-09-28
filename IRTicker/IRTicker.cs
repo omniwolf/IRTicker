@@ -82,16 +82,22 @@ namespace IRTicker {
                 }
             }
 
-
             if (bStick != null && bStick.OpenDevice()) {
-                bStick.Blink("yellow",1,200);
-                bStick.Blink("blue",1,200);
+                bStick.Blink("yellow", 1, 200);
+                bStick.Blink("blue", 1, 200);
                 //bStick.Pulse("purple", 1, 300, 50);
                 //bStick.Pulse(RgbColor.FromRgb(69, 114, 69), 20, 700, 50);
                 //BlinkStickBW.RunWorkerAsync(argument: RgbColor.FromRgb(69, 114, 69));
             }
             else {
-                Debug.Print("BlinkStick couldn't be accessed or opened");
+                Debug.Print("BlinkStick BTC couldn't be accessed or opened");
+            }
+            if (bStickETH != null && bStickETH.OpenDevice()) {
+                bStickETH.Blink("red", 1, 200);
+                bStickETH.Blink("purple", 1, 200);
+            }
+            else {
+                Debug.Print("BlinkStick ETH couldn't be accessed or opened");
             }
 
             if (refreshFrequencyTextbox.Text == "1") refreshFrequencyTextbox.Text = minRefreshFrequency.ToString();  // design time default is 1, we set to our actual min
@@ -2178,6 +2184,12 @@ namespace IRTicker {
                     bStick.TurnOff();
                 }
            }
+            if (bStickETH != null) {
+                if (bStickETH.OpenDevice()) {
+                    BlinkStickBW.CancelAsync();
+                    bStickETH.TurnOff();
+                }
+            }
 
             IRAccount_panel.Visible = false;
 

@@ -599,7 +599,7 @@ namespace IRTicker
                     TGstate.ChosenPair = new Tuple<string, string>(pIR.placedOrder.PrimaryCurrencyCode.ToString().ToUpper(), pIR.placedOrder.SecondaryCurrencyCode.ToString().ToUpper());
 
                     masterStr += "  Volume: " + (TGstate.ChosenPair.Item1 == "XBT" ? "BTC" : TGstate.ChosenPair.Item1) + " " + Utilities.FormatValue(volume, 8, false) + Environment.NewLine;
-                    masterStr += "  Price: $ " + Utilities.FormatValue(price, -1, false) + Environment.NewLine;
+                    masterStr += "  Price: $ " + Utilities.FormatValue(price, 5, false) + Environment.NewLine;
 
                     // now we find the closest order.. what a mish
 
@@ -617,11 +617,11 @@ namespace IRTicker
 
                     if (pIR.placedOrder.Price == orderedOrders.ElementAt(0).Key) {
                         decimal nextClosestPrice = orderedOrders.ElementAt(1).Key;
-                        masterStr += "  Next closest order is: $ " + Utilities.FormatValue(nextClosestPrice, -1, false);
+                        masterStr += "  Next closest order is: $ " + Utilities.FormatValue(nextClosestPrice, 5, false);
                     }
                     else {  // our order is not at the top at this moment
                         decimal topOrderPrice = orderedOrders.ElementAt(0).Key;
-                        masterStr += "  Baitin' order not at the top, top order is: $ " + Utilities.FormatValue(topOrderPrice, -1, false);
+                        masterStr += "  Baitin' order not at the top, top order is: $ " + Utilities.FormatValue(topOrderPrice, 5, false);
                     }
 
                     SendMessage(masterStr, buttons: BaitinButtons(), editMessage: editMsg);
