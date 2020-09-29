@@ -68,7 +68,7 @@ namespace IRTicker {
 
             //bStick = BlinkStick.FindFirst();
             var bSticks = BlinkStick.FindAll();
-            if (bSticks.Length > 1) {
+            if (bSticks.Length == 2) {
                 Debug.Print("bs1: " + bSticks[0].Meta.Serial);
                 Debug.Print("bs2: " + bSticks[1].Meta.Serial);
 
@@ -80,24 +80,35 @@ namespace IRTicker {
                     bStick = bSticks[1];
                     bStickETH = bSticks[0];
                 }
-            }
 
-            if (bStick != null && bStick.OpenDevice()) {
-                bStick.Blink("yellow", 1, 200);
-                bStick.Blink("blue", 1, 200);
-                //bStick.Pulse("purple", 1, 300, 50);
-                //bStick.Pulse(RgbColor.FromRgb(69, 114, 69), 20, 700, 50);
-                //BlinkStickBW.RunWorkerAsync(argument: RgbColor.FromRgb(69, 114, 69));
+
+                if (bStick != null && bStick.OpenDevice()) {
+                    bStick.Blink("yellow", 1, 200);
+                    bStick.Blink("blue", 1, 200);
+                    //bStick.Pulse("purple", 1, 300, 50);
+                    //bStick.Pulse(RgbColor.FromRgb(69, 114, 69), 20, 700, 50);
+                    //BlinkStickBW.RunWorkerAsync(argument: RgbColor.FromRgb(69, 114, 69));
+                }
+                else {
+                    Debug.Print("BlinkStick BTC couldn't be accessed or opened");
+                }
+                if (bStickETH != null && bStickETH.OpenDevice()) {
+                    bStickETH.Blink("red", 1, 200);
+                    bStickETH.Blink("purple", 1, 200);
+                }
+                else {
+                    Debug.Print("BlinkStick ETH couldn't be accessed or opened");
+                }
             }
-            else {
-                Debug.Print("BlinkStick BTC couldn't be accessed or opened");
-            }
-            if (bStickETH != null && bStickETH.OpenDevice()) {
-                bStickETH.Blink("red", 1, 200);
-                bStickETH.Blink("purple", 1, 200);
-            }
-            else {
-                Debug.Print("BlinkStick ETH couldn't be accessed or opened");
+            else if (bSticks.Length == 1) {
+                bStick = bSticks[0];  // if we only have 1 blink stick, then make it BTC
+                if (bStick != null && bStick.OpenDevice()) {
+                    bStick.Blink("yellow", 1, 200);
+                    bStick.Blink("blue", 1, 200);
+                }
+                else {
+                    Debug.Print("Only 1 BlinkStick. Assigning it to BTC, but it couldn't be accessed or opened");
+                }
             }
 
             if (refreshFrequencyTextbox.Text == "1") refreshFrequencyTextbox.Text = minRefreshFrequency.ToString();  // design time default is 1, we set to our actual min
@@ -754,7 +765,7 @@ namespace IRTicker {
                     decimal bid = cPairs[crypto + "-" + Properties.Settings.Default.SlackNameFiatCurrency].CurrentHighestBidPrice;
                     decimal offer = cPairs[crypto + "-" + Properties.Settings.Default.SlackNameFiatCurrency].CurrentLowestOfferPrice;
                     //string midPoint = Utilities.FormatValue(Math.Round(((bid + offer) / 2), 0), 5);
-                    string midPoint = Utilities.FormatValue(((bid + offer) / 2), 5);
+                    string midPoint = Utilities.FormatValue(((bid + offer) / 2));
 
                     //string tempName = ((cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentLowestOfferPrice - cPairs["XBT-" + Properties.Settings.Default.SlackNameCurrency].CurrentHighestBidPrice) / 2).ToString();
 
@@ -2101,7 +2112,8 @@ namespace IRTicker {
 
                 if ((bStick == null) || (bStickETH == null)) {
                     var bSticks = BlinkStick.FindAll();
-                    if (bSticks.Length > 1) {
+                    if (bSticks.Length == 2) {
+
                         if (bSticks[0].Meta.Serial == "BS028603-3.0") {
                             bStick = bSticks[0];
                             bStickETH = bSticks[1];
@@ -2111,6 +2123,7 @@ namespace IRTicker {
                             bStickETH = bSticks[0];
                         }
                     }
+                    else if (bSticks.Length == 1) bStick = bSticks[0];  // if we only have 1 blink stick, then make it BTC
                 }
                 if (bStick != null && bStick.OpenDevice()) {
                     // update blink stick

@@ -24,14 +24,16 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Loading...");
             System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Loading...");
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
             this.IRAccountSettings_groupBox = new System.Windows.Forms.GroupBox();
+            this.TGBot_Enable_checkBox = new System.Windows.Forms.CheckBox();
+            this.TGBot_Enable_label = new System.Windows.Forms.Label();
             this.TelegramNewMessages_checkBox = new System.Windows.Forms.CheckBox();
             this.TelegramNewMessages_label = new System.Windows.Forms.Label();
             this.TGBot_APIToken_label = new System.Windows.Forms.Label();
@@ -455,8 +457,6 @@
             this.IRTickerTT_avgPrice = new System.Windows.Forms.ToolTip(this.components);
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
             this.IRT_notification = new System.Windows.Forms.NotifyIcon(this.components);
-            this.TGBot_Enable_checkBox = new System.Windows.Forms.CheckBox();
-            this.TGBot_Enable_label = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.IRAccountSettings_groupBox.SuspendLayout();
             this.SlackSettings_groupBox.SuspendLayout();
@@ -566,6 +566,28 @@
             this.IRAccountSettings_groupBox.TabIndex = 37;
             this.IRAccountSettings_groupBox.TabStop = false;
             this.IRAccountSettings_groupBox.Text = "IR account";
+            // 
+            // TGBot_Enable_checkBox
+            // 
+            this.TGBot_Enable_checkBox.AccessibleName = "";
+            this.TGBot_Enable_checkBox.AutoSize = true;
+            this.TGBot_Enable_checkBox.Location = new System.Drawing.Point(429, 82);
+            this.TGBot_Enable_checkBox.Name = "TGBot_Enable_checkBox";
+            this.TGBot_Enable_checkBox.Size = new System.Drawing.Size(15, 14);
+            this.TGBot_Enable_checkBox.TabIndex = 47;
+            this.TGBot_Enable_checkBox.UseVisualStyleBackColor = true;
+            // 
+            // TGBot_Enable_label
+            // 
+            this.TGBot_Enable_label.AccessibleName = "";
+            this.TGBot_Enable_label.AutoSize = true;
+            this.TGBot_Enable_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TGBot_Enable_label.Location = new System.Drawing.Point(24, 80);
+            this.TGBot_Enable_label.Name = "TGBot_Enable_label";
+            this.TGBot_Enable_label.Size = new System.Drawing.Size(178, 16);
+            this.TGBot_Enable_label.TabIndex = 46;
+            this.TGBot_Enable_label.Text = "Enable Telegram integration";
+            this.IRTickerTT_generic.SetToolTip(this.TGBot_Enable_label, resources.GetString("TGBot_Enable_label.ToolTip"));
             // 
             // TelegramNewMessages_checkBox
             // 
@@ -1052,7 +1074,7 @@
             // 
             this.GIFLabel.BackColor = System.Drawing.Color.Black;
             this.GIFLabel.ForeColor = System.Drawing.Color.Red;
-            this.GIFLabel.Image = global::IRTicker.Properties.Resources.pink_clouds;
+            this.GIFLabel.Image = ((System.Drawing.Image)(resources.GetObject("GIFLabel.Image")));
             this.GIFLabel.Location = new System.Drawing.Point(0, 0);
             this.GIFLabel.Name = "GIFLabel";
             this.GIFLabel.Size = new System.Drawing.Size(585, 843);
@@ -1090,7 +1112,7 @@
             // 
             // BTCM_GroupBox
             // 
-            this.BTCM_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.btcm3;
+            this.BTCM_GroupBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("BTCM_GroupBox.BackgroundImage")));
             this.BTCM_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.BTCM_GroupBox.Controls.Add(this.BTCM_panel);
             this.BTCM_GroupBox.Controls.Add(this.BTCM_CurrencyBox);
@@ -1824,7 +1846,7 @@
             // 
             // BFX_GroupBox
             // 
-            this.BFX_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.bfx_faded;
+            this.BFX_GroupBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("BFX_GroupBox.BackgroundImage")));
             this.BFX_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.BFX_GroupBox.Controls.Add(this.BFX_panel);
             this.BFX_GroupBox.Controls.Add(this.BFX_CurrencyBox);
@@ -2687,7 +2709,7 @@
             // 
             // IR_GroupBox
             // 
-            this.IR_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.IR_Eagel_Transparent___small_faded2;
+            this.IR_GroupBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("IR_GroupBox.BackgroundImage")));
             this.IR_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.IR_GroupBox.Controls.Add(this.IR_PMGT_Label2);
             this.IR_GroupBox.Controls.Add(this.IR_PMGT_Label1);
@@ -3702,7 +3724,7 @@
             // 
             // GDAX_GroupBox
             // 
-            this.GDAX_GroupBox.BackgroundImage = global::IRTicker.Properties.Resources.coinbasepro_logo3;
+            this.GDAX_GroupBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("GDAX_GroupBox.BackgroundImage")));
             this.GDAX_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.GDAX_GroupBox.Controls.Add(this.GDAX_panel);
             this.GDAX_GroupBox.Controls.Add(this.GDAX_CurrencyBox);
@@ -5705,37 +5727,15 @@
             this.IRT_notification.Icon = ((System.Drawing.Icon)(resources.GetObject("IRT_notification.Icon")));
             this.IRT_notification.Text = "IR Ticker";
             // 
-            // TGBot_Enable_checkBox
-            // 
-            this.TGBot_Enable_checkBox.AccessibleName = "";
-            this.TGBot_Enable_checkBox.AutoSize = true;
-            this.TGBot_Enable_checkBox.Location = new System.Drawing.Point(429, 82);
-            this.TGBot_Enable_checkBox.Name = "TGBot_Enable_checkBox";
-            this.TGBot_Enable_checkBox.Size = new System.Drawing.Size(15, 14);
-            this.TGBot_Enable_checkBox.TabIndex = 47;
-            this.TGBot_Enable_checkBox.UseVisualStyleBackColor = true;
-            // 
-            // TGBot_Enable_label
-            // 
-            this.TGBot_Enable_label.AccessibleName = "";
-            this.TGBot_Enable_label.AutoSize = true;
-            this.TGBot_Enable_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TGBot_Enable_label.Location = new System.Drawing.Point(24, 80);
-            this.TGBot_Enable_label.Name = "TGBot_Enable_label";
-            this.TGBot_Enable_label.Size = new System.Drawing.Size(178, 16);
-            this.TGBot_Enable_label.TabIndex = 46;
-            this.TGBot_Enable_label.Text = "Enable Telegram integration";
-            this.IRTickerTT_generic.SetToolTip(this.TGBot_Enable_label, resources.GetString("TGBot_Enable_label.ToolTip"));
-            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(584, 841);
-            this.Controls.Add(this.Settings);
             this.Controls.Add(this.Main);
-            this.Controls.Add(this.IRAccount_panel);
             this.Controls.Add(this.LoadingPanel);
+            this.Controls.Add(this.Settings);
+            this.Controls.Add(this.IRAccount_panel);
             this.Controls.Add(this.OTCHelper);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HelpButton = true;
