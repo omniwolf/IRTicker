@@ -82,10 +82,13 @@ namespace IRTicker {
                         irAccounts = pIR.GetAccounts();
                     }
                     catch (Exception ex) {
-                        Debug.Print(DateTime.Now + " - couldn't pull getAccounts pIR because: " + ex.Message);
+                        string errorMsg = "";
+                        if (ex.InnerException != null) errorMsg = ex.InnerException.Message;
+                        else errorMsg = ex.Message;
+                        Debug.Print(DateTime.Now + " - couldn't pull getAccounts pIR because: " + errorMsg);
                         irAccounts = null;
                         MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                            ex.Message, "Error - GetAccounts", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            errorMsg, "Error - GetAccounts", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     //Debug.Print("PIR: gotACcounts");
                     if ((irAccounts == null) && IRAccountsButtonJustClicked) {
@@ -107,7 +110,10 @@ namespace IRTicker {
                         addressData = pIR.GetDepositAddress(AccountSelectedCrypto);
                     }
                     catch (Exception ex) {
-                        Debug.Print(DateTime.Now + " - failed to call GetDepositAddress properly: " + ex.Message);
+                        string errorMsg = "";
+                        if (ex.InnerException != null) errorMsg = ex.InnerException.Message;
+                        else errorMsg = ex.Message;
+                        Debug.Print(DateTime.Now + " - failed to call GetDepositAddress properly: " + errorMsg);
                         continue;
                     }
                     drawDepositAddress(addressData);
@@ -119,8 +125,11 @@ namespace IRTicker {
                         addressData = pIR.CheckAddressNow(AccountSelectedCrypto, address);
                     }
                     catch (Exception ex) {
+                        string errorMsg = "";
+                        if (ex.InnerException != null) errorMsg = ex.InnerException.Message;
+                        else errorMsg = ex.Message;
                         MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                            ex.Message, "Error - CheckAddress", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            errorMsg, "Error - CheckAddress", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                     if (addressData != null) drawDepositAddress(addressData);
@@ -141,7 +150,10 @@ namespace IRTicker {
                         closedOrders = pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
                     }
                     catch (Exception ex) {
-                        Debug.Print("Bulk method: couldn't pull closed orders: " + ex.Message);
+                        string errorMsg = "";
+                        if (ex.InnerException != null) errorMsg = ex.InnerException.Message;
+                        else errorMsg = ex.Message;
+                        Debug.Print("Bulk method: couldn't pull closed orders: " + errorMsg);
                         continue;
                     }
                     if (closedOrders != null) {
@@ -157,8 +169,11 @@ namespace IRTicker {
                         orderResult = pIR.PlaceMarketOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, null, -1);
                     }
                     catch (Exception ex) {
+                        string errorMsg = "";
+                        if (ex.InnerException != null) errorMsg = ex.InnerException.Message;
+                        else errorMsg = ex.Message;
                         MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                            ex.Message, "Error - Market order", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            errorMsg, "Error - Market order", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                     if ((orderResult != null) && (orderResult.Status == OrderStatus.Failed)) {
@@ -173,8 +188,11 @@ namespace IRTicker {
                         orderResult = pIR.PlaceLimitOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, null, -1, -1);
                     }
                     catch (Exception ex) {
+                        string errorMsg = "";
+                        if (ex.InnerException != null) errorMsg = ex.InnerException.Message;
+                        else errorMsg = ex.Message;
                         MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                            ex.Message, "Error - Limit order", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            errorMsg, "Error - Limit order", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                     if ((orderResult != null) && (orderResult.Status == OrderStatus.Failed)) {
@@ -187,8 +205,11 @@ namespace IRTicker {
                         cancelledOrder = pIR.CancelOrder(orderGuid);
                     }
                     catch (Exception ex) {
+                        string errorMsg = "";
+                        if (ex.InnerException != null) errorMsg = ex.InnerException.Message;
+                        else errorMsg = ex.Message;
                         MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                            ex.Message, "Error - Cancel order", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            errorMsg, "Error - Cancel order", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                     Debug.Print("cancelled order status: " + cancelledOrder.Status.ToString());

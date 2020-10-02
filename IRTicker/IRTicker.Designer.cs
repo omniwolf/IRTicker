@@ -710,7 +710,7 @@
             // SessionStartedRel_label
             // 
             this.SessionStartedRel_label.AutoSize = true;
-            this.SessionStartedRel_label.Location = new System.Drawing.Point(271, 838);
+            this.SessionStartedRel_label.Location = new System.Drawing.Point(271, 818);
             this.SessionStartedRel_label.Name = "SessionStartedRel_label";
             this.SessionStartedRel_label.Size = new System.Drawing.Size(0, 13);
             this.SessionStartedRel_label.TabIndex = 40;
@@ -899,9 +899,9 @@
             this.slackNameChangeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.slackNameChangeLabel.Location = new System.Drawing.Point(16, 128);
             this.slackNameChangeLabel.Name = "slackNameChangeLabel";
-            this.slackNameChangeLabel.Size = new System.Drawing.Size(305, 13);
+            this.slackNameChangeLabel.Size = new System.Drawing.Size(347, 13);
             this.slackNameChangeLabel.TabIndex = 26;
-            this.slackNameChangeLabel.Text = "Change Slack username to have BTC price midpoint appended";
+            this.slackNameChangeLabel.Text = "Change Slack username to have below crypto  price midpoint appended";
             // 
             // slackDefaultNameTextBox
             // 
