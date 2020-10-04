@@ -1648,7 +1648,12 @@ namespace IRTicker {
                         }
                     }
 
-                    UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(pairObj.Value.spread) + ((pairObj.Value.DayVolumeXbt == 0) ? " / 0" : " / " + Utilities.FormatValue(pairObj.Value.DayVolumeXbt));
+                    string vol = "";
+                    if (pairObj.Value.DayVolumeXbt == 0) vol = "0";
+                    else if (pairObj.Value.DayVolumeXbt < 0) vol = "?";
+                    else vol = Utilities.FormatValue(pairObj.Value.DayVolumeXbt);
+
+                        UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(pairObj.Value.spread) + " / " + vol;
 
                     // update tool tips.
                     IRTickerTT_spread.SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], "Best bid: " + Utilities.FormatValue(pairObj.Value.CurrentHighestBidPrice) + System.Environment.NewLine + "Best offer: " + Utilities.FormatValue(pairObj.Value.CurrentLowestOfferPrice));
@@ -1723,7 +1728,12 @@ namespace IRTicker {
                     }
                 }
 
-                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(mSummary.spread) + ((mSummary.DayVolumeXbt == 0) ? " / 0" : " / " + Utilities.FormatValue(mSummary.DayVolumeXbt));
+                string vol = "";
+                if (mSummary.DayVolumeXbt == 0) vol = "0";
+                else if (mSummary.DayVolumeXbt < 0) vol = "?";
+                else vol = Utilities.FormatValue(mSummary.DayVolumeXbt);
+
+                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(mSummary.spread) + " / " + vol;
                 //Debug.Print("ABOUT TO CHECK ORDER BOOK STUFF:");
                 //Debug.Print("---num coins = " + UIControls_Dict[dExchange].AvgPrice_NumCoins.Text + " avgprice_crypto = " + (UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedItem == null ? "null" : UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedItem.ToString()));
 
@@ -2120,6 +2130,7 @@ namespace IRTicker {
                 return;
             }
 
+            // Time to blink some sticks
             Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
             Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
             decimal IRvol = -1, BTCMvol = -1, IRETHvol = -1, BTCMETHvol = -1;
@@ -2207,6 +2218,9 @@ namespace IRTicker {
                 else APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);
             }
 
+            // If the account panel is open, let's update some sub panels (open orders, closed orders, etc)
+            if (IRAccount_panel.Visible) Task.Run(() => UpdateIRAccountPanel());  // don't wait up
+
             // we have updated all the prices, if the average price controls are disabled, we can enable them now
             IR_CryptoComboBox.Enabled = IR_BuySellComboBox.Enabled = IR_NumCoinsTextBox.Enabled = true;
             BTCM_CryptoComboBox.Enabled = BTCM_BuySellComboBox.Enabled = BTCM_NumCoinsTextBox.Enabled = true;
@@ -2226,6 +2240,22 @@ namespace IRTicker {
             }
 
             foreach (KeyValuePair<string, SpreadGraph> sGraph in SpreadGraph_Dict) sGraph.Value.Redraw();  // update the graph
+        }
+
+        private void UpdateIRAccountPanel() {
+            try {
+                var openOs = pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
+                drawOpenOrders(openOs.Data);
+                var closedOs = pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
+                drawClosedOrders(closedOs.Data);
+                var accs = pIR.GetAccounts();
+                DrawIRAccounts(accs);
+            }
+            catch (Exception ex) {
+                string errorMsg = ex.Message;
+                if (ex.InnerException != null) errorMsg = ex.InnerException.Message;
+                Debug.Print(DateTime.Now + " - Trying to do a sneaky account update, but we had a failure: " + errorMsg);
+            }
         }
 
         private void PollingThread_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
@@ -2250,17 +2280,17 @@ namespace IRTicker {
                     return;
                 }
             }
-           
-           // turn off the blink stick.
-           if (bStick != null) {
+
+            // turn off the blink stick.
+            if (bStick != null) {
                 if (bStick.OpenDevice()) {
-                    BlinkStickBW.CancelAsync();
+                    cTokenPulseBTC.Cancel();
                     bStick.TurnOff();
                 }
-           }
+            }
             if (bStickETH != null) {
                 if (bStickETH.OpenDevice()) {
-                    BlinkStickBW.CancelAsync();
+                    cTokenPulseETH.Cancel();
                     bStickETH.TurnOff();
                 }
             }
@@ -2365,14 +2395,17 @@ namespace IRTicker {
                     Properties.Settings.Default.TelegramAPIToken = TelegramBotAPIToken_textBox.Text;
 
                     Properties.Settings.Default.Save();
-                    try {
+                    /*try {  // don't need this anymore, we do it in InitialiseAccountsPanel() sub below
                         if (pIR != null) System.Threading.Tasks.Task.Run(() => pIR.GetAccounts());
                     }
                     catch (Exception ex) {
                         Debug.Print("Tried to getAccounts on closing the settings screen, but it failed.  oh well: " + ex.Message);
-                    }
+                    }*/
                     LastPanel.Visible = true;
                     Settings.Visible = false;
+                    if (IRAccount_panel.Visible) {
+                        InitialiseAccountsPanel();
+                    }
                 }
                 else {
                     MessageBox.Show("Sorry, minimum is " + minRefreshFrequency.ToString() + " seconds, or you'll piss off APIs and get blocked", "Too low!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2419,25 +2452,17 @@ namespace IRTicker {
         }
 
         private void GroupBox_Click(string dExchange) {
+            UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: updating...)";
             string oldFiat = DCEs[dExchange].CurrentSecondaryCurrency;
             DCEs[dExchange].NextSecondaryCurrency();
             wSocketConnect.WebSocket_Resubscribe(dExchange, "none", oldFiat, DCEs[dExchange].CurrentSecondaryCurrency);
 
-            ParseExchangeThreadStarter(dExchange);  // here we start a quick thread pull volume data for IR
             UIControls_Dict[dExchange].dExchange_GB.ForeColor = Color.Gray;
-            UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")";
 
             if (UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Count > 0) UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex = 0;  // reset the selection to blank
 
             Utilities.ColourDCETags(Controls, dExchange);
             DCEs[dExchange].ChangedSecondaryCurrency = true;
-        }
-
-        // this starts the thread.  I return the thread, but in reality I don't do anything with it, so it's just discarded.  Maybe I should make sure the thread isn't hanging...
-        public Thread ParseExchangeThreadStarter(string dExchange) {
-            var t = new Thread(() => ParseExchangeThreadWorker(dExchange));
-            t.Start();
-            return t;
         }
 
         private void ParseExchangeThreadWorker(string dExchange) {
@@ -2452,10 +2477,12 @@ namespace IRTicker {
 
 
 
-        private void IR_GroupBox_Click(object sender, EventArgs e) {
-            if (DCEs["IR"].HasStaticData) {
+        private async void IR_GroupBox_Click(object sender, EventArgs e) {
+            if (DCEs["IR"].HasStaticData && !pIR.marketBaiterActive) {  // can't let the secondary currency change if market baiter is running, too dangerous
                 GroupBox_Click("IR");
                 GroupBoxAndLabelColourActive("IR");
+
+                await Task.Run(() => ParseExchangeThreadWorker("IR"));  // here we start a quick thread pull volume data for IR
                 // need to force a label update, otherwise they'll stay grey <no currency> until the next update comes through
                 foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in DCEs["IR"].GetCryptoPairs()) {
                     if (pairObj.Value.SecondaryCurrencyCode == DCEs["IR"].CurrentSecondaryCurrency) {
@@ -2464,6 +2491,7 @@ namespace IRTicker {
                 }
 
                 PopulateCryptoComboBox("IR");
+                UIControls_Dict["IR"].dExchange_GB.Text = DCEs["IR"].FriendlyName + " (fiat pair: " + DCEs["IR"].CurrentSecondaryCurrency + ")";
             }
         }
 
@@ -2486,6 +2514,7 @@ namespace IRTicker {
                     }
                 }
                 PopulateCryptoComboBox("GDAX");
+                UIControls_Dict["GDAX"].dExchange_GB.Text = DCEs["GDAX"].FriendlyName + " (fiat pair: " + DCEs["GDAX"].CurrentSecondaryCurrency + ")";
             }
         }
 
@@ -2508,6 +2537,7 @@ namespace IRTicker {
                     }
                 }
                 PopulateCryptoComboBox("BFX");
+                UIControls_Dict["BFX"].dExchange_GB.Text = DCEs["BFX"].FriendlyName + " (fiat pair: " + DCEs["BFX"].CurrentSecondaryCurrency + ")";
             }
         }
 

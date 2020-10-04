@@ -213,43 +213,6 @@ namespace IRTicker {
             public Guid guid { get; set; }
         }
 
-        public void Enqueue(IRClientData IRdata) {
-            IRQueue.Enqueue(IRdata);
-            if (!isDequeuing) {
-                isDequeuing = true;
-                Dequeue();
-            }
-        }
-
-        public void Enqueue(List<IRClientData> IRdataList) {
-            foreach (IRClientData dat in IRdataList) {
-                IRQueue.Enqueue(dat);
-            }
-            if (!isDequeuing) {
-                isDequeuing = true;
-                Dequeue();
-            }
-        }
-
-        private async void Dequeue() {
-            while (IRQueue.Count > 0) {
-                if (IRQueue.TryDequeue(out IRClientData data)) {
-                    switch (data.EndPoint) {
-                        case PrivateIREndPoints.CancelOrder:
-                            BankOrder bo = CancelOrder(data.guid.ToString());
-                            break;
-                        case PrivateIREndPoints.CheckAddress:
-                            CheckAddressNow(data.Crypto.ToString(), data.CryptoAddress);
-                            break;
-                        case PrivateIREndPoints.GetAccounts:
-                            // this one has a result.  should capture it and then call the draw func
-                            break;
-                    }
-                }
-            }
-            isDequeuing = false;
-        }
-
         public void compileAccountOrderBookAsync(string pair) {
 
             if (pair != (Crypto + "-" + DCE_IR.CurrentSecondaryCurrency)) return;

@@ -23,6 +23,7 @@ namespace IRTicker {
         private void InitialiseAccountsPanel() {
             AccountOrderVolume_textbox.Enabled = true;
             AccountLimitPrice_textbox.Enabled = true;
+            Settings.Visible = false;
             IRAccount_panel.Visible = true;
             Main.Visible = false;
             IRAccountsButtonJustClicked = true;
