@@ -2284,13 +2284,13 @@ namespace IRTicker {
             // turn off the blink stick.
             if (bStick != null) {
                 if (bStick.OpenDevice()) {
-                    cTokenPulseBTC.Cancel();
+                    if (cTokenPulseBTC != null) cTokenPulseBTC.Cancel();
                     bStick.TurnOff();
                 }
             }
             if (bStickETH != null) {
                 if (bStickETH.OpenDevice()) {
-                    cTokenPulseETH.Cancel();
+                    if (cTokenPulseETH != null) cTokenPulseETH.Cancel();
                     bStickETH.TurnOff();
                 }
             }
