@@ -1196,7 +1196,10 @@ namespace IRTicker
                         Debug.Print("Tried to grab the accounts after checking if we have any new closed orders but it failed: " + ex.Message);
                     }
                 }
-                else closedOrdersFirstRun[pair] = false;
+                else {
+                    closedOrdersFirstRun[pair] = false;
+                    Debug.Print(DateTime.Now + " - TGBot - in closedOrders sub, this is the first run for " + pair);
+                }
             }
 
 
