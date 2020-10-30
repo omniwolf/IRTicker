@@ -598,7 +598,10 @@ namespace IRTicker
                     // also store this in the state object in case we want to cancel
                     TGstate.ChosenPair = new Tuple<string, string>(pIR.placedOrder.PrimaryCurrencyCode.ToString().ToUpper(), pIR.placedOrder.SecondaryCurrencyCode.ToString().ToUpper());
 
-                    masterStr += "  Volume: " + (TGstate.ChosenPair.Item1 == "XBT" ? "BTC" : TGstate.ChosenPair.Item1) + " " + Utilities.FormatValue(volume, 8, false) + Environment.NewLine;
+                    masterStr += "  Original volume: " + (TGstate.ChosenPair.Item1 == "XBT" ? "BTC" : TGstate.ChosenPair.Item1) + " " + Utilities.FormatValue(volume, 8, false) + Environment.NewLine;
+                    if (volume != pIR.baiterLiveVol) {
+                        masterStr += "  Remaining volume: " + (TGstate.ChosenPair.Item1 == "XBT" ? "BTC" : TGstate.ChosenPair.Item1) + " " + Utilities.FormatValue(pIR.baiterLiveVol, 8, false) + Environment.NewLine;
+                    }
                     masterStr += "  Price: $ " + Utilities.FormatValue(price, 5, false) + Environment.NewLine;
 
                     // now we find the closest order.. what a mish

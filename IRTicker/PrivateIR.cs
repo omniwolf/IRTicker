@@ -37,6 +37,7 @@ namespace IRTicker {
         public ConcurrentBag<Guid> openOrders = new ConcurrentBag<Guid>();
 
         public BankOrder placedOrder = null;
+        public decimal baiterLiveVol = 0;  // this holds the current value of the baiter order, ie if there has been nibbles this will be the orginal volume minus nibbles
 
         public bool marketBaiterActive = false;
 
@@ -301,6 +302,7 @@ namespace IRTicker {
             IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> baiterBook;
             Task rateLimitPlaceOrder = Task.Delay(1);
             string pair = crypto + "-" + fiat;
+            baiterLiveVol = volume;
             
             decimal distanceFromTopOrder = (decimal)(Math.Pow(0.1, DCE_IR.currencyFiatDivision[crypto]) * 5);  // how far infront of the best order should we be?  will be different for different cryptos
             if (BaiterBookSide == "Offer") distanceFromTopOrder = distanceFromTopOrder * -1;
@@ -376,7 +378,7 @@ namespace IRTicker {
                     try {
                         if (!rateLimitPlaceOrder.IsCompleted) await rateLimitPlaceOrder;  // if we haven't waited a full second yet, wait.
                         placedOrder = PlaceLimitOrder(crypto, DCE_IR.CurrentSecondaryCurrency,
-                            (BaiterBookSide == "Bid" ? OrderType.LimitBid : OrderType.LimitOffer), orderPrice, volume);
+                            (BaiterBookSide == "Bid" ? OrderType.LimitBid : OrderType.LimitOffer), orderPrice, baiterLiveVol);
                         /*if (placedOrder == null) {  // i don't think we should have this.  IF the result is somehow null and doesn't throw to the catch block, then just loop and try again.
                             var res = MessageBox.Show("Failed to place the order.  Do you want to cancel market baiter?", "Market Baiter", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                             if (res == DialogResult.Yes) marketBaiterActive = false;
@@ -467,7 +469,7 @@ namespace IRTicker {
                                         Debug.Print("MBAIT: cancel order was successful");
                                         //if (bo.VolumeFilled != 0) IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble..."));
 
-                                        volume = bo.VolumeOrdered - bo.VolumeFilled;
+                                        baiterLiveVol = bo.VolumeOrdered - bo.VolumeFilled;
                                         // bulkupdate thingo should only be called from the UI as it can result in messageboxes.  also I think we don't need to call updateOrderBook, there should have already been a new event comet through the websockets that would update it?
                                         //IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
                                         try {
@@ -486,9 +488,9 @@ namespace IRTicker {
                                 //else Debug.Print("MBAIT: our order is at the limit, just gonna leave it.  price: " + placedOrder.Price);
                             }
                             else {
-                                if (pricePoint.Value[placedOrder.OrderGuid.ToString()].Volume != volume) {
-                                    volume = pricePoint.Value[placedOrder.OrderGuid.ToString()].Volume;
-                                    IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble...."));
+                                if (pricePoint.Value[placedOrder.OrderGuid.ToString()].Volume != baiterLiveVol) {
+                                    baiterLiveVol = pricePoint.Value[placedOrder.OrderGuid.ToString()].Volume;
+                                    IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble.... (" + (placedOrder.PrimaryCurrencyCode.ToString().ToUpper() == "XBT" ? "BTC" : placedOrder.PrimaryCurrencyCode.ToString().ToUpper()) + " " + baiterLiveVol + " remaining)"));
                                 }
                             }
                             break;  // order book foreach
