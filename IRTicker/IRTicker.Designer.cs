@@ -25,8 +25,8 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Loading...");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Loading...");
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
@@ -391,6 +391,15 @@
             this.AccountWithdrawalCrypto_label = new System.Windows.Forms.Label();
             this.IRAccountClose_button = new System.Windows.Forms.Button();
             this.GetAccounts_panel = new System.Windows.Forms.Panel();
+            this.AccountKNC_total = new System.Windows.Forms.Label();
+            this.AccountKNC_value = new System.Windows.Forms.Label();
+            this.AccountKNC_label = new System.Windows.Forms.Label();
+            this.AccountAAVE_total = new System.Windows.Forms.Label();
+            this.AccountAAVE_value = new System.Windows.Forms.Label();
+            this.AccountAAVE_label = new System.Windows.Forms.Label();
+            this.AccountYFI_total = new System.Windows.Forms.Label();
+            this.AccountYFI_value = new System.Windows.Forms.Label();
+            this.AccountYFI_label = new System.Windows.Forms.Label();
             this.AccountPMGT_total = new System.Windows.Forms.Label();
             this.AccountPMGT_value = new System.Windows.Forms.Label();
             this.AccountPMGT_label = new System.Windows.Forms.Label();
@@ -466,15 +475,6 @@
             this.IRTickerTT_avgPrice = new System.Windows.Forms.ToolTip(this.components);
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
             this.IRT_notification = new System.Windows.Forms.NotifyIcon(this.components);
-            this.AccountKNC_total = new System.Windows.Forms.Label();
-            this.AccountKNC_value = new System.Windows.Forms.Label();
-            this.AccountKNC_label = new System.Windows.Forms.Label();
-            this.AccountAAVE_total = new System.Windows.Forms.Label();
-            this.AccountAAVE_value = new System.Windows.Forms.Label();
-            this.AccountAAVE_label = new System.Windows.Forms.Label();
-            this.AccountYFI_total = new System.Windows.Forms.Label();
-            this.AccountYFI_value = new System.Windows.Forms.Label();
-            this.AccountYFI_label = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.IRAccountSettings_groupBox.SuspendLayout();
             this.SlackSettings_groupBox.SuspendLayout();
@@ -4742,7 +4742,7 @@
             this.AccountOpenOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountOpenOrders_listview.HideSelection = false;
             this.AccountOpenOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
+            listViewItem3});
             this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountOpenOrders_listview.MultiSelect = false;
             this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";
@@ -4808,7 +4808,7 @@
             this.AccountClosedOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountClosedOrders_listview.HideSelection = false;
             this.AccountClosedOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem2});
+            listViewItem4});
             this.AccountClosedOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountClosedOrders_listview.MultiSelect = false;
             this.AccountClosedOrders_listview.Name = "AccountClosedOrders_listview";
@@ -5131,6 +5131,99 @@
             this.GetAccounts_panel.Name = "GetAccounts_panel";
             this.GetAccounts_panel.Size = new System.Drawing.Size(276, 843);
             this.GetAccounts_panel.TabIndex = 0;
+            // 
+            // AccountKNC_total
+            // 
+            this.AccountKNC_total.AutoSize = true;
+            this.AccountKNC_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountKNC_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountKNC_total.Location = new System.Drawing.Point(83, 647);
+            this.AccountKNC_total.Name = "AccountKNC_total";
+            this.AccountKNC_total.Size = new System.Drawing.Size(0, 20);
+            this.AccountKNC_total.TabIndex = 87;
+            // 
+            // AccountKNC_value
+            // 
+            this.AccountKNC_value.AutoSize = true;
+            this.AccountKNC_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountKNC_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountKNC_value.Location = new System.Drawing.Point(183, 647);
+            this.AccountKNC_value.Name = "AccountKNC_value";
+            this.AccountKNC_value.Size = new System.Drawing.Size(0, 20);
+            this.AccountKNC_value.TabIndex = 86;
+            // 
+            // AccountKNC_label
+            // 
+            this.AccountKNC_label.AutoSize = true;
+            this.AccountKNC_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountKNC_label.Location = new System.Drawing.Point(12, 647);
+            this.AccountKNC_label.Name = "AccountKNC_label";
+            this.AccountKNC_label.Size = new System.Drawing.Size(49, 20);
+            this.AccountKNC_label.TabIndex = 85;
+            this.AccountKNC_label.Text = "KNC:";
+            this.AccountKNC_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountAAVE_total
+            // 
+            this.AccountAAVE_total.AutoSize = true;
+            this.AccountAAVE_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountAAVE_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountAAVE_total.Location = new System.Drawing.Point(83, 622);
+            this.AccountAAVE_total.Name = "AccountAAVE_total";
+            this.AccountAAVE_total.Size = new System.Drawing.Size(0, 20);
+            this.AccountAAVE_total.TabIndex = 84;
+            // 
+            // AccountAAVE_value
+            // 
+            this.AccountAAVE_value.AutoSize = true;
+            this.AccountAAVE_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountAAVE_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountAAVE_value.Location = new System.Drawing.Point(183, 622);
+            this.AccountAAVE_value.Name = "AccountAAVE_value";
+            this.AccountAAVE_value.Size = new System.Drawing.Size(0, 20);
+            this.AccountAAVE_value.TabIndex = 83;
+            // 
+            // AccountAAVE_label
+            // 
+            this.AccountAAVE_label.AutoSize = true;
+            this.AccountAAVE_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountAAVE_label.Location = new System.Drawing.Point(12, 622);
+            this.AccountAAVE_label.Name = "AccountAAVE_label";
+            this.AccountAAVE_label.Size = new System.Drawing.Size(62, 20);
+            this.AccountAAVE_label.TabIndex = 82;
+            this.AccountAAVE_label.Text = "AAVE:";
+            this.AccountAAVE_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountYFI_total
+            // 
+            this.AccountYFI_total.AutoSize = true;
+            this.AccountYFI_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountYFI_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountYFI_total.Location = new System.Drawing.Point(83, 597);
+            this.AccountYFI_total.Name = "AccountYFI_total";
+            this.AccountYFI_total.Size = new System.Drawing.Size(0, 20);
+            this.AccountYFI_total.TabIndex = 81;
+            // 
+            // AccountYFI_value
+            // 
+            this.AccountYFI_value.AutoSize = true;
+            this.AccountYFI_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountYFI_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountYFI_value.Location = new System.Drawing.Point(183, 597);
+            this.AccountYFI_value.Name = "AccountYFI_value";
+            this.AccountYFI_value.Size = new System.Drawing.Size(0, 20);
+            this.AccountYFI_value.TabIndex = 80;
+            // 
+            // AccountYFI_label
+            // 
+            this.AccountYFI_label.AutoSize = true;
+            this.AccountYFI_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountYFI_label.Location = new System.Drawing.Point(12, 597);
+            this.AccountYFI_label.Name = "AccountYFI_label";
+            this.AccountYFI_label.Size = new System.Drawing.Size(43, 20);
+            this.AccountYFI_label.TabIndex = 79;
+            this.AccountYFI_label.Text = "YFI:";
+            this.AccountYFI_label.Click += new System.EventHandler(this.Account_label_Click);
             // 
             // AccountPMGT_total
             // 
@@ -5882,96 +5975,6 @@
             // 
             this.IRT_notification.Icon = ((System.Drawing.Icon)(resources.GetObject("IRT_notification.Icon")));
             this.IRT_notification.Text = "IR Ticker";
-            // 
-            // AccountKNC_total
-            // 
-            this.AccountKNC_total.AutoSize = true;
-            this.AccountKNC_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountKNC_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountKNC_total.Location = new System.Drawing.Point(83, 647);
-            this.AccountKNC_total.Name = "AccountKNC_total";
-            this.AccountKNC_total.Size = new System.Drawing.Size(0, 20);
-            this.AccountKNC_total.TabIndex = 87;
-            // 
-            // AccountKNC_value
-            // 
-            this.AccountKNC_value.AutoSize = true;
-            this.AccountKNC_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountKNC_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountKNC_value.Location = new System.Drawing.Point(183, 647);
-            this.AccountKNC_value.Name = "AccountKNC_value";
-            this.AccountKNC_value.Size = new System.Drawing.Size(0, 20);
-            this.AccountKNC_value.TabIndex = 86;
-            // 
-            // AccountKNC_label
-            // 
-            this.AccountKNC_label.AutoSize = true;
-            this.AccountKNC_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountKNC_label.Location = new System.Drawing.Point(12, 647);
-            this.AccountKNC_label.Name = "AccountKNC_label";
-            this.AccountKNC_label.Size = new System.Drawing.Size(49, 20);
-            this.AccountKNC_label.TabIndex = 85;
-            this.AccountKNC_label.Text = "KNC:";
-            // 
-            // AccountAAVE_total
-            // 
-            this.AccountAAVE_total.AutoSize = true;
-            this.AccountAAVE_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountAAVE_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountAAVE_total.Location = new System.Drawing.Point(83, 622);
-            this.AccountAAVE_total.Name = "AccountAAVE_total";
-            this.AccountAAVE_total.Size = new System.Drawing.Size(0, 20);
-            this.AccountAAVE_total.TabIndex = 84;
-            // 
-            // AccountAAVE_value
-            // 
-            this.AccountAAVE_value.AutoSize = true;
-            this.AccountAAVE_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountAAVE_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountAAVE_value.Location = new System.Drawing.Point(183, 622);
-            this.AccountAAVE_value.Name = "AccountAAVE_value";
-            this.AccountAAVE_value.Size = new System.Drawing.Size(0, 20);
-            this.AccountAAVE_value.TabIndex = 83;
-            // 
-            // AccountAAVE_label
-            // 
-            this.AccountAAVE_label.AutoSize = true;
-            this.AccountAAVE_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountAAVE_label.Location = new System.Drawing.Point(12, 622);
-            this.AccountAAVE_label.Name = "AccountAAVE_label";
-            this.AccountAAVE_label.Size = new System.Drawing.Size(62, 20);
-            this.AccountAAVE_label.TabIndex = 82;
-            this.AccountAAVE_label.Text = "AAVE:";
-            // 
-            // AccountYFI_total
-            // 
-            this.AccountYFI_total.AutoSize = true;
-            this.AccountYFI_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountYFI_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountYFI_total.Location = new System.Drawing.Point(83, 597);
-            this.AccountYFI_total.Name = "AccountYFI_total";
-            this.AccountYFI_total.Size = new System.Drawing.Size(0, 20);
-            this.AccountYFI_total.TabIndex = 81;
-            // 
-            // AccountYFI_value
-            // 
-            this.AccountYFI_value.AutoSize = true;
-            this.AccountYFI_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountYFI_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountYFI_value.Location = new System.Drawing.Point(183, 597);
-            this.AccountYFI_value.Name = "AccountYFI_value";
-            this.AccountYFI_value.Size = new System.Drawing.Size(0, 20);
-            this.AccountYFI_value.TabIndex = 80;
-            // 
-            // AccountYFI_label
-            // 
-            this.AccountYFI_label.AutoSize = true;
-            this.AccountYFI_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountYFI_label.Location = new System.Drawing.Point(12, 597);
-            this.AccountYFI_label.Name = "AccountYFI_label";
-            this.AccountYFI_label.Size = new System.Drawing.Size(43, 20);
-            this.AccountYFI_label.TabIndex = 79;
-            this.AccountYFI_label.Text = "YFI:";
             // 
             // IRTicker
             // 

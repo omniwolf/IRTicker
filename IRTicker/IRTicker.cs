@@ -37,6 +37,7 @@ namespace IRTicker {
         private WebSocketsConnect wSocketConnect;
         private BlinkStick bStick;
         private BlinkStick bStickETH;
+        private long lastBlock = 0;  // this holds the last block the app knows about
         private Task taskPulseBTC;
         private Task taskPulseETH;
         private CancellationTokenSource cTokenPulseBTC;
@@ -1291,7 +1292,7 @@ namespace IRTicker {
 
 
                 ////// IR ///////
-                if(!DCEs["IR"].HasStaticData) {  // only pull the currencies once per session as these are essentially static
+                if (!DCEs["IR"].HasStaticData) {  // only pull the currencies once per session as these are essentially static
                     Tuple<bool, string> primaryCurrencyCodesTpl = Utilities.Get(DCEs["IR"].BaseURL + "/Public/GetValidPrimaryCurrencyCodes");
                     if (!primaryCurrencyCodesTpl.Item1) {
                         DCEs["IR"].CurrentDCEStatus = WebsiteError(primaryCurrencyCodesTpl.Item2);
@@ -1429,6 +1430,18 @@ namespace IRTicker {
                                 }
                             }
                         }
+                    }
+                }
+
+                // lets grab the latest BTC block
+                Tuple<bool, string> resultTup = Utilities.Get("https://blockchain.info/latestblock");
+                if (resultTup.Item1) {
+                    BlockHeight bHeight = JsonConvert.DeserializeObject<BlockHeight>(resultTup.Item2);
+
+                    if (lastBlock == 0) lastBlock = bHeight.Height;  // we haven' found a block before, just set it and move on
+                    else if(lastBlock != bHeight.Height) {
+                        bStick.Blink("purple");
+                        lastBlock = bHeight.BlockIndex;
                     }
                 }
 
@@ -3240,8 +3253,22 @@ namespace IRTicker {
             IRAccount_panel.Visible = false;
         }
 
-        private void Account_label_Click(object sender, EventArgs e) {
+        public partial class BlockHeight
+        {
+            [JsonProperty("hash")]
+            public string Hash { get; set; }
 
+            [JsonProperty("time")]
+            public long Time { get; set; }
+
+            [JsonProperty("block_index")]
+            public long BlockIndex { get; set; }
+
+            [JsonProperty("height")]
+            public long Height { get; set; }
+
+            [JsonProperty("txIndexes")]
+            public object[] TxIndexes { get; set; }
         }
     }
 }
