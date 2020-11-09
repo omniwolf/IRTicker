@@ -618,50 +618,6 @@ namespace IRTicker {
             fiat_panel.AutoScroll = true;
         }
 
-        private void setStickColour(decimal IRBTCvol, decimal BTCMBTCvol, decimal IRETHvol, decimal BTCMETHvol) {
-            //IRBTCvol = 98;
-            //BTCMBTCvol = 99;
-            if (bStick != null && bStick.OpenDevice()) {
-                //RgbColor col = new RgbColor();
-                //RgbColor.FromRgb(69, 114, 69);
-                if (BlinkStickBW.IsBusy) {
-                    BlinkStickBW.CancelAsync();
-                    //Debug.Print(DateTime.Now + " -- BS -- cancelling the BlinkStickBW thread...");
-                }
-
-                try {
-                    if (IRBTCvol > BTCMBTCvol * 2) {
-                        if (!BlinkStickBW.IsBusy) {
-                            BlinkStickBW.RunWorkerAsync(RgbColor.FromString("#0079FF"));
-                            //Debug.Print(DateTime.Now + " -- BS -- started the IR GOOOOOD thread");
-                        }
-                    }
-                    else if (IRBTCvol * 2 < BTCMBTCvol) {
-                        if (!BlinkStickBW.IsBusy) {
-                            BlinkStickBW.RunWorkerAsync(RgbColor.FromString("#00FF00"));
-                            //Debug.Print(DateTime.Now + " -- BS -- started the IR BAAAD thread");
-                        }
-                    }
-                    else if (IRBTCvol > BTCMBTCvol + 5) {
-                        //Debug.Print(DateTime.Now + " -- BS -- IR winning");
-                        bStick.Morph("#3176BC");
-                    }
-                    else if ((IRBTCvol <= BTCMBTCvol + 5) && (IRBTCvol >= BTCMBTCvol - 5)) {
-                        //Debug.Print(DateTime.Now + " -- BS -- trying to go white");
-                        bStick.Morph("#C19E6E");
-                        if (!BlinkStickWhite_Thread.IsBusy) BlinkStickWhite_Thread.RunWorkerAsync(RgbColor.FromString((BTCMBTCvol > IRBTCvol ? "#42953A" : "#B6CBE1")));
-                    }
-                    else if (IRBTCvol < BTCMBTCvol - 5) {
-                        //Debug.Print(DateTime.Now + " -- BS -- BTCM is winning");
-                        bStick.Morph("#00A607");
-                    }
-                }
-                catch (Exception ex) {
-                    Debug.Print(DateTime.Now + " -- BS -- caught an exception: " + ex.Message);
-                }
-            }
-        }
-
         private CancellationTokenSource setStickColourAsync(BlinkStick _bStick, CancellationTokenSource cTokenSrc, ref Task pulseTask, decimal IRvol, decimal BTCMvol) {
             //IRBTCvol = 98;
             //BTCMBTCvol = 99;
@@ -1440,8 +1396,9 @@ namespace IRTicker {
 
                     if (lastBlock == 0) lastBlock = bHeight.Height;  // we haven' found a block before, just set it and move on
                     else if(lastBlock != bHeight.Height) {
-                        bStick.Blink("purple");
+                        if (bStick != null && bStick.OpenDevice()) bStick.Blink("purple");
                         lastBlock = bHeight.BlockIndex;
+                        Debug.Print(DateTime.Now + " - we have a new BTC block: " + lastBlock);
                     }
                 }
 
@@ -2161,7 +2118,7 @@ namespace IRTicker {
                 return;
             }
 
-            // Time to blink some sticks
+            // Time to blink some sticks, should try this in the doWork thread...
             Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
             Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
             decimal IRvol = -1, BTCMvol = -1, IRETHvol = -1, BTCMETHvol = -1;
@@ -2996,66 +2953,8 @@ namespace IRTicker {
             DCEs["IR"].socketsReset = true;
         }
 
-        private void BlinkStickBW_DoWork(object sender, DoWorkEventArgs e) {
-            RgbColor col = (RgbColor)e.Argument;
 
-            int pulseLength = 700;
-            //int repeats = 15000 / pulseLength;
-
-            //bStick.Pulse(col, repeats, pulseLength, 50);
-
-            do {
-                if (BlinkStickBW.CancellationPending == true) {
-                    break;
-                }
-                if (bStick != null && bStick.OpenDevice()) {
-                    try {
-                        bStick.Pulse(col, 1, pulseLength, 50);
-                    }
-                    catch (Exception ex) {
-                        Debug.Print(DateTime.Now + " -- BS -- caught an exception in BW: " + ex.Message);
-                    }
-                }
-                if (BlinkStickBW.CancellationPending == true) {
-                    break;
-                }
-            } while (true);
-        }
-
-        private void BlinkStickBW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
-            // update blink stick
-            Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
-            Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
-
-            decimal IRvol = IRpairs["XBT-AUD"].DayVolumeXbt;
-            decimal BTCMvol = BTCMpairs["XBT-AUD"].DayVolumeXbt;
-            //Debug.Print("hoping for FALSE here - isBusy for blink is: " + BlinkStickBW.IsBusy);
-
-            setStickColour(IRvol, BTCMvol, 0, 0);
-        }
-
-        private void BlinkStickWhite_Thread_DoWork(object sender, DoWorkEventArgs e) {
-
-            RgbColor col = (RgbColor)e.Argument;
-
-            int pulseLength = 200;
-            //Debug.Print(DateTime.Now + " - BS - white thread should pulse a colour");
-
-            if (bStick != null && bStick.OpenDevice()) {
-                try {
-                    //bStick.Pulse(col, 1, pulseLength, 50);
-                    bStick.Morph(col, pulseLength);
-                    bStick.Morph("#C19E6E", pulseLength);
-                }
-                catch (Exception ex) {
-                    Debug.Print(DateTime.Now + " -- BS -- caught an exception in white thread: " + ex.Message);
-                }
-            }
-        }
-
-
-
-        // To support flashing.
+        // To support window form flashing.
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
