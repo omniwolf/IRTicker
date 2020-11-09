@@ -1400,6 +1400,10 @@ namespace IRTicker {
                         lastBlock = bHeight.BlockIndex;
                         Debug.Print(DateTime.Now + " - we have a new BTC block: " + lastBlock);
                     }
+                    Debug.Print("current block is: " + lastBlock);
+                }
+                else {
+                    Debug.Print("couldn't pull the block height data? error: " + resultTup.Item2);
                 }
 
 
@@ -2370,7 +2374,12 @@ namespace IRTicker {
                     }
                     else {  // we can't start tgbot, so kill it if it's running
                         if (TGBot != null) {
-                            TGBot.StopBot();
+                            try {
+                                TGBot.StopBot();
+                            }
+                            catch (Exception ex) {
+                                Debug.Print("Tried to stop TGBot but failed: " + ex.Message);
+                            }
                             TGBot = null;  // hopefully this will dispose of the bot and it will responding..
                         }
                         if (pIR != null) pIR.setTGBot(null);
