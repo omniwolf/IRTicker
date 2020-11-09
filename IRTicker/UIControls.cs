@@ -35,6 +35,9 @@ namespace IRTicker {
         public Label COMP_Label { get; set; }
         public Label SNX_Label { get; set; }
         public Label PMGT_Label { get; set; }
+        public Label YFI_Label { get; set; }
+        public Label AAVE_Label { get; set; }
+        public Label KNC_Label { get; set; }
 
         public Label XBT_Price { get; set; }
         public Label ETH_Price { get; set; }
@@ -57,6 +60,9 @@ namespace IRTicker {
         public Label COMP_Price { get; set; }
         public Label SNX_Price { get; set; }
         public Label PMGT_Price { get; set; }
+        public Label YFI_Price { get; set; }
+        public Label AAVE_Price { get; set; }
+        public Label KNC_Price { get; set; }
 
         public Label XBT_Spread { get; set; }
         public Label ETH_Spread { get; set; }
@@ -79,6 +85,9 @@ namespace IRTicker {
         public Label COMP_Spread { get; set; }
         public Label SNX_Spread { get; set; }
         public Label PMGT_Spread { get; set; }
+        public Label YFI_Spread { get; set; }
+        public Label AAVE_Spread { get; set; }
+        public Label KNC_Spread { get; set; }
 
         public ComboBox AvgPrice_BuySell { get; set; }
         public MaskedTextBox AvgPrice_NumCoins { get; set; }
@@ -115,6 +124,9 @@ namespace IRTicker {
         public Label Account_COMP_Label { get; set; }
         public Label Account_SNX_Label { get; set; }
         public Label Account_PMGT_Label { get; set; }
+        public Label Account_YFI_Label { get; set; }
+        public Label Account_AAVE_Label { get; set; }
+        public Label Account_KNC_Label { get; set; }
 
         public Label Account_XBT_Value { get; set; }
         public Label Account_ETH_Value { get; set; }
@@ -137,6 +149,9 @@ namespace IRTicker {
         public Label Account_COMP_Value { get; set; }
         public Label Account_SNX_Value { get; set; }
         public Label Account_PMGT_Value { get; set; }
+        public Label Account_YFI_Value { get; set; }
+        public Label Account_AAVE_Value { get; set; }
+        public Label Account_KNC_Value { get; set; }
 
         public Label Account_XBT_Total { get; set; }
         public Label Account_ETH_Total { get; set; }
@@ -162,6 +177,9 @@ namespace IRTicker {
         public Label Account_COMP_Total { get; set; }
         public Label Account_SNX_Total { get; set; }
         public Label Account_PMGT_Total { get; set; }
+        public Label Account_YFI_Total { get; set; }
+        public Label Account_AAVE_Total { get; set; }
+        public Label Account_KNC_Total { get; set; }
 
 
 
@@ -190,6 +208,9 @@ namespace IRTicker {
             if (COMP_Label != null) Label_Dict.Add("COMP_Label", COMP_Label);
             if (SNX_Label != null) Label_Dict.Add("SNX_Label", SNX_Label);
             if (PMGT_Label != null) Label_Dict.Add("PMGT_Label", PMGT_Label);
+            if (YFI_Label != null) Label_Dict.Add("YFI_Label", YFI_Label);
+            if (AAVE_Label != null) Label_Dict.Add("AAVE_Label", AAVE_Label);
+            if (KNC_Label != null) Label_Dict.Add("KNC_Label", KNC_Label);
 
             if (XBT_Price != null) Label_Dict.Add("XBT_Price", XBT_Price);
             if (ETH_Price != null) Label_Dict.Add("ETH_Price", ETH_Price);
@@ -212,6 +233,9 @@ namespace IRTicker {
             if (COMP_Price != null) Label_Dict.Add("COMP_Price", COMP_Price);
             if (SNX_Price != null) Label_Dict.Add("SNX_Price", SNX_Price);
             if (PMGT_Price != null) Label_Dict.Add("PMGT_Price", PMGT_Price);
+            if (YFI_Price != null) Label_Dict.Add("YFI_Price", YFI_Price);
+            if (AAVE_Price != null) Label_Dict.Add("AAVE_Price", AAVE_Price);
+            if (KNC_Price != null) Label_Dict.Add("KNC_Price", KNC_Price);
 
             if (XBT_Spread != null) Label_Dict.Add("XBT_Spread", XBT_Spread);
             if (ETH_Spread != null) Label_Dict.Add("ETH_Spread", ETH_Spread);
@@ -234,6 +258,9 @@ namespace IRTicker {
             if (COMP_Spread != null) Label_Dict.Add("COMP_Spread", COMP_Spread);
             if (SNX_Spread != null) Label_Dict.Add("SNX_Spread", SNX_Spread);
             if (PMGT_Spread != null) Label_Dict.Add("PMGT_Spread", PMGT_Spread);
+            if (YFI_Spread != null) Label_Dict.Add("YFI_Spread", YFI_Spread);
+            if (AAVE_Spread != null) Label_Dict.Add("AAVE_Spread", AAVE_Spread);
+            if (KNC_Spread != null) Label_Dict.Add("KNC_Spread", KNC_Spread);
 
 
 
@@ -261,6 +288,9 @@ namespace IRTicker {
             if (Account_COMP_Label != null) Label_Dict.Add("COMP_Account_Label", Account_COMP_Label);
             if (Account_SNX_Label != null) Label_Dict.Add("SNX_Account_Label", Account_SNX_Label);
             if (Account_PMGT_Label != null) Label_Dict.Add("PMGT_Account_Label", Account_PMGT_Label);
+            if (Account_YFI_Label != null) Label_Dict.Add("YFI_Account_Label", Account_YFI_Label);
+            if (Account_AAVE_Label != null) Label_Dict.Add("AAVE_Account_Label", Account_AAVE_Label);
+            if (Account_KNC_Label != null) Label_Dict.Add("KNC_Account_Label", Account_KNC_Label);
 
             if (Account_XBT_Value != null) Label_Dict.Add("XBT_Account_Value", Account_XBT_Value);
             if (Account_ETH_Value != null) Label_Dict.Add("ETH_Account_Value", Account_ETH_Value);
@@ -283,6 +313,9 @@ namespace IRTicker {
             if (Account_COMP_Value != null) Label_Dict.Add("COMP_Account_Value", Account_COMP_Value);
             if (Account_SNX_Value != null) Label_Dict.Add("SNX_Account_Value", Account_SNX_Value);
             if (Account_PMGT_Value != null) Label_Dict.Add("PMGT_Account_Value", Account_PMGT_Value);
+            if (Account_YFI_Value != null) Label_Dict.Add("YFI_Account_Value", Account_YFI_Value);
+            if (Account_AAVE_Value != null) Label_Dict.Add("AAVE_Account_Value", Account_AAVE_Value);
+            if (Account_KNC_Value != null) Label_Dict.Add("KNC_Account_Value", Account_KNC_Value);
 
             if (Account_XBT_Total != null) Label_Dict.Add("XBT_Account_Total", Account_XBT_Total);
             if (Account_ETH_Total != null) Label_Dict.Add("ETH_Account_Total", Account_ETH_Total);
@@ -308,6 +341,9 @@ namespace IRTicker {
             if (Account_COMP_Total != null) Label_Dict.Add("COMP_Account_Total", Account_COMP_Total);
             if (Account_SNX_Total != null) Label_Dict.Add("SNX_Account_Total", Account_SNX_Total);
             if (Account_PMGT_Total != null) Label_Dict.Add("PMGT_Account_Total", Account_PMGT_Total);
+            if (Account_YFI_Total != null) Label_Dict.Add("YFI_Account_Total", Account_YFI_Total);
+            if (Account_AAVE_Total != null) Label_Dict.Add("AAVE_Account_Total", Account_AAVE_Total);
+            if (Account_KNC_Total != null) Label_Dict.Add("KNC_Account_Total", Account_KNC_Total);
         }
     }
 }

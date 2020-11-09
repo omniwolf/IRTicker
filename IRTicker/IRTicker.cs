@@ -322,6 +322,15 @@ namespace IRTicker {
             UIControls_Dict["IR"].PMGT_Label = IR_PMGT_Label1;
             UIControls_Dict["IR"].PMGT_Price = IR_PMGT_Label2;
             UIControls_Dict["IR"].PMGT_Spread = IR_PMGT_Label3;
+            UIControls_Dict["IR"].YFI_Label = IR_YFI_Label1;
+            UIControls_Dict["IR"].YFI_Price = IR_YFI_Label2;
+            UIControls_Dict["IR"].YFI_Spread = IR_YFI_Label3;
+            UIControls_Dict["IR"].AAVE_Label = IR_AAVE_Label1;
+            UIControls_Dict["IR"].AAVE_Price = IR_AAVE_Label2;
+            UIControls_Dict["IR"].AAVE_Spread = IR_AAVE_Label3;
+            UIControls_Dict["IR"].KNC_Label = IR_KNC_Label1;
+            UIControls_Dict["IR"].KNC_Price = IR_KNC_Label2;
+            UIControls_Dict["IR"].KNC_Spread = IR_KNC_Label3;
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
             UIControls_Dict["IR"].AvgPrice_Crypto = IR_CryptoComboBox;
@@ -396,6 +405,15 @@ namespace IRTicker {
             UIControls_Dict["IR"].Account_PMGT_Total = AccountPMGT_total;
             UIControls_Dict["IR"].Account_PMGT_Value = AccountPMGT_value;
             UIControls_Dict["IR"].Account_PMGT_Label = AccountPMGT_label;
+            UIControls_Dict["IR"].Account_YFI_Total = AccountYFI_total;
+            UIControls_Dict["IR"].Account_YFI_Value = AccountYFI_value;
+            UIControls_Dict["IR"].Account_YFI_Label = AccountYFI_label;
+            UIControls_Dict["IR"].Account_AAVE_Total = AccountAAVE_total;
+            UIControls_Dict["IR"].Account_AAVE_Value = AccountAAVE_value;
+            UIControls_Dict["IR"].Account_AAVE_Label = AccountAAVE_label;
+            UIControls_Dict["IR"].Account_KNC_Total = AccountKNC_total;
+            UIControls_Dict["IR"].Account_KNC_Value = AccountKNC_value;
+            UIControls_Dict["IR"].Account_KNC_Label = AccountKNC_label;
 
             // BTCM
 
@@ -1352,7 +1370,7 @@ namespace IRTicker {
                 }
 
                 // still need to run this to get volume data (and all coins except BTC)
-                if (DCEs["IR"].HasStaticData) {
+                if (DCEs["IR"].HasStaticData && DCEs["IR"].NetworkAvailable) {
                     foreach (string primaryCode in DCEs["IR"].PrimaryCurrencyList) {
                         // if there's no crypto selected in the drop down or there's no number of coins entered, then just pull the market summary
                         if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
@@ -3220,6 +3238,10 @@ namespace IRTicker {
 
             Settings.Visible = true;
             IRAccount_panel.Visible = false;
+        }
+
+        private void Account_label_Click(object sender, EventArgs e) {
+
         }
     }
 }
