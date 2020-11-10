@@ -748,7 +748,7 @@ namespace IRTicker {
                     return;
                 }
                 else if (!DCEs["BTCM"].socketsAlive || !DCEs["BTCM"].NetworkAvailable) {
-                    slackObj.setStatus("", ":face_with_rolling_eyes:", 120, name + " - BTCM API down");
+                    slackObj.setStatus("", ":face_with_rolling_eyes:", 120, name + " - BTCM API down");  // should change this to still show the price, and not bother saying "BTCM API down" 
                     return;
                 }
 
@@ -1321,8 +1321,9 @@ namespace IRTicker {
                         SubscribeTickerSocket("IR");
                         pollingThread.ReportProgress(14, "IR");
                     }
-                    else {
+                    else {  // network is down.  we should report it and try again?
                         pollingThread.ReportProgress(12, "IR");
+                        DCEs["IR"].HasStaticData = false;  // if we go offline, let's start again.
                     }
                 }
 
@@ -1396,14 +1397,56 @@ namespace IRTicker {
 
                     if (lastBlock == 0) lastBlock = bHeight.Height;  // we haven' found a block before, just set it and move on
                     else if(lastBlock != bHeight.Height) {
-                        if (bStick != null && bStick.OpenDevice()) bStick.Blink("purple");
-                        lastBlock = bHeight.BlockIndex;
+                        if (bStick != null && bStick.OpenDevice()) bStick.Morph("purple");
+                        lastBlock = bHeight.Height;
                         Debug.Print(DateTime.Now + " - we have a new BTC block: " + lastBlock);
                     }
-                    Debug.Print("current block is: " + lastBlock);
+                    //Debug.Print("current block is: " + lastBlock);
                 }
                 else {
                     Debug.Print("couldn't pull the block height data? error: " + resultTup.Item2);
+                }
+
+                // Time to blink some sticks, should try this in the doWork thread...
+                Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
+                Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
+                decimal IRvol = -1, BTCMvol = -1, IRETHvol = -1, BTCMETHvol = -1;
+                if (IRpairs.ContainsKey("XBT-AUD") && BTCMpairs.ContainsKey("XBT-AUD") && IRpairs.ContainsKey("ETH-AUD") && BTCMpairs.ContainsKey("ETH-AUD")) {
+                    IRvol = IRpairs["XBT-AUD"].DayVolumeXbt; ;
+                    BTCMvol = BTCMpairs["XBT-AUD"].DayVolumeXbt;
+                    IRETHvol = IRpairs["ETH-AUD"].DayVolumeXbt; ;
+                    BTCMETHvol = BTCMpairs["ETH-AUD"].DayVolumeXbt;
+
+
+                    if ((bStick == null) || (bStickETH == null)) {
+                        var bSticks = BlinkStick.FindAll();
+                        if (bSticks.Length == 2) {
+
+                            if (bSticks[0].Meta.Serial == "BS028603-3.0") {
+                                bStick = bSticks[0];
+                                bStickETH = bSticks[1];
+                            }
+                            else {
+                                bStick = bSticks[1];
+                                bStickETH = bSticks[0];
+                            }
+                        }
+                        else if (bSticks.Length == 1) bStick = bSticks[0];  // if we only have 1 blink stick, then make it BTC
+                    }
+                    if (bStick != null && bStick.OpenDevice()) {
+                        // update blink stick
+                        //setStickColour(IRvol, BTCMvol, IRETHvol, BTCMETHvol);
+                        cTokenPulseBTC = setStickColourAsync(bStick, cTokenPulseBTC, ref taskPulseBTC, IRvol, BTCMvol);
+                    }
+                    if (bStickETH != null && bStickETH.OpenDevice()) {
+                        // update blink stick
+                        //setStickColour(IRvol, BTCMvol, IRETHvol, BTCMETHvol);
+                        cTokenPulseETH = setStickColourAsync(bStickETH, cTokenPulseETH, ref taskPulseETH, IRETHvol, BTCMETHvol);
+                    }
+                }
+
+                if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "")) {
+                    setSlackStatus();
                 }
 
 
@@ -2122,47 +2165,7 @@ namespace IRTicker {
                 return;
             }
 
-            // Time to blink some sticks, should try this in the doWork thread...
-            Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
-            Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
-            decimal IRvol = -1, BTCMvol = -1, IRETHvol = -1, BTCMETHvol = -1;
-            if (IRpairs.ContainsKey("XBT-AUD") && BTCMpairs.ContainsKey("XBT-AUD") && IRpairs.ContainsKey("ETH-AUD") && BTCMpairs.ContainsKey("ETH-AUD")) {
-                IRvol = IRpairs["XBT-AUD"].DayVolumeXbt; ;
-                BTCMvol = BTCMpairs["XBT-AUD"].DayVolumeXbt;
-                IRETHvol = IRpairs["ETH-AUD"].DayVolumeXbt; ;
-                BTCMETHvol = BTCMpairs["ETH-AUD"].DayVolumeXbt;
 
-
-                if ((bStick == null) || (bStickETH == null)) {
-                    var bSticks = BlinkStick.FindAll();
-                    if (bSticks.Length == 2) {
-
-                        if (bSticks[0].Meta.Serial == "BS028603-3.0") {
-                            bStick = bSticks[0];
-                            bStickETH = bSticks[1];
-                        }
-                        else {
-                            bStick = bSticks[1];
-                            bStickETH = bSticks[0];
-                        }
-                    }
-                    else if (bSticks.Length == 1) bStick = bSticks[0];  // if we only have 1 blink stick, then make it BTC
-                }
-                if (bStick != null && bStick.OpenDevice()) {
-                    // update blink stick
-                    //setStickColour(IRvol, BTCMvol, IRETHvol, BTCMETHvol);
-                    cTokenPulseBTC = setStickColourAsync(bStick, cTokenPulseBTC, ref taskPulseBTC, IRvol, BTCMvol);
-                }
-                if (bStickETH != null && bStickETH.OpenDevice()) {
-                    // update blink stick
-                    //setStickColour(IRvol, BTCMvol, IRETHvol, BTCMETHvol);
-                    cTokenPulseETH = setStickColourAsync(bStickETH, cTokenPulseETH, ref taskPulseETH, IRETHvol, BTCMETHvol);
-                }
-            }
-
-            if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "")) {
-                setSlackStatus();
-            }
 
             // update the UI
 
