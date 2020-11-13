@@ -387,7 +387,11 @@ namespace IRTicker {
                         rateLimitPlaceOrder = Task.Delay(1001);  // start a timer.  can only try and create a new order after a second has passed
                     }
                     catch (Exception ex) {
-                        Debug.Print("MBAIT: trid to create an order, but it failed.  Will retry.  Error: " + ex.Message);
+                        string errorMsg = ex.Message;
+                        if (ex.InnerException != null) {
+                            errorMsg = ex.InnerException.Message;
+                        }
+                        Debug.Print("MBAIT: trid to create an order, but it failed.  Will retry.  Error: " + errorMsg);
                     }
                     // sholudnt' call the bulkupdate method from here, it should only be called from the UI as it can result in messageboxes, etc.  Also I shouldn't need to cal UpdateOrderBook...
                     //IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, /*PrivateIREndPoints.GetAccounts, */PrivateIREndPoints.UpdateOrderBook });
