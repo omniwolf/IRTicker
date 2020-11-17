@@ -41,11 +41,11 @@ namespace IRTicker {
                 Dictionary<string, Account> _irAccounts = (Dictionary<string, Account>)o;
                 Label CurrentSecondaryCurrecyLabel = UIControls_Dict["IR"].Label_Dict[DCEs["IR"].CurrentSecondaryCurrency + "_Account_Label"];
                 CurrentSecondaryCurrecyLabel.ForeColor = Color.DarkBlue;
-                CurrentSecondaryCurrecyLabel.Font = new Font(CurrentSecondaryCurrecyLabel.Font.FontFamily, 14.25f, FontStyle.Bold);
+                CurrentSecondaryCurrecyLabel.Font = new Font(CurrentSecondaryCurrecyLabel.Font.FontFamily, 12f, FontStyle.Bold);
 
                 Label SelectedCrypto = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
                 SelectedCrypto.ForeColor = Color.DarkOrange;
-                SelectedCrypto.Font = new Font(SelectedCrypto.Font.FontFamily, 14.25f, FontStyle.Bold);
+                SelectedCrypto.Font = new Font(SelectedCrypto.Font.FontFamily, 12f, FontStyle.Bold);
 
                 var mSummaries = DCEs["IR"].GetCryptoPairs();
 
@@ -390,7 +390,7 @@ namespace IRTicker {
               
                 Label oldLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
                 oldLabel.ForeColor = Color.Black;
-                oldLabel.Font = new Font(oldLabel.Font.FontFamily, 14.25f, FontStyle.Regular);
+                oldLabel.Font = new Font(oldLabel.Font.FontFamily, 12f, FontStyle.Bold);
 
                 oldLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Total"];
                 oldLabel.ForeColor = Color.FromArgb(64, 64, 64);
@@ -414,7 +414,7 @@ namespace IRTicker {
 
                 Label newLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
                 newLabel.ForeColor = Color.DarkOrange;
-                newLabel.Font = new Font(newLabel.Font.FontFamily, 14.25f, FontStyle.Bold);
+                newLabel.Font = new Font(newLabel.Font.FontFamily, 12f, FontStyle.Bold);
 
                 newLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Total"];
                 newLabel.ForeColor = Color.DarkOrange;
@@ -440,7 +440,7 @@ namespace IRTicker {
 
             Label CurrentSecondaryCurrecyLabel = UIControls_Dict["IR"].Label_Dict[DCEs["IR"].CurrentSecondaryCurrency + "_Account_Label"];
             CurrentSecondaryCurrecyLabel.ForeColor = Color.Black;
-            CurrentSecondaryCurrecyLabel.Font = new Font(CurrentSecondaryCurrecyLabel.Font.FontFamily, 14.25f, FontStyle.Regular);
+            CurrentSecondaryCurrecyLabel.Font = new Font(CurrentSecondaryCurrecyLabel.Font.FontFamily, 12f, FontStyle.Regular);
         }
 
         private void AccountWithdrawalAddress_label_Click(object sender, EventArgs e) {

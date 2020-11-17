@@ -1068,8 +1068,8 @@ namespace IRTicker {
                     if (prod.pair.StartsWith("btc")) {  // first make btc into xbt
                         prod.pair = prod.pair.Replace("btc", "XBT");
                     }
-                    if (prod.pair.StartsWith("bab")) {
-                        prod.pair = prod.pair.Replace("bab", "BCH");
+                    if (prod.pair.StartsWith("bchn")) {
+                        prod.pair = prod.pair.Replace("bchn:", "BCH");
                     }
                     if (prod.pair.StartsWith("ust")) prod.pair = prod.pair.Replace("ust", "USDT");
 

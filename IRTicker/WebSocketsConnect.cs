@@ -384,7 +384,7 @@ namespace IRTicker {
                             foreach (string crypto1 in pairs) {
                                 string crypto2 = crypto1;
                                 if (crypto2 == "XBT") crypto2 = "BTC";
-                                if (crypto2 == "BCH") crypto2 = "BAB";
+                                if (crypto2 == "BCH") crypto2 = "BCHN:";
                                 if (crypto2 == "USDT") crypto2 = "UST";
                                 if (!DCEs[dExchange].ExchangeProducts.ContainsKey(crypto1 + "-" + fiat)) continue;  // only try to subscribe to pairs that this BFX supports
                                 channel = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"" + crypto2 + fiat + "\"}";
@@ -1249,8 +1249,11 @@ namespace IRTicker {
                     else if (__pair.Length == 7) {  // laaammmeee  actually just looked at the BFX spec and all pairs are 6 characters.  will leave this in anyawy, but it shouldn't ever come to it
                         return __pair.Substring(0, 4) + "-" + __pair.Substring(4, 3);
                     }
+                    else if (__pair.Length == 8) {  // OK BFX is fucked, BCHUSD is now BCHN:USD ??? gah
+                        return __pair.Substring(0, 5) + "-" + __pair.Substring(5, 3);
+                    }
                     else {
-                        Debug.Print("We have a pair from the BFX socket that isn't 3 or 4 chars?  howww - " + __pair);
+                        Debug.Print("We have a pair from the BFX socket that isn't 3 or 4 or 5 chars?  howww - " + __pair);
                         return "";
                     }
                 }

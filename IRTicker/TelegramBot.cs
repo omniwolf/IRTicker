@@ -412,7 +412,7 @@ namespace IRTicker
                                         break;
 
                                     default:
-                                        //TGstate.ResetMenu();  // sends the top menu message
+                                        TGstate.ResetMenu();  // sends the top menu message
                                         break;
                                 }
                             }
