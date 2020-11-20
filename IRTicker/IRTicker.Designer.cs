@@ -1872,9 +1872,9 @@
             this.BFX_GroupBox.Controls.Add(this.BFX_AvgPrice_Label);
             this.BFX_GroupBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.BFX_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.BFX_GroupBox.Location = new System.Drawing.Point(305, 424);
+            this.BFX_GroupBox.Location = new System.Drawing.Point(20, 566);
             this.BFX_GroupBox.Name = "BFX_GroupBox";
-            this.BFX_GroupBox.Size = new System.Drawing.Size(262, 380);
+            this.BFX_GroupBox.Size = new System.Drawing.Size(262, 266);
             this.BFX_GroupBox.TabIndex = 9;
             this.BFX_GroupBox.TabStop = false;
             this.BFX_GroupBox.Text = "BitFinex";
@@ -1933,7 +1933,7 @@
             this.BFX_panel.Controls.Add(this.BFX_GNT_Label2);
             this.BFX_panel.Location = new System.Drawing.Point(0, 16);
             this.BFX_panel.Name = "BFX_panel";
-            this.BFX_panel.Size = new System.Drawing.Size(262, 307);
+            this.BFX_panel.Size = new System.Drawing.Size(262, 195);
             this.BFX_panel.TabIndex = 57;
             // 
             // BFX_DAI_Label3
@@ -2527,7 +2527,7 @@
             this.BFX_CurrencyBox.Items.AddRange(new object[] {
             "crypto",
             "fiat"});
-            this.BFX_CurrencyBox.Location = new System.Drawing.Point(131, 350);
+            this.BFX_CurrencyBox.Location = new System.Drawing.Point(131, 239);
             this.BFX_CurrencyBox.Name = "BFX_CurrencyBox";
             this.BFX_CurrencyBox.Size = new System.Drawing.Size(58, 21);
             this.BFX_CurrencyBox.TabIndex = 56;
@@ -2536,7 +2536,7 @@
             // 
             this.BFX_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BFX_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.BFX_CryptoComboBox.Location = new System.Drawing.Point(194, 350);
+            this.BFX_CryptoComboBox.Location = new System.Drawing.Point(194, 239);
             this.BFX_CryptoComboBox.Name = "BFX_CryptoComboBox";
             this.BFX_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
             this.BFX_CryptoComboBox.TabIndex = 20;
@@ -2546,7 +2546,7 @@
             // BFX_NumCoinsTextBox
             // 
             this.BFX_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BFX_NumCoinsTextBox.Location = new System.Drawing.Point(58, 350);
+            this.BFX_NumCoinsTextBox.Location = new System.Drawing.Point(58, 239);
             this.BFX_NumCoinsTextBox.Name = "BFX_NumCoinsTextBox";
             this.BFX_NumCoinsTextBox.PromptChar = ' ';
             this.BFX_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
@@ -2564,7 +2564,7 @@
             this.BFX_BuySellComboBox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.BFX_BuySellComboBox.Location = new System.Drawing.Point(10, 350);
+            this.BFX_BuySellComboBox.Location = new System.Drawing.Point(10, 239);
             this.BFX_BuySellComboBox.Name = "BFX_BuySellComboBox";
             this.BFX_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
             this.BFX_BuySellComboBox.TabIndex = 18;
@@ -2575,7 +2575,7 @@
             this.BFX_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
             this.BFX_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BFX_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BFX_AvgPrice_Label.Location = new System.Drawing.Point(10, 326);
+            this.BFX_AvgPrice_Label.Location = new System.Drawing.Point(10, 218);
             this.BFX_AvgPrice_Label.Name = "BFX_AvgPrice_Label";
             this.BFX_AvgPrice_Label.Size = new System.Drawing.Size(242, 16);
             this.BFX_AvgPrice_Label.TabIndex = 19;
@@ -2584,7 +2584,7 @@
             // 
             this.fiat_GroupBox.Controls.Add(this.fiat_panel);
             this.fiat_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.fiat_GroupBox.Location = new System.Drawing.Point(19, 731);
+            this.fiat_GroupBox.Location = new System.Drawing.Point(305, 702);
             this.fiat_GroupBox.Name = "fiat_GroupBox";
             this.fiat_GroupBox.Size = new System.Drawing.Size(263, 102);
             this.fiat_GroupBox.TabIndex = 9;
@@ -2935,6 +2935,7 @@
             this.IR_YFI_Label3.TabIndex = 73;
             this.IR_YFI_Label3.Tag = "";
             this.IR_YFI_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.IR_YFI_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.IR_YFI_Label3_MouseDoubleClick);
             // 
             // IR_PMGT_Label2
             // 
@@ -3135,6 +3136,7 @@
             this.IR_LINK_Label3.TabIndex = 58;
             this.IR_LINK_Label3.Tag = "";
             this.IR_LINK_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.IR_LINK_Label3.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.IR_LINK_Label3_MouseDoubleClick);
             // 
             // IR_DAI_Label2
             // 
@@ -3879,9 +3881,9 @@
             this.GDAX_GroupBox.Controls.Add(this.GDAX_BuySellComboBox);
             this.GDAX_GroupBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.GDAX_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.GDAX_GroupBox.Location = new System.Drawing.Point(19, 566);
+            this.GDAX_GroupBox.Location = new System.Drawing.Point(305, 420);
             this.GDAX_GroupBox.Name = "GDAX_GroupBox";
-            this.GDAX_GroupBox.Size = new System.Drawing.Size(263, 157);
+            this.GDAX_GroupBox.Size = new System.Drawing.Size(263, 271);
             this.GDAX_GroupBox.TabIndex = 8;
             this.GDAX_GroupBox.TabStop = false;
             this.GDAX_GroupBox.Text = "Coinbase Pro";
@@ -3928,7 +3930,7 @@
             this.GDAX_panel.Controls.Add(this.GDAX_XBT_Label3);
             this.GDAX_panel.Location = new System.Drawing.Point(0, 14);
             this.GDAX_panel.Name = "GDAX_panel";
-            this.GDAX_panel.Size = new System.Drawing.Size(262, 152);
+            this.GDAX_panel.Size = new System.Drawing.Size(262, 207);
             this.GDAX_panel.TabIndex = 56;
             // 
             // GDAX_COMP_Label2
@@ -4375,7 +4377,7 @@
             this.GDAX_CurrencyBox.Items.AddRange(new object[] {
             "crypto",
             "fiat"});
-            this.GDAX_CurrencyBox.Location = new System.Drawing.Point(131, 191);
+            this.GDAX_CurrencyBox.Location = new System.Drawing.Point(131, 244);
             this.GDAX_CurrencyBox.Name = "GDAX_CurrencyBox";
             this.GDAX_CurrencyBox.Size = new System.Drawing.Size(58, 21);
             this.GDAX_CurrencyBox.TabIndex = 55;
@@ -4385,16 +4387,16 @@
             this.GDAX_AvgPrice_Label.BackColor = System.Drawing.Color.LightCyan;
             this.GDAX_AvgPrice_Label.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_AvgPrice_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_AvgPrice_Label.Location = new System.Drawing.Point(9, 164);
+            this.GDAX_AvgPrice_Label.Location = new System.Drawing.Point(9, 224);
             this.GDAX_AvgPrice_Label.Name = "GDAX_AvgPrice_Label";
-            this.GDAX_AvgPrice_Label.Size = new System.Drawing.Size(242, 21);
+            this.GDAX_AvgPrice_Label.Size = new System.Drawing.Size(242, 17);
             this.GDAX_AvgPrice_Label.TabIndex = 18;
             // 
             // GDAX_CryptoComboBox
             // 
             this.GDAX_CryptoComboBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_CryptoComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.GDAX_CryptoComboBox.Location = new System.Drawing.Point(193, 191);
+            this.GDAX_CryptoComboBox.Location = new System.Drawing.Point(193, 244);
             this.GDAX_CryptoComboBox.Name = "GDAX_CryptoComboBox";
             this.GDAX_CryptoComboBox.Size = new System.Drawing.Size(58, 21);
             this.GDAX_CryptoComboBox.TabIndex = 17;
@@ -4404,7 +4406,7 @@
             // GDAX_NumCoinsTextBox
             // 
             this.GDAX_NumCoinsTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_NumCoinsTextBox.Location = new System.Drawing.Point(58, 191);
+            this.GDAX_NumCoinsTextBox.Location = new System.Drawing.Point(58, 244);
             this.GDAX_NumCoinsTextBox.Name = "GDAX_NumCoinsTextBox";
             this.GDAX_NumCoinsTextBox.PromptChar = ' ';
             this.GDAX_NumCoinsTextBox.Size = new System.Drawing.Size(70, 20);
@@ -4422,7 +4424,7 @@
             this.GDAX_BuySellComboBox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.GDAX_BuySellComboBox.Location = new System.Drawing.Point(9, 191);
+            this.GDAX_BuySellComboBox.Location = new System.Drawing.Point(9, 244);
             this.GDAX_BuySellComboBox.Name = "GDAX_BuySellComboBox";
             this.GDAX_BuySellComboBox.Size = new System.Drawing.Size(46, 21);
             this.GDAX_BuySellComboBox.TabIndex = 15;
@@ -5969,8 +5971,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(584, 841);
-            this.Controls.Add(this.IRAccount_panel);
             this.Controls.Add(this.Main);
+            this.Controls.Add(this.IRAccount_panel);
             this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Settings);
             this.Controls.Add(this.OTCHelper);

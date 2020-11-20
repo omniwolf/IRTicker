@@ -2885,6 +2885,17 @@ namespace IRTicker {
             SpreadGraph_Dict.TryAdd("BAR-XBT-" + DCEs["BAR"].CurrentSecondaryCurrency, SGForm);
         }
 
+        private void IR_YFI_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["IR"], "YFI-" + DCEs["IR"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("IR-YFI-" + DCEs["IR"].CurrentSecondaryCurrency, SGForm);
+        }
+        private void IR_LINK_Label3_MouseDoubleClick(object sender, MouseEventArgs e) {
+            SpreadGraph SGForm = new SpreadGraph(DCEs["IR"], "LINK-" + DCEs["IR"].CurrentSecondaryCurrency, this);
+            SGForm.Show();
+            SpreadGraph_Dict.TryAdd("IR-LINK-" + DCEs["IR"].CurrentSecondaryCurrency, SGForm);
+        }
+
         private void Help_Button_Click(object sender, EventArgs e) {
             Help helpForm = new Help(this);
             helpForm.Show();
