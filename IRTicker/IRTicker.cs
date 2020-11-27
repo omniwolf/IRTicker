@@ -1248,6 +1248,7 @@ namespace IRTicker {
 
 
                 ////// IR ///////
+                if (!DCEs["IR"].NetworkAvailable) DCEs["IR"].HasStaticData = false;  // if we have a network outage, let's start again.
                 if (!DCEs["IR"].HasStaticData) {  // only pull the currencies once per session as these are essentially static
                     Tuple<bool, string> primaryCurrencyCodesTpl = Utilities.Get(DCEs["IR"].BaseURL + "/Public/GetValidPrimaryCurrencyCodes");
                     if (!primaryCurrencyCodesTpl.Item1) {
@@ -1290,6 +1291,8 @@ namespace IRTicker {
                         /*DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "AUD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "USD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "NZD");*/
+
+                        if (DCEs["IR"].currencyFiatDivision.Count() > 0) DCEs["IR"].currencyFiatDivision.Clear();  // if we reset due to network outage, then clear this before 
 
                         if (!File.Exists("IRCurrencyAttributes.txt")) {
                             MessageBox.Show("IRCurrencyAttributes.txt can't be found in the root application folder.  Grab it from Resources folder if you can, or ask Nick.  App will close now.",
@@ -2260,6 +2263,7 @@ namespace IRTicker {
             }
             else {
                 Debug.Print(DateTime.Now + " - POLL stopped!! why?? " + e.Result + " " + e.Error + " " + e.ToString());
+                pollingThread.RunWorkerAsync(); // start it up again I guess
             }
         }
 
