@@ -141,7 +141,7 @@ namespace IRTicker {
             // Actually I'm not sure about the above comment, i think some of them do?  But the main issue is most of them have
             // currencies that we don't want to deal with, so we set the currencies manually here.  IR we want all currencies, so
             // we use the API.  This is probably not really smart, as the UI is static, so when new currencies turn up IR breaks.  meh
-            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"XLM\",\"BAT\",\"GNT\",\"ETC\",\"BSV\",\"LINK\",\"COMP\"";
+            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"XLM\",\"BAT\",\"GNT\",\"ETC\",\"BSV\",\"LINK\",\"COMP\",\"USDT\"";
             DCEs["BTCM"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["BTCM"].HasStaticData = false;  // want to set this to false so we run the subscribe code once.
 
@@ -466,6 +466,10 @@ namespace IRTicker {
             UIControls_Dict["BTCM"].COMP_Label = BTCM_COMP_Label1;
             UIControls_Dict["BTCM"].COMP_Price = BTCM_COMP_Label2;
             UIControls_Dict["BTCM"].COMP_Spread = BTCM_COMP_Label3;
+            UIControls_Dict["BTCM"].USDT_Label = BTCM_USDT_Label1;
+            UIControls_Dict["BTCM"].USDT_Price = BTCM_USDT_Label2;
+            UIControls_Dict["BTCM"].USDT_Spread = BTCM_USDT_Label3;
+
             UIControls_Dict["BTCM"].AvgPrice_BuySell = BTCM_BuySellComboBox;
             UIControls_Dict["BTCM"].AvgPrice_NumCoins = BTCM_NumCoinsTextBox;
             UIControls_Dict["BTCM"].AvgPrice_Crypto = BTCM_CryptoComboBox;

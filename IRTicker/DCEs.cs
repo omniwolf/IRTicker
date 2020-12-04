@@ -298,6 +298,7 @@ namespace IRTicker {
                 if (!orderBuffer_IR.ContainsKey(pair)) {
                     if (!orderBuffer_IR.TryAdd(pair, new ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>())) {
                         Debug.Print(DateTime.Now + " - can't add orderBuffer_IR concurrent dicsh for " + pair);
+                        return null;
                     }
                 }
 
