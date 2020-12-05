@@ -1214,6 +1214,12 @@ namespace IRTicker {
 
         private void PopulateCryptoComboBox(string dExchange) {
 
+            Utilities.PopulateCryptoComboBox(DCEs[dExchange], UIControls_Dict[dExchange].AvgPrice_Crypto);
+
+            return;
+
+            // shouldn't need this stuff anymore, it's all in the utilities sub
+
             if (UIControls_Dict[dExchange].AvgPrice == null) return;  // eg coinspot 
 
             UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Clear();
@@ -1312,11 +1318,12 @@ namespace IRTicker {
                         }
 
                         foreach (Currency curr in CurrencyRoot.Currencies) {
-                            string crypto = curr.IrCommonAttributesCurrencyConfiguration.Code.ToUpper();
-                            if (crypto == "UST") crypto = "USDT";
+                            string crypto = curr.IrCommonAttributesCurrencyConfiguration.Ticker.ToUpper();
+                            /*if (crypto == "UST") crypto = "USDT";
                             if (crypto == "USC") crypto = "USDC";
                             if (crypto == "LNK") crypto = "LINK";
-                            if (crypto == "COM") crypto = "COMP";
+                            if (crypto == "COM") crypto = "COMP";*/
+                            if (crypto == "BTC") crypto = "XBT";
                             DCEs["IR"].currencyFiatDivision.Add(crypto, curr.IrCommonAttributesCurrencyConfiguration.FiatPriceDecimalPlaces);
                         }
 

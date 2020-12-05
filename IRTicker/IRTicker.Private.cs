@@ -19,6 +19,7 @@ namespace IRTicker {
         private string AccountSelectedCrypto = "XBT";
         private Task updateOBTask;
         private bool IRAccountsButtonJustClicked = true;  // true if the use has just clicked the IR Accounts button.  If true and GetAccounts fails, then we close the IR Accounts panel and head back to the Main panel.  If false and GetAccounts fails, we just do it silently
+        private AccAvgPrice _AccAvgPrice = null;
 
         private void InitialiseAccountsPanel() {
             AccountOrderVolume_textbox.Enabled = true;
@@ -635,6 +636,19 @@ namespace IRTicker {
                 AccountOrderVolume_textbox.Enabled = false;
                 AccountLimitPrice_textbox.Enabled = false;
                 if (oType == 2) {
+
+                    // now ask if they want to start the avg price thingo
+                    if ((_AccAvgPrice == null) || !Application.OpenForms.OfType<AccAvgPrice>().Any()) {
+                        res = MessageBox.Show("Start recording the average order price?" + Environment.NewLine + Environment.NewLine +
+                            "This will open up the Average Price Calculator window and enable the auto update setting",
+                            "Average Price Calculator", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                        if (res == DialogResult.Yes) {
+                            _AccAvgPrice = new AccAvgPrice(DCEs["IR"], pIR, true, AccountSelectedCrypto, AccountBuySell_listbox.SelectedIndex);
+                            _AccAvgPrice.Show();
+                        }
+                    }
+
                     AccountPlaceOrder_button.Size = new Size(170, 39);
                     StopBaitin_button.Enabled = true;
                     StopBaitin_button.Visible = true;
@@ -838,6 +852,22 @@ namespace IRTicker {
 
         private void AccountOrderVolume_label_DoubleClick(object sender, EventArgs e) {
             AccountOrderVolume_textbox.Text = pIR.accounts[AccountSelectedCrypto].AvailableBalance.ToString();
+        }
+        private void IRAccount_AvgPrice_Button_Click(object sender, EventArgs e) {
+            if ((_AccAvgPrice == null) || (!Application.OpenForms.OfType<AccAvgPrice>().Any())) {
+                _AccAvgPrice = new AccAvgPrice(DCEs["IR"], pIR);
+                _AccAvgPrice.Show();
+            }
+            else _AccAvgPrice.Focus();
+        }
+
+        // I had a crash here once, can't reproduce it.  instance not set to an object or something, but I couldn't see what was wrong.
+        // maybe i should check that cOrders isn't somehow null?
+        public void SignalAveragePriceUpdate(Page<BankHistoryOrder> cOrders) {
+            synchronizationContext.Post(new SendOrPostCallback(o => {
+                if (_AccAvgPrice != null) _AccAvgPrice.UpdatePrice((Page<BankHistoryOrder>)o);
+            }), cOrders);
+            
         }
     }
 }

@@ -355,6 +355,7 @@
             this.CryptoChooser_ComboBox = new System.Windows.Forms.ComboBox();
             this.spreadHistory_FolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.IRAccount_panel = new System.Windows.Forms.Panel();
+            this.IRAccount_AvgPrice_Button = new System.Windows.Forms.Button();
             this.StopBaitin_button = new System.Windows.Forms.Button();
             this.SwitchOrderBookSide_button = new System.Windows.Forms.Button();
             this.AccountOrderType_listbox = new NoScrollListBox.NoScrollListBox();
@@ -1093,7 +1094,7 @@
             // 
             this.GIFLabel.BackColor = System.Drawing.Color.Black;
             this.GIFLabel.ForeColor = System.Drawing.Color.Red;
-            this.GIFLabel.Image = ((System.Drawing.Image)(resources.GetObject("GIFLabel.Image")));
+            this.GIFLabel.Image = global::IRTicker.Properties.Resources.darkmatter2;
             this.GIFLabel.Location = new System.Drawing.Point(0, 0);
             this.GIFLabel.Name = "GIFLabel";
             this.GIFLabel.Size = new System.Drawing.Size(585, 843);
@@ -4688,6 +4689,7 @@
             // 
             // IRAccount_panel
             // 
+            this.IRAccount_panel.Controls.Add(this.IRAccount_AvgPrice_Button);
             this.IRAccount_panel.Controls.Add(this.StopBaitin_button);
             this.IRAccount_panel.Controls.Add(this.SwitchOrderBookSide_button);
             this.IRAccount_panel.Controls.Add(this.AccountOrderType_listbox);
@@ -4710,12 +4712,25 @@
             this.IRAccount_panel.TabIndex = 61;
             this.IRAccount_panel.Visible = false;
             // 
+            // IRAccount_AvgPrice_Button
+            // 
+            this.IRAccount_AvgPrice_Button.BackColor = System.Drawing.Color.White;
+            this.IRAccount_AvgPrice_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.IRAccount_AvgPrice_Button.Location = new System.Drawing.Point(499, 99);
+            this.IRAccount_AvgPrice_Button.Name = "IRAccount_AvgPrice_Button";
+            this.IRAccount_AvgPrice_Button.Size = new System.Drawing.Size(77, 24);
+            this.IRAccount_AvgPrice_Button.TabIndex = 18;
+            this.IRAccount_AvgPrice_Button.Text = "Avg price";
+            this.IRAccount_AvgPrice_Button.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.IRAccount_AvgPrice_Button.UseVisualStyleBackColor = false;
+            this.IRAccount_AvgPrice_Button.Click += new System.EventHandler(this.IRAccount_AvgPrice_Button_Click);
+            // 
             // StopBaitin_button
             // 
             this.StopBaitin_button.BackColor = System.Drawing.Color.White;
             this.StopBaitin_button.Enabled = false;
             this.StopBaitin_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.StopBaitin_button.Location = new System.Drawing.Point(455, 65);
+            this.StopBaitin_button.Location = new System.Drawing.Point(455, 55);
             this.StopBaitin_button.Name = "StopBaitin_button";
             this.StopBaitin_button.Size = new System.Drawing.Size(121, 39);
             this.StopBaitin_button.TabIndex = 17;
@@ -4728,11 +4743,13 @@
             // 
             this.SwitchOrderBookSide_button.BackColor = System.Drawing.Color.White;
             this.SwitchOrderBookSide_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SwitchOrderBookSide_button.Location = new System.Drawing.Point(499, 114);
+            this.SwitchOrderBookSide_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SwitchOrderBookSide_button.Location = new System.Drawing.Point(499, 126);
             this.SwitchOrderBookSide_button.Name = "SwitchOrderBookSide_button";
-            this.SwitchOrderBookSide_button.Size = new System.Drawing.Size(77, 24);
+            this.SwitchOrderBookSide_button.Size = new System.Drawing.Size(77, 20);
             this.SwitchOrderBookSide_button.TabIndex = 16;
             this.SwitchOrderBookSide_button.Text = "Switch sides";
+            this.SwitchOrderBookSide_button.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.SwitchOrderBookSide_button.UseVisualStyleBackColor = false;
             this.SwitchOrderBookSide_button.Click += new System.EventHandler(this.SwitchOrderBookSide_button_Click);
             // 
@@ -4745,7 +4762,7 @@
             "Market order",
             "Limit order",
             "Market baiter"});
-            this.AccountOrderType_listbox.Location = new System.Drawing.Point(330, 12);
+            this.AccountOrderType_listbox.Location = new System.Drawing.Point(330, 7);
             this.AccountOrderType_listbox.Name = "AccountOrderType_listbox";
             this.AccountOrderType_listbox.ShowScrollbar = false;
             this.AccountOrderType_listbox.Size = new System.Drawing.Size(101, 44);
@@ -4953,7 +4970,7 @@
             // 
             this.AccountPlaceOrder_button.BackColor = System.Drawing.Color.White;
             this.AccountPlaceOrder_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AccountPlaceOrder_button.Location = new System.Drawing.Point(282, 65);
+            this.AccountPlaceOrder_button.Location = new System.Drawing.Point(282, 55);
             this.AccountPlaceOrder_button.Name = "AccountPlaceOrder_button";
             this.AccountPlaceOrder_button.Size = new System.Drawing.Size(294, 39);
             this.AccountPlaceOrder_button.TabIndex = 8;
@@ -4964,7 +4981,7 @@
             // AccountLimitPrice_label
             // 
             this.AccountLimitPrice_label.AutoSize = true;
-            this.AccountLimitPrice_label.Location = new System.Drawing.Point(537, 41);
+            this.AccountLimitPrice_label.Location = new System.Drawing.Point(537, 36);
             this.AccountLimitPrice_label.Name = "AccountLimitPrice_label";
             this.AccountLimitPrice_label.Size = new System.Drawing.Size(31, 13);
             this.AccountLimitPrice_label.TabIndex = 7;
@@ -4973,7 +4990,7 @@
             // 
             // AccountLimitPrice_textbox
             // 
-            this.AccountLimitPrice_textbox.Location = new System.Drawing.Point(437, 36);
+            this.AccountLimitPrice_textbox.Location = new System.Drawing.Point(437, 31);
             this.AccountLimitPrice_textbox.Name = "AccountLimitPrice_textbox";
             this.AccountLimitPrice_textbox.Size = new System.Drawing.Size(93, 20);
             this.AccountLimitPrice_textbox.TabIndex = 6;
@@ -4984,7 +5001,7 @@
             // AccountOrderVolume_label
             // 
             this.AccountOrderVolume_label.AutoSize = true;
-            this.AccountOrderVolume_label.Location = new System.Drawing.Point(537, 17);
+            this.AccountOrderVolume_label.Location = new System.Drawing.Point(537, 12);
             this.AccountOrderVolume_label.Name = "AccountOrderVolume_label";
             this.AccountOrderVolume_label.Size = new System.Drawing.Size(42, 13);
             this.AccountOrderVolume_label.TabIndex = 5;
@@ -4994,7 +5011,7 @@
             // 
             // AccountOrderVolume_textbox
             // 
-            this.AccountOrderVolume_textbox.Location = new System.Drawing.Point(437, 12);
+            this.AccountOrderVolume_textbox.Location = new System.Drawing.Point(437, 7);
             this.AccountOrderVolume_textbox.Name = "AccountOrderVolume_textbox";
             this.AccountOrderVolume_textbox.Size = new System.Drawing.Size(93, 20);
             this.AccountOrderVolume_textbox.TabIndex = 4;
@@ -5009,7 +5026,7 @@
             this.AccountBuySell_listbox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.AccountBuySell_listbox.Location = new System.Drawing.Point(282, 12);
+            this.AccountBuySell_listbox.Location = new System.Drawing.Point(282, 7);
             this.AccountBuySell_listbox.Name = "AccountBuySell_listbox";
             this.AccountBuySell_listbox.Size = new System.Drawing.Size(42, 44);
             this.AccountBuySell_listbox.TabIndex = 2;
@@ -6014,8 +6031,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(584, 841);
-            this.Controls.Add(this.Main);
             this.Controls.Add(this.IRAccount_panel);
+            this.Controls.Add(this.Main);
             this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Settings);
             this.Controls.Add(this.OTCHelper);
@@ -6523,6 +6540,7 @@
         private System.Windows.Forms.Label BTCM_USDT_Label1;
         private System.Windows.Forms.Label BTCM_USDT_Label3;
         private System.Windows.Forms.Label BTCM_USDT_Label2;
+        private System.Windows.Forms.Button IRAccount_AvgPrice_Button;
     }
 }
 

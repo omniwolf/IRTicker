@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Net;
 using System.IO;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace IRTicker {
     class Utilities {
@@ -207,6 +208,28 @@ namespace IRTicker {
                 return char.ToUpper(str[0]) + str.Substring(1);
 
             return str.ToUpper();
+        }
+
+        public static void PopulateCryptoComboBox(DCE _DCE, ComboBox cBox) {
+
+            if (cBox == null) return;  // eg coinspot 
+
+            cBox.Items.Clear();
+            cBox.ResetText();
+            cBox.Items.Add("");  // add an empty option as the first one so it can be selected when we need to "reset"
+            cBox.SelectedIndex = 0;
+
+            foreach (string pair in _DCE.UsablePairs()) {
+                Tuple<string, string> splitPair = SplitPair(pair);  // splits "XBT-AUD" into a tuple ("XBT","AUD")
+                if (splitPair.Item2 == _DCE.CurrentSecondaryCurrency) {
+                    cBox.Items.Add(splitPair.Item1 == "XBT" ? "BTC" : splitPair.Item1);
+                }
+            }
+
+            if (cBox.Items.Count < 1) {
+                MessageBox.Show("Error - no primary currencies from " + _DCE.FriendlyName + "?", "Show this to Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                cBox.Enabled = false;
+            }
         }
     }
 }

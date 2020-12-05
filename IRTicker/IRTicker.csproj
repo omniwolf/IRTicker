@@ -172,6 +172,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccAvgPrice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AccAvgPrice.Designer.cs">
+      <DependentUpon>AccAvgPrice.cs</DependentUpon>
+    </Compile>
     <Compile Include="AccountAPIKeys.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -230,6 +236,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="WebSocketsConnect.cs" />
+    <EmbeddedResource Include="AccAvgPrice.resx">
+      <DependentUpon>AccAvgPrice.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AccountAPIKeys.resx">
       <DependentUpon>AccountAPIKeys.cs</DependentUpon>
     </EmbeddedResource>
@@ -278,6 +287,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ir_eagel_transparent___small_Oe3_icon.ico" />
+    <None Include="Resources\darkmatter2.gif" />
     <None Include="Resources\pink-clouds.gif" />
     <None Include="Resources\btcm3.jpg" />
     <None Include="Resources\coinbasepro-logo3.jpg" />

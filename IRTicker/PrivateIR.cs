@@ -83,6 +83,7 @@ namespace IRTicker {
         }
 
         public DigitalCurrencyDepositAddress GetDepositAddress(string crypto) {
+            if (crypto.ToUpper() == "BTC") crypto = "XBT";
             lock (pIR_Lock) {
                 return IRclient.GetDigitalCurrencyDepositAddress(convertCryptoStrToCryptoEnum(crypto));
             }
@@ -90,6 +91,7 @@ namespace IRTicker {
 
         //
         public DigitalCurrencyDepositAddress CheckAddressNow(string crypto, string address) {
+            if (crypto.ToUpper() == "BTC") crypto = "XBT";
             DigitalCurrencyDepositAddress result;
             lock (pIR_Lock) {
                 try {
@@ -106,6 +108,7 @@ namespace IRTicker {
         }
 
         public BankOrder PlaceLimitOrder(string crypto, string fiat, OrderType? orderType, decimal price, decimal volume) {
+            if (crypto.ToUpper() == "BTC") crypto = "XBT";
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
@@ -122,6 +125,7 @@ namespace IRTicker {
         }
 
         public BankOrder PlaceMarketOrder(string crypto, string fiat, OrderType? orderType, decimal volume) {
+            if (crypto.ToUpper() == "BTC") crypto = "XBT";
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
 
@@ -136,6 +140,7 @@ namespace IRTicker {
         }
 
         public Page<BankHistoryOrder> GetOpenOrders(string crypto, string fiat) {
+            if (crypto.ToUpper() == "BTC") crypto = "XBT";
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
             Page<BankHistoryOrder> openOs;
@@ -154,6 +159,7 @@ namespace IRTicker {
         }
 
         public Page<BankHistoryOrder> GetClosedOrders(string crypto, string fiat) {
+            if (crypto.ToUpper() == "BTC") crypto = "XBT";
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
             Page<BankHistoryOrder> cOrders = null;
@@ -179,7 +185,10 @@ namespace IRTicker {
 
             if (page < cOrders.TotalPages) return null;  // we don't want to send partial results, we either get it all or die trying
             cOrders.Data = allCOrders;
-            if ((TGBot != null) && ((cOrders.Data.Count() > 0))) TGBot.closedOrders(cOrders);
+            if (cOrders.Data.Count() > 0) {
+                if (TGBot != null) TGBot.closedOrders(cOrders);
+                IRT.SignalAveragePriceUpdate(cOrders);
+            }
             return cOrders;
         }
 
