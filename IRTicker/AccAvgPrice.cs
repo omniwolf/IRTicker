@@ -76,6 +76,14 @@ namespace IRTicker
             AccAvgPrice_Start_DTPicker.Enabled = false;
             AccAvgPrice_End_DTPicker.Enabled = false;
 
+            // blank out the previous results
+            AccAvgPrice_Result_TextBox.Text = "";
+            AccAvgPrice_TotalCrypto_TextBox.Text = "";
+            AccAvgPrice_TotalFiat_TextBox.Text = "";
+            AvgPriceResult = "";
+            TotalCryptoDealt = "";
+            TotalFiatDealt = "";
+
             string crypto = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString();
             string fiat = AccAvgPrice_Fiat_ComboBox.SelectedItem.ToString();
 
