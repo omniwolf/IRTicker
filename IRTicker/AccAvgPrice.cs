@@ -83,6 +83,10 @@ namespace IRTicker
             AvgPriceResult = "";
             TotalCryptoDealt = "";
             TotalFiatDealt = "";
+            AccAvgPrice_RemainingToDeal_TextBox.BackColor = SystemColors.Control;
+            AccAvgPrice_RemainingToDeal_TextBox.Text = "";
+            AccAvgPrice_RemaingToDealCurrency_Label.Text = "";
+            
 
             string crypto = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString();
             string fiat = AccAvgPrice_Fiat_ComboBox.SelectedItem.ToString();
@@ -131,16 +135,38 @@ namespace IRTicker
                     AccAvgPrice_Result_TextBox.Text = "Error: totalValue: " + totalValue + " totalCryptoDealt: " + totalCryptoDealt;
                 }
                 else {
-                    decimal tempRes = Math.Round((totalValue / totalCryptoDealt), 2, MidpointRounding.AwayFromZero);
+                    string crypto = (AccAvgPrice_Crypto_ComboBox.SelectedItem == "BTC" ? "XBT" : AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString());
+
+                    decimal tempRes = Math.Round((totalValue / totalCryptoDealt), dce.currencyFiatDivision[crypto], MidpointRounding.AwayFromZero);
                     AvgPriceResult = tempRes.ToString();
-                    AccAvgPrice_Result_TextBox.Text = Utilities.FormatValue(tempRes, 2);
+                    AccAvgPrice_Result_TextBox.Text = Utilities.FormatValue(tempRes, dce.currencyFiatDivision[crypto], false);
                     AccAvgPrice_CopyAvg_Button.Enabled = true;
-                    AccAvgPrice_TotalCrypto_TextBox.Text = Utilities.FormatValue(totalCryptoDealt, 8);
+                    AccAvgPrice_TotalCrypto_TextBox.Text = Utilities.FormatValue(totalCryptoDealt, 8, false);
                     TotalCryptoDealt = totalCryptoDealt.ToString();
                     AccAvgPrice_CopyCrypto_Button.Enabled = true;
-                    AccAvgPrice_TotalFiat_TextBox.Text = Utilities.FormatValue(totalValue, 2);
+                    AccAvgPrice_TotalFiat_TextBox.Text = Utilities.FormatValue(totalValue, 2, false);
                     TotalFiatDealt = totalValue.ToString();
                     AccAvgPrice_CopyFiat_Button.Enabled = true;
+
+                    if (!string.IsNullOrEmpty(AccAvgPrice_DealSize_TextBox.Text) && (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex != 0)) {  // if the user has entered a deal size and chose a currency
+                        if (decimal.TryParse(AccAvgPrice_DealSize_TextBox.Text, out decimal dealSize)) {
+                            // deal size user entry is good
+                            if (dealSize > 0) {
+                                decimal dealtSoFar = (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex == 1 ? totalCryptoDealt : totalValue);
+                                int decimals = 8;  // crypto vol should go to 8 dp
+                                if (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex == 2) decimals = 2;  // fiat just do 2
+
+                                // colour the remaining box
+                                if ((dealSize - dealtSoFar) < 0) AccAvgPrice_RemainingToDeal_TextBox.BackColor = Color.MistyRose;
+                                else if ((dealSize - dealtSoFar == 0)) AccAvgPrice_RemainingToDeal_TextBox.BackColor = Color.PaleGreen;
+
+                                AccAvgPrice_RemainingToDeal_TextBox.Text = Utilities.FormatValue((dealSize - dealtSoFar), decimals, false);
+                                AccAvgPrice_RemaingToDealCurrency_Label.Text = (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex == 1 ? AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() : AccAvgPrice_Fiat_ComboBox.SelectedItem.ToString());
+                            }
+                            else AccAvgPrice_RemainingToDeal_TextBox.Text = "Must be > 0";
+                        }
+                        else AccAvgPrice_RemainingToDeal_TextBox.Text = "Bad deal size";
+                    }
 
                 }
             }
@@ -152,6 +178,10 @@ namespace IRTicker
                 AccAvgPrice_CopyCrypto_Button.Enabled = false;
                 AccAvgPrice_TotalFiat_TextBox.Text = "";
                 AccAvgPrice_CopyFiat_Button.Enabled = false;
+                AccAvgPrice_RemainingToDeal_TextBox.Text = "";
+                AccAvgPrice_RemainingToDeal_TextBox.BackColor = SystemColors.Control;
+                AccAvgPrice_RemaingToDealCurrency_Label.Text = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString();
+
             }
 
             AccAvgPrice_Crypto_ComboBox.Enabled = true;

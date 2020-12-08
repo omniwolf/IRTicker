@@ -31,6 +31,7 @@ namespace IRTicker {
         /// </summary>
         /// <param name="val">the value we're formatting</param>
         /// <param name="maxDecimalPlaces">max decimal places to return.  Defaults to 5, this is only for limiting if you want less than 5 where the value is less than 10</param>
+        /// <param name="decimalsForLargeNumbersOnly">if the number is over 1000, apply custom "decimalPlaces", otherwise if the price is less than 1000 just use standard (2 dp for > 10, 5 dp under 10)</param>
         /// <returns>a beautiful string</returns>
         public static string FormatValue(decimal val, int decimalPlaces = -1, bool decimalsForLargeNumbersOnly = true) {
 
