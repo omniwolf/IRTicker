@@ -708,7 +708,12 @@ namespace IRTicker {
                     }
                 }
                 if (cToken.IsCancellationRequested) {
-                    _bStick.Morph(col);
+                    try {
+                        _bStick.Morph(col);
+                    }
+                    catch {
+                        throw new TaskCanceledException();
+                    }
                     throw new TaskCanceledException();
                     //break;  // can't use break, because we need to set the cTokenSrc to null somewhere.  we can't do it here, and breaking doesn't signal upwards that we're finished
                 }
