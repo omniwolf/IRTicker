@@ -148,7 +148,7 @@ namespace IRTicker
                     TotalFiatDealt = totalValue.ToString();
                     AccAvgPrice_CopyFiat_Button.Enabled = true;
 
-                    if (!string.IsNullOrEmpty(AccAvgPrice_DealSize_TextBox.Text) && (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex != 0)) {  // if the user has entered a deal size and chose a currency
+                    if (!string.IsNullOrEmpty(AccAvgPrice_DealSize_TextBox.Text) && (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex > 0)) {  // if the user has entered a deal size and chose a currency
                         if (decimal.TryParse(AccAvgPrice_DealSize_TextBox.Text, out decimal dealSize)) {
                             // deal size user entry is good
                             if (dealSize > 0) {
@@ -159,6 +159,7 @@ namespace IRTicker
                                 // colour the remaining box
                                 if ((dealSize - dealtSoFar) < 0) AccAvgPrice_RemainingToDeal_TextBox.BackColor = Color.MistyRose;
                                 else if ((dealSize - dealtSoFar == 0)) AccAvgPrice_RemainingToDeal_TextBox.BackColor = Color.PaleGreen;
+                                else AccAvgPrice_RemainingToDeal_TextBox.BackColor = Color.LightGoldenrodYellow;
 
                                 AccAvgPrice_RemainingToDeal_TextBox.Text = Utilities.FormatValue((dealSize - dealtSoFar), decimals, false);
                                 AccAvgPrice_RemaingToDealCurrency_Label.Text = (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex == 1 ? AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() : AccAvgPrice_Fiat_ComboBox.SelectedItem.ToString());
@@ -167,7 +168,10 @@ namespace IRTicker
                         }
                         else AccAvgPrice_RemainingToDeal_TextBox.Text = "Bad deal size";
                     }
-
+                    else {  // don't have enough info to calculate remaining deal size, so blank it out
+                        AccAvgPrice_RemainingToDeal_TextBox.BackColor = SystemColors.Control;
+                        AccAvgPrice_RemainingToDeal_TextBox.Text = "";
+                    }
                 }
             }
             else {

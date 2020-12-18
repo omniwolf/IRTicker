@@ -276,7 +276,7 @@ namespace IRTicker {
                     }
                     AccountClosedOrders_listview.Items.Add(new ListViewItem(new string[] {
                     order.CreatedTimestampUtc.ToLocalTime().ToShortDateString(),
-                    Utilities.FormatValue(vol),
+                    Utilities.FormatValue(vol, 8, false),
                     Utilities.FormatValue(order.AvgPrice.Value, 2),
                     Utilities.FormatValue(order.Value.Value)}));
                     AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].ToolTipText = buildOrderTT(order, false);
@@ -347,7 +347,8 @@ namespace IRTicker {
             }
         }
 
-
+        // how is this accountORders.item2 string array made up?
+        // count, pricePoint (not formatted), totalVolume, cumulativeVol (not formatted), cumulativeValue, includesMyOrder 
         public void drawAccountOrderBook(Tuple<decimal, List<string[]>> accountOrders, string pair) {
 
             synchronizationContext.Post(new SendOrPostCallback(o => {
@@ -361,13 +362,38 @@ namespace IRTicker {
 
                 AccountOrders_listview.Items.Clear();
 
+                bool cumVolumeReached = false;  // We need to track the cum volume on the orders.  When we find a row that has higher cumulative volume than the form volume value, we need to highlight this one, but no further ones.  use this flag to show we no longer need to highlight orders
+
                 foreach (string[] lvi in _accountOrders.Item2) {
                     Tuple<string, string> pairTup = Utilities.SplitPair(pair);
-                    AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0], Utilities.FormatValue(decimal.Parse(lvi[1]), DCEs["IR"].currencyFiatDivision[pairTup.Item1], false), lvi[2], lvi[3], lvi[4] }));
+                    AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0], Utilities.FormatValue(decimal.Parse(lvi[1]), DCEs["IR"].currencyFiatDivision[pairTup.Item1], false), lvi[2], Utilities.FormatValue(decimal.Parse(lvi[3]), 8, false), lvi[4] }));
                     AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].SubItems[1].Tag = lvi[1];  // need to store the price in an unformatted (and therefore parseable) format
                     if (lvi[5] == "true") {  // what a hack.  colourising any orders that are MINE
                         AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].ForeColor = Color.RoyalBlue;
                         AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.Yellow;
+                    }
+                    else {
+                        // if limit order or baiter, and can parse vol and limit price, and order book is showing the opposite side (ie if we're selling, and the OB is showing bids)
+                        // if cumVol >= formVol then highlight
+
+                        if (VolumePriceParseable()) {
+                            if (((AccountBuySell_listbox.SelectedIndex == 0) && (pIR.OrderBookSide == "Offer")) ||
+                                ((AccountBuySell_listbox.SelectedIndex == 1) && (pIR.OrderBookSide == "Bid"))) {
+                                if (decimal.Parse(lvi[3]) <= decimal.Parse(AccountOrderVolume_textbox.Text)) {
+                                    if (AccountOrderType_listbox.SelectedIndex > 0) {  // if we are have a limit or bait order type chosen, let's also stop highlighting at the price value
+                                        if ((AccountBuySell_listbox.SelectedIndex == 0) && (decimal.Parse(lvi[1]) < decimal.Parse(AccountLimitPrice_textbox.Text)) ||
+                                            ((AccountBuySell_listbox.SelectedIndex == 1) && (decimal.Parse(lvi[1]) > decimal.Parse(AccountLimitPrice_textbox.Text)))) {
+                                            AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleTurquoise;
+                                        }
+                                    }
+                                    else AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleTurquoise;  // else it's a market order, just highlight if the vol is good
+                                }
+                                else if (!cumVolumeReached) {  // we need to highlight one more row, as this will be the final order we'll eat into to fulfill our above order
+                                    AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleTurquoise;
+                                    cumVolumeReached = true;
+                                }
+                            }
+                        }
                     }
                 }
                 if (_accountOrders.Item1 == -1) {
@@ -465,6 +491,7 @@ namespace IRTicker {
                 AccountLimitPrice_textbox.Visible = true;
                 AccountLimitPrice_textbox_TextChanged(null, null);  // simulate a change in the limit text box to recalculate the order value
                 pIR.OrderTypeStr = "Limit";
+                AccountSwitchOrderBook(false);
             }
             else if (AccountOrderType_listbox.SelectedIndex == 0) {
                 SwitchOrderBookSide_button.Enabled = true;
@@ -480,6 +507,7 @@ namespace IRTicker {
                 AccountPlaceOrder_button.ForeColor = Color.Black;
                 IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "");
                 if (pIR != null) pIR.OrderTypeStr = "Market";
+                AccountSwitchOrderBook(false);
             }
             else if (AccountOrderType_listbox.SelectedIndex == 2) {  // market baiter!
                 AccountPlaceOrder_button.Text = "Start baitin'";
@@ -490,16 +518,7 @@ namespace IRTicker {
 
                 // switch the order book to the side we're dealing in
                 //SwitchOrderBookSide_button.Enabled = false;  // we're now monitoring this side, no changes allowed.
-                if (AccountBuySell_listbox.SelectedIndex == 0) {
-                    pIR.OrderBookSide = "Bid";
-                    AccountOrders_listview.Columns[1].Text = "Bids";
-                    AccountOrders_listview.BackColor = Color.Thistle;
-                }
-                else {
-                    pIR.OrderBookSide = "Offer";
-                    AccountOrders_listview.Columns[1].Text = "Offers";
-                    AccountOrders_listview.BackColor = Color.PeachPuff;
-                }
+                AccountSwitchOrderBook(true);  // switches the OB shown
                 pIR.OrderTypeStr = "Limit";
                 Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
                 //updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
@@ -507,37 +526,48 @@ namespace IRTicker {
             AccountPlaceOrder_button.Enabled = VolumePriceParseable();
         }
 
+        // if they chose Market Baiter, then we do the opposite - a buy will show bids and a sell will show offers
+        // if they clicked market or limit, then we show the other order book, ie if they have buy selected, then we show offers, and if the have sell selected then we show bids
+        private void AccountSwitchOrderBook(bool switchToLimit) {
+            int BuySellIndex = AccountBuySell_listbox.SelectedIndex;
+            if (switchToLimit) {
+                if (BuySellIndex == 0) BuySellIndex = 1;
+                else BuySellIndex = 0;
+            }
+            if (BuySellIndex == 1) {
+                pIR.OrderBookSide = "Bid";
+                AccountOrders_listview.Columns[1].Text = "Bids";
+                AccountOrders_listview.BackColor = Color.Thistle;
+            }
+            else {
+                pIR.OrderBookSide = "Offer";
+                AccountOrders_listview.Columns[1].Text = "Offers";
+                AccountOrders_listview.BackColor = Color.PeachPuff;
+            }
+        }
+
         private void AccountBuySell_listbox_Click(object sender, EventArgs e) {
             if (AccountOrderType_listbox.SelectedIndex < 2) {  // if we're baitin', then don't change the button
                 if (AccountBuySell_listbox.SelectedIndex == 0) {
                     AccountPlaceOrder_button.Text = "Buy now";
-                    AccountOrders_listview.Columns[1].Text = "Offers";
-                    pIR.OrderBookSide = "Offer";
                     pIR.BuySell = "Buy";
-                    AccountOrders_listview.BackColor = Color.PeachPuff;
                 }
                 else {
                     AccountPlaceOrder_button.Text = "Sell now";
-                    AccountOrders_listview.Columns[1].Text = "Bids";
-                    pIR.OrderBookSide = "Bid";
                     pIR.BuySell = "Sell";
-                    AccountOrders_listview.BackColor = Color.Thistle;
                 }
+                AccountSwitchOrderBook(false);
             }
             else {  // baitin'
                     // switch the order book to the side we're dealing in
                 if (AccountBuySell_listbox.SelectedIndex == 0) {
-                    pIR.OrderBookSide = "Bid";
-                    AccountOrders_listview.Columns[1].Text = "Bids";
                     pIR.BuySell = "Buy";
-                    AccountOrders_listview.BackColor = Color.Thistle;
                 }
                 else {
-                    pIR.OrderBookSide = "Offer";
-                    AccountOrders_listview.Columns[1].Text = "Offers";
                     pIR.BuySell = "Sell";
-                    AccountOrders_listview.BackColor = Color.PeachPuff;
                 }
+                AccountSwitchOrderBook(true);
+
                 if (pIR.marketBaiterActive) {
                     if (AccountBuySell_listbox.SelectedIndex == 0) {
                         AccountPlaceOrder_button.Text = "Buy now";

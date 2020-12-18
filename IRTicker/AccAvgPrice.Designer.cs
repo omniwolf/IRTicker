@@ -47,13 +47,13 @@
             this.AccAvgPrice_TT = new System.Windows.Forms.ToolTip(this.components);
             this.AccAvgPrice_CopyCrypto_Button = new System.Windows.Forms.Button();
             this.AccAvgPrice_CopyFiat_Button = new System.Windows.Forms.Button();
+            this.AccAvgPrice_DealSize_TextBox = new System.Windows.Forms.TextBox();
+            this.AccAvgPrice_DealSizeCurrency_ComboBox = new System.Windows.Forms.ComboBox();
             this.AccAvgPrice_TotalCrypto_TextBox = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.AccAvgPrice_TotalFiat_TextBox = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.AccAvgPrice_DealSize_TextBox = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.AccAvgPrice_DealSizeCurrency_ComboBox = new System.Windows.Forms.ComboBox();
             this.AccAvgPrice_RemainingToDeal_TextBox = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.AccAvgPrice_RemaingToDealCurrency_Label = new System.Windows.Forms.Label();
@@ -261,6 +261,28 @@
             this.AccAvgPrice_CopyFiat_Button.UseVisualStyleBackColor = true;
             this.AccAvgPrice_CopyFiat_Button.Click += new System.EventHandler(this.AccAvgPrice_CopyFiat_Button_Click);
             // 
+            // AccAvgPrice_DealSize_TextBox
+            // 
+            this.AccAvgPrice_DealSize_TextBox.Location = new System.Drawing.Point(112, 224);
+            this.AccAvgPrice_DealSize_TextBox.Name = "AccAvgPrice_DealSize_TextBox";
+            this.AccAvgPrice_DealSize_TextBox.Size = new System.Drawing.Size(106, 20);
+            this.AccAvgPrice_DealSize_TextBox.TabIndex = 25;
+            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_DealSize_TextBox, "Enter here what size you need to do on the order book.");
+            // 
+            // AccAvgPrice_DealSizeCurrency_ComboBox
+            // 
+            this.AccAvgPrice_DealSizeCurrency_ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.AccAvgPrice_DealSizeCurrency_ComboBox.FormattingEnabled = true;
+            this.AccAvgPrice_DealSizeCurrency_ComboBox.Items.AddRange(new object[] {
+            "",
+            "Crypto",
+            "Fiat"});
+            this.AccAvgPrice_DealSizeCurrency_ComboBox.Location = new System.Drawing.Point(230, 224);
+            this.AccAvgPrice_DealSizeCurrency_ComboBox.Name = "AccAvgPrice_DealSizeCurrency_ComboBox";
+            this.AccAvgPrice_DealSizeCurrency_ComboBox.Size = new System.Drawing.Size(98, 21);
+            this.AccAvgPrice_DealSizeCurrency_ComboBox.TabIndex = 26;
+            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_DealSizeCurrency_ComboBox, "Choose the currency of the size of the deal value");
+            // 
             // AccAvgPrice_TotalCrypto_TextBox
             // 
             this.AccAvgPrice_TotalCrypto_TextBox.Location = new System.Drawing.Point(112, 290);
@@ -297,14 +319,6 @@
             this.label9.TabIndex = 21;
             this.label9.Text = "Total fiat dealt:";
             // 
-            // AccAvgPrice_DealSize_TextBox
-            // 
-            this.AccAvgPrice_DealSize_TextBox.Location = new System.Drawing.Point(112, 224);
-            this.AccAvgPrice_DealSize_TextBox.Name = "AccAvgPrice_DealSize_TextBox";
-            this.AccAvgPrice_DealSize_TextBox.Size = new System.Drawing.Size(106, 20);
-            this.AccAvgPrice_DealSize_TextBox.TabIndex = 25;
-            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_DealSize_TextBox, "Enter here what size you need to do on the order book.");
-            // 
             // label10
             // 
             this.label10.AutoSize = true;
@@ -314,20 +328,6 @@
             this.label10.Size = new System.Drawing.Size(65, 13);
             this.label10.TabIndex = 24;
             this.label10.Text = "Size of deal:";
-            // 
-            // AccAvgPrice_DealSizeCurrency_ComboBox
-            // 
-            this.AccAvgPrice_DealSizeCurrency_ComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.AccAvgPrice_DealSizeCurrency_ComboBox.FormattingEnabled = true;
-            this.AccAvgPrice_DealSizeCurrency_ComboBox.Items.AddRange(new object[] {
-            "",
-            "Crypto",
-            "Fiat"});
-            this.AccAvgPrice_DealSizeCurrency_ComboBox.Location = new System.Drawing.Point(230, 224);
-            this.AccAvgPrice_DealSizeCurrency_ComboBox.Name = "AccAvgPrice_DealSizeCurrency_ComboBox";
-            this.AccAvgPrice_DealSizeCurrency_ComboBox.Size = new System.Drawing.Size(98, 21);
-            this.AccAvgPrice_DealSizeCurrency_ComboBox.TabIndex = 26;
-            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_DealSizeCurrency_ComboBox, "Choose the currency of the size of the deal value");
             // 
             // AccAvgPrice_RemainingToDeal_TextBox
             // 
