@@ -182,6 +182,7 @@ namespace IRTicker {
                 if (e.Response != null) {
                     using (WebResponse response = e.Response) {
                         HttpWebResponse httpResponse = (HttpWebResponse)response;
+                        Debug.Print("Fail for: " + uri);
                         Debug.Print("Error code: {0}", httpResponse.StatusCode);
                         using (Stream data = response.GetResponseStream())
                         using (var reader = new StreamReader(data)) {
