@@ -379,7 +379,7 @@ namespace IRTicker {
                         if (VolumePriceParseable()) {
                             if (((AccountBuySell_listbox.SelectedIndex == 0) && (pIR.OrderBookSide == "Offer")) ||
                                 ((AccountBuySell_listbox.SelectedIndex == 1) && (pIR.OrderBookSide == "Bid"))) {
-                                if (decimal.Parse(lvi[3]) <= decimal.Parse(AccountOrderVolume_textbox.Text)) {
+                                if (decimal.Parse(lvi[3]) < decimal.Parse(AccountOrderVolume_textbox.Text)) {
                                     if (AccountOrderType_listbox.SelectedIndex > 0) {  // if we are have a limit or bait order type chosen, let's also stop highlighting at the price value
                                         if ((AccountBuySell_listbox.SelectedIndex == 0) && (decimal.Parse(lvi[1]) < decimal.Parse(AccountLimitPrice_textbox.Text)) ||
                                             ((AccountBuySell_listbox.SelectedIndex == 1) && (decimal.Parse(lvi[1]) > decimal.Parse(AccountLimitPrice_textbox.Text)))) {
