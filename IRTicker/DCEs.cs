@@ -316,13 +316,20 @@ namespace IRTicker {
             ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> OB_IR;  // an order will only ever be a limit or a bid, so sort it out up top to reduce code duplication
             ConcurrentDictionary<string, decimal> Order_OB_IR;  // one side of the Order_IR_OBs dictionary
 
+            ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> OB_IR_cross;  // the other side
+            //ConcurrentDictionary<string, decimal> Order_OB_IR_cross;  // if our order is a bid, this is the offer side, and vice versa
+
             if (order.OrderType.EndsWith("Bid")) {
                 OB_IR = IR_OBs[pair].Item1;
                 Order_OB_IR = OrderGuid_IR_OBs[pair].Item1;
+                OB_IR_cross = IR_OBs[pair].Item2;
+                //Order_OB_IR_cross = OrderGuid_IR_OBs[pair].Item2;
             }
             else {
                 OB_IR = IR_OBs[pair].Item2;
                 Order_OB_IR = OrderGuid_IR_OBs[pair].Item2;
+                OB_IR_cross = IR_OBs[pair].Item1;
+                //Order_OB_IR_cross = OrderGuid_IR_OBs[pair].Item1;
             }
 
             // if the dictionary for this event pair is empty, just get straight to the adding and move on
@@ -391,6 +398,24 @@ namespace IRTicker {
                     }
                     break;
             }
+
+            // need to find out if the order crosses the spread, and if so ignore it
+            /*if (eventStr == "NewOrder") {
+                switch (order.OrderType) {
+                    case "LimitBid":
+                        if (order.Price >= OB_IR_cross.Keys.Min()) {  // if the price of this order is greater than the best offer, it's just crossing the spread. ignore
+                            Debug.Print(DateTime.Now + " - (" + pair + ") Limit bid crossed the spread, attempted price: " + order.Price + ", best offer: " + OB_IR_cross.Keys.Min());
+                            return null;
+                        }
+                        break;
+                    case "LimitOffer":
+                        if (order.Price <= OB_IR_cross.Keys.Max()) {
+                            Debug.Print(DateTime.Now + " - (" + pair + ") Limit offer crossed the spread, attempted price: " + order.Price + ", best offer: " + OB_IR_cross.Keys.Max());
+                            return null;
+                        }
+                        break;
+                }
+            }*/
 
             if (TopPrice < 0) {
                 Debug.Print(DateTime.Now + " - the IR order book was empty for + " + pair + ", just ignoring this");
@@ -468,17 +493,17 @@ namespace IRTicker {
                                 Debug.Print("- but the other dictionary has it...");
                                 if (order.Volume == 0) {
                                     if (OB_IR[priceLevel.Key].Count > 1) {
-                                        OB_IR[priceLevel.Key].TryRemove(order.OrderGuid, out OrderBook_IR ignore1);
-                                        Debug.Print("- removing a single order at this price level - " + priceLevel.Key);
+                                        if (!OB_IR[priceLevel.Key].TryRemove(order.OrderGuid, out OrderBook_IR ignore1)) Debug.Print("!! failed to remove inner order on OrderChanged.  price: " + priceLevel.Key + " and guid: " + order.OrderGuid);
+                                        Debug.Print("- removing a single order at this price level - " + priceLevel.Key + " guid: " + ignore1.OrderGuid);
                                     }
                                     else {  // need to remove the whole outer thang
-                                        OB_IR.TryRemove(priceLevel.Key, out ConcurrentDictionary<string, OrderBook_IR> ignore2);
-                                        Debug.Print("- removing the whole price level - " + priceLevel.Key);
+                                        if (!OB_IR.TryRemove(priceLevel.Key, out ConcurrentDictionary<string, OrderBook_IR> ignore2)) Debug.Print("!! failed to remove outer order on OrderChanged.  price: " + priceLevel.Key + " and guid: " + order.OrderGuid);
+                                        Debug.Print("- removing the whole price level - " + ignore2.First().Value.Price + " guid: " + ignore2.First().Value.OrderGuid);
                                     }
                                 }
                                 else {  // OK we just adjust the vol
                                     priceLevel.Value[order.OrderGuid].Volume = order.Volume;
-                                    Debug.Print("- adjusting the volume of price " + priceLevel.Key + " to " + order.Volume);
+                                    Debug.Print("- adjusting the volume of price " + priceLevel.Key + " to " + order.Volume + " for " + order.OrderGuid);
                                 }
                             }
                         }
@@ -490,17 +515,19 @@ namespace IRTicker {
                         if (OB_IR.ContainsKey(OrderPrice)) {
                             if (OB_IR[OrderPrice].Count > 1) {
                                 if (!OB_IR[OrderPrice].TryRemove(order.OrderGuid, out OrderBook_IR ignore1)) {
-                                    Debug.Print(DateTime.Now + " - couldn't remove order from OB (order changed, vol was 0)!");
+                                    Debug.Print(DateTime.Now + " - couldn't remove order from OB (order changed, vol was 0)!  guid: " + ignore1.OrderGuid);
                                 }
+                                Debug.Print("order changed to 0, price: " + OrderPrice + " guid: " + ignore1.OrderGuid);
                             }
                             else {  // need to remove the whole outer thang
                                 if (!OB_IR.TryRemove(OrderPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore2)) {
-                                    Debug.Print(DateTime.Now + " - couldn't remove the price element from price dict (order changed event, vol 0)");
+                                    Debug.Print(DateTime.Now + " - couldn't remove the price element from price dict (order changed event, vol 0).  guid: " + ignore2.First().Value.OrderGuid);
                                 }
+                                Debug.Print("order (outer) changed to 0, price: " + OrderPrice + " guid: " + ignore2.First().Value.OrderGuid);
                             }
                         }
                         else {  // big dictionary don't contain this price
-                            Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to set vol = 0 on an order, but big dictionary don't contain this price (" + OrderPrice + "). will manually search...");
+                            Debug.Print(DateTime.Now.ToString() + " |(" + order.Pair + ") Trying to set vol = 0 on an order, but big dictionary don't contain this price (" + OrderPrice + "). will manually search... (guid: " + order.OrderGuid + ")");
                             foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
                                 if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
                                     Debug.Print("Manual search was successful! the price in this bad boy was: " + priceLevel.Value[order.OrderGuid].Price);
@@ -515,7 +542,7 @@ namespace IRTicker {
 
                         }
                         if (!Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore3)) {  // regardless of whether we find the price/order in the OB_IR dict, let's remove it from the order_ob_ir dict
-                            Debug.Print(DateTime.Now + " - couldn't remove order guid dictionary?  orderchange event, vol 1");
+                            Debug.Print(DateTime.Now + " - couldn't remove order guid dictionary?  orderchange event, vol 1.  guid: " + order.OrderGuid);
                         }
 
 
@@ -547,6 +574,7 @@ namespace IRTicker {
                         if (OB_IR.ContainsKey(orderPrice)) {
                             if (OB_IR[orderPrice].ContainsKey(order.OrderGuid)) {
                                 OB_IR[orderPrice][order.OrderGuid].Volume = order.Volume;
+                                Debug.Print("Order vol updated for guid: " + order.OrderGuid);
                             }
                             else {
                                 Debug.Print(DateTime.Now.ToString() + " |(" + pair + ") Trying to update vol to a non-zero value, but can't find the orderGuid at the price: " + orderPrice);
@@ -571,12 +599,14 @@ namespace IRTicker {
                             else {  // this price level does include the guid, so let's kill it
                                 if (OB_IR[OrderPrice2].Count > 1) {
                                     if (!OB_IR[OrderPrice2].TryRemove(order.OrderGuid, out OrderBook_IR ignore)) Debug.Print("!! 1 failed to remove (" + order.Pair + ") " + order.OrderGuid);
+                                    //if (pair == "XBT-AUD") Debug.Print("-- removed GUID " + ignore.OrderGuid + " which had a price of: " + ignore.Price);
                                     /*if (order.Pair.ToUpper() == "XBT-AUD") {
                                         if (ignore != null) Debug.Print(DateTime.Now.ToString() + " |                                                                 ORDER CANCELED: " + order.OrderGuid + " | others at this price remain, was this: " + ignore.OrderGuid);
                                     }*/
                                 }
                                 else {  // only one order at this price, remove the whole price level
                                     if (!OB_IR.TryRemove(OrderPrice2, out ConcurrentDictionary<string, OrderBook_IR> ignore)) Debug.Print("!! 2 failed to remove (" + order.Pair + ") " + order.OrderGuid);
+                                    //if (pair == "XBT-AUD") Debug.Print("-- removed price and GUID " + ignore.First().Value.OrderGuid + " which had a price of: " + ignore.First().Value.Price);
                                     /*if (order.Pair.ToUpper() == "XBT-AUD") {
                                         if (ignore != null) Debug.Print(DateTime.Now.ToString() + " |                                                                 ORDER CANCELED: " + order.OrderGuid + " | only one at this price, was this: " + ignore.First().Key);
                                     }*/

@@ -1179,24 +1179,27 @@ namespace IRTicker
                 }
 
                 if (!closedOrdersFirstRun[pair]) {
-                    // send message..
-                    foreach (BankHistoryOrder cOrder in ordersToNotify) {
-                        if (cOrder.Status == OrderStatus.Filled) {
-                            string crypto = cOrder.PrimaryCurrencyCode.ToString().ToUpper();
-                            await SendMessage("*Order Filled!* 🤝" + Environment.NewLine +
-                                "  Pair: " + crypto + "-" + cOrder.SecondaryCurrencyCode.ToString().ToUpper() + Environment.NewLine +
-                                "  Value: $" + Utilities.FormatValue(cOrder.Value.Value, 2) + Environment.NewLine +
-                                "  Avg price: $" + Utilities.FormatValue(cOrder.AvgPrice.Value, 2) + Environment.NewLine +
-                                "  Volume: " + crypto + ": " + Utilities.FormatValue(cOrder.Volume, 8, false) + Environment.NewLine +
-                                "  Order created: " + cOrder.CreatedTimestampUtc.ToLocalTime());
-                            NextMsgIsNew = true;  // don't edit this message if the next message normally would
+
+                    if (ordersToNotify.Count > 0) {
+                        // send message..
+                        foreach (BankHistoryOrder cOrder in ordersToNotify) {
+                            if (cOrder.Status == OrderStatus.Filled) {
+                                string crypto = cOrder.PrimaryCurrencyCode.ToString().ToUpper();
+                                await SendMessage("*Order Filled!* 🤝" + Environment.NewLine +
+                                    "  Pair: " + crypto + "-" + cOrder.SecondaryCurrencyCode.ToString().ToUpper() + Environment.NewLine +
+                                    "  Value: $" + Utilities.FormatValue(cOrder.Value.Value, 2) + Environment.NewLine +
+                                    "  Avg price: $" + Utilities.FormatValue(cOrder.AvgPrice.Value, 2) + Environment.NewLine +
+                                    "  Volume: " + crypto + ": " + Utilities.FormatValue(cOrder.Volume, 8, false) + Environment.NewLine +
+                                    "  Order created: " + cOrder.CreatedTimestampUtc.ToLocalTime());
+                                NextMsgIsNew = true;  // don't edit this message if the next message normally would
+                            }
                         }
-                    }
-                    try {
-                        pIR.GetAccounts();
-                    }
-                    catch (Exception ex) {
-                        Debug.Print("Tried to grab the accounts after checking if we have any new closed orders but it failed: " + ex.Message);
+                        try {
+                            pIR.GetAccounts();
+                        }
+                        catch (Exception ex) {
+                            Debug.Print("Tried to grab the accounts after checking if we have any new closed orders but it failed: " + ex.Message);
+                        }
                     }
                 }
                 else {

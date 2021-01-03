@@ -345,94 +345,98 @@ namespace IRTicker {
 
             //using (client_IR = new WebsocketClient(url)) {  getting rid of using statement..
             client_IR = new WebsocketClient(url);
-                client_IR.ReconnectTimeout = TimeSpan.FromSeconds(70);
-                client_IR.ReconnectionHappened.Subscribe(info => {
-                    if (info.Type == ReconnectionType.Initial) {
-                        Debug.Print("Initial 'reconnection', ignored");
-                        DCEs[dExchange].socketsAlive = true;
-                        DCEs[dExchange].socketsReset = false;
-                    }
-                    /*else if (info.Type == ReconnectionType.Lost) {
-                        Debug.Print("Lost 'reconnection' ignored, attached to a Reset button click?");
-                    }*/
-                    else { 
-                        Debug.Print(DateTime.Now + " - (" + dExchange + " reconnection) - clearing OB sub dicts...");
-                        DCEs[dExchange].socketsAlive = false;
-                        DCEs["IR"].CurrentDCEStatus = "Reconnected";
-                        /*DCEs[dExchange].ClearOrderBookSubDicts();
-                        Debug.Print("creating a new buffer dict...");
-                        DCEs[dExchange].orderBuffer_IR = new ConcurrentDictionary<string, ConcurrentDictionary<int, Ticker_IR>>();
-                        Debug.Print("setting the pulledSnapShot dict entries to all false and initialising the orderbuffer dicts...");
-                        List<string> tempPairs = new List<string>();
-                        tempPairs.Add("XBT-AUD");
-                        tempPairs.Add("XBT-USD");
-                        tempPairs.Add("XBT-NZD");
-                        /*foreach(string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
-                            foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {*/
-                        /*foreach (string pair in tempPairs) {
-                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(pair)) {
-                                DCEs[dExchange].pulledSnapShot[pair] = false;
-                            }
-                            // initialise orderbuffers
-                            if (!DCEs["IR"].orderBuffer_IR.ContainsKey(pair)) {  // make the dictionary element doesn't already exist
-                                if (!DCEs["IR"].orderBuffer_IR.TryAdd(pair, new ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>())) {
-                                    Debug.Print(DateTime.Now + " - can't add orderBuffer_IR concurrent dicsh for " + pair);
-                                    return;
-                                }
-                            }
-                            //}
-                        }*/
-                        Reinit_sockets(dExchange);
-                        Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
-                        subscribe_unsubscribe_new(dExchange, true);  // resubscriibe to all pairs
-                        // commented out the below because 1. use subscribe_unsubscribe_new() instead of re-writing code, and 2. stoping and starting the timer again seems pointless
-                        /*Task.Run(() => client_IR.Send(subscribeStr));
-                        Debug.Print("Pulling the REST OBs...");
-                        foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
-                            foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                                if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                                    //GetOrderBook_IR("XBT", "AUD");
-                                    //GetOrderBook_IR("XBT", "USD");
-                                    //GetOrderBook_IR("XBT", "NZD");
-                                    GetOrderBook_IR(primaryCode, secondaryCode);
-                                }
+            client_IR.ReconnectTimeout = TimeSpan.FromSeconds(70);
+            client_IR.ReconnectionHappened.Subscribe(info =>
+            {
+                if (info.Type == ReconnectionType.Initial) {
+                    Debug.Print("Initial 'reconnection', ignored");
+                    DCEs[dExchange].socketsAlive = true;
+                    DCEs[dExchange].socketsReset = false;
+                }
+                /*else if (info.Type == ReconnectionType.Lost) {
+                    Debug.Print("Lost 'reconnection' ignored, attached to a Reset button click?");
+                }*/
+                else {
+                    Debug.Print(DateTime.Now + " - (" + dExchange + " reconnection) - clearing OB sub dicts...");
+                    DCEs[dExchange].socketsAlive = false;
+                    DCEs["IR"].CurrentDCEStatus = "Reconnected";
+                    /*DCEs[dExchange].ClearOrderBookSubDicts();
+                    Debug.Print("creating a new buffer dict...");
+                    DCEs[dExchange].orderBuffer_IR = new ConcurrentDictionary<string, ConcurrentDictionary<int, Ticker_IR>>();
+                    Debug.Print("setting the pulledSnapShot dict entries to all false and initialising the orderbuffer dicts...");
+                    List<string> tempPairs = new List<string>();
+                    tempPairs.Add("XBT-AUD");
+                    tempPairs.Add("XBT-USD");
+                    tempPairs.Add("XBT-NZD");
+                    /*foreach(string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
+                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {*/
+                    /*foreach (string pair in tempPairs) {
+                        if (DCEs[dExchange].ExchangeProducts.ContainsKey(pair)) {
+                            DCEs[dExchange].pulledSnapShot[pair] = false;
+                        }
+                        // initialise orderbuffers
+                        if (!DCEs["IR"].orderBuffer_IR.ContainsKey(pair)) {  // make the dictionary element doesn't already exist
+                            if (!DCEs["IR"].orderBuffer_IR.TryAdd(pair, new ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>())) {
+                                Debug.Print(DateTime.Now + " - can't add orderBuffer_IR concurrent dicsh for " + pair);
+                                return;
                             }
                         }
-
-                    // why do we stop and start the timer here?  the socket is already up and running.. i think this is dumb.
-                        stopUITimerThread();
-
-                        Debug.Print(DateTime.Now + " - RECONNECT: about to start the UI timer!");
-                        UITimerThreadProceed = true;
-                        UITimerThread = new Thread(new ThreadStart(updateUITimer));
-                        // this command to start the thread
-                        UITimerThread.Start();
-                        Debug.Print("RECONNECT: UI timer storted.");*/
+                        //}
+                    }*/
+                    Reinit_sockets(dExchange);
+                    Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
+                    subscribe_unsubscribe_new(dExchange, true);  // resubscriibe to all pairs
+                                                                 // commented out the below because 1. use subscribe_unsubscribe_new() instead of re-writing code, and 2. stoping and starting the timer again seems pointless
+                    /*Task.Run(() => client_IR.Send(subscribeStr));
+                    Debug.Print("Pulling the REST OBs...");
+                    foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
+                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
+                                //GetOrderBook_IR("XBT", "AUD");
+                                //GetOrderBook_IR("XBT", "USD");
+                                //GetOrderBook_IR("XBT", "NZD");
+                                GetOrderBook_IR(primaryCode, secondaryCode);
+                            }
+                        }
                     }
 
-                });
+                // why do we stop and start the timer here?  the socket is already up and running.. i think this is dumb.
+                    stopUITimerThread();
 
-                client_IR.MessageReceived.Subscribe(msg => {
-                    switch (dExchange) {
-                        case "IR":
-                            MessageRX_IR(msg.Text);
-                            break;
-                    }
-                });
+                    Debug.Print(DateTime.Now + " - RECONNECT: about to start the UI timer!");
+                    UITimerThreadProceed = true;
+                    UITimerThread = new Thread(new ThreadStart(updateUITimer));
+                    // this command to start the thread
+                    UITimerThread.Start();
+                    Debug.Print("RECONNECT: UI timer storted.");*/
+                }
 
-                Task.Run(() => client_IR.Start());
+            });
 
-                Debug.Print(DateTime.Now + " - about to start the UI timer!");
+            client_IR.MessageReceived.Subscribe(msg =>
+            {
+                switch (dExchange) {
+                    case "IR":
+                        MessageRX_IR(msg.Text);
+                        break;
+                }
+            });
+
+            Task.Run(() => client_IR.Start());
+
+            DCEs["IR"].socketsReset = false;  // i think this needs to be set.
+
+            Debug.Print(DateTime.Now + " - about to start the UI timer!");
                                 
-                UITimerThread = new Thread(new ThreadStart(updateUITimer));
-                // this command to start the thread
-                UITimerThread.Start();
-                Debug.Print("UI timer storted.");
-                //await Task.Run(() => client_IR.Send("1"));
-                //Debug.Print(DateTime.Now + " - we have moved on after the client_IR.send where we subscribe!");
+            UITimerThread = new Thread(new ThreadStart(updateUITimer));
+            // this command to start the thread
+            UITimerThread.Start();
+            Debug.Print("UI timer storted.");
+            //await Task.Run(() => client_IR.Send("1"));
+            //Debug.Print(DateTime.Now + " - we have moved on after the client_IR.send where we subscribe!");
 
-                //startSocket_exitEvent.WaitOne();
-            //}  trying to remove the using statement
+            //startSocket_exitEvent.WaitOne();
+        //}  trying to remove the using statement
         }
 
         // shuts down the UITimerThread.  Only called when the app is terminating.
@@ -661,6 +665,12 @@ namespace IRTicker {
         private void MessageRX_IR(string message) {
             if (message == null) return;
             //Debug.Print("IR MSG ---- " + message);
+
+            // catching order cancelled events and logging it to try and figure out what's up.
+            if (message.Contains("OrderChanged") && message.Contains("xbt-aud")) {
+                Debug.Print("changed GUID: " + message);  //message.Substring(message.IndexOf("OrderGuid\":\"")));
+            }
+
             DCEs["IR"].socketsAlive = true;
             if (message.Contains("\"Event\":\"Subscriptions\"")) {
                 // ignore the subscriptions event.  it breaks parsing too :/
@@ -781,7 +791,7 @@ namespace IRTicker {
         public void parseTicker_IR(Ticker_IR tickerStream) { 
 
             if (!tickerStream.Data.OrderType.StartsWith("Limit")) {
-                Debug.Print(DateTime.Now + " - (" + tickerStream.Channel + ") ignoring a " + tickerStream.Data.OrderType + " order.  event: " + tickerStream.Event);
+                Debug.Print(DateTime.Now + " - (" + tickerStream.Channel + ") ignoring a " + tickerStream.Data.OrderType + " order.  event: " + tickerStream.Event + ".  guid: " + tickerStream.Data.OrderGuid);
                 return;  // ignore market orders
             }
 
