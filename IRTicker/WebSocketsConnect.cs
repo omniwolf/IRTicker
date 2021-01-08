@@ -424,7 +424,7 @@ namespace IRTicker {
 
             Task.Run(() => client_IR.Start());
 
-            DCEs["IR"].socketsReset = false;  // i think this needs to be set.
+            //DCEs["IR"].socketsReset = false;  // i think this needs to be set.
 
             Debug.Print(DateTime.Now + " - about to start the UI timer!");
                                 
@@ -667,9 +667,9 @@ namespace IRTicker {
             //Debug.Print("IR MSG ---- " + message);
 
             // catching order cancelled events and logging it to try and figure out what's up.
-            if (message.Contains("OrderChanged") && message.Contains("xbt-aud")) {
-                Debug.Print("changed GUID: " + message);  //message.Substring(message.IndexOf("OrderGuid\":\"")));
-            }
+            //if (message.Contains("OrderChanged") && message.Contains("xbt-aud")) {
+            //    Debug.Print("changed GUID: " + message);  //message.Substring(message.IndexOf("OrderGuid\":\"")));
+            //}
 
             DCEs["IR"].socketsAlive = true;
             if (message.Contains("\"Event\":\"Subscriptions\"")) {

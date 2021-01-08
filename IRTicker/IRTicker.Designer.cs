@@ -563,6 +563,7 @@
             this.Settings.Name = "Settings";
             this.Settings.Size = new System.Drawing.Size(582, 840);
             this.Settings.TabIndex = 4;
+            this.Settings.Visible = false;
             // 
             // IRAccountSettings_groupBox
             // 

@@ -517,13 +517,13 @@ namespace IRTicker {
                                 if (!OB_IR[OrderPrice].TryRemove(order.OrderGuid, out OrderBook_IR ignore1)) {
                                     Debug.Print(DateTime.Now + " - couldn't remove order from OB (order changed, vol was 0)!  guid: " + ignore1.OrderGuid);
                                 }
-                                Debug.Print("order changed to 0, price: " + OrderPrice + " guid: " + ignore1.OrderGuid);
+                                //Debug.Print("order changed to 0, price: " + OrderPrice + " guid: " + ignore1.OrderGuid);
                             }
                             else {  // need to remove the whole outer thang
                                 if (!OB_IR.TryRemove(OrderPrice, out ConcurrentDictionary<string, OrderBook_IR> ignore2)) {
                                     Debug.Print(DateTime.Now + " - couldn't remove the price element from price dict (order changed event, vol 0).  guid: " + ignore2.First().Value.OrderGuid);
                                 }
-                                Debug.Print("order (outer) changed to 0, price: " + OrderPrice + " guid: " + ignore2.First().Value.OrderGuid);
+                               // Debug.Print("order (outer) changed to 0, price: " + OrderPrice + " guid: " + ignore2.First().Value.OrderGuid);
                             }
                         }
                         else {  // big dictionary don't contain this price
@@ -574,7 +574,7 @@ namespace IRTicker {
                         if (OB_IR.ContainsKey(orderPrice)) {
                             if (OB_IR[orderPrice].ContainsKey(order.OrderGuid)) {
                                 OB_IR[orderPrice][order.OrderGuid].Volume = order.Volume;
-                                Debug.Print("Order vol updated for guid: " + order.OrderGuid);
+                                //Debug.Print("Order vol updated for guid: " + order.OrderGuid);
                             }
                             else {
                                 Debug.Print(DateTime.Now.ToString() + " |(" + pair + ") Trying to update vol to a non-zero value, but can't find the orderGuid at the price: " + orderPrice);
