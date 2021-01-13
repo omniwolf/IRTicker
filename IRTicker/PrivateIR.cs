@@ -177,6 +177,8 @@ namespace IRTicker {
                     }
                 }
 
+                if (page == 1) Debug.Print("GetClosedOrders(" + crypto + "-" + fiat + "): total pages: " + cOrders.TotalPages + " and total items: " + cOrders.TotalItems);
+
                 foreach (BankHistoryOrder order in cOrders.Data) {
                     allCOrders.Add(order);
                 }

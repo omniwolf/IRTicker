@@ -3163,7 +3163,7 @@ namespace IRTicker {
             if (Properties.Settings.Default.APIFriendly != ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName) {
                 // a new key has been chosen, let's reset the closed orders.
                 Debug.Print(DateTime.Now + " - API key has been changed, about to clear the closedOrdersFirstRun ductionary...");
-                if (TGBot != null) TGBot.closedOrdersFirstRun.Clear();
+                if (TGBot != null) TGBot.closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
                 Debug.Print(DateTime.Now + " - closedOrdersFirstRun has been cleared.  There should be no old orders reported.  Size of dict now: " + TGBot.closedOrdersFirstRun.Count);
 
                 Properties.Settings.Default.APIFriendly = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName;
