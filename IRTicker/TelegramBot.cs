@@ -1165,7 +1165,9 @@ namespace IRTicker
         public async void closedOrders(Page<BankHistoryOrder> cOrders) {
 
             if (cOrders.Data.Count() > 0) {
-                string pair = (cOrders.Data.First().PrimaryCurrencyCode + "-" + cOrders.Data.First().SecondaryCurrencyCode).ToUpper();
+
+                string cryptoTmp = (cOrders.Data.First().PrimaryCurrencyCode.ToString().ToUpper() == "XBT" ? "BTC" : cOrders.Data.First().PrimaryCurrencyCode.ToString());
+                string pair = (cryptoTmp + "-" + cOrders.Data.First().SecondaryCurrencyCode).ToUpper();
                 List<BankHistoryOrder> ordersToNotify = new List<BankHistoryOrder>();
 
                 if (!notifiedOrders.ContainsKey(pair)) notifiedOrders.TryAdd(pair, new List<Guid>());
