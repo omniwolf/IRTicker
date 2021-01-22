@@ -351,7 +351,7 @@ namespace IRTicker {
                     //OB_IR = IR_OBs[order.Pair.ToUpper()].Item1;
                     //Order_OB_IR = OrderGuid_IR_OBs[order.Pair.ToUpper()].Item1;
                     lock (IR_OBs[pair].Item1) {
-                        if (IR_OBs[pair].Item2.Any()) {
+                        if (IR_OBs[pair].Item1.Any()) {
                             TopPrice = IR_OBs[pair].Item1.Keys.Max();
                             TopOrder = (IR_OBs[pair].Item1)[TopPrice];  // if you get a crash here (or the other TopOrder line just below), see if pulledSnapShot is false.  If so, maybe we should be returning null above in the pulledSnapShot test so the code doesn't continue...
                         }

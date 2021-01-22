@@ -52,7 +52,7 @@ namespace IRTicker {
             // 
         }
 
-        public void PrivateIR_init(string _BaseURL, string APIKey, string APISecret, IRTicker _IRT, DCE _DCE_IR, TelegramBot _TGBot) {
+        public void PrivateIR_init(string APIKey, string APISecret, IRTicker _IRT, DCE _DCE_IR, TelegramBot _TGBot) {
             IRT = _IRT;
             DCE_IR = _DCE_IR;
             TGBot = _TGBot;
@@ -65,7 +65,7 @@ namespace IRTicker {
             IRcreds = new ApiCredential(APIKey, APISecret);
 
             var IRconf = new ApiConfig {
-                BaseUrl = _BaseURL,
+                BaseUrl = DCE_IR.BaseURL,
                 Credential = IRcreds
             };
             IRclient = Client.Create(IRconf);
@@ -517,7 +517,7 @@ namespace IRTicker {
                         Debug.Print("MBAIT: Our order doesn't exist in the OB, possibly filled? " + placedOrder.OrderGuid.ToString());
                         Page<BankHistoryOrder> closedOs;
                         try {
-                            closedOs = GetClosedOrders(crypto, fiat);
+                            closedOs = GetClosedOrders(crypto, fiat);  // let's check to see if we have it
                         }
                         catch (Exception ex) {
                             Debug.Print("MBAIT: Damnit, can't pull closed orders for some reason: " + ex.Message);

@@ -38,7 +38,7 @@ namespace IRTicker
         private string bTCMemoji = "";
 
         public ConcurrentDictionary<string, bool> closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
-        private ConcurrentDictionary<string, List<Guid>> notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();
+        public ConcurrentDictionary<string, List<Guid>> notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();
 
         public TelegramBot(string TGAPIKey, PrivateIR _pIR, DCE _DCE_IR, IRTicker _IRT) {
 
@@ -1166,6 +1166,9 @@ namespace IRTicker
 
             if (cOrders.Data.Count() > 0) {
 
+                if (cOrders.Data.First().PrimaryCurrencyCode.ToString().ToUpper() == "BTC") 
+                    Debug.Print("TG closed orders: we have been sent a BTC order??");
+
                 string cryptoTmp = (cOrders.Data.First().PrimaryCurrencyCode.ToString().ToUpper() == "XBT" ? "BTC" : cOrders.Data.First().PrimaryCurrencyCode.ToString());
                 string pair = (cryptoTmp + "-" + cOrders.Data.First().SecondaryCurrencyCode).ToUpper();
                 List<BankHistoryOrder> ordersToNotify = new List<BankHistoryOrder>();
@@ -1209,8 +1212,6 @@ namespace IRTicker
                     Debug.Print(DateTime.Now + " - TGBot - in closedOrders sub, this is the first run for " + pair);
                 }
             }
-
-
         }
 
         enum CommandChosen {

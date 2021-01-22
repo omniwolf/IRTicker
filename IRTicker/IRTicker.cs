@@ -224,7 +224,7 @@ namespace IRTicker {
                 pIR = null;
             }
             else {
-                pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
                 int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
                 if (friendlyNameLen > 20) friendlyNameLen = 20;
                 AccountName_button.Text = Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : "");
@@ -2260,8 +2260,8 @@ namespace IRTicker {
             try {
                 var openOs = pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
                 drawOpenOrders(openOs.Data);
-                var closedOs = pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
-                drawClosedOrders(closedOs.Data);
+                //var closedOs = pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);  // shouldn't need to call this, we call it from DoWork already
+                //drawClosedOrders(closedOs.Data);
                 var accs = pIR.GetAccounts();
                 DrawIRAccounts(accs);
             }
@@ -2359,7 +2359,7 @@ namespace IRTicker {
                         IRAccount_button.Enabled = true;
 
                         pIR = new PrivateIR();
-                        pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                        pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
                     }
 
                     if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
@@ -2424,7 +2424,7 @@ namespace IRTicker {
                     LastPanel.Visible = true;
                     Settings.Visible = false;
                     if (IRAccount_panel.Visible) {
-                        InitialiseAccountsPanel();
+                        //InitialiseAccountsPanel();  // seeing if this helps the tg spam
                     }
                 }
                 else {
@@ -3162,8 +3162,11 @@ namespace IRTicker {
 
             if (Properties.Settings.Default.APIFriendly != ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName) {
                 // a new key has been chosen, let's reset the closed orders.
-                Debug.Print(DateTime.Now + " - API key has been changed, about to clear the closedOrdersFirstRun ductionary...");
-                if (TGBot != null) TGBot.closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
+                Debug.Print(DateTime.Now + " - API key has been changed from " + Properties.Settings.Default.APIFriendly + " to " + ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName + ", about to clear the closedOrdersFirstRun ductionary...");
+                if (TGBot != null) {
+                    TGBot.closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
+                    TGBot.notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();
+                }
                 Debug.Print(DateTime.Now + " - closedOrdersFirstRun has been cleared.  There should be no old orders reported.  Size of dict now: " + TGBot.closedOrdersFirstRun.Count);
 
                 Properties.Settings.Default.APIFriendly = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName;
@@ -3174,7 +3177,7 @@ namespace IRTicker {
                 if (friendlyNameLen > 20) friendlyNameLen = 20;
                 AccountName_button.Text = Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : "");
 
-                if (pIR != null) pIR.PrivateIR_init(DCEs["IR"].BaseURL, Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                if (pIR != null) pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
             }
         }
 
