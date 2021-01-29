@@ -32,6 +32,7 @@ namespace IRTicker
             AccAvgPrice_End_DTPicker.Value = DateTime.Now + TimeSpan.FromHours(24);
             AccAvgPrice_BuySell_ComboBox.SelectedIndex = direction;  // 0 = buy, 1 = sell
             AccAvgPrice_AutoUpdate_CheckBox.Checked = enableAutoUpdate;
+            AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex = 1;  // auto select "Crypto" - it's the only option i actually use
             if (!string.IsNullOrEmpty(crypto)) {
                 if (crypto == "XBT") crypto = "BTC";
                 if (AccAvgPrice_Crypto_ComboBox.Items.Contains(crypto)) AccAvgPrice_Crypto_ComboBox.SelectedItem = crypto;

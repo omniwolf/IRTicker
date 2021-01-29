@@ -1121,8 +1121,8 @@ namespace IRTicker {
                     if (_pair.StartsWith("BTC")) {
                         return _pair.Replace("BTC", "XBT");
                     }
-                    if (_pair.StartsWith("BAB")) {
-                        return _pair.Replace("BAB", "BCH");
+                    if (_pair.StartsWith("BCHN:")) {
+                        return _pair.Replace("BCHN:", "BCH");
                     }
                     else return _pair;
                 }
@@ -1130,8 +1130,8 @@ namespace IRTicker {
                     if (value.StartsWith("BTC")) {
                         _pair = value.Replace("BTC", "XBT");
                     }
-                    if (value.StartsWith("BAB")) {
-                        _pair = value.Replace("BAB", "BCH");
+                    if (value.StartsWith("BCHN:")) {
+                        _pair = value.Replace("BCHN:", "BCH");
                     }
                     else _pair = value;
                 }
@@ -1143,8 +1143,8 @@ namespace IRTicker {
                     if (_pair.StartsWith("BTC")) {
                         __pair = _pair.Replace("BTC", "XBT");
                     }
-                    if (_pair.StartsWith("BAB")) {
-                        __pair = _pair.Replace("BAB", "BCH");
+                    if (_pair.StartsWith("BCHN:")) {  // should never happen.
+                        __pair = _pair.Replace("BCHN:", "BCH");
                     }
 
                     if (__pair.Length == 6) {
@@ -1153,7 +1153,7 @@ namespace IRTicker {
                     else if (__pair.Length == 7) {  // laaammmeee  actually just looked at the BFX spec and all pairs are 6 characters.  will leave this in anyawy, but it shouldn't ever come to it
                         return __pair.Substring(0, 4) + "-" + __pair.Substring(4, 3);
                     }
-                    else if (__pair.Length == 8) {  // OK BFX is fucked, BCHUSD is now BCHN:USD ??? gah
+                    else if (__pair.Length == 8) {  // OK BFX is fucked, BCHUSD is now BCHN:USD ??? gah .... actually this should never be hit because we swap "BCHN:" with "BCH" above in the pair setter?
                         return __pair.Substring(0, 5) + "-" + __pair.Substring(5, 3);
                     }
                     else {

@@ -305,13 +305,10 @@
             this.GDAX_MKR_Label1 = new System.Windows.Forms.Label();
             this.GDAX_ZRX_Label2 = new System.Windows.Forms.Label();
             this.GDAX_ETH_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_XRP_Label1 = new System.Windows.Forms.Label();
             this.GDAX_ETC_Label2 = new System.Windows.Forms.Label();
             this.GDAX_BCH_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_XRP_Label3 = new System.Windows.Forms.Label();
             this.GDAX_ETC_Label3 = new System.Windows.Forms.Label();
             this.GDAX_LTC_Label2 = new System.Windows.Forms.Label();
-            this.GDAX_XRP_Label2 = new System.Windows.Forms.Label();
             this.GDAX_ETC_Label1 = new System.Windows.Forms.Label();
             this.GDAX_LTC_Label3 = new System.Windows.Forms.Label();
             this.GDAX_ETH_Label1 = new System.Windows.Forms.Label();
@@ -3952,13 +3949,10 @@
             this.GDAX_panel.Controls.Add(this.GDAX_MKR_Label1);
             this.GDAX_panel.Controls.Add(this.GDAX_ZRX_Label2);
             this.GDAX_panel.Controls.Add(this.GDAX_ETH_Label2);
-            this.GDAX_panel.Controls.Add(this.GDAX_XRP_Label1);
             this.GDAX_panel.Controls.Add(this.GDAX_ETC_Label2);
             this.GDAX_panel.Controls.Add(this.GDAX_BCH_Label2);
-            this.GDAX_panel.Controls.Add(this.GDAX_XRP_Label3);
             this.GDAX_panel.Controls.Add(this.GDAX_ETC_Label3);
             this.GDAX_panel.Controls.Add(this.GDAX_LTC_Label2);
-            this.GDAX_panel.Controls.Add(this.GDAX_XRP_Label2);
             this.GDAX_panel.Controls.Add(this.GDAX_ETC_Label1);
             this.GDAX_panel.Controls.Add(this.GDAX_LTC_Label3);
             this.GDAX_panel.Controls.Add(this.GDAX_ETH_Label1);
@@ -3973,7 +3967,7 @@
             this.GDAX_panel.Controls.Add(this.GDAX_XLM_Label2);
             this.GDAX_panel.Controls.Add(this.GDAX_LINK_Label1);
             this.GDAX_panel.Controls.Add(this.GDAX_XBT_Label3);
-            this.GDAX_panel.Location = new System.Drawing.Point(0, 14);
+            this.GDAX_panel.Location = new System.Drawing.Point(1, 15);
             this.GDAX_panel.Name = "GDAX_panel";
             this.GDAX_panel.Size = new System.Drawing.Size(262, 207);
             this.GDAX_panel.TabIndex = 56;
@@ -3984,7 +3978,7 @@
             this.GDAX_COMP_Label2.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_COMP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_COMP_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_COMP_Label2.Location = new System.Drawing.Point(53, 230);
+            this.GDAX_COMP_Label2.Location = new System.Drawing.Point(53, 210);
             this.GDAX_COMP_Label2.Name = "GDAX_COMP_Label2";
             this.GDAX_COMP_Label2.Size = new System.Drawing.Size(0, 13);
             this.GDAX_COMP_Label2.TabIndex = 63;
@@ -3994,7 +3988,7 @@
             // 
             this.GDAX_COMP_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_COMP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_COMP_Label3.Location = new System.Drawing.Point(129, 234);
+            this.GDAX_COMP_Label3.Location = new System.Drawing.Point(129, 214);
             this.GDAX_COMP_Label3.Name = "GDAX_COMP_Label3";
             this.GDAX_COMP_Label3.Size = new System.Drawing.Size(114, 13);
             this.GDAX_COMP_Label3.TabIndex = 64;
@@ -4007,7 +4001,7 @@
             this.GDAX_COMP_Label1.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_COMP_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_COMP_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_COMP_Label1.Location = new System.Drawing.Point(6, 230);
+            this.GDAX_COMP_Label1.Location = new System.Drawing.Point(6, 210);
             this.GDAX_COMP_Label1.Name = "GDAX_COMP_Label1";
             this.GDAX_COMP_Label1.Size = new System.Drawing.Size(46, 13);
             this.GDAX_COMP_Label1.TabIndex = 62;
@@ -4020,7 +4014,7 @@
             this.GDAX_DAI_Label2.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_DAI_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_DAI_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_DAI_Label2.Location = new System.Drawing.Point(53, 212);
+            this.GDAX_DAI_Label2.Location = new System.Drawing.Point(53, 192);
             this.GDAX_DAI_Label2.Name = "GDAX_DAI_Label2";
             this.GDAX_DAI_Label2.Size = new System.Drawing.Size(0, 13);
             this.GDAX_DAI_Label2.TabIndex = 60;
@@ -4030,7 +4024,7 @@
             // 
             this.GDAX_DAI_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_DAI_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_DAI_Label3.Location = new System.Drawing.Point(129, 214);
+            this.GDAX_DAI_Label3.Location = new System.Drawing.Point(129, 194);
             this.GDAX_DAI_Label3.Name = "GDAX_DAI_Label3";
             this.GDAX_DAI_Label3.Size = new System.Drawing.Size(114, 13);
             this.GDAX_DAI_Label3.TabIndex = 61;
@@ -4043,7 +4037,7 @@
             this.GDAX_DAI_Label1.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_DAI_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_DAI_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_DAI_Label1.Location = new System.Drawing.Point(6, 212);
+            this.GDAX_DAI_Label1.Location = new System.Drawing.Point(6, 192);
             this.GDAX_DAI_Label1.Name = "GDAX_DAI_Label1";
             this.GDAX_DAI_Label1.Size = new System.Drawing.Size(32, 13);
             this.GDAX_DAI_Label1.TabIndex = 59;
@@ -4056,7 +4050,7 @@
             this.GDAX_MKR_Label2.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_MKR_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_MKR_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_MKR_Label2.Location = new System.Drawing.Point(53, 192);
+            this.GDAX_MKR_Label2.Location = new System.Drawing.Point(53, 172);
             this.GDAX_MKR_Label2.Name = "GDAX_MKR_Label2";
             this.GDAX_MKR_Label2.Size = new System.Drawing.Size(0, 13);
             this.GDAX_MKR_Label2.TabIndex = 57;
@@ -4081,7 +4075,7 @@
             this.GDAX_ZRX_Label1.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ZRX_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_ZRX_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_ZRX_Label1.Location = new System.Drawing.Point(6, 152);
+            this.GDAX_ZRX_Label1.Location = new System.Drawing.Point(6, 132);
             this.GDAX_ZRX_Label1.Name = "GDAX_ZRX_Label1";
             this.GDAX_ZRX_Label1.Size = new System.Drawing.Size(36, 13);
             this.GDAX_ZRX_Label1.TabIndex = 19;
@@ -4092,7 +4086,7 @@
             // 
             this.GDAX_MKR_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_MKR_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_MKR_Label3.Location = new System.Drawing.Point(129, 194);
+            this.GDAX_MKR_Label3.Location = new System.Drawing.Point(129, 174);
             this.GDAX_MKR_Label3.Name = "GDAX_MKR_Label3";
             this.GDAX_MKR_Label3.Size = new System.Drawing.Size(114, 13);
             this.GDAX_MKR_Label3.TabIndex = 58;
@@ -4103,7 +4097,7 @@
             // 
             this.GDAX_ZRX_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ZRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ZRX_Label3.Location = new System.Drawing.Point(119, 154);
+            this.GDAX_ZRX_Label3.Location = new System.Drawing.Point(119, 134);
             this.GDAX_ZRX_Label3.Name = "GDAX_ZRX_Label3";
             this.GDAX_ZRX_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_ZRX_Label3.TabIndex = 21;
@@ -4128,7 +4122,7 @@
             this.GDAX_MKR_Label1.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_MKR_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_MKR_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_MKR_Label1.Location = new System.Drawing.Point(6, 192);
+            this.GDAX_MKR_Label1.Location = new System.Drawing.Point(6, 172);
             this.GDAX_MKR_Label1.Name = "GDAX_MKR_Label1";
             this.GDAX_MKR_Label1.Size = new System.Drawing.Size(38, 13);
             this.GDAX_MKR_Label1.TabIndex = 56;
@@ -4141,7 +4135,7 @@
             this.GDAX_ZRX_Label2.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ZRX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_ZRX_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_ZRX_Label2.Location = new System.Drawing.Point(53, 152);
+            this.GDAX_ZRX_Label2.Location = new System.Drawing.Point(53, 132);
             this.GDAX_ZRX_Label2.Name = "GDAX_ZRX_Label2";
             this.GDAX_ZRX_Label2.Size = new System.Drawing.Size(0, 13);
             this.GDAX_ZRX_Label2.TabIndex = 20;
@@ -4153,24 +4147,11 @@
             this.GDAX_ETH_Label2.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ETH_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_ETH_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_ETH_Label2.Location = new System.Drawing.Point(53, 52);
+            this.GDAX_ETH_Label2.Location = new System.Drawing.Point(53, 32);
             this.GDAX_ETH_Label2.Name = "GDAX_ETH_Label2";
             this.GDAX_ETH_Label2.Size = new System.Drawing.Size(0, 13);
             this.GDAX_ETH_Label2.TabIndex = 5;
             this.GDAX_ETH_Label2.Tag = "GDAX";
-            // 
-            // GDAX_XRP_Label1
-            // 
-            this.GDAX_XRP_Label1.AutoSize = true;
-            this.GDAX_XRP_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_XRP_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XRP_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_XRP_Label1.Location = new System.Drawing.Point(6, 32);
-            this.GDAX_XRP_Label1.Name = "GDAX_XRP_Label1";
-            this.GDAX_XRP_Label1.Size = new System.Drawing.Size(36, 13);
-            this.GDAX_XRP_Label1.TabIndex = 22;
-            this.GDAX_XRP_Label1.Tag = "DCECryptoLabel";
-            this.GDAX_XRP_Label1.Text = "XRP:";
             // 
             // GDAX_ETC_Label2
             // 
@@ -4178,7 +4159,7 @@
             this.GDAX_ETC_Label2.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ETC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_ETC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_ETC_Label2.Location = new System.Drawing.Point(53, 112);
+            this.GDAX_ETC_Label2.Location = new System.Drawing.Point(53, 92);
             this.GDAX_ETC_Label2.Name = "GDAX_ETC_Label2";
             this.GDAX_ETC_Label2.Size = new System.Drawing.Size(0, 13);
             this.GDAX_ETC_Label2.TabIndex = 32;
@@ -4190,28 +4171,17 @@
             this.GDAX_BCH_Label2.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_BCH_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_BCH_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_BCH_Label2.Location = new System.Drawing.Point(53, 72);
+            this.GDAX_BCH_Label2.Location = new System.Drawing.Point(53, 52);
             this.GDAX_BCH_Label2.Name = "GDAX_BCH_Label2";
             this.GDAX_BCH_Label2.Size = new System.Drawing.Size(0, 13);
             this.GDAX_BCH_Label2.TabIndex = 6;
             this.GDAX_BCH_Label2.Tag = "GDAX";
             // 
-            // GDAX_XRP_Label3
-            // 
-            this.GDAX_XRP_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_XRP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XRP_Label3.Location = new System.Drawing.Point(119, 34);
-            this.GDAX_XRP_Label3.Name = "GDAX_XRP_Label3";
-            this.GDAX_XRP_Label3.Size = new System.Drawing.Size(124, 13);
-            this.GDAX_XRP_Label3.TabIndex = 24;
-            this.GDAX_XRP_Label3.Tag = "";
-            this.GDAX_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // GDAX_ETC_Label3
             // 
             this.GDAX_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ETC_Label3.Location = new System.Drawing.Point(119, 114);
+            this.GDAX_ETC_Label3.Location = new System.Drawing.Point(119, 94);
             this.GDAX_ETC_Label3.Name = "GDAX_ETC_Label3";
             this.GDAX_ETC_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_ETC_Label3.TabIndex = 33;
@@ -4224,23 +4194,11 @@
             this.GDAX_LTC_Label2.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_LTC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_LTC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_LTC_Label2.Location = new System.Drawing.Point(53, 92);
+            this.GDAX_LTC_Label2.Location = new System.Drawing.Point(53, 72);
             this.GDAX_LTC_Label2.Name = "GDAX_LTC_Label2";
             this.GDAX_LTC_Label2.Size = new System.Drawing.Size(0, 13);
             this.GDAX_LTC_Label2.TabIndex = 7;
             this.GDAX_LTC_Label2.Tag = "GDAX";
-            // 
-            // GDAX_XRP_Label2
-            // 
-            this.GDAX_XRP_Label2.AutoSize = true;
-            this.GDAX_XRP_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.GDAX_XRP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XRP_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_XRP_Label2.Location = new System.Drawing.Point(53, 32);
-            this.GDAX_XRP_Label2.Name = "GDAX_XRP_Label2";
-            this.GDAX_XRP_Label2.Size = new System.Drawing.Size(0, 13);
-            this.GDAX_XRP_Label2.TabIndex = 23;
-            this.GDAX_XRP_Label2.Tag = "GDAX";
             // 
             // GDAX_ETC_Label1
             // 
@@ -4248,7 +4206,7 @@
             this.GDAX_ETC_Label1.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ETC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_ETC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_ETC_Label1.Location = new System.Drawing.Point(6, 112);
+            this.GDAX_ETC_Label1.Location = new System.Drawing.Point(6, 92);
             this.GDAX_ETC_Label1.Name = "GDAX_ETC_Label1";
             this.GDAX_ETC_Label1.Size = new System.Drawing.Size(35, 13);
             this.GDAX_ETC_Label1.TabIndex = 31;
@@ -4259,7 +4217,7 @@
             // 
             this.GDAX_LTC_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_LTC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_LTC_Label3.Location = new System.Drawing.Point(119, 94);
+            this.GDAX_LTC_Label3.Location = new System.Drawing.Point(119, 74);
             this.GDAX_LTC_Label3.Name = "GDAX_LTC_Label3";
             this.GDAX_LTC_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_LTC_Label3.TabIndex = 15;
@@ -4273,7 +4231,7 @@
             this.GDAX_ETH_Label1.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ETH_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_ETH_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_ETH_Label1.Location = new System.Drawing.Point(6, 52);
+            this.GDAX_ETH_Label1.Location = new System.Drawing.Point(6, 32);
             this.GDAX_ETH_Label1.Name = "GDAX_ETH_Label1";
             this.GDAX_ETH_Label1.Size = new System.Drawing.Size(36, 13);
             this.GDAX_ETH_Label1.TabIndex = 1;
@@ -4286,7 +4244,7 @@
             this.GDAX_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_XLM_Label1.Location = new System.Drawing.Point(6, 132);
+            this.GDAX_XLM_Label1.Location = new System.Drawing.Point(6, 112);
             this.GDAX_XLM_Label1.Name = "GDAX_XLM_Label1";
             this.GDAX_XLM_Label1.Size = new System.Drawing.Size(36, 13);
             this.GDAX_XLM_Label1.TabIndex = 25;
@@ -4299,7 +4257,7 @@
             this.GDAX_LINK_Label2.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_LINK_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_LINK_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_LINK_Label2.Location = new System.Drawing.Point(53, 172);
+            this.GDAX_LINK_Label2.Location = new System.Drawing.Point(53, 152);
             this.GDAX_LINK_Label2.Name = "GDAX_LINK_Label2";
             this.GDAX_LINK_Label2.Size = new System.Drawing.Size(0, 13);
             this.GDAX_LINK_Label2.TabIndex = 29;
@@ -4309,7 +4267,7 @@
             // 
             this.GDAX_BCH_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_BCH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_BCH_Label3.Location = new System.Drawing.Point(119, 74);
+            this.GDAX_BCH_Label3.Location = new System.Drawing.Point(119, 54);
             this.GDAX_BCH_Label3.Name = "GDAX_BCH_Label3";
             this.GDAX_BCH_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_BCH_Label3.TabIndex = 14;
@@ -4323,7 +4281,7 @@
             this.GDAX_BCH_Label1.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_BCH_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_BCH_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_BCH_Label1.Location = new System.Drawing.Point(6, 72);
+            this.GDAX_BCH_Label1.Location = new System.Drawing.Point(6, 52);
             this.GDAX_BCH_Label1.Name = "GDAX_BCH_Label1";
             this.GDAX_BCH_Label1.Size = new System.Drawing.Size(36, 13);
             this.GDAX_BCH_Label1.TabIndex = 2;
@@ -4334,7 +4292,7 @@
             // 
             this.GDAX_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_XLM_Label3.Location = new System.Drawing.Point(119, 134);
+            this.GDAX_XLM_Label3.Location = new System.Drawing.Point(119, 114);
             this.GDAX_XLM_Label3.Name = "GDAX_XLM_Label3";
             this.GDAX_XLM_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_XLM_Label3.TabIndex = 27;
@@ -4345,7 +4303,7 @@
             // 
             this.GDAX_LINK_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_LINK_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_LINK_Label3.Location = new System.Drawing.Point(119, 174);
+            this.GDAX_LINK_Label3.Location = new System.Drawing.Point(119, 154);
             this.GDAX_LINK_Label3.Name = "GDAX_LINK_Label3";
             this.GDAX_LINK_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_LINK_Label3.TabIndex = 30;
@@ -4356,7 +4314,7 @@
             // 
             this.GDAX_ETH_Label3.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_ETH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.GDAX_ETH_Label3.Location = new System.Drawing.Point(119, 54);
+            this.GDAX_ETH_Label3.Location = new System.Drawing.Point(119, 34);
             this.GDAX_ETH_Label3.Name = "GDAX_ETH_Label3";
             this.GDAX_ETH_Label3.Size = new System.Drawing.Size(124, 13);
             this.GDAX_ETH_Label3.TabIndex = 13;
@@ -4370,7 +4328,7 @@
             this.GDAX_LTC_Label1.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_LTC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_LTC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_LTC_Label1.Location = new System.Drawing.Point(6, 92);
+            this.GDAX_LTC_Label1.Location = new System.Drawing.Point(6, 72);
             this.GDAX_LTC_Label1.Name = "GDAX_LTC_Label1";
             this.GDAX_LTC_Label1.Size = new System.Drawing.Size(34, 13);
             this.GDAX_LTC_Label1.TabIndex = 3;
@@ -4383,7 +4341,7 @@
             this.GDAX_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_XLM_Label2.Location = new System.Drawing.Point(53, 132);
+            this.GDAX_XLM_Label2.Location = new System.Drawing.Point(53, 112);
             this.GDAX_XLM_Label2.Name = "GDAX_XLM_Label2";
             this.GDAX_XLM_Label2.Size = new System.Drawing.Size(0, 13);
             this.GDAX_XLM_Label2.TabIndex = 26;
@@ -4395,7 +4353,7 @@
             this.GDAX_LINK_Label1.BackColor = System.Drawing.Color.Transparent;
             this.GDAX_LINK_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.GDAX_LINK_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GDAX_LINK_Label1.Location = new System.Drawing.Point(6, 172);
+            this.GDAX_LINK_Label1.Location = new System.Drawing.Point(6, 152);
             this.GDAX_LINK_Label1.Name = "GDAX_LINK_Label1";
             this.GDAX_LINK_Label1.Size = new System.Drawing.Size(39, 13);
             this.GDAX_LINK_Label1.TabIndex = 28;
@@ -6032,8 +5990,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(584, 841);
-            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Main);
+            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Settings);
             this.Controls.Add(this.IRAccount_panel);
             this.Controls.Add(this.OTCHelper);
@@ -6231,9 +6189,6 @@
         private System.Windows.Forms.Label GDAX_ZRX_Label2;
         private System.Windows.Forms.Label GDAX_ZRX_Label3;
         private System.Windows.Forms.Label GDAX_ZRX_Label1;
-        private System.Windows.Forms.Label GDAX_XRP_Label2;
-        private System.Windows.Forms.Label GDAX_XRP_Label3;
-        private System.Windows.Forms.Label GDAX_XRP_Label1;
         private System.Windows.Forms.Label BFX_EOS_Label2;
         private System.Windows.Forms.Label BFX_EOS_Label3;
         private System.Windows.Forms.Label BFX_EOS_Label1;

@@ -148,7 +148,7 @@ namespace IRTicker {
             DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\",\"EOS\",\"XLM\",\"BAT\",\"MKR\",\"DAI\",\"GNT\",\"ETC\",\"BSV\",\"USDT\"";
             DCEs["BFX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
-            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\",\"XRP\",\"XLM\",\"MKR\",\"DAI\",\"ETC\",\"LINK\",\"COMP\"";
+            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\",\"XLM\",\"MKR\",\"DAI\",\"ETC\",\"LINK\",\"COMP\"";
             DCEs["GDAX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
             DCEs["BAR"].PrimaryCurrencyCodes = "\"XBT\"";
@@ -502,9 +502,6 @@ namespace IRTicker {
             UIControls_Dict["GDAX"].ZRX_Label = GDAX_ZRX_Label1;
             UIControls_Dict["GDAX"].ZRX_Price = GDAX_ZRX_Label2;
             UIControls_Dict["GDAX"].ZRX_Spread = GDAX_ZRX_Label3;
-            UIControls_Dict["GDAX"].XRP_Label = GDAX_XRP_Label1;
-            UIControls_Dict["GDAX"].XRP_Price = GDAX_XRP_Label2;
-            UIControls_Dict["GDAX"].XRP_Spread = GDAX_XRP_Label3;
             UIControls_Dict["GDAX"].XLM_Label = GDAX_XLM_Label1;
             UIControls_Dict["GDAX"].XLM_Price = GDAX_XLM_Label2;
             UIControls_Dict["GDAX"].XLM_Spread = GDAX_XLM_Label3;
@@ -2278,7 +2275,7 @@ namespace IRTicker {
                 pollingThread.RunWorkerAsync(); // we need to cancel to make sure we haven't already pulled the old currency from the API
             }
             else {
-                Debug.Print(DateTime.Now + " - POLL stopped!! why?? " + e.Result + " " + e.Error + " " + e.ToString());
+                Debug.Print(DateTime.Now + " - POLL stopped!! why?? " + e.Result + " " + e.Error + " " + e.Error.Message.ToString());
                 pollingThread.RunWorkerAsync(); // start it up again I guess
             }
         }
