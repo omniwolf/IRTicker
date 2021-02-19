@@ -21,7 +21,7 @@ namespace IRTicker {
         /// <param name="duration"></param>
         public void setStatus(string status = "", string emoji = "", long duration = 0, string name = "") {
 
-            if (name == "" && (Properties.Settings.Default.SlackDefaultName == "")) {
+            if ((name == "") && (Properties.Settings.Default.SlackDefaultName == "")) {
                 var profChange = new SlackProfile_noname {
                     profile = new SlackStatus_noname {
                         status_emoji = emoji,

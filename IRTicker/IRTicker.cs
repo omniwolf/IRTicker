@@ -719,15 +719,8 @@ namespace IRTicker {
 
         private void setSlackStatus(bool disable = false) {
             // now we set slack stuff
-            /*if (IRBTCvol > (BTCMBTCvol + 5)) {  // IR is winning :D
-                slackObj.setStatus("", ":large_blue_diamond:", 120);
-            }
-            else if (BTCMBTCvol > (IRBTCvol + 5)) {  // BTCM is winning :<
-                slackObj.setStatus("", ":green_book:", 120);
-            }
-            else {  // pretty even - white :|
-                slackObj.setStatus("", ":white_square:", 120);
-            }*/
+
+            long status_emoji_duration = 200;  // seconds
 
             if (string.IsNullOrEmpty(Properties.Settings.Default.SlackNameEmojiCrypto) || string.IsNullOrEmpty(Properties.Settings.Default.SlackNameFiatCurrency)) return;
             string crypto = (Properties.Settings.Default.SlackNameEmojiCrypto == "BTC" ? "XBT" : Properties.Settings.Default.SlackNameEmojiCrypto);
@@ -750,11 +743,11 @@ namespace IRTicker {
 
                 name = Properties.Settings.Default.SlackDefaultName;
                 if (!DCEs["IR"].socketsAlive || !DCEs["IR"].NetworkAvailable) {
-                    slackObj.setStatus("", ":exclamation:", 120, name + " - IR API down");
+                    slackObj.setStatus("", ":exclamation:", status_emoji_duration, name + " - IR API down");
                     return;
                 }
                 else if (!DCEs["BTCM"].socketsAlive || !DCEs["BTCM"].NetworkAvailable) {
-                    slackObj.setStatus("", ":face_with_rolling_eyes:", 120, name + " - BTCM API down");  // should change this to still show the price, and not bother saying "BTCM API down" 
+                    slackObj.setStatus("", ":face_with_rolling_eyes:", status_emoji_duration, name + " - BTCM API down");  // should change this to still show the price, and not bother saying "BTCM API down" 
                     return;
                 }
 
@@ -779,31 +772,31 @@ namespace IRTicker {
 
 
             if (IRvol < 0) {
-                slackObj.setStatus("", ":question:", 120, name);
+                slackObj.setStatus("", ":question:", status_emoji_duration, name);
                 if (TGBot != null) TGBot.BTCMemoji = "";
             }
             else if (BTCMvol < 0) {
-                slackObj.setStatus("", "", 120, name);
+                slackObj.setStatus("", "", status_emoji_duration, name);
                 if (TGBot != null) TGBot.BTCMemoji = "";
             }
             else if (IRvol > BTCMvol * 2) {
-                slackObj.setStatus("", ":danbizan:", 120, name);
+                slackObj.setStatus("", ":danbizan:", status_emoji_duration, name);
                 if (TGBot != null) TGBot.BTCMemoji = "🥳";
             }
             else if (IRvol * 2 < BTCMvol) {
-                slackObj.setStatus("", ":sob:", 120, name);
+                slackObj.setStatus("", ":sob:", status_emoji_duration, name);
                 if (TGBot != null) TGBot.BTCMemoji = "😭";
             }
             else if (IRvol > BTCMvol * 1.05M) {
-                slackObj.setStatus("", ":sunglasses:", 120, name);
+                slackObj.setStatus("", ":sunglasses:", status_emoji_duration, name);
                 if (TGBot != null) TGBot.BTCMemoji = "😎";
             }
             else if ((IRvol <= BTCMvol * 1.05M) && (IRvol >= BTCMvol * 0.95M)) {
-                slackObj.setStatus("", ":neutral_face:", 120, name);
+                slackObj.setStatus("", ":neutral_face:", status_emoji_duration, name);
                 if (TGBot != null) TGBot.BTCMemoji = "😐";
             }
             else if (IRvol < BTCMvol * 0.95M) {
-                slackObj.setStatus("", ":slightly_frowning_face:", 120, name);
+                slackObj.setStatus("", ":slightly_frowning_face:", status_emoji_duration, name);
                 if (TGBot != null) TGBot.BTCMemoji = "🙁";
             }
         }
@@ -1370,7 +1363,7 @@ namespace IRTicker {
                         }
                     }
 
-                    // need to pull this other fiat currency market summary data if our chose slack currency is not the one we're looking at (and the slack stuff is enabled)
+                    // need to pull this other fiat currency market summary data if our chosen slack currency is not the one we're looking at (and the slack stuff is enabled)
                     if ((Properties.Settings.Default.SlackNameFiatCurrency != DCEs["IR"].CurrentSecondaryCurrency) &&
                         Properties.Settings.Default.Slack && Properties.Settings.Default.SlackNameChange) {
 
@@ -1423,7 +1416,7 @@ namespace IRTicker {
                     Debug.Print("couldn't pull the block height data? error: " + resultTup.Item2);
                 }
 
-                // Time to blink some sticks, should try this in the doWork thread...
+                // Time to blink some sticks
                 Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
                 Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
                 decimal IRvol = -1, BTCMvol = -1, IRETHvol = -1, BTCMETHvol = -1;
@@ -1461,7 +1454,8 @@ namespace IRTicker {
                     }
                 }
 
-                if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "")) {
+                // loopCount // - let's only update this every 3rd time, stop my slack phone app from restarting as often
+                if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "") /*&& (loopCount == 0)*/) {
                     setSlackStatus();
                 }
 
