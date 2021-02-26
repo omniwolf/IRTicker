@@ -32,7 +32,7 @@ namespace IRTicker {
         private bool refreshFiat = true;  // this too?
         private Dictionary<string, UIControls> UIControls_Dict;
         private List<string> Exchanges;
-        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "REP", "GNT", "BSV", "USDT" };  // we don't poll the shit coins as often to help with rate limiting
+        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "GNT", "BSV", "USDT", "DOT", "GRT", "KNC", "AAVE", "YFI", "PMGT", "SNX", "COMP", "LINK" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
         private BlinkStick bStick;
@@ -145,10 +145,10 @@ namespace IRTicker {
             DCEs["BTCM"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["BTCM"].HasStaticData = false;  // want to set this to false so we run the subscribe code once.
 
-            DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\",\"EOS\",\"XLM\",\"BAT\",\"MKR\",\"DAI\",\"GNT\",\"ETC\",\"BSV\",\"USDT\"";
+            DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\",\"EOS\",\"XLM\",\"BAT\",\"MKR\",\"DAI\",\"GNT\",\"ETC\",\"BSV\",\"USDT\",\"DOT\"";
             DCEs["BFX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
-            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\",\"XLM\",\"MKR\",\"DAI\",\"ETC\",\"LINK\",\"COMP\"";
+            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\",\"XLM\",\"MKR\",\"DAI\",\"ETC\",\"LINK\",\"COMP\",\"GRT\"";
             DCEs["GDAX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
             DCEs["BAR"].PrimaryCurrencyCodes = "\"XBT\"";
@@ -332,6 +332,12 @@ namespace IRTicker {
             UIControls_Dict["IR"].KNC_Label = IR_KNC_Label1;
             UIControls_Dict["IR"].KNC_Price = IR_KNC_Label2;
             UIControls_Dict["IR"].KNC_Spread = IR_KNC_Label3;
+            UIControls_Dict["IR"].DOT_Label = IR_DOT_Label1;
+            UIControls_Dict["IR"].DOT_Price = IR_DOT_Label2;
+            UIControls_Dict["IR"].DOT_Spread = IR_DOT_Label3;
+            UIControls_Dict["IR"].GRT_Label = IR_GRT_Label1;
+            UIControls_Dict["IR"].GRT_Price = IR_GRT_Label2;
+            UIControls_Dict["IR"].GRT_Spread = IR_GRT_Label3;
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
             UIControls_Dict["IR"].AvgPrice_Crypto = IR_CryptoComboBox;
@@ -397,6 +403,8 @@ namespace IRTicker {
             UIControls_Dict["IR"].Account_NZD_Label = AccountNZD_label;
             UIControls_Dict["IR"].Account_USD_Total = AccountUSD_total;
             UIControls_Dict["IR"].Account_USD_Label = AccountUSD_label;
+            UIControls_Dict["IR"].Account_SGD_Total = AccountSGD_total;
+            UIControls_Dict["IR"].Account_SGD_Label = AccountSGD_label;
             UIControls_Dict["IR"].Account_COMP_Total = AccountCOMP_total;
             UIControls_Dict["IR"].Account_COMP_Value = AccountCOMP_value;
             UIControls_Dict["IR"].Account_COMP_Label = AccountCOMP_label;
@@ -415,6 +423,12 @@ namespace IRTicker {
             UIControls_Dict["IR"].Account_KNC_Total = AccountKNC_total;
             UIControls_Dict["IR"].Account_KNC_Value = AccountKNC_value;
             UIControls_Dict["IR"].Account_KNC_Label = AccountKNC_label;
+            UIControls_Dict["IR"].Account_DOT_Total = AccountDOT_total;
+            UIControls_Dict["IR"].Account_DOT_Value = AccountDOT_value;
+            UIControls_Dict["IR"].Account_DOT_Label = AccountDOT_label;
+            UIControls_Dict["IR"].Account_GRT_Total = AccountGRT_total;
+            UIControls_Dict["IR"].Account_GRT_Value = AccountGRT_value;
+            UIControls_Dict["IR"].Account_GRT_Label = AccountGRT_label;
 
             // BTCM
 
@@ -520,6 +534,9 @@ namespace IRTicker {
             UIControls_Dict["GDAX"].COMP_Label = GDAX_COMP_Label1;
             UIControls_Dict["GDAX"].COMP_Price = GDAX_COMP_Label2;
             UIControls_Dict["GDAX"].COMP_Spread = GDAX_COMP_Label3;
+            UIControls_Dict["GDAX"].GRT_Label = GDAX_GRT_Label1;
+            UIControls_Dict["GDAX"].GRT_Price = GDAX_GRT_Label2;
+            UIControls_Dict["GDAX"].GRT_Spread = GDAX_GRT_Label3;
             UIControls_Dict["GDAX"].AvgPrice_BuySell = GDAX_BuySellComboBox;
             UIControls_Dict["GDAX"].AvgPrice_NumCoins = GDAX_NumCoinsTextBox;
             UIControls_Dict["GDAX"].AvgPrice_Crypto = GDAX_CryptoComboBox;
@@ -585,6 +602,9 @@ namespace IRTicker {
             UIControls_Dict["BFX"].BSV_Label = BFX_BSV_Label1;
             UIControls_Dict["BFX"].BSV_Price = BFX_BSV_Label2;
             UIControls_Dict["BFX"].BSV_Spread = BFX_BSV_Label3;
+            UIControls_Dict["BFX"].DOT_Label = BFX_DOT_Label1;
+            UIControls_Dict["BFX"].DOT_Price = BFX_DOT_Label2;
+            UIControls_Dict["BFX"].DOT_Spread = BFX_DOT_Label3;
             UIControls_Dict["BFX"].AvgPrice_BuySell = BFX_BuySellComboBox;
             UIControls_Dict["BFX"].AvgPrice_NumCoins = BFX_NumCoinsTextBox;
             UIControls_Dict["BFX"].AvgPrice_Crypto = BFX_CryptoComboBox;
@@ -720,7 +740,7 @@ namespace IRTicker {
         private void setSlackStatus(bool disable = false) {
             // now we set slack stuff
 
-            long status_emoji_duration = 200;  // seconds
+            long status_emoji_duration = 120;  // seconds
 
             if (string.IsNullOrEmpty(Properties.Settings.Default.SlackNameEmojiCrypto) || string.IsNullOrEmpty(Properties.Settings.Default.SlackNameFiatCurrency)) return;
             string crypto = (Properties.Settings.Default.SlackNameEmojiCrypto == "BTC" ? "XBT" : Properties.Settings.Default.SlackNameEmojiCrypto);

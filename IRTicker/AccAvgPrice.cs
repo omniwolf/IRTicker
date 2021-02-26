@@ -214,7 +214,7 @@ namespace IRTicker
 
                 }
 
-                if (crypto == "XBT") crypto = "BTC";
+                //if (crypto == "XBT") crypto = "BTC";
 
                 if ((crypto == AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString()) &&
                     (cOrders.Data.ElementAt(0).SecondaryCurrencyCode.ToString().ToUpper() == AccAvgPrice_Fiat_ComboBox.SelectedItem.ToString())) {
