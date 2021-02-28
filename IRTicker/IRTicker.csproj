@@ -287,6 +287,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ir_eagel_transparent___small_Oe3_icon.ico" />
+    <None Include="Resources\btcm-tri2.png" />
     <None Include="Resources\darkmatter2.gif" />
     <None Include="Resources\pink-clouds.gif" />
     <None Include="Resources\btcm3.jpg" />

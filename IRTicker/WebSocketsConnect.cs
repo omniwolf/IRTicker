@@ -21,7 +21,7 @@ namespace IRTicker {
         private BackgroundWorker pollingThread;
         private Thread UITimerThread;
         private bool UITimerThreadProceed = true;
-        private ManualResetEvent startSocket_exitEvent = new ManualResetEvent(false);
+        //private ManualResetEvent startSocket_exitEvent = new ManualResetEvent(false);
         private string IRSocketsURL = "wss://websockets.independentreserve.com";
         //private string IRSocketsURL = "ws://dev.pushservice.independentreserve.net";
         private PrivateIR pIR;
@@ -36,10 +36,10 @@ namespace IRTicker {
 
             Debug.Print("IR websocket connecting..");
 
-            Task.Factory.StartNew(() => {
+            //Task.Factory.StartNew(() => {
                 startSockets("IR", IRSocketsURL);
-            })
-            ;
+           // })
+            //;
             Debug.Print("after first start sockets");
             //subscribe_unsubscribe_new("IR", true);  // subscribe to all the things
 
@@ -334,11 +334,11 @@ namespace IRTicker {
         private void stopSockets(string dExchange, string pair = "none") {
             client_IR.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
             DCEs[dExchange].socketsAlive = false;
-            startSocket_exitEvent.Set();  // hopefully this should let the existing startSockets() sub complete
+            //startSocket_exitEvent.Set();  // hopefully this should let the existing startSockets() sub complete
             Debug.Print("IR sockets stop command sent");
         }
 
-        private void startSockets(string dExchange, string socketsURL) {
+        private void startSockets(string dExchange, string socketsURL, bool doSubscribe = false) {
             var url = new Uri(socketsURL);
             DCEs[dExchange].socketsAlive = false;
             Debug.Print(DateTime.Now + " - startSockets called for " + dExchange);
@@ -436,7 +436,24 @@ namespace IRTicker {
             //Debug.Print(DateTime.Now + " - we have moved on after the client_IR.send where we subscribe!");
 
             //startSocket_exitEvent.WaitOne();
-        //}  trying to remove the using statement
+            //}  trying to remove the using statement
+
+            // if we want this code to re-subscribe (at time of writing this is only for when the user clicks the Reset button), then we loop until we have detected that
+            // the sockets is up and running, and THEN subscribe.  Maybe there's a better IRQ style way of doing this, but i'm a pleb.
+            if (doSubscribe) {
+                bool keepLooping = true;
+                int loopCounter = 0;
+                do {
+                    if (client_IR.IsRunning) {
+                        subscribe_unsubscribe_new(dExchange, true);
+                        keepLooping = false;
+                    }
+                    else {
+                        Thread.Sleep(500);
+                        loopCounter++;
+                    }
+                } while (keepLooping && (loopCounter < 10)) ;  // 5 seconds and we're still not connected?  something else is wrong.
+            }
         }
 
         // shuts down the UITimerThread.  Only called when the app is terminating.
@@ -468,7 +485,6 @@ namespace IRTicker {
                 Debug.Print(DateTime.Now + " - IR_Disconnect sub: IR running, will stop");
                 stopSockets("IR");
             }
-            DCEs["IR"].ClearOrderBookSubDicts();
         }
 
         public void BTCM_Connect_v2() {
@@ -549,8 +565,7 @@ namespace IRTicker {
                         stopUITimerThread();  // if it hasn't stopped by now, we force it.
 
                         Reinit_sockets("IR");
-                        startSockets("IR", IRSocketsURL);
-                        //IR_Connect();  // create all the sockets stuff again from scratch :/
+                        startSockets("IR", IRSocketsURL, true);  // the "true" here tells the sub to also subscribe to all channels as well
                         DCEs["IR"].HeartBeat = DateTime.Now;
                     //}
                     break;
@@ -594,7 +609,8 @@ namespace IRTicker {
                 }
             }
             WebSocket_Subscribe(dExchange, pairList);*/
-            subscribe_unsubscribe_new(dExchange, true);  // subscribe to all 
+            // for a reconnect, the IR code will automatically subscribe once the socket is active (see the loop/sleep shitty code in startSockets).  this way we only subscribe once the socket is up, and don't have to rely on the slow doWork loop to detect an issue
+            if (dExchange != "IR") subscribe_unsubscribe_new(dExchange, true);  // subscribe to all 
         }
 
         // after calling this sub, please remove the KVP of the channel you're unsubscribing from from the channel_Dict_BFX dictionary

@@ -266,27 +266,34 @@ namespace IRTicker {
         private void drawClosedOrders(IEnumerable<BankHistoryOrder> closedOrders) {
             synchronizationContext.Post(new SendOrPostCallback(o => {
                 IEnumerable<BankHistoryOrder> _closedOrders = (IEnumerable<BankHistoryOrder>)o;
-                AccountClosedOrders_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " closed orders";
-                AccountClosedOrders_listview.Items.Clear();
-                foreach (BankHistoryOrder order in _closedOrders) {
-                    if ((order.Status != OrderStatus.Filled) && (order.Status != OrderStatus.PartiallyFilledAndCancelled) && (order.Status != OrderStatus.PartiallyFilledAndFailed)) continue;
-                    decimal vol = order.Volume;
-                    if (order.Outstanding.HasValue && order.Outstanding.Value > 0) {
-                        vol = order.Volume - order.Outstanding.Value;
-                    }
-                    AccountClosedOrders_listview.Items.Add(new ListViewItem(new string[] {
+
+                if (_closedOrders == null) {
+                    AccountClosedOrders_listview.Items.Clear();
+                    AccountClosedOrders_listview.Items.Add(new System.Windows.Forms.ListViewItem("Loading..."));
+                }
+                else {
+                    AccountClosedOrders_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " closed orders";
+                    AccountClosedOrders_listview.Items.Clear();
+                    foreach (BankHistoryOrder order in _closedOrders) {
+                        if ((order.Status != OrderStatus.Filled) && (order.Status != OrderStatus.PartiallyFilledAndCancelled) && (order.Status != OrderStatus.PartiallyFilledAndFailed)) continue;
+                        decimal vol = order.Volume;
+                        if (order.Outstanding.HasValue && order.Outstanding.Value > 0) {
+                            vol = order.Volume - order.Outstanding.Value;
+                        }
+                        AccountClosedOrders_listview.Items.Add(new ListViewItem(new string[] {
                     order.CreatedTimestampUtc.ToLocalTime().ToShortDateString(),
                     Utilities.FormatValue(vol, 8, false),
                     Utilities.FormatValue(order.AvgPrice.Value, 2),
                     Utilities.FormatValue(order.Value.Value)}));
-                    AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].ToolTipText = buildOrderTT(order, false);
-                    if (order.OrderType == OrderType.LimitBid || order.OrderType == OrderType.MarketBid) {
-                        AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].BackColor = Color.Thistle;
+                        AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].ToolTipText = buildOrderTT(order, false);
+                        if (order.OrderType == OrderType.LimitBid || order.OrderType == OrderType.MarketBid) {
+                            AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].BackColor = Color.Thistle;
+                        }
+                        else {
+                            AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].BackColor = Color.PeachPuff;
+                        }
+                        AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].Tag = order;
                     }
-                    else {
-                        AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].BackColor = Color.PeachPuff;
-                    }
-                    AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].Tag = order;
                 }
             }), closedOrders);
         }
@@ -294,41 +301,59 @@ namespace IRTicker {
         public void drawOpenOrders(IEnumerable<BankHistoryOrder> openOrders) {
             synchronizationContext.Post(new SendOrPostCallback(o => {
                 IEnumerable<BankHistoryOrder> _openOrders = (IEnumerable<BankHistoryOrder>)o;
-                AccountOpenOrders_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " open orders";
-                AccountOpenOrders_listview.Items.Clear();
 
-                foreach (BankHistoryOrder order in _openOrders) {
-                    if ((order.Status != OrderStatus.Open) && (order.Status != OrderStatus.PartiallyFilled)) continue;
-                    AccountOpenOrders_listview.Items.Add(new ListViewItem(new string[] {
+                if (_openOrders == null) {
+                    AccountOpenOrders_listview.Items.Clear();
+                    AccountOpenOrders_listview.Items.Add(new System.Windows.Forms.ListViewItem("Loading..."));
+                }
+                else {
+                    AccountOpenOrders_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " open orders";
+                    AccountOpenOrders_listview.Items.Clear();
+
+                    foreach (BankHistoryOrder order in _openOrders) {
+                        if ((order.Status != OrderStatus.Open) && (order.Status != OrderStatus.PartiallyFilled)) continue;
+                        AccountOpenOrders_listview.Items.Add(new ListViewItem(new string[] {
                     order.CreatedTimestampUtc.ToLocalTime().ToShortDateString(),
                     Utilities.FormatValue(order.Volume),
                     Utilities.FormatValue(order.Price.Value, 2),
                     Utilities.FormatValue(order.Outstanding.Value)}));
-                    AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].ToolTipText = buildOrderTT(order, true);
-                    if (order.OrderType == OrderType.LimitBid) {
-                        AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].BackColor = Color.Thistle;
+                        AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].ToolTipText = buildOrderTT(order, true);
+                        if (order.OrderType == OrderType.LimitBid) {
+                            AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].BackColor = Color.Thistle;
+                        }
+                        else {
+                            AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].BackColor = Color.PeachPuff;
+                        }
+                        AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].Tag = order;
                     }
-                    else {
-                        AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].BackColor = Color.PeachPuff;
-                    }
-                    AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].Tag = order;
                 }
             }), openOrders);
         }
 
         private void drawDepositAddress(DigitalCurrencyDepositAddress deposAddress) {
+            if (deposAddress == null) {  // construct an empty address object and draw blanks, this is used when our data is old and we need to show nothing until the new data is sent
+                deposAddress = new DigitalCurrencyDepositAddress();
+                deposAddress.DepositAddress = "";
+                deposAddress.NextUpdateTimestampUtc = null;
+                deposAddress.LastCheckedTimestampUtc = null;
+
+            }
             synchronizationContext.Post(new SendOrPostCallback(o => {
                 DigitalCurrencyDepositAddress _deposAddress = (DigitalCurrencyDepositAddress)o;
                 AccountWithdrawalCrypto_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " deposit address";
 
                 AccountWithdrawalAddress_label.Text = _deposAddress.DepositAddress;
 
-                string nextCheck;
-                if (_deposAddress.NextUpdateTimestampUtc.Value.ToLocalTime() < DateTime.Now) nextCheck = "ASAP";
-                else nextCheck = _deposAddress.NextUpdateTimestampUtc.Value.ToLocalTime().ToString();
+                string nextCheck = "";
+                if (_deposAddress.NextUpdateTimestampUtc != null) {
+                    if (_deposAddress.NextUpdateTimestampUtc.Value.ToLocalTime() < DateTime.Now) nextCheck = "ASAP";
+                    else nextCheck = _deposAddress.NextUpdateTimestampUtc.Value.ToLocalTime().ToString();
+                }
                 AccountWithdrawalNextCheck_label.Text = "Next check: " + nextCheck;
 
-                AccountWithdrawalLastCheck_label.Text = "Last checked: " + _deposAddress.LastCheckedTimestampUtc.Value.ToLocalTime().ToString(); ;
+                string lastChecked = "";
+                if (_deposAddress.LastCheckedTimestampUtc != null) lastChecked = _deposAddress.LastCheckedTimestampUtc.Value.ToLocalTime().ToString();
+                AccountWithdrawalLastCheck_label.Text = "Last checked: " + lastChecked;
 
                 if (string.IsNullOrEmpty(_deposAddress.Tag)) {
                     AccountWithdrawalTag_label.Visible = false;
@@ -429,12 +454,12 @@ namespace IRTicker {
                 AccountSelectedCrypto = clickedLabel.Text.Substring(0, clickedLabel.Text.IndexOf(':'));
 
                 AccountOpenOrders_label.Text = AccountSelectedCrypto + " open orders";
-                AccountOpenOrders_listview.Items.Clear();
-                AccountOpenOrders_listview.Items.Add(new ListViewItem("Loading..."));
+                drawOpenOrders(null);
 
                 AccountClosedOrders_label.Text = AccountSelectedCrypto + " closed orders";
-                AccountClosedOrders_listview.Items.Clear();
-                AccountClosedOrders_listview.Items.Add(new ListViewItem("Loading..."));
+                drawClosedOrders(null);
+
+                drawDepositAddress(null);
 
                 if (AccountSelectedCrypto == "BTC") AccountSelectedCrypto = "XBT";
                 pIR.Crypto = AccountSelectedCrypto;

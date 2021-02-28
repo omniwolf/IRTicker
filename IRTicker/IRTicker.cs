@@ -1366,7 +1366,9 @@ namespace IRTicker {
                         if (pIR != null) {
                             foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
                                 try {
-                                    pIR.GetClosedOrders(primaryCode, fiat);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
+                                    var cOrders = pIR.GetClosedOrders(primaryCode, fiat);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
+                                    if (IRAccount_panel.Visible && (primaryCode == AccountSelectedCrypto) && (fiat == DCEs["IR"].CurrentSecondaryCurrency) && (cOrders != null)) 
+                                        drawClosedOrders(cOrders.Data);
                                 }
                                 catch (Exception ex) {
                                     string errorMsg = ex.Message;
@@ -2435,7 +2437,11 @@ namespace IRTicker {
                     LastPanel.Visible = true;
                     Settings.Visible = false;
                     if (IRAccount_panel.Visible) {
-                        //InitialiseAccountsPanel();  // seeing if this helps the tg spam
+                        drawClosedOrders(null);
+                        drawOpenOrders(null);
+
+                        drawDepositAddress(null);  // blanks out the deposit address pane
+                        InitialiseAccountsPanel();  // seeing if this helps the tg spam
                     }
                 }
                 else {
@@ -3004,7 +3010,9 @@ namespace IRTicker {
             DCEs["IR"].CurrentDCEStatus = "Resetting...";
             Debug.Print(DateTime.Now + " - IR reset button clicked");
             APIDown(UIControls_Dict["IR"].dExchange_GB, "IR");
-            DCEs["IR"].socketsReset = true;
+            //DCEs["IR"].socketsReset = true;
+            Debug.Print("IR websocket connecting....");
+            wSocketConnect.WebSocket_Reconnect("IR");
         }
 
 
@@ -3172,23 +3180,27 @@ namespace IRTicker {
         private void APIKeys_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
 
             if (Properties.Settings.Default.APIFriendly != ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName) {
+
+                pIR.APIKeyHasChanged();  // signal that we have changed the API key
                 // a new key has been chosen, let's reset the closed orders.
                 Debug.Print(DateTime.Now + " - API key has been changed from " + Properties.Settings.Default.APIFriendly + " to " + ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName + ", about to clear the closedOrdersFirstRun ductionary...");
-                if (TGBot != null) {
-                    TGBot.closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
-                    TGBot.notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();
-                }
-                Debug.Print(DateTime.Now + " - closedOrdersFirstRun has been cleared.  There should be no old orders reported.  Size of dict now: " + TGBot.closedOrdersFirstRun.Count);
 
                 Properties.Settings.Default.APIFriendly = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName;
                 Properties.Settings.Default.IRAPIPubKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).pubKey;
                 Properties.Settings.Default.IRAPIPrivKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).privKey;
+                Properties.Settings.Default.Save();
 
                 int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
                 if (friendlyNameLen > 20) friendlyNameLen = 20;
                 AccountName_button.Text = Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : "");
 
                 if (pIR != null) pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                if (TGBot != null) {
+                    TGBot.closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
+                    TGBot.notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();
+                }
+                Debug.Print(DateTime.Now + " - closedOrdersFirstRun has been cleared.  There should be no old orders reported.  Size of dict now: " + TGBot.closedOrdersFirstRun.Count);
+                Debug.Print(DateTime.Now + " - notifiedOrders has been cleared.  There should be no old orders reported.  Size of dict now: " + TGBot.notifiedOrders.Count);
             }
         }
 

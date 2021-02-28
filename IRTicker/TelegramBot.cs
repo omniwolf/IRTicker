@@ -36,6 +36,7 @@ namespace IRTicker
         string LastMessage = "";  // need to track our previous message so we don't try and edit a message with the same message
         bool NextMsgIsNew = false;  // set to true to disable the edit functionality for the next message (eg when an async message has come through like the order filled message)
         private string bTCMemoji = "";
+        private string APIKey;  // try to track which APIkey we're using so we know which closed orders we're pulling
 
         public ConcurrentDictionary<string, bool> closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
         public ConcurrentDictionary<string, List<Guid>> notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();
@@ -1162,25 +1163,45 @@ namespace IRTicker
             else LatestMessageID = (await botClient.SendTextMessageAsync(Properties.Settings.Default.TelegramChatID, message, pMode, false, false, 0, buttons)).MessageId;
         }
 
-        public async void closedOrders(Page<BankHistoryOrder> cOrders) {
-
+        public async void closedOrders(Page<BankHistoryOrder> cOrders, string APIkey) {
             if (cOrders.Data.Count() > 0) {
 
-                if (cOrders.Data.First().PrimaryCurrencyCode.ToString().ToUpper() == "BTC") 
+                if (APIkey != Properties.Settings.Default.IRAPIPubKey) {
+                    Debug.Print("closedOrders - bailed due to mismatched APIkey");
+                    return;  // different key, I guess this is the wrong data?
+                }
+
+                if (cOrders.Data.First().PrimaryCurrencyCode.ToString().ToUpper() == "BTC")
                     Debug.Print("TG closed orders: we have been sent a BTC order??");
 
                 string cryptoTmp = (cOrders.Data.First().PrimaryCurrencyCode.ToString().ToUpper() == "XBT" ? "BTC" : cOrders.Data.First().PrimaryCurrencyCode.ToString());
                 string pair = (cryptoTmp + "-" + cOrders.Data.First().SecondaryCurrencyCode).ToUpper();
                 List<BankHistoryOrder> ordersToNotify = new List<BankHistoryOrder>();
 
+                if (pair == "BTC-AUD") {
+                    if (notifiedOrders.ContainsKey(pair)) {
+                        Debug.Print(DateTime.Now + " - Initial NotifiedOrders count: " + notifiedOrders[pair].Count + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
+                    }
+                    else Debug.Print("BTC-AUD not in notifiedOrders" + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
+                }
+
+
                 if (!notifiedOrders.ContainsKey(pair)) notifiedOrders.TryAdd(pair, new List<Guid>());
                 if (!closedOrdersFirstRun.ContainsKey(pair)) closedOrdersFirstRun.TryAdd(pair, true);
 
+                // for some reason we're doubling up orders here I think into notifiedOrders
                 foreach (BankHistoryOrder cOrder in cOrders.Data) {
                     if (!notifiedOrders[pair].Contains(cOrder.OrderGuid)) {
                         ordersToNotify.Add(cOrder);
                         notifiedOrders[pair].Add(cOrder.OrderGuid);  // persistent for the session
                     }
+                }
+
+                if (pair == "BTC-AUD") {
+                    Debug.Print(DateTime.Now + " - BTCAUD closedOrders - order count: " + cOrders.Data.Count() + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
+                    Debug.Print("BTCAUD closedOrders - notifiedOrders count: " + notifiedOrders[pair].Count + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
+                    Debug.Print("BTCAUD closedOrders - ordersToNotify count: " + ordersToNotify.Count + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
+                    Debug.Print("BTCAUD closedOrders - closedOrdersFirstRun: " + closedOrdersFirstRun[pair] + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
                 }
 
                 if (!closedOrdersFirstRun[pair]) {

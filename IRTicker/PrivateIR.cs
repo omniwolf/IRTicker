@@ -35,6 +35,7 @@ namespace IRTicker {
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBids;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
         public ConcurrentBag<Guid> openOrders = new ConcurrentBag<Guid>();
+        private DateTime APIKeyChanged = DateTime.Now;  // records when we changed the APIKey so we can wait for a period (5 seconds?) before believing that closed orders are from the new APIKey.  If we use them immediately then often we get ClosedOrders from the old APIKey
 
         public BankOrder placedOrder = null;
         public decimal baiterLiveVol = 0;  // this holds the current value of the baiter order, ie if there has been nibbles this will be the orginal volume minus nibbles
@@ -158,18 +159,30 @@ namespace IRTicker {
             return openOs;
         }
 
+        // When the user changes the API Key, this method gets called and records the timestamp.  Then the GetClosedOrders(...) method can know when an APIKey change was made
+        // and ignore Closed Orders made around this time, as I have often found I receive old closed orders from the old API key and it gets mixed in with the new one.
+        public void APIKeyHasChanged() {
+            APIKeyChanged = DateTime.Now;
+        }
+
         public Page<BankHistoryOrder> GetClosedOrders(string crypto, string fiat) {
             if (crypto.ToUpper() == "BTC") crypto = "XBT";
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
             Page<BankHistoryOrder> cOrders = null;
             List<BankHistoryOrder> allCOrders = new List<BankHistoryOrder>();
+            string APIkey;  // let's try and track which key we use
 
             int page = 1;
             do {
                 lock (pIR_Lock) {
                     try {
+                        APIkey = IRcreds.Key;
                         cOrders = IRclient.GetClosedOrders(enumCrypto, enumFiat, page, 50);
+                        if (APIkey != IRcreds.Key) {  // i don't think this will ever happen.. but who knows  /// ok.. seems to happen every time we change APIkey.  but if stops errors, so leave it
+                            Debug.Print("uh oh.. it's unclear which API key we used.. probably should just bail" + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
+                            return null;
+                        }
                     }
                     catch (Exception ex) {
                         Debug.Print(DateTime.Now + " - Failed to pull GetClosedOrders on page " + page + " - " + ex.Message);
@@ -177,20 +190,23 @@ namespace IRTicker {
                     }
                 }
 
-                if ((page == 1) && (crypto == "XBT")) Debug.Print("GetClosedOrders(" + crypto + "-" + fiat + "): total pages: " + cOrders.TotalPages + " and total items: " + cOrders.TotalItems);
+                if ((page == 1) && (crypto == "XBT") && (fiat == "AUD")) Debug.Print(DateTime.Now + " - GetClosedOrders(" + crypto + "-" + fiat + "): total pages: " + cOrders.TotalPages + " and total items: " + cOrders.TotalItems + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
 
                 foreach (BankHistoryOrder order in cOrders.Data) {
                     allCOrders.Add(order);
                 }
                 page++;
             }  while (page <= cOrders.TotalPages);
+            
 
             if (page < cOrders.TotalPages) return null;  // we don't want to send partial results, we either get it all or die trying
             cOrders.Data = allCOrders;
             if (cOrders.Data.Count() > 0) {
-                if (TGBot != null) TGBot.closedOrders(cOrders);
+                // only call the TG closed orders sub if we've waited 5 seconds after an APIKey change
+                if ((TGBot != null) && (DateTime.Now > APIKeyChanged + TimeSpan.FromMinutes(1))) TGBot.closedOrders(cOrders, APIkey);
                 IRT.SignalAveragePriceUpdate(cOrders);
             }
+            //else Debug.Print("gecClosed orders, no orders for " + crypto + "-" + fiat);
             return cOrders;
         }
 
@@ -470,18 +486,31 @@ namespace IRTicker {
                             foundOrder = true;
                             if (pricePointCount > 0) {  // our order has been beaten by another. lez cancel and start again.  if == 0 then we're the top of the book, do nothing.
                                 if (placedOrder.Price != limitPrice) {  // if we're at the limit price, just leave the order, do not cancel.
-                                    Debug.Print("MBAIT: our order has been beaten.  cancelling it...");
+                                    //Debug.Print("MBAIT: our order has been beaten.  cancelling it...");
                                     BankOrder bo = new BankOrder();
                                     try {
                                         bo = CancelOrder(placedOrder.OrderGuid.ToString());
                                     }
                                     catch (Exception ex) {
-                                        Debug.Print("MBAIT: trying to cancel the order because it got beat, but failed due to: " + ex.Message);
-                                        retryRequired = true;
+                                        string errorMsg = ex.Message;
+                                        if (ex.InnerException != null) {
+                                            errorMsg = ex.InnerException.Message;
+                                            if (errorMsg.Contains("(Filled)")) {  // have seen an error like this: {"Order is in an invalid state to be cancelled (Filled)"}
+                                                foundOrder = false;  // this will trigger code below to check closed orders, we should find our closed order.
+                                            }
+                                            else {  // some new error, should check it out and potentially handle it
+                                                Debug.Print("MBAIT: trying to cancel the order because it got beat, but failed due to inner exception: " + ex.InnerException.Message);
+                                                retryRequired = true;
+                                            }
+                                        }
+                                        else {
+                                            Debug.Print("MBAIT: trying to cancel the order because it got beat, but failed due to: " + ex.Message);
+                                            retryRequired = true;
+                                        }
                                         break;
                                     }
                                     if (bo.Status == OrderStatus.Cancelled) {
-                                        Debug.Print("MBAIT: cancel order was successful");
+                                        //Debug.Print("MBAIT: cancel order was successful");
                                         //if (bo.VolumeFilled != 0) IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble..."));
 
                                         baiterLiveVol = bo.VolumeOrdered - bo.VolumeFilled;
