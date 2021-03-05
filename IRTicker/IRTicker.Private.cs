@@ -263,7 +263,7 @@ namespace IRTicker {
             return tt;
         }
 
-        private void drawClosedOrders(IEnumerable<BankHistoryOrder> closedOrders) {
+        public void drawClosedOrders(IEnumerable<BankHistoryOrder> closedOrders) {
             synchronizationContext.Post(new SendOrPostCallback(o => {
                 IEnumerable<BankHistoryOrder> _closedOrders = (IEnumerable<BankHistoryOrder>)o;
 

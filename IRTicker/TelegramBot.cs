@@ -1056,7 +1056,7 @@ namespace IRTicker
                     // let's show 10 orders per book
                     for (int i = 0; i < 10; i++) {
                         // the price should be padded out to 12 characters to cover "$ 999 999.99"
-                        string price = "$ " + Utilities.FormatValue(orderedOffers.ElementAt(i).Key, 2, false);
+                        string price = "$ " + Utilities.FormatValue(orderedOffers.ElementAt(i).Key);
                         int padding = 12 - (price.Length);
                         for (int h = 1; h < padding; h++) {
                             price += " ";
@@ -1083,13 +1083,18 @@ namespace IRTicker
 
                         tempOffers = tempLine + tempOffers;  // gotta work this one backwards
                     }
-                    masterStr += tempOffers + "```" + Environment.NewLine + "👆 Offers      Bids 👇" + Environment.NewLine + Environment.NewLine + "```" + Environment.NewLine;
+
+                    // spread
+                    decimal bestOffer = orderedOffers.ElementAt(0).Key;
+                    decimal bestBid = orderedBids.ElementAt(0).Key;
+
+                    masterStr += tempOffers + "```" + Environment.NewLine + "👆 Offers   ($ " + Utilities.FormatValue((bestOffer - bestBid)) + ")   Bids 👇" + Environment.NewLine + Environment.NewLine + "```" + Environment.NewLine;
                     string tempBids = "";
 
                     // let's show 10 orders per book
                     for (int i = 0; i < 10; i++) {
                         // the price should be padded out to 12 characters to cover "$ 999 999.99"
-                        string price = "$ " + Utilities.FormatValue(orderedBids.ElementAt(i).Key, 2, false);
+                        string price = "$ " + Utilities.FormatValue(orderedBids.ElementAt(i).Key);
                         int padding = 12 - (price.Length);
                         for (int h = 1; h < padding; h++) {
                             price += " ";

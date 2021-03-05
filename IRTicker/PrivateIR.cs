@@ -553,7 +553,7 @@ namespace IRTicker {
                             Thread.Sleep(100);
                             continue;
                         }
-                        
+                        IRT.drawClosedOrders(closedOs.Data);
                         foreach (BankHistoryOrder closedO in closedOs.Data) {
                             if (closedO.OrderGuid == placedOrder.OrderGuid) {
                                 if (closedO.Status == OrderStatus.Filled) {
