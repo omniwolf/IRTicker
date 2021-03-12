@@ -317,19 +317,19 @@ namespace IRTicker {
             ConcurrentDictionary<string, decimal> Order_OB_IR;  // one side of the Order_IR_OBs dictionary
 
             ConcurrentDictionary<decimal, ConcurrentDictionary<string, OrderBook_IR>> OB_IR_cross;  // the other side
-            //ConcurrentDictionary<string, decimal> Order_OB_IR_cross;  // if our order is a bid, this is the offer side, and vice versa
+            ConcurrentDictionary<string, decimal> Order_OB_IR_cross;  // if our order is a bid, this is the offer side, and vice versa
 
             if (order.OrderType.EndsWith("Bid")) {
                 OB_IR = IR_OBs[pair].Item1;
                 Order_OB_IR = OrderGuid_IR_OBs[pair].Item1;
                 OB_IR_cross = IR_OBs[pair].Item2;
-                //Order_OB_IR_cross = OrderGuid_IR_OBs[pair].Item2;
+                Order_OB_IR_cross = OrderGuid_IR_OBs[pair].Item2;
             }
             else {
                 OB_IR = IR_OBs[pair].Item2;
                 Order_OB_IR = OrderGuid_IR_OBs[pair].Item2;
                 OB_IR_cross = IR_OBs[pair].Item1;
-                //Order_OB_IR_cross = OrderGuid_IR_OBs[pair].Item1;
+                Order_OB_IR_cross = OrderGuid_IR_OBs[pair].Item1;
             }
 
             // if the dictionary for this event pair is empty, just get straight to the adding and move on
@@ -399,24 +399,6 @@ namespace IRTicker {
                     break;
             }
 
-            // need to find out if the order crosses the spread, and if so ignore it
-            /*if (eventStr == "NewOrder") {
-                switch (order.OrderType) {
-                    case "LimitBid":
-                        if (order.Price >= OB_IR_cross.Keys.Min()) {  // if the price of this order is greater than the best offer, it's just crossing the spread. ignore
-                            Debug.Print(DateTime.Now + " - (" + pair + ") Limit bid crossed the spread, attempted price: " + order.Price + ", best offer: " + OB_IR_cross.Keys.Min());
-                            return null;
-                        }
-                        break;
-                    case "LimitOffer":
-                        if (order.Price <= OB_IR_cross.Keys.Max()) {
-                            Debug.Print(DateTime.Now + " - (" + pair + ") Limit offer crossed the spread, attempted price: " + order.Price + ", best offer: " + OB_IR_cross.Keys.Max());
-                            return null;
-                        }
-                        break;
-                }
-            }*/
-
             if (TopPrice < 0) {
                 Debug.Print(DateTime.Now + " - the IR order book was empty for + " + pair + ", just ignoring this");
                 OrderWillChangeSpread = false;
@@ -445,6 +427,25 @@ namespace IRTicker {
                 }
             }
 
+            // instead of ignoring crossed orders, we should delete the order that it crosses
+            // need to find out if the order crosses the spread, and if so ignore it
+            /*if (eventStr == "NewOrder") {
+                switch (order.OrderType) {
+                    case "LimitBid":
+                        if (order.Price >= OB_IR_cross.Keys.Min()) {  // if the price of this order is greater than the best offer, it's just crossing the spread. ignore
+                            Debug.Print(DateTime.Now + " - (" + pair + ") Limit bid crossed the spread, attempted price: " + order.Price + ", best offer: " + OB_IR_cross.Keys.Min());
+                            return null;
+                        }
+                        break;
+                    case "LimitOffer":
+                        if (order.Price <= OB_IR_cross.Keys.Max()) {
+                            Debug.Print(DateTime.Now + " - (" + pair + ") Limit offer crossed the spread, attempted price: " + order.Price + ", best offer: " + OB_IR_cross.Keys.Max());
+                            return null;
+                        }
+                        break;
+                }
+            }*/
+
             // if either OB is empty, then we won't change the spread
             if (IR_OBs[pair].Item1.Count == 0 || IR_OBs[pair].Item2.Count == 0) OrderWillChangeSpread = false;
 
@@ -465,6 +466,44 @@ namespace IRTicker {
                         ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
                         tempCD.TryAdd(order.OrderGuid, order);
                         OB_IR.TryAdd(order.Price, tempCD);
+
+                        // if this new order crosses the spread, then I think it's likely that the order on the other side is probably stale, so let's try deleting it and see if this messes things up terribly
+                        // seems to be working..
+                        switch (order.OrderType) {
+                            case "LimitBid":
+                                if (order.Price >= OB_IR_cross.Keys.Min()) {  // if the price of this order is greater than the best offer, it's just crossing the spread. ignore
+                                    Debug.Print(DateTime.Now + " - (" + pair + ") Limit bid crossed the spread, attempted price: " + order.Price + ", best offer: " + OB_IR_cross.Keys.Min());
+                                    if (OB_IR_cross.TryRemove(OB_IR_cross.Keys.Min(), out ConcurrentDictionary<string, OrderBook_IR> outVal)) {
+                                        Debug.Print("Order at $" + outVal.First().Value.Price + " removed from the Offers price dictionary");
+                                        foreach (var guidOrder in outVal) {
+                                            if (Order_OB_IR_cross.ContainsKey(guidOrder.Key)) {
+                                                if (Order_OB_IR_cross.TryRemove(guidOrder.Key, out decimal guidPrice)) Debug.Print("Also removed from GUID cross dictionary - " + guidOrder.Key);
+                                                else Debug.Print("But couldn't remove it from the GUID cross dictionary??");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    else Debug.Print("Couldn't remove order??");
+                                }
+                                break;
+                            case "LimitOffer":
+                                if (order.Price <= OB_IR_cross.Keys.Max()) {
+                                    Debug.Print(DateTime.Now + " - (" + pair + ") Limit offer crossed the spread, attempted price: " + order.Price + ", best bid: " + OB_IR_cross.Keys.Max());
+                                    if (OB_IR_cross.TryRemove(OB_IR_cross.Keys.Max(), out ConcurrentDictionary<string, OrderBook_IR> outVal)) {
+                                        Debug.Print("Order at $" + outVal.First().Value.Price + " removed from the Bids price dictionary");
+                                        foreach (var guidOrder in outVal) {
+                                            if (Order_OB_IR_cross.ContainsKey(guidOrder.Key)) {
+                                                if (Order_OB_IR_cross.TryRemove(guidOrder.Key, out decimal guidPrice)) Debug.Print("Also removed from GUID cross dictionary - " + guidOrder.Key);
+                                                else Debug.Print("But couldn't remove it from the GUID cross dictionary??");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    else Debug.Print("Couldn't remove order??");
+                                }
+                                break;
+                        }
+
                         //Debug.Print("New order new price - " + order.Price);
                     }
                     Order_OB_IR[order.OrderGuid] = order.Price;
@@ -485,7 +524,7 @@ namespace IRTicker {
                     // They are ignored long before we get to this code.
                     if (!Order_OB_IR.ContainsKey(order.OrderGuid)) {
 
-                        Debug.Print(DateTime.Now.ToString() + " |(" + pair + ") Trying to change event vol, but it doesn't exist in order guid dictionary.  ordertype: " + order.OrderType + " vol: " + order.Volume);
+                        Debug.Print(DateTime.Now.ToString() + " |(" + pair + ") Trying to change event vol, but it doesn't exist in order guid dictionary.  ordertype: " + order.OrderType + " vol: " + order.Volume + " guid: " + order.OrderGuid);
                         bool foundOrder = false;
                         foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
                             if (priceLevel.Value.ContainsKey(order.OrderGuid)) {

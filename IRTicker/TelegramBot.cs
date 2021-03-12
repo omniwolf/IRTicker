@@ -1183,12 +1183,12 @@ namespace IRTicker
                 string pair = (cryptoTmp + "-" + cOrders.Data.First().SecondaryCurrencyCode).ToUpper();
                 List<BankHistoryOrder> ordersToNotify = new List<BankHistoryOrder>();
 
-                if (pair == "BTC-AUD") {
+                /*if (pair == "BTC-AUD") {
                     if (notifiedOrders.ContainsKey(pair)) {
                         Debug.Print(DateTime.Now + " - Initial NotifiedOrders count: " + notifiedOrders[pair].Count + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
                     }
                     else Debug.Print("BTC-AUD not in notifiedOrders" + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
-                }
+                }*/
 
 
                 if (!notifiedOrders.ContainsKey(pair)) notifiedOrders.TryAdd(pair, new List<Guid>());
@@ -1202,12 +1202,12 @@ namespace IRTicker
                     }
                 }
 
-                if (pair == "BTC-AUD") {
+                /*if (pair == "BTC-AUD") {
                     Debug.Print(DateTime.Now + " - BTCAUD closedOrders - order count: " + cOrders.Data.Count() + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
                     Debug.Print("BTCAUD closedOrders - notifiedOrders count: " + notifiedOrders[pair].Count + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
                     Debug.Print("BTCAUD closedOrders - ordersToNotify count: " + ordersToNotify.Count + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
                     Debug.Print("BTCAUD closedOrders - closedOrdersFirstRun: " + closedOrdersFirstRun[pair] + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
-                }
+                }*/
 
                 if (!closedOrdersFirstRun[pair]) {
 
