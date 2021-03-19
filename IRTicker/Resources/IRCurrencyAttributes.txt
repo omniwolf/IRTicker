@@ -661,6 +661,50 @@
       "IsDelisted": false,
       "UrlProtocol": "ether"
     }
-  }
+  },
+{
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Grt",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Grt",
+        "ContractAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+        "DecimalPlaces": 18
+      },
+      "Name": "Grt",
+      "Ticker": "Grt",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 2850,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 5,
+      "FiatPriceStringFormat": "0.00000",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  },
+    {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Dot",
+      "Name": "Polkadot",
+      "Ticker": "Dot",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 2950,
+      "Family": "Polkadot",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 4,
+      "FiatPriceStringFormat": "0.0000",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "bitcoincashsv"
+    }
+  },
 ] 
 }

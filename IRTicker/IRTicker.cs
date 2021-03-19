@@ -1339,6 +1339,7 @@ namespace IRTicker {
                             if (crypto == "LNK") crypto = "LINK";
                             if (crypto == "COM") crypto = "COMP";*/
                             if (crypto == "BTC") crypto = "XBT";
+                            if (crypto == "AVE") crypto = "AAVE";
                             DCEs["IR"].currencyFiatDivision.Add(crypto, curr.IrCommonAttributesCurrencyConfiguration.FiatPriceDecimalPlaces);
                         }
 
