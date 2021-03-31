@@ -32,7 +32,7 @@ namespace IRTicker {
         private bool refreshFiat = true;  // this too?
         private Dictionary<string, UIControls> UIControls_Dict;
         private List<string> Exchanges;
-        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "GNT", "BSV", "USDT", "DOT", "GRT", "KNC", "AAVE", "YFI", "PMGT", "SNX", "COMP", "LINK" };  // we don't poll the shit coins as often to help with rate limiting
+        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "USDT", "DOT", "GRT", "KNC", "AAVE", "YFI", "PMGT", "SNX", "COMP", "LINK" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
         private BlinkStick bStick;
@@ -141,11 +141,11 @@ namespace IRTicker {
             // Actually I'm not sure about the above comment, i think some of them do?  But the main issue is most of them have
             // currencies that we don't want to deal with, so we set the currencies manually here.  IR we want all currencies, so
             // we use the API.  This is probably not really smart, as the UI is static, so when new currencies turn up IR breaks.  meh
-            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"XLM\",\"BAT\",\"GNT\",\"ETC\",\"BSV\",\"LINK\",\"COMP\",\"USDT\"";
+            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"XLM\",\"BAT\",\"ETC\",\"LINK\",\"COMP\",\"USDT\"";
             DCEs["BTCM"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["BTCM"].HasStaticData = false;  // want to set this to false so we run the subscribe code once.
 
-            DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\",\"EOS\",\"XLM\",\"BAT\",\"MKR\",\"DAI\",\"GNT\",\"ETC\",\"BSV\",\"USDT\",\"DOT\"";
+            DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\",\"EOS\",\"XLM\",\"BAT\",\"MKR\",\"DAI\",\"ETC\",\"USDT\",\"DOT\"";
             DCEs["BFX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
             DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\",\"XLM\",\"MKR\",\"DAI\",\"ETC\",\"LINK\",\"COMP\",\"GRT\"";
@@ -293,18 +293,12 @@ namespace IRTicker {
             UIControls_Dict["IR"].MKR_Label = IR_MKR_Label1;
             UIControls_Dict["IR"].MKR_Price = IR_MKR_Label2;
             UIControls_Dict["IR"].MKR_Spread = IR_MKR_Label3;
-            UIControls_Dict["IR"].GNT_Label = IR_GNT_Label1;
-            UIControls_Dict["IR"].GNT_Price = IR_GNT_Label2;
-            UIControls_Dict["IR"].GNT_Spread = IR_GNT_Label3;
             UIControls_Dict["IR"].ETC_Label = IR_ETC_Label1;
             UIControls_Dict["IR"].ETC_Price = IR_ETC_Label2;
             UIControls_Dict["IR"].ETC_Spread = IR_ETC_Label3;
             UIControls_Dict["IR"].USDT_Label = IR_USDT_Label1;
             UIControls_Dict["IR"].USDT_Price = IR_USDT_Label2;
             UIControls_Dict["IR"].USDT_Spread = IR_USDT_Label3;
-            UIControls_Dict["IR"].BSV_Label = IR_BSV_Label1;
-            UIControls_Dict["IR"].BSV_Price = IR_BSV_Label2;
-            UIControls_Dict["IR"].BSV_Spread = IR_BSV_Label3;
             UIControls_Dict["IR"].DAI_Label = IR_DAI_Label1;
             UIControls_Dict["IR"].DAI_Price = IR_DAI_Label2;
             UIControls_Dict["IR"].DAI_Spread = IR_DAI_Label3;
@@ -465,15 +459,9 @@ namespace IRTicker {
             UIControls_Dict["BTCM"].BAT_Label = BTCM_BAT_Label1;
             UIControls_Dict["BTCM"].BAT_Price = BTCM_BAT_Label2;
             UIControls_Dict["BTCM"].BAT_Spread = BTCM_BAT_Label3;
-            UIControls_Dict["BTCM"].GNT_Label = BTCM_GNT_Label1;
-            UIControls_Dict["BTCM"].GNT_Price = BTCM_GNT_Label2;
-            UIControls_Dict["BTCM"].GNT_Spread = BTCM_GNT_Label3;
             UIControls_Dict["BTCM"].ETC_Label = BTCM_ETC_Label1;
             UIControls_Dict["BTCM"].ETC_Price = BTCM_ETC_Label2;
             UIControls_Dict["BTCM"].ETC_Spread = BTCM_ETC_Label3;
-            UIControls_Dict["BTCM"].BSV_Label = BTCM_BSV_Label1;
-            UIControls_Dict["BTCM"].BSV_Price = BTCM_BSV_Label2;
-            UIControls_Dict["BTCM"].BSV_Spread = BTCM_BSV_Label3;
             UIControls_Dict["BTCM"].LINK_Label = BTCM_LINK_Label1;
             UIControls_Dict["BTCM"].LINK_Price = BTCM_LINK_Label2;
             UIControls_Dict["BTCM"].LINK_Spread = BTCM_LINK_Label3;
@@ -590,18 +578,12 @@ namespace IRTicker {
             UIControls_Dict["BFX"].DAI_Label = BFX_DAI_Label1;
             UIControls_Dict["BFX"].DAI_Price = BFX_DAI_Label2;
             UIControls_Dict["BFX"].DAI_Spread = BFX_DAI_Label3;
-            UIControls_Dict["BFX"].GNT_Label = BFX_GNT_Label1;
-            UIControls_Dict["BFX"].GNT_Price = BFX_GNT_Label2;
-            UIControls_Dict["BFX"].GNT_Spread = BFX_GNT_Label3;
             UIControls_Dict["BFX"].ETC_Label = BFX_ETC_Label1;
             UIControls_Dict["BFX"].ETC_Price = BFX_ETC_Label2;
             UIControls_Dict["BFX"].ETC_Spread = BFX_ETC_Label3;
             UIControls_Dict["BFX"].USDT_Label = BFX_USDT_Label1;
             UIControls_Dict["BFX"].USDT_Price = BFX_USDT_Label2;
             UIControls_Dict["BFX"].USDT_Spread = BFX_USDT_Label3;
-            UIControls_Dict["BFX"].BSV_Label = BFX_BSV_Label1;
-            UIControls_Dict["BFX"].BSV_Price = BFX_BSV_Label2;
-            UIControls_Dict["BFX"].BSV_Spread = BFX_BSV_Label3;
             UIControls_Dict["BFX"].DOT_Label = BFX_DOT_Label1;
             UIControls_Dict["BFX"].DOT_Price = BFX_DOT_Label2;
             UIControls_Dict["BFX"].DOT_Spread = BFX_DOT_Label3;
