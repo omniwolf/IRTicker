@@ -744,14 +744,6 @@ namespace IRTicker {
                 }
 
                 name = Properties.Settings.Default.SlackDefaultName;
-                if (!DCEs["IR"].socketsAlive || !DCEs["IR"].NetworkAvailable) {
-                    slackObj.setStatus("", ":exclamation:", status_emoji_duration, name + " - IR API down");
-                    return;
-                }
-                else if (!DCEs["BTCM"].socketsAlive || !DCEs["BTCM"].NetworkAvailable) {
-                    slackObj.setStatus("", ":face_with_rolling_eyes:", status_emoji_duration, name + " - BTCM API down");  // should change this to still show the price, and not bother saying "BTCM API down" 
-                    return;
-                }
 
                 // can't continue if we somehow don't have crypto and fiat chosen for slack
 
@@ -771,6 +763,15 @@ namespace IRTicker {
             }
             //Debug.Print("slack name is: " + name);
 
+            if (!DCEs["IR"].socketsAlive || !DCEs["IR"].NetworkAvailable) {
+                slackObj.setStatus("", ":exclamation:", status_emoji_duration, name + " - IR API down");
+                return;
+            }
+            else if (!DCEs["BTCM"].socketsAlive || !DCEs["BTCM"].NetworkAvailable) {
+                slackObj.setStatus("", ":man-shrugging:", status_emoji_duration, name);  // should change this to still show the price, and not bother saying "BTCM API down" 
+                if (TGBot != null) TGBot.BTCMemoji = "🤷‍";
+                return;
+            }
 
 
             if (IRvol < 0) {
@@ -778,8 +779,8 @@ namespace IRTicker {
                 if (TGBot != null) TGBot.BTCMemoji = "";
             }
             else if (BTCMvol < 0) {
-                slackObj.setStatus("", "", status_emoji_duration, name);
-                if (TGBot != null) TGBot.BTCMemoji = "";
+                slackObj.setStatus("", ":man-shrugging:", status_emoji_duration, name);
+                if (TGBot != null) TGBot.BTCMemoji = "🤷‍";
             }
             else if (IRvol > BTCMvol * 2) {
                 slackObj.setStatus("", ":danbizan:", status_emoji_duration, name);

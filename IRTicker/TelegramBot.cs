@@ -37,6 +37,7 @@ namespace IRTicker
         bool NextMsgIsNew = false;  // set to true to disable the edit functionality for the next message (eg when an async message has come through like the order filled message)
         private string bTCMemoji = "";
         private string APIKey;  // try to track which APIkey we're using so we know which closed orders we're pulling
+        private string mBaitSpinner = "/";  // we spin this in the market baiter tg bot screen on each refresh to show the refresh is working
 
         public ConcurrentDictionary<string, bool> closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
         public ConcurrentDictionary<string, List<Guid>> notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();
@@ -586,7 +587,23 @@ namespace IRTicker
 
                 decimal price = -1;
                 decimal volume = -1;
-                string masterStr = "`Market Baiter` :: ⬆️ Market baiter is currently *active*" + Environment.NewLine + Environment.NewLine;
+
+                switch (mBaitSpinner) {
+                    case "/":
+                        mBaitSpinner = "-";
+                        break;
+                    case "-":
+                        mBaitSpinner = @"\\\";
+                        break;
+                    case @"\\\":
+                        mBaitSpinner = "|";
+                        break;
+                    case "|":
+                        mBaitSpinner = "/";
+                        break;
+                }
+
+                string masterStr = "`Market Baiter` :: ⬆️ Market baiter is currently *active* " + mBaitSpinner + Environment.NewLine + Environment.NewLine;
 
                 if (pIR.placedOrder != null) {
                     if (pIR.placedOrder.Price.HasValue) {
