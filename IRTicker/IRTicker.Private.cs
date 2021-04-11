@@ -781,7 +781,7 @@ namespace IRTicker {
         // this method checks the limit price, and if it would make the order a market order, then highlight buttons and shit
         // can only be called if AccountOrderType_listbox.SelectedIndex is 1 or 2 (limit or bait)
         private void ValidateLimitOrder() {
-            //if (pIR.marketBaiterActive) return;  // we don't want to really look at anything if baitin'
+            //if (pIR.marketBaiterActive) return;  // we don't want to really look at anything if baitin'  // actually... we can now place limit orders while baitin'
             decimal price = decimal.Parse(AccountLimitPrice_textbox.Text);
             if (AccountOrders_listview.Items.Count > 0) {  // only continue if we have orders in the OB
                 if (AccountBuySell_listbox.SelectedIndex == 0) {  // buy
