@@ -1412,7 +1412,14 @@ namespace IRTicker {
 
                     if (lastBlock == 0) lastBlock = bHeight.Height;  // we haven' found a block before, just set it and move on
                     else if(lastBlock != bHeight.Height) {
-                        if (bStick != null && bStick.OpenDevice()) bStick.Morph("purple");
+                        if (bStick != null && bStick.OpenDevice()) {
+                            try {
+                                bStick.Morph("purple");
+                            }
+                            catch (Exception ex) {
+                                Debug.Print(DateTime.Now + " -- BS -- caught an exception in block height: " + ex.Message);
+                            }
+                        }
                         lastBlock = bHeight.Height;
                         Debug.Print(DateTime.Now + " - we have a new BTC block: " + lastBlock);
                     }
