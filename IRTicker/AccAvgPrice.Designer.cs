@@ -35,8 +35,8 @@
             this.AccAvgPrice_End_DTPicker = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.AccAvgPrice_End_Label = new System.Windows.Forms.Label();
+            this.AccAvgPrice_Start_Label = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.AccAvgPrice_Result_TextBox = new System.Windows.Forms.TextBox();
@@ -57,6 +57,7 @@
             this.AccAvgPrice_RemainingToDeal_TextBox = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.AccAvgPrice_RemaingToDealCurrency_Label = new System.Windows.Forms.Label();
+            this.AccAvgPrice_SendRemainingToVolumeField_button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // AccAvgPrice_Crypto_ComboBox
@@ -136,25 +137,29 @@
             this.label2.TabIndex = 8;
             this.label2.Text = "Fiat:";
             // 
-            // label3
+            // AccAvgPrice_End_Label
             // 
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.Transparent;
-            this.label3.Location = new System.Drawing.Point(13, 122);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(90, 13);
-            this.label3.TabIndex = 10;
-            this.label3.Text = "Last order before:";
+            this.AccAvgPrice_End_Label.AutoSize = true;
+            this.AccAvgPrice_End_Label.BackColor = System.Drawing.Color.Transparent;
+            this.AccAvgPrice_End_Label.Location = new System.Drawing.Point(13, 122);
+            this.AccAvgPrice_End_Label.Name = "AccAvgPrice_End_Label";
+            this.AccAvgPrice_End_Label.Size = new System.Drawing.Size(90, 13);
+            this.AccAvgPrice_End_Label.TabIndex = 10;
+            this.AccAvgPrice_End_Label.Text = "Last order before:";
+            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_End_Label, "Double click to set this to now + 1 day");
+            this.AccAvgPrice_End_Label.DoubleClick += new System.EventHandler(this.AccAvgPrice_End_Label_DoubleClick);
             // 
-            // label4
+            // AccAvgPrice_Start_Label
             // 
-            this.label4.AutoSize = true;
-            this.label4.BackColor = System.Drawing.Color.Transparent;
-            this.label4.Location = new System.Drawing.Point(13, 96);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(80, 13);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "First order after:";
+            this.AccAvgPrice_Start_Label.AutoSize = true;
+            this.AccAvgPrice_Start_Label.BackColor = System.Drawing.Color.Transparent;
+            this.AccAvgPrice_Start_Label.Location = new System.Drawing.Point(13, 96);
+            this.AccAvgPrice_Start_Label.Name = "AccAvgPrice_Start_Label";
+            this.AccAvgPrice_Start_Label.Size = new System.Drawing.Size(80, 13);
+            this.AccAvgPrice_Start_Label.TabIndex = 9;
+            this.AccAvgPrice_Start_Label.Text = "First order after:";
+            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_Start_Label, "Double click to set this to now");
+            this.AccAvgPrice_Start_Label.DoubleClick += new System.EventHandler(this.AccAvgPrice_Start_Label_DoubleClick);
             // 
             // label5
             // 
@@ -359,6 +364,18 @@
             this.AccAvgPrice_RemaingToDealCurrency_Label.TabIndex = 29;
             this.AccAvgPrice_RemaingToDealCurrency_Label.Text = "BTC";
             // 
+            // AccAvgPrice_SendRemainingToVolumeField_button
+            // 
+            this.AccAvgPrice_SendRemainingToVolumeField_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.AccAvgPrice_SendRemainingToVolumeField_button.Location = new System.Drawing.Point(268, 248);
+            this.AccAvgPrice_SendRemainingToVolumeField_button.Name = "AccAvgPrice_SendRemainingToVolumeField_button";
+            this.AccAvgPrice_SendRemainingToVolumeField_button.Size = new System.Drawing.Size(60, 23);
+            this.AccAvgPrice_SendRemainingToVolumeField_button.TabIndex = 30;
+            this.AccAvgPrice_SendRemainingToVolumeField_button.Text = "Set vol";
+            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_SendRemainingToVolumeField_button, "Will copy the average price with no formatting, just a decimal value");
+            this.AccAvgPrice_SendRemainingToVolumeField_button.UseVisualStyleBackColor = true;
+            this.AccAvgPrice_SendRemainingToVolumeField_button.Click += new System.EventHandler(this.AccAvgPrice_SendRemainingToVolumeField_button_Click);
+            // 
             // AccAvgPrice
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -367,6 +384,7 @@
             this.BackgroundImage = global::IRTicker.Properties.Resources.IR_Eagel_Transparent___small_faded2;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ClientSize = new System.Drawing.Size(344, 351);
+            this.Controls.Add(this.AccAvgPrice_SendRemainingToVolumeField_button);
             this.Controls.Add(this.AccAvgPrice_RemaingToDealCurrency_Label);
             this.Controls.Add(this.AccAvgPrice_RemainingToDeal_TextBox);
             this.Controls.Add(this.label11);
@@ -386,8 +404,8 @@
             this.Controls.Add(this.AccAvgPrice_Result_TextBox);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label4);
+            this.Controls.Add(this.AccAvgPrice_End_Label);
+            this.Controls.Add(this.AccAvgPrice_Start_Label);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.AccAvgPrice_End_DTPicker);
@@ -419,8 +437,8 @@
         private System.Windows.Forms.DateTimePicker AccAvgPrice_End_DTPicker;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label AccAvgPrice_End_Label;
+        private System.Windows.Forms.Label AccAvgPrice_Start_Label;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox AccAvgPrice_Result_TextBox;
@@ -441,5 +459,6 @@
         private System.Windows.Forms.TextBox AccAvgPrice_RemainingToDeal_TextBox;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label AccAvgPrice_RemaingToDealCurrency_Label;
+        private System.Windows.Forms.Button AccAvgPrice_SendRemainingToVolumeField_button;
     }
 }

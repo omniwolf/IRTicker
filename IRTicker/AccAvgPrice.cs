@@ -16,14 +16,16 @@ namespace IRTicker
     {
         private PrivateIR pIR;
         private DCE dce;
+        private IRTicker IRT;
         private string AvgPriceResult = "";  // holds the unformatted version of the average price
         private string TotalCryptoDealt = "";  // holds the unformatted version of the total crypto dealt
         private string TotalFiatDealt = "";  // holds the unformatted version of the total fiat dealt
 
-        public AccAvgPrice(DCE _DCE, PrivateIR _pIR, bool enableAutoUpdate = false, string crypto = "", int direction = 0) {
+        public AccAvgPrice(DCE _DCE, PrivateIR _pIR, IRTicker _IRT, bool enableAutoUpdate = false, string crypto = "", int direction = 0) {
             InitializeComponent();
             dce = _DCE;
             pIR = _pIR;
+            IRT = _IRT;
 
             // initialise the controls
             Utilities.PopulateCryptoComboBox(dce, AccAvgPrice_Crypto_ComboBox);
@@ -163,6 +165,7 @@ namespace IRTicker
                                 else AccAvgPrice_RemainingToDeal_TextBox.BackColor = Color.LightGoldenrodYellow;
 
                                 AccAvgPrice_RemainingToDeal_TextBox.Text = Utilities.FormatValue((dealSize - dealtSoFar), decimals, false);
+                                AccAvgPrice_RemainingToDeal_TextBox.Tag = dealSize - dealtSoFar;  // put the raw unformatted number in the tag, so we can copy this if they double click the label
                                 AccAvgPrice_RemaingToDealCurrency_Label.Text = (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex == 1 ? AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() : AccAvgPrice_Fiat_ComboBox.SelectedItem.ToString());
                             }
                             else AccAvgPrice_RemainingToDeal_TextBox.Text = "Must be > 0";
@@ -230,6 +233,20 @@ namespace IRTicker
 
         private void AccAvgPrice_CopyFiat_Button_Click(object sender, EventArgs e) {
             Clipboard.SetText(TotalFiatDealt);
+        }
+
+        private void AccAvgPrice_Start_Label_DoubleClick(object sender, EventArgs e) {
+            AccAvgPrice_Start_DTPicker.Value = DateTime.Now;
+        }
+
+        private void AccAvgPrice_End_Label_DoubleClick(object sender, EventArgs e) {
+            AccAvgPrice_End_DTPicker.Value = DateTime.Now + TimeSpan.FromDays(1);
+        }
+
+        private void AccAvgPrice_SendRemainingToVolumeField_button_Click(object sender, EventArgs e) {
+            if ((null != AccAvgPrice_RemainingToDeal_TextBox.Tag) && (!string.IsNullOrEmpty(AccAvgPrice_RemainingToDeal_TextBox.Tag.ToString()))) {
+                IRT.IRAccount_FillVolumeField(AccAvgPrice_RemainingToDeal_TextBox.Tag.ToString());
+            }
         }
     }
 }

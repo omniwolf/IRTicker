@@ -21,8 +21,6 @@ namespace IRTicker {
         public Dictionary<string, Account> accounts = new Dictionary<string, Account>();
         private ApiCredential IRcreds;
         private IRTicker IRT;
-        private ConcurrentQueue<IRClientData> IRQueue = new ConcurrentQueue<IRClientData>();
-        private bool isDequeuing = false;
         private static readonly Object pIR_Lock = new Object();
 
         public string OrderBookSide = "Bid";  //  maintains which side of the order book we show in the AccountOrders_listview
@@ -35,6 +33,7 @@ namespace IRTicker {
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBids;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
         public ConcurrentBag<Guid> openOrders = new ConcurrentBag<Guid>();
+        private Dictionary<string, int> closedOrdersCount = new Dictionary<string, int>();  // keeps a count of how many closed orders each pair has so we can maybe try and get to the bottom of this weird issue where I sometimes see less closed orders than actually exists
         private DateTime APIKeyChanged = DateTime.Now;  // records when we changed the APIKey so we can wait for a period (5 seconds?) before believing that closed orders are from the new APIKey.  If we use them immediately then often we get ClosedOrders from the old APIKey
 
         public BankOrder placedOrder = null;
@@ -120,7 +119,8 @@ namespace IRTicker {
             BankOrder orderResult;
             lock (pIR_Lock) {
                 orderResult = IRclient.PlaceLimitOrder(enumCrypto, enumFiat, orderType.Value, price, volume);
-                openOrders.Add(orderResult.OrderGuid);
+                if ((orderResult.Status == OrderStatus.Open) || (orderResult.Status == OrderStatus.PartiallyFilled)) 
+                    openOrders.Add(orderResult.OrderGuid);
             }
             return orderResult;
         }
@@ -169,9 +169,13 @@ namespace IRTicker {
             if (crypto.ToUpper() == "BTC") crypto = "XBT";
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
+            string pair = enumCrypto.ToString() + "-" + enumFiat.ToString();
             Page<BankHistoryOrder> cOrders = null;
             List<BankHistoryOrder> allCOrders = new List<BankHistoryOrder>();
             string APIkey;  // let's try and track which key we use
+            if (!closedOrdersCount.ContainsKey(pair)) {
+                closedOrdersCount.Add(pair, 0);
+            }
 
             int page = 1;
             do {
@@ -197,8 +201,15 @@ namespace IRTicker {
                 }
                 page++;
             }  while (page <= cOrders.TotalPages);
-            
 
+            if (allCOrders.Count >= closedOrdersCount[pair]) {
+                closedOrdersCount[pair] = allCOrders.Count;
+            }
+            else {
+                Debug.Print("pIR: We have LESS closed orders for " + pair + " than we did at the last closedOrders pull?? why???  Before: " + closedOrdersCount[pair] + " after: " + allCOrders.Count);
+            }
+
+            
             if (page < cOrders.TotalPages) return null;  // we don't want to send partial results, we either get it all or die trying
             cOrders.Data = allCOrders;
             if (cOrders.Data.Count() > 0) {

@@ -699,7 +699,7 @@ namespace IRTicker {
                             "Average Price Calculator", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                         if (res == DialogResult.Yes) {
-                            _AccAvgPrice = new AccAvgPrice(DCEs["IR"], pIR, true, AccountSelectedCrypto, AccountBuySell_listbox.SelectedIndex);
+                            _AccAvgPrice = new AccAvgPrice(DCEs["IR"], pIR, this, true, AccountSelectedCrypto, AccountBuySell_listbox.SelectedIndex);
                             _AccAvgPrice.Show();
                         }
                     }
@@ -910,7 +910,7 @@ namespace IRTicker {
         }
         private void IRAccount_AvgPrice_Button_Click(object sender, EventArgs e) {
             if ((_AccAvgPrice == null) || (!Application.OpenForms.OfType<AccAvgPrice>().Any())) {
-                _AccAvgPrice = new AccAvgPrice(DCEs["IR"], pIR);
+                _AccAvgPrice = new AccAvgPrice(DCEs["IR"], pIR, this);
                 _AccAvgPrice.Show();
             }
             else _AccAvgPrice.Focus();
@@ -923,6 +923,10 @@ namespace IRTicker {
                 if (_AccAvgPrice != null) _AccAvgPrice.UpdatePrice((Page<BankHistoryOrder>)o);
             }), cOrders);
             
+        }
+
+        public void IRAccount_FillVolumeField(string vol) {
+            AccountOrderVolume_textbox.Text = vol;
         }
     }
 }

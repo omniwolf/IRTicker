@@ -45,6 +45,8 @@ namespace IRTicker {
         private Slack slackObj = new Slack();
         private DateTime lastCSVWrite = DateTime.Now;  // this holds the time we last saved the CSV file
         private System.Windows.Forms.Panel LastPanel;
+        private decimal BTCfee = 0;  // holds the estimated BTC network fee for the next block in sats/byte
+        private decimal ETHfee = 0;  // holds the estimated ETH network fee for the next block in gwei
 
         public ConcurrentDictionary<string, SpreadGraph> SpreadGraph_Dict = new ConcurrentDictionary<string, SpreadGraph>();  // needs to be public because it gets accessed from the graphs object
 
@@ -1405,10 +1407,27 @@ namespace IRTicker {
                     }
                 }
 
+                // grab BTC and ETH fees
+                Tuple<bool, string> feeTup = Utilities.Get("https://mempool.space/api/v1/fees/recommended");
+                if (feeTup.Item1) {
+                    mempoolSpace mspaceRecommended = JsonConvert.DeserializeObject<mempoolSpace>(feeTup.Item2);
+                    BTCfee = mspaceRecommended.fastestFee;
+                }
+                else BTCfee = -1;  // tells the system to signal on the "Last updated" label
+
+                feeTup = Utilities.Get("https://www.gasnow.org/api/v3/gas/price?utm_source=IRTicker");
+                if (feeTup.Item1) {
+                    GNData gasNowData = JsonConvert.DeserializeObject<gasNow>(feeTup.Item2).data;
+                    ETHfee = gasNowData.fast / 1000000000;
+                }
+                else ETHfee = -1;  // tells the system to signal on the "Last updated" label
+
+
+
                 // lets grab the latest BTC block
-                Tuple<bool, string> resultTup = Utilities.Get("https://blockchain.info/latestblock");
-                if (resultTup.Item1) {
-                    BlockHeight bHeight = JsonConvert.DeserializeObject<BlockHeight>(resultTup.Item2);
+                Tuple<bool, string> latestBlockTup = Utilities.Get("https://blockchain.info/latestblock");
+                if (latestBlockTup.Item1) {
+                    BlockHeight bHeight = JsonConvert.DeserializeObject<BlockHeight>(latestBlockTup.Item2);
 
                     if (lastBlock == 0) lastBlock = bHeight.Height;  // we haven' found a block before, just set it and move on
                     else if(lastBlock != bHeight.Height) {
@@ -1426,7 +1445,7 @@ namespace IRTicker {
                     //Debug.Print("current block is: " + lastBlock);
                 }
                 else {
-                    Debug.Print("couldn't pull the block height data? error: " + resultTup.Item2);
+                    Debug.Print("couldn't pull the block height data? error: " + latestBlockTup.Item2);
                 }
 
                 // Time to blink some sticks
@@ -1584,10 +1603,10 @@ namespace IRTicker {
 
 
                 //////// fiat rates /////////
-                if (refreshFiat) {
+                /*if (refreshFiat) {
                     ParseFiat_OER("USD", "AUD,NZD,EUR,USD,SGD");  // only run this once per session as we have limited fx API calls.
                     refreshFiat = false;
-                }
+                }*/
 
                 // OK we now have all the DCE and fiat rates info loaded.
 
@@ -2243,14 +2262,53 @@ namespace IRTicker {
             IR_CryptoComboBox.Enabled = IR_BuySellComboBox.Enabled = IR_NumCoinsTextBox.Enabled = true;
             BTCM_CryptoComboBox.Enabled = BTCM_BuySellComboBox.Enabled = BTCM_NumCoinsTextBox.Enabled = true;
 
-            if (OER_NetworkAvailable) {
+            // update crypto fees
+
+            cryptoFees_groupBox.ForeColor = Color.Black;
+
+            string cryptoFees_LastUpdated_temp = "";
+            if (BTCfee > 0) {
+                cryptoFees_BTC_value.ForeColor = Color.Black;
+                cryptoFees_BTC_value.Text = BTCfee + " sats/byte";
+                IRTickerTT_generic.SetToolTip(cryptoFees_BTC_value, "");  // fees API is good, no TT required
+            }
+            else {
+                cryptoFees_BTC_value.ForeColor = Color.Gray;
+                cryptoFees_LastUpdated_temp = "BTC fail.  ";
+                if (string.IsNullOrEmpty(IRTickerTT_generic.GetToolTip(cryptoFees_BTC_value))) {  // if this tooltip already has data in it, it means we don't want to change it because the timestamp needs to stay static until we next successfully update the fees
+                    IRTickerTT_generic.SetToolTip(cryptoFees_BTC_value, "Last successful update: " + DateTime.Now.ToString("HH:mm:ss"));
+                }
+            }
+
+            if (ETHfee > 0) {
+                cryptoFees_ETH_value.ForeColor = Color.Black;
+                cryptoFees_ETH_value.Text = ETHfee + " gwei";
+                IRTickerTT_generic.SetToolTip(cryptoFees_ETH_value, "");  // fees API is good, no TT required
+            }
+            else {
+                cryptoFees_ETH_value.ForeColor = Color.Gray;
+                cryptoFees_LastUpdated_temp += "ETH fail.";
+                if (string.IsNullOrEmpty(IRTickerTT_generic.GetToolTip(cryptoFees_ETH_value))) {  // if this tooltip already has data in it, it means we don't want to change it because the timestamp needs to stay static until we next successfully update the fees
+                    IRTickerTT_generic.SetToolTip(cryptoFees_ETH_value, "Last successful update: " + DateTime.Now.ToString("HH:mm:ss"));
+                }
+            }
+
+            // am i getting too tricky here?  the addition of these 2 will be -2 if they have both failed, in which case we don't care about the last updated time.  If only one has failed, we still want the updated time for the successful one.
+            if (BTCfee + ETHfee > -2) {
+                cryptoFees_LastUpdated_temp += DateTime.Now.ToString("HH:mm:ss");
+            }
+
+            cryptoFees_LastUpdated_value.Text = cryptoFees_LastUpdated_temp;
+            
+
+            /*if (OER_NetworkAvailable) {
                 PrintFiat();  // i outsourced updating the fiat UI we do it when loading for the first time, and also when the user clicks the fiat_groupBox.  it doesn't realy need to be done each poll as we only pull fiat once.. but meh
                 if (fiatRefresh_checkBox.Checked) {
                     fiatRefresh_checkBox.Enabled = true;
                     fiatRefresh_checkBox.Text = "Tick to queue an update";
                     fiatRefresh_checkBox.Checked = false;
                 }
-            }
+            }*/
 
             if ((reportType == 1) && LoadingPanel.Visible) {
                 Main.Visible = true;
@@ -3231,5 +3289,26 @@ namespace IRTicker {
             [JsonProperty("txIndexes")]
             public object[] TxIndexes { get; set; }
         }
+        public class mempoolSpace {
+            public int fastestFee { get; set; }
+            public int halfHourFee { get; set; }
+            public int hourFee { get; set; }
+            public int minimumFee { get; set; }
+        }
+
+        public class GNData {
+            public long rapid { get; set; }
+            public long fast { get; set; }
+            public long standard { get; set; }
+            public long slow { get; set; }
+            public long timestamp { get; set; }
+        }
+
+        public class gasNow {
+            public int code { get; set; }
+            public GNData data { get; set; }
+        }
+
+
     }
 }
