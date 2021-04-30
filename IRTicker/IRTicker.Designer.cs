@@ -6092,8 +6092,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(584, 841);
-            this.Controls.Add(this.Main);
             this.Controls.Add(this.IRAccount_panel);
+            this.Controls.Add(this.Main);
             this.Controls.Add(this.Settings);
             this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.OTCHelper);

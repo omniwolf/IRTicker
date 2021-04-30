@@ -12,7 +12,7 @@ namespace IRTicker.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -476,6 +476,150 @@ namespace IRTicker.Properties {
             }
             set {
                 this["TGBot_Enable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKeyMB {
+            get {
+                return ((string)(this["IRAPIPubKeyMB"]));
+            }
+            set {
+                this["IRAPIPubKeyMB"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKeyMB {
+            get {
+                return ((string)(this["IRAPIPrivKeyMB"]));
+            }
+            set {
+                this["IRAPIPrivKeyMB"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKeyMB1 {
+            get {
+                return ((string)(this["IRAPIPubKeyMB1"]));
+            }
+            set {
+                this["IRAPIPubKeyMB1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKeyMB2 {
+            get {
+                return ((string)(this["IRAPIPubKeyMB2"]));
+            }
+            set {
+                this["IRAPIPubKeyMB2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKeyMB3 {
+            get {
+                return ((string)(this["IRAPIPubKeyMB3"]));
+            }
+            set {
+                this["IRAPIPubKeyMB3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKeyMB4 {
+            get {
+                return ((string)(this["IRAPIPubKeyMB4"]));
+            }
+            set {
+                this["IRAPIPubKeyMB4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKeyMB5 {
+            get {
+                return ((string)(this["IRAPIPubKeyMB5"]));
+            }
+            set {
+                this["IRAPIPubKeyMB5"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKeyMB1 {
+            get {
+                return ((string)(this["IRAPIPrivKeyMB1"]));
+            }
+            set {
+                this["IRAPIPrivKeyMB1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKeyMB2 {
+            get {
+                return ((string)(this["IRAPIPrivKeyMB2"]));
+            }
+            set {
+                this["IRAPIPrivKeyMB2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKeyMB3 {
+            get {
+                return ((string)(this["IRAPIPrivKeyMB3"]));
+            }
+            set {
+                this["IRAPIPrivKeyMB3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKeyMB4 {
+            get {
+                return ((string)(this["IRAPIPrivKeyMB4"]));
+            }
+            set {
+                this["IRAPIPrivKeyMB4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKeyMB5 {
+            get {
+                return ((string)(this["IRAPIPrivKeyMB5"]));
+            }
+            set {
+                this["IRAPIPrivKeyMB5"] = value;
             }
         }
     }

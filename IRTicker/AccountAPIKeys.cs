@@ -32,6 +32,19 @@ namespace IRTicker {
             PrivKey_textBox4.Text = Properties.Settings.Default.IRAPIPrivKey4;
             PrivKey_textBox5.Text = Properties.Settings.Default.IRAPIPrivKey5;
 
+            PubKeyMB_textBox1.Text = Properties.Settings.Default.IRAPIPubKeyMB1;
+            PubKeyMB_textBox2.Text = Properties.Settings.Default.IRAPIPubKeyMB2;
+            PubKeyMB_textBox3.Text = Properties.Settings.Default.IRAPIPubKeyMB3;
+            PubKeyMB_textBox4.Text = Properties.Settings.Default.IRAPIPubKeyMB4;
+            PubKeyMB_textBox5.Text = Properties.Settings.Default.IRAPIPubKeyMB5;
+
+            PrivKeyMB_textBox1.Text = Properties.Settings.Default.IRAPIPrivKeyMB1;
+            PrivKeyMB_textBox2.Text = Properties.Settings.Default.IRAPIPrivKeyMB2;
+            PrivKeyMB_textBox3.Text = Properties.Settings.Default.IRAPIPrivKeyMB3;
+            PrivKeyMB_textBox4.Text = Properties.Settings.Default.IRAPIPrivKeyMB4;
+            PrivKeyMB_textBox5.Text = Properties.Settings.Default.IRAPIPrivKeyMB5;
+
+
         }
 
         private void SettingsOKButton_Click(object sender, EventArgs e) {
@@ -52,6 +65,18 @@ namespace IRTicker {
             Properties.Settings.Default.IRAPIPrivKey3 = PrivKey_textBox3.Text;
             Properties.Settings.Default.IRAPIPrivKey4 = PrivKey_textBox4.Text;
             Properties.Settings.Default.IRAPIPrivKey5 = PrivKey_textBox5.Text;
+
+            Properties.Settings.Default.IRAPIPubKeyMB1 = PubKeyMB_textBox1.Text;
+            Properties.Settings.Default.IRAPIPubKeyMB2 = PubKeyMB_textBox2.Text;
+            Properties.Settings.Default.IRAPIPubKeyMB3 = PubKeyMB_textBox3.Text;
+            Properties.Settings.Default.IRAPIPubKeyMB4 = PubKeyMB_textBox4.Text;
+            Properties.Settings.Default.IRAPIPubKeyMB5 = PubKeyMB_textBox5.Text;
+
+            Properties.Settings.Default.IRAPIPrivKeyMB1 = PrivKeyMB_textBox1.Text;
+            Properties.Settings.Default.IRAPIPrivKeyMB2 = PrivKeyMB_textBox2.Text;
+            Properties.Settings.Default.IRAPIPrivKeyMB3 = PrivKeyMB_textBox3.Text;
+            Properties.Settings.Default.IRAPIPrivKeyMB4 = PrivKeyMB_textBox4.Text;
+            Properties.Settings.Default.IRAPIPrivKeyMB5 = PrivKeyMB_textBox5.Text;
 
             Properties.Settings.Default.Save();
             
