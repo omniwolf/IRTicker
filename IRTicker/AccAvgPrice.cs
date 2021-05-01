@@ -94,9 +94,15 @@ namespace IRTicker
             string crypto = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString();
             string fiat = AccAvgPrice_Fiat_ComboBox.SelectedItem.ToString();
 
-            Task<Page<BankHistoryOrder>> cOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetClosedOrders(crypto, fiat));
-            cOrdersTask.Start();
-            CalculateAvgPrice(await cOrdersTask);
+            try {
+                Task<Page<BankHistoryOrder>> cOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetClosedOrders(crypto, fiat));
+                cOrdersTask.Start();
+                CalculateAvgPrice(await cOrdersTask);
+            }
+            catch (Exception ex) {
+                Debug.Print(DateTime.Now + " - failed to pull closed orders when clicking the average price go button.  error: " + ex.Message);
+                AccAvgPrice_Status_Label.Text = "Failed to pull closed orders, please try again.";
+            }
         }
 
         public void CalculateAvgPrice(Page<BankHistoryOrder> cOrders) {
@@ -247,6 +253,16 @@ namespace IRTicker
             if ((null != AccAvgPrice_RemainingToDeal_TextBox.Tag) && (!string.IsNullOrEmpty(AccAvgPrice_RemainingToDeal_TextBox.Tag.ToString()))) {
                 IRT.IRAccount_FillVolumeField(AccAvgPrice_RemainingToDeal_TextBox.Tag.ToString());
             }
+        }
+
+        private void AccAvgPrice_Start_DTPicker_ValueChanged(object sender, EventArgs e) {
+            // make a note of the start date, so we only pull orders from this date onwards to reduce our closedOrders cost.  
+            // this way when pulling closed orders we only pull what's required because we know how far back we have to look
+            pIR.earliestClosedOrderRequired = AccAvgPrice_Start_DTPicker.Value;
+        }
+
+        private void AccAvgPrice_FormClosing(object sender, FormClosingEventArgs e) {
+            pIR.earliestClosedOrderRequired = null;  // no more start date, just grab the 7 newest closed orders
         }
     }
 }

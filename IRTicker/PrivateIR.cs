@@ -33,7 +33,9 @@ namespace IRTicker {
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBids;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
         public ConcurrentBag<Guid> openOrders = new ConcurrentBag<Guid>();
-        private Dictionary<string, int> closedOrdersCount = new Dictionary<string, int>();  // keeps a count of how many closed orders each pair has so we can maybe try and get to the bottom of this weird issue where I sometimes see less closed orders than actually exists
+        public DateTime? earliestClosedOrderRequired = null;  // optimise closed orders by only pulling what's required.  If null we just pull a static 7 to cover the closed orders UI
+        public bool firstClosedOrdersPullDone = false;  // we need to pull ALL orders intially so we have a record of all guids for announcing new closed orders
+        private Dictionary<string, long> closedOrdersCount = new Dictionary<string, long>();  // keeps a count of how many closed orders each pair has so we can maybe try and get to the bottom of this weird issue where I sometimes see less closed orders than actually exists
         private DateTime APIKeyChanged = DateTime.Now;  // records when we changed the APIKey so we can wait for a period (5 seconds?) before believing that closed orders are from the new APIKey.  If we use them immediately then often we get ClosedOrders from the old APIKey
 
         public BankOrder placedOrder = null;
@@ -56,6 +58,8 @@ namespace IRTicker {
             IRT = _IRT;
             DCE_IR = _DCE_IR;
             TGBot = _TGBot;
+
+            firstClosedOrdersPullDone = false;  // reset to false
 
             if (string.IsNullOrEmpty(APIKey) || string.IsNullOrEmpty(APISecret)) {
                 Debug.Print(DateTime.Now + " cannot do private IR stuff, missing API key(s)");
@@ -163,9 +167,13 @@ namespace IRTicker {
         // and ignore Closed Orders made around this time, as I have often found I receive old closed orders from the old API key and it gets mixed in with the new one.
         public void APIKeyHasChanged() {
             APIKeyChanged = DateTime.Now;
+            firstClosedOrdersPullDone = false;
         }
 
-        public Page<BankHistoryOrder> GetClosedOrders(string crypto, string fiat) {
+        public Page<BankHistoryOrder> GetClosedOrders(string crypto, string fiat, bool initialPull = false) {
+
+            if (!firstClosedOrdersPullDone && !initialPull) return null;  // If we haven't done the first giant pull, and something tries to do a closed order pull, ignore it.  Only start servicing calls once the initial pull is complete
+
             if (crypto.ToUpper() == "BTC") crypto = "XBT";
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
@@ -177,44 +185,55 @@ namespace IRTicker {
                 closedOrdersCount.Add(pair, 0);
             }
 
+            int pageSize = 8;  // by default we only get 7, this is how many we would need to display on the Closed orders list on the accounts UI
+            if (earliestClosedOrderRequired.HasValue || initialPull) {  // Either we have a date, need to pull all orders newer than or equal to this date, or it's the first run and we need to pull everything
+                pageSize = 50;
+            }
+
             int page = 1;
             do {
+                
+                APIkey = IRcreds.Key;
                 lock (pIR_Lock) {
-                    try {
-                        APIkey = IRcreds.Key;
-                        cOrders = IRclient.GetClosedOrders(enumCrypto, enumFiat, page, 50);
-                        if (APIkey != IRcreds.Key) {  // i don't think this will ever happen.. but who knows  /// ok.. seems to happen every time we change APIkey.  but if stops errors, so leave it
-                            Debug.Print("uh oh.. it's unclear which API key we used.. probably should just bail" + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
-                            return null;
-                        }
-                    }
-                    catch (Exception ex) {
-                        Debug.Print(DateTime.Now + " - Failed to pull GetClosedOrders on page " + page + " - " + ex.Message);
-                        throw ex;
-                    }
+                    cOrders = IRclient.GetClosedOrders(enumCrypto, enumFiat, page, pageSize);
+                }
+                if (APIkey != IRcreds.Key) {  // i don't think this will ever happen.. but who knows  /// ok.. seems to happen every time we change APIkey.  but if stops errors, so leave it
+                    Debug.Print("uh oh.. it's unclear which API key we used.. probably should just bail" + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
+                    return null;
                 }
 
+                if (cOrders.TotalItems <= 0) break;  // we have no orders, let's get out of here
                 //if ((page == 1) && (crypto == "XBT") && (fiat == "AUD")) Debug.Print(DateTime.Now + " - GetClosedOrders(" + crypto + "-" + fiat + "): total pages: " + cOrders.TotalPages + " and total items: " + cOrders.TotalItems + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
 
                 foreach (BankHistoryOrder order in cOrders.Data) {
                     allCOrders.Add(order);
                 }
                 page++;
+                if (!initialPull) {  // only want to consider breaking out of this loop early if this isn't the first pull.  If it's the first pull we need ALL closed orders
+                    if (!earliestClosedOrderRequired.HasValue) break;  // we only need to get the first page if we don't have a date
+                    else {  // ok we do have a date, need to work out if we bail or continue here
+                        if (allCOrders.Last().CreatedTimestampUtc < earliestClosedOrderRequired.Value) {
+                            break;
+                        }
+                    }
+                }
             }  while (page <= cOrders.TotalPages);
 
-            if (allCOrders.Count >= closedOrdersCount[pair]) {
-                closedOrdersCount[pair] = allCOrders.Count;
+            if (cOrders.TotalItems >= closedOrdersCount[pair]) {
+                closedOrdersCount[pair] = cOrders.TotalItems;
             }
             else {
-                Debug.Print("pIR: We have LESS closed orders for " + pair + " than we did at the last closedOrders pull?? why???  Before: " + closedOrdersCount[pair] + " after: " + allCOrders.Count);
+                Debug.Print("pIR: We have LESS closed orders for " + pair + " than we did at the last closedOrders pull?? why???  Before: " + closedOrdersCount[pair] + " after: " + cOrders.TotalItems);
             }
 
-            
-            if (page < cOrders.TotalPages) return null;  // we don't want to send partial results, we either get it all or die trying
-            cOrders.Data = allCOrders;
+            if ((crypto == "XBT") && (fiat == "AUD")) Debug.Print("TOTAL ITEMS pulled for BTC-AUD: " + allCOrders.Count);
+
+                //if (page < cOrders.TotalPages) return null;  // we don't want to send partial results, we either get it all or die trying  // AACTTUALLY... partial results are good now
+                cOrders.Data = allCOrders;
             if (cOrders.Data.Count() > 0) {
-                // only call the TG closed orders sub if we've waited 5 seconds after an APIKey change
-                if ((TGBot != null) && (DateTime.Now > APIKeyChanged + TimeSpan.FromMinutes(1))) TGBot.closedOrders(cOrders, APIkey);
+                // only call the TG closed orders sub if we've waited 5 seconds after an APIKey change or it's the initial pull of all orders
+                //if ((TGBot != null) && (DateTime.Now > APIKeyChanged + TimeSpan.FromMinutes(1))) TGBot.closedOrders(cOrders, APIkey);
+                if ((TGBot != null) && ((DateTime.Now > APIKeyChanged + TimeSpan.FromMinutes(1)) || initialPull)) TGBot.closedOrders(cOrders, APIkey);
                 IRT.SignalAveragePriceUpdate(cOrders);
             }
             //else Debug.Print("gecClosed orders, no orders for " + crypto + "-" + fiat);

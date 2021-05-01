@@ -1215,29 +1215,7 @@ namespace IRTicker {
         private void PopulateCryptoComboBox(string dExchange) {
 
             Utilities.PopulateCryptoComboBox(DCEs[dExchange], UIControls_Dict[dExchange].AvgPrice_Crypto);
-
             return;
-
-            // shouldn't need this stuff anymore, it's all in the utilities sub
-
-            if (UIControls_Dict[dExchange].AvgPrice == null) return;  // eg coinspot 
-
-            UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Clear();
-            UIControls_Dict[dExchange].AvgPrice_Crypto.ResetText();
-            UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Add("");  // add an empty option as the first one so it can be selected when we need to "reset"
-            UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex = 0;
-
-            foreach (string pair in DCEs[dExchange].UsablePairs()) {
-                Tuple<string, string> splitPair = Utilities.SplitPair(pair);  // splits "XBT-AUD" into a tuple ("XBT","AUD")
-                if (splitPair.Item2 == DCEs[dExchange].CurrentSecondaryCurrency) {
-                    UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Add(splitPair.Item1 == "XBT" ? "BTC" : splitPair.Item1);
-                }
-            }
-
-            if (UIControls_Dict[dExchange].AvgPrice_Crypto.Items.Count < 1) {
-                MessageBox.Show("Error - no primary currencies from " + dExchange + "?", "Show this to Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                UIControls_Dict[dExchange].AvgPrice_Crypto.Enabled = false;
-            }
         }
 
         private void PollingThread_DoWork(object sender, DoWorkEventArgs e) {
@@ -1297,6 +1275,9 @@ namespace IRTicker {
                                 if (DCEs["IR"].CurrentSecondaryCurrency == fiat) ParseDCE_IR(crypto, fiat, true);  // initial data pull and display
                             }
                         }
+
+                        // now that we have the currencies, lets grab all closedorders and put into notifiedOrders
+                        if ((null != pIR) && (null != TGBot)) TGBot.populateClosedOrders();
 
                         /*DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "AUD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "USD");
@@ -3243,11 +3224,14 @@ namespace IRTicker {
                 if (friendlyNameLen > 20) friendlyNameLen = 20;
                 AccountName_button.Text = Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : "");
 
-                if (pIR != null) pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
-                if (TGBot != null) {
+                if (TGBot != null) {  // need to clear the TGBot dictionaries first before we re-initialise pIR object as privateIR_init will alert TGBot to API key's closed orders
                     TGBot.closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
                     TGBot.notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();
                 }
+                if (pIR != null) pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+
+                if (null != TGBot) TGBot.populateClosedOrders();
+
                 Debug.Print(DateTime.Now + " - closedOrdersFirstRun has been cleared.  There should be no old orders reported.  Size of dict now: " + TGBot.closedOrdersFirstRun.Count);
                 Debug.Print(DateTime.Now + " - notifiedOrders has been cleared.  There should be no old orders reported.  Size of dict now: " + TGBot.notifiedOrders.Count);
             }

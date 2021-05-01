@@ -49,6 +49,7 @@
             this.AccAvgPrice_CopyFiat_Button = new System.Windows.Forms.Button();
             this.AccAvgPrice_DealSize_TextBox = new System.Windows.Forms.TextBox();
             this.AccAvgPrice_DealSizeCurrency_ComboBox = new System.Windows.Forms.ComboBox();
+            this.AccAvgPrice_SendRemainingToVolumeField_button = new System.Windows.Forms.Button();
             this.AccAvgPrice_TotalCrypto_TextBox = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.AccAvgPrice_TotalFiat_TextBox = new System.Windows.Forms.TextBox();
@@ -57,7 +58,6 @@
             this.AccAvgPrice_RemainingToDeal_TextBox = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.AccAvgPrice_RemaingToDealCurrency_Label = new System.Windows.Forms.Label();
-            this.AccAvgPrice_SendRemainingToVolumeField_button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // AccAvgPrice_Crypto_ComboBox
@@ -85,6 +85,7 @@
             this.AccAvgPrice_Start_DTPicker.Name = "AccAvgPrice_Start_DTPicker";
             this.AccAvgPrice_Start_DTPicker.Size = new System.Drawing.Size(106, 20);
             this.AccAvgPrice_Start_DTPicker.TabIndex = 2;
+            this.AccAvgPrice_Start_DTPicker.ValueChanged += new System.EventHandler(this.AccAvgPrice_Start_DTPicker_ValueChanged);
             // 
             // AccAvgPrice_Go_Button
             // 
@@ -288,6 +289,18 @@
             this.AccAvgPrice_DealSizeCurrency_ComboBox.TabIndex = 26;
             this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_DealSizeCurrency_ComboBox, "Choose the currency of the size of the deal value");
             // 
+            // AccAvgPrice_SendRemainingToVolumeField_button
+            // 
+            this.AccAvgPrice_SendRemainingToVolumeField_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.AccAvgPrice_SendRemainingToVolumeField_button.Location = new System.Drawing.Point(268, 248);
+            this.AccAvgPrice_SendRemainingToVolumeField_button.Name = "AccAvgPrice_SendRemainingToVolumeField_button";
+            this.AccAvgPrice_SendRemainingToVolumeField_button.Size = new System.Drawing.Size(60, 23);
+            this.AccAvgPrice_SendRemainingToVolumeField_button.TabIndex = 30;
+            this.AccAvgPrice_SendRemainingToVolumeField_button.Text = "Set vol";
+            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_SendRemainingToVolumeField_button, "Will copy the average price with no formatting, just a decimal value");
+            this.AccAvgPrice_SendRemainingToVolumeField_button.UseVisualStyleBackColor = true;
+            this.AccAvgPrice_SendRemainingToVolumeField_button.Click += new System.EventHandler(this.AccAvgPrice_SendRemainingToVolumeField_button_Click);
+            // 
             // AccAvgPrice_TotalCrypto_TextBox
             // 
             this.AccAvgPrice_TotalCrypto_TextBox.Location = new System.Drawing.Point(112, 290);
@@ -364,18 +377,6 @@
             this.AccAvgPrice_RemaingToDealCurrency_Label.TabIndex = 29;
             this.AccAvgPrice_RemaingToDealCurrency_Label.Text = "BTC";
             // 
-            // AccAvgPrice_SendRemainingToVolumeField_button
-            // 
-            this.AccAvgPrice_SendRemainingToVolumeField_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AccAvgPrice_SendRemainingToVolumeField_button.Location = new System.Drawing.Point(268, 248);
-            this.AccAvgPrice_SendRemainingToVolumeField_button.Name = "AccAvgPrice_SendRemainingToVolumeField_button";
-            this.AccAvgPrice_SendRemainingToVolumeField_button.Size = new System.Drawing.Size(60, 23);
-            this.AccAvgPrice_SendRemainingToVolumeField_button.TabIndex = 30;
-            this.AccAvgPrice_SendRemainingToVolumeField_button.Text = "Set vol";
-            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_SendRemainingToVolumeField_button, "Will copy the average price with no formatting, just a decimal value");
-            this.AccAvgPrice_SendRemainingToVolumeField_button.UseVisualStyleBackColor = true;
-            this.AccAvgPrice_SendRemainingToVolumeField_button.Click += new System.EventHandler(this.AccAvgPrice_SendRemainingToVolumeField_button_Click);
-            // 
             // AccAvgPrice
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -422,6 +423,7 @@
             this.Name = "AccAvgPrice";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Average price calculator";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AccAvgPrice_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

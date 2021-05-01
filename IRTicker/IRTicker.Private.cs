@@ -310,6 +310,7 @@ namespace IRTicker {
                     AccountOpenOrders_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " open orders";
                     AccountOpenOrders_listview.Items.Clear();
 
+                    int loopCount = 1;
                     foreach (BankHistoryOrder order in _openOrders) {
                         if ((order.Status != OrderStatus.Open) && (order.Status != OrderStatus.PartiallyFilled)) continue;
                         AccountOpenOrders_listview.Items.Add(new ListViewItem(new string[] {
@@ -325,6 +326,8 @@ namespace IRTicker {
                             AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].BackColor = Color.PeachPuff;
                         }
                         AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].Tag = order;
+                        loopCount++;
+                        if (loopCount > 7) break;  // we only need to draw 7 items
                     }
                 }
             }), openOrders);
