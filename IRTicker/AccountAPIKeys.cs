@@ -84,14 +84,18 @@ namespace IRTicker {
         }
 
         public class APIKeyGroup {
-            public APIKeyGroup(string _friendlyName, string _pubKey, string _privKey) {
+            public APIKeyGroup(string _friendlyName, string _pubKey, string _privKey, string _pubKeyMB = "", string _privKeyMB = "") {
                 friendlyName = _friendlyName;
                 pubKey = _pubKey;
                 privKey = _privKey;
+                pubKeyMB = _pubKeyMB;
+                privKeyMB = _privKeyMB;
             }
             public string friendlyName { get; set; }
             public string pubKey { get; set; }
             public string privKey { get; set; }
+            public string pubKeyMB { get; set; }
+            public string privKeyMB { get; set; }
 
             public override string ToString() {
                 return friendlyName;

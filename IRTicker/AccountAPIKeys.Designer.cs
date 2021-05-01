@@ -68,6 +68,7 @@
             this.PubKeyMB_textBox1 = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // IRPrivKey_label
@@ -514,11 +515,22 @@
             this.label15.TabIndex = 79;
             this.label15.Text = "Market baiter API keys:";
             // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(95, 520);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(414, 26);
+            this.label16.TabIndex = 80;
+            this.label16.Text = "If making changes here, ensure you select a different API key in the drop down me" +
+    "nu, \r\nand then select the one you want to re-initialise the client";
+            // 
             // AccountAPIKeys
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(838, 553);
+            this.Controls.Add(this.label16);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.PrivKeyMB_textBox5);
@@ -621,5 +633,6 @@
         private System.Windows.Forms.TextBox PubKeyMB_textBox1;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label16;
     }
 }

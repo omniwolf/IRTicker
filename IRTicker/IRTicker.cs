@@ -2418,10 +2418,10 @@ namespace IRTicker {
                         !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) &&
                         !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
 
-                        IRAccount_button.Enabled = true;
-
                         pIR = new PrivateIR();
-                        pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                        if (pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot)) {
+                            IRAccount_button.Enabled = true;
+                        }
                     }
 
                     if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
@@ -3187,26 +3187,27 @@ namespace IRTicker {
             APIKeys_comboBox.Items.Clear();
                         
             if (!string.IsNullOrEmpty(Properties.Settings.Default.APIFriendly1) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey1) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey1)) {
-                AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly1, Properties.Settings.Default.IRAPIPubKey1, Properties.Settings.Default.IRAPIPrivKey1);
+                AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly1, Properties.Settings.Default.IRAPIPubKey1, Properties.Settings.Default.IRAPIPrivKey1, Properties.Settings.Default.IRAPIPubKeyMB1, Properties.Settings.Default.IRAPIPrivKeyMB1);
                 APIKeys_comboBox.Items.Add(grp);
             }
             if (!string.IsNullOrEmpty(Properties.Settings.Default.APIFriendly2) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey2) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey2)) {
-                AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly2, Properties.Settings.Default.IRAPIPubKey2, Properties.Settings.Default.IRAPIPrivKey2);
+                AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly2, Properties.Settings.Default.IRAPIPubKey2, Properties.Settings.Default.IRAPIPrivKey2, Properties.Settings.Default.IRAPIPubKeyMB2, Properties.Settings.Default.IRAPIPrivKeyMB2);
                 APIKeys_comboBox.Items.Add(grp);
             }
             if (!string.IsNullOrEmpty(Properties.Settings.Default.APIFriendly3) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey3) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey3)) {
-                AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly3, Properties.Settings.Default.IRAPIPubKey3, Properties.Settings.Default.IRAPIPrivKey3);
+                AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly3, Properties.Settings.Default.IRAPIPubKey3, Properties.Settings.Default.IRAPIPrivKey3, Properties.Settings.Default.IRAPIPubKeyMB3, Properties.Settings.Default.IRAPIPrivKeyMB3);
                 APIKeys_comboBox.Items.Add(grp);
             }
             if (!string.IsNullOrEmpty(Properties.Settings.Default.APIFriendly4) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey4) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey4)) {
-                AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly4, Properties.Settings.Default.IRAPIPubKey4, Properties.Settings.Default.IRAPIPrivKey4);
+                AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly4, Properties.Settings.Default.IRAPIPubKey4, Properties.Settings.Default.IRAPIPrivKey4, Properties.Settings.Default.IRAPIPubKeyMB4, Properties.Settings.Default.IRAPIPrivKeyMB4);
                 APIKeys_comboBox.Items.Add(grp);
             }
             if (!string.IsNullOrEmpty(Properties.Settings.Default.APIFriendly5) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey5) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey5)) {
-                AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly5, Properties.Settings.Default.IRAPIPubKey5, Properties.Settings.Default.IRAPIPrivKey5);
+                AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly5, Properties.Settings.Default.IRAPIPubKey5, Properties.Settings.Default.IRAPIPrivKey5, Properties.Settings.Default.IRAPIPubKeyMB5, Properties.Settings.Default.IRAPIPrivKeyMB5);
                 APIKeys_comboBox.Items.Add(grp);
             }
 
+            // here we're checking to make sure that the already selected apiKey can still be found in the list of keys
             bool foundKey = false;
             foreach (AccountAPIKeys.APIKeyGroup chosenKey in APIKeys_comboBox.Items) {
                 if (chosenKey.friendlyName == Properties.Settings.Default.APIFriendly) {
@@ -3215,10 +3216,12 @@ namespace IRTicker {
                     foundKey = true;
                 }
             }
-            if (!foundKey) {
+            if (!foundKey) {  // if not, then blank it all out and make them choose a new one
                 Properties.Settings.Default.APIFriendly = "";
                 Properties.Settings.Default.IRAPIPubKey = "";
                 Properties.Settings.Default.IRAPIPrivKey = "";
+                Properties.Settings.Default.IRAPIPubKeyMB = "";
+                Properties.Settings.Default.IRAPIPrivKeyMB = "";
                 AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup("", "", "");
                 APIKeys_comboBox.Items.Add(grp);
                 APIKeys_comboBox.SelectedItem = grp;
@@ -3237,13 +3240,16 @@ namespace IRTicker {
                 Properties.Settings.Default.APIFriendly = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName;
                 Properties.Settings.Default.IRAPIPubKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).pubKey;
                 Properties.Settings.Default.IRAPIPrivKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).privKey;
+                Properties.Settings.Default.IRAPIPubKeyMB = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).pubKeyMB;
+                Properties.Settings.Default.IRAPIPrivKeyMB = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).privKeyMB;
                 Properties.Settings.Default.Save();
 
                 int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
                 if (friendlyNameLen > 20) friendlyNameLen = 20;
                 AccountName_button.Text = Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : "");
 
-                if (pIR != null) pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                if (pIR == null) pIR = new PrivateIR();
+                pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
                 if (TGBot != null) {
                     TGBot.closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
                     TGBot.notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();

@@ -18,10 +18,12 @@ namespace IRTicker {
 
         //private static readonly HttpClient client = new HttpClient();
         private Client IRclient;
+        private Client IRclientMB;  // the client that does all market baiting
         public Dictionary<string, Account> accounts = new Dictionary<string, Account>();
-        private ApiCredential IRcreds;
+        private ApiCredential IRcreds;  // this is the normal (non-baiter) credentials, I don't think i'll ever need the baiter creds anywhere but creation, so no need to globalise them
         private IRTicker IRT;
         private static readonly Object pIR_Lock = new Object();
+        private static readonly object pIR_LockMB = new Object();   // locking for market baiter
 
         public string OrderBookSide = "Bid";  //  maintains which side of the order book we show in the AccountOrders_listview
         public string BaiterBookSide = "Bid"; // maintains which book we're baitin' on
@@ -40,6 +42,7 @@ namespace IRTicker {
         public decimal baiterLiveVol = 0;  // this holds the current value of the baiter order, ie if there has been nibbles this will be the orginal volume minus nibbles
 
         public bool marketBaiterActive = false;
+        public bool marketBaiterAllowed = false;  // if they haven't set the baiter api keys, then we don't allow them to bait
 
         private DCE DCE_IR;
         private TelegramBot TGBot;
@@ -52,14 +55,14 @@ namespace IRTicker {
             // 
         }
 
-        public void PrivateIR_init(string APIKey, string APISecret, IRTicker _IRT, DCE _DCE_IR, TelegramBot _TGBot) {
+        public bool PrivateIR_init(string APIKey, string APISecret, IRTicker _IRT, DCE _DCE_IR, TelegramBot _TGBot) {
             IRT = _IRT;
             DCE_IR = _DCE_IR;
             TGBot = _TGBot;
 
             if (string.IsNullOrEmpty(APIKey) || string.IsNullOrEmpty(APISecret)) {
                 Debug.Print(DateTime.Now + " cannot do private IR stuff, missing API key(s)");
-                return;
+                return false;
             }
 
             IRcreds = new ApiCredential(APIKey, APISecret);
@@ -69,33 +72,65 @@ namespace IRTicker {
                 Credential = IRcreds
             };
             IRclient = Client.Create(IRconf);
+
+            // mbaiter client setup
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKeyMB) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKeyMB)) {
+
+                ApiCredential MBCreds = new ApiCredential(Properties.Settings.Default.IRAPIPubKeyMB, Properties.Settings.Default.IRAPIPrivKeyMB);
+                var IRconfMB = new ApiConfig {
+                    BaseUrl = DCE_IR.BaseURL,
+                    Credential = MBCreds
+                };
+                IRclientMB = Client.Create(IRconfMB);
+                marketBaiterAllowed = true;
+            }
+
+            return true;
         }
 
         public void setTGBot(TelegramBot _TGBot) {
             TGBot = _TGBot;
         }
 
-        public Dictionary<string, Account> GetAccounts() {
-            lock (pIR_Lock) {
-                accounts = (IRclient.GetAccounts()).ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
+        private Client selectIRclient(bool isMB) {
+            if (isMB) return IRclientMB;
+            else return IRclient;
+        }
+        private Object selectLock(bool isMB) {
+            if (isMB) return pIR_LockMB;
+            else return pIR_Lock;
+        }
+
+        public Dictionary<string, Account> GetAccounts(bool isMB = false) {
+            Object _pIR_Lock = selectLock(isMB);
+            Client _IRclient = selectIRclient(isMB);
+
+            lock (_pIR_Lock) {
+                accounts = (_IRclient.GetAccounts()).ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
             }
             return accounts;
         }
 
-        public DigitalCurrencyDepositAddress GetDepositAddress(string crypto) {
+        public DigitalCurrencyDepositAddress GetDepositAddress(string crypto, bool isMB = false) {
+            Object _pIR_Lock = selectLock(isMB);
+            Client _IRclient = selectIRclient(isMB);
+
             if (crypto.ToUpper() == "BTC") crypto = "XBT";
-            lock (pIR_Lock) {
-                return IRclient.GetDigitalCurrencyDepositAddress(convertCryptoStrToCryptoEnum(crypto));
+            lock (_pIR_Lock) {
+                return _IRclient.GetDigitalCurrencyDepositAddress(convertCryptoStrToCryptoEnum(crypto));
             }
         }
 
         //
-        public DigitalCurrencyDepositAddress CheckAddressNow(string crypto, string address) {
+        public DigitalCurrencyDepositAddress CheckAddressNow(string crypto, string address, bool isMB = false) {
+            Object _pIR_Lock = selectLock(isMB);
+            Client _IRclient = selectIRclient(isMB);
+
             if (crypto.ToUpper() == "BTC") crypto = "XBT";
             DigitalCurrencyDepositAddress result;
-            lock (pIR_Lock) {
+            lock (_pIR_Lock) {
                 try {
-                    result = IRclient.SynchDigitalCurrencyDepositAddressWithBlockchain(address, convertCryptoStrToCryptoEnum(crypto));
+                    result = _IRclient.SynchDigitalCurrencyDepositAddressWithBlockchain(address, convertCryptoStrToCryptoEnum(crypto));
                 }
                 catch (Exception ex) {
                     MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
@@ -107,7 +142,10 @@ namespace IRTicker {
             return result;
         }
 
-        public BankOrder PlaceLimitOrder(string crypto, string fiat, OrderType? orderType, decimal price, decimal volume) {
+        public BankOrder PlaceLimitOrder(string crypto, string fiat, OrderType? orderType, decimal price, decimal volume, bool isMB = false) {
+            Object _pIR_Lock = selectLock(isMB);
+            Client _IRclient = selectIRclient(isMB);
+
             if (crypto.ToUpper() == "BTC") crypto = "XBT";
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
@@ -117,15 +155,19 @@ namespace IRTicker {
             if (volume < 0) volume = Volume;
 
             BankOrder orderResult;
-            lock (pIR_Lock) {
-                orderResult = IRclient.PlaceLimitOrder(enumCrypto, enumFiat, orderType.Value, price, volume);
-                if ((orderResult.Status == OrderStatus.Open) || (orderResult.Status == OrderStatus.PartiallyFilled)) 
-                    openOrders.Add(orderResult.OrderGuid);
+            lock (_pIR_Lock) {
+                orderResult = _IRclient.PlaceLimitOrder(enumCrypto, enumFiat, orderType.Value, price, volume);
             }
+
+            if ((orderResult.Status == OrderStatus.Open) || (orderResult.Status == OrderStatus.PartiallyFilled))
+                openOrders.Add(orderResult.OrderGuid);
             return orderResult;
         }
 
-        public BankOrder PlaceMarketOrder(string crypto, string fiat, OrderType? orderType, decimal volume) {
+        public BankOrder PlaceMarketOrder(string crypto, string fiat, OrderType? orderType, decimal volume, bool isMB = false) {
+            Object _pIR_Lock = selectLock(isMB);
+            Client _IRclient = selectIRclient(isMB);
+
             if (crypto.ToUpper() == "BTC") crypto = "XBT";
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
@@ -134,20 +176,23 @@ namespace IRTicker {
             if (volume < 0) volume = Volume;
 
             BankOrder orderResult;
-            lock (pIR_Lock) {
-                orderResult = IRclient.PlaceMarketOrder(enumCrypto, enumFiat, orderType.Value, volume);
+            lock (_pIR_Lock) {
+                orderResult = _IRclient.PlaceMarketOrder(enumCrypto, enumFiat, orderType.Value, volume);
             }
             return orderResult;
         }
 
-        public Page<BankHistoryOrder> GetOpenOrders(string crypto, string fiat) {
+        public Page<BankHistoryOrder> GetOpenOrders(string crypto, string fiat, bool isMB = false) {
+            Object _pIR_Lock = selectLock(isMB);
+            Client _IRclient = selectIRclient(isMB);
+
             if (crypto.ToUpper() == "BTC") crypto = "XBT";
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
             Page<BankHistoryOrder> openOs;
 
-            lock (pIR_Lock) {
-                openOs = IRclient.GetOpenOrders(enumCrypto, enumFiat, 1, 7);
+            lock (_pIR_Lock) {
+                openOs = _IRclient.GetOpenOrders(enumCrypto, enumFiat, 1, 7);
             }
 
             openOrders = new ConcurrentBag<Guid>(); // clear the old one
@@ -165,7 +210,10 @@ namespace IRTicker {
             APIKeyChanged = DateTime.Now;
         }
 
-        public Page<BankHistoryOrder> GetClosedOrders(string crypto, string fiat) {
+        public Page<BankHistoryOrder> GetClosedOrders(string crypto, string fiat, bool isMB = false ) {
+            Object _pIR_Lock = selectLock(isMB);
+            Client _IRclient = selectIRclient(isMB);
+
             if (crypto.ToUpper() == "BTC") crypto = "XBT";
             CurrencyCode enumCrypto = convertCryptoStrToCryptoEnum(crypto);
             CurrencyCode enumFiat = convertCryptoStrToCryptoEnum(fiat);
@@ -179,18 +227,13 @@ namespace IRTicker {
 
             int page = 1;
             do {
-                lock (pIR_Lock) {
-                    try {
-                        APIkey = IRcreds.Key;
-                        cOrders = IRclient.GetClosedOrders(enumCrypto, enumFiat, page, 50);
-                        if (APIkey != IRcreds.Key) {  // i don't think this will ever happen.. but who knows  /// ok.. seems to happen every time we change APIkey.  but if stops errors, so leave it
-                            Debug.Print("uh oh.. it's unclear which API key we used.. probably should just bail" + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
-                            return null;
-                        }
-                    }
-                    catch (Exception ex) {
-                        Debug.Print(DateTime.Now + " - Failed to pull GetClosedOrders on page " + page + " - " + ex.Message);
-                        throw ex;
+                lock (_pIR_Lock) {
+
+                    APIkey = IRcreds.Key;
+                    cOrders = _IRclient.GetClosedOrders(enumCrypto, enumFiat, page, 50);
+                    if (APIkey != IRcreds.Key) {  // i don't think this will ever happen.. but who knows  /// ok.. seems to happen every time we change APIkey.  but if stops errors, so leave it
+                        Debug.Print("uh oh.. it's unclear which API key we used.. probably should just bail" + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
+                        return null;
                     }
                 }
 

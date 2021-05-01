@@ -678,6 +678,11 @@ namespace IRTicker {
             }
             else if ((oType == 2) && !pIR.marketBaiterActive) {  // start market baiter
 
+                if (!pIR.marketBaiterAllowed) {
+                    MessageBox.Show("Cannot start the market baiter, maybe you need to enter a market baiter API key and secret into the settings screen?", "Cannot bait", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 res = MessageBox.Show("Start the market baiter strategy?" + Environment.NewLine + Environment.NewLine +
                     "This will create a " + orderSide + " order that will automatically move with the best order " +
                     "on the market, never going beyond $ " + Utilities.FormatValue(decimal.Parse(AccountLimitPrice_textbox.Text)) + Environment.NewLine + Environment.NewLine +

@@ -94,9 +94,15 @@ namespace IRTicker
             string crypto = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString();
             string fiat = AccAvgPrice_Fiat_ComboBox.SelectedItem.ToString();
 
-            Task<Page<BankHistoryOrder>> cOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetClosedOrders(crypto, fiat));
-            cOrdersTask.Start();
-            CalculateAvgPrice(await cOrdersTask);
+            try {
+                Task<Page<BankHistoryOrder>> cOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetClosedOrders(crypto, fiat));
+                cOrdersTask.Start();
+                CalculateAvgPrice(await cOrdersTask);
+            }
+            catch (Exception ex) {
+                Debug.Print(DateTime.Now + " - Failed to pull closed orders for avgerage price go button.  error: " + ex.Message);
+                AccAvgPrice_Status_Label.Text = "Failed to pull closed orders, please try again";
+            }
         }
 
         public void CalculateAvgPrice(Page<BankHistoryOrder> cOrders) {
