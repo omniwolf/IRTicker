@@ -101,16 +101,8 @@ namespace IRTicker {
             if (crypto.ToUpper() == "BTC") crypto = "XBT";
             DigitalCurrencyDepositAddress result;
             lock (pIR_Lock) {
-                try {
-                    result = IRclient.SynchDigitalCurrencyDepositAddressWithBlockchain(address, convertCryptoStrToCryptoEnum(crypto));
-                }
-                catch (Exception ex) {
-                    MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                        ex.Message, "Error - CheckAddressNow", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return null;
-                }
+                result = IRclient.SynchDigitalCurrencyDepositAddressWithBlockchain(address, convertCryptoStrToCryptoEnum(crypto));
             }
-
             return result;
         }
 
@@ -126,9 +118,9 @@ namespace IRTicker {
             BankOrder orderResult;
             lock (pIR_Lock) {
                 orderResult = IRclient.PlaceLimitOrder(enumCrypto, enumFiat, orderType.Value, price, volume);
-                if ((orderResult.Status == OrderStatus.Open) || (orderResult.Status == OrderStatus.PartiallyFilled)) 
-                    openOrders.Add(orderResult.OrderGuid);
             }
+            if ((orderResult.Status == OrderStatus.Open) || (orderResult.Status == OrderStatus.PartiallyFilled))
+                openOrders.Add(orderResult.OrderGuid);
             return orderResult;
         }
 
@@ -200,7 +192,7 @@ namespace IRTicker {
                 
                 APIkey = IRcreds.Key;
                 lock (pIR_Lock) {
-                    cOrders = IRclient.GetClosedOrders(enumCrypto, enumFiat, page, pageSize);
+                    cOrders = IRclient.GetClosedFilledOrders(enumCrypto, enumFiat, page, pageSize);  // we don't care about cancelled orders
                 }
                 if (APIkey != IRcreds.Key) {  // i don't think this will ever happen.. but who knows  /// ok.. seems to happen every time we change APIkey.  but if stops errors, so leave it
                     Debug.Print("uh oh.. it's unclear which API key we used.. probably should just bail" + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
@@ -218,7 +210,7 @@ namespace IRTicker {
                     if ((crypto != AvgPriceSelectedCrypto) || (fiat != AvgPriceSelectedFiat)) break;  // if we're pulling orders for some different crypto, just bail
                     if (!earliestClosedOrderRequired.HasValue) break;  // we only need to get the first page if we don't have a date
                     else {  // ok we do have a date, need to work out if we bail or continue here
-                        if (allCOrders.Last().CreatedTimestampUtc < earliestClosedOrderRequired.Value) {
+                        if (allCOrders.Last().CreatedTimestampUtc < earliestClosedOrderRequired.Value.ToUniversalTime()) {
                             break;
                         }
                     }
@@ -249,14 +241,7 @@ namespace IRTicker {
 
         public BankOrder CancelOrder(string guid) {
             lock (pIR_Lock) {
-                try {
-                    return IRclient.CancelOrder(new Guid(guid));
-                }
-                catch (Exception ex) {
-                    //MessageBox.Show("IR private API issue:" + Environment.NewLine + Environment.NewLine +
-                    //    ex.InnerException.Message, "Error - CancelOrder", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    throw ex;
-                }
+                return IRclient.CancelOrder(new Guid(guid));
             }
         }
 
@@ -546,7 +531,7 @@ namespace IRTicker {
                                         }
                                         break;
                                     }
-                                    if (bo.Status == OrderStatus.Cancelled) {
+                                    if ((bo.Status == OrderStatus.Cancelled) || (bo.Status == OrderStatus.PartiallyFilledAndCancelled)) {
                                         //Debug.Print("MBAIT: cancel order was successful");
                                         //if (bo.VolumeFilled != 0) IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble..."));
 
@@ -627,7 +612,7 @@ namespace IRTicker {
                                             continue;
                                         }
                                         Debug.Print("MBAIT: cancelled status: " + cancelledOrder.Status);
-                                        if (cancelledOrder.Status == OrderStatus.Cancelled) {
+                                        if ((cancelledOrder.Status == OrderStatus.Cancelled) || (cancelledOrder.Status == OrderStatus.PartiallyFilledAndCancelled)) {
                                             placedOrder = null;
                                         }
                                     }
@@ -673,7 +658,7 @@ namespace IRTicker {
                     Debug.Print("MBAIT: couldn't cancel the order... weird.  message: " + ex.Message);
                     bo = new BankOrder() { Status = OrderStatus.Open };  // fake it for below if statement
                 }
-                if (bo.Status == OrderStatus.Cancelled) {
+                if ((bo.Status == OrderStatus.Cancelled) || (bo.Status == OrderStatus.PartiallyFilledAndCancelled)) {
                     Debug.Print("MBAIT: cancel order was successful");
                     IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Market baiter stopped, existing order cancelled."));
                     placedOrder = null;

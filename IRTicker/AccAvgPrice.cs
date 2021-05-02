@@ -113,7 +113,7 @@ namespace IRTicker
 
             foreach (BankHistoryOrder cOrder in cOrders.Data) {
                 // first we make sure the order isn't still open
-                if ((cOrder.Status == OrderStatus.Filled) || (cOrder.Status == OrderStatus.PartiallyFilledAndCancelled) ||
+                if ((cOrder.Status == OrderStatus.Filled) || (cOrder.Status == OrderStatus.PartiallyFilledAndCancelled) || (cOrder.Status == OrderStatus.PartiallyFilled) ||
                     (cOrder.Status == OrderStatus.PartiallyFilledAndExpired) || (cOrder.Status == OrderStatus.PartiallyFilledAndFailed)) {
                     // then we make sure it's within the time period
                     if ((cOrder.CreatedTimestampUtc > AccAvgPrice_Start_DTPicker.Value.ToUniversalTime()) && (cOrder.CreatedTimestampUtc < AccAvgPrice_End_DTPicker.Value.ToUniversalTime())) {
