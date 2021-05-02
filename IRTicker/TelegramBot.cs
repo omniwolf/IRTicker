@@ -92,19 +92,28 @@ namespace IRTicker
 
         // this thing runs through all IR pairs and pulls all orders for the pair to the notifiedOrders dictionary
         // so that we have a list of closed orders to compare when a new one comes in
-        public void populateClosedOrders() {
+        public async Task populateClosedOrders() {
             // now we pull all closed orders for all pairs to ensure we have all order guids listed in the TG Bot notifiedOrders dictionary
+
+            Page<BankHistoryOrder> cOrders;
+
             foreach (string primaryCode in DCE_IR.PrimaryCurrencyList) {
-                foreach (string fiat in DCE_IR.SecondaryCurrencyList) {
+                foreach (string secondaryCode in DCE_IR.SecondaryCurrencyList) {
                     try {
-                        pIR.GetClosedOrders(primaryCode, fiat, true);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
+                        cOrders = pIR.GetClosedOrders(primaryCode, secondaryCode, true);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
+
+                        // need to go if the current primary/secondary is what's shown on IRAccounts, then draw it
+                        if ((pIR.SelectedCrypto == primaryCode) && (DCE_IR.CurrentSecondaryCurrency == secondaryCode)) {
+                            IRT.drawClosedOrders(cOrders.Data);
+                        }
+                        // IRT.drawClosedOrders(cOrders);
                     }
                     catch (Exception ex) {
                         string errorMsg = ex.Message;
                         if (ex.InnerException != null) {
                             errorMsg = ex.InnerException.Message;
                         }
-                        Debug.Print(DateTime.Now + " - PrivateIR_init sub, trying to pull closed orders for " + primaryCode + "-" + fiat + ", but it failed: " + errorMsg);
+                        Debug.Print(DateTime.Now + " - PrivateIR_init sub, trying to pull closed orders for " + primaryCode + "-" + secondaryCode + ", but it failed: " + errorMsg);
                     }
                 }
             }

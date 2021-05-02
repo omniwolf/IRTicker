@@ -465,7 +465,7 @@ namespace IRTicker {
                 drawDepositAddress(null);
 
                 if (AccountSelectedCrypto == "BTC") AccountSelectedCrypto = "XBT";
-                pIR.Crypto = AccountSelectedCrypto;
+                pIR.SelectedCrypto = AccountSelectedCrypto;  // inform the pIR object what our selected crypto is
 
                 Label newLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
                 newLabel.ForeColor = Color.DarkOrange;

@@ -3207,7 +3207,7 @@ namespace IRTicker {
             }
         }
 
-        private void APIKeys_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
+        private async void APIKeys_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
 
             if (Properties.Settings.Default.APIFriendly != ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName) {
 
@@ -3230,7 +3230,7 @@ namespace IRTicker {
                 }
                 if (pIR != null) pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
 
-                if (null != TGBot) TGBot.populateClosedOrders();
+                if (null != TGBot) await Task.Run(() => TGBot.populateClosedOrders());
 
                 Debug.Print(DateTime.Now + " - closedOrdersFirstRun has been cleared.  There should be no old orders reported.  Size of dict now: " + TGBot.closedOrdersFirstRun.Count);
                 Debug.Print(DateTime.Now + " - notifiedOrders has been cleared.  There should be no old orders reported.  Size of dict now: " + TGBot.notifiedOrders.Count);

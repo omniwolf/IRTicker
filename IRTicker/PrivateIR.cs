@@ -29,13 +29,15 @@ namespace IRTicker {
         public string BuySell = "Buy";
         public decimal Volume = 0;
         public decimal LimitPrice = 0;
-        public string Crypto = "XBT";
+        public string SelectedCrypto = "XBT";
+        public string AvgPriceSelectedCrypto = "";  // this should be whatever the AccAvgPrice form has selected, so we know which crypto we need to get more closed orders for
+        public string AvgPriceSelectedFiat = "";
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBids;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
         public ConcurrentBag<Guid> openOrders = new ConcurrentBag<Guid>();
         public DateTime? earliestClosedOrderRequired = null;  // optimise closed orders by only pulling what's required.  If null we just pull a static 7 to cover the closed orders UI
         public bool firstClosedOrdersPullDone = false;  // we need to pull ALL orders intially so we have a record of all guids for announcing new closed orders
-        private Dictionary<string, long> closedOrdersCount = new Dictionary<string, long>();  // keeps a count of how many closed orders each pair has so we can maybe try and get to the bottom of this weird issue where I sometimes see less closed orders than actually exists
+        private Dictionary<string, long> closedOrdersCount;  // keeps a count of how many closed orders each pair has so we can maybe try and get to the bottom of this weird issue where I sometimes see less closed orders than actually exists
         private DateTime APIKeyChanged = DateTime.Now;  // records when we changed the APIKey so we can wait for a period (5 seconds?) before believing that closed orders are from the new APIKey.  If we use them immediately then often we get ClosedOrders from the old APIKey
 
         public BankOrder placedOrder = null;
@@ -60,6 +62,7 @@ namespace IRTicker {
             TGBot = _TGBot;
 
             firstClosedOrdersPullDone = false;  // reset to false
+            closedOrdersCount = new Dictionary<string, long>();
 
             if (string.IsNullOrEmpty(APIKey) || string.IsNullOrEmpty(APISecret)) {
                 Debug.Print(DateTime.Now + " cannot do private IR stuff, missing API key(s)");
@@ -185,8 +188,10 @@ namespace IRTicker {
                 closedOrdersCount.Add(pair, 0);
             }
 
-            int pageSize = 8;  // by default we only get 7, this is how many we would need to display on the Closed orders list on the accounts UI
-            if (earliestClosedOrderRequired.HasValue || initialPull) {  // Either we have a date, need to pull all orders newer than or equal to this date, or it's the first run and we need to pull everything
+            int pageSize = 10;  // we only need 7 for the UI, but grab 10 in case 
+            // Either we have a date, need to pull all orders newer than or equal to this date, or it's the first run and we need to pull everything
+            // also - we only pull  more than 8 if the crypto we're pulling is the currently chosen crypto.  `Crypto` is the currently chosen crypto... (i know.. great var name)
+            if ((earliestClosedOrderRequired.HasValue && (crypto == AvgPriceSelectedCrypto) && (fiat == AvgPriceSelectedFiat)) || initialPull)  {  
                 pageSize = 50;
             }
 
@@ -210,6 +215,7 @@ namespace IRTicker {
                 }
                 page++;
                 if (!initialPull) {  // only want to consider breaking out of this loop early if this isn't the first pull.  If it's the first pull we need ALL closed orders
+                    if ((crypto != AvgPriceSelectedCrypto) || (fiat != AvgPriceSelectedFiat)) break;  // if we're pulling orders for some different crypto, just bail
                     if (!earliestClosedOrderRequired.HasValue) break;  // we only need to get the first page if we don't have a date
                     else {  // ok we do have a date, need to work out if we bail or continue here
                         if (allCOrders.Last().CreatedTimestampUtc < earliestClosedOrderRequired.Value) {
@@ -235,6 +241,7 @@ namespace IRTicker {
                 //if ((TGBot != null) && (DateTime.Now > APIKeyChanged + TimeSpan.FromMinutes(1))) TGBot.closedOrders(cOrders, APIkey);
                 if ((TGBot != null) && ((DateTime.Now > APIKeyChanged + TimeSpan.FromMinutes(1)) || initialPull)) TGBot.closedOrders(cOrders, APIkey);
                 IRT.SignalAveragePriceUpdate(cOrders);
+                //if (initialPull && IRT.IRAccount_panel.Visible) IRT.drawClosedOrders(cOrders.Data);  // this isn't the right place to do this
             }
             //else Debug.Print("gecClosed orders, no orders for " + crypto + "-" + fiat);
             return cOrders;
@@ -273,7 +280,7 @@ namespace IRTicker {
 
         public void compileAccountOrderBookAsync(string pair) {
 
-            if (pair != (Crypto + "-" + DCE_IR.CurrentSecondaryCurrency)) return;
+            if (pair != (SelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency)) return;
             if (!IRT.IRAccount_panel.Visible) {
                 if (!marketBaiterActive) return;
             }
@@ -489,7 +496,7 @@ namespace IRTicker {
                                 if (!continueBaiterLoop) {  // OK, we didn't find it.  let's grab the openOrders and search again, maybe we only recently created it
                                     Page<BankHistoryOrder> openOs;
                                     try {
-                                        openOs = GetOpenOrders(Crypto, DCE_IR.CurrentSecondaryCurrency);
+                                        openOs = GetOpenOrders(crypto, DCE_IR.CurrentSecondaryCurrency);
                                     }
                                     catch (Exception ex) {
                                         Debug.Print("MBAIT: failed to get open orders due to: " + ex.Message);

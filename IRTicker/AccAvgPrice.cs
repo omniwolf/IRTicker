@@ -264,5 +264,13 @@ namespace IRTicker
         private void AccAvgPrice_FormClosing(object sender, FormClosingEventArgs e) {
             pIR.earliestClosedOrderRequired = null;  // no more start date, just grab the 7 newest closed orders
         }
+
+        private void AccAvgPrice_Crypto_ComboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            pIR.AvgPriceSelectedCrypto = (AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() == "BTC" ? "XBT" : AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString());
+        }
+
+        private void AccAvgPrice_Fiat_ComboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            pIR.AvgPriceSelectedFiat = AccAvgPrice_Fiat_ComboBox.SelectedItem.ToString();
+        }
     }
 }

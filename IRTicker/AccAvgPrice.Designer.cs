@@ -68,6 +68,7 @@
             this.AccAvgPrice_Crypto_ComboBox.Name = "AccAvgPrice_Crypto_ComboBox";
             this.AccAvgPrice_Crypto_ComboBox.Size = new System.Drawing.Size(106, 21);
             this.AccAvgPrice_Crypto_ComboBox.TabIndex = 0;
+            this.AccAvgPrice_Crypto_ComboBox.SelectedIndexChanged += new System.EventHandler(this.AccAvgPrice_Crypto_ComboBox_SelectedIndexChanged);
             // 
             // AccAvgPrice_Fiat_ComboBox
             // 
@@ -77,6 +78,7 @@
             this.AccAvgPrice_Fiat_ComboBox.Name = "AccAvgPrice_Fiat_ComboBox";
             this.AccAvgPrice_Fiat_ComboBox.Size = new System.Drawing.Size(106, 21);
             this.AccAvgPrice_Fiat_ComboBox.TabIndex = 1;
+            this.AccAvgPrice_Fiat_ComboBox.SelectedIndexChanged += new System.EventHandler(this.AccAvgPrice_Fiat_ComboBox_SelectedIndexChanged);
             // 
             // AccAvgPrice_Start_DTPicker
             // 
