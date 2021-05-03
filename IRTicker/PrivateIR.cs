@@ -31,7 +31,7 @@ namespace IRTicker {
         public decimal LimitPrice = 0;
         public string SelectedCrypto = "XBT";
         public string AvgPriceSelectedCrypto = "";  // this should be whatever the AccAvgPrice form has selected, so we know which crypto we need to get more closed orders for
-        public string AvgPriceSelectedFiat = "";
+        public Dictionary<string, Tuple<Button, bool>> fiatCurrenciesSelected;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBids;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
         public ConcurrentBag<Guid> openOrders = new ConcurrentBag<Guid>();
@@ -165,6 +165,13 @@ namespace IRTicker {
             firstClosedOrdersPullDone = false;
         }
 
+        /// <summary>
+        /// Actually - this uses GetClosedFilledOrders(...)
+        /// </summary>
+        /// <param name="crypto"></param>
+        /// <param name="fiat"></param>
+        /// <param name="initialPull"></param>
+        /// <returns></returns>
         public Page<BankHistoryOrder> GetClosedOrders(string crypto, string fiat, bool initialPull = false) {
 
             if (!firstClosedOrdersPullDone && !initialPull) return null;  // If we haven't done the first giant pull, and something tries to do a closed order pull, ignore it.  Only start servicing calls once the initial pull is complete
@@ -183,7 +190,7 @@ namespace IRTicker {
             int pageSize = 10;  // we only need 7 for the UI, but grab 10 in case 
             // Either we have a date, need to pull all orders newer than or equal to this date, or it's the first run and we need to pull everything
             // also - we only pull  more than 8 if the crypto we're pulling is the currently chosen crypto.  `Crypto` is the currently chosen crypto... (i know.. great var name)
-            if ((earliestClosedOrderRequired.HasValue && (crypto == AvgPriceSelectedCrypto) && (fiat == AvgPriceSelectedFiat)) || initialPull)  {  
+            if ((earliestClosedOrderRequired.HasValue && (crypto == AvgPriceSelectedCrypto) && (fiatCurrenciesSelected.Keys.Contains(fiat))) || initialPull)  {  
                 pageSize = 50;
             }
 
@@ -207,7 +214,7 @@ namespace IRTicker {
                 }
                 page++;
                 if (!initialPull) {  // only want to consider breaking out of this loop early if this isn't the first pull.  If it's the first pull we need ALL closed orders
-                    if ((crypto != AvgPriceSelectedCrypto) || (fiat != AvgPriceSelectedFiat)) break;  // if we're pulling orders for some different crypto, just bail
+                    if ((crypto != AvgPriceSelectedCrypto) || (!fiatCurrenciesSelected.Keys.Contains(fiat))) break;  // if we're pulling orders for some different crypto, just bail
                     if (!earliestClosedOrderRequired.HasValue) break;  // we only need to get the first page if we don't have a date
                     else {  // ok we do have a date, need to work out if we bail or continue here
                         if (allCOrders.Last().CreatedTimestampUtc < earliestClosedOrderRequired.Value.ToUniversalTime()) {

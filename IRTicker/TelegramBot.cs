@@ -87,7 +87,14 @@ namespace IRTicker
         }
 
         public void StopBot() {
-            botClient.StopReceiving();
+            if (botClient.IsReceiving) {
+                try {
+                    botClient.StopReceiving();
+                }
+                catch (Exception ex) {
+                    Debug.Print("stopping TG bot didn't work very well.  error: " + ex.Message);
+                }
+            }
         }
 
         // this thing runs through all IR pairs and pulls all orders for the pair to the notifiedOrders dictionary

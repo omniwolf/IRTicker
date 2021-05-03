@@ -702,7 +702,7 @@ namespace IRTicker {
                             "Average Price Calculator", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                         if (res == DialogResult.Yes) {
-                            _AccAvgPrice = new AccAvgPrice(DCEs["IR"], pIR, this, true, AccountSelectedCrypto, AccountBuySell_listbox.SelectedIndex);
+                            _AccAvgPrice = new AccAvgPrice(DCEs["IR"], pIR, this, true, AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, AccountBuySell_listbox.SelectedIndex);
                             _AccAvgPrice.Show();
                         }
                     }
