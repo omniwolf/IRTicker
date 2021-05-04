@@ -31,12 +31,12 @@ namespace IRTicker {
         public decimal LimitPrice = 0;
         public string SelectedCrypto = "XBT";
         public string AvgPriceSelectedCrypto = "";  // this should be whatever the AccAvgPrice form has selected, so we know which crypto we need to get more closed orders for
-        public Dictionary<string, Tuple<Button, bool>> fiatCurrenciesSelected;
+        public Dictionary<string, Tuple<Button, bool>> fiatCurrenciesSelected = new Dictionary<string, Tuple<Button, bool>>();
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBids;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
         public ConcurrentBag<Guid> openOrders = new ConcurrentBag<Guid>();
         public DateTime? earliestClosedOrderRequired = null;  // optimise closed orders by only pulling what's required.  If null we just pull a static 7 to cover the closed orders UI
-        public bool firstClosedOrdersPullDone = false;  // we need to pull ALL orders intially so we have a record of all guids for announcing new closed orders
+        private bool firstClosedOrdersPullDone = false;  // we need to pull ALL orders intially so we have a record of all guids for announcing new closed orders
         private Dictionary<string, long> closedOrdersCount;  // keeps a count of how many closed orders each pair has so we can maybe try and get to the bottom of this weird issue where I sometimes see less closed orders than actually exists
         private DateTime APIKeyChanged = DateTime.Now;  // records when we changed the APIKey so we can wait for a period (5 seconds?) before believing that closed orders are from the new APIKey.  If we use them immediately then often we get ClosedOrders from the old APIKey
 
@@ -163,6 +163,36 @@ namespace IRTicker {
         public void APIKeyHasChanged() {
             APIKeyChanged = DateTime.Now;
             firstClosedOrdersPullDone = false;
+        }
+
+        // this thing runs through all IR pairs and pulls all orders for the pair to the notifiedOrders dictionary
+        // so that we have a list of closed orders to compare when a new one comes in
+        public async Task populateClosedOrders() {
+            // now we pull all closed orders for all pairs to ensure we have all order guids listed in the TG Bot notifiedOrders dictionary
+
+            Page<BankHistoryOrder> cOrders;
+
+            foreach (string primaryCode in DCE_IR.PrimaryCurrencyList) {
+                foreach (string secondaryCode in DCE_IR.SecondaryCurrencyList) {
+                    try {
+                        cOrders = GetClosedOrders(primaryCode, secondaryCode, true);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
+
+                        // need to go if the current primary/secondary is what's shown on IRAccounts, then draw it
+                        if (IRT.IRAccount_panel.Visible && (SelectedCrypto == primaryCode) && (DCE_IR.CurrentSecondaryCurrency == secondaryCode)) {
+                            IRT.drawClosedOrders(cOrders.Data);
+                        }
+                        // IRT.drawClosedOrders(cOrders);
+                    }
+                    catch (Exception ex) {
+                        string errorMsg = ex.Message;
+                        if (ex.InnerException != null) {
+                            errorMsg = ex.InnerException.Message;
+                        }
+                        Debug.Print(DateTime.Now + " - PrivateIR_init sub, trying to pull closed orders for " + primaryCode + "-" + secondaryCode + ", but it failed: " + errorMsg);
+                    }
+                }
+            }
+            firstClosedOrdersPullDone = true;
         }
 
         /// <summary>

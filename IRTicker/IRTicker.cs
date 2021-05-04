@@ -1277,7 +1277,7 @@ namespace IRTicker {
                         }
 
                         // now that we have the currencies, lets grab all closedorders and put into notifiedOrders
-                        if ((null != pIR) && (null != TGBot)) TGBot.populateClosedOrders();
+                        if (null != pIR) pIR.populateClosedOrders();
 
                         /*DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "AUD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "USD");
@@ -3227,13 +3227,12 @@ namespace IRTicker {
                 if (TGBot != null) {  // need to clear the TGBot dictionaries first before we re-initialise pIR object as privateIR_init will alert TGBot to API key's closed orders
                     TGBot.closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
                     TGBot.notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();
-                }
-                if (pIR != null) pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
-
-                if (null != TGBot) {
-                    await Task.Run(() => TGBot.populateClosedOrders());
                     Debug.Print(DateTime.Now + " - closedOrdersFirstRun has been cleared.  There should be no old orders reported.  Size of dict now: " + TGBot.closedOrdersFirstRun.Count);
                     Debug.Print(DateTime.Now + " - notifiedOrders has been cleared.  There should be no old orders reported.  Size of dict now: " + TGBot.notifiedOrders.Count);
+                }
+                if (pIR != null) {
+                    pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                    await Task.Run(() => pIR.populateClosedOrders());
                 }
             }
         }

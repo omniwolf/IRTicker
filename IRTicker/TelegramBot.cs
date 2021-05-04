@@ -36,7 +36,6 @@ namespace IRTicker
         string LastMessage = "";  // need to track our previous message so we don't try and edit a message with the same message
         bool NextMsgIsNew = false;  // set to true to disable the edit functionality for the next message (eg when an async message has come through like the order filled message)
         private string bTCMemoji = "";
-        private string APIKey;  // try to track which APIkey we're using so we know which closed orders we're pulling
         private string mBaitSpinner = "/";  // we spin this in the market baiter tg bot screen on each refresh to show the refresh is working
 
         public ConcurrentDictionary<string, bool> closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
@@ -95,36 +94,6 @@ namespace IRTicker
                     Debug.Print("stopping TG bot didn't work very well.  error: " + ex.Message);
                 }
             }
-        }
-
-        // this thing runs through all IR pairs and pulls all orders for the pair to the notifiedOrders dictionary
-        // so that we have a list of closed orders to compare when a new one comes in
-        public async Task populateClosedOrders() {
-            // now we pull all closed orders for all pairs to ensure we have all order guids listed in the TG Bot notifiedOrders dictionary
-
-            Page<BankHistoryOrder> cOrders;
-
-            foreach (string primaryCode in DCE_IR.PrimaryCurrencyList) {
-                foreach (string secondaryCode in DCE_IR.SecondaryCurrencyList) {
-                    try {
-                        cOrders = pIR.GetClosedOrders(primaryCode, secondaryCode, true);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
-
-                        // need to go if the current primary/secondary is what's shown on IRAccounts, then draw it
-                        if ((pIR.SelectedCrypto == primaryCode) && (DCE_IR.CurrentSecondaryCurrency == secondaryCode)) {
-                            IRT.drawClosedOrders(cOrders.Data);
-                        }
-                        // IRT.drawClosedOrders(cOrders);
-                    }
-                    catch (Exception ex) {
-                        string errorMsg = ex.Message;
-                        if (ex.InnerException != null) {
-                            errorMsg = ex.InnerException.Message;
-                        }
-                        Debug.Print(DateTime.Now + " - PrivateIR_init sub, trying to pull closed orders for " + primaryCode + "-" + secondaryCode + ", but it failed: " + errorMsg);
-                    }
-                }
-            }
-            pIR.firstClosedOrdersPullDone = true;
         }
 
         public string BTCMemoji {

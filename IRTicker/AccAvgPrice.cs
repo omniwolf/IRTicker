@@ -89,7 +89,7 @@ namespace IRTicker
             foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
                 if (fiatButton.Value.Item2) {
                     atLeastOneCurrencySelected = true;
-                    return;
+                    break;
                 }
             }
             if (!atLeastOneCurrencySelected) {
@@ -127,6 +127,7 @@ namespace IRTicker
                 foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
                     if (fiatButton.Value.Item2) {
                         Task<Page<BankHistoryOrder>> cOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetClosedOrders(crypto, fiatButton.Key));
+                        cOrdersTask.Start();
                         ultimateBHO = await cOrdersTask;
 
                         foreach (BankHistoryOrder order in ultimateBHO.Data) {
@@ -363,16 +364,18 @@ namespace IRTicker
             pIR.AvgPriceSelectedCrypto = (AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() == "BTC" ? "XBT" : AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString());
         }
 
-        private void AccAvgPrice_Fiat_ComboBox_SelectedIndexChanged(object sender, EventArgs e) {
-            pIR.fiatCurrenciesSelected = fiatCurrenciesSelected;
-        }
-
         private void AccAvgPrice_Fiat_button_click(object sender, EventArgs e) {
             Button fiatButton = (Button)sender;
             foreach (KeyValuePair<string, Tuple<Button, bool>> fiatSelectedKVP in fiatCurrenciesSelected) {
                 if (fiatButton == fiatSelectedKVP.Value.Item1) {  // if it's true, make it false.  if false, make it true.  need to colour them too
-                    if (fiatSelectedKVP.Value.Item2) { // true
+                    if (fiatSelectedKVP.Value.Item2) { // it's true (selected), let's set it to false
                         fiatCurrenciesSelected[fiatSelectedKVP.Key] = new Tuple<Button, bool>(fiatSelectedKVP.Value.Item1, false);
+                        fiatSelectedKVP.Value.Item1.ForeColor = Color.Black;
+                        fiatSelectedKVP.Value.Item1.BackColor = Color.White;
+                    }
+                    else {  // it's false, let's choose this fiat
+
+                        fiatCurrenciesSelected[fiatSelectedKVP.Key] = new Tuple<Button, bool>(fiatSelectedKVP.Value.Item1, true);
                         fiatSelectedKVP.Value.Item1.ForeColor = Color.White;
                         fiatSelectedKVP.Value.Item1.BackColor = Color.RoyalBlue;
 
@@ -393,14 +396,10 @@ namespace IRTicker
                             }
                         }
                     }
-                    else {  // false
-                        fiatCurrenciesSelected[fiatSelectedKVP.Key] = new Tuple<Button, bool>(fiatSelectedKVP.Value.Item1, true);
-                        fiatSelectedKVP.Value.Item1.ForeColor = Color.Black;
-                        fiatSelectedKVP.Value.Item1.BackColor = Color.White;
-                    }
                     return;
                 }
             }
+            pIR.fiatCurrenciesSelected = fiatCurrenciesSelected;
         }
     }
 }
