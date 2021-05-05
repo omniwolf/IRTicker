@@ -122,10 +122,12 @@ namespace IRTicker
             string crypto = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString();
             Page<BankHistoryOrder> ultimateBHO = new Page<BankHistoryOrder>();
             List<BankHistoryOrder> allOrders = new List<BankHistoryOrder>();
+            int fiatCurrenciesSelectedCount = 0;
             try {
                 // now we need to grab all the orders for each fiat currency selected and concatenate them into one, then stuff it back in the Page<> object and send it to get calculated
                 foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
                     if (fiatButton.Value.Item2) {
+                        fiatCurrenciesSelectedCount++;
                         Task<Page<BankHistoryOrder>> cOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetClosedOrders(crypto, fiatButton.Key));
                         cOrdersTask.Start();
                         ultimateBHO = await cOrdersTask;
@@ -136,7 +138,7 @@ namespace IRTicker
                     }
                 }
                 ultimateBHO.Data = allOrders;
-                CalculateAvgPrice(ultimateBHO);
+                CalculateAvgPrice(ultimateBHO, (fiatCurrenciesSelectedCount > 1));
             }
             catch (Exception ex) {
                 Debug.Print(DateTime.Now + " - failed to pull closed orders when clicking the average price go button.  error: " + ex.Message);
@@ -144,7 +146,7 @@ namespace IRTicker
             }
         }
 
-        public void CalculateAvgPrice(Page<BankHistoryOrder> cOrders) {
+        public void CalculateAvgPrice(Page<BankHistoryOrder> cOrders, bool isMultipleFiatCurrenciesSelected) {
 
             int count = 0;
             decimal totalCryptoDealt = 0;
@@ -187,12 +189,20 @@ namespace IRTicker
 
                     decimal tempRes = Math.Round((totalValue / totalCryptoDealt), dce.currencyFiatDivision[crypto], MidpointRounding.AwayFromZero);
                     AvgPriceResult = tempRes.ToString();
-                    AccAvgPrice_Result_TextBox.Text = Utilities.FormatValue(tempRes, dce.currencyFiatDivision[crypto], false);
+
+                    if (isMultipleFiatCurrenciesSelected) {
+                        AccAvgPrice_Result_TextBox.Text = "N/A";
+                        AccAvgPrice_TotalFiat_TextBox.Text = "N/A";
+                    }
+                    else {
+                        AccAvgPrice_Result_TextBox.Text = Utilities.FormatValue(tempRes, dce.currencyFiatDivision[crypto], false);
+                        AccAvgPrice_TotalFiat_TextBox.Text = Utilities.FormatValue(totalValue, 2, false);
+                    }
+
                     AccAvgPrice_CopyAvg_Button.Enabled = true;
                     AccAvgPrice_TotalCrypto_TextBox.Text = Utilities.FormatValue(totalCryptoDealt, 8, false);
                     TotalCryptoDealt = totalCryptoDealt.ToString();
                     AccAvgPrice_CopyCrypto_Button.Enabled = true;
-                    AccAvgPrice_TotalFiat_TextBox.Text = Utilities.FormatValue(totalValue, 2, false);
                     TotalFiatDealt = totalValue.ToString();
                     AccAvgPrice_CopyFiat_Button.Enabled = true;
 
@@ -302,15 +312,19 @@ namespace IRTicker
 
                     //Page<BankHistoryOrder> ultimateBHO = new Page<BankHistoryOrder>();
                     List<BankHistoryOrder> allOrders = new List<BankHistoryOrder>(cOrders.Data);
+                    int selectedFiatCurrencies = 0;
                     try {
                         // now we need to grab all the orders for each fiat currency selected and concatenate them into one, then stuff it back in the Page<> object and send it to get calculated
                         foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
-                            if ((fiatButton.Value.Item2) && (fiatButton.Key != dce.CurrentSecondaryCurrency)) {
-                                Task<Page<BankHistoryOrder>> cOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetClosedOrders(crypto, fiatButton.Key));
-                                Page<BankHistoryOrder> secondaryFiatOrders = await cOrdersTask;
+                            if (fiatButton.Value.Item2) {
+                                selectedFiatCurrencies++;
+                                if (fiatButton.Key != dce.CurrentSecondaryCurrency) {  // well.. we were sent the currently selected fiat currency's closed orders, so don't bother pullinng that one.  Only other fiats that are selected
+                                    Task<Page<BankHistoryOrder>> cOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetClosedOrders(crypto, fiatButton.Key));
+                                    Page<BankHistoryOrder> secondaryFiatOrders = await cOrdersTask;
 
-                                foreach (BankHistoryOrder order in secondaryFiatOrders.Data) {
-                                    allOrders.Add(order);
+                                    foreach (BankHistoryOrder order in secondaryFiatOrders.Data) {
+                                        allOrders.Add(order);
+                                    }
                                 }
                             }
                         }
@@ -323,7 +337,7 @@ namespace IRTicker
                     }
 
 
-                    CalculateAvgPrice(cOrders);
+                    CalculateAvgPrice(cOrders, (selectedFiatCurrencies > 1));
                 }
             }
         }
@@ -384,6 +398,7 @@ namespace IRTicker
                         foreach (KeyValuePair<string, Tuple<Button, bool>> fiatSelectedKVP2 in fiatCurrenciesSelected) {
                             if (fiatSelectedKVP2.Value.Item2) fiatCount++;
                         }
+                        // i think this bit doesn't work.  The fiat/crypto drop down menu doesn't enable/disable as expected, need to fix
                         if (fiatCount > 1) {
                             oldDealSizeCurrencySelected = AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex;
                             AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex = 1;
@@ -396,10 +411,21 @@ namespace IRTicker
                             }
                         }
                     }
-                    return;
+                    break;
                 }
             }
             pIR.fiatCurrenciesSelected = fiatCurrenciesSelected;
+        }
+
+        private void AccAvgPrice_DealSizeCurrency_ComboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            if (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex == 1) {
+                AccAvgPrice_SendRemainingToVolumeField_button.Enabled = true;
+                AccAvgPrice_CopyFiat_Button.Enabled = true;
+            }
+            else {
+                AccAvgPrice_SendRemainingToVolumeField_button.Enabled = false;
+                AccAvgPrice_CopyFiat_Button.Enabled = false;
+            }
         }
     }
 }

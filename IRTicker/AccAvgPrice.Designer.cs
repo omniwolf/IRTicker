@@ -283,6 +283,7 @@
             this.AccAvgPrice_DealSizeCurrency_ComboBox.Size = new System.Drawing.Size(98, 21);
             this.AccAvgPrice_DealSizeCurrency_ComboBox.TabIndex = 26;
             this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_DealSizeCurrency_ComboBox, "Choose the currency of the size of the deal value");
+            this.AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndexChanged += new System.EventHandler(this.AccAvgPrice_DealSizeCurrency_ComboBox_SelectedIndexChanged);
             // 
             // AccAvgPrice_SendRemainingToVolumeField_button
             // 
@@ -292,7 +293,8 @@
             this.AccAvgPrice_SendRemainingToVolumeField_button.Size = new System.Drawing.Size(60, 23);
             this.AccAvgPrice_SendRemainingToVolumeField_button.TabIndex = 30;
             this.AccAvgPrice_SendRemainingToVolumeField_button.Text = "Set vol";
-            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_SendRemainingToVolumeField_button, "Will copy the average price with no formatting, just a decimal value");
+            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_SendRemainingToVolumeField_button, "Clicking will copy the \"Remaining to deal\" value to the volume field on the main " +
+        "app.   \r\nOnly works if the \"Size of deal\" drop down menu is set to \"Crypto\".");
             this.AccAvgPrice_SendRemainingToVolumeField_button.UseVisualStyleBackColor = true;
             this.AccAvgPrice_SendRemainingToVolumeField_button.Click += new System.EventHandler(this.AccAvgPrice_SendRemainingToVolumeField_button_Click);
             // 
