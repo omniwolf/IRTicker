@@ -613,6 +613,9 @@ namespace IRTicker {
                                         }
                                         Debug.Print("MBAIT: cancelled status: " + cancelledOrder.Status);
                                         if ((cancelledOrder.Status == OrderStatus.Cancelled) || (cancelledOrder.Status == OrderStatus.PartiallyFilledAndCancelled)) {
+                                            if (cancelledOrder.Status == OrderStatus.PartiallyFilled) {
+                                                Debug.Print("partially filled, let's stop here and see if we can update the order volume here to account for the partial fill");
+                                            }
                                             placedOrder = null;
                                         }
                                     }

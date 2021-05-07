@@ -21,7 +21,7 @@ namespace IRTicker
         private string TotalCryptoDealt = "";  // holds the unformatted version of the total crypto dealt
         private string TotalFiatDealt = "";  // holds the unformatted version of the total fiat dealt
 
-        public AccAvgPrice(DCE _DCE, PrivateIR _pIR, IRTicker _IRT, bool enableAutoUpdate = false, string crypto = "", int direction = 0) {
+        public AccAvgPrice(DCE _DCE, PrivateIR _pIR, IRTicker _IRT, bool enableAutoUpdate = false, string crypto = "", string fiat = "", int direction = 0) {
             InitializeComponent();
             dce = _DCE;
             pIR = _pIR;
@@ -39,6 +39,10 @@ namespace IRTicker
                 if (crypto == "XBT") crypto = "BTC";
                 if (AccAvgPrice_Crypto_ComboBox.Items.Contains(crypto)) AccAvgPrice_Crypto_ComboBox.SelectedItem = crypto;
                 else Debug.Print("Can't find the crypto to set the crypto combobox: " + crypto);
+            }
+            if (!string.IsNullOrEmpty(fiat)) {
+                if (AccAvgPrice_Fiat_ComboBox.Items.Contains(fiat)) AccAvgPrice_Fiat_ComboBox.SelectedItem = fiat;
+                else Debug.Print("Can't find the fiat to set the crypto combobox: " + fiat);
             }
         }
 
