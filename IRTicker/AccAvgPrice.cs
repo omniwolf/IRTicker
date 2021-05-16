@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Concurrent;
 using System.Windows.Forms;
 using IndependentReserve.DotNetClientApi.Data;
 using System.Diagnostics;
@@ -21,7 +22,7 @@ namespace IRTicker
         private string TotalCryptoDealt = "";  // holds the unformatted version of the total crypto dealt
         private string TotalFiatDealt = "";  // holds the unformatted version of the total fiat dealt
         private int oldDealSizeCurrencySelected = 1;  // remembers which dealsize currency (eg crypto or fiat) is selected for when we force crypto and disable the control if they choose more than one fiat currency, and then deselect to just 1 currency and we need to remember which option they had selected bofer
-        private Dictionary<string, Tuple<Button, bool>> fiatCurrenciesSelected = new Dictionary<string, Tuple<Button, bool>>();
+        private ConcurrentDictionary<string, Tuple<Button, bool>> fiatCurrenciesSelected = new ConcurrentDictionary<string, Tuple<Button, bool>>();
 
         public AccAvgPrice(DCE _DCE, PrivateIR _pIR, IRTicker _IRT, bool enableAutoUpdate = false, string crypto = "", string fiat = "AUD", int direction = 0) {
             InitializeComponent();
@@ -44,10 +45,10 @@ namespace IRTicker
             }
 
 
-            fiatCurrenciesSelected.Add("AUD", new Tuple<Button, bool>(AccAvgPrice_FiatAUD_button, false));
-            fiatCurrenciesSelected.Add("USD", new Tuple<Button, bool>(AccAvgPrice_FiatUSD_button, false));
-            fiatCurrenciesSelected.Add("NZD", new Tuple<Button, bool>(AccAvgPrice_FiatNZD_button, false));
-            fiatCurrenciesSelected.Add("SGD", new Tuple<Button, bool>(AccAvgPrice_FiatSGD_button, false));
+            fiatCurrenciesSelected.TryAdd("AUD", new Tuple<Button, bool>(AccAvgPrice_FiatAUD_button, false));
+            fiatCurrenciesSelected.TryAdd("USD", new Tuple<Button, bool>(AccAvgPrice_FiatUSD_button, false));
+            fiatCurrenciesSelected.TryAdd("NZD", new Tuple<Button, bool>(AccAvgPrice_FiatNZD_button, false));
+            fiatCurrenciesSelected.TryAdd("SGD", new Tuple<Button, bool>(AccAvgPrice_FiatSGD_button, false));
 
             // simulate clicking on the button to make it selected by default
             AccAvgPrice_Fiat_button_click(fiatCurrenciesSelected[fiat].Item1, null);
@@ -82,6 +83,10 @@ namespace IRTicker
         private async void AccAvgPrice_Go_Button_Click(object sender, EventArgs e) {
             if (AccAvgPrice_Crypto_ComboBox.SelectedIndex == 0) {
                 AccAvgPrice_Status_Label.Text = "Choose a crypto and fiat please";
+                return;
+            }
+            if (AccAvgPrice_End_DTPicker.Value < AccAvgPrice_Start_DTPicker.Value) {
+                AccAvgPrice_Status_Label.Text = "Last Order time is before First Order time!";
                 return;
             }
 
@@ -132,7 +137,7 @@ namespace IRTicker
                         cOrdersTask.Start();
                         ultimateBHO = await cOrdersTask;
 
-                        foreach (BankHistoryOrder order in ultimateBHO.Data) {
+                        foreach (BankHistoryOrder order in ultimateBHO.Data) {  // bad pattern here.  we should check that ultimateBHO is null, but basically if it is null, we want to do everything in the catch block... so just let it fail and get caught
                             allOrders.Add(order);
                         }
                     }
@@ -143,6 +148,16 @@ namespace IRTicker
             catch (Exception ex) {
                 Debug.Print(DateTime.Now + " - failed to pull closed orders when clicking the average price go button.  error: " + ex.Message);
                 AccAvgPrice_Status_Label.Text = "Failed to pull closed orders, please try again.";
+
+                // re-enable the controls
+                AccAvgPrice_Crypto_ComboBox.Enabled = true;
+
+                foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
+                    fiatButton.Value.Item1.Enabled = true;
+                }
+
+                AccAvgPrice_Start_DTPicker.Enabled = true;
+                AccAvgPrice_End_DTPicker.Enabled = true;
             }
         }
 
@@ -157,7 +172,9 @@ namespace IRTicker
                 if ((cOrder.Status == OrderStatus.Filled) || (cOrder.Status == OrderStatus.PartiallyFilledAndCancelled) || (cOrder.Status == OrderStatus.PartiallyFilled) ||
                     (cOrder.Status == OrderStatus.PartiallyFilledAndExpired) || (cOrder.Status == OrderStatus.PartiallyFilledAndFailed)) {
                     // then we make sure it's within the time period
-                    if ((cOrder.CreatedTimestampUtc > AccAvgPrice_Start_DTPicker.Value.ToUniversalTime()) && (cOrder.CreatedTimestampUtc < AccAvgPrice_End_DTPicker.Value.ToUniversalTime())) {
+                    /*Debug.Print(" -- order timestamp: " + cOrder.CreatedTimestampUtc);
+                    Debug.Print("-- DTPicker value: " + AccAvgPrice_Start_DTPicker.Value + ", UTC val: " + AccAvgPrice_Start_DTPicker.Value.ToUniversalTime());*/
+                    if ((cOrder.CreatedTimestampUtc >= AccAvgPrice_Start_DTPicker.Value.ToUniversalTime()) && (cOrder.CreatedTimestampUtc <= AccAvgPrice_End_DTPicker.Value.ToUniversalTime())) {
                         // then we makse sure it's a buy or sell as specified
                         if (((AccAvgPrice_BuySell_ComboBox.SelectedIndex == 0) && ((cOrder.OrderType == OrderType.LimitBid) || (cOrder.OrderType == OrderType.MarketBid))) ||
                             ((AccAvgPrice_BuySell_ComboBox.SelectedIndex == 1) && ((cOrder.OrderType == OrderType.LimitOffer) || (cOrder.OrderType == OrderType.MarketOffer))) ||
@@ -274,15 +291,25 @@ namespace IRTicker
             Clipboard.SetText(AvgPriceResult);
         }
 
+        // cOrders.Data must have at least one element, this method assumes this..
         public async void UpdatePrice(Page<BankHistoryOrder> cOrders) {
 
-            // off the bat - if the fiat currency isn't my main currency, then bail
-            if (cOrders.Data.ElementAt(0).SecondaryCurrencyCode.ToString().ToUpper() != dce.CurrentSecondaryCurrency) return;
+            // off the bat - if the fiat currency isn't my main currency, then bail.  we assume here that there is at least one element in the Data container
+            // not anymore, can have more than one fiat selected
+            //if (cOrders.Data.ElementAt(0).SecondaryCurrencyCode.ToString().ToUpper() != dce.CurrentSecondaryCurrency) return;
+
+            string cOrdersFiat = cOrders.Data.ElementAt(0).SecondaryCurrencyCode.ToString().ToUpper();
 
             int fiatSelectedCount = 0;
+            bool sentFiatIsSelected = false;
             foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
-                if (fiatButton.Value.Item2) fiatSelectedCount++;
+                if (fiatButton.Value.Item2) {
+                    fiatSelectedCount++;
+                    if (fiatButton.Key == cOrdersFiat) sentFiatIsSelected = true;
+                }
             }
+
+            if (!sentFiatIsSelected) return;  // the secondary currency of the sent orders is not in our list, so don't process it
 
             if ((AccAvgPrice_AutoUpdate_CheckBox.Checked) && (AccAvgPrice_Crypto_ComboBox.SelectedIndex > 0) && (fiatSelectedCount > 0)) {
                 string crypto = cOrders.Data.ElementAt(0).PrimaryCurrencyCode.ToString().ToUpper();
@@ -318,8 +345,9 @@ namespace IRTicker
                         foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
                             if (fiatButton.Value.Item2) {
                                 selectedFiatCurrencies++;
-                                if (fiatButton.Key != dce.CurrentSecondaryCurrency) {  // well.. we were sent the currently selected fiat currency's closed orders, so don't bother pullinng that one.  Only other fiats that are selected
+                                if (fiatButton.Key != cOrdersFiat) {  // don't bother pulling orders for the fiat orders we were sent.  Only other fiats that are selected
                                     Task<Page<BankHistoryOrder>> cOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetClosedOrders(crypto, fiatButton.Key));
+                                    cOrdersTask.Start();
                                     Page<BankHistoryOrder> secondaryFiatOrders = await cOrdersTask;
 
                                     foreach (BankHistoryOrder order in secondaryFiatOrders.Data) {
@@ -379,9 +407,10 @@ namespace IRTicker
         }
 
         private void AccAvgPrice_Fiat_button_click(object sender, EventArgs e) {
-            Button fiatButton = (Button)sender;
+            Button fiatButton = (Button)sender;  // this is the button the user clicked
             foreach (KeyValuePair<string, Tuple<Button, bool>> fiatSelectedKVP in fiatCurrenciesSelected) {
-                if (fiatButton == fiatSelectedKVP.Value.Item1) {  // if it's true, make it false.  if false, make it true.  need to colour them too
+                if (fiatButton == fiatSelectedKVP.Value.Item1) {  // if this is the button the user clicked...
+                    // if it's true, make it false.  if false, make it true.  need to colour them too
                     if (fiatSelectedKVP.Value.Item2) { // it's true (selected), let's set it to false
                         fiatCurrenciesSelected[fiatSelectedKVP.Key] = new Tuple<Button, bool>(fiatSelectedKVP.Value.Item1, false);
                         fiatSelectedKVP.Value.Item1.ForeColor = Color.Black;
@@ -392,29 +421,29 @@ namespace IRTicker
                         fiatCurrenciesSelected[fiatSelectedKVP.Key] = new Tuple<Button, bool>(fiatSelectedKVP.Value.Item1, true);
                         fiatSelectedKVP.Value.Item1.ForeColor = Color.White;
                         fiatSelectedKVP.Value.Item1.BackColor = Color.RoyalBlue;
-
-                        // now we need to disable the dealsizecurrency control and force Crypto as the selection if there is more than 1 fiat selected
-                        int fiatCount = 0;
-                        foreach (KeyValuePair<string, Tuple<Button, bool>> fiatSelectedKVP2 in fiatCurrenciesSelected) {
-                            if (fiatSelectedKVP2.Value.Item2) fiatCount++;
-                        }
-                        // i think this bit doesn't work.  The fiat/crypto drop down menu doesn't enable/disable as expected, need to fix
-                        if (fiatCount > 1) {
-                            oldDealSizeCurrencySelected = AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex;
-                            AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex = 1;
-                            AccAvgPrice_DealSizeCurrency_ComboBox.Enabled = false;
-                        }
-                        else {
-                            if (AccAvgPrice_DealSizeCurrency_ComboBox.Enabled == false) {
-                                AccAvgPrice_DealSizeCurrency_ComboBox.Enabled = true;
-                                AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex = oldDealSizeCurrencySelected;
-                            }
-                        }
                     }
                     break;
                 }
             }
+            // now we need to disable the dealsizecurrency control and force Crypto as the selection if there is more than 1 fiat selected
+            int fiatCount = 0;
+            foreach (KeyValuePair<string, Tuple<Button, bool>> fiatSelectedKVP2 in fiatCurrenciesSelected) {
+                if (fiatSelectedKVP2.Value.Item2) fiatCount++;
+            }
+            // i think this bit doesn't work.  The fiat/crypto drop down menu doesn't enable/disable as expected, need to fix
+            if (fiatCount > 1) {
+                oldDealSizeCurrencySelected = AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex;
+                AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex = 1;
+                AccAvgPrice_DealSizeCurrency_ComboBox.Enabled = false;
+            }
+            else {
+                if (AccAvgPrice_DealSizeCurrency_ComboBox.Enabled == false) {
+                    AccAvgPrice_DealSizeCurrency_ComboBox.Enabled = true;
+                    AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex = oldDealSizeCurrencySelected;
+                }
+            }
             pIR.fiatCurrenciesSelected = fiatCurrenciesSelected;
+            //AccAvgPrice_Go_Button_Click(null, null);  // simulate a click on the button
         }
 
         private void AccAvgPrice_DealSizeCurrency_ComboBox_SelectedIndexChanged(object sender, EventArgs e) {

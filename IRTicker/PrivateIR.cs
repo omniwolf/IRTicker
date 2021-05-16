@@ -31,7 +31,7 @@ namespace IRTicker {
         public decimal LimitPrice = 0;
         public string SelectedCrypto = "XBT";
         public string AvgPriceSelectedCrypto = "";  // this should be whatever the AccAvgPrice form has selected, so we know which crypto we need to get more closed orders for
-        public Dictionary<string, Tuple<Button, bool>> fiatCurrenciesSelected = new Dictionary<string, Tuple<Button, bool>>();
+        public ConcurrentDictionary<string, Tuple<Button, bool>> fiatCurrenciesSelected = new ConcurrentDictionary<string, Tuple<Button, bool>>();
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedBids;
         IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> orderedOffers;
         public ConcurrentBag<Guid> openOrders = new ConcurrentBag<Guid>();
@@ -220,7 +220,7 @@ namespace IRTicker {
             int pageSize = 10;  // we only need 7 for the UI, but grab 10 in case 
             // Either we have a date, need to pull all orders newer than or equal to this date, or it's the first run and we need to pull everything
             // also - we only pull  more than 8 if the crypto we're pulling is the currently chosen crypto.  `Crypto` is the currently chosen crypto... (i know.. great var name)
-            if ((earliestClosedOrderRequired.HasValue && (crypto == AvgPriceSelectedCrypto) && (fiatCurrenciesSelected.Keys.Contains(fiat))) || initialPull)  {  
+            if ((earliestClosedOrderRequired.HasValue && (crypto == AvgPriceSelectedCrypto) && (fiatCurrenciesSelected.ContainsKey(fiat))) || initialPull)  {  
                 pageSize = 50;
             }
 
@@ -244,7 +244,7 @@ namespace IRTicker {
                 }
                 page++;
                 if (!initialPull) {  // only want to consider breaking out of this loop early if this isn't the first pull.  If it's the first pull we need ALL closed orders
-                    if ((crypto != AvgPriceSelectedCrypto) || (!fiatCurrenciesSelected.Keys.Contains(fiat))) break;  // if we're pulling orders for some different crypto, just bail
+                    if ((crypto != AvgPriceSelectedCrypto) || (!fiatCurrenciesSelected.ContainsKey(fiat))) break;  // if we're pulling orders for some different crypto, just bail
                     if (!earliestClosedOrderRequired.HasValue) break;  // we only need to get the first page if we don't have a date
                     else {  // ok we do have a date, need to work out if we bail or continue here
                         if (allCOrders.Last().CreatedTimestampUtc < earliestClosedOrderRequired.Value.ToUniversalTime()) {
