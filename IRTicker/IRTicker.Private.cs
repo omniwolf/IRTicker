@@ -513,6 +513,7 @@ namespace IRTicker {
 
         // market order, limit order, market baiter list box
         private void AcccountOrderType_listbox_SelectedIndexChanged(object sender, EventArgs e) {
+            if (null == pIR) return;  // this sub seems to get called when the app opens.. 
             if (AccountOrderType_listbox.SelectedIndex == 1) {
                 SwitchOrderBookSide_button.Enabled = true;
                 AccountLimitPrice_label.Visible = true;

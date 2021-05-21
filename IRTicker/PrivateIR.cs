@@ -76,6 +76,7 @@ namespace IRTicker {
                 Credential = IRcreds
             };
             IRclient = Client.Create(IRconf);
+            Task.Run(() => populateClosedOrders());
         }
 
         public void setTGBot(TelegramBot _TGBot) {

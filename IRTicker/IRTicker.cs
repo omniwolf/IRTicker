@@ -221,17 +221,6 @@ namespace IRTicker {
                 }
             }
 
-            if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
-                IRAccount_button.Enabled = false;
-                pIR = null;
-            }
-            else {
-                pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
-                int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
-                if (friendlyNameLen > 20) friendlyNameLen = 20;
-                AccountName_button.Text = Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : "");
-            }
-
             wSocketConnect = new WebSocketsConnect(DCEs, pollingThread, pIR);
             LastPanel = Main;
 
@@ -1277,7 +1266,19 @@ namespace IRTicker {
                         }
 
                         // now that we have the currencies, lets grab all closedorders and put into notifiedOrders
-                        if (null != pIR) pIR.populateClosedOrders();
+                        // we do this in the privateIR_init() sub now
+                        // if (null != pIR) pIR.populateClosedOrders();
+
+                        if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
+                            IRAccount_button.Enabled = false;
+                            pIR = null;
+                        }
+                        else {
+                            pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                            int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
+                            if (friendlyNameLen > 20) friendlyNameLen = 20;
+                            AccountName_button.Text = Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : "");
+                        }
 
                         /*DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "AUD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "USD");
@@ -2403,6 +2404,7 @@ namespace IRTicker {
 
                         pIR = new PrivateIR();
                         pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                        //Task.Run(() => pIR.populateClosedOrders());
                     }
 
                     if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
@@ -3211,7 +3213,6 @@ namespace IRTicker {
 
             if (Properties.Settings.Default.APIFriendly != ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName) {
 
-                pIR.APIKeyHasChanged();  // signal that we have changed the API key
                 // a new key has been chosen, let's reset the closed orders.
                 Debug.Print(DateTime.Now + " - API key has been changed from " + Properties.Settings.Default.APIFriendly + " to " + ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName + ", about to clear the closedOrdersFirstRun ductionary...");
 
@@ -3231,6 +3232,7 @@ namespace IRTicker {
                     Debug.Print(DateTime.Now + " - notifiedOrders has been cleared.  There should be no old orders reported.  Size of dict now: " + TGBot.notifiedOrders.Count);
                 }
                 if (pIR != null) {
+                    pIR.APIKeyHasChanged();
                     pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
                     await Task.Run(() => pIR.populateClosedOrders());
                 }
