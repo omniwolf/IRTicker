@@ -1085,30 +1085,6 @@ namespace IRTicker {
 
         public void SubscribeTickerSocket(string dExchange) {
             // subscribe to all the pairs
-            // don't do it this way anymore
-            /*List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
-
-            if (true) { // dExchange == "IR") {
-                //pairList.Add(new Tuple<string, string>("XBT", "AUD"));
-                //pairList.Add(new Tuple<string, string>("XBT", "USD"));
-                //pairList.Add(new Tuple<string, string>("XBT", "NZD"));
-
-                foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                    if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + DCEs[dExchange].CurrentSecondaryCurrency)) {
-                        pairList.Add(new Tuple<string, string>(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency));
-                    }
-                }
-            }
-            else {
-
-                foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
-                    foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                        if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                            pairList.Add(new Tuple<string, string>(primaryCode, secondaryCode));
-                        }
-                    }
-                }
-            }*/
             wSocketConnect.subscribe_unsubscribe_new(dExchange, true);  // this sub is now kinda useless
         }
 
