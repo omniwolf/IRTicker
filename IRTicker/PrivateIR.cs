@@ -501,7 +501,7 @@ namespace IRTicker {
                     foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> pricePoint in baiterBook) {
                         // let's see if this price level has an order in it that is one of our OTHER (non-market baiter) orders.  If it is, pretend it's not there
                         // I've put this idea to rest.  would need to pull the GetOpenOrders every time we looped to see if the top order was mine.  Too inefficient
-                        if (pricePointCount == 0) {
+                        if (pricePointCount == 0) {  // only for the first price level, let's see if it's us, and if so if it's not the baiter order, we can ignore
                             if (!pricePoint.Value.ContainsKey(placedOrder.OrderGuid.ToString())) {  // before we check let's make sure our actual baiter order isn't here
                                 bool continueBaiterLoop = false;
                                 foreach (KeyValuePair<string, DCE.OrderBook_IR> orderAtPrice in pricePoint.Value) {
@@ -541,7 +541,7 @@ namespace IRTicker {
                             }
                         }
 
-
+                        // now we look for the baiter order
                         if (pricePoint.Value.ContainsKey(placedOrder.OrderGuid.ToString())) {
                             foundOrder = true;
                             if (pricePointCount > 0) {  // our order has been beaten by another. lez cancel and start again.  if == 0 then we're the top of the book, do nothing.

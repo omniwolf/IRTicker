@@ -179,6 +179,7 @@ namespace IRTicker {
             }
             catch (WebException e) {
                 string returnStr = "";
+                
                 if (e.Response != null) {
                     using (WebResponse response = e.Response) {
                         HttpWebResponse httpResponse = (HttpWebResponse)response;
@@ -194,6 +195,10 @@ namespace IRTicker {
                 }
                 //MessageBox.Show("Error connecting to URL: " + uri, "Network error", MessageBoxButtons.OK);
                 return new Tuple<bool, string>(false, returnStr);
+            }
+            catch (Exception e) {
+                Debug.Print(DateTime.Now + " -- GET FAILED! exception: " + e.Message);
+                return new Tuple<bool, string>(false, e.Message);
             }
         }
 
