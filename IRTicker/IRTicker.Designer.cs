@@ -1193,7 +1193,7 @@
             // BTC_LastBlock_Time_value
             // 
             this.BTC_LastBlock_Time_value.AutoSize = true;
-            this.BTC_LastBlock_Time_value.Location = new System.Drawing.Point(146, 29);
+            this.BTC_LastBlock_Time_value.Location = new System.Drawing.Point(182, 29);
             this.BTC_LastBlock_Time_value.Name = "BTC_LastBlock_Time_value";
             this.BTC_LastBlock_Time_value.Size = new System.Drawing.Size(0, 13);
             this.BTC_LastBlock_Time_value.TabIndex = 9;
