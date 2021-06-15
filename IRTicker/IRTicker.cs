@@ -32,7 +32,7 @@ namespace IRTicker {
         private bool refreshFiat = true;  // this too?
         private Dictionary<string, UIControls> UIControls_Dict;
         private List<string> Exchanges;
-        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "USDT", "DOT", "GRT", "KNC", "AAVE", "YFI", "PMGT", "SNX", "COMP", "LINK" };  // we don't poll the shit coins as often to help with rate limiting
+        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "USDT", "DOT", "GRT", "AAVE", "YFI", "PMGT", "SNX", "COMP", "LINK", "ADA", "UNI" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
         private BlinkStick bStick;
@@ -147,10 +147,10 @@ namespace IRTicker {
             DCEs["BTCM"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["BTCM"].HasStaticData = false;  // want to set this to false so we run the subscribe code once.
 
-            DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\",\"EOS\",\"XLM\",\"BAT\",\"MKR\",\"DAI\",\"ETC\",\"USDT\",\"DOT\"";
+            DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\",\"EOS\",\"XLM\",\"BAT\",\"MKR\",\"DAI\",\"ETC\",\"USDT\",\"DOT\",\"UNI\",\"ADA\"";
             DCEs["BFX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
-            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\",\"XLM\",\"MKR\",\"DAI\",\"ETC\",\"LINK\",\"COMP\",\"GRT\"";
+            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\",\"XLM\",\"MKR\",\"DAI\",\"ETC\",\"LINK\",\"COMP\",\"GRT\",\"UNI\",\"ADA\"";
             DCEs["GDAX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
             DCEs["BAR"].PrimaryCurrencyCodes = "\"XBT\"";
@@ -314,15 +314,19 @@ namespace IRTicker {
             UIControls_Dict["IR"].AAVE_Label = IR_AAVE_Label1;
             UIControls_Dict["IR"].AAVE_Price = IR_AAVE_Label2;
             UIControls_Dict["IR"].AAVE_Spread = IR_AAVE_Label3;
-            UIControls_Dict["IR"].KNC_Label = IR_KNC_Label1;
-            UIControls_Dict["IR"].KNC_Price = IR_KNC_Label2;
-            UIControls_Dict["IR"].KNC_Spread = IR_KNC_Label3;
             UIControls_Dict["IR"].DOT_Label = IR_DOT_Label1;
             UIControls_Dict["IR"].DOT_Price = IR_DOT_Label2;
             UIControls_Dict["IR"].DOT_Spread = IR_DOT_Label3;
             UIControls_Dict["IR"].GRT_Label = IR_GRT_Label1;
             UIControls_Dict["IR"].GRT_Price = IR_GRT_Label2;
             UIControls_Dict["IR"].GRT_Spread = IR_GRT_Label3;
+            UIControls_Dict["IR"].UNI_Label = IR_UNI_Label1;
+            UIControls_Dict["IR"].UNI_Price = IR_UNI_Label2;
+            UIControls_Dict["IR"].UNI_Spread = IR_UNI_Label3;
+            UIControls_Dict["IR"].ADA_Label = IR_ADA_Label1;
+            UIControls_Dict["IR"].ADA_Price = IR_ADA_Label2;
+            UIControls_Dict["IR"].ADA_Spread = IR_ADA_Label3;
+
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
             UIControls_Dict["IR"].AvgPrice_Crypto = IR_CryptoComboBox;
@@ -414,6 +418,13 @@ namespace IRTicker {
             UIControls_Dict["IR"].Account_GRT_Total = AccountGRT_total;
             UIControls_Dict["IR"].Account_GRT_Value = AccountGRT_value;
             UIControls_Dict["IR"].Account_GRT_Label = AccountGRT_label;
+
+            UIControls_Dict["IR"].Account_UNI_Total = AccountUNI_total;
+            UIControls_Dict["IR"].Account_UNI_Value = AccountUNI_value;
+            UIControls_Dict["IR"].Account_UNI_Label = AccountUNI_label;
+            UIControls_Dict["IR"].Account_ADA_Total = AccountADA_total;
+            UIControls_Dict["IR"].Account_ADA_Value = AccountADA_value;
+            UIControls_Dict["IR"].Account_ADA_Label = AccountADA_label;
 
             // BTCM
 
@@ -516,6 +527,13 @@ namespace IRTicker {
             UIControls_Dict["GDAX"].GRT_Label = GDAX_GRT_Label1;
             UIControls_Dict["GDAX"].GRT_Price = GDAX_GRT_Label2;
             UIControls_Dict["GDAX"].GRT_Spread = GDAX_GRT_Label3;
+            UIControls_Dict["GDAX"].UNI_Label = GDAX_UNI_Label1;
+            UIControls_Dict["GDAX"].UNI_Price = GDAX_UNI_Label2;
+            UIControls_Dict["GDAX"].UNI_Spread = GDAX_UNI_Label3;
+            UIControls_Dict["GDAX"].ADA_Label = GDAX_ADA_Label1;
+            UIControls_Dict["GDAX"].ADA_Price = GDAX_ADA_Label2;
+            UIControls_Dict["GDAX"].ADA_Spread = GDAX_ADA_Label3;
+
             UIControls_Dict["GDAX"].AvgPrice_BuySell = GDAX_BuySellComboBox;
             UIControls_Dict["GDAX"].AvgPrice_NumCoins = GDAX_NumCoinsTextBox;
             UIControls_Dict["GDAX"].AvgPrice_Crypto = GDAX_CryptoComboBox;
@@ -578,6 +596,13 @@ namespace IRTicker {
             UIControls_Dict["BFX"].DOT_Label = BFX_DOT_Label1;
             UIControls_Dict["BFX"].DOT_Price = BFX_DOT_Label2;
             UIControls_Dict["BFX"].DOT_Spread = BFX_DOT_Label3;
+            UIControls_Dict["BFX"].UNI_Label = BFX_UNI_Label1;
+            UIControls_Dict["BFX"].UNI_Price = BFX_UNI_Label2;
+            UIControls_Dict["BFX"].UNI_Spread = BFX_UNI_Label3;
+            UIControls_Dict["BFX"].ADA_Label = BFX_ADA_Label1;
+            UIControls_Dict["BFX"].ADA_Price = BFX_ADA_Label2;
+            UIControls_Dict["BFX"].ADA_Spread = BFX_ADA_Label3;
+
             UIControls_Dict["BFX"].AvgPrice_BuySell = BFX_BuySellComboBox;
             UIControls_Dict["BFX"].AvgPrice_NumCoins = BFX_NumCoinsTextBox;
             UIControls_Dict["BFX"].AvgPrice_Crypto = BFX_CryptoComboBox;
@@ -1398,6 +1423,7 @@ namespace IRTicker {
                             }
                         }
                         lastBlock = bHeight.Height;
+                        pollingThread.ReportProgress(15);
                         Debug.Print(DateTime.Now + " - we have a new BTC block: " + lastBlock);
                     }
                     //Debug.Print("current block is: " + lastBlock);
@@ -1999,6 +2025,10 @@ namespace IRTicker {
             else if (reportType == 14) {  // should only be called once per session - if we don't do this the crypto combo box is empty until we change secondary currencies
                 string dExchange = (string)e.UserState;
                 PopulateCryptoComboBox(dExchange);
+                return;
+            }
+            else if (reportType == 15) {  // update last block mined time
+                BTC_LastBlock_Time_value.Text = DateTime.Now.ToString("t");
                 return;
             }
 
@@ -3270,7 +3300,5 @@ namespace IRTicker {
             public int code { get; set; }
             public GNData data { get; set; }
         }
-
-
     }
 }

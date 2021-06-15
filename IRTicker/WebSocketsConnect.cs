@@ -261,7 +261,7 @@ namespace IRTicker {
                     break;
 
                 case "BFX":
-
+                    //return;
                     if (!subscribe) {  // there is no unsubscribing in BFX, so we just close it down for resubscription.  better hope we don't try and do it for 1 crypto
                         wSocket_BFX.Close();
                         wSocket_BFX.Connect();
@@ -295,7 +295,7 @@ namespace IRTicker {
                     break;
 
                 case "GDAX":
-
+                    //return;
                     if (crypto == "none") {
                         foreach (string primarycode in DCEs[dExchange].PrimaryCurrencyList) {
                             pairs.Add(primarycode);

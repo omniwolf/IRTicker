@@ -706,5 +706,49 @@
       "UrlProtocol": "bitcoincashsv"
     }
   },
+{
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Uni",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Uni",
+        "ContractAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+        "DecimalPlaces": 18
+      },
+      "Name": "Uni",
+      "Ticker": "Uni",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 3050,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 4,
+      "FiatPriceStringFormat": "0.0000",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  },
+    {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Ada",
+      "Name": "Cardano",
+      "Ticker": "Ada",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 3150,
+      "Family": "Cardano",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 5,
+      "FiatPriceStringFormat": "0.00000",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "bitcoincashsv"
+    }
+  },
 ] 
 }
