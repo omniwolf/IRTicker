@@ -607,13 +607,14 @@ namespace IRTicker {
                         Page<BankHistoryOrder> closedOs;
                         try {
                             closedOs = GetClosedOrders(crypto, fiat);  // let's check to see if we have it
+                            IRT.drawClosedOrders(closedOs.Data);
                         }
                         catch (Exception ex) {
                             Debug.Print("MBAIT: Damnit, can't pull closed orders for some reason: " + ex.Message);
                             Thread.Sleep(100);
                             continue;
                         }
-                        IRT.drawClosedOrders(closedOs.Data);
+                        
                         foreach (BankHistoryOrder closedO in closedOs.Data) {
                             if (closedO.OrderGuid == placedOrder.OrderGuid) {
                                 if (closedO.Status == OrderStatus.Filled) {

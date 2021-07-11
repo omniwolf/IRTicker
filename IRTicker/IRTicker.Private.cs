@@ -394,7 +394,7 @@ namespace IRTicker {
 
                 foreach (string[] lvi in _accountOrders.Item2) {
                     Tuple<string, string> pairTup = Utilities.SplitPair(pair);
-                    AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0], Utilities.FormatValue(decimal.Parse(lvi[1]), DCEs["IR"].currencyFiatDivision[pairTup.Item1], false), lvi[2], Utilities.FormatValue(decimal.Parse(lvi[3]), 8, false), lvi[4] }));
+                    AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0], Utilities.FormatValue(decimal.Parse(lvi[1]), DCEs["IR"].currencyFiatDivision[pairTup.Item1], false), Utilities.FormatValue(decimal.Parse(lvi[2]), 8, false), lvi[3], lvi[4] }));
                     AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].SubItems[1].Tag = lvi[1];  // need to store the price in an unformatted (and therefore parseable) format
                     if (lvi[5] == "true") {  // what a hack.  colourising any orders that are MINE
                         AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].ForeColor = Color.RoyalBlue;
@@ -790,7 +790,7 @@ namespace IRTicker {
             if (AccountOrders_listview.Items.Count > 0) {  // only continue if we have orders in the OB
                 if (AccountBuySell_listbox.SelectedIndex == 0) {  // buy
                     if (price >= decimal.Parse(AccountOrders_listview.Items[0].SubItems[1].Tag.ToString())) {
-                        AccountPlaceOrder_button.Text = "MARKET buy now";
+                        AccountPlaceOrder_button.Text = "Possible MARKET buy";
                         AccountLimitPrice_label.ForeColor = AccountPlaceOrder_button.ForeColor = Color.Red;
                         IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "Price is higher than the lowest offer, this will be a market order!");
                         if (!pIR.marketBaiterActive && (AccountOrderType_listbox.SelectedIndex == 2)) {
@@ -800,7 +800,7 @@ namespace IRTicker {
                         }
                     }
                     else {
-                        AccountPlaceOrder_button.Text = "Buy now";
+                        AccountPlaceOrder_button.Text = "Place limit buy";
                         if (!pIR.marketBaiterActive && (AccountOrderType_listbox.SelectedIndex == 2)) { // actually ..
                             AccountPlaceOrder_button.Text = "Start baitin'";
                         }
@@ -811,7 +811,7 @@ namespace IRTicker {
                 }
                 else {  // sell
                     if (price <= decimal.Parse(AccountOrders_listview.Items[0].SubItems[1].Tag.ToString())) {
-                        AccountPlaceOrder_button.Text = "MARKET sell now";
+                        AccountPlaceOrder_button.Text = "Possible MARKET sell";
                         AccountLimitPrice_label.ForeColor = AccountPlaceOrder_button.ForeColor = Color.Red;
                         IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "Price is lower than the higest bid, this will be a market order!");
                         if (!pIR.marketBaiterActive && (AccountOrderType_listbox.SelectedIndex == 2)) {
@@ -822,7 +822,7 @@ namespace IRTicker {
                     }
                     else {
                         AccountLimitPrice_label.ForeColor = Color.Black;
-                        AccountPlaceOrder_button.Text = "Sell now";
+                        AccountPlaceOrder_button.Text = "Place limit sell";
                         if (!pIR.marketBaiterActive && (AccountOrderType_listbox.SelectedIndex == 2)) { // actually ..
                             AccountPlaceOrder_button.Text = "Start baitin'";
                         }
@@ -853,12 +853,19 @@ namespace IRTicker {
         }
 
         private void AccountOpenOrders_listview_DoubleClick(object sender, EventArgs e) {
-            DialogResult res = MessageBox.Show("Do you want to cancel this order?" + Environment.NewLine + Environment.NewLine +
-                "Date created: " + AccountOpenOrders_listview.SelectedItems[0].SubItems[0].Text + Environment.NewLine +
-                "Volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + AccountOpenOrders_listview.SelectedItems[0].SubItems[1].Text + Environment.NewLine +
-                "Price: $ " + AccountOpenOrders_listview.SelectedItems[0].SubItems[2].Text + Environment.NewLine +
-                "Outstanding volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + AccountOpenOrders_listview.SelectedItems[0].SubItems[3].Text,
-                "Cancel order", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult res;
+            try {
+                res = MessageBox.Show("Do you want to cancel this order?" + Environment.NewLine + Environment.NewLine +
+                    "Date created: " + AccountOpenOrders_listview.SelectedItems[0].SubItems[0].Text + Environment.NewLine +
+                    "Volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + AccountOpenOrders_listview.SelectedItems[0].SubItems[1].Text + Environment.NewLine +
+                    "Price: $ " + AccountOpenOrders_listview.SelectedItems[0].SubItems[2].Text + Environment.NewLine +
+                    "Outstanding volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + AccountOpenOrders_listview.SelectedItems[0].SubItems[3].Text,
+                    "Cancel order", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            }
+            catch (Exception ex) {
+                Debug.Print("tried to cancel an order but there were no orders selected somehow, silently failing...");
+                return;
+            }
 
             if (res == DialogResult.Yes) {
                 if (AccountOpenOrders_listview.SelectedItems.Count == 0) return;
