@@ -308,7 +308,7 @@ namespace IRTicker {
                 if (!marketBaiterActive) return;
             }
 
-            List<string[]> accOrderListView = new List<string[]>();
+            List<decimal[]> accOrderListView = new List<decimal[]>();
             decimal estValue = 0;  // this appears to be the total value of the order currently in the fields on the form
 
             // here we grab the buy or sell order book, make a copy, and then sort it
@@ -360,7 +360,7 @@ namespace IRTicker {
                 if (count < 10) {  // there are 9 rows on the OB listview
                     cumulativeVol += totalVolume;
                     cumulativeValue += pricePoint.Key * totalVolume;
-                    accOrderListView.Add(new string[] { count.ToString(), pricePoint.Key.ToString(), Utilities.FormatValue(totalVolume), cumulativeVol.ToString(), Utilities.FormatValue(cumulativeValue), (includesMyOrder ? "true" : "false") }); ;
+                    accOrderListView.Add(new decimal[] { count, pricePoint.Key, totalVolume, cumulativeVol, cumulativeValue, (includesMyOrder ? 1 : 0) }); ;
                     count++;
                 }
                 // this can be read like: "if we've finished populating the listview, but we still have more orders required 
@@ -379,7 +379,7 @@ namespace IRTicker {
             // if it's a limit order, then the AccountEstOrderValue field is calculated manually (no need for OB), so here we need to make sure we don't clear it
             // this else is saying "if it's a market order, but we didn't engage trackedOrderVolume, then they probably have unparsable text in the vol box, so clear the estimate value label"
             else if (OrderTypeStr == "Market") estValue = -2; // ""
-            IRT.drawAccountOrderBook(new Tuple<decimal, List<string[]>>(estValue, accOrderListView), pair);  // why a tuple and not just separate variables?  We need it as one to insert into the synchronisation thing in the drawAccountOrderBook sub
+            IRT.drawAccountOrderBook(new Tuple<decimal, List<decimal[]>>(estValue, accOrderListView), pair);  // why a tuple and not just separate variables?  We need it as one to insert into the synchronisation thing in the drawAccountOrderBook sub
            // return Task.CompletedTask;
         }
 

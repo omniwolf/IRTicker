@@ -377,11 +377,11 @@ namespace IRTicker {
 
         // how is this accountORders.item2 string array made up?
         // count, pricePoint (not formatted), totalVolume, cumulativeVol (not formatted), cumulativeValue, includesMyOrder 
-        public void drawAccountOrderBook(Tuple<decimal, List<string[]>> accountOrders, string pair) {
+        public void drawAccountOrderBook(Tuple<decimal, List<decimal[]>> accountOrders, string pair) {
 
             synchronizationContext.Post(new SendOrPostCallback(o => {
 
-                Tuple<decimal, List<string[]>> _accountOrders = (Tuple<decimal, List<string[]>>)o;
+                Tuple<decimal, List<decimal[]>> _accountOrders = (Tuple<decimal, List<decimal[]>>)o;
 
                 if (AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency != pair) return;
                 if (!DCEs["IR"].IR_OBs.ContainsKey(pair)) return;
@@ -392,11 +392,11 @@ namespace IRTicker {
 
                 bool cumVolumeReached = false;  // We need to track the cum volume on the orders.  When we find a row that has higher cumulative volume than the form volume value, we need to highlight this one, but no further ones.  use this flag to show we no longer need to highlight orders
 
-                foreach (string[] lvi in _accountOrders.Item2) {
+                foreach (decimal[] lvi in _accountOrders.Item2) {
                     Tuple<string, string> pairTup = Utilities.SplitPair(pair);
-                    AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0], Utilities.FormatValue(decimal.Parse(lvi[1]), DCEs["IR"].currencyFiatDivision[pairTup.Item1], false), Utilities.FormatValue(decimal.Parse(lvi[2]), 8, false), lvi[3], lvi[4] }));
+                    AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0].ToString(), Utilities.FormatValue(lvi[1], DCEs["IR"].currencyFiatDivision[pairTup.Item1], false), Utilities.FormatValue(lvi[2], 8, false), Utilities.FormatValue(lvi[3]), Utilities.FormatValue(lvi[4]) }));
                     AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].SubItems[1].Tag = lvi[1];  // need to store the price in an unformatted (and therefore parseable) format
-                    if (lvi[5] == "true") {  // what a hack.  colourising any orders that are MINE
+                    if (lvi[5] == 1) {  // what a hack.  colourising any orders that are MINE
                         AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].ForeColor = Color.RoyalBlue;
                         AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.Yellow;
                     }
@@ -407,10 +407,10 @@ namespace IRTicker {
                         if (VolumePriceParseable()) {
                             if (((AccountBuySell_listbox.SelectedIndex == 0) && (pIR.OrderBookSide == "Offer")) ||
                                 ((AccountBuySell_listbox.SelectedIndex == 1) && (pIR.OrderBookSide == "Bid"))) {
-                                if (decimal.Parse(lvi[3]) < decimal.Parse(AccountOrderVolume_textbox.Text)) {
+                                if (lvi[3] < decimal.Parse(AccountOrderVolume_textbox.Text)) {
                                     if (AccountOrderType_listbox.SelectedIndex > 0) {  // if we are have a limit or bait order type chosen, let's also stop highlighting at the price value
-                                        if ((AccountBuySell_listbox.SelectedIndex == 0) && (decimal.Parse(lvi[1]) < decimal.Parse(AccountLimitPrice_textbox.Text)) ||
-                                            ((AccountBuySell_listbox.SelectedIndex == 1) && (decimal.Parse(lvi[1]) > decimal.Parse(AccountLimitPrice_textbox.Text)))) {
+                                        if ((AccountBuySell_listbox.SelectedIndex == 0) && (lvi[1] < decimal.Parse(AccountLimitPrice_textbox.Text)) ||
+                                            ((AccountBuySell_listbox.SelectedIndex == 1) && (lvi[1] > decimal.Parse(AccountLimitPrice_textbox.Text)))) {
                                             AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleTurquoise;
                                         }
                                     }
