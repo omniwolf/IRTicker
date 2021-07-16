@@ -409,15 +409,21 @@ namespace IRTicker {
                                 ((AccountBuySell_listbox.SelectedIndex == 1) && (pIR.OrderBookSide == "Bid"))) {
                                 if (lvi[3] < decimal.Parse(AccountOrderVolume_textbox.Text)) {
                                     if (AccountOrderType_listbox.SelectedIndex > 0) {  // if we are have a limit or bait order type chosen, let's also stop highlighting at the price value
-                                        if ((AccountBuySell_listbox.SelectedIndex == 0) && (lvi[1] < decimal.Parse(AccountLimitPrice_textbox.Text)) ||
-                                            ((AccountBuySell_listbox.SelectedIndex == 1) && (lvi[1] > decimal.Parse(AccountLimitPrice_textbox.Text)))) {
+                                        if ((AccountBuySell_listbox.SelectedIndex == 0) && (lvi[1] <= decimal.Parse(AccountLimitPrice_textbox.Text)) ||
+                                            ((AccountBuySell_listbox.SelectedIndex == 1) && (lvi[1] >= decimal.Parse(AccountLimitPrice_textbox.Text)))) {
                                             AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleTurquoise;
                                         }
                                     }
                                     else AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleTurquoise;  // else it's a market order, just highlight if the vol is good
                                 }
                                 else if (!cumVolumeReached) {  // we need to highlight one more row, as this will be the final order we'll eat into to fulfill our above order
-                                    AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleTurquoise;
+                                    if ((AccountBuySell_listbox.SelectedIndex == 0) && (lvi[1] <= decimal.Parse(AccountLimitPrice_textbox.Text)) ||
+                                        ((AccountBuySell_listbox.SelectedIndex == 1) && (lvi[1] >= decimal.Parse(AccountLimitPrice_textbox.Text)))) {
+                                        AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleTurquoise;
+                                    }
+                                    // if the price is beyond our limit price, then colour a different colour to signify that this is the price level the user
+                                    // would need to enter if they wanted to fill this volume
+                                    else AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleVioletRed;
                                     cumVolumeReached = true;
                                 }
                             }
@@ -549,9 +555,10 @@ namespace IRTicker {
                 //SwitchOrderBookSide_button.Enabled = false;  // we're now monitoring this side, no changes allowed.
                 AccountSwitchOrderBook(true);  // switches the OB shown
                 pIR.OrderTypeStr = "Limit";
-                Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
                 //updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
             }
+            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
+
             AccountPlaceOrder_button.Enabled = VolumePriceParseable();
         }
 
@@ -605,7 +612,7 @@ namespace IRTicker {
                         AccountPlaceOrder_button.Text = "Sell now";
                     }
                 }
-                    Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
+                Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
             }
             if ((AccountOrderType_listbox.SelectedIndex > 0) &&  //  limit or bait
                 decimal.TryParse(AccountLimitPrice_textbox.Text, out decimal ignore)) ValidateLimitOrder();

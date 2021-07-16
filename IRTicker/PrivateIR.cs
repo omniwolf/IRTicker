@@ -311,7 +311,7 @@ namespace IRTicker {
             List<decimal[]> accOrderListView = new List<decimal[]>();
             decimal estValue = 0;  // this appears to be the total value of the order currently in the fields on the form
 
-            // here we grab the buy or sell order book, make a copy, and then sort it
+            // here we grab the buy and sell order book, make a copy, and then sort it
 
                 KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCE_IR.IR_OBs[pair].Item2.ToArray();  // because we're buying from the sell orders
                 orderedOffers = arrayBook.OrderBy(k => k.Key);
