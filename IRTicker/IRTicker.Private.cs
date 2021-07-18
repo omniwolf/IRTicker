@@ -519,7 +519,7 @@ namespace IRTicker {
 
         // market order, limit order, market baiter list box
         private void AcccountOrderType_listbox_SelectedIndexChanged(object sender, EventArgs e) {
-            if (null == pIR) return;  // this sub seems to get called when the app opens.. 
+            if ((null == pIR) || !IRAccount_panel.Visible) return;  // this sub seems to get called when the app opens.. 
             if (AccountOrderType_listbox.SelectedIndex == 1) {
                 SwitchOrderBookSide_button.Enabled = true;
                 AccountLimitPrice_label.Visible = true;
@@ -612,7 +612,7 @@ namespace IRTicker {
                         AccountPlaceOrder_button.Text = "Sell now";
                     }
                 }
-                Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
+                //Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
             }
             if ((AccountOrderType_listbox.SelectedIndex > 0) &&  //  limit or bait
                 decimal.TryParse(AccountLimitPrice_textbox.Text, out decimal ignore)) ValidateLimitOrder();

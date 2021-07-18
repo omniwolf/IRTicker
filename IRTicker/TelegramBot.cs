@@ -1187,8 +1187,8 @@ namespace IRTicker
             if (message.Equals(LastMessage) && editMessage) return;  // if we're editing, we're not allowed to try and send exactly the same message
             LastMessage = message;
 
-            if (editMessage) LatestMessageID = (await botClient.EditMessageTextAsync(Properties.Settings.Default.TelegramChatID, LatestMessageID, message, pMode, false, buttons)).MessageId;
-            else LatestMessageID = (await botClient.SendTextMessageAsync(Properties.Settings.Default.TelegramChatID, message, pMode, false, false, 0, buttons)).MessageId;
+            if (editMessage) LatestMessageID = (await botClient.EditMessageTextAsync(Properties.Settings.Default.TelegramChatID, LatestMessageID, message, pMode, replyMarkup: buttons)).MessageId;
+            else LatestMessageID = (await botClient.SendTextMessageAsync(Properties.Settings.Default.TelegramChatID, message, pMode, replyMarkup: buttons)).MessageId;
         }
 
         public async void closedOrders(Page<BankHistoryOrder> cOrders, string APIkey) {

@@ -70,8 +70,8 @@
     <Reference Include="LibUsbDotNet, Version=2.2.8.104, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LibUsbDotNet.2.2.8\lib\LibUsbDotNet.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NoScrollListBox">
       <HintPath>.\NoScrollListBox.dll</HintPath>
@@ -157,8 +157,8 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Telegram.Bot, Version=15.7.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Telegram.Bot.15.7.1\lib\net45\Telegram.Bot.dll</HintPath>
+    <Reference Include="Telegram.Bot, Version=16.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Telegram.Bot.16.0.2\lib\net45\Telegram.Bot.dll</HintPath>
     </Reference>
     <Reference Include="Telegram.Bot.Extensions.Polling, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Telegram.Bot.Extensions.Polling.0.2.0\lib\netstandard2.0\Telegram.Bot.Extensions.Polling.dll</HintPath>
@@ -167,7 +167,7 @@
       <HintPath>..\packages\WebSocketSharp-NonPreRelease.1.0.0\lib\net35\websocket-sharp.dll</HintPath>
     </Reference>
     <Reference Include="Websocket.Client, Version=4.3.0.0, Culture=neutral, PublicKeyToken=ae648c6d12f59b1b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Websocket.Client.4.3.30\lib\netstandard2.0\Websocket.Client.dll</HintPath>
+      <HintPath>..\packages\Websocket.Client.4.3.32\lib\netstandard2.0\Websocket.Client.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
