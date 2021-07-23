@@ -386,8 +386,6 @@ namespace IRTicker {
                 if (AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency != pair) return;
                 if (!DCEs["IR"].IR_OBs.ContainsKey(pair)) return;
 
-                string volume = AccountOrderVolume_textbox.Text;
-
                 AccountOrders_listview.Items.Clear();
 
                 bool cumVolumeReached = false;  // We need to track the cum volume on the orders.  When we find a row that has higher cumulative volume than the form volume value, we need to highlight this one, but no further ones.  use this flag to show we no longer need to highlight orders
@@ -396,38 +394,55 @@ namespace IRTicker {
                     Tuple<string, string> pairTup = Utilities.SplitPair(pair);
                     AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0].ToString(), Utilities.FormatValue(lvi[1], DCEs["IR"].currencyFiatDivision[pairTup.Item1], false), Utilities.FormatValue(lvi[2], 8, false), Utilities.FormatValue(lvi[3]), Utilities.FormatValue(lvi[4]) }));
                     AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].SubItems[1].Tag = lvi[1];  // need to store the price in an unformatted (and therefore parseable) format
-                    if (lvi[5] == 1) {  // what a hack.  colourising any orders that are MINE
-                        AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].ForeColor = Color.RoyalBlue;
-                        AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.Yellow;
-                    }
-                    else {
-                        // if limit order or baiter, and can parse vol and limit price, and order book is showing the opposite side (ie if we're selling, and the OB is showing bids)
-                        // if cumVol >= formVol then highlight
 
-                        if (VolumePriceParseable()) {
-                            if (((AccountBuySell_listbox.SelectedIndex == 0) && (pIR.OrderBookSide == "Offer")) ||
-                                ((AccountBuySell_listbox.SelectedIndex == 1) && (pIR.OrderBookSide == "Bid"))) {
-                                if (lvi[3] < decimal.Parse(AccountOrderVolume_textbox.Text)) {
-                                    if (AccountOrderType_listbox.SelectedIndex > 0) {  // if we are have a limit or bait order type chosen, let's also stop highlighting at the price value
-                                        if ((AccountBuySell_listbox.SelectedIndex == 0) && (lvi[1] <= decimal.Parse(AccountLimitPrice_textbox.Text)) ||
-                                            ((AccountBuySell_listbox.SelectedIndex == 1) && (lvi[1] >= decimal.Parse(AccountLimitPrice_textbox.Text)))) {
-                                            AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleTurquoise;
-                                        }
-                                    }
-                                    else AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleTurquoise;  // else it's a market order, just highlight if the vol is good
-                                }
-                                else if (!cumVolumeReached) {  // we need to highlight one more row, as this will be the final order we'll eat into to fulfill our above order
-                                    if ((AccountBuySell_listbox.SelectedIndex == 0) && (lvi[1] <= decimal.Parse(AccountLimitPrice_textbox.Text)) ||
-                                        ((AccountBuySell_listbox.SelectedIndex == 1) && (lvi[1] >= decimal.Parse(AccountLimitPrice_textbox.Text)))) {
+                    // if limit order or baiter, and can parse vol and limit price, and order book is showing the opposite side (ie if we're selling, and the OB is showing bids)
+                    // if cumVol >= formVol then highlight
+
+                    Tuple<bool, decimal, decimal> volPriceTup = VolumePriceParseable();
+
+                    if (volPriceTup.Item1) {
+                        if (((AccountBuySell_listbox.SelectedIndex == 0) && (pIR.OrderBookSide == "Offer")) ||
+                            ((AccountBuySell_listbox.SelectedIndex == 1) && (pIR.OrderBookSide == "Bid"))) {
+                            if (lvi[3] < volPriceTup.Item2) {
+                                if (AccountOrderType_listbox.SelectedIndex > 0) {  // if we are have a limit or bait order type chosen, let's also stop highlighting at the price value
+                                    if ((AccountBuySell_listbox.SelectedIndex == 0) && (lvi[1] <= volPriceTup.Item3) ||
+                                        ((AccountBuySell_listbox.SelectedIndex == 1) && (lvi[1] >= volPriceTup.Item3))) {
                                         AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleTurquoise;
                                     }
                                     // if the price is beyond our limit price, then colour a different colour to signify that this is the price level the user
                                     // would need to enter if they wanted to fill this volume
-                                    else AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleVioletRed;
-                                    cumVolumeReached = true;
+                                    else {
+                                        AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleVioletRed;
+                                    }
                                 }
+                                else AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleTurquoise;  // else it's a market order, just highlight if the vol is good
+                            }
+                            else if (!cumVolumeReached) {  // we need to highlight one more row, as this will be the final order we'll eat into to fulfill our above order
+                                if (AccountOrderType_listbox.SelectedIndex == 0) {  // if it's a market order, just colour it.  don't try and compare limit prices
+                                    AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleTurquoise;
+                                }
+                                else if ((AccountBuySell_listbox.SelectedIndex == 0) && (lvi[1] <= volPriceTup.Item3) ||
+                                ((AccountBuySell_listbox.SelectedIndex == 1) && (lvi[1] >= volPriceTup.Item3))) {
+                                    AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleTurquoise;
+                                }
+                                // if the price is beyond our limit price, then colour a different colour to signify that this is the price level the user
+                                // would need to enter if they wanted to fill this volume
+                                else {
+                                    AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleVioletRed;
+                                }
+                                cumVolumeReached = true;
                             }
                         }
+                    }
+                    else if (volPriceTup.Item3 >= 0) {  // vol not parsable, but price is.  let's colour some rows
+                        if ((AccountBuySell_listbox.SelectedIndex == 0) && (lvi[1] <= volPriceTup.Item3) ||
+                        ((AccountBuySell_listbox.SelectedIndex == 1) && (lvi[1] >= volPriceTup.Item3))) {
+                            AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.PaleTurquoise;
+                        }
+                    }
+                    if (lvi[5] == 1) {  // what a hack.  colourising any orders that are MINE
+                        AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].ForeColor = Color.RoyalBlue;
+                        AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].BackColor = Color.Yellow;
                     }
                 }
                 if (_accountOrders.Item1 == -1) {
@@ -559,7 +574,7 @@ namespace IRTicker {
             }
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
 
-            AccountPlaceOrder_button.Enabled = VolumePriceParseable();
+            AccountPlaceOrder_button.Enabled = VolumePriceParseable().Item1;
         }
 
         // if they chose Market Baiter, then we do the opposite - a buy will show bids and a sell will show offers
@@ -619,7 +634,11 @@ namespace IRTicker {
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
-        private bool VolumePriceParseable() {
+        /// <summary>
+        /// checks if the vol and price are parsable
+        /// </summary>
+        /// <returns>item1 is the bool, item2 is volume, item3 is the price</returns>
+        private Tuple<bool, decimal, decimal> VolumePriceParseable() {
             int orderType = AccountOrderType_listbox.SelectedIndex;
             string volume = AccountOrderVolume_textbox.Text;
             string price = AccountLimitPrice_textbox.Text;
@@ -627,33 +646,45 @@ namespace IRTicker {
                 if (decimal.TryParse(volume, out decimal orderVol)) {
                     if (orderVol > 0) {
                         pIR.Volume = orderVol;
-                        return true;
+                        return new Tuple<bool, decimal, decimal>(true, orderVol, -1);
                     }
                 }
                 if (pIR != null) pIR.Volume = 0;
-                return false;
+                return new Tuple<bool, decimal, decimal>(false, -1, -1);
             }
             else {  // limit order or market baiter, need to check both fields
-                if (decimal.TryParse(price, out decimal orderPrice) && decimal.TryParse(volume, out decimal orderVol)) {
-                    if ((orderVol > 0) && (orderPrice > 0)) {
-                        pIR.Volume = orderVol;
-                        pIR.LimitPrice = orderPrice;
-                        return true;
-                    }
+                decimal orderPrice = -1;
+                decimal orderVol = -1;
+                bool canParsePrice = false;
+                bool canParseVol = false;
+                if (decimal.TryParse(price, out decimal _orderPrice)) {
+                    orderPrice = _orderPrice;
+                    canParsePrice = true;
                 }
+                else orderPrice = -1;
+                if (decimal.TryParse(volume, out decimal _orderVol)) {
+                    orderVol = _orderVol;
+                    canParseVol = true;
+                }
+                else orderVol = -1;
+                if (canParseVol && canParsePrice && (orderVol > 0) && (orderPrice >= 0)) {
+                    pIR.Volume = orderVol;
+                    pIR.LimitPrice = orderPrice;
+                    return new Tuple<bool, decimal, decimal>(true, orderVol, orderPrice);
+                }
+                
                 pIR.Volume = pIR.LimitPrice = 0;
-                return false;
+                return new Tuple<bool, decimal, decimal>(false, orderVol, orderPrice);
             }
         }
 
         private void AccountOrderVolume_textbox_TextChanged(object sender, EventArgs e) {
-            if (VolumePriceParseable()) {
-                if (AccountOrderType_listbox.SelectedIndex == 0) {
-                    Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
-                }
-                else /*if (AccountOrderType_listbox.SelectedIndex == 1)*/ {  // limit order
+            Tuple<bool, decimal, decimal> volPriceTup = VolumePriceParseable();
+
+            if (volPriceTup.Item1) {
+                if (AccountOrderType_listbox.SelectedIndex > 0) {  // limit or bait
                     AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(
-                        decimal.Parse(AccountOrderVolume_textbox.Text) * decimal.Parse(AccountLimitPrice_textbox.Text));
+                        volPriceTup.Item2 * volPriceTup.Item3);
                 }
                 AccountPlaceOrder_button.Enabled = true;
             }
@@ -661,6 +692,7 @@ namespace IRTicker {
                 AccountPlaceOrder_button.Enabled = false;
                 AccountEstOrderValue_value.Text = "";
             }
+            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
         private void StopBaitin_button_Click(object sender, EventArgs e) {
@@ -793,7 +825,7 @@ namespace IRTicker {
         // can only be called if AccountOrderType_listbox.SelectedIndex is 1 or 2 (limit or bait)
         private void ValidateLimitOrder() {
             //if (pIR.marketBaiterActive) return;  // we don't want to really look at anything if baitin'  // actually... we can now place limit orders while baitin'
-            decimal price = decimal.Parse(AccountLimitPrice_textbox.Text);
+            decimal price = decimal.Parse(AccountLimitPrice_textbox.Text);  // why no tryParse?  the only way this gets called really is if the price has been validated as a number, or it's the result of clicking the place order button, which is only clickable if the vol/price are validated.  so we should be safe here...
             if (AccountOrders_listview.Items.Count > 0) {  // only continue if we have orders in the OB
                 if (AccountBuySell_listbox.SelectedIndex == 0) {  // buy
                     if (price >= decimal.Parse(AccountOrders_listview.Items[0].SubItems[1].Tag.ToString())) {
@@ -841,14 +873,16 @@ namespace IRTicker {
         }
 
         private void AccountLimitPrice_textbox_TextChanged(object sender, EventArgs e) {
-            if (VolumePriceParseable()) {
+            Tuple<bool, decimal, decimal> volPriceTup = VolumePriceParseable();
+
+            if (volPriceTup.Item1) {
                 AccountPlaceOrder_button.Enabled = true;
                 ValidateLimitOrder();
                 AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(
-                    decimal.Parse(AccountOrderVolume_textbox.Text) * decimal.Parse(AccountLimitPrice_textbox.Text));
+                    volPriceTup.Item2 * volPriceTup.Item3);
             }
             // if VolumePriceParseable() not true, but we can parse the price field on it's own, then we can still colour some UI elements
-            else if (decimal.TryParse(AccountLimitPrice_textbox.Text, out decimal volume)) {
+            else if (volPriceTup.Item3 >= 0) {
                 AccountPlaceOrder_button.Enabled = false;
                 AccountEstOrderValue_value.Text = "";
                 ValidateLimitOrder();
@@ -857,6 +891,7 @@ namespace IRTicker {
                 AccountPlaceOrder_button.Enabled = false;
                 AccountEstOrderValue_value.Text = "";
             }
+            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
         private void AccountOpenOrders_listview_DoubleClick(object sender, EventArgs e) {

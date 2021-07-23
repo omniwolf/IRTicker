@@ -168,7 +168,7 @@ namespace IRTicker {
 
         // this thing runs through all IR pairs and pulls all orders for the pair to the notifiedOrders dictionary
         // so that we have a list of closed orders to compare when a new one comes in
-        public async Task populateClosedOrders() {
+        public void populateClosedOrders() {
             // now we pull all closed orders for all pairs to ensure we have all order guids listed in the TG Bot notifiedOrders dictionary
 
             Page<BankHistoryOrder> cOrders;
@@ -506,7 +506,7 @@ namespace IRTicker {
                                 bool continueBaiterLoop = false;
                                 foreach (KeyValuePair<string, DCE.OrderBook_IR> orderAtPrice in pricePoint.Value) {
                                     foreach (var openO in openOrders) {
-                                        if ((orderAtPrice.Key == openO.ToString()) && (orderAtPrice.Key != placedOrder.OrderGuid.ToString())) {  // it's ours, but not the bait order
+                                        if ((orderAtPrice.Key == openO.ToString()) /*&& (orderAtPrice.Key != placedOrder.OrderGuid.ToString())*/) {  // it's ours, but not the bait order.  The part i have commented out here - i don't think we need to check this because 4 lines above we have already made sure the bait order is not in this price level
                                             continueBaiterLoop = true;  // the order at the spread is ours, let's not compete against it.
                                             //Debug.Print("MBAIT: It appears an order at price $" + pricePoint.Key + " is our own.  Ignore and move to the next price level");
                                             break;
@@ -516,7 +516,9 @@ namespace IRTicker {
                                 }
                                 // why do we duplicate this search?  Because if we already know about this order, then let's not pull GetOpenOrders every time.  Should only
                                 // be duplicated the first time, and then we'll know about our existing order, and we'll be good.
-                                if (!continueBaiterLoop) {  // OK, we didn't find it.  let's grab the openOrders and search again, maybe we only recently created it
+                                // what the hell was I trying to do here?
+                                // alright, in my great wisdow i think maybe this doesn't make sense.  Why duplicate this check?  Just in case?  how shitty.  Let's see how things survive without double checking.  Also I think it wasn't coded right anyway, which probably means that it was never used
+                                /*if (!continueBaiterLoop) {  // OK, we didn't find it.  let's grab the openOrders and search again, maybe we only recently created it
                                     Page<BankHistoryOrder> openOs;
                                     try {
                                         openOs = GetOpenOrders(crypto, DCE_IR.CurrentSecondaryCurrency);
@@ -528,7 +530,7 @@ namespace IRTicker {
                                     }
                                     foreach (KeyValuePair<string, DCE.OrderBook_IR> orderAtPrice in pricePoint.Value) {
                                         foreach (var openO in openOrders) {
-                                            if ((orderAtPrice.Key == openO.ToString()) && (orderAtPrice.Key != placedOrder.OrderGuid.ToString())) {  // it's ours, but not the bait order
+                                            if ((orderAtPrice.Key == openO.ToString()) /*&& (orderAtPrice.Key != placedOrder.OrderGuid.ToString())) {  // it's ours, but not the bait order
                                                 continueBaiterLoop = true;  // the order at the spread is ours, let's not compete against it.
                                                 Debug.Print("MBAIT: After pulling new open orders, it appears an order at price $" + pricePoint.Key + " is our own.  Ignore and move to the next price level");
                                                 break;
@@ -536,8 +538,18 @@ namespace IRTicker {
                                         }
                                         if (continueBaiterLoop) break;
                                     }
+                                    if (continueBaiterLoop) continue;  // we will only get here if on the second look we found the order.  Still don't know why we need to look twice.
                                 }
+                                else continue; */ // continues the baitorBook loop, ie moves to the second price level, but does not increase pricePointCount
                                 if (continueBaiterLoop) continue;  // continues the baitorBook loop, ie moves to the second price level, but does not increase pricePointCount
+                            }
+                            else {  // the baiting order IS in the first price level!
+                                if (pricePoint.Value[placedOrder.OrderGuid.ToString()].Volume != baiterLiveVol) {
+                                    baiterLiveVol = pricePoint.Value[placedOrder.OrderGuid.ToString()].Volume;
+                                    IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble.... (" + (placedOrder.PrimaryCurrencyCode.ToString().ToUpper() == "XBT" ? "BTC" : placedOrder.PrimaryCurrencyCode.ToString().ToUpper()) + " " + baiterLiveVol + " remaining)"));
+                                }
+                                foundOrder = true;
+                                break;  // we don't need to continue, the order is where we want it.
                             }
                         }
 
@@ -591,13 +603,14 @@ namespace IRTicker {
                                 }
                                 //else Debug.Print("MBAIT: our order is at the limit, just gonna leave it.  price: " + placedOrder.Price);
                             }
-                            else {
+                            /*else {
+                                // we used to have code here for if the order was in the first price level, but have moved it up
                                 if (pricePoint.Value[placedOrder.OrderGuid.ToString()].Volume != baiterLiveVol) {
                                     baiterLiveVol = pricePoint.Value[placedOrder.OrderGuid.ToString()].Volume;
                                     IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble.... (" + (placedOrder.PrimaryCurrencyCode.ToString().ToUpper() == "XBT" ? "BTC" : placedOrder.PrimaryCurrencyCode.ToString().ToUpper()) + " " + baiterLiveVol + " remaining)"));
                                 }
-                            }
-                            break;  // order book foreach
+                            }*/
+                            break;  // we found the baiter order, so berak out of the order book foreach
                         }
                         pricePointCount++;
                     }
@@ -632,7 +645,14 @@ namespace IRTicker {
 
                         if (null != placedOrder) {
                             Debug.Print("MBAIT: OK, let's see if it's still open.");
-                            Page<BankHistoryOrder> openOs = GetOpenOrders(crypto, fiat);
+                            Page<BankHistoryOrder> openOs = new Page<BankHistoryOrder>();
+                            try {
+                                openOs = GetOpenOrders(crypto, fiat);
+                            }
+                            catch (Exception ex) {
+                                Debug.Print("MBAIT: failed to pull GetOpenOrders while trying to see where the order is. error: " + ex.Message);
+                                continue;  // let's move on, let the sytem auto-correct.
+                            }
                             foreach (BankHistoryOrder openO in openOs.Data) {
                                 if (openO.OrderGuid == placedOrder.OrderGuid) {
                                     foundOrder = true;
@@ -652,6 +672,16 @@ namespace IRTicker {
                                         }
                                         Debug.Print("MBAIT: cancelled status: " + cancelledOrder.Status);
                                         if ((cancelledOrder.Status == OrderStatus.Cancelled) || (cancelledOrder.Status == OrderStatus.PartiallyFilledAndCancelled)) {
+                                            baiterLiveVol = cancelledOrder.VolumeOrdered - cancelledOrder.VolumeFilled;
+                                            // bulkupdate thingo should only be called from the UI as it can result in messageboxes.  also I think we don't need to call updateOrderBook, there should have already been a new event comet through the websockets that would update it?
+                                            //IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
+                                            try {
+                                                Page<BankHistoryOrder> oOrders = GetOpenOrders(crypto, fiat);  // we need to pull this again because we just cancelled the order
+                                                IRT.drawOpenOrders(oOrders.Data);
+                                            }
+                                            catch (Exception ex) {
+                                                Debug.Print("MBAIT: failed to pull GetOpenOrders after discovering our order was cancelled. error: " + ex.Message);
+                                            }
                                             placedOrder = null;
                                         }
                                     }
@@ -659,7 +689,9 @@ namespace IRTicker {
                                     break;
                                 }
                             }
-                            IRT.synchronizationContext.Post(new SendOrPostCallback(o => { IRT.drawOpenOrders((IEnumerable<BankHistoryOrder>)o); }), openOs.Data);
+                            // IRT.synchronizationContext.Post(new SendOrPostCallback(o => { IRT.drawOpenOrders((IEnumerable<BankHistoryOrder>)o); }), openOs.Data);  // whoa.. don't think we need to do this.  The drawOpenOrders already does it
+                            IRT.drawOpenOrders(openOs.Data);
+
                             if (!foundOrder) {  // if we still haven't found it (ie it's not in the open or closed order lists), it must be cancelled I guess?  re-create.
                                 Debug.Print("MBAIT: order wasn't in open or closed orders, so we'll re-create it");
                                 placedOrder = null;
