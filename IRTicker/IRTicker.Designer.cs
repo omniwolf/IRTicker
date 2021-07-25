@@ -5474,7 +5474,7 @@
             // 
             this.AccountSGD_total.AutoSize = true;
             this.AccountSGD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
-            this.AccountSGD_total.Location = new System.Drawing.Point(83, 818);
+            this.AccountSGD_total.Location = new System.Drawing.Point(83, 811);
             this.AccountSGD_total.Name = "AccountSGD_total";
             this.AccountSGD_total.Size = new System.Drawing.Size(0, 24);
             this.AccountSGD_total.TabIndex = 95;
@@ -5483,7 +5483,7 @@
             // 
             this.AccountSGD_label.AutoSize = true;
             this.AccountSGD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
-            this.AccountSGD_label.Location = new System.Drawing.Point(12, 818);
+            this.AccountSGD_label.Location = new System.Drawing.Point(12, 811);
             this.AccountSGD_label.Name = "AccountSGD_label";
             this.AccountSGD_label.Size = new System.Drawing.Size(54, 24);
             this.AccountSGD_label.TabIndex = 94;
@@ -5580,7 +5580,6 @@
             this.AccountKNC_label.Size = new System.Drawing.Size(48, 18);
             this.AccountKNC_label.TabIndex = 85;
             this.AccountKNC_label.Text = "KNC:";
-            this.AccountKNC_label.Click += new System.EventHandler(this.Account_label_Click);
             // 
             // AccountAAVE_total
             // 
@@ -6026,7 +6025,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(4, 715);
+            this.label7.Location = new System.Drawing.Point(4, 708);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(271, 13);
             this.label7.TabIndex = 37;
@@ -6036,7 +6035,7 @@
             // 
             this.AccountUSD_total.AutoSize = true;
             this.AccountUSD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountUSD_total.Location = new System.Drawing.Point(83, 790);
+            this.AccountUSD_total.Location = new System.Drawing.Point(83, 783);
             this.AccountUSD_total.Name = "AccountUSD_total";
             this.AccountUSD_total.Size = new System.Drawing.Size(0, 24);
             this.AccountUSD_total.TabIndex = 36;
@@ -6045,7 +6044,7 @@
             // 
             this.AccountUSD_label.AutoSize = true;
             this.AccountUSD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountUSD_label.Location = new System.Drawing.Point(12, 790);
+            this.AccountUSD_label.Location = new System.Drawing.Point(12, 783);
             this.AccountUSD_label.Name = "AccountUSD_label";
             this.AccountUSD_label.Size = new System.Drawing.Size(53, 24);
             this.AccountUSD_label.TabIndex = 35;
@@ -6055,7 +6054,7 @@
             // 
             this.AccountNZD_total.AutoSize = true;
             this.AccountNZD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountNZD_total.Location = new System.Drawing.Point(83, 762);
+            this.AccountNZD_total.Location = new System.Drawing.Point(83, 755);
             this.AccountNZD_total.Name = "AccountNZD_total";
             this.AccountNZD_total.Size = new System.Drawing.Size(0, 24);
             this.AccountNZD_total.TabIndex = 34;
@@ -6064,7 +6063,7 @@
             // 
             this.AccountNZD_label.AutoSize = true;
             this.AccountNZD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountNZD_label.Location = new System.Drawing.Point(12, 762);
+            this.AccountNZD_label.Location = new System.Drawing.Point(12, 755);
             this.AccountNZD_label.Name = "AccountNZD_label";
             this.AccountNZD_label.Size = new System.Drawing.Size(54, 24);
             this.AccountNZD_label.TabIndex = 33;
@@ -6074,7 +6073,7 @@
             // 
             this.AccountAUD_total.AutoSize = true;
             this.AccountAUD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountAUD_total.Location = new System.Drawing.Point(83, 734);
+            this.AccountAUD_total.Location = new System.Drawing.Point(83, 727);
             this.AccountAUD_total.Name = "AccountAUD_total";
             this.AccountAUD_total.Size = new System.Drawing.Size(0, 24);
             this.AccountAUD_total.TabIndex = 32;
@@ -6083,7 +6082,7 @@
             // 
             this.AccountAUD_label.AutoSize = true;
             this.AccountAUD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountAUD_label.Location = new System.Drawing.Point(12, 734);
+            this.AccountAUD_label.Location = new System.Drawing.Point(12, 727);
             this.AccountAUD_label.Name = "AccountAUD_label";
             this.AccountAUD_label.Size = new System.Drawing.Size(54, 24);
             this.AccountAUD_label.TabIndex = 31;
@@ -6108,7 +6107,6 @@
             this.AccountGNT_label.Size = new System.Drawing.Size(48, 18);
             this.AccountGNT_label.TabIndex = 28;
             this.AccountGNT_label.Text = "GNT:";
-            this.AccountGNT_label.Click += new System.EventHandler(this.Account_label_Click);
             // 
             // AccountZRX_value
             // 
@@ -6298,7 +6296,6 @@
             this.AccountBSV_label.Size = new System.Drawing.Size(45, 18);
             this.AccountBSV_label.TabIndex = 8;
             this.AccountBSV_label.Text = "BSV:";
-            this.AccountBSV_label.Click += new System.EventHandler(this.Account_label_Click);
             // 
             // AccountBCH_value
             // 

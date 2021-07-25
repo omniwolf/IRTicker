@@ -204,7 +204,7 @@ namespace IRTicker
                 else {
                     string crypto = (AccAvgPrice_Crypto_ComboBox.SelectedItem == "BTC" ? "XBT" : AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString());
 
-                    decimal tempRes = Math.Round((totalValue / totalCryptoDealt), dce.currencyFiatDivision[crypto], MidpointRounding.AwayFromZero);
+                    decimal tempRes = Math.Round((totalValue / totalCryptoDealt), dce.currencyDecimalPlaces[crypto].Item2, MidpointRounding.AwayFromZero);
                     AvgPriceResult = tempRes.ToString();
 
                     if (isMultipleFiatCurrenciesSelected) {
@@ -212,7 +212,7 @@ namespace IRTicker
                         AccAvgPrice_TotalFiat_TextBox.Text = "N/A";
                     }
                     else {
-                        AccAvgPrice_Result_TextBox.Text = Utilities.FormatValue(tempRes, dce.currencyFiatDivision[crypto], false);
+                        AccAvgPrice_Result_TextBox.Text = Utilities.FormatValue(tempRes, dce.currencyDecimalPlaces[crypto].Item2, false);
                         AccAvgPrice_TotalFiat_TextBox.Text = Utilities.FormatValue(totalValue, 2, false);
                     }
 
@@ -228,7 +228,8 @@ namespace IRTicker
                             // deal size user entry is good
                             if (dealSize > 0) {
                                 decimal dealtSoFar = (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex == 1 ? totalCryptoDealt : totalValue);
-                                int decimals = 8;  // crypto vol should go to 8 dp
+                                int decimals = dce.currencyDecimalPlaces[crypto].Item1;  // crypto vol should go to 8 dp
+
                                 if (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex == 2) decimals = 2;  // fiat just do 2
 
                                 // colour the remaining box
@@ -404,6 +405,7 @@ namespace IRTicker
 
         private void AccAvgPrice_Crypto_ComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             pIR.AvgPriceSelectedCrypto = (AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() == "BTC" ? "XBT" : AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString());
+            AccAvgPrice_DealSize_TextBox_TextChanged(null, null);  // simulate text change to validate and adjust
         }
 
         private void AccAvgPrice_Fiat_button_click(object sender, EventArgs e) {
@@ -454,6 +456,26 @@ namespace IRTicker
             else {
                 AccAvgPrice_SendRemainingToVolumeField_button.Enabled = false;
                 AccAvgPrice_CopyFiat_Button.Enabled = false;
+            }
+        }
+
+        private void AccAvgPrice_DealSize_TextBox_TextChanged(object sender, EventArgs e) {
+            if (AccAvgPrice_Crypto_ComboBox.SelectedIndex == 0) return;
+            // let's truncate and validate
+            string crypto = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString();
+            decimal adjustedVol = 0;
+            if (crypto == "BTC") crypto = "XBT";
+            if (decimal.TryParse(AccAvgPrice_DealSize_TextBox.Text, out decimal dealSize)) {
+                if (dealSize > 0) {
+                    int mantissaLen = BitConverter.GetBytes(decimal.GetBits(dealSize)[3])[2];
+                    if (mantissaLen > dce.currencyDecimalPlaces[crypto].Item1) {
+                        adjustedVol = Utilities.Truncate(dealSize, (byte)(dce.currencyDecimalPlaces[crypto].Item1));
+                        AccAvgPrice_DealSize_TextBox.Text = adjustedVol.ToString();
+                        AccAvgPrice_DealSize_TextBox.SelectionStart = AccAvgPrice_DealSize_TextBox.Text.Length;
+                        AccAvgPrice_DealSize_TextBox.SelectionLength = 0;
+                    }
+                }
+
             }
         }
     }

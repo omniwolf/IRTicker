@@ -34,6 +34,7 @@ namespace IRTicker {
                 PrivateIR.PrivateIREndPoints.GetClosedOrders, 
                 PrivateIR.PrivateIREndPoints.GetAddress, 
                 PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
+            AccountBuySell_listbox_Click(null, null);  // simulate a click to set things up
         }
 
         private void DrawIRAccounts(Dictionary<string, Account> irAccounts) {
@@ -284,7 +285,7 @@ namespace IRTicker {
                     order.CreatedTimestampUtc.ToLocalTime().ToShortDateString(),
                     Utilities.FormatValue(vol, 8, false),
                     Utilities.FormatValue(order.AvgPrice.Value, 2),
-                    Utilities.FormatValue(order.Value.Value)}));
+                    Utilities.FormatValue(order.Value.Value, 2)}));
                         AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].ToolTipText = buildOrderTT(order, false);
                         if (order.OrderType == OrderType.LimitBid || order.OrderType == OrderType.MarketBid) {
                             AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].BackColor = Color.Thistle;
@@ -315,9 +316,9 @@ namespace IRTicker {
                         if ((order.Status != OrderStatus.Open) && (order.Status != OrderStatus.PartiallyFilled)) continue;
                         AccountOpenOrders_listview.Items.Add(new ListViewItem(new string[] {
                     order.CreatedTimestampUtc.ToLocalTime().ToShortDateString(),
-                    Utilities.FormatValue(order.Volume),
+                    Utilities.FormatValue(order.Volume, 8, false),  // hopefully will format but leave decimals untouched..
                     Utilities.FormatValue(order.Price.Value, 2),
-                    Utilities.FormatValue(order.Outstanding.Value)}));
+                    Utilities.FormatValue(order.Outstanding.Value, 8, false)}));
                         AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].ToolTipText = buildOrderTT(order, true);
                         if (order.OrderType == OrderType.LimitBid) {
                             AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].BackColor = Color.Thistle;
@@ -392,7 +393,7 @@ namespace IRTicker {
 
                 foreach (decimal[] lvi in _accountOrders.Item2) {
                     Tuple<string, string> pairTup = Utilities.SplitPair(pair);
-                    AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0].ToString(), Utilities.FormatValue(lvi[1], DCEs["IR"].currencyFiatDivision[pairTup.Item1], false), Utilities.FormatValue(lvi[2], 8, false), Utilities.FormatValue(lvi[3]), Utilities.FormatValue(lvi[4]) }));
+                    AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0].ToString(), Utilities.FormatValue(lvi[1], DCEs["IR"].currencyDecimalPlaces[pairTup.Item1].Item2, false), Utilities.FormatValue(lvi[2], 8, false), Utilities.FormatValue(lvi[3]), Utilities.FormatValue(lvi[4]) }));
                     AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].SubItems[1].Tag = lvi[1];  // need to store the price in an unformatted (and therefore parseable) format
 
                     // if limit order or baiter, and can parse vol and limit price, and order book is showing the opposite side (ie if we're selling, and the OB is showing bids)
@@ -461,6 +462,7 @@ namespace IRTicker {
 
         }
 
+        // is called when the user selects a different crypto from the side panel
         private void cryptoClicked(Label clickedLabel) {
             if (!pIR.marketBaiterActive) {  // can't let the crypto change while we're baitin'
               
@@ -497,6 +499,10 @@ namespace IRTicker {
 
                 newLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Value"];
                 newLabel.ForeColor = Color.DarkOrange;
+
+                // simulate a change in text so we perform text validation and adjustments
+                AccountOrderVolume_textbox_TextChanged(null, null);
+                AccountLimitPrice_textbox_TextChanged(null, null);
             }
 
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { 
@@ -645,11 +651,9 @@ namespace IRTicker {
             if (orderType == 0) {   // market, only care about volume
                 if (decimal.TryParse(volume, out decimal orderVol)) {
                     if (orderVol > 0) {
-                        pIR.Volume = orderVol;
                         return new Tuple<bool, decimal, decimal>(true, orderVol, -1);
                     }
                 }
-                if (pIR != null) pIR.Volume = 0;
                 return new Tuple<bool, decimal, decimal>(false, -1, -1);
             }
             else {  // limit order or market baiter, need to check both fields
@@ -668,23 +672,30 @@ namespace IRTicker {
                 }
                 else orderVol = -1;
                 if (canParseVol && canParsePrice && (orderVol > 0) && (orderPrice >= 0)) {
-                    pIR.Volume = orderVol;
-                    pIR.LimitPrice = orderPrice;
                     return new Tuple<bool, decimal, decimal>(true, orderVol, orderPrice);
                 }
                 
-                pIR.Volume = pIR.LimitPrice = 0;
                 return new Tuple<bool, decimal, decimal>(false, orderVol, orderPrice);
             }
         }
 
         private void AccountOrderVolume_textbox_TextChanged(object sender, EventArgs e) {
             Tuple<bool, decimal, decimal> volPriceTup = VolumePriceParseable();
+            decimal adjustedVol = volPriceTup.Item2;
+            if (volPriceTup.Item2 > 0) {
+                int mantissaLen = BitConverter.GetBytes(decimal.GetBits(volPriceTup.Item2)[3])[2];
+                if (mantissaLen > DCEs["IR"].currencyDecimalPlaces[AccountSelectedCrypto].Item1) {
+                    adjustedVol = Utilities.Truncate(volPriceTup.Item2, (byte)(DCEs["IR"].currencyDecimalPlaces[AccountSelectedCrypto].Item1));
+                    AccountOrderVolume_textbox.Text = adjustedVol.ToString();
+                    AccountOrderVolume_textbox.SelectionStart = AccountOrderVolume_textbox.Text.Length;
+                    AccountOrderVolume_textbox.SelectionLength = 0;
+                }
+                pIR.Volume = adjustedVol;  // need to set this here because we need to tell pIR if we have a legit vol, even if the price is illegit or not entered yet
+            }
 
             if (volPriceTup.Item1) {
-                if (AccountOrderType_listbox.SelectedIndex > 0) {  // limit or bait
-                    AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(
-                        volPriceTup.Item2 * volPriceTup.Item3);
+                if (AccountOrderType_listbox.SelectedIndex > 0) {  // limit or bait, we set the estimated notional label
+                    AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(adjustedVol * volPriceTup.Item3);
                 }
                 AccountPlaceOrder_button.Enabled = true;
             }
@@ -824,7 +835,7 @@ namespace IRTicker {
         // this method checks the limit price, and if it would make the order a market order, then highlight buttons and shit
         // can only be called if AccountOrderType_listbox.SelectedIndex is 1 or 2 (limit or bait)
         private void ValidateLimitOrder() {
-            //if (pIR.marketBaiterActive) return;  // we don't want to really look at anything if baitin'  // actually... we can now place limit orders while baitin'
+            if (AccountBuySell_listbox.SelectedIndex == 0) return;  // this can happen when changing cryptos, we simulate a price text box update to validate and adjust
             decimal price = decimal.Parse(AccountLimitPrice_textbox.Text);  // why no tryParse?  the only way this gets called really is if the price has been validated as a number, or it's the result of clicking the place order button, which is only clickable if the vol/price are validated.  so we should be safe here...
             if (AccountOrders_listview.Items.Count > 0) {  // only continue if we have orders in the OB
                 if (AccountBuySell_listbox.SelectedIndex == 0) {  // buy
@@ -874,15 +885,25 @@ namespace IRTicker {
 
         private void AccountLimitPrice_textbox_TextChanged(object sender, EventArgs e) {
             Tuple<bool, decimal, decimal> volPriceTup = VolumePriceParseable();
+            decimal adjustedPrice = volPriceTup.Item3;
+            if (volPriceTup.Item3 >= 0) {
+                int mantissaLen = BitConverter.GetBytes(decimal.GetBits(volPriceTup.Item3)[3])[2];
+                if (mantissaLen > DCEs["IR"].currencyDecimalPlaces[AccountSelectedCrypto].Item2) {
+                    adjustedPrice = Utilities.Truncate(volPriceTup.Item3, (byte)(DCEs["IR"].currencyDecimalPlaces[AccountSelectedCrypto].Item2));
+                    AccountLimitPrice_textbox.Text = adjustedPrice.ToString();
+                    AccountLimitPrice_textbox.SelectionStart = AccountLimitPrice_textbox.Text.Length;
+                    AccountLimitPrice_textbox.SelectionLength = 0;
+                }
+                pIR.LimitPrice = adjustedPrice;
+            }
 
             if (volPriceTup.Item1) {
                 AccountPlaceOrder_button.Enabled = true;
                 ValidateLimitOrder();
-                AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(
-                    volPriceTup.Item2 * volPriceTup.Item3);
+                AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(volPriceTup.Item2 * adjustedPrice);
             }
             // if VolumePriceParseable() not true, but we can parse the price field on it's own, then we can still colour some UI elements
-            else if (volPriceTup.Item3 >= 0) {
+            else if (adjustedPrice >= 0) {
                 AccountPlaceOrder_button.Enabled = false;
                 AccountEstOrderValue_value.Text = "";
                 ValidateLimitOrder();
@@ -963,7 +984,7 @@ namespace IRTicker {
         }
         private void IRAccount_AvgPrice_Button_Click(object sender, EventArgs e) {
             if ((_AccAvgPrice == null) || (!Application.OpenForms.OfType<AccAvgPrice>().Any())) {
-                _AccAvgPrice = new AccAvgPrice(DCEs["IR"], pIR, this);
+                _AccAvgPrice = new AccAvgPrice(DCEs["IR"], pIR, this, crypto: AccountSelectedCrypto, fiat: DCEs["IR"].CurrentSecondaryCurrency, direction: AccountBuySell_listbox.SelectedIndex);
                 _AccAvgPrice.Show();
             }
             else _AccAvgPrice.Focus();
@@ -980,6 +1001,9 @@ namespace IRTicker {
 
         public void IRAccount_FillVolumeField(string vol) {
             AccountOrderVolume_textbox.Text = vol;
+
+            // simulate a change in the text
+            AccountOrderVolume_textbox_TextChanged(null, null);
         }
     }
 }

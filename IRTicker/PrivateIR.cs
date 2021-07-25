@@ -174,12 +174,13 @@ namespace IRTicker {
             Page<BankHistoryOrder> cOrders;
 
             foreach (string primaryCode in DCE_IR.PrimaryCurrencyList) {
+                Debug.Print("Big pull of closed orders, pulling " + primaryCode);
                 foreach (string secondaryCode in DCE_IR.SecondaryCurrencyList) {
                     try {
                         cOrders = GetClosedOrders(primaryCode, secondaryCode, true);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
 
                         // need to go if the current primary/secondary is what's shown on IRAccounts, then draw it
-                        if (IRT.IRAccount_panel.Visible && (SelectedCrypto == primaryCode) && (DCE_IR.CurrentSecondaryCurrency == secondaryCode)) {
+                        if (/*IRT.IRAccount_panel.Visible &&*/ (SelectedCrypto == primaryCode) && (DCE_IR.CurrentSecondaryCurrency == secondaryCode)) {
                             IRT.drawClosedOrders(cOrders.Data);
                         }
                         // IRT.drawClosedOrders(cOrders);
@@ -192,6 +193,7 @@ namespace IRTicker {
                         Debug.Print(DateTime.Now + " - PrivateIR_init sub, trying to pull closed orders for " + primaryCode + "-" + secondaryCode + ", but it failed: " + errorMsg);
                     }
                 }
+                Debug.Print("Big pull of closed orders done: " + primaryCode);
             }
             firstClosedOrdersPullDone = true;
         }
@@ -391,7 +393,7 @@ namespace IRTicker {
             string pair = crypto + "-" + fiat;
             baiterLiveVol = volume;
             
-            decimal distanceFromTopOrder = (decimal)(Math.Pow(0.1, DCE_IR.currencyFiatDivision[crypto]) * 5);  // how far infront of the best order should we be?  will be different for different cryptos
+            decimal distanceFromTopOrder = (decimal)(Math.Pow(0.1, DCE_IR.currencyDecimalPlaces[crypto].Item2) * 5);  // how far infront of the best order should we be?  will be different for different cryptos
             if (BaiterBookSide == "Offer") distanceFromTopOrder = distanceFromTopOrder * -1;
 
             Debug.Print("MBAIT: distance from top: " + distanceFromTopOrder);

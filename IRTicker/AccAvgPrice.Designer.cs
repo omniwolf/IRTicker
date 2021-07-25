@@ -269,6 +269,7 @@
             this.AccAvgPrice_DealSize_TextBox.Size = new System.Drawing.Size(106, 20);
             this.AccAvgPrice_DealSize_TextBox.TabIndex = 25;
             this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_DealSize_TextBox, "Enter here what size you need to do on the order book.");
+            this.AccAvgPrice_DealSize_TextBox.TextChanged += new System.EventHandler(this.AccAvgPrice_DealSize_TextBox_TextChanged);
             // 
             // AccAvgPrice_DealSizeCurrency_ComboBox
             // 

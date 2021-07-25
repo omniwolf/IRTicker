@@ -1285,30 +1285,44 @@ namespace IRTicker {
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "USD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "NZD");*/
 
-                        if (DCEs["IR"].currencyFiatDivision.Count() > 0) DCEs["IR"].currencyFiatDivision.Clear();  // if we reset due to network outage, then clear this before 
+                        if (DCEs["IR"].currencyDecimalPlaces.Count() > 0) DCEs["IR"].currencyDecimalPlaces.Clear();  // if we reset due to network outage, then clear this before 
 
-                        if (!File.Exists("IRCurrencyAttributes.txt")) {
-                            MessageBox.Show("IRCurrencyAttributes.txt can't be found in the root application folder.  Grab it from Resources folder if you can, or ask Nick.  App will close now.",
-                                "Error: can't find currency file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (!File.Exists("cryptoDPs.csv")) {
+                            MessageBox.Show("cryptoDPs.csv can't be found in the root application folder.  Grab it from Resources folder if you can, or ask Nick.  Can re-generate this file by running the CryptoDecimalPlaces-scrape.ps1 script.  App will close now.",
+                                "Error: can't find decimal places file", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Application.Exit();
                             return;
                         }
+                        try {
+                            using (StreamReader r = new StreamReader("cryptoDPs.csv")) {
+                                //string json = r.ReadToEnd();
+                                //CurrencyRoot = JsonConvert.DeserializeObject<IRCurrencies>(json);
+                                string line;
+                                while ((line = r.ReadLine()) != null) {
+                                    if (string.IsNullOrEmpty(line)) break;
+                                    string[] details = line.Split(',');
+                                    int vol = int.Parse(details[1]);
+                                    int fiat = int.Parse(details[2]);
+                                    if ((vol > 126) || (vol < -126) || (fiat > 126) || (fiat < -126)) throw new Exception("volume or fiat not within -126 and 126");  // we have to convert this to a byte, which must be within these values
+                                    DCEs["IR"].currencyDecimalPlaces.Add(details[0].ToUpper(), new Tuple<int, int>(int.Parse(details[1]), int.Parse(details[2])));
+                                }
+                            }
 
-                        IRCurrencies CurrencyRoot;
-                        using (StreamReader r = new StreamReader("IRCurrencyAttributes.txt")) {
-                            string json = r.ReadToEnd();
-                            CurrencyRoot = JsonConvert.DeserializeObject<IRCurrencies>(json);
+                           /* foreach (Currency curr in CurrencyRoot.Currencies) {
+                                string crypto = curr.IrCommonAttributesCurrencyConfiguration.Ticker.ToUpper();
+                                /*if (crypto == "UST") crypto = "USDT";
+                                if (crypto == "USC") crypto = "USDC";
+                                if (crypto == "LNK") crypto = "LINK";
+                                if (crypto == "COM") crypto = "COMP";
+                                if (crypto == "BTC") crypto = "XBT";
+                                if (crypto == "AVE") crypto = "AAVE";
+                                DCEs["IR"].currencyFiatDivision.Add(crypto, curr.IrCommonAttributesCurrencyConfiguration.FiatPriceDecimalPlaces);
+                            }*/
                         }
-
-                        foreach (Currency curr in CurrencyRoot.Currencies) {
-                            string crypto = curr.IrCommonAttributesCurrencyConfiguration.Ticker.ToUpper();
-                            /*if (crypto == "UST") crypto = "USDT";
-                            if (crypto == "USC") crypto = "USDC";
-                            if (crypto == "LNK") crypto = "LINK";
-                            if (crypto == "COM") crypto = "COMP";*/
-                            if (crypto == "BTC") crypto = "XBT";
-                            if (crypto == "AVE") crypto = "AAVE";
-                            DCEs["IR"].currencyFiatDivision.Add(crypto, curr.IrCommonAttributesCurrencyConfiguration.FiatPriceDecimalPlaces);
+                        catch (Exception ex) {
+                            MessageBox.Show("cryptoDPs.csv can't be read, can't parse the lines for ints maybe?  Error: " + ex.Message + " App will close now.",
+                                "Error: can't read decimal places file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Application.Exit();
                         }
 
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
@@ -2475,12 +2489,11 @@ namespace IRTicker {
                     LastPanel.Visible = true;
                     Settings.Visible = false;
                     if (IRAccount_panel.Visible) {
-                        drawClosedOrders(null);
-                        drawOpenOrders(null);
-
-                        drawDepositAddress(null);  // blanks out the deposit address pane
                         InitialiseAccountsPanel();  // seeing if this helps the tg spam
                     }
+                    drawClosedOrders(null);
+                    drawOpenOrders(null);
+                    drawDepositAddress(null);  // blanks out the deposit address pane
                 }
                 else {
                     MessageBox.Show("Sorry, minimum is " + minRefreshFrequency.ToString() + " seconds, or you'll piss off APIs and get blocked", "Too low!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -3240,7 +3253,7 @@ namespace IRTicker {
                 if (pIR != null) {
                     pIR.APIKeyHasChanged();
                     pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
-                    await Task.Run(() => pIR.populateClosedOrders());
+                    //await Task.Run(() => pIR.populateClosedOrders());
                 }
             }
         }
