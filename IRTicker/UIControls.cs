@@ -42,6 +42,8 @@ namespace IRTicker {
         public Label GRT_Label { get; set; }
         public Label UNI_Label { get; set; }
         public Label ADA_Label { get; set; }
+        public Label DOGE_Label { get; set; }
+        public Label MATIC_Label { get; set; }
 
         public Label XBT_Price { get; set; }
         public Label ETH_Price { get; set; }
@@ -71,6 +73,9 @@ namespace IRTicker {
         public Label GRT_Price { get; set; }
         public Label UNI_Price { get; set; }
         public Label ADA_Price { get; set; }
+        public Label DOGE_Price { get; set; }
+        public Label MATIC_Price { get; set; }
+
 
         public Label XBT_Spread { get; set; }
         public Label ETH_Spread { get; set; }
@@ -100,6 +105,9 @@ namespace IRTicker {
         public Label GRT_Spread { get; set; }
         public Label UNI_Spread { get; set; }
         public Label ADA_Spread { get; set; }
+        public Label DOGE_Spread { get; set; }
+        public Label MATIC_Spread { get; set; }
+
 
         public ComboBox AvgPrice_BuySell { get; set; }
         public MaskedTextBox AvgPrice_NumCoins { get; set; }
@@ -144,6 +152,8 @@ namespace IRTicker {
         public Label Account_GRT_Label { get; set; }
         public Label Account_UNI_Label { get; set; }
         public Label Account_ADA_Label { get; set; }
+        public Label Account_DOGE_Label { get; set; }
+        public Label Account_MATIC_Label { get; set; }
 
         public Label Account_XBT_Value { get; set; }
         public Label Account_ETH_Value { get; set; }
@@ -173,6 +183,9 @@ namespace IRTicker {
         public Label Account_GRT_Value { get; set; }
         public Label Account_UNI_Value { get; set; }
         public Label Account_ADA_Value { get; set; }
+        public Label Account_DOGE_Value { get; set; }
+        public Label Account_MATIC_Value { get; set; }
+
 
         public Label Account_XBT_Total { get; set; }
         public Label Account_ETH_Total { get; set; }
@@ -206,6 +219,8 @@ namespace IRTicker {
         public Label Account_GRT_Total { get; set; }
         public Label Account_UNI_Total { get; set; }
         public Label Account_ADA_Total { get; set; }
+        public Label Account_DOGE_Total { get; set; }
+        public Label Account_MATIC_Total { get; set; }
 
 
 
@@ -242,6 +257,9 @@ namespace IRTicker {
             if (GRT_Label != null) Label_Dict.Add("GRT_Label", GRT_Label);
             if (UNI_Label != null) Label_Dict.Add("UNI_Label", UNI_Label);
             if (ADA_Label != null) Label_Dict.Add("ADA_Label", ADA_Label);
+            if (DOGE_Label != null) Label_Dict.Add("DOGE_Label", DOGE_Label);
+            if (MATIC_Label != null) Label_Dict.Add("MATIC_Label", MATIC_Label);
+
 
             if (XBT_Price != null) Label_Dict.Add("XBT_Price", XBT_Price);
             if (ETH_Price != null) Label_Dict.Add("ETH_Price", ETH_Price);
@@ -271,6 +289,8 @@ namespace IRTicker {
             if (GRT_Price != null) Label_Dict.Add("GRT_Price", GRT_Price);
             if (UNI_Price != null) Label_Dict.Add("UNI_Price", UNI_Price);
             if (ADA_Price != null) Label_Dict.Add("ADA_Price", ADA_Price);
+            if (DOGE_Price != null) Label_Dict.Add("DOGE_Price", DOGE_Price);
+            if (MATIC_Price != null) Label_Dict.Add("MATIC_Price", MATIC_Price);
 
             if (XBT_Spread != null) Label_Dict.Add("XBT_Spread", XBT_Spread);
             if (ETH_Spread != null) Label_Dict.Add("ETH_Spread", ETH_Spread);
@@ -300,6 +320,8 @@ namespace IRTicker {
             if (GRT_Spread != null) Label_Dict.Add("GRT_Spread", GRT_Spread);
             if (UNI_Spread != null) Label_Dict.Add("UNI_Spread", UNI_Spread);
             if (ADA_Spread != null) Label_Dict.Add("ADA_Spread", ADA_Spread);
+            if (DOGE_Spread != null) Label_Dict.Add("DOGE_Spread", DOGE_Spread);
+            if (MATIC_Spread != null) Label_Dict.Add("MATIC_Spread", MATIC_Spread);
 
             if (Account_XBT_Label != null) Label_Dict.Add("XBT_Account_Label", Account_XBT_Label);
             if (Account_ETH_Label != null) Label_Dict.Add("ETH_Account_Label", Account_ETH_Label);
@@ -333,6 +355,8 @@ namespace IRTicker {
             if (Account_GRT_Label != null) Label_Dict.Add("GRT_Account_Label", Account_GRT_Label);
             if (Account_UNI_Label != null) Label_Dict.Add("UNI_Account_Label", Account_UNI_Label);
             if (Account_ADA_Label != null) Label_Dict.Add("ADA_Account_Label", Account_ADA_Label);
+            if (Account_DOGE_Label != null) Label_Dict.Add("DOGE_Account_Label", Account_DOGE_Label);
+            if (Account_MATIC_Label != null) Label_Dict.Add("MATIC_Account_Label", Account_MATIC_Label);
 
             if (Account_XBT_Value != null) Label_Dict.Add("XBT_Account_Value", Account_XBT_Value);
             if (Account_ETH_Value != null) Label_Dict.Add("ETH_Account_Value", Account_ETH_Value);
@@ -362,6 +386,8 @@ namespace IRTicker {
             if (Account_GRT_Value != null) Label_Dict.Add("GRT_Account_Value", Account_GRT_Value);
             if (Account_UNI_Value != null) Label_Dict.Add("UNI_Account_Value", Account_UNI_Value);
             if (Account_ADA_Value != null) Label_Dict.Add("ADA_Account_Value", Account_ADA_Value);
+            if (Account_DOGE_Value != null) Label_Dict.Add("DOGE_Account_Value", Account_DOGE_Value);
+            if (Account_MATIC_Value != null) Label_Dict.Add("MATIC_Account_Value", Account_MATIC_Value);
 
             if (Account_XBT_Total != null) Label_Dict.Add("XBT_Account_Total", Account_XBT_Total);
             if (Account_ETH_Total != null) Label_Dict.Add("ETH_Account_Total", Account_ETH_Total);
@@ -395,6 +421,8 @@ namespace IRTicker {
             if (Account_GRT_Total != null) Label_Dict.Add("GRT_Account_Total", Account_GRT_Total);
             if (Account_UNI_Total != null) Label_Dict.Add("UNI_Account_Total", Account_UNI_Total);
             if (Account_ADA_Total != null) Label_Dict.Add("ADA_Account_Total", Account_ADA_Total);
+            if (Account_DOGE_Total != null) Label_Dict.Add("DOGE_Account_Total", Account_DOGE_Total);
+            if (Account_MATIC_Total != null) Label_Dict.Add("MATIC_Account_Total", Account_MATIC_Total);
         }
     }
 }

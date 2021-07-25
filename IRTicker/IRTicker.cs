@@ -147,10 +147,10 @@ namespace IRTicker {
             DCEs["BTCM"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["BTCM"].HasStaticData = false;  // want to set this to false so we run the subscribe code once.
 
-            DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\",\"EOS\",\"XLM\",\"BAT\",\"MKR\",\"DAI\",\"ETC\",\"USDT\",\"DOT\",\"UNI\",\"ADA\"";
+            DCEs["BFX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"ZRX\",\"EOS\",\"XLM\",\"BAT\",\"MKR\",\"DAI\",\"ETC\",\"USDT\",\"DOT\",\"UNI\",\"ADA\",\"DOGE\"";
             DCEs["BFX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
-            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\",\"XLM\",\"MKR\",\"DAI\",\"ETC\",\"LINK\",\"COMP\",\"GRT\",\"UNI\",\"ADA\"";
+            DCEs["GDAX"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"ZRX\",\"XLM\",\"MKR\",\"DAI\",\"ETC\",\"LINK\",\"COMP\",\"GRT\",\"UNI\",\"ADA\",\"DOGE\",\"MATIC\"";
             DCEs["GDAX"].SecondaryCurrencyCodes = "\"USD\",\"EUR\",\"GBP\"";
 
             DCEs["BAR"].PrimaryCurrencyCodes = "\"XBT\"";
@@ -326,6 +326,12 @@ namespace IRTicker {
             UIControls_Dict["IR"].ADA_Label = IR_ADA_Label1;
             UIControls_Dict["IR"].ADA_Price = IR_ADA_Label2;
             UIControls_Dict["IR"].ADA_Spread = IR_ADA_Label3;
+            UIControls_Dict["IR"].DOGE_Label = IR_DOGE_Label1;
+            UIControls_Dict["IR"].DOGE_Price = IR_DOGE_Label2;
+            UIControls_Dict["IR"].DOGE_Spread = IR_DOGE_Label3;
+            UIControls_Dict["IR"].MATIC_Label = IR_MATIC_Label1;
+            UIControls_Dict["IR"].MATIC_Price = IR_MATIC_Label2;
+            UIControls_Dict["IR"].MATIC_Spread = IR_MATIC_Label3;
 
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
@@ -418,13 +424,18 @@ namespace IRTicker {
             UIControls_Dict["IR"].Account_GRT_Total = AccountGRT_total;
             UIControls_Dict["IR"].Account_GRT_Value = AccountGRT_value;
             UIControls_Dict["IR"].Account_GRT_Label = AccountGRT_label;
-
             UIControls_Dict["IR"].Account_UNI_Total = AccountUNI_total;
             UIControls_Dict["IR"].Account_UNI_Value = AccountUNI_value;
             UIControls_Dict["IR"].Account_UNI_Label = AccountUNI_label;
             UIControls_Dict["IR"].Account_ADA_Total = AccountADA_total;
             UIControls_Dict["IR"].Account_ADA_Value = AccountADA_value;
             UIControls_Dict["IR"].Account_ADA_Label = AccountADA_label;
+            UIControls_Dict["IR"].Account_DOGE_Total = AccountDOGE_total;
+            UIControls_Dict["IR"].Account_DOGE_Value = AccountDOGE_value;
+            UIControls_Dict["IR"].Account_DOGE_Label = AccountDOGE_label;
+            UIControls_Dict["IR"].Account_MATIC_Total = AccountMATIC_total;
+            UIControls_Dict["IR"].Account_MATIC_Value = AccountMATIC_value;
+            UIControls_Dict["IR"].Account_MATIC_Label = AccountMATIC_label;
 
             // BTCM
 
@@ -533,6 +544,12 @@ namespace IRTicker {
             UIControls_Dict["GDAX"].ADA_Label = GDAX_ADA_Label1;
             UIControls_Dict["GDAX"].ADA_Price = GDAX_ADA_Label2;
             UIControls_Dict["GDAX"].ADA_Spread = GDAX_ADA_Label3;
+            UIControls_Dict["GDAX"].DOGE_Label = GDAX_DOGE_Label1;
+            UIControls_Dict["GDAX"].DOGE_Price = GDAX_DOGE_Label2;
+            UIControls_Dict["GDAX"].DOGE_Spread = GDAX_DOGE_Label3;
+            UIControls_Dict["GDAX"].MATIC_Label = GDAX_MATIC_Label1;
+            UIControls_Dict["GDAX"].MATIC_Price = GDAX_MATIC_Label2;
+            UIControls_Dict["GDAX"].MATIC_Spread = GDAX_MATIC_Label3;
 
             UIControls_Dict["GDAX"].AvgPrice_BuySell = GDAX_BuySellComboBox;
             UIControls_Dict["GDAX"].AvgPrice_NumCoins = GDAX_NumCoinsTextBox;
@@ -602,6 +619,9 @@ namespace IRTicker {
             UIControls_Dict["BFX"].ADA_Label = BFX_ADA_Label1;
             UIControls_Dict["BFX"].ADA_Price = BFX_ADA_Label2;
             UIControls_Dict["BFX"].ADA_Spread = BFX_ADA_Label3;
+            UIControls_Dict["BFX"].DOGE_Label = BFX_DOGE_Label1;
+            UIControls_Dict["BFX"].DOGE_Price = BFX_DOGE_Label2;
+            UIControls_Dict["BFX"].DOGE_Spread = BFX_DOGE_Label3;
 
             UIControls_Dict["BFX"].AvgPrice_BuySell = BFX_BuySellComboBox;
             UIControls_Dict["BFX"].AvgPrice_NumCoins = BFX_NumCoinsTextBox;
