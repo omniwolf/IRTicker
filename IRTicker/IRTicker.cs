@@ -1103,13 +1103,13 @@ namespace IRTicker {
 
                 // convert the list of producct_BFX's into a dictionary of product_GDAX's
                 foreach (DCE.products_BFX prod in productList) {
-                    if (prod.pair.StartsWith("btc")) {  // first make btc into xbt
+                    /*if (prod.pair.StartsWith("btc")) {  // first make btc into xbt
                         prod.pair = prod.pair.Replace("btc", "XBT");
                     }
                     if (prod.pair.StartsWith("bchn")) {
                         prod.pair = prod.pair.Replace("bchn:", "BCH");
                     }
-                    if (prod.pair.StartsWith("ust")) prod.pair = prod.pair.Replace("ust", "USDT");
+                    if (prod.pair.StartsWith("ust")) prod.pair = prod.pair.Replace("ust", "USDT");*/
 
                     // next we need to do a manual conversion.
                     DCE.products_GDAX prod_gdax = new DCE.products_GDAX();

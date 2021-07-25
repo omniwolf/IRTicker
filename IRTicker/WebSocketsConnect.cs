@@ -280,7 +280,8 @@ namespace IRTicker {
                                 if (crypto2 == "XBT") crypto2 = "BTC";
                                 if (crypto2 == "BCH") crypto2 = "BCHN:";
                                 if (crypto2 == "USDT") crypto2 = "UST";
-                                if (!DCEs[dExchange].ExchangeProducts.ContainsKey(crypto1 + "-" + fiat)) continue;  // only try to subscribe to pairs that this BFX supports
+                                if (crypto2 == "DOGE") crypto2 = "DOG";
+                                if (!DCEs[dExchange].ExchangeProducts.ContainsKey(crypto2 + "-" + fiat)) continue;  // only try to subscribe to pairs that this BFX supports
                                 channel = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"" + crypto2 + fiat + "\"}";
                                 Debug.Print("BFX subscribing to: " + channel);
                                 wSocket_BFX.Send(channel);
@@ -1050,6 +1051,8 @@ namespace IRTicker {
                         DCE.MarketSummary mSummary = new DCE.MarketSummary();
                         mSummary.PrimaryCurrencyCode = channel_Dict_BFX[streamParts[0]].pair.Substring(0, 3);
                         if (mSummary.PrimaryCurrencyCode.ToUpper() == "UST") mSummary.PrimaryCurrencyCode = "USDT";
+                        if (mSummary.PrimaryCurrencyCode.ToUpper() == "DOG") 
+                            mSummary.PrimaryCurrencyCode = "DOGE";
                         mSummary.SecondaryCurrencyCode = channel_Dict_BFX[streamParts[0]].pair.Substring(3, 3);
                         do {
                             if (decimal.TryParse(streamParts[partCount], out decimal result)) {
