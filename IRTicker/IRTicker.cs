@@ -1378,7 +1378,7 @@ namespace IRTicker {
                                     if (ex.InnerException != null) {
                                         errorMsg = ex.InnerException.Message;
                                     }
-                                    Debug.Print(DateTime.Now + " - In BGW thread loop, trying to pull closed orders, but it failed: " + errorMsg);
+                                    Debug.Print(DateTime.Now + " - In BGW thread loop, trying to pull closed orders, but it failed (" + primaryCode + "-" + fiat + "): " + errorMsg);
                                 }
                                 // if i want to get fancy i can call reportProgress and drawClosedOrders()...
 
@@ -1772,6 +1772,7 @@ namespace IRTicker {
         // Updates labels, but just a specific pair (used for websockets because we get each pair separartely)
         private void UpdateLabels_Pair(string dExchange, DCE.MarketSummary mSummary) {
             if (!Main.Visible && !LoadingPanel.Visible) return;  // no point drawing to the UI if we can't see anything
+            if (!UIControls_Dict[dExchange].Label_Dict.ContainsKey(mSummary.PrimaryCurrencyCode + "_Price")) return;  // we haven't added this crypto to the UI yet
             // first we reset the labels.  The label writing process only writes to labels of pairs that exist, so we first need to set them back in case they don't exist
 
             //DCE.MarketSummary mSummary = DCEs[dExchange].GetCryptoPairs()[crypto + "-" + fiat];
