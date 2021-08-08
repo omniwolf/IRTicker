@@ -25,8 +25,8 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRTicker));
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Loading...");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Loading...");
             this.refreshFrequencyTextbox = new System.Windows.Forms.MaskedTextBox();
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
@@ -5230,7 +5230,7 @@
             this.AccountOpenOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountOpenOrders_listview.HideSelection = false;
             this.AccountOpenOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem5});
+            listViewItem3});
             this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountOpenOrders_listview.MultiSelect = false;
             this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";
@@ -5296,7 +5296,7 @@
             this.AccountClosedOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountClosedOrders_listview.HideSelection = false;
             this.AccountClosedOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem6});
+            listViewItem4});
             this.AccountClosedOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountClosedOrders_listview.MultiSelect = false;
             this.AccountClosedOrders_listview.Name = "AccountClosedOrders_listview";
@@ -5669,6 +5669,7 @@
             this.AccountMATIC_label.Size = new System.Drawing.Size(63, 18);
             this.AccountMATIC_label.TabIndex = 105;
             this.AccountMATIC_label.Text = "MATIC:";
+            this.AccountMATIC_label.Click += new System.EventHandler(this.Account_label_Click);
             // 
             // AccountDOGE_total
             // 
@@ -5699,6 +5700,7 @@
             this.AccountDOGE_label.Size = new System.Drawing.Size(62, 18);
             this.AccountDOGE_label.TabIndex = 102;
             this.AccountDOGE_label.Text = "DOGE:";
+            this.AccountDOGE_label.Click += new System.EventHandler(this.Account_label_Click);
             // 
             // AccountADA_total
             // 
@@ -5729,6 +5731,7 @@
             this.AccountADA_label.Size = new System.Drawing.Size(45, 18);
             this.AccountADA_label.TabIndex = 99;
             this.AccountADA_label.Text = "ADA:";
+            this.AccountADA_label.Click += new System.EventHandler(this.Account_label_Click);
             // 
             // AccountUNI_total
             // 
@@ -5759,6 +5762,7 @@
             this.AccountUNI_label.Size = new System.Drawing.Size(41, 18);
             this.AccountUNI_label.TabIndex = 96;
             this.AccountUNI_label.Text = "UNI:";
+            this.AccountUNI_label.Click += new System.EventHandler(this.Account_label_Click);
             // 
             // AccountSGD_total
             // 
@@ -6687,8 +6691,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(584, 841);
-            this.Controls.Add(this.Main);
             this.Controls.Add(this.IRAccount_panel);
+            this.Controls.Add(this.Main);
             this.Controls.Add(this.Settings);
             this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.OTCHelper);
