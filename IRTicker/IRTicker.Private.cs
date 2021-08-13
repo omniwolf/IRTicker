@@ -804,7 +804,7 @@ namespace IRTicker {
             ValidateLimitOrder();
             AccountBuySell_listbox.Enabled = true;
             AccountOrderType_listbox.Enabled = true;
-            AccountPlaceOrder_button.Text = "Start baitin'";
+            AccountPlaceOrder_button.Text = "Start baitin'";  // the user can't change the order type while baiting, so we can be sure it's still set to baiter when it fineshes
             AccountPlaceOrder_button.Size = new Size(294, 39);
             StopBaitin_button.Visible = false;
             StopBaitin_button.Enabled = false;

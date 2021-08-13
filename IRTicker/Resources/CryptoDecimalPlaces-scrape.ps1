@@ -13,6 +13,7 @@ $ResArray = $Results -split "class=`"decimal-places-table__code`""  # let's hope
 $count = 0
 $masterStr = ""
 
+write-host "Parsing /api page..." -ForegroundColor Yellow
 do {
     $count++  # have to do this at the top so the until clause doesn't evaluate the next array element before we've used it
     $crypto = $ResArray[$count] -split "<span>"
@@ -29,6 +30,9 @@ do {
         $masterStr += $crypto[1].Substring((23 + $cryptoTicker.Length), 1) + ","
         $masterStr += $crypto[1].Substring((34 + $cryptoTicker.Length), 1) + "`n"
     }
+    write-host "Added " $cryptoTicker
 } until ($ResArray[$count] -match "The following public API methods are available")
 
+write-host "Writing CSV..." -ForegroundColor Yellow
 $masterStr | Out-File -FilePath .\cryptoDPs.csv  # this doesn't actually create a usable CSV, but it's good enough for IRTicker to parse
+Write-Host "Complete!" -ForegroundColor Green

@@ -186,6 +186,7 @@ namespace IRTicker
                                     vol = vol - cOrder.Outstanding.Value;
                                 }
                                 totalCryptoDealt += vol;
+                                // this isn't accurate enough.  Need to use exact trade numbers
                                 totalValue += cOrder.AvgPrice.Value * vol;  // we can't just use the .Value property because it has a resolution of 2 decimal places which isn't enough.  So we use AvgPrice and vol to work backwards what the real Value is
                                 count++;
                             }
