@@ -149,7 +149,7 @@ namespace IRTicker
                 Debug.Print(DateTime.Now + " - failed to pull closed orders when clicking the average price go button.  error: " + ex.Message);
                 AccAvgPrice_Status_Label.Text = "Failed to pull closed orders, please try again.";
 
-                // re-enable the controls
+                // pulling closed orders failed, lets re-enable the controls
                 AccAvgPrice_Crypto_ComboBox.Enabled = true;
 
                 foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
@@ -187,7 +187,7 @@ namespace IRTicker
                                 }
                                 totalCryptoDealt += vol;
                                 // this isn't accurate enough.  Need to use exact trade numbers
-                                totalValue += cOrder.AvgPrice.Value * vol;  // we can't just use the .Value property because it has a resolution of 2 decimal places which isn't enough.  So we use AvgPrice and vol to work backwards what the real Value is
+                                totalValue += cOrder.Value.Value;
                                 count++;
                             }
                         }

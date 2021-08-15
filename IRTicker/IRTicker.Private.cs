@@ -835,7 +835,7 @@ namespace IRTicker {
         // this method checks the limit price, and if it would make the order a market order, then highlight buttons and shit
         // can only be called if AccountOrderType_listbox.SelectedIndex is 1 or 2 (limit or bait)
         private void ValidateLimitOrder() {
-            if (AccountBuySell_listbox.SelectedIndex == 0) return;  // this can happen when changing cryptos, we simulate a price text box update to validate and adjust
+            if (AccountOrderType_listbox.SelectedIndex == 0) return;  // this can happen when changing cryptos, we simulate a price text box update to validate and adjust
             decimal price = decimal.Parse(AccountLimitPrice_textbox.Text);  // why no tryParse?  the only way this gets called really is if the price has been validated as a number, or it's the result of clicking the place order button, which is only clickable if the vol/price are validated.  so we should be safe here...
             if (AccountOrders_listview.Items.Count > 0) {  // only continue if we have orders in the OB
                 if (AccountBuySell_listbox.SelectedIndex == 0) {  // buy
@@ -886,7 +886,8 @@ namespace IRTicker {
         private void AccountLimitPrice_textbox_TextChanged(object sender, EventArgs e) {
             Tuple<bool, decimal, decimal> volPriceTup = VolumePriceParseable();
             decimal adjustedPrice = volPriceTup.Item3;
-            if (volPriceTup.Item3 >= 0) {
+            if (adjustedPrice >= 0) {  // item3 will be -1 if not parseable.  If parseable, let's truncate.
+                // we truncate the price field to obey our max decimal places for this crypto
                 int mantissaLen = BitConverter.GetBytes(decimal.GetBits(volPriceTup.Item3)[3])[2];
                 if (mantissaLen > DCEs["IR"].currencyDecimalPlaces[AccountSelectedCrypto].Item2) {
                     adjustedPrice = Utilities.Truncate(volPriceTup.Item3, (byte)(DCEs["IR"].currencyDecimalPlaces[AccountSelectedCrypto].Item2));
@@ -897,7 +898,7 @@ namespace IRTicker {
                 pIR.LimitPrice = adjustedPrice;
             }
 
-            if (volPriceTup.Item1) {
+            if (volPriceTup.Item1) {  // both price and vol are parseable
                 AccountPlaceOrder_button.Enabled = true;
                 ValidateLimitOrder();
                 AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(volPriceTup.Item2 * adjustedPrice);
