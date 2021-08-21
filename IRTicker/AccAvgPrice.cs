@@ -186,7 +186,6 @@ namespace IRTicker
                                     vol = vol - cOrder.Outstanding.Value;
                                 }
                                 totalCryptoDealt += vol;
-                                // this isn't accurate enough.  Need to use exact trade numbers
                                 totalValue += cOrder.Value.Value;
                                 count++;
                             }

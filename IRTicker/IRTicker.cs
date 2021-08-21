@@ -3334,5 +3334,10 @@ namespace IRTicker {
             public int code { get; set; }
             public GNData data { get; set; }
         }
+
+        private void Balance_button_Click(object sender, EventArgs e) {
+            Balance balForm = new Balance(DCEs["IR"], pIR);
+            balForm.Show();
+        }
     }
 }

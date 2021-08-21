@@ -184,6 +184,12 @@
     <Compile Include="AccountAPIKeys.Designer.cs">
       <DependentUpon>AccountAPIKeys.cs</DependentUpon>
     </Compile>
+    <Compile Include="Balance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Balance.Designer.cs">
+      <DependentUpon>Balance.cs</DependentUpon>
+    </Compile>
     <Compile Include="CE.cs" />
     <Compile Include="DCEs.cs" />
     <Compile Include="Help.cs">
@@ -241,6 +247,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AccountAPIKeys.resx">
       <DependentUpon>AccountAPIKeys.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Balance.resx">
+      <DependentUpon>Balance.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DCEControl.resx">
       <DependentUpon>DCEControl.cs</DependentUpon>

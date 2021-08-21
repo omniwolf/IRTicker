@@ -35,16 +35,21 @@ namespace IRTicker {
         /// <returns>a beautiful string</returns>
         public static string FormatValue(decimal val, int decimalPlaces = -1, bool decimalsForLargeNumbersOnly = true) {
 
+            bool positiveInput = true;  // track if this sub receives a negative or positive "val" value.  If negative, make it positive for calculations, then flip it at the end
             string formatString = "0";
+            if (val < 0) {
+                val = val * -1;
+                positiveInput = false;
+            }
 
             // default settings
             if (val < 10) formatString = "0.00###";
             if (val >= 10) formatString = "##0.00";
             if (val >= 1000) formatString = "### ### ### ##0";
 
-            if (decimalPlaces == -1) return val.ToString(formatString).Trim();
+            if (decimalPlaces == -1) return (positiveInput ? val.ToString(formatString).Trim() : "-" + val.ToString(formatString).Trim());
 
-            if (decimalsForLargeNumbersOnly && (val < 1000)) return val.ToString(formatString).Trim();
+            if (decimalsForLargeNumbersOnly && (val < 1000)) return (positiveInput ? val.ToString(formatString).Trim() : "-" + val.ToString(formatString).Trim());
 
             // custom decimal places
             if (val < 10) formatString = "0";
@@ -59,7 +64,7 @@ namespace IRTicker {
                 else formatString += "#";
                 loopCounter++;
             }
-            return val.ToString(formatString).Trim();
+            return (positiveInput ? val.ToString(formatString).Trim() : "-" + val.ToString(formatString).Trim());
         }
 
         // this list will be sorted from earliest time to latest time
