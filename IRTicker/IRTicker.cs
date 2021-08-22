@@ -3336,8 +3336,11 @@ namespace IRTicker {
         }
 
         private void Balance_button_Click(object sender, EventArgs e) {
-            Balance balForm = new Balance(DCEs["IR"], pIR);
-            balForm.Show();
+            if (null != pIR) {
+                Balance balForm = new Balance(DCEs["IR"], pIR);
+                balForm.Show();
+            }
+            else MessageBox.Show("IR API config not setup, go to Settings and do it first", "API not configured", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

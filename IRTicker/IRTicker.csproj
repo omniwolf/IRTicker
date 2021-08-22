@@ -190,7 +190,14 @@
     <Compile Include="Balance.Designer.cs">
       <DependentUpon>Balance.cs</DependentUpon>
     </Compile>
+    <Compile Include="BalSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BalSettings.Designer.cs">
+      <DependentUpon>BalSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="CE.cs" />
+    <Compile Include="CoinbaseClient.cs" />
     <Compile Include="DCEs.cs" />
     <Compile Include="Help.cs">
       <SubType>Form</SubType>
@@ -250,6 +257,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Balance.resx">
       <DependentUpon>Balance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BalSettings.resx">
+      <DependentUpon>BalSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DCEControl.resx">
       <DependentUpon>DCEControl.cs</DependentUpon>

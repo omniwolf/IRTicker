@@ -502,5 +502,65 @@ namespace IRTicker.Properties {
                 this["LoanSlushEncoded_B2C2"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string B2C2Token {
+            get {
+                return ((string)(this["B2C2Token"]));
+            }
+            set {
+                this["B2C2Token"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CoinbaseAPIKey {
+            get {
+                return ((string)(this["CoinbaseAPIKey"]));
+            }
+            set {
+                this["CoinbaseAPIKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CoinbaseAPISecret {
+            get {
+                return ((string)(this["CoinbaseAPISecret"]));
+            }
+            set {
+                this["CoinbaseAPISecret"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CoinbasePassPhrase {
+            get {
+                return ((string)(this["CoinbasePassPhrase"]));
+            }
+            set {
+                this["CoinbasePassPhrase"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LoanSlushEncoded_Coinbase {
+            get {
+                return ((string)(this["LoanSlushEncoded_Coinbase"]));
+            }
+            set {
+                this["LoanSlushEncoded_Coinbase"] = value;
+            }
+        }
     }
 }

@@ -32,6 +32,8 @@ namespace IRTicker
             this.BalReload_button = new System.Windows.Forms.Button();
             this.Legend_label = new System.Windows.Forms.Label();
             this.Legend_TT = new System.Windows.Forms.ToolTip(this.components);
+            this.BalCopyForSlack_button = new System.Windows.Forms.Button();
+            this.BalSettings_button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Platform_comboBox
@@ -52,7 +54,7 @@ namespace IRTicker
             // 
             // BalReload_button
             // 
-            this.BalReload_button.Location = new System.Drawing.Point(272, 12);
+            this.BalReload_button.Location = new System.Drawing.Point(244, 12);
             this.BalReload_button.Name = "BalReload_button";
             this.BalReload_button.Size = new System.Drawing.Size(115, 23);
             this.BalReload_button.TabIndex = 1;
@@ -63,13 +65,34 @@ namespace IRTicker
             // Legend_label
             // 
             this.Legend_label.AutoSize = true;
-            this.Legend_label.Location = new System.Drawing.Point(478, 19);
+            this.Legend_label.Location = new System.Drawing.Point(580, 15);
             this.Legend_label.Name = "Legend_label";
             this.Legend_label.Size = new System.Drawing.Size(142, 13);
             this.Legend_label.TabIndex = 2;
             this.Legend_label.Text = "Hover here for colour legend";
             this.Legend_TT.SetToolTip(this.Legend_label, "Green: perfect balance\r\nBlack: imperfect balance (close enough)\r\nRed: out of bala" +
-        "nce, needs investigation\r\nPurple: out of balance, slush needs topping up?");
+        "nce, needs investigation\r\nPurple: out of balance, slush needs topping up?\r\nOrang" +
+        "e: something is wrong, speak to Nick");
+            // 
+            // BalCopyForSlack_button
+            // 
+            this.BalCopyForSlack_button.Location = new System.Drawing.Point(370, 12);
+            this.BalCopyForSlack_button.Name = "BalCopyForSlack_button";
+            this.BalCopyForSlack_button.Size = new System.Drawing.Size(115, 23);
+            this.BalCopyForSlack_button.TabIndex = 3;
+            this.BalCopyForSlack_button.Text = "Copy for Slack";
+            this.BalCopyForSlack_button.UseVisualStyleBackColor = true;
+            this.BalCopyForSlack_button.Click += new System.EventHandler(this.BalCopyForSlack_button_Click);
+            // 
+            // BalSettings_button
+            // 
+            this.BalSettings_button.Location = new System.Drawing.Point(495, 12);
+            this.BalSettings_button.Name = "BalSettings_button";
+            this.BalSettings_button.Size = new System.Drawing.Size(79, 23);
+            this.BalSettings_button.TabIndex = 4;
+            this.BalSettings_button.Text = "Settings";
+            this.BalSettings_button.UseVisualStyleBackColor = true;
+            this.BalSettings_button.Click += new System.EventHandler(this.BalSettings_button_Click);
             // 
             // Balance
             // 
@@ -78,6 +101,8 @@ namespace IRTicker
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(734, 761);
+            this.Controls.Add(this.BalSettings_button);
+            this.Controls.Add(this.BalCopyForSlack_button);
             this.Controls.Add(this.Legend_label);
             this.Controls.Add(this.BalReload_button);
             this.Controls.Add(this.Platform_comboBox);
@@ -96,5 +121,7 @@ namespace IRTicker
         private System.Windows.Forms.Button BalReload_button;
         private System.Windows.Forms.Label Legend_label;
         private System.Windows.Forms.ToolTip Legend_TT;
+        private System.Windows.Forms.Button BalCopyForSlack_button;
+        private System.Windows.Forms.Button BalSettings_button;
     }
 }
