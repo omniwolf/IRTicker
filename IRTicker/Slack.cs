@@ -29,7 +29,7 @@ namespace IRTicker {
                         status_expiration = duration + (duration == 0 ? 0 : DateTimeOffset.Now.ToUnixTimeSeconds())  // if we send 0 for duration, then send it on to the slack API
                     }
                 };
-                SendMessageAsync(Properties.Settings.Default.SlackToken, profChange).Wait();
+                SendMessageAsync(Properties.Settings.Default.SlackToken, profChange, "https://slack.com/api/users.profile.set").Wait();
             }
             else {
                 if (name == "") name = Properties.Settings.Default.SlackDefaultName;  // set their default name if we don't specify anything (this should be for when the app closes)
@@ -41,58 +41,14 @@ namespace IRTicker {
                         display_name = name
                     }
                 };
-                SendMessageAsync(Properties.Settings.Default.SlackToken, profChange).Wait();
+                SendMessageAsync(Properties.Settings.Default.SlackToken, profChange, "https://slack.com/api/users.profile.set").Wait();
             }
         }
 
-        public class SlackProfile {
-            public SlackStatus profile { get; set; }
-        }
-
-        public class SlackProfile_noname {
-            public SlackStatus_noname profile { get; set; }
-        }
-
-        public class SlackStatus {
-            public string status_text { get; set; }
-            public string status_emoji { get; set; }
-            public long status_expiration { get; set; }
-            public string display_name { get; set; }
-        }
-
-        public class SlackStatus_noname {
-            public string status_text { get; set; }
-            public string status_emoji { get; set; }
-            public long status_expiration { get; set; }
-        }
-
-        // reponse from message methods
-        public class SlackMessageResponse {
-            public bool ok { get; set; }
-            public string error { get; set; }
-            public string channel { get; set; }
-            public string ts { get; set; }
-        }
-
-        // a slack message
-        public class SlackMessage {
-            public string channel { get; set; }
-            public string text { get; set; }
-            public bool as_user { get; set; }
-            public SlackAttachment[] attachments { get; set; }
-        }
-
-        // a slack message attachment
-        public class SlackAttachment {
-            public string fallback { get; set; }
-            public string text { get; set; }
-            public string image_url { get; set; }
-            public string color { get; set; }
-        }
 
         // sends a slack message asynchronous
         // throws exception if message can not be sent
-        public static async Task SendMessageAsync(string token, object msg) {
+        public static async Task SendMessageAsync(string token, object msg, string uri) {
             // serialize method parameters to JSON
             var content = JsonConvert.SerializeObject(msg);
 
@@ -106,7 +62,7 @@ namespace IRTicker {
                 // set token in authorization header
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 // send message to API
-                var response = await client.PostAsync("https://slack.com/api/users.profile.set", httpContent).ConfigureAwait(continueOnCapturedContext: false);
+                var response = await client.PostAsync(uri, httpContent).ConfigureAwait(continueOnCapturedContext: false);
                 // fetch response from API
                 var responseJson = await response.Content.ReadAsStringAsync();
 
@@ -125,5 +81,58 @@ namespace IRTicker {
                 Debug.Print(DateTime.Now + " - exception when trying to do Slack API stuff.  Probably network down? - " + ex.Message);
             }
         }
+
+        public class SlackProfile
+        {
+            public SlackStatus profile { get; set; }
+        }
+
+        public class SlackProfile_noname
+        {
+            public SlackStatus_noname profile { get; set; }
+        }
+
+        public class SlackStatus
+        {
+            public string status_text { get; set; }
+            public string status_emoji { get; set; }
+            public long status_expiration { get; set; }
+            public string display_name { get; set; }
+        }
+
+        public class SlackStatus_noname
+        {
+            public string status_text { get; set; }
+            public string status_emoji { get; set; }
+            public long status_expiration { get; set; }
+        }
+
+        // reponse from message methods
+        public class SlackMessageResponse
+        {
+            public bool ok { get; set; }
+            public string error { get; set; }
+            public string channel { get; set; }
+            public string ts { get; set; }
+        }
+
+        // a slack message
+        public class SlackMessage
+        {
+            public string channel { get; set; }
+            public string text { get; set; }
+            public string icon_url { get; set; }
+            public SlackAttachment[] attachments { get; set; }
+        }
+
+        // a slack message attachment
+        public class SlackAttachment
+        {
+            public string fallback { get; set; }
+            public string text { get; set; }
+            public string image_url { get; set; }
+            public string color { get; set; }
+        }
+
     }
 }

@@ -562,5 +562,77 @@ namespace IRTicker.Properties {
                 this["LoanSlushEncoded_Coinbase"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TrigonXToken {
+            get {
+                return ((string)(this["TrigonXToken"]));
+            }
+            set {
+                this["TrigonXToken"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ETHWalletAddress {
+            get {
+                return ((string)(this["ETHWalletAddress"]));
+            }
+            set {
+                this["ETHWalletAddress"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LoanSlushEncoded_IROTCMetaMask {
+            get {
+                return ((string)(this["LoanSlushEncoded_IROTCMetaMask"]));
+            }
+            set {
+                this["LoanSlushEncoded_IROTCMetaMask"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SlackBotToken {
+            get {
+                return ((string)(this["SlackBotToken"]));
+            }
+            set {
+                this["SlackBotToken"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SlackBotChannel {
+            get {
+                return ((string)(this["SlackBotChannel"]));
+            }
+            set {
+                this["SlackBotChannel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GDriveFolder_BalSettings {
+            get {
+                return ((string)(this["GDriveFolder_BalSettings"]));
+            }
+            set {
+                this["GDriveFolder_BalSettings"] = value;
+            }
+        }
     }
 }

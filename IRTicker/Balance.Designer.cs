@@ -54,9 +54,9 @@ namespace IRTicker
             // 
             // BalReload_button
             // 
-            this.BalReload_button.Location = new System.Drawing.Point(244, 12);
+            this.BalReload_button.Location = new System.Drawing.Point(230, 10);
             this.BalReload_button.Name = "BalReload_button";
-            this.BalReload_button.Size = new System.Drawing.Size(115, 23);
+            this.BalReload_button.Size = new System.Drawing.Size(104, 23);
             this.BalReload_button.TabIndex = 1;
             this.BalReload_button.Text = "Reload";
             this.BalReload_button.UseVisualStyleBackColor = true;
@@ -76,9 +76,9 @@ namespace IRTicker
             // 
             // BalCopyForSlack_button
             // 
-            this.BalCopyForSlack_button.Location = new System.Drawing.Point(370, 12);
+            this.BalCopyForSlack_button.Location = new System.Drawing.Point(340, 10);
             this.BalCopyForSlack_button.Name = "BalCopyForSlack_button";
-            this.BalCopyForSlack_button.Size = new System.Drawing.Size(115, 23);
+            this.BalCopyForSlack_button.Size = new System.Drawing.Size(104, 23);
             this.BalCopyForSlack_button.TabIndex = 3;
             this.BalCopyForSlack_button.Text = "Copy for Slack";
             this.BalCopyForSlack_button.UseVisualStyleBackColor = true;
@@ -86,11 +86,11 @@ namespace IRTicker
             // 
             // BalSettings_button
             // 
-            this.BalSettings_button.Location = new System.Drawing.Point(495, 12);
+            this.BalSettings_button.Location = new System.Drawing.Point(450, 10);
             this.BalSettings_button.Name = "BalSettings_button";
-            this.BalSettings_button.Size = new System.Drawing.Size(79, 23);
+            this.BalSettings_button.Size = new System.Drawing.Size(104, 23);
             this.BalSettings_button.TabIndex = 4;
-            this.BalSettings_button.Text = "Settings";
+            this.BalSettings_button.Text = "Settings...";
             this.BalSettings_button.UseVisualStyleBackColor = true;
             this.BalSettings_button.Click += new System.EventHandler(this.BalSettings_button_Click);
             // 

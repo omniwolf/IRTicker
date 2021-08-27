@@ -80,6 +80,7 @@
             this.LoadingPanel = new System.Windows.Forms.Panel();
             this.GIFLabel = new System.Windows.Forms.Label();
             this.Main = new System.Windows.Forms.Panel();
+            this.Balance_button = new System.Windows.Forms.Button();
             this.cryptoFees_groupBox = new System.Windows.Forms.GroupBox();
             this.cryptoFees_Panel = new System.Windows.Forms.Panel();
             this.BTC_LastBlock_Time_label = new System.Windows.Forms.Label();
@@ -528,7 +529,6 @@
             this.IRTickerTT_avgPrice = new System.Windows.Forms.ToolTip(this.components);
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
             this.IRT_notification = new System.Windows.Forms.NotifyIcon(this.components);
-            this.Balance_button = new System.Windows.Forms.Button();
             this.Settings.SuspendLayout();
             this.IRAccountSettings_groupBox.SuspendLayout();
             this.SlackSettings_groupBox.SuspendLayout();
@@ -1175,6 +1175,17 @@
             this.Main.Size = new System.Drawing.Size(585, 843);
             this.Main.TabIndex = 5;
             this.Main.Visible = false;
+            // 
+            // Balance_button
+            // 
+            this.Balance_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Balance_button.Location = new System.Drawing.Point(332, 810);
+            this.Balance_button.Name = "Balance_button";
+            this.Balance_button.Size = new System.Drawing.Size(75, 23);
+            this.Balance_button.TabIndex = 18;
+            this.Balance_button.Text = "Balance²";
+            this.Balance_button.UseVisualStyleBackColor = true;
+            this.Balance_button.Click += new System.EventHandler(this.Balance_button_Click);
             // 
             // cryptoFees_groupBox
             // 
@@ -6688,25 +6699,14 @@
             this.IRT_notification.Icon = ((System.Drawing.Icon)(resources.GetObject("IRT_notification.Icon")));
             this.IRT_notification.Text = "IR Ticker";
             // 
-            // Balance_button
-            // 
-            this.Balance_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Balance_button.Location = new System.Drawing.Point(332, 810);
-            this.Balance_button.Name = "Balance_button";
-            this.Balance_button.Size = new System.Drawing.Size(75, 23);
-            this.Balance_button.TabIndex = 18;
-            this.Balance_button.Text = "Balance²";
-            this.Balance_button.UseVisualStyleBackColor = true;
-            this.Balance_button.Click += new System.EventHandler(this.Balance_button_Click);
-            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(584, 841);
             this.Controls.Add(this.Main);
-            this.Controls.Add(this.IRAccount_panel);
             this.Controls.Add(this.Settings);
+            this.Controls.Add(this.IRAccount_panel);
             this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.OTCHelper);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

@@ -256,11 +256,12 @@ namespace IRTicker
         /// 
         /// </summary>
         /// <returns></returns>
-        private async Task<string> GetB2C2(string token) {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://api.b2c2.net/balance/");
+        private async Task<string> GetWebData(string uri, string token = "") {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
             request.UserAgent = "IRTicker";
-            request.Headers["Authorization"] = "Token " + token;
+
+            if (!string.IsNullOrEmpty(token)) request.Headers["Authorization"] = "Token " + token;  // both trigon and B2C2 use the same thing, i guess this is coinroutes
 
             try {
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
@@ -306,7 +307,7 @@ namespace IRTicker
                 Platform_comboBox_SelectedIndexChanged(null, null);  // revert back to IR
                 return;
             }
-            Task<string> res = GetB2C2(Properties.Settings.Default.B2C2Token);
+            Task<string> res = GetWebData("https://api.b2c2.net/balance/", Properties.Settings.Default.B2C2Token);
 
             if (!masterBalanceDict.ContainsKey(platformName))
                 masterBalanceDict.Add(platformName, new Dictionary<string, BalanceData>());
@@ -496,6 +497,9 @@ namespace IRTicker
                 case "Coinbase":
                     Properties.Settings.Default.LoanSlushEncoded_Coinbase = loanSlushEncoded;
                     break;
+                case "IROTC MetaMask":
+                    Properties.Settings.Default.LoanSlushEncoded_IROTCMetaMask = loanSlushEncoded;
+                    break;
             }
 
             Properties.Settings.Default.Save();
@@ -534,7 +538,7 @@ namespace IRTicker
 
         // copies to clipboard some text that can be pasted into slack
         // refresh
-        private void CopyForSlack(string platformName) {
+        private string CopyForSlack(string platformName) {
             if (masterBalanceDict.ContainsKey(platformName)) {
 
                 Dictionary<string, BalanceData> BalancesDict = masterBalanceDict[platformName];
@@ -594,7 +598,7 @@ namespace IRTicker
                     Color OutByAlertColour = DetermineOutByColour(currencyData.Key, BalancesDict[currencyData.Key].OutBy, BalancesDict[currencyData.Key].Slush);
 
                     if (OutByAlertColour == Color.Black) slackString += " :ok:";
-                    else if (OutByAlertColour == Color.Green) slackString += " :white_tick:";
+                    else if (OutByAlertColour == Color.Green) slackString += " :white_check_mark:";
                     else if (OutByAlertColour == Color.Red) slackString += " :exclamation:";
                     else if (OutByAlertColour == Color.Purple) slackString += " :male-detective:";
                     else slackString += " :warning:";
@@ -603,7 +607,9 @@ namespace IRTicker
                 }
                 //Debug.Print("copy for slack: " + slackString);
                 Clipboard.SetText(slackString);
+                return slackString;
             }
+            return "";
         }
 
         private Color DetermineOutByColour(string currency, decimal OutBy, decimal slush) {
@@ -613,13 +619,15 @@ namespace IRTicker
 
                 decimal value = 0;
                 if (CryptoPairs.ContainsKey(pair)) {
-                    value = OutBy * (CryptoPairs[pair].CurrentLowestOfferPrice - CryptoPairs[pair].CurrentHighestBidPrice);
+                    value = OutBy * ((CryptoPairs[pair].CurrentLowestOfferPrice + CryptoPairs[pair].CurrentHighestBidPrice) / 2);
                 }
                 else if (!isCrypto) value = OutBy;
                 else return Color.Orange;
 
                 if (isCrypto && (slush > 0) && (OutBy < 0)) {  // for crypto we're OK if there's slush and the crypto outBy is negative up to 50% of the slush - this is expected due to withdrawal fees
-                    if (OutBy < (slush * -0.5M)) return Color.Purple;  // be alert, not alarmed
+                    if (OutBy < (slush * -1)) return Color.Red;
+                    else if (OutBy < (slush * -0.5M)) return Color.Purple;  // be alert, not alarmed
+                    else return Color.Black;  // we're down a bit, but have more than half the slush still, so just chill.  no need for red
                 }
                 else {  // it's not crypto, or slush is 0
                     if (value == 0) return Color.Green;
@@ -686,18 +694,21 @@ namespace IRTicker
             }
             catch (Exception ex) {
                 Debug.Print("Failed to parse Coinbase web response: " + ex.Message);
+                Debug.Print("Response: " + response);
                 return null;
             }
 
             foreach (CoinbaseAccountResponse currency in responseJson) {
-                if (DCE_IR.SecondaryCurrencyList.Contains(currency.currency) || DCE_IR.PrimaryCurrencyList.Contains(currency.currency)) {
+                string curr = currency.currency;
+                if (curr == "BTC") curr = "XBT";
+                if (DCE_IR.SecondaryCurrencyList.Contains(curr) || DCE_IR.PrimaryCurrencyList.Contains(curr)) {
                     if (decimal.TryParse(currency.balance, out decimal balance)) {
 
                        Account tempAccount = new Account();
-                        if (Enum.TryParse(currency.currency, out CurrencyCode IRCurrency)) {
+                        if (Enum.TryParse(curr, out CurrencyCode IRCurrency)) {
                             tempAccount.CurrencyCode = IRCurrency;
                         }
-                        else Debug.Print("Could not parse " + currency.currency + " in Coinbase to an IR currency");
+                        else Debug.Print("Could not parse " + curr + " in Coinbase to an IR currency");
                         if (decimal.TryParse(currency.available, out decimal parseAvailable)) {
                             tempAccount.AvailableBalance = parseAvailable;
                         }
@@ -710,15 +721,93 @@ namespace IRTicker
                         if (currency.trading_enabled) tempAccount.AccountStatus = AccountStatus.Active;
                         else tempAccount.AccountStatus = AccountStatus.Inactive;
 
-                        CoinbaseBalances.Add(currency.currency, tempAccount);
+                        CoinbaseBalances.Add(curr, tempAccount);
                     }
                 }
             }
             return CoinbaseBalances;
         }
 
+        private async void DrawMetaMask() {
+            string platformName = "IROTC MetaMask";
+            if (string.IsNullOrEmpty(Properties.Settings.Default.ETHWalletAddress)) {
+                balSetting_form = new BalSettings();
+                balSetting_form.Show();
+                Platform_comboBox.SelectedIndex = 0;
+                Platform_comboBox_SelectedIndexChanged(null, null);  // revert back to IR
+                return;
+            }
+            string uri = "https://api.ethplorer.io/getAddressInfo/" + Properties.Settings.Default.ETHWalletAddress + "?apiKey=freekey";
+            Task<string> responseTask = GetWebData(uri);
 
-        private async void Platform_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            if (!masterBalanceDict.ContainsKey(platformName))
+                masterBalanceDict.Add(platformName, new Dictionary<string, BalanceData>());
+
+            masterBalanceDict[platformName].Clear();
+
+            ClearDynamicRows(DCE_IR.SecondaryCurrencyList);
+            ClearDynamicRows(DCE_IR.PrimaryCurrencyList);
+            LoanSlushDecode(Properties.Settings.Default.LoanSlushEncoded_IROTCMetaMask, platformName);
+
+            string MMRes = await responseTask;
+
+            // now to parse the response.
+            if (string.IsNullOrEmpty(MMRes)) {
+                TotalBalDict.FirstOrDefault().Value.Text = "Failed to pull ETH wallet data";
+            }
+            else {
+                Dictionary<string, Account> ETHBalances = ParseETHWalletResponse(MMRes);
+                if (null == ETHBalances) TotalBalDict.FirstOrDefault().Value.Text = "Failed to pull ETH wallet data";
+                else {
+                    DrawDynamicRows_NonIR(DCE_IR.SecondaryCurrencyList, ETHBalances, false, platformName);
+                    DrawDynamicRows_NonIR(DCE_IR.PrimaryCurrencyList, ETHBalances, true, platformName);
+                }
+            }
+
+        }
+
+        private Dictionary<string, Account> ParseETHWalletResponse(string response) {
+
+            Dictionary<string, Account> ETHBalances = new Dictionary<string, Account>();
+            ETHWallet jsonETHBalances;
+            try {
+                jsonETHBalances = JsonConvert.DeserializeObject<ETHWallet>(response);
+            }
+            catch (Exception ex) {
+                Debug.Print("failed to parse eth wallet data: " + ex.Message);
+                return null;
+            }
+
+            // first grab the ETH balance
+            Account ethAccount = new Account();
+            ethAccount.CurrencyCode = CurrencyCode.Eth;
+            ethAccount.AccountStatus = AccountStatus.Active;
+            ethAccount.TotalBalance = Convert.ToDecimal(jsonETHBalances.ETH.balance);
+            ETHBalances.Add("ETH", ethAccount);
+
+            foreach (Token tok in jsonETHBalances.tokens) {
+                Account tokAccount = new Account();
+                if (Enum.TryParse(tok.tokenInfo.symbol, out CurrencyCode currencyCode)) {
+                    tokAccount.CurrencyCode = currencyCode;
+                }
+                else Debug.Print("Couldn't parse " + tok.tokenInfo.symbol + " in ETHWallet for " + tok.tokenInfo.symbol);
+
+                if (long.TryParse(tok.tokenInfo.decimals, out long decimalsLong)) {
+                    double bal = tok.balance / Math.Pow(10, decimalsLong);
+                    tokAccount.TotalBalance = Convert.ToDecimal(bal);
+                }
+                else Debug.Print("Couldn't parse " + tok.tokenInfo.decimals + " in ETHWallet for " + tok.tokenInfo.symbol);
+
+                tokAccount.AccountStatus = AccountStatus.Active;
+                ETHBalances.Add(tok.tokenInfo.symbol, tokAccount);
+            }
+
+            return ETHBalances;
+        }
+
+
+
+            private async void Platform_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
             // platform hub
             CryptoPairs = await GetCryptoPairs();
             switch (Platform_comboBox.SelectedItem.ToString()) {
@@ -737,6 +826,16 @@ namespace IRTicker
                 case "Coinbase":
                     SaveLoanSlush = false;
                     DrawCoinbase();
+                    SaveLoanSlush = true;
+                    break;
+
+                case "TrigonX":
+                    string res = await GetWebData("https://trading.trigonx.com/otc/api/customer/", Properties.Settings.Default.TrigonXToken);
+                    break;
+
+                case "IROTC MetaMask":
+                    SaveLoanSlush = false;
+                    DrawMetaMask();
                     SaveLoanSlush = true;
                     break;
             }
@@ -765,9 +864,92 @@ namespace IRTicker
             public bool trading_enabled { get; set; }
         }
 
+        public class Price
+        {
+            public double rate { get; set; }
+            public double diff { get; set; }
+            public double diff7d { get; set; }
+            public int ts { get; set; }
+            public double marketCapUsd { get; set; }
+            public double availableSupply { get; set; }
+            public double volume24h { get; set; }
+            public double diff30d { get; set; }
+            public double volDiff1 { get; set; }
+            public double volDiff7 { get; set; }
+            public double volDiff30 { get; set; }
+            public string currency { get; set; }
+        }
 
-        private void BalCopyForSlack_button_Click(object sender, EventArgs e) {
-            CopyForSlack(Platform_comboBox.SelectedItem.ToString());
+        public class ETH
+        {
+            public Price price { get; set; }
+            public double balance { get; set; }
+            public string rawBalance { get; set; }
+        }
+
+        public class TokenInfo
+        {
+            public string address { get; set; }
+            public string name { get; set; }
+            public string decimals { get; set; }
+            public string symbol { get; set; }
+            public string totalSupply { get; set; }
+            public string owner { get; set; }
+            public int lastUpdated { get; set; }
+            public int slot { get; set; }
+            public int issuancesCount { get; set; }
+            public int holdersCount { get; set; }
+            public string image { get; set; }
+            public string website { get; set; }
+            public string telegram { get; set; }
+            public string twitter { get; set; }
+            public string coingecko { get; set; }
+            public Price price { get; set; }
+            public List<string> publicTags { get; set; }
+            public string description { get; set; }
+            public string reddit { get; set; }
+            public int? ethTransfersCount { get; set; }
+            public string facebook { get; set; }
+        }
+
+        public class Token
+        {
+            public TokenInfo tokenInfo { get; set; }
+            public long balance { get; set; }
+            public int totalIn { get; set; }
+            public int totalOut { get; set; }
+            public string rawBalance { get; set; }
+        }
+
+        public class ETHWallet
+        {
+            public string address { get; set; }
+            public ETH ETH { get; set; }
+            public int countTxs { get; set; }
+            public List<Token> tokens { get; set; }
+        }
+
+
+        private async void BalCopyForSlack_button_Click(object sender, EventArgs e) {
+            string message = CopyForSlack(Platform_comboBox.SelectedItem.ToString());
+
+
+            if (string.IsNullOrEmpty(Properties.Settings.Default.SlackBotToken) || 
+                string.IsNullOrEmpty(Properties.Settings.Default.SlackBotChannel)) {
+                balSetting_form = new BalSettings();
+                balSetting_form.Show();
+                return;
+            }
+
+            Slack slack = new Slack();
+
+            var smsg = new Slack.SlackMessage {
+                channel = Properties.Settings.Default.SlackBotChannel,
+                text = message,
+                icon_url = "https://s3-ap-southeast-2.amazonaws.com/independentreserve/media/IRTicker-avatar2.png"
+            };
+
+            await Slack.SendMessageAsync(Properties.Settings.Default.SlackBotToken, smsg, "https://slack.com/api/chat.postMessage");
         }
 
         private void BalSettings_button_Click(object sender, EventArgs e) {
