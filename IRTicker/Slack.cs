@@ -48,7 +48,7 @@ namespace IRTicker {
 
         // sends a slack message asynchronous
         // throws exception if message can not be sent
-        public static async Task SendMessageAsync(string token, object msg, string uri) {
+        public static async Task<SlackMessageResponse> SendMessageAsync(string token, object msg, string uri) {
             // serialize method parameters to JSON
             var content = JsonConvert.SerializeObject(msg);
 
@@ -71,15 +71,22 @@ namespace IRTicker {
                     JsonConvert.DeserializeObject<SlackMessageResponse>(responseJson);
 
                 // throw exception if sending failed
-                if ((messageResponse == null) || (messageResponse.ok == false)) {
+                if (null == messageResponse) {
                     throw new Exception(
                         "Failed to send Slack message."
                     );
                 }
+                if (messageResponse.ok == false) {
+                    throw new Exception(
+                        "Slack message failed: " + messageResponse.error);
+                }
+
+                return messageResponse;
             }
             catch (Exception ex) {
                 Debug.Print(DateTime.Now + " - exception when trying to do Slack API stuff.  Probably network down? - " + ex.Message);
             }
+            return null;
         }
 
         public class SlackProfile
@@ -123,6 +130,7 @@ namespace IRTicker {
             public string text { get; set; }
             public string icon_url { get; set; }
             public SlackAttachment[] attachments { get; set; }
+            public string thread_ts { get; set; }
         }
 
         // a slack message attachment

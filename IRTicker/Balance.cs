@@ -12,7 +12,7 @@ using System.IO;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using IndependentReserve.DotNetClientApi.Data;
-
+using System.Globalization;
 
 namespace IRTicker
 {
@@ -36,6 +36,9 @@ namespace IRTicker
         bool SaveLoanSlush = true;  // false if we're clearing stuff and don't want to make changes to the saved entries.  Taking bets on me having to remove this auto-save nonsense and build a save button again
 
         BalSettings balSetting_form;
+
+        string SlackMessageTS = "";  // stores the most recent slack message identifier, we use this to thread the balance messages
+        DateTime LastSlackThread = new DateTime(2000,1,1);  // last time we sent slack message.  year 2000 is as good as null.
 
         public Balance(DCE _dce_IR, PrivateIR _pIR) {
             InitializeComponent();
@@ -799,7 +802,14 @@ namespace IRTicker
                 else Debug.Print("Couldn't parse " + tok.tokenInfo.decimals + " in ETHWallet for " + tok.tokenInfo.symbol);
 
                 tokAccount.AccountStatus = AccountStatus.Active;
-                ETHBalances.Add(tok.tokenInfo.symbol, tokAccount);
+                if (null != tok.tokenInfo.symbol) {
+                    if (!ETHBalances.ContainsKey(tok.tokenInfo.symbol)) {
+                        ETHBalances.Add(tok.tokenInfo.symbol, tokAccount);
+                    }
+                    else {
+                        Debug.Print("hmm looks like we have 2 tokens with the same symbol in this ETH wallet: " + tok.tokenInfo.symbol + ".  Will ignore duplicates");
+                    }
+                }
             }
 
             return ETHBalances;
@@ -904,7 +914,7 @@ namespace IRTicker
             public string telegram { get; set; }
             public string twitter { get; set; }
             public string coingecko { get; set; }
-            public Price price { get; set; }
+            public object price { get; set; }
             public List<string> publicTags { get; set; }
             public string description { get; set; }
             public string reddit { get; set; }
@@ -915,6 +925,7 @@ namespace IRTicker
         public class Token
         {
             public TokenInfo tokenInfo { get; set; }
+            [JsonConverter(typeof(JsonExponentialConverter))]
             public long balance { get; set; }
             public int totalIn { get; set; }
             public int totalOut { get; set; }
@@ -932,7 +943,7 @@ namespace IRTicker
 
         private async void BalCopyForSlack_button_Click(object sender, EventArgs e) {
             string message = CopyForSlack(Platform_comboBox.SelectedItem.ToString());
-
+            string platform = (Platform_comboBox.SelectedItem.ToString()).Replace(" ", "%20");
 
             if (string.IsNullOrEmpty(Properties.Settings.Default.SlackBotToken) || 
                 string.IsNullOrEmpty(Properties.Settings.Default.SlackBotChannel)) {
@@ -943,18 +954,78 @@ namespace IRTicker
 
             Slack slack = new Slack();
 
-            var smsg = new Slack.SlackMessage {
-                channel = Properties.Settings.Default.SlackBotChannel,
-                text = message,
-                icon_url = "https://s3-ap-southeast-2.amazonaws.com/independentreserve/media/IRTicker-avatar2.png"
-            };
+            if (LastSlackThread.Date < DateTime.Now.Date) {  // start a new thread
+                var ParentMessage = new Slack.SlackMessage {
+                    channel = Properties.Settings.Default.SlackBotChannel,
+                    text = "Balance check :thread:",
+                    icon_url = "https://s3-ap-southeast-2.amazonaws.com/independentreserve/media/IRTicker/IRTicker-avatar2.png"
+                };
+                Slack.SlackMessageResponse SlackResponse = await Slack.SendMessageAsync(Properties.Settings.Default.SlackBotToken, ParentMessage, "https://slack.com/api/chat.postMessage");
+                if (null == SlackResponse) {
+                    Debug.Print("Failed to send Slack thread message");
+                    return;
+                }
+                SlackMessageTS = SlackResponse.ts;
+                LastSlackThread = DateTime.Now;
+            }
 
-            await Slack.SendMessageAsync(Properties.Settings.Default.SlackBotToken, smsg, "https://slack.com/api/chat.postMessage");
+            if (!string.IsNullOrEmpty(SlackMessageTS)) {
+                var smsg = new Slack.SlackMessage {
+                    channel = Properties.Settings.Default.SlackBotChannel,
+                    text = message,
+                    icon_url = "https://s3-ap-southeast-2.amazonaws.com/independentreserve/media/IRTicker/" + platform + ".png",
+                    thread_ts = SlackMessageTS
+                };
+                await Slack.SendMessageAsync(Properties.Settings.Default.SlackBotToken, smsg, "https://slack.com/api/chat.postMessage");
+            }
+
+            DialogResult SaveToGDriveRes = MessageBox.Show("Save results to G drive?  This will overwrite any previously saved data for today" + Environment.NewLine + Environment.NewLine +
+                Properties.Settings.Default.GDriveFolder_BalSettings, "Save?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (SaveToGDriveRes == DialogResult.Yes) {
+
+                if (string.IsNullOrEmpty(Properties.Settings.Default.GDriveFolder_BalSettings)) {  // make sure we have GDrive settings
+
+                    balSetting_form = new BalSettings();
+                    balSetting_form.Show();
+                    return;
+                }
+
+                string Filename = Properties.Settings.Default.GDriveFolder_BalSettings + "\\OTC-balances-" + DateTime.Now.ToString("yyyy-MM-dd");
+
+                try {
+                    File.WriteAllText(Filename, message);
+                }
+                catch (Exception ex) {
+                    Debug.Print("Couldn't write file.. " + ex.Message);
+                    MessageBox.Show("Failed to write gdrive file to: " + Filename);
+                }
+            }
         }
 
         private void BalSettings_button_Click(object sender, EventArgs e) {
             balSetting_form = new BalSettings();
             balSetting_form.Show();
+        }
+    }
+
+    public class JsonExponentialConverter : JsonConverter
+    {
+        public override bool CanRead { get { return true; } }
+        public override bool CanConvert(Type objectType) {
+            return true;
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
+            serializer.Serialize(writer, value);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
+            long amount = 0;
+            if (long.TryParse(reader.Value.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out amount)) {
+                return amount;
+            }
+            return amount;
         }
     }
 }

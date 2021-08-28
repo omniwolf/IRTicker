@@ -26,9 +26,7 @@ namespace IRTicker
             ApiKey = inAPIKey;
             UnsignedSignature = inAPISecret;
             PassPhrase = inPassPhrase;
-            //ApiKey = "ced7942858a6f1e5608b594519cc94de";
-            //UnsignedSignature = "yRoYqJua+flrXSiLckVwAqAJZnatOCPHXsfk0EFq9RwM4ztaxLqzYL9nrFnmUz0cMaqAFli8/z8ozfBePvBwDg==";
-            //Passphrase = "mh3ka9tgigg";
+
             var httpRequestMessage = BuildHTTPRequest("https://api.exchange.coinbase.com", "/accounts", "", HttpMethod.Get);
             if (null == httpRequestMessage) return "";
             HttpResponseMessage httpResponseMessage;
@@ -51,7 +49,6 @@ namespace IRTicker
                     : new StringContent(contentBody, Encoding.UTF8, "application/json")
             };
             double timeStamp = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
-           // var timeStamp = DateTime.UtcNow.ToTimeStamp();
 
             if (string.IsNullOrEmpty(ApiKey) || string.IsNullOrEmpty(UnsignedSignature) || string.IsNullOrEmpty(PassPhrase)) {
                 return null;
