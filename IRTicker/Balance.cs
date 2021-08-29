@@ -327,13 +327,13 @@ namespace IRTicker
             }
             else {
                 Dictionary<string, Account> B2C2Balances = parseB2C2Response(B2C2res);
-                DrawDynamicRows_NonIR(DCE_IR.SecondaryCurrencyList, B2C2Balances, false, platformName);
-                DrawDynamicRows_NonIR(DCE_IR.PrimaryCurrencyList, B2C2Balances, true, platformName);
+                DrawDynamicRows(DCE_IR.SecondaryCurrencyList, B2C2Balances, false, platformName);
+                DrawDynamicRows(DCE_IR.PrimaryCurrencyList, B2C2Balances, true, platformName);
             }
         }
 
 
-        private void DrawDynamicRows_NonIR(List<string> Currencies, Dictionary<string, Account> Balances, bool crypto, string platformName) {
+        private void DrawDynamicRows(List<string> Currencies, Dictionary<string, Account> Balances, bool crypto, string platformName) {
             foreach (string curr in Currencies) {
                 if (!masterBalanceDict[platformName].ContainsKey(curr))
                     masterBalanceDict[platformName].Add(curr, new BalanceData());  // at this point we should already have the loan and slush data in here
@@ -373,7 +373,8 @@ namespace IRTicker
                     // colour the out by text to give a quick idea where we're at
                     OutByDict[curr].ForeColor = DetermineOutByColour(curr, outby, SlushDec);
 
-                    OutByDict[curr].Text = Utilities.FormatValue(outby);
+                    if (crypto) OutByDict[curr].Text = Utilities.FormatValue(outby);
+                    else OutByDict[curr].Text = Utilities.FormatValue(outby, 2, false);
                     masterBalanceDict[platformName][curr].OutBy = outby;
                 }
             }
@@ -466,8 +467,8 @@ namespace IRTicker
 
             Dictionary<string, Account> pAccounts = await meeTask;  // the idea here is we pause until this task is done
 
-            DrawDynamicRows_NonIR(DCE_IR.SecondaryCurrencyList, pAccounts, false, platformName);
-            DrawDynamicRows_NonIR(DCE_IR.PrimaryCurrencyList, pAccounts, true, platformName);
+            DrawDynamicRows(DCE_IR.SecondaryCurrencyList, pAccounts, false, platformName);
+            DrawDynamicRows(DCE_IR.PrimaryCurrencyList, pAccounts, true, platformName);
         }
 
         private void LoanSlush_TextChanged(object sender, EventArgs e) {
@@ -539,52 +540,62 @@ namespace IRTicker
             Platform_comboBox_SelectedIndexChanged(null, null);
         }
 
-        // copies to clipboard some text that can be pasted into slack
-        // refresh
-        private string CopyForSlack(string platformName) {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="platformName"></param>
+        /// <returns>Item1 = string for slack, Item2 = string for .txt file</returns>
+        private Tuple<string, string> GenerateBalanceStrings(string platformName) {
             if (masterBalanceDict.ContainsKey(platformName)) {
 
                 Dictionary<string, BalanceData> BalancesDict = masterBalanceDict[platformName];
-                switch (platformName) {
-                    case "Independent Reserve": platformName = ":ir:";
+                string slackPlatformName = platformName;
+                switch (slackPlatformName) {
+                    case "Independent Reserve":
+                        slackPlatformName = ":ir:";
                         break;
-                    case "TrigonX": platformName = ":trigon:";
+                    case "TrigonX":
+                        slackPlatformName = ":trigon:";
                         break;
                     default:
-                        platformName = "`" + platformName + "`";
+                        slackPlatformName = "`" + slackPlatformName + "`";
                         break;
                 }
                 bool reachedCryptoYet = false;  // hack to let put in an empty line in between cryptos and fiat.  Only will work if fiat is all on the top as we cycle through the dictionary
-                string slackString = "*Platform:* " + platformName + Environment.NewLine + Environment.NewLine;
+                string slackString = "*Platform:* " + slackPlatformName + Environment.NewLine + Environment.NewLine;
+                string TXTString = "Platform: " + platformName + Environment.NewLine + Environment.NewLine;
                 foreach (KeyValuePair<string, BalanceData> currencyData in BalancesDict) {
                     if (!BalancesDict[currencyData.Key].isActive) continue;  // don't print if this isn't a valid currency for this platform
                     string currency = currencyData.Key;
                     switch (currency) {  // some cryptos have emojis, let's use them
-                        case "XBT": currency = ":xbt:";
+                        case "XBT": currency = ":xbt:   ";
                             break;
-                        case "ETH": currency = ":eth:";
+                        case "ETH": currency = ":eth:   ";
                             break;
-                        case "USDT": currency = ":usdt:";
+                        case "USDT": currency = ":usdt:   ";
                             break;
-                        case "USDC": currency = ":usdc:";
+                        case "USDC": currency = ":usdc:   ";
                             break;
-                        case "BCH": currency = ":bch:";
+                        case "BCH": currency = ":bch:   ";
                             break;
-                        case "AUD": currency = ":flag-au:";
+                        case "AUD": currency = ":flag-au:   ";
                             break;
-                        case "USD": currency = ":flag-us:";
+                        case "USD": currency = ":flag-us:   ";
                             break;
-                        case "NZD": currency = ":flag-nz:";
+                        case "NZD": currency = ":flag-nz:   ";
                             break;
-                        case "SGD": currency = ":flag-sg:";
+                        case "SGD": currency = ":flag-sg:   ";
                             break;
-                        case "DOGE": currency = ":dog:";
+                        case "DOGE": currency = ":dog:   ";
                             break;
-                        case "UNI": currency = ":unicorn_face:";
+                        case "UNI": currency = ":unicorn_face:   ";
                             break;
-                        case "BAT": currency = ":bat:";
+                        case "BAT": currency = ":bat:   ";
                             break;
-                        case "PMGT": currency = ":golden:";
+                        case "PMGT": currency = ":golden:   ";
+                            break;
+                        default:
+                            if (currency.Length == 3) currency += " ";
                             break;
                     }
 
@@ -593,26 +604,36 @@ namespace IRTicker
                         reachedCryptoYet = true;
                     }
 
-                    slackString += currency + "  Total balance: " + Utilities.FormatValue(BalancesDict[currencyData.Key].TotalBalance) + "  |  " +
-                        "Loan: " + Utilities.FormatValue(BalancesDict[currencyData.Key].Loan) + "  |  " +
-                        "Slush: " + Utilities.FormatValue(BalancesDict[currencyData.Key].Slush) + "  |  " +
+                    slackString += currency + "  Total balance: " + Utilities.FormatValue(BalancesDict[currencyData.Key].TotalBalance) + "  ";
+
+                    TXTString += currencyData.Key + "\tTotal balance: " + Utilities.FormatValue(BalancesDict[currencyData.Key].TotalBalance) + "\t|\t" +
+                        "Loan: " + Utilities.FormatValue(BalancesDict[currencyData.Key].Loan) + "\t|\t" +
+                        "Slush: " + Utilities.FormatValue(BalancesDict[currencyData.Key].Slush) + "\t|\t" +
                         "Out by: " + Utilities.FormatValue(BalancesDict[currencyData.Key].OutBy);
 
                     Color OutByAlertColour = DetermineOutByColour(currencyData.Key, BalancesDict[currencyData.Key].OutBy, BalancesDict[currencyData.Key].Slush);
 
-                    if (OutByAlertColour == Color.Black) slackString += " :ok:";
-                    else if (OutByAlertColour == Color.Green) slackString += " :white_check_mark:";
-                    else if (OutByAlertColour == Color.Red) slackString += " :exclamation:";
-                    else if (OutByAlertColour == Color.Purple) slackString += " :male-detective:";
+                    if (OutByAlertColour == Color.Black) slackString += "\t:ok:";
+                    else if (OutByAlertColour == Color.Green) slackString += "\t:white_check_mark:";
+                    else if (OutByAlertColour == Color.Red) slackString += "\t:exclamation:";
+                    else if (OutByAlertColour == Color.Purple) slackString += "\t:male-detective:";
                     else slackString += " :warning:";
 
+                    if (OutByAlertColour == Color.Black) TXTString += "\tOK";
+                    else if (OutByAlertColour == Color.Green) TXTString += "\tPerfect";
+                    else if (OutByAlertColour == Color.Red) TXTString += "\t!! Warning";
+                    else if (OutByAlertColour == Color.Purple) TXTString += "\tSlush needs topping up";
+                    else TXTString += "\tUnknown?";
+
                     slackString += Environment.NewLine;
+                    TXTString += Environment.NewLine;
                 }
                 //Debug.Print("copy for slack: " + slackString);
                 Clipboard.SetText(slackString);
-                return slackString;
+                TXTString += Environment.NewLine + Environment.NewLine;
+                return new Tuple<string, string>(slackString, TXTString);
             }
-            return "";
+            return new Tuple<string, string>("", "");
         }
 
         private Color DetermineOutByColour(string currency, decimal OutBy, decimal slush) {
@@ -676,8 +697,8 @@ namespace IRTicker
                 Dictionary<string, Account> CoinbaseBalances = ParseCoinbaseResponse(CoinbaseRes);
                 if (null == CoinbaseBalances) TotalBalDict.FirstOrDefault().Value.Text = "Failed to pull Coinbase data";
                 else {
-                    DrawDynamicRows_NonIR(DCE_IR.SecondaryCurrencyList, CoinbaseBalances, false, "Coinbase");
-                    DrawDynamicRows_NonIR(DCE_IR.PrimaryCurrencyList, CoinbaseBalances, true, "Coinbase");
+                    DrawDynamicRows(DCE_IR.SecondaryCurrencyList, CoinbaseBalances, false, "Coinbase");
+                    DrawDynamicRows(DCE_IR.PrimaryCurrencyList, CoinbaseBalances, true, "Coinbase");
                 }
             }
         }
@@ -762,8 +783,8 @@ namespace IRTicker
                 Dictionary<string, Account> ETHBalances = ParseETHWalletResponse(MMRes);
                 if (null == ETHBalances) TotalBalDict.FirstOrDefault().Value.Text = "Failed to pull ETH wallet data";
                 else {
-                    DrawDynamicRows_NonIR(DCE_IR.SecondaryCurrencyList, ETHBalances, false, platformName);
-                    DrawDynamicRows_NonIR(DCE_IR.PrimaryCurrencyList, ETHBalances, true, platformName);
+                    DrawDynamicRows(DCE_IR.SecondaryCurrencyList, ETHBalances, false, platformName);
+                    DrawDynamicRows(DCE_IR.PrimaryCurrencyList, ETHBalances, true, platformName);
                 }
             }
 
@@ -815,9 +836,95 @@ namespace IRTicker
             return ETHBalances;
         }
 
+        private async void BalCopyForSlack_button_Click(object sender, EventArgs e) {
+            Tuple<string, string> txtTuple = GenerateBalanceStrings(Platform_comboBox.SelectedItem.ToString());
+            string platform = Platform_comboBox.SelectedItem.ToString();
+            string platformURLEncoded = (Platform_comboBox.SelectedItem.ToString()).Replace(" ", "%20");
 
+            if (string.IsNullOrEmpty(Properties.Settings.Default.SlackBotToken) ||
+                string.IsNullOrEmpty(Properties.Settings.Default.SlackBotChannel)) {
+                balSetting_form = new BalSettings();
+                balSetting_form.Show();
+                return;
+            }
 
-            private async void Platform_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            Slack slack = new Slack();
+
+            if (LastSlackThread.Date < DateTime.Now.Date) {  // start a new thread
+                var ParentMessage = new Slack.SlackMessage {
+                    channel = Properties.Settings.Default.SlackBotChannel,
+                    text = "Balance check :thread:",
+                    icon_url = "https://s3-ap-southeast-2.amazonaws.com/independentreserve/media/IRTicker/IRTicker-avatar2.png"
+                };
+                Slack.SlackMessageResponse SlackResponse = await Slack.SendMessageAsync(Properties.Settings.Default.SlackBotToken, ParentMessage, "https://slack.com/api/chat.postMessage");
+                if (null == SlackResponse) {
+                    Debug.Print("Failed to send Slack thread message");
+                    return;
+                }
+                SlackMessageTS = SlackResponse.ts;
+                LastSlackThread = DateTime.Now;
+            }
+
+            if (!string.IsNullOrEmpty(SlackMessageTS)) {
+                var smsg = new Slack.SlackMessage {
+                    channel = Properties.Settings.Default.SlackBotChannel,
+                    text = txtTuple.Item1,
+                    icon_url = "https://s3-ap-southeast-2.amazonaws.com/independentreserve/media/IRTicker/" + platformURLEncoded + ".png",
+                    thread_ts = SlackMessageTS
+                };
+                await Slack.SendMessageAsync(Properties.Settings.Default.SlackBotToken, smsg, "https://slack.com/api/chat.postMessage");
+            }
+
+            DialogResult SaveToGDriveRes = MessageBox.Show("Save results to G drive?  This will overwrite any previously saved data for today" + Environment.NewLine + Environment.NewLine +
+                Properties.Settings.Default.GDriveFolder_BalSettings, "Save?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (SaveToGDriveRes == DialogResult.Yes) {
+
+                if (string.IsNullOrEmpty(Properties.Settings.Default.GDriveFolder_BalSettings)) {  // make sure we have GDrive settings
+
+                    balSetting_form = new BalSettings();
+                    balSetting_form.Show();
+                    return;
+                }
+
+                string Filename = Properties.Settings.Default.GDriveFolder_BalSettings + "\\OTC-balances-" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
+                // need to open the file, find out if this platform has been written yet.  If not we append, if it has, we start again?
+                // might be good to have a "check file" button that checks to make sure all platforms have bee written
+
+                if (File.Exists(Filename)) {
+                    string readText = File.ReadAllText(Filename);
+                    if (readText.Contains(platform)) {  // Today's file already has this platform, so we start again, even if it means overwriting all other platform results
+                        try {
+                            File.WriteAllText(Filename, txtTuple.Item2);
+                        }
+                        catch (Exception ex) {
+                            Debug.Print("Couldn't write file.. " + ex.Message);
+                            MessageBox.Show("Failed to write gdrive file to: " + Filename);
+                        }
+                    }
+                    else {  // it doesn't contain this platfrom, so we append
+                        try {
+                            File.AppendAllText(Filename, txtTuple.Item2, Encoding.UTF8);  // this doesn't append, it just overwrites??
+                        }
+                        catch (Exception ex) {
+                            Debug.Print("Couldn't append file.. " + ex.Message);
+                            MessageBox.Show("Failed to append to gdrive file: " + Filename);
+                        }
+                    }
+                }
+                else {  // else file not there, so let's create it
+                    try {
+                        File.WriteAllText(Filename, txtTuple.Item2);
+                    }
+                    catch (Exception ex) {
+                        Debug.Print("Couldn't write file.. " + ex.Message);
+                        MessageBox.Show("Failed to write gdrive file to: " + Filename);
+                    }
+                }
+            }
+        }
+
+        private async void Platform_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
             // platform hub
             CryptoPairs = await GetCryptoPairs();
             switch (Platform_comboBox.SelectedItem.ToString()) {
@@ -938,69 +1045,6 @@ namespace IRTicker
             public ETH ETH { get; set; }
             public int countTxs { get; set; }
             public List<Token> tokens { get; set; }
-        }
-
-
-        private async void BalCopyForSlack_button_Click(object sender, EventArgs e) {
-            string message = CopyForSlack(Platform_comboBox.SelectedItem.ToString());
-            string platform = (Platform_comboBox.SelectedItem.ToString()).Replace(" ", "%20");
-
-            if (string.IsNullOrEmpty(Properties.Settings.Default.SlackBotToken) || 
-                string.IsNullOrEmpty(Properties.Settings.Default.SlackBotChannel)) {
-                balSetting_form = new BalSettings();
-                balSetting_form.Show();
-                return;
-            }
-
-            Slack slack = new Slack();
-
-            if (LastSlackThread.Date < DateTime.Now.Date) {  // start a new thread
-                var ParentMessage = new Slack.SlackMessage {
-                    channel = Properties.Settings.Default.SlackBotChannel,
-                    text = "Balance check :thread:",
-                    icon_url = "https://s3-ap-southeast-2.amazonaws.com/independentreserve/media/IRTicker/IRTicker-avatar2.png"
-                };
-                Slack.SlackMessageResponse SlackResponse = await Slack.SendMessageAsync(Properties.Settings.Default.SlackBotToken, ParentMessage, "https://slack.com/api/chat.postMessage");
-                if (null == SlackResponse) {
-                    Debug.Print("Failed to send Slack thread message");
-                    return;
-                }
-                SlackMessageTS = SlackResponse.ts;
-                LastSlackThread = DateTime.Now;
-            }
-
-            if (!string.IsNullOrEmpty(SlackMessageTS)) {
-                var smsg = new Slack.SlackMessage {
-                    channel = Properties.Settings.Default.SlackBotChannel,
-                    text = message,
-                    icon_url = "https://s3-ap-southeast-2.amazonaws.com/independentreserve/media/IRTicker/" + platform + ".png",
-                    thread_ts = SlackMessageTS
-                };
-                await Slack.SendMessageAsync(Properties.Settings.Default.SlackBotToken, smsg, "https://slack.com/api/chat.postMessage");
-            }
-
-            DialogResult SaveToGDriveRes = MessageBox.Show("Save results to G drive?  This will overwrite any previously saved data for today" + Environment.NewLine + Environment.NewLine +
-                Properties.Settings.Default.GDriveFolder_BalSettings, "Save?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (SaveToGDriveRes == DialogResult.Yes) {
-
-                if (string.IsNullOrEmpty(Properties.Settings.Default.GDriveFolder_BalSettings)) {  // make sure we have GDrive settings
-
-                    balSetting_form = new BalSettings();
-                    balSetting_form.Show();
-                    return;
-                }
-
-                string Filename = Properties.Settings.Default.GDriveFolder_BalSettings + "\\OTC-balances-" + DateTime.Now.ToString("yyyy-MM-dd");
-
-                try {
-                    File.WriteAllText(Filename, message);
-                }
-                catch (Exception ex) {
-                    Debug.Print("Couldn't write file.. " + ex.Message);
-                    MessageBox.Show("Failed to write gdrive file to: " + Filename);
-                }
-            }
         }
 
         private void BalSettings_button_Click(object sender, EventArgs e) {
