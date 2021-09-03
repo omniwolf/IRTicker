@@ -634,5 +634,17 @@ namespace IRTicker.Properties {
                 this["GDriveFolder_BalSettings"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LoanSlushEncoded_TrigonX {
+            get {
+                return ((string)(this["LoanSlushEncoded_TrigonX"]));
+            }
+            set {
+                this["LoanSlushEncoded_TrigonX"] = value;
+            }
+        }
     }
 }

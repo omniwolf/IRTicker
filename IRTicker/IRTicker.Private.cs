@@ -19,7 +19,7 @@ namespace IRTicker {
         private string AccountSelectedCrypto = "XBT";
         private Task updateOBTask;
         private bool IRAccountsButtonJustClicked = true;  // true if the use has just clicked the IR Accounts button.  If true and GetAccounts fails, then we close the IR Accounts panel and head back to the Main panel.  If false and GetAccounts fails, we just do it silently
-        private AccAvgPrice _AccAvgPrice = null;
+        private AccAvgPrice AccAvgPrice_form = null;
 
         private void InitialiseAccountsPanel() {
             AccountOrderVolume_textbox.Enabled = true;
@@ -744,18 +744,16 @@ namespace IRTicker {
                 AccountPlaceOrder_button.Enabled = false;
                 AccountOrderVolume_textbox.Enabled = false;
                 AccountLimitPrice_textbox.Enabled = false;
-                if (oType == 2) {
+                if (oType == 2) {  // market baiter
 
                     // now ask if they want to start the avg price thingo
-                    if ((_AccAvgPrice == null) || !Application.OpenForms.OfType<AccAvgPrice>().Any()) {
-                        res = MessageBox.Show("Start recording the average order price?" + Environment.NewLine + Environment.NewLine +
-                            "This will open up the Average Price Calculator window and enable the auto update setting",
-                            "Average Price Calculator", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    res = MessageBox.Show("Start recording the average order price?" + Environment.NewLine + Environment.NewLine +
+                        "This will open up the Average Price Calculator window and enable the auto update setting",
+                        "Average Price Calculator", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-                        if (res == DialogResult.Yes) {
-                            _AccAvgPrice = new AccAvgPrice(DCEs["IR"], pIR, this, true, AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, AccountBuySell_listbox.SelectedIndex);
-                            _AccAvgPrice.Show();
-                        }
+                    if (res == DialogResult.Yes) {
+                        var _AccAvgPrice = new AccAvgPrice(DCEs["IR"], pIR, this, true, AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, AccountBuySell_listbox.SelectedIndex);
+                        _AccAvgPrice.Show();
                     }
 
                     AccountPlaceOrder_button.Size = new Size(170, 39);
@@ -984,20 +982,55 @@ namespace IRTicker {
             AccountOrderVolume_textbox.Text = pIR.accounts[AccountSelectedCrypto].AvailableBalance.ToString();
         }
         private void IRAccount_AvgPrice_Button_Click(object sender, EventArgs e) {
-            if ((_AccAvgPrice == null) || (!Application.OpenForms.OfType<AccAvgPrice>().Any())) {
-                _AccAvgPrice = new AccAvgPrice(DCEs["IR"], pIR, this, crypto: AccountSelectedCrypto, fiat: DCEs["IR"].CurrentSecondaryCurrency, direction: AccountBuySell_listbox.SelectedIndex);
-                _AccAvgPrice.Show();
-            }
-            else _AccAvgPrice.Focus();
+            var _AccAvgPrice = new AccAvgPrice(DCEs["IR"], pIR, this, crypto: AccountSelectedCrypto, fiat: DCEs["IR"].CurrentSecondaryCurrency, direction: AccountBuySell_listbox.SelectedIndex);
+            _AccAvgPrice.Show();
         }
 
         // I had a crash here once, can't reproduce it.  instance not set to an object or something, but I couldn't see what was wrong.
         // maybe i should check that cOrders isn't somehow null?
         public void SignalAveragePriceUpdate(Page<BankHistoryOrder> cOrders) {
             synchronizationContext.Post(new SendOrPostCallback(o => {
-                if (_AccAvgPrice != null) _AccAvgPrice.UpdatePrice((Page<BankHistoryOrder>)o);
+                foreach (Form frm in Application.OpenForms) {
+                    if (frm.Name == "AccAvgPrice") {
+                        ((AccAvgPrice)frm).UpdatePrice((Page<BankHistoryOrder>)o);
+                    }
+                }
             }), cOrders);
-            
+        }
+
+        public void RecalculateAvgPriceVariables(AccAvgPrice closingForm) {
+
+            // first, let's reset the pIR.earliestClosedOrderRequired - we want this to be the earliest start date that isn't the closing form's date
+            DateTime oldestDT = new DateTime(3000, 1, 1);  // if someone is still using this app in the year 3000, then I must have transcended time and space.  Congrats dude.
+            pIR.AvgPriceSelectedCrypto.Clear();
+            pIR.fiatCurrenciesSelected = new ConcurrentBag<string>();
+            foreach (Form frm in Application.OpenForms) {
+                if (frm.Name == "AccAvgPrice") {
+                    if ((null != closingForm) && ((AccAvgPrice)frm == closingForm)) continue;  // ignore the form that's closing
+
+                    if (((AccAvgPrice)frm).AccAvgPrice_Start_DTPicker.Value < oldestDT) {
+                        oldestDT = ((AccAvgPrice)frm).AccAvgPrice_Start_DTPicker.Value;
+                    }
+
+                    // next let's reset pIR.AvgPriceSelectedCrypto
+                    string normalisedCrypto = (((AccAvgPrice)frm).AccAvgPrice_Crypto_ComboBox.Text == "BTC" ? "XBT" : ((AccAvgPrice)frm).AccAvgPrice_Crypto_ComboBox.Text);
+
+                    if (!pIR.AvgPriceSelectedCrypto.Contains(normalisedCrypto)) {
+                        pIR.AvgPriceSelectedCrypto.Add(normalisedCrypto);
+                    }
+
+                    // and finally reset pIR.fiatCurrenciesSelected
+                    foreach (var fiatButt in ((AccAvgPrice)frm).fiatCurrenciesSelected) {
+                        if (!pIR.fiatCurrenciesSelected.Contains(fiatButt.Key)) {
+                            if (fiatButt.Value.Item2) {
+                                pIR.fiatCurrenciesSelected.Add(fiatButt.Key);
+                            }
+                        }
+                    }
+                }
+            }
+            if (oldestDT.Year != 3000) pIR.earliestClosedOrderRequired = oldestDT;
+            else pIR.earliestClosedOrderRequired = null;
         }
 
         public void IRAccount_FillVolumeField(string vol) {

@@ -155,5 +155,8 @@
     <Setting Name="GDriveFolder_BalSettings" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="LoanSlushEncoded_TrigonX" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

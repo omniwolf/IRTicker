@@ -44,11 +44,13 @@
             this.label7 = new System.Windows.Forms.Label();
             this.AccAvgPrice_BuySell_ComboBox = new System.Windows.Forms.ComboBox();
             this.AccAvgPrice_TT = new System.Windows.Forms.ToolTip(this.components);
-            this.AccAvgPrice_CopyCrypto_Button = new System.Windows.Forms.Button();
-            this.AccAvgPrice_CopyFiat_Button = new System.Windows.Forms.Button();
             this.AccAvgPrice_DealSize_TextBox = new System.Windows.Forms.TextBox();
             this.AccAvgPrice_DealSizeCurrency_ComboBox = new System.Windows.Forms.ComboBox();
             this.AccAvgPrice_SendRemainingToVolumeField_button = new System.Windows.Forms.Button();
+            this.AccAvgPrice_DealComment_TextBox = new System.Windows.Forms.TextBox();
+            this.AccAvgPrice_Persist_CheckBox = new System.Windows.Forms.CheckBox();
+            this.AccAvgPrice_EndDay_Label = new System.Windows.Forms.Label();
+            this.AccAvgPrice_StartDay_Label = new System.Windows.Forms.Label();
             this.AccAvgPrice_TotalCrypto_TextBox = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.AccAvgPrice_TotalFiat_TextBox = new System.Windows.Forms.TextBox();
@@ -61,6 +63,7 @@
             this.AccAvgPrice_FiatUSD_button = new System.Windows.Forms.Button();
             this.AccAvgPrice_FiatNZD_button = new System.Windows.Forms.Button();
             this.AccAvgPrice_FiatSGD_button = new System.Windows.Forms.Button();
+            this.AccAvgPrice_DealComment_Label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // AccAvgPrice_Crypto_ComboBox
@@ -88,9 +91,9 @@
             this.AccAvgPrice_Go_Button.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccAvgPrice_Go_Button.Location = new System.Drawing.Point(230, 10);
             this.AccAvgPrice_Go_Button.Name = "AccAvgPrice_Go_Button";
-            this.AccAvgPrice_Go_Button.Size = new System.Drawing.Size(98, 102);
+            this.AccAvgPrice_Go_Button.Size = new System.Drawing.Size(98, 52);
             this.AccAvgPrice_Go_Button.TabIndex = 3;
-            this.AccAvgPrice_Go_Button.Text = "Calculate average price";
+            this.AccAvgPrice_Go_Button.Text = "Calculate avg price";
             this.AccAvgPrice_Go_Button.UseVisualStyleBackColor = true;
             this.AccAvgPrice_Go_Button.Click += new System.EventHandler(this.AccAvgPrice_Go_Button_Click);
             // 
@@ -112,6 +115,7 @@
             this.AccAvgPrice_End_DTPicker.Size = new System.Drawing.Size(106, 20);
             this.AccAvgPrice_End_DTPicker.TabIndex = 5;
             this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_End_DTPicker, "Defaults to +24 hours from the current time");
+            this.AccAvgPrice_End_DTPicker.ValueChanged += new System.EventHandler(this.AccAvgPrice_End_DTPicker_ValueChanged);
             // 
             // label1
             // 
@@ -203,7 +207,7 @@
             // 
             this.AccAvgPrice_AutoUpdate_CheckBox.AutoSize = true;
             this.AccAvgPrice_AutoUpdate_CheckBox.BackColor = System.Drawing.Color.Transparent;
-            this.AccAvgPrice_AutoUpdate_CheckBox.Location = new System.Drawing.Point(230, 146);
+            this.AccAvgPrice_AutoUpdate_CheckBox.Location = new System.Drawing.Point(230, 68);
             this.AccAvgPrice_AutoUpdate_CheckBox.Name = "AccAvgPrice_AutoUpdate_CheckBox";
             this.AccAvgPrice_AutoUpdate_CheckBox.Size = new System.Drawing.Size(110, 17);
             this.AccAvgPrice_AutoUpdate_CheckBox.TabIndex = 15;
@@ -235,32 +239,6 @@
             this.AccAvgPrice_BuySell_ComboBox.Size = new System.Drawing.Size(106, 21);
             this.AccAvgPrice_BuySell_ComboBox.TabIndex = 16;
             this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_BuySell_ComboBox, "Not sure why \"both\" would be useful, but it\'s there anyway");
-            // 
-            // AccAvgPrice_CopyCrypto_Button
-            // 
-            this.AccAvgPrice_CopyCrypto_Button.Enabled = false;
-            this.AccAvgPrice_CopyCrypto_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AccAvgPrice_CopyCrypto_Button.Location = new System.Drawing.Point(230, 313);
-            this.AccAvgPrice_CopyCrypto_Button.Name = "AccAvgPrice_CopyCrypto_Button";
-            this.AccAvgPrice_CopyCrypto_Button.Size = new System.Drawing.Size(98, 23);
-            this.AccAvgPrice_CopyCrypto_Button.TabIndex = 20;
-            this.AccAvgPrice_CopyCrypto_Button.Text = "Copy crypto";
-            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_CopyCrypto_Button, "Will copy the raw crypto dealt value sans formatting");
-            this.AccAvgPrice_CopyCrypto_Button.UseVisualStyleBackColor = true;
-            this.AccAvgPrice_CopyCrypto_Button.Click += new System.EventHandler(this.AccAvgPrice_CopyCrypto_Button_Click);
-            // 
-            // AccAvgPrice_CopyFiat_Button
-            // 
-            this.AccAvgPrice_CopyFiat_Button.Enabled = false;
-            this.AccAvgPrice_CopyFiat_Button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AccAvgPrice_CopyFiat_Button.Location = new System.Drawing.Point(230, 339);
-            this.AccAvgPrice_CopyFiat_Button.Name = "AccAvgPrice_CopyFiat_Button";
-            this.AccAvgPrice_CopyFiat_Button.Size = new System.Drawing.Size(98, 23);
-            this.AccAvgPrice_CopyFiat_Button.TabIndex = 23;
-            this.AccAvgPrice_CopyFiat_Button.Text = "Copy fiat";
-            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_CopyFiat_Button, "Will copy the raw fiat dealt value sans formatting");
-            this.AccAvgPrice_CopyFiat_Button.UseVisualStyleBackColor = true;
-            this.AccAvgPrice_CopyFiat_Button.Click += new System.EventHandler(this.AccAvgPrice_CopyFiat_Button_Click);
             // 
             // AccAvgPrice_DealSize_TextBox
             // 
@@ -298,6 +276,48 @@
         "app.   \r\nOnly works if the \"Size of deal\" drop down menu is set to \"Crypto\".");
             this.AccAvgPrice_SendRemainingToVolumeField_button.UseVisualStyleBackColor = true;
             this.AccAvgPrice_SendRemainingToVolumeField_button.Click += new System.EventHandler(this.AccAvgPrice_SendRemainingToVolumeField_button_Click);
+            // 
+            // AccAvgPrice_DealComment_TextBox
+            // 
+            this.AccAvgPrice_DealComment_TextBox.Location = new System.Drawing.Point(230, 341);
+            this.AccAvgPrice_DealComment_TextBox.Name = "AccAvgPrice_DealComment_TextBox";
+            this.AccAvgPrice_DealComment_TextBox.Size = new System.Drawing.Size(106, 20);
+            this.AccAvgPrice_DealComment_TextBox.TabIndex = 36;
+            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_DealComment_TextBox, "Enter here what size you need to do on the order book.");
+            // 
+            // AccAvgPrice_Persist_CheckBox
+            // 
+            this.AccAvgPrice_Persist_CheckBox.AutoSize = true;
+            this.AccAvgPrice_Persist_CheckBox.BackColor = System.Drawing.Color.Transparent;
+            this.AccAvgPrice_Persist_CheckBox.Location = new System.Drawing.Point(230, 93);
+            this.AccAvgPrice_Persist_CheckBox.Name = "AccAvgPrice_Persist_CheckBox";
+            this.AccAvgPrice_Persist_CheckBox.Size = new System.Drawing.Size(72, 17);
+            this.AccAvgPrice_Persist_CheckBox.TabIndex = 37;
+            this.AccAvgPrice_Persist_CheckBox.Text = "Persistent";
+            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_Persist_CheckBox, "If ticked, next time the first Average Price Calculator window is opened, this wi" +
+        "ll be opened too");
+            this.AccAvgPrice_Persist_CheckBox.UseVisualStyleBackColor = false;
+            this.AccAvgPrice_Persist_CheckBox.CheckedChanged += new System.EventHandler(this.AccAvgPrice_Persist_CheckBox_CheckedChanged);
+            // 
+            // AccAvgPrice_EndDay_Label
+            // 
+            this.AccAvgPrice_EndDay_Label.AutoSize = true;
+            this.AccAvgPrice_EndDay_Label.BackColor = System.Drawing.Color.Transparent;
+            this.AccAvgPrice_EndDay_Label.Location = new System.Drawing.Point(227, 147);
+            this.AccAvgPrice_EndDay_Label.Name = "AccAvgPrice_EndDay_Label";
+            this.AccAvgPrice_EndDay_Label.Size = new System.Drawing.Size(0, 13);
+            this.AccAvgPrice_EndDay_Label.TabIndex = 39;
+            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_EndDay_Label, "Double click to set this to now + 1 day");
+            // 
+            // AccAvgPrice_StartDay_Label
+            // 
+            this.AccAvgPrice_StartDay_Label.AutoSize = true;
+            this.AccAvgPrice_StartDay_Label.BackColor = System.Drawing.Color.Transparent;
+            this.AccAvgPrice_StartDay_Label.Location = new System.Drawing.Point(227, 121);
+            this.AccAvgPrice_StartDay_Label.Name = "AccAvgPrice_StartDay_Label";
+            this.AccAvgPrice_StartDay_Label.Size = new System.Drawing.Size(0, 13);
+            this.AccAvgPrice_StartDay_Label.TabIndex = 38;
+            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_StartDay_Label, "Double click to set this to now");
             // 
             // AccAvgPrice_TotalCrypto_TextBox
             // 
@@ -421,6 +441,16 @@
             this.AccAvgPrice_FiatSGD_button.UseVisualStyleBackColor = true;
             this.AccAvgPrice_FiatSGD_button.Click += new System.EventHandler(this.AccAvgPrice_Fiat_button_click);
             // 
+            // AccAvgPrice_DealComment_Label
+            // 
+            this.AccAvgPrice_DealComment_Label.AutoSize = true;
+            this.AccAvgPrice_DealComment_Label.BackColor = System.Drawing.Color.Transparent;
+            this.AccAvgPrice_DealComment_Label.Location = new System.Drawing.Point(227, 318);
+            this.AccAvgPrice_DealComment_Label.Name = "AccAvgPrice_DealComment_Label";
+            this.AccAvgPrice_DealComment_Label.Size = new System.Drawing.Size(59, 13);
+            this.AccAvgPrice_DealComment_Label.TabIndex = 35;
+            this.AccAvgPrice_DealComment_Label.Text = "Comments:";
+            // 
             // AccAvgPrice
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -429,6 +459,11 @@
             this.BackgroundImage = global::IRTicker.Properties.Resources.IR_Eagel_Transparent___small_faded2;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ClientSize = new System.Drawing.Size(344, 371);
+            this.Controls.Add(this.AccAvgPrice_EndDay_Label);
+            this.Controls.Add(this.AccAvgPrice_StartDay_Label);
+            this.Controls.Add(this.AccAvgPrice_Persist_CheckBox);
+            this.Controls.Add(this.AccAvgPrice_DealComment_TextBox);
+            this.Controls.Add(this.AccAvgPrice_DealComment_Label);
             this.Controls.Add(this.AccAvgPrice_FiatSGD_button);
             this.Controls.Add(this.AccAvgPrice_FiatNZD_button);
             this.Controls.Add(this.AccAvgPrice_FiatUSD_button);
@@ -440,10 +475,8 @@
             this.Controls.Add(this.AccAvgPrice_DealSizeCurrency_ComboBox);
             this.Controls.Add(this.AccAvgPrice_DealSize_TextBox);
             this.Controls.Add(this.label10);
-            this.Controls.Add(this.AccAvgPrice_CopyFiat_Button);
             this.Controls.Add(this.AccAvgPrice_TotalFiat_TextBox);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this.AccAvgPrice_CopyCrypto_Button);
             this.Controls.Add(this.AccAvgPrice_TotalCrypto_TextBox);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -471,15 +504,13 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Average price calculator";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AccAvgPrice_FormClosing);
+            this.Load += new System.EventHandler(this.AccAvgPrice_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.ComboBox AccAvgPrice_Crypto_ComboBox;
-        private System.Windows.Forms.DateTimePicker AccAvgPrice_Start_DTPicker;
         private System.Windows.Forms.Button AccAvgPrice_Go_Button;
         private System.Windows.Forms.Label AccAvgPrice_Status_Label;
         private System.Windows.Forms.DateTimePicker AccAvgPrice_End_DTPicker;
@@ -495,10 +526,8 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox AccAvgPrice_BuySell_ComboBox;
         private System.Windows.Forms.ToolTip AccAvgPrice_TT;
-        private System.Windows.Forms.Button AccAvgPrice_CopyCrypto_Button;
         private System.Windows.Forms.TextBox AccAvgPrice_TotalCrypto_TextBox;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Button AccAvgPrice_CopyFiat_Button;
         private System.Windows.Forms.TextBox AccAvgPrice_TotalFiat_TextBox;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox AccAvgPrice_DealSize_TextBox;
@@ -512,5 +541,12 @@
         private System.Windows.Forms.Button AccAvgPrice_FiatUSD_button;
         private System.Windows.Forms.Button AccAvgPrice_FiatNZD_button;
         private System.Windows.Forms.Button AccAvgPrice_FiatSGD_button;
+        private System.Windows.Forms.Label AccAvgPrice_DealComment_Label;
+        private System.Windows.Forms.TextBox AccAvgPrice_DealComment_TextBox;
+        private System.Windows.Forms.CheckBox AccAvgPrice_Persist_CheckBox;
+        private System.Windows.Forms.Label AccAvgPrice_EndDay_Label;
+        private System.Windows.Forms.Label AccAvgPrice_StartDay_Label;
+        public System.Windows.Forms.DateTimePicker AccAvgPrice_Start_DTPicker;
+        public System.Windows.Forms.ComboBox AccAvgPrice_Crypto_ComboBox;
     }
 }

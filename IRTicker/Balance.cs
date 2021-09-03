@@ -301,6 +301,73 @@ namespace IRTicker
             return "";
         }
 
+        private async void DrawTrigonX() {
+            string platformName = "TrigonX";
+            if (string.IsNullOrEmpty(Properties.Settings.Default.TrigonXToken)) {
+                balSetting_form = new BalSettings();
+                balSetting_form.Show();
+                Platform_comboBox.SelectedIndex = 0;
+                Platform_comboBox_SelectedIndexChanged(null, null);  // revert back to IR
+                return;
+            }
+            Task<string> res = GetWebData("https://trading.trigonx.com/otc/api/customer/", Properties.Settings.Default.TrigonXToken);
+
+            if (!masterBalanceDict.ContainsKey(platformName))
+                masterBalanceDict.Add(platformName, new Dictionary<string, BalanceData>());
+
+            masterBalanceDict[platformName].Clear();
+
+            ClearDynamicRows(DCE_IR.SecondaryCurrencyList);
+            ClearDynamicRows(DCE_IR.PrimaryCurrencyList);
+            LoanSlushDecode(Properties.Settings.Default.LoanSlushEncoded_TrigonX, platformName);
+
+            string TrigonXres = await res;
+            if (string.IsNullOrEmpty(TrigonXres)) {
+                TotalBalDict.FirstOrDefault().Value.Text = "Failed to pull TrigonX data";
+            }
+            else {
+                Dictionary<string, Account> TrigonXBalances = parseTrigonXResponse(TrigonXres);
+                DrawDynamicRows(DCE_IR.SecondaryCurrencyList, TrigonXBalances, false, platformName);
+                DrawDynamicRows(DCE_IR.PrimaryCurrencyList, TrigonXBalances, true, platformName);
+            }
+        }
+
+        private Dictionary<string, Account> parseTrigonXResponse(string jsonResp) {
+            Dictionary<string, Account> Balances = new Dictionary<string, Account>();
+            List<TrigonXResponse> TrigonDeserialised;
+            try {
+                TrigonDeserialised = JsonConvert.DeserializeObject<List<TrigonXResponse>>(jsonResp);
+            }
+            catch (Exception ex) {
+                Debug.Print("Could not parse Trigon response: " + ex.Message);
+                return Balances;
+            }
+
+            foreach (KeyValuePair<string, double> bal in TrigonDeserialised.FirstOrDefault().balances) {
+                string currency = bal.Key;
+                switch (currency) {
+                    case "BTC":
+                        currency = "XBT";
+                        break;
+                }
+                if (DCE_IR.PrimaryCurrencyList.Contains(currency) || DCE_IR.SecondaryCurrencyList.Contains(currency)) {
+                    Account tempAcc = new Account();
+
+                    if (Enum.TryParse(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(currency.ToLower()), out CurrencyCode currencyEnum)) {
+                        tempAcc.CurrencyCode = currencyEnum;
+                    }
+                    else Debug.Print("Cannot parse " + currency + " in TrigonX for the ticker");
+
+                    tempAcc.TotalBalance = Convert.ToDecimal(bal.Value);
+
+                    tempAcc.AccountStatus = AccountStatus.Active;
+                    Balances.Add(currency, tempAcc);
+                }
+            }
+            return Balances;
+        }
+
+
         private async void DrawB2C2() {
             string platformName = "B2C2";
             if (string.IsNullOrEmpty(Properties.Settings.Default.B2C2Token)) {
@@ -332,18 +399,17 @@ namespace IRTicker
             }
         }
 
-
         private void DrawDynamicRows(List<string> Currencies, Dictionary<string, Account> Balances, bool crypto, string platformName) {
             foreach (string curr in Currencies) {
                 if (!masterBalanceDict[platformName].ContainsKey(curr))
                     masterBalanceDict[platformName].Add(curr, new BalanceData());  // at this point we should already have the loan and slush data in here
                 if (Balances.ContainsKey(curr)) {
                     if (TotalBalDict.ContainsKey(curr)) {
-                        TotalBalDict[curr].Text = Utilities.FormatValue(Balances[curr].TotalBalance, 8, false);
+                        TotalBalDict[curr].Text = Utilities.FormatValue(Balances[curr].TotalBalance, (crypto ? 8 : 2), false);
                         masterBalanceDict[platformName][curr].TotalBalance = Balances[curr].TotalBalance;
                     }
                     if (AvailsBalDict.ContainsKey(curr)) {
-                        AvailsBalDict[curr].Text = Utilities.FormatValue(Balances[curr].AvailableBalance, 8, false);
+                        AvailsBalDict[curr].Text = Utilities.FormatValue(Balances[curr].AvailableBalance, (crypto ? 8 : 2), false);
                         masterBalanceDict[platformName][curr].AvailableBalance = Balances[curr].AvailableBalance;
                     }
                     masterBalanceDict[platformName][curr].isActive = true;
@@ -409,7 +475,7 @@ namespace IRTicker
                         tempAccount.TotalBalance = balance;
                     }
                     else Debug.Print("Cannot parse " + currPair[1] + " in B2C2 for the balance");
-                    if (Enum.TryParse(currPair[0], out CurrencyCode currencyEnum)) {
+                    if (Enum.TryParse(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(currPair[0].ToLower()), out CurrencyCode currencyEnum)) {
                         tempAccount.CurrencyCode = currencyEnum;
                     }
                     else Debug.Print("Cannot parse " + currPair[0] + " in B2C2 for the ticker");
@@ -503,6 +569,9 @@ namespace IRTicker
                     break;
                 case "IROTC MetaMask":
                     Properties.Settings.Default.LoanSlushEncoded_IROTCMetaMask = loanSlushEncoded;
+                    break;
+                case "TrigonX":
+                    Properties.Settings.Default.LoanSlushEncoded_TrigonX = loanSlushEncoded;
                     break;
             }
 
@@ -729,7 +798,7 @@ namespace IRTicker
                     if (decimal.TryParse(currency.balance, out decimal balance)) {
 
                        Account tempAccount = new Account();
-                        if (Enum.TryParse(curr, out CurrencyCode IRCurrency)) {
+                        if (Enum.TryParse(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(curr.ToLower()), out CurrencyCode IRCurrency)) {
                             tempAccount.CurrencyCode = IRCurrency;
                         }
                         else Debug.Print("Could not parse " + curr + " in Coinbase to an IR currency");
@@ -811,7 +880,7 @@ namespace IRTicker
 
             foreach (Token tok in jsonETHBalances.tokens) {
                 Account tokAccount = new Account();
-                if (Enum.TryParse(tok.tokenInfo.symbol, out CurrencyCode currencyCode)) {
+                if (Enum.TryParse(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(tok.tokenInfo.symbol.ToLower()), out CurrencyCode currencyCode)) {
                     tokAccount.CurrencyCode = currencyCode;
                 }
                 else Debug.Print("Couldn't parse " + tok.tokenInfo.symbol + " in ETHWallet for " + tok.tokenInfo.symbol);
@@ -947,7 +1016,9 @@ namespace IRTicker
                     break;
 
                 case "TrigonX":
-                    string res = await GetWebData("https://trading.trigonx.com/otc/api/customer/", Properties.Settings.Default.TrigonXToken);
+                    SaveLoanSlush = false;
+                    DrawTrigonX();
+                    SaveLoanSlush = true;
                     break;
 
                 case "IROTC MetaMask":
@@ -1032,7 +1103,6 @@ namespace IRTicker
         public class Token
         {
             public TokenInfo tokenInfo { get; set; }
-            [JsonConverter(typeof(JsonExponentialConverter))]
             public long balance { get; set; }
             public int totalIn { get; set; }
             public int totalOut { get; set; }
@@ -1047,13 +1117,58 @@ namespace IRTicker
             public List<Token> tokens { get; set; }
         }
 
+        public class Pair
+        {
+            public int id { get; set; }
+            public string slug { get; set; }
+        }
+
+        public class Balances
+        {
+            public double ADA { get; set; }
+            public double AUD { get; set; }
+            public double BTC { get; set; }
+            public double DOT { get; set; }
+            public double EOS { get; set; }
+            public double ETH { get; set; }
+            public double LINK { get; set; }
+            public double LTC { get; set; }
+            public double USD { get; set; }
+            public double USDC { get; set; }
+            public double USDT { get; set; }
+            public double XRP { get; set; }
+
+            [JsonProperty("Total Equity")]
+            public double TotalEquity { get; set; }
+
+            [JsonProperty("Credit Used")]
+            public double CreditUsed { get; set; }
+
+            [JsonProperty("Credit Limit")]
+            public double CreditLimit { get; set; }
+        }
+
+        public class TrigonXResponse
+        {
+            public List<Pair> pairs { get; set; }
+            public string credit_limit { get; set; }
+            public string credit_used { get; set; }
+            public string discretion_bps { get; set; }
+            public Dictionary<string, double> balances { get; set; }
+            //public Balances balances { get; set; }
+            public string name { get; set; }
+            public object credit_limit_since { get; set; }
+            public object customer_template { get; set; }
+            public string internal_account { get; set; }
+        }
+
         private void BalSettings_button_Click(object sender, EventArgs e) {
             balSetting_form = new BalSettings();
             balSetting_form.Show();
         }
     }
 
-    public class JsonExponentialConverter : JsonConverter
+    /*public class JsonExponentialConverter : JsonConverter
     {
         public override bool CanRead { get { return true; } }
         public override bool CanConvert(Type objectType) {
@@ -1071,5 +1186,5 @@ namespace IRTicker
             }
             return amount;
         }
-    }
+    }*/
 }

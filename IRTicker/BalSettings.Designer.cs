@@ -325,7 +325,7 @@ namespace IRTicker
             this.MaximumSize = new System.Drawing.Size(578, 470);
             this.MinimumSize = new System.Drawing.Size(578, 470);
             this.Name = "BalSettings";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "BalSettings";
             this.BalSettingsB2C2_groupbox.ResumeLayout(false);
             this.BalSettingsB2C2_groupbox.PerformLayout();

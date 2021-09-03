@@ -22,7 +22,7 @@ namespace IRTicker
         private string TotalCryptoDealt = "";  // holds the unformatted version of the total crypto dealt
         private string TotalFiatDealt = "";  // holds the unformatted version of the total fiat dealt
         private int oldDealSizeCurrencySelected = 1;  // remembers which dealsize currency (eg crypto or fiat) is selected for when we force crypto and disable the control if they choose more than one fiat currency, and then deselect to just 1 currency and we need to remember which option they had selected bofer
-        private ConcurrentDictionary<string, Tuple<Button, bool>> fiatCurrenciesSelected = new ConcurrentDictionary<string, Tuple<Button, bool>>();
+        public ConcurrentDictionary<string, Tuple<Button, bool>> fiatCurrenciesSelected = new ConcurrentDictionary<string, Tuple<Button, bool>>();
 
         public AccAvgPrice(DCE _DCE, PrivateIR _pIR, IRTicker _IRT, bool enableAutoUpdate = false, string crypto = "", string fiat = "AUD", int direction = 0) {
             InitializeComponent();
@@ -122,7 +122,7 @@ namespace IRTicker
             AccAvgPrice_RemainingToDeal_TextBox.BackColor = SystemColors.Control;
             AccAvgPrice_RemainingToDeal_TextBox.Text = "";
             AccAvgPrice_RemaingToDealCurrency_Label.Text = "";
-            
+
 
             string crypto = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString();
             Page<BankHistoryOrder> ultimateBHO = new Page<BankHistoryOrder>();
@@ -219,9 +219,7 @@ namespace IRTicker
                     AccAvgPrice_CopyAvg_Button.Enabled = true;
                     AccAvgPrice_TotalCrypto_TextBox.Text = Utilities.FormatValue(totalCryptoDealt, 8, false);
                     TotalCryptoDealt = totalCryptoDealt.ToString();
-                    AccAvgPrice_CopyCrypto_Button.Enabled = true;
                     TotalFiatDealt = totalValue.ToString();
-                    AccAvgPrice_CopyFiat_Button.Enabled = true;
 
                     if (!string.IsNullOrEmpty(AccAvgPrice_DealSize_TextBox.Text) && (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex > 0)) {  // if the user has entered a deal size and chose a currency
                         if (decimal.TryParse(AccAvgPrice_DealSize_TextBox.Text, out decimal dealSize)) {
@@ -268,9 +266,7 @@ namespace IRTicker
                 AvgPriceResult = "";
                 AccAvgPrice_CopyAvg_Button.Enabled = false;
                 AccAvgPrice_TotalCrypto_TextBox.Text = "";
-                AccAvgPrice_CopyCrypto_Button.Enabled = false;
                 AccAvgPrice_TotalFiat_TextBox.Text = "";
-                AccAvgPrice_CopyFiat_Button.Enabled = false;
                 AccAvgPrice_RemainingToDeal_TextBox.Text = "";
                 AccAvgPrice_RemainingToDeal_TextBox.BackColor = SystemColors.Control;
                 AccAvgPrice_RemaingToDealCurrency_Label.Text = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString();
@@ -371,14 +367,6 @@ namespace IRTicker
             }
         }
 
-        private void AccAvgPrice_CopyCrypto_Button_Click(object sender, EventArgs e) {
-            Clipboard.SetText(TotalCryptoDealt);
-        }
-
-        private void AccAvgPrice_CopyFiat_Button_Click(object sender, EventArgs e) {
-            Clipboard.SetText(TotalFiatDealt);
-        }
-
         private void AccAvgPrice_Start_Label_DoubleClick(object sender, EventArgs e) {
             AccAvgPrice_Start_DTPicker.Value = DateTime.Now;
         }
@@ -396,15 +384,43 @@ namespace IRTicker
         private void AccAvgPrice_Start_DTPicker_ValueChanged(object sender, EventArgs e) {
             // make a note of the start date, so we only pull orders from this date onwards to reduce our closedOrders cost.  
             // this way when pulling closed orders we only pull what's required because we know how far back we have to look
-            pIR.earliestClosedOrderRequired = AccAvgPrice_Start_DTPicker.Value;
+            //pIR.earliestClosedOrderRequired = AccAvgPrice_Start_DTPicker.Value;
+            IRT.RecalculateAvgPriceVariables(null);  // send a nonsense date as we don't want to ignore anything
+            if (AccAvgPrice_Start_DTPicker.Value.Date == DateTime.Now.Date) {
+                AccAvgPrice_StartDay_Label.Text = "Today";
+            }
+            else if (AccAvgPrice_Start_DTPicker.Value.Date == (DateTime.Now + TimeSpan.FromDays(1)).Date) {
+                AccAvgPrice_StartDay_Label.Text = "Tomorrow";
+            }
+            else {
+                AccAvgPrice_StartDay_Label.Text = AccAvgPrice_Start_DTPicker.Value.ToString("dddd d") + Utilities.GetOrdinalSuffix(AccAvgPrice_Start_DTPicker.Value.Day);
+            }
+        }
+
+        private void AccAvgPrice_End_DTPicker_ValueChanged(object sender, EventArgs e) {
+            if (AccAvgPrice_End_DTPicker.Value.Date == DateTime.Now.Date) {
+                AccAvgPrice_EndDay_Label.Text = "Today";
+            }
+            else if (AccAvgPrice_End_DTPicker.Value.Date == (DateTime.Now + TimeSpan.FromDays(1)).Date) {
+                AccAvgPrice_EndDay_Label.Text = "Tomorrow";
+            }
+            else {
+                AccAvgPrice_EndDay_Label.Text = AccAvgPrice_End_DTPicker.Value.ToString("dddd d") + Utilities.GetOrdinalSuffix(AccAvgPrice_End_DTPicker.Value.Day);
+            }
         }
 
         private void AccAvgPrice_FormClosing(object sender, FormClosingEventArgs e) {
-            pIR.earliestClosedOrderRequired = null;  // no more start date, just grab the 7 newest closed orders
+            //pIR.earliestClosedOrderRequired = null;  // no more start date, just grab the 7 newest closed orders
+            IRT.RecalculateAvgPriceVariables(this);  // It's possible to have multiple accAvgPrice forms open, so when closing one we need to figure out again which is the furthest back starting time
         }
 
         private void AccAvgPrice_Crypto_ComboBox_SelectedIndexChanged(object sender, EventArgs e) {
-            pIR.AvgPriceSelectedCrypto = (AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() == "BTC" ? "XBT" : AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString());
+            //pIR.AvgPriceSelectedCrypto = (AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() == "BTC" ? "XBT" : AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString());
+
+            string normalisedCrypto = (AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() == "BTC" ? "XBT" : AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString());
+
+            IRT.RecalculateAvgPriceVariables(null);
+
             AccAvgPrice_DealSize_TextBox_TextChanged(null, null);  // simulate text change to validate and adjust
         }
 
@@ -444,18 +460,18 @@ namespace IRTicker
                     AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex = oldDealSizeCurrencySelected;
                 }
             }
-            pIR.fiatCurrenciesSelected = fiatCurrenciesSelected;
+
+            IRT.RecalculateAvgPriceVariables(null);  // we've made changes to the buttons, let's reset (update) our pIR vars
+
             //AccAvgPrice_Go_Button_Click(null, null);  // simulate a click on the button
         }
 
         private void AccAvgPrice_DealSizeCurrency_ComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             if (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex == 1) {
                 AccAvgPrice_SendRemainingToVolumeField_button.Enabled = true;
-                AccAvgPrice_CopyFiat_Button.Enabled = true;
             }
             else {
                 AccAvgPrice_SendRemainingToVolumeField_button.Enabled = false;
-                AccAvgPrice_CopyFiat_Button.Enabled = false;
             }
         }
 
@@ -477,6 +493,49 @@ namespace IRTicker
                 }
 
             }
+        }
+
+        private void AccAvgPrice_Load(object sender, EventArgs e) {
+            IRT.RecalculateAvgPriceVariables(null);
+        }
+
+        private void AccAvgPrice_Persist_CheckBox_CheckedChanged(object sender, EventArgs e) {
+            SerialiseFormSettings();
+        }
+
+        private string SerialiseFormSettings() {
+            string masterStr =
+                AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() + ";";
+
+            string fiats = "";
+            foreach (var fiatButt in fiatCurrenciesSelected) {
+                if (fiatButt.Value.Item2) {
+                    fiats += fiatButt.Key + ",";
+                }
+            }
+
+            masterStr += fiats + ";" +
+                AccAvgPrice_BuySell_ComboBox.SelectedItem.ToString() + ";" +
+                AccAvgPrice_Start_DTPicker.Value.ToString("u") + ";" +  // "u" format should be 2008-10-31 17:04:32Z
+                AccAvgPrice_End_DTPicker.Value.ToString("u") + ";" +
+                AccAvgPrice_DealSize_TextBox.Text.ToString() + ";" +
+                AccAvgPrice_DealSizeCurrency_ComboBox.SelectedItem.ToString() + ";" +
+                AccAvgPrice_DealComment_TextBox.Text;
+
+            return masterStr;
+        }
+
+        // will probably need this up in the IRTicker class...
+        class AccAvgPriceSettings
+        {
+            public string Crypto { get; set; }  // "XBT", "ETH", etc
+            public string Fiats { get; set; }  // comma separated, eg "AUD,USD" 
+            public string Direction { get; set; }  // "Buy" or "Sell"
+            public string StartDateTime { get; set; }  // DateTime object in string format.. "z" ?
+            public string EndDateTime { get; set; }  // same as StartDateTime
+            public string DealSize { get; set; }  // string version of a decimal
+            public string DealSizeType { get; set; }  // "Crypto" or "Fiat"
+            public string Comment { get; set; }  // "some rando string.  hmm what if semicolons in it?  Need to sanitise semicolons
         }
     }
 }
