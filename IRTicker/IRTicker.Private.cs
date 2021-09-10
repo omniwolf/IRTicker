@@ -282,10 +282,11 @@ namespace IRTicker {
                             vol = order.Volume - order.Outstanding.Value;
                         }
                         AccountClosedOrders_listview.Items.Add(new ListViewItem(new string[] {
-                    order.CreatedTimestampUtc.ToLocalTime().ToShortDateString(),
-                    Utilities.FormatValue(vol, 8, false),
-                    Utilities.FormatValue(order.AvgPrice.Value, 2),
-                    Utilities.FormatValue(order.Value.Value, 2)}));
+                            order.CreatedTimestampUtc.ToLocalTime().ToShortDateString(),
+                            Utilities.FormatValue(vol, 8, false),
+                            Utilities.FormatValue((order.AvgPrice.HasValue ? order.AvgPrice.Value : 0), 2),
+                            Utilities.FormatValue((order.Value.HasValue ? order.Value.Value : 0), 2)
+                        }));
                         AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].ToolTipText = buildOrderTT(order, false);
                         if (order.OrderType == OrderType.LimitBid || order.OrderType == OrderType.MarketBid) {
                             AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].BackColor = Color.Thistle;
@@ -315,10 +316,11 @@ namespace IRTicker {
                     foreach (BankHistoryOrder order in _openOrders) {
                         if ((order.Status != OrderStatus.Open) && (order.Status != OrderStatus.PartiallyFilled)) continue;
                         AccountOpenOrders_listview.Items.Add(new ListViewItem(new string[] {
-                    order.CreatedTimestampUtc.ToLocalTime().ToShortDateString(),
-                    Utilities.FormatValue(order.Volume, 8, false),  // hopefully will format but leave decimals untouched..
-                    Utilities.FormatValue(order.Price.Value, 2),
-                    Utilities.FormatValue(order.Outstanding.Value, 8, false)}));
+                            order.CreatedTimestampUtc.ToLocalTime().ToShortDateString(),
+                            Utilities.FormatValue(order.Volume, 8, false),  // hopefully will format but leave decimals untouched..
+                            Utilities.FormatValue((order.Price.HasValue ? order.Price.Value : 0), 2),
+                            Utilities.FormatValue((order.Outstanding.HasValue ? order.Outstanding.Value : 0), 8, false)
+                        }));
                         AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].ToolTipText = buildOrderTT(order, true);
                         if (order.OrderType == OrderType.LimitBid) {
                             AccountOpenOrders_listview.Items[AccountOpenOrders_listview.Items.Count - 1].BackColor = Color.Thistle;
