@@ -275,7 +275,7 @@ namespace IRTicker {
                         else pairs.Add(crypto);
 
                         if (wSocket_BFX.IsAlive) {
-                            DCEs[dExchange].ExchangeProducts.Add("tDOGE:-USD", new DCE.products_GDAX());
+                            //DCEs[dExchange].ExchangeProducts.Add("tDOGE:-USD", new DCE.products_GDAX());
                             foreach (string crypto1 in pairs) {
                                 string crypto2 = crypto1;
                                 if (crypto2 == "XBT") crypto2 = "BTC";
