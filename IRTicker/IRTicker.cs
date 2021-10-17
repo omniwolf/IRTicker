@@ -1432,13 +1432,12 @@ namespace IRTicker {
                 }
                 else BTCfee = -1;  // tells the system to signal on the "Last updated" label
 
-                feeTup = Utilities.Get("https://www.gasnow.org/api/v3/gas/price?utm_source=IRTicker");
+                feeTup = Utilities.Get("https://data-api.defipulse.com/api/v1/egs/api/ethgasAPI.json?api-key=17888172119617872db6baf33644a66c6e0b4354f25e03cf974986aedfa2");
                 if (feeTup.Item1) {
-                    GNData gasNowData = JsonConvert.DeserializeObject<gasNow>(feeTup.Item2).data;
-                    ETHfee = gasNowData.fast / 1000000000;
+                    EGSRoot EGSData = JsonConvert.DeserializeObject<EGSRoot>(feeTup.Item2);
+                    ETHfee = EGSData.fast / 10;
                 }
-                else ETHfee = -1;  // tells the system to signal on the "Last updated" label
-
+                else ETHfee = -1;
 
 
                 // lets grab the latest BTC block
@@ -3322,19 +3321,95 @@ namespace IRTicker {
             public int minimumFee { get; set; }
         }
 
-        public class GNData {
-            public long rapid { get; set; }
-            public long fast { get; set; }
-            public long standard { get; set; }
-            public long slow { get; set; }
-            public long timestamp { get; set; }
+        public class GasPriceRange
+        {
+            public int _4 { get; set; }
+            public int _6 { get; set; }
+            public int _8 { get; set; }
+            public int _10 { get; set; }
+            public int _20 { get; set; }
+            public int _30 { get; set; }
+            public int _40 { get; set; }
+            public int _50 { get; set; }
+            public int _60 { get; set; }
+            public int _70 { get; set; }
+            public int _80 { get; set; }
+            public int _90 { get; set; }
+            public int _100 { get; set; }
+            public int _110 { get; set; }
+            public int _120 { get; set; }
+            public int _130 { get; set; }
+            public int _140 { get; set; }
+            public int _150 { get; set; }
+            public int _160 { get; set; }
+            public int _170 { get; set; }
+            public int _180 { get; set; }
+            public int _190 { get; set; }
+            public int _200 { get; set; }
+            public int _220 { get; set; }
+            public int _240 { get; set; }
+            public int _260 { get; set; }
+            public int _280 { get; set; }
+            public int _300 { get; set; }
+            public int _320 { get; set; }
+            public int _340 { get; set; }
+            public int _360 { get; set; }
+            public int _380 { get; set; }
+            public int _400 { get; set; }
+            public int _420 { get; set; }
+            public int _440 { get; set; }
+            public int _460 { get; set; }
+            public int _480 { get; set; }
+            public int _500 { get; set; }
+            public int _520 { get; set; }
+            public int _540 { get; set; }
+            public int _560 { get; set; }
+            public int _580 { get; set; }
+            public int _600 { get; set; }
+            public int _620 { get; set; }
+            public int _640 { get; set; }
+            public int _660 { get; set; }
+            public int _680 { get; set; }
+            public double _700 { get; set; }
+            public double _710 { get; set; }
+            public double _720 { get; set; }
+            public double _740 { get; set; }
+            public double _760 { get; set; }
+            public double _780 { get; set; }
+            public double _800 { get; set; }
+            public double _820 { get; set; }
+            public double _840 { get; set; }
+            public int _860 { get; set; }
+            public double _880 { get; set; }
+            public double _900 { get; set; }
+            public double _920 { get; set; }
+            public double _940 { get; set; }
+            public double _960 { get; set; }
+            public double _980 { get; set; }
+            public double _1000 { get; set; }
+            public double _1020 { get; set; }
+            public double _1040 { get; set; }
+            public double _1060 { get; set; }
+            public double _1080 { get; set; }
+            public double _1100 { get; set; }
+            public double _1120 { get; set; }
         }
 
-        public class gasNow {
-            public int code { get; set; }
-            public GNData data { get; set; }
+        public class EGSRoot
+        {
+            public int fast { get; set; }
+            public int fastest { get; set; }
+            public int safeLow { get; set; }
+            public int average { get; set; }
+            public double block_time { get; set; }
+            public int blockNum { get; set; }
+            public double speed { get; set; }
+            public double safeLowWait { get; set; }
+            public double avgWait { get; set; }
+            public double fastWait { get; set; }
+            public double fastestWait { get; set; }
+            public GasPriceRange gasPriceRange { get; set; }
         }
-
         private void Balance_button_Click(object sender, EventArgs e) {
             if (null != pIR) {
                 Balance balForm = new Balance(DCEs["IR"], pIR);

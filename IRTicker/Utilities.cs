@@ -265,5 +265,51 @@ namespace IRTicker {
             if (number.EndsWith("3")) return "rd";
             return "th";
         }
+
+        /// <summary>
+        /// Just does a web request where there is 1 header - Authorization.  
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<string> GetWebData(string uri, string AuthorizationToken = "") {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+            //request.UserAgent = "IRTicker";
+
+            if (!string.IsNullOrEmpty(AuthorizationToken)) request.Headers["Authorization"] = AuthorizationToken;  // both trigon and B2C2 use the same thing, i guess this is coinroutes
+
+            try {
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (Stream stream = response.GetResponseStream())
+                using (StreamReader reader = new StreamReader(stream)) {
+                    string result = reader.ReadToEnd();
+
+                    return result;
+                }
+            }
+            catch (WebException e) {
+                string returnStr = "";
+
+                if (e.Response != null) {
+                    using (WebResponse response = e.Response) {
+                        HttpWebResponse httpResponse = (HttpWebResponse)response;
+                        //Debug.Print("Fail for: " + uri);
+                        Debug.Print("Error code: {0}", httpResponse.StatusCode);
+                        using (Stream data = response.GetResponseStream())
+                        using (var reader = new StreamReader(data)) {
+                            returnStr = reader.ReadToEnd();
+                            Debug.Print(returnStr);
+                            returnStr = httpResponse.StatusCode.ToString();
+                        }
+                    }
+                }
+                //MessageBox.Show("Error connecting to URL: " + uri, "Network error", MessageBoxButtons.OK);
+                //return new Tuple<bool, string>(false, returnStr);
+            }
+            catch (Exception e) {
+                Debug.Print(DateTime.Now + " -- GET FAILED! exception: " + e.Message);
+                //return new Tuple<bool, string>(false, e.Message);
+            }
+            return "";
+        }
     }
 }

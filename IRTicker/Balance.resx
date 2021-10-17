@@ -120,6 +120,14 @@
   <metadata name="Legend_TT.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="Legend_label.ToolTip" xml:space="preserve">
+    <value>Green: perfect balance
+Black: imperfect balance (close enough)
+Red: out of balance, needs investigation
+Purple: out of balance, slush needs topping up?
+Dark blue: We don't know the fiat value of this crypto, so cannot judge if Out By is significant or not
+Orange: something is wrong, speak to Nick</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

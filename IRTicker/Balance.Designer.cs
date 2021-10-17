@@ -70,9 +70,7 @@ namespace IRTicker
             this.Legend_label.Size = new System.Drawing.Size(142, 13);
             this.Legend_label.TabIndex = 2;
             this.Legend_label.Text = "Hover here for colour legend";
-            this.Legend_TT.SetToolTip(this.Legend_label, "Green: perfect balance\r\nBlack: imperfect balance (close enough)\r\nRed: out of bala" +
-        "nce, needs investigation\r\nPurple: out of balance, slush needs topping up?\r\nOrang" +
-        "e: something is wrong, speak to Nick");
+            this.Legend_TT.SetToolTip(this.Legend_label, resources.GetString("Legend_label.ToolTip"));
             // 
             // BalCopyForSlack_button
             // 

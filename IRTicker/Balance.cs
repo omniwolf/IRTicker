@@ -16,8 +16,7 @@ using System.Globalization;
 
 namespace IRTicker
 {
-    public partial class Balance : Form
-    {
+    public partial class Balance : Form {
         DCE DCE_IR;
         PrivateIR pIR;
 
@@ -32,6 +31,12 @@ namespace IRTicker
 
         // holds info about crypto prices that we refresh from time to time (eg when we re-draw dynamic rows, or click reload, or build slack text
         Dictionary<string, DCE.MarketSummary> CryptoPairs;
+
+        // DCE_IR.PrimaryCurrencyList won't cut it - we need to include other currencies
+        List<string> IRCurrencies_and_extras = new List<string>();
+
+        // which other currencies?  These:
+        List<string> Currencies_extras = new List<string>() {"SOL", "WETH", "WBTC", "CHI" };
 
         bool SaveLoanSlush = true;  // false if we're clearing stuff and don't want to make changes to the saved entries.  Taking bets on me having to remove this auto-save nonsense and build a save button again
 
@@ -132,7 +137,16 @@ namespace IRTicker
 
             RowCount += 2;
             CryptoPairs = await cryptoPairsTask;
-            buildDynamicRows(DCE_IR.PrimaryCurrencyList, RowCount);
+
+            // initialise entire currency list, IR ones and extras we care about
+            IRCurrencies_and_extras = DCE_IR.PrimaryCurrencyList.ToList();
+            foreach (string extraCurr in Currencies_extras) {
+                if (!DCE_IR.PrimaryCurrencyList.Contains(extraCurr)) {
+                    IRCurrencies_and_extras.Add(extraCurr);
+                }
+            }
+
+            buildDynamicRows(IRCurrencies_and_extras, RowCount);
 
             DrawIR();  // always draw IR first, 
         }
@@ -201,106 +215,6 @@ namespace IRTicker
             return RowCount;
         }
 
-        // this sub assumes that the masterBalanceDict[][].loan and .slush are populated - eg the LoanSlushDecode() sub has been called
-        /*private void DrawDynamicRows_IR(List<string> Currencies, bool crypto, string platformName) {
-
-            foreach (string curr in Currencies) {
-                if (!masterBalanceDict[platformName].ContainsKey(curr))
-                    masterBalanceDict[platformName].Add(curr, new BalanceData() { isActive = true } );  // at this point we should already have the loan and slush data in here
-                else masterBalanceDict[platformName][curr].isActive = true;  // all currencies are active for IR, just set this to true
-
-                if (pAccounts.ContainsKey(curr)) {
-                    if (TotalBalDict.ContainsKey(curr)) {
-                        TotalBalDict[curr].Text = Utilities.FormatValue(pAccounts[curr].TotalBalance, 8, false);
-                        masterBalanceDict[platformName][curr].TotalBalance = pAccounts[curr].TotalBalance;
-                    }
-                    if (AvailsBalDict.ContainsKey(curr)) {
-                        AvailsBalDict[curr].Text = Utilities.FormatValue(pAccounts[curr].AvailableBalance, 8, false);
-                        masterBalanceDict[platformName][curr].AvailableBalance = pAccounts[curr].AvailableBalance;
-                    }
-                }
-
-                if (masterBalanceDict[platformName].ContainsKey(curr)) {
-                    if (LoanDict.ContainsKey(curr)) {
-                        LoanDict[curr].Text = masterBalanceDict[platformName][curr].LoanStr;
-                    }
-                    if (SlushDict.ContainsKey(curr)) {
-                        SlushDict[curr].Text = masterBalanceDict[platformName][curr].SlushStr;
-                    }
-                }
-
-                if (OutByDict.ContainsKey(curr)) {
-
-                    decimal LoanDec = 0;
-                    decimal SlushDec = 0;
-                    if (decimal.TryParse(LoanDict[curr].Text, out decimal _LoanDec)) {
-                        LoanDec = _LoanDec;
-                        masterBalanceDict[platformName][curr].Loan = LoanDec;
-                    }
-                    if (decimal.TryParse(SlushDict[curr].Text, out decimal _SlushDec)) {
-                        SlushDec = _SlushDec;
-                        masterBalanceDict[platformName][curr].Slush = SlushDec;
-                    }
-                    decimal outby = pAccounts[curr].TotalBalance - LoanDec - SlushDec;
-
-                    // colour the out by text to give a quick idea where we're at
-                    OutByDict[curr].ForeColor = DetermineOutByColour(curr, outby, SlushDec);
-                    
-                    OutByDict[curr].Text = Utilities.FormatValue(outby);
-                    masterBalanceDict[platformName][curr].OutBy = outby;
-                }
-            }
-        }*/
-
-        /// <summary>
-        /// Will return something like this on a good day:
-        /// 
-        /// {"ADA":"0","USD":"0.0045115155","ETH":"0","UST":"-0.0068","XRP":"0.000001","AUD":"-0.006411","BTC":"0","BCH":"0","DOT":"0","BNB":"0","CAD":"0","CHF":"0","CNH":"0","DOG":"0","EOS":"0","ETC":"0","EUR":"0","GBP":"0","ICP":"0","JPY":"0","KSM":"0","LNK":"0","LTC":"0","MXN":"0","NZD":"0","SGD":"0","TRX":"0","UNI":"0","USC":"0","XAU":"0","XLM":"0","XMR":"0","XTZ":"0","ZEC":"0"}
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        private async Task<string> GetWebData(string uri, string token = "") {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
-            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-            request.UserAgent = "IRTicker";
-
-            if (!string.IsNullOrEmpty(token)) request.Headers["Authorization"] = "Token " + token;  // both trigon and B2C2 use the same thing, i guess this is coinroutes
-
-            try {
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                using (Stream stream = response.GetResponseStream())
-                using (StreamReader reader = new StreamReader(stream)) {
-                    string result = reader.ReadToEnd();
-
-                    return result;
-                }
-            }
-            catch (WebException e) {
-                string returnStr = "";
-
-                if (e.Response != null) {
-                    using (WebResponse response = e.Response) {
-                        HttpWebResponse httpResponse = (HttpWebResponse)response;
-                        //Debug.Print("Fail for: " + uri);
-                        Debug.Print("Error code: {0}", httpResponse.StatusCode);
-                        using (Stream data = response.GetResponseStream())
-                        using (var reader = new StreamReader(data)) {
-                            returnStr = reader.ReadToEnd();
-                            Debug.Print(returnStr);
-                            returnStr = httpResponse.StatusCode.ToString();
-                        }
-                    }
-                }
-                //MessageBox.Show("Error connecting to URL: " + uri, "Network error", MessageBoxButtons.OK);
-                //return new Tuple<bool, string>(false, returnStr);
-            }
-            catch (Exception e) {
-                Debug.Print(DateTime.Now + " -- GET FAILED! exception: " + e.Message);
-                //return new Tuple<bool, string>(false, e.Message);
-            }
-            return "";
-        }
-
         private async void DrawTrigonX() {
             string platformName = "TrigonX";
             if (string.IsNullOrEmpty(Properties.Settings.Default.TrigonXToken)) {
@@ -310,7 +224,11 @@ namespace IRTicker
                 Platform_comboBox_SelectedIndexChanged(null, null);  // revert back to IR
                 return;
             }
-            Task<string> res = GetWebData("https://trading.trigonx.com/otc/api/customer/", Properties.Settings.Default.TrigonXToken);
+
+            /// Will return something like this on a good day:
+            /// 
+            /// {"ADA":"0","USD":"0.0045115155","ETH":"0","UST":"-0.0068","XRP":"0.000001","AUD":"-0.006411","BTC":"0","BCH":"0","DOT":"0","BNB":"0","CAD":"0","CHF":"0","CNH":"0","DOG":"0","EOS":"0","ETC":"0","EUR":"0","GBP":"0","ICP":"0","JPY":"0","KSM":"0","LNK":"0","LTC":"0","MXN":"0","NZD":"0","SGD":"0","TRX":"0","UNI":"0","USC":"0","XAU":"0","XLM":"0","XMR":"0","XTZ":"0","ZEC":"0"}
+            Task<string> res = Utilities.GetWebData("https://trading.trigonx.com/otc/api/customer/", "Token " + Properties.Settings.Default.TrigonXToken);
 
             if (!masterBalanceDict.ContainsKey(platformName))
                 masterBalanceDict.Add(platformName, new Dictionary<string, BalanceData>());
@@ -318,7 +236,7 @@ namespace IRTicker
             masterBalanceDict[platformName].Clear();
 
             ClearDynamicRows(DCE_IR.SecondaryCurrencyList);
-            ClearDynamicRows(DCE_IR.PrimaryCurrencyList);
+            ClearDynamicRows(IRCurrencies_and_extras);
             LoanSlushDecode(Properties.Settings.Default.LoanSlushEncoded_TrigonX, platformName);
 
             string TrigonXres = await res;
@@ -328,7 +246,8 @@ namespace IRTicker
             else {
                 Dictionary<string, Account> TrigonXBalances = parseTrigonXResponse(TrigonXres);
                 DrawDynamicRows(DCE_IR.SecondaryCurrencyList, TrigonXBalances, false, platformName);
-                DrawDynamicRows(DCE_IR.PrimaryCurrencyList, TrigonXBalances, true, platformName);
+
+                DrawDynamicRows(IRCurrencies_and_extras, TrigonXBalances, true, platformName);
             }
         }
 
@@ -350,7 +269,7 @@ namespace IRTicker
                         currency = "XBT";
                         break;
                 }
-                if (DCE_IR.PrimaryCurrencyList.Contains(currency) || DCE_IR.SecondaryCurrencyList.Contains(currency)) {
+                if (IRCurrencies_and_extras.Contains(currency) || DCE_IR.SecondaryCurrencyList.Contains(currency)) {
                     Account tempAcc = new Account();
 
                     if (Enum.TryParse(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(currency.ToLower()), out CurrencyCode currencyEnum)) {
@@ -377,7 +296,11 @@ namespace IRTicker
                 Platform_comboBox_SelectedIndexChanged(null, null);  // revert back to IR
                 return;
             }
-            Task<string> res = GetWebData("https://api.b2c2.net/balance/", Properties.Settings.Default.B2C2Token);
+
+            /// Will return something like this on a good day:
+            /// 
+            /// {"ADA":"0","USD":"0.0045115155","ETH":"0","UST":"-0.0068","XRP":"0.000001","AUD":"-0.006411","BTC":"0","BCH":"0","DOT":"0","BNB":"0","CAD":"0","CHF":"0","CNH":"0","DOG":"0","EOS":"0","ETC":"0","EUR":"0","GBP":"0","ICP":"0","JPY":"0","KSM":"0","LNK":"0","LTC":"0","MXN":"0","NZD":"0","SGD":"0","TRX":"0","UNI":"0","USC":"0","XAU":"0","XLM":"0","XMR":"0","XTZ":"0","ZEC":"0"}
+            Task<string> res = Utilities.GetWebData("https://api.b2c2.net/balance/", "Token " + Properties.Settings.Default.B2C2Token);
 
             if (!masterBalanceDict.ContainsKey(platformName))
                 masterBalanceDict.Add(platformName, new Dictionary<string, BalanceData>());
@@ -385,7 +308,7 @@ namespace IRTicker
             masterBalanceDict[platformName].Clear();
 
             ClearDynamicRows(DCE_IR.SecondaryCurrencyList);
-            ClearDynamicRows(DCE_IR.PrimaryCurrencyList);
+            ClearDynamicRows(IRCurrencies_and_extras);
             LoanSlushDecode(Properties.Settings.Default.LoanSlushEncoded_B2C2, platformName);
 
             string B2C2res = await res;
@@ -395,7 +318,7 @@ namespace IRTicker
             else {
                 Dictionary<string, Account> B2C2Balances = parseB2C2Response(B2C2res);
                 DrawDynamicRows(DCE_IR.SecondaryCurrencyList, B2C2Balances, false, platformName);
-                DrawDynamicRows(DCE_IR.PrimaryCurrencyList, B2C2Balances, true, platformName);
+                DrawDynamicRows(IRCurrencies_and_extras, B2C2Balances, true, platformName);
             }
         }
 
@@ -470,7 +393,7 @@ namespace IRTicker
                 else if (normalisedCurrency == "LNK") normalisedCurrency = "LINK";
                 else if (normalisedCurrency == "USC") normalisedCurrency = "USDC";
 
-                if (DCE_IR.SecondaryCurrencyList.Contains(normalisedCurrency) || DCE_IR.PrimaryCurrencyList.Contains(normalisedCurrency)) {
+                if (DCE_IR.SecondaryCurrencyList.Contains(normalisedCurrency) || IRCurrencies_and_extras.Contains(normalisedCurrency)) {
                     if (decimal.TryParse(currPair[1], out decimal balance)) {
                         tempAccount.TotalBalance = balance;
                     }
@@ -526,7 +449,7 @@ namespace IRTicker
 
             // let's draw some controls
             ClearDynamicRows(DCE_IR.SecondaryCurrencyList);
-            ClearDynamicRows(DCE_IR.PrimaryCurrencyList);
+            ClearDynamicRows(IRCurrencies_and_extras);
 
             // populate numbas
             LoanSlushDecode(Properties.Settings.Default.LoanSlushEncoded, platformName);
@@ -534,7 +457,7 @@ namespace IRTicker
             Dictionary<string, Account> pAccounts = await meeTask;  // the idea here is we pause until this task is done
 
             DrawDynamicRows(DCE_IR.SecondaryCurrencyList, pAccounts, false, platformName);
-            DrawDynamicRows(DCE_IR.PrimaryCurrencyList, pAccounts, true, platformName);
+            DrawDynamicRows(IRCurrencies_and_extras, pAccounts, true, platformName);
         }
 
         private void LoanSlush_TextChanged(object sender, EventArgs e) {
@@ -546,7 +469,7 @@ namespace IRTicker
                 loanSlushEncoded += fiat + ";" + LoanDict[fiat].Text + ";" + SlushDict[fiat].Text + "?";
             }
 
-            foreach (string crypto in DCE_IR.PrimaryCurrencyList) {
+            foreach (string crypto in IRCurrencies_and_extras) {
                 loanSlushEncoded += crypto + ";" + LoanDict[crypto].Text + ";" + SlushDict[crypto].Text + "?";
             }
 
@@ -595,7 +518,7 @@ namespace IRTicker
 
 
                 // if it's a legit currency, and we have loan and slush textbox controls for it, then...
-                if ((DCE_IR.PrimaryCurrencyList.Contains(currencySplit[0]) || DCE_IR.SecondaryCurrencyList.Contains(currencySplit[0])) && 
+                if ((IRCurrencies_and_extras.Contains(currencySplit[0]) || DCE_IR.SecondaryCurrencyList.Contains(currencySplit[0])) && 
                     LoanDict.ContainsKey(currencySplit[0]) && SlushDict.ContainsKey(currencySplit[0])) {
                     masterBalanceDict[platformName][currencySplit[0]].LoanStr = currencySplit[1];
                     masterBalanceDict[platformName][currencySplit[0]].SlushStr = currencySplit[2];
@@ -668,7 +591,7 @@ namespace IRTicker
                             break;
                     }
 
-                    if (DCE_IR.PrimaryCurrencyList.Contains(currencyData.Key) && !reachedCryptoYet) {
+                    if (IRCurrencies_and_extras.Contains(currencyData.Key) && !reachedCryptoYet) {
                         slackString += Environment.NewLine;
                         reachedCryptoYet = true;
                     }
@@ -686,12 +609,14 @@ namespace IRTicker
                     else if (OutByAlertColour == Color.Green) slackString += "\t:white_check_mark:";
                     else if (OutByAlertColour == Color.Red) slackString += "\t:exclamation:";
                     else if (OutByAlertColour == Color.Purple) slackString += "\t:male-detective:";
+                    else if (OutByAlertColour == Color.DarkBlue) slackString += "\t:man-shrugging:";
                     else slackString += " :warning:";
 
                     if (OutByAlertColour == Color.Black) TXTString += "\tOK";
                     else if (OutByAlertColour == Color.Green) TXTString += "\tPerfect";
                     else if (OutByAlertColour == Color.Red) TXTString += "\t!! Warning";
                     else if (OutByAlertColour == Color.Purple) TXTString += "\tSlush needs topping up";
+                    else if (OutByAlertColour == Color.DarkBlue) TXTString += "\tUnsupported token";
                     else TXTString += "\tUnknown?";
 
                     slackString += Environment.NewLine;
@@ -707,20 +632,32 @@ namespace IRTicker
 
         private Color DetermineOutByColour(string currency, decimal OutBy, decimal slush) {
             if (null != CryptoPairs) {
-                string pair = currency + "-" + DCE_IR.CurrentSecondaryCurrency;
-                bool isCrypto = DCE_IR.PrimaryCurrencyList.Contains(currency);
+
+                // some cryptos (eg wrapped cryptos) will have the same price as their unwrapped counterparts, or close enough for our purposes.  So "unwrap" them for this sub
+                string pairCurrency = currency;
+                if (pairCurrency == "WETH") pairCurrency = "ETH";
+                if (pairCurrency == "WBTC") pairCurrency = "XBT";
+                string pair = pairCurrency + "-" + DCE_IR.CurrentSecondaryCurrency;
+                
+                bool isCrypto = IRCurrencies_and_extras.Contains(currency);
 
                 decimal value = 0;
                 if (CryptoPairs.ContainsKey(pair)) {
                     value = OutBy * ((CryptoPairs[pair].CurrentLowestOfferPrice + CryptoPairs[pair].CurrentHighestBidPrice) / 2);
                 }
                 else if (!isCrypto) value = OutBy;
-                else return Color.Orange;
+                else {
+                    if (OutBy == 0) return Color.Green;  // even if we don't know the value of the token, if we're out by 0, then we're all good.
+                    else return Color.DarkBlue;
+                }
 
                 if (isCrypto && (slush > 0) && (OutBy < 0)) {  // for crypto we're OK if there's slush and the crypto outBy is negative up to 50% of the slush - this is expected due to withdrawal fees
                     if (OutBy < (slush * -1)) return Color.Red;
-                    else if (OutBy < (slush * -0.5M)) return Color.Purple;  // be alert, not alarmed
-                    else return Color.Black;  // we're down a bit, but have more than half the slush still, so just chill.  no need for red
+                    else if ((slush + OutBy) < (slush / 2)) {  // (slush + OutBy) is the amount we've eaten into the slush by. is it less than half the slush? if so, warn as slush is getting low
+                    //else if (OutBy < (slush * -0.5M)) {
+                        return Color.Purple;  // be alert, not alarmed
+                    }
+                    else return Color.Black;  // we're down a bit, but have more than half the slush still, so just chill.  no need for red/purple
                 }
                 else {  // it's not crypto, or slush is 0
                     if (value == 0) return Color.Green;
@@ -753,7 +690,7 @@ namespace IRTicker
             masterBalanceDict["Coinbase"].Clear();
 
             ClearDynamicRows(DCE_IR.SecondaryCurrencyList);
-            ClearDynamicRows(DCE_IR.PrimaryCurrencyList);
+            ClearDynamicRows(IRCurrencies_and_extras);
             LoanSlushDecode(Properties.Settings.Default.LoanSlushEncoded_Coinbase, "Coinbase");
 
             string CoinbaseRes = await cbResponseTask;
@@ -767,7 +704,7 @@ namespace IRTicker
                 if (null == CoinbaseBalances) TotalBalDict.FirstOrDefault().Value.Text = "Failed to pull Coinbase data";
                 else {
                     DrawDynamicRows(DCE_IR.SecondaryCurrencyList, CoinbaseBalances, false, "Coinbase");
-                    DrawDynamicRows(DCE_IR.PrimaryCurrencyList, CoinbaseBalances, true, "Coinbase");
+                    DrawDynamicRows(IRCurrencies_and_extras, CoinbaseBalances, true, "Coinbase");
                 }
             }
         }
@@ -794,7 +731,7 @@ namespace IRTicker
             foreach (CoinbaseAccountResponse currency in responseJson) {
                 string curr = currency.currency;
                 if (curr == "BTC") curr = "XBT";
-                if (DCE_IR.SecondaryCurrencyList.Contains(curr) || DCE_IR.PrimaryCurrencyList.Contains(curr)) {
+                if (DCE_IR.SecondaryCurrencyList.Contains(curr) || IRCurrencies_and_extras.Contains(curr)) {
                     if (decimal.TryParse(currency.balance, out decimal balance)) {
 
                        Account tempAccount = new Account();
@@ -831,7 +768,7 @@ namespace IRTicker
                 return;
             }
             string uri = "https://api.ethplorer.io/getAddressInfo/" + Properties.Settings.Default.ETHWalletAddress + "?apiKey=freekey";
-            Task<string> responseTask = GetWebData(uri);
+            Task<string> responseTask = Utilities.GetWebData(uri);
 
             if (!masterBalanceDict.ContainsKey(platformName))
                 masterBalanceDict.Add(platformName, new Dictionary<string, BalanceData>());
@@ -839,7 +776,7 @@ namespace IRTicker
             masterBalanceDict[platformName].Clear();
 
             ClearDynamicRows(DCE_IR.SecondaryCurrencyList);
-            ClearDynamicRows(DCE_IR.PrimaryCurrencyList);
+            ClearDynamicRows(IRCurrencies_and_extras);
             LoanSlushDecode(Properties.Settings.Default.LoanSlushEncoded_IROTCMetaMask, platformName);
 
             string MMRes = await responseTask;
@@ -853,7 +790,7 @@ namespace IRTicker
                 if (null == ETHBalances) TotalBalDict.FirstOrDefault().Value.Text = "Failed to pull ETH wallet data";
                 else {
                     DrawDynamicRows(DCE_IR.SecondaryCurrencyList, ETHBalances, false, platformName);
-                    DrawDynamicRows(DCE_IR.PrimaryCurrencyList, ETHBalances, true, platformName);
+                    DrawDynamicRows(IRCurrencies_and_extras, ETHBalances, true, platformName);
                 }
             }
 
@@ -917,7 +854,7 @@ namespace IRTicker
                 return;
             }
 
-            Slack slack = new Slack();
+            //Slack slack = new Slack();
 
             if (LastSlackThread.Date < DateTime.Now.Date) {  // start a new thread
                 var ParentMessage = new Slack.SlackMessage {
