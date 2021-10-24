@@ -30,7 +30,7 @@ namespace IRTicker {
         private bool fiatIsUSD = true;  // to keep track of which fiat base is currently being shown.  I suppose we could inspect the groupbox text field.. but meh
         private bool OER_NetworkAvailable = true;  // should move this into the CE class i guess
         private bool refreshFiat = true;  // this too?
-        private Dictionary<string, UIControls> UIControls_Dict;
+        public Dictionary<string, UIControls> UIControls_Dict;
         private List<string> Exchanges;
         private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "USDT", "DOT", "GRT", "AAVE", "YFI", "PMGT", "SNX", "COMP", "LINK", "ADA", "UNI" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
@@ -44,7 +44,7 @@ namespace IRTicker {
         private CancellationTokenSource cTokenPulseETH;
         private Slack slackObj = new Slack();
         private DateTime lastCSVWrite = DateTime.Now;  // this holds the time we last saved the CSV file
-        private System.Windows.Forms.Panel LastPanel;
+        //private System.Windows.Forms.Panel LastPanel;  // shouldn't need this anymore with the new account form
         private decimal BTCfee = 0;  // holds the estimated BTC network fee for the next block in sats/byte
         private decimal ETHfee = 0;  // holds the estimated ETH network fee for the next block in gwei
 
@@ -52,6 +52,8 @@ namespace IRTicker {
 
         PrivateIR pIR = new PrivateIR();
         public readonly SynchronizationContext synchronizationContext;  // use this to do UI stuff from the market baiter thread
+
+        IRAccountsForm IRAF;
 
         TelegramBot TGBot = null;
 
@@ -222,15 +224,12 @@ namespace IRTicker {
             }
 
             wSocketConnect = new WebSocketsConnect(DCEs, pollingThread, pIR);
-            LastPanel = Main;
+            //LastPanel = Main;
 
 
             if (Properties.Settings.Default.ShowOB) obv.Show();
 
             VersionLabel.Text = "IR Ticker version " + FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
-
-            AccountBuySell_listbox.SelectedIndex = 0;
-            AccountOrderType_listbox.SelectedIndex = 0;
 
             pollingThread.RunWorkerAsync();
         }
@@ -338,104 +337,6 @@ namespace IRTicker {
             UIControls_Dict["IR"].AvgPrice_Crypto = IR_CryptoComboBox;
             UIControls_Dict["IR"].AvgPrice_Currency = IR_CurrencyBox;
             UIControls_Dict["IR"].AvgPrice = IR_AvgPrice_Label;
-            UIControls_Dict["IR"].Account_XBT_Label = AccountXBT_label;
-            UIControls_Dict["IR"].Account_XBT_Value = AccountXBT_value;
-            UIControls_Dict["IR"].Account_ETH_Value = AccountETH_value;
-            UIControls_Dict["IR"].Account_ETH_Label = AccountETH_label;
-            UIControls_Dict["IR"].Account_XRP_Value = AccountXRP_value;
-            UIControls_Dict["IR"].Account_XRP_Label = AccountXRP_label;
-            UIControls_Dict["IR"].Account_BCH_Value = AccountBCH_value;
-            UIControls_Dict["IR"].Account_BCH_Label = AccountBCH_label;
-            UIControls_Dict["IR"].Account_BSV_Value = AccountBSV_value;
-            UIControls_Dict["IR"].Account_BSV_Label = AccountBSV_label;
-            UIControls_Dict["IR"].Account_USDT_Value = AccountUSDT_value;
-            UIControls_Dict["IR"].Account_USDT_Label = AccountUSDT_label;
-            UIControls_Dict["IR"].Account_LTC_Value = AccountLTC_value;
-            UIControls_Dict["IR"].Account_LTC_Label = AccountLTC_label;
-            UIControls_Dict["IR"].Account_EOS_Value = AccountEOS_value;
-            UIControls_Dict["IR"].Account_EOS_Label = AccountEOS_label;
-            UIControls_Dict["IR"].Account_XLM_Value = AccountXLM_value;
-            UIControls_Dict["IR"].Account_XLM_Label = AccountXLM_label;
-            UIControls_Dict["IR"].Account_ETC_Value = AccountETC_value;
-            UIControls_Dict["IR"].Account_ETC_Label = AccountETC_label;
-            UIControls_Dict["IR"].Account_BAT_Value = AccountBAT_value;
-            UIControls_Dict["IR"].Account_BAT_Label = AccountBAT_label;
-            UIControls_Dict["IR"].Account_OMG_Value = AccountOMG_value;
-            UIControls_Dict["IR"].Account_OMG_Label = AccountOMG_label;
-            UIControls_Dict["IR"].Account_MKR_Value = AccountMKR_value;
-            UIControls_Dict["IR"].Account_MKR_Label = AccountMKR_label;
-            UIControls_Dict["IR"].Account_ZRX_Value = AccountZRX_value;
-            UIControls_Dict["IR"].Account_ZRX_Label = AccountZRX_label;
-            UIControls_Dict["IR"].Account_GNT_Value = AccountGNT_value;
-            UIControls_Dict["IR"].Account_GNT_Label = AccountGNT_label;
-            UIControls_Dict["IR"].Account_DAI_Value = AccountDAI_value;
-            UIControls_Dict["IR"].Account_DAI_Label = AccountDAI_label;
-            UIControls_Dict["IR"].Account_USDC_Value = AccountUSDC_value;
-            UIControls_Dict["IR"].Account_USDC_Label = AccountUSDC_label;
-            UIControls_Dict["IR"].Account_XBT_Total = AccountXBT_total;
-            UIControls_Dict["IR"].Account_ETH_Total = AccountETH_total;
-            UIControls_Dict["IR"].Account_XRP_Total = AccountXRP_total;
-            UIControls_Dict["IR"].Account_BCH_Total = AccountBCH_total;
-            UIControls_Dict["IR"].Account_BSV_Total = AccountBSV_total;
-            UIControls_Dict["IR"].Account_USDT_Total = AccountUSDT_total;
-            UIControls_Dict["IR"].Account_LTC_Total = AccountLTC_total;
-            UIControls_Dict["IR"].Account_EOS_Total = AccountEOS_total;
-            UIControls_Dict["IR"].Account_XLM_Total = AccountXLM_total;
-            UIControls_Dict["IR"].Account_ETC_Total = AccountETC_total;
-            UIControls_Dict["IR"].Account_BAT_Total = AccountBAT_total;
-            UIControls_Dict["IR"].Account_OMG_Total = AccountOMG_total;
-            UIControls_Dict["IR"].Account_MKR_Total = AccountMKR_total;
-            UIControls_Dict["IR"].Account_ZRX_Total = AccountZRX_total;
-            UIControls_Dict["IR"].Account_GNT_Total = AccountGNT_total;
-            UIControls_Dict["IR"].Account_DAI_Total = AccountDAI_total;
-            UIControls_Dict["IR"].Account_LINK_Total = AccountLINK_total;
-            UIControls_Dict["IR"].Account_LINK_Value = AccountLINK_value;
-            UIControls_Dict["IR"].Account_LINK_Label = AccountLINK_label;
-            UIControls_Dict["IR"].Account_USDC_Total = AccountUSDC_total;
-            UIControls_Dict["IR"].Account_AUD_Total = AccountAUD_total;
-            UIControls_Dict["IR"].Account_AUD_Label = AccountAUD_label;
-            UIControls_Dict["IR"].Account_NZD_Total = AccountNZD_total;
-            UIControls_Dict["IR"].Account_NZD_Label = AccountNZD_label;
-            UIControls_Dict["IR"].Account_USD_Total = AccountUSD_total;
-            UIControls_Dict["IR"].Account_USD_Label = AccountUSD_label;
-            UIControls_Dict["IR"].Account_SGD_Total = AccountSGD_total;
-            UIControls_Dict["IR"].Account_SGD_Label = AccountSGD_label;
-            UIControls_Dict["IR"].Account_COMP_Total = AccountCOMP_total;
-            UIControls_Dict["IR"].Account_COMP_Value = AccountCOMP_value;
-            UIControls_Dict["IR"].Account_COMP_Label = AccountCOMP_label;
-            UIControls_Dict["IR"].Account_SNX_Total = AccountSNX_total;
-            UIControls_Dict["IR"].Account_SNX_Value = AccountSNX_value;
-            UIControls_Dict["IR"].Account_SNX_Label = AccountSNX_label;
-            UIControls_Dict["IR"].Account_PMGT_Total = AccountPMGT_total;
-            UIControls_Dict["IR"].Account_PMGT_Value = AccountPMGT_value;
-            UIControls_Dict["IR"].Account_PMGT_Label = AccountPMGT_label;
-            UIControls_Dict["IR"].Account_YFI_Total = AccountYFI_total;
-            UIControls_Dict["IR"].Account_YFI_Value = AccountYFI_value;
-            UIControls_Dict["IR"].Account_YFI_Label = AccountYFI_label;
-            UIControls_Dict["IR"].Account_AAVE_Total = AccountAAVE_total;
-            UIControls_Dict["IR"].Account_AAVE_Value = AccountAAVE_value;
-            UIControls_Dict["IR"].Account_AAVE_Label = AccountAAVE_label;
-            UIControls_Dict["IR"].Account_KNC_Total = AccountKNC_total;
-            UIControls_Dict["IR"].Account_KNC_Value = AccountKNC_value;
-            UIControls_Dict["IR"].Account_KNC_Label = AccountKNC_label;
-            UIControls_Dict["IR"].Account_DOT_Total = AccountDOT_total;
-            UIControls_Dict["IR"].Account_DOT_Value = AccountDOT_value;
-            UIControls_Dict["IR"].Account_DOT_Label = AccountDOT_label;
-            UIControls_Dict["IR"].Account_GRT_Total = AccountGRT_total;
-            UIControls_Dict["IR"].Account_GRT_Value = AccountGRT_value;
-            UIControls_Dict["IR"].Account_GRT_Label = AccountGRT_label;
-            UIControls_Dict["IR"].Account_UNI_Total = AccountUNI_total;
-            UIControls_Dict["IR"].Account_UNI_Value = AccountUNI_value;
-            UIControls_Dict["IR"].Account_UNI_Label = AccountUNI_label;
-            UIControls_Dict["IR"].Account_ADA_Total = AccountADA_total;
-            UIControls_Dict["IR"].Account_ADA_Value = AccountADA_value;
-            UIControls_Dict["IR"].Account_ADA_Label = AccountADA_label;
-            UIControls_Dict["IR"].Account_DOGE_Total = AccountDOGE_total;
-            UIControls_Dict["IR"].Account_DOGE_Value = AccountDOGE_value;
-            UIControls_Dict["IR"].Account_DOGE_Label = AccountDOGE_label;
-            UIControls_Dict["IR"].Account_MATIC_Total = AccountMATIC_total;
-            UIControls_Dict["IR"].Account_MATIC_Value = AccountMATIC_value;
-            UIControls_Dict["IR"].Account_MATIC_Label = AccountMATIC_label;
 
             // BTCM
 
@@ -1295,10 +1196,11 @@ namespace IRTicker {
                             pIR = null;
                         }
                         else {
-                            pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                            pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, IRAF, DCEs["IR"], TGBot);
                             int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
                             if (friendlyNameLen > 20) friendlyNameLen = 20;
-                            AccountName_button.Text = Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : "");
+
+                            if (null != IRAF) IRAF.UpdateAccountNameButton(Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : ""));
                         }
 
                         /*DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "AUD");
@@ -1366,12 +1268,12 @@ namespace IRTicker {
                         if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
                             ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency, false);
                         }
-                        if (pIR != null) {
+                        if ((null != IRAF) && (pIR != null)) {
                             foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
                                 try {
                                     var cOrders = pIR.GetClosedOrders(primaryCode, fiat);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
-                                    if (IRAccount_panel.Visible && (primaryCode == AccountSelectedCrypto) && (fiat == DCEs["IR"].CurrentSecondaryCurrency) && (cOrders != null)) 
-                                        drawClosedOrders(cOrders.Data);
+                                    if ((null != IRAF) && (primaryCode == IRAF.AccountSelectedCrypto) && (fiat == DCEs["IR"].CurrentSecondaryCurrency) && (cOrders != null)) 
+                                        IRAF.drawClosedOrders(cOrders.Data);
                                 }
                                 catch (Exception ex) {
                                     string errorMsg = ex.Message;
@@ -1383,7 +1285,7 @@ namespace IRTicker {
                                 // if i want to get fancy i can call reportProgress and drawClosedOrders()...
 
                                 // once a cycle let's give the order book a nudge.. there might be new orders that we haven't seen.
-                                pIR.compileAccountOrderBookAsync(primaryCode + "-" + fiat);
+                                if (null != IRAF) pIR.compileAccountOrderBookAsync(primaryCode + "-" + fiat);
                             }
                         }
                     }
@@ -1797,8 +1699,8 @@ namespace IRTicker {
                 //}
 
                 // lets update IRACCOUNTS
-                if (IRAccount_panel.Visible && dExchange == "IR") {
-                    setCurrencyValues(mSummary.PrimaryCurrencyCode.ToUpper(), mSummary.CurrentHighestBidPrice);
+                if ((null != IRAF) && dExchange == "IR") {
+                    IRAF.setCurrencyValues(mSummary.PrimaryCurrencyCode.ToUpper(), mSummary.CurrentHighestBidPrice);
                 }
 
 
@@ -2278,7 +2180,7 @@ namespace IRTicker {
             }
 
             // If the account panel is open, let's update some sub panels (open orders, closed orders, etc)
-            if (IRAccount_panel.Visible) Task.Run(() => UpdateIRAccountPanel());  // don't wait up
+            if (null != IRAF) Task.Run(() => UpdateIRAccountPanel());  // don't wait up
 
             // we have updated all the prices, if the average price controls are disabled, we can enable them now
             IR_CryptoComboBox.Enabled = IR_BuySellComboBox.Enabled = IR_NumCoinsTextBox.Enabled = true;
@@ -2340,14 +2242,15 @@ namespace IRTicker {
             foreach (KeyValuePair<string, SpreadGraph> sGraph in SpreadGraph_Dict) sGraph.Value.Redraw();  // update the graph
         }
 
+        // this is only called if IRAF is not null
         private void UpdateIRAccountPanel() {
             try {
-                var openOs = pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
-                drawOpenOrders(openOs.Data);
+                var openOs = pIR.GetOpenOrders(IRAF.AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
+                IRAF.drawOpenOrders(openOs.Data);
                 //var closedOs = pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);  // shouldn't need to call this, we call it from DoWork already
                 //drawClosedOrders(closedOs.Data);
                 var accs = pIR.GetAccounts();
-                DrawIRAccounts(accs);
+                IRAF.DrawIRAccounts(accs);
             }
             catch (Exception ex) {
                 string errorMsg = ex.Message;
@@ -2394,7 +2297,7 @@ namespace IRTicker {
                 }
             }
 
-            IRAccount_panel.Visible = false;
+            //IRAccount_panel.Visible = false;
 
            if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "")) {
                 slackObj.setStatus("", "");
@@ -2443,7 +2346,7 @@ namespace IRTicker {
                         IRAccount_button.Enabled = true;
 
                         pIR = new PrivateIR();
-                        pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                        pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, IRAF, DCEs["IR"], TGBot);
                         //Task.Run(() => pIR.populateClosedOrders());
                     }
 
@@ -2506,14 +2409,14 @@ namespace IRTicker {
                     catch (Exception ex) {
                         Debug.Print("Tried to getAccounts on closing the settings screen, but it failed.  oh well: " + ex.Message);
                     }*/
-                    LastPanel.Visible = true;
+                    Main.Visible = true;
                     Settings.Visible = false;
-                    if (IRAccount_panel.Visible) {
-                        InitialiseAccountsPanel();  // seeing if this helps the tg spam
+                    if (null != IRAF) {
+                        IRAF.InitialiseAccountsPanel();  // seeing if this helps the tg spam
+                        IRAF.drawClosedOrders(null);
+                        IRAF.drawOpenOrders(null);
+                        IRAF.drawDepositAddress(null);  // blanks out the deposit address pane
                     }
-                    drawClosedOrders(null);
-                    drawOpenOrders(null);
-                    drawDepositAddress(null);  // blanks out the deposit address pane
                 }
                 else {
                     MessageBox.Show("Sorry, minimum is " + minRefreshFrequency.ToString() + " seconds, or you'll piss off APIs and get blocked", "Too low!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -3194,7 +3097,15 @@ namespace IRTicker {
         }
 
         private void IRAccount_button_Click(object sender, EventArgs e) {
-            InitialiseAccountsPanel();
+            if ((null == IRAF) || IRAF.IsDisposed) {
+                IRAF = new IRAccountsForm(this, pIR, DCEs["IR"], TGBot);
+                IRAF.Show();
+            }
+            else {
+                IRAF.BringToFront();
+                IRAF.Show();
+                IRAF.Activate();
+            }            
         }
 
         private void EditKeys_button_Click(object sender, EventArgs e) {
@@ -3262,7 +3173,8 @@ namespace IRTicker {
 
                 int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
                 if (friendlyNameLen > 20) friendlyNameLen = 20;
-                AccountName_button.Text = Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : "");
+
+                if (null != IRAF) IRAF.UpdateAccountNameButton(Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : ""));
 
                 if (TGBot != null) {  // need to clear the TGBot dictionaries first before we re-initialise pIR object as privateIR_init will alert TGBot to API key's closed orders
                     TGBot.closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
@@ -3272,7 +3184,7 @@ namespace IRTicker {
                 }
                 if (pIR != null) {
                     pIR.APIKeyHasChanged();
-                    pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, this, DCEs["IR"], TGBot);
+                    pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, IRAF, DCEs["IR"], TGBot);
                     //await Task.Run(() => pIR.populateClosedOrders());
                 }
             }
@@ -3289,12 +3201,26 @@ namespace IRTicker {
             }
         }
 
-        private void AccountName_button_Click(object sender, EventArgs e) {
-            LastPanel = IRAccount_panel;
-            populateIRAPIKeysSettings();  // populate the api keys drop down.
+        public void showBalloon(string title, string body) {
 
+            IRT_notification.Visible = true;
+
+            if (title != null) {
+                IRT_notification.BalloonTipTitle = title;
+            }
+
+            if (body != null) {
+                IRT_notification.BalloonTipText = body;
+            }
+
+            IRT_notification.ShowBalloonTip(10000);
+        }
+
+        private void AccountName_button_Click(object sender, EventArgs e) {
+            //LastPanel = IRAccount_panel;
+            populateIRAPIKeysSettings();  // populate the api keys drop down.
+            BringToFront();  // should make the main form focused
             Settings.Visible = true;
-            IRAccount_panel.Visible = false;
         }
 
         public partial class BlockHeight

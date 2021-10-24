@@ -205,15 +205,18 @@
     <Compile Include="Help.Designer.cs">
       <DependentUpon>Help.cs</DependentUpon>
     </Compile>
+    <Compile Include="IRAccountsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IRAccountsForm.Designer.cs">
+      <DependentUpon>IRAccountsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="IRCurrencies.cs" />
     <Compile Include="IRTicker.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="IRTicker.Designer.cs">
       <DependentUpon>IRTicker.cs</DependentUpon>
-    </Compile>
-    <Compile Include="IRTicker.Private.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="OBview.cs">
       <SubType>Form</SubType>
@@ -266,6 +269,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Help.resx">
       <DependentUpon>Help.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IRAccountsForm.resx">
+      <DependentUpon>IRAccountsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="IRTicker.resx">
       <DependentUpon>IRTicker.cs</DependentUpon>

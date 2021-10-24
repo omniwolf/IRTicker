@@ -1,69 +1,199 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
-using IndependentReserve.DotNetClientApi;
-using IndependentReserve.DotNetClientApi.Data;
 using System.Threading.Tasks;
-using System.Threading;
 using System.Windows.Forms;
+using IndependentReserve.DotNetClientApi.Data;
+using System.Threading;
 using System.Diagnostics;
-using System.Drawing;
 using System.Collections.Concurrent;
-using System.Net;
 
-namespace IRTicker {
-    // holds code to do with the IR Accounts panel
-    /*partial class IRTicker {
 
-        private string AccountSelectedCrypto = "XBT";
+namespace IRTicker
+{
+    public partial class IRAccountsForm : Form
+    {
+
+        public string AccountSelectedCrypto = "XBT";
         private Task updateOBTask;
         private bool IRAccountsButtonJustClicked = true;  // true if the use has just clicked the IR Accounts button.  If true and GetAccounts fails, then we close the IR Accounts panel and head back to the Main panel.  If false and GetAccounts fails, we just do it silently
-        private AccAvgPrice AccAvgPrice_form = null;
 
-        private void InitialiseAccountsPanel1() {
+        private IRTicker IRT;
+        private PrivateIR pIR;
+        private DCE DCE_IR;
+        private TelegramBot TGBot;
+
+        public void InitialiseAccountsPanel() {
             AccountOrderVolume_textbox.Enabled = true;
             AccountLimitPrice_textbox.Enabled = true;
-            Settings.Visible = false;
-            IRAccount_panel.Visible = true;
-            Main.Visible = false;
+            //IRT.Settings.Visible = false;
+            //IRAccount_panel.Visible = true;
+            //Main.Visible = false;
             IRAccountsButtonJustClicked = true;
-            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { 
-                PrivateIR.PrivateIREndPoints.GetAccounts, 
-                PrivateIR.PrivateIREndPoints.GetOpenOrders, 
-                PrivateIR.PrivateIREndPoints.GetClosedOrders, 
-                PrivateIR.PrivateIREndPoints.GetAddress, 
+            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
+                PrivateIR.PrivateIREndPoints.GetAccounts,
+                PrivateIR.PrivateIREndPoints.GetOpenOrders,
+                //PrivateIR.PrivateIREndPoints.GetClosedOrders,
+                PrivateIR.PrivateIREndPoints.GetAddress,
                 PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
             AccountBuySell_listbox_Click(null, null);  // simulate a click to set things up
         }
 
-        private void DrawIRAccounts1(Dictionary<string, Account> irAccounts) {
+        public IRAccountsForm(IRTicker _IRT, PrivateIR _pIR, DCE _DCE_IR, TelegramBot _TGBot) {
+            IRT = _IRT;
+            pIR = _pIR;
+            DCE_IR = _DCE_IR;
+            TGBot = _TGBot;
 
-            synchronizationContext.Post(new SendOrPostCallback(o => {
+            InitializeComponent();
+
+            AccountBuySell_listbox.SelectedIndex = 0;
+            AccountOrderType_listbox.SelectedIndex = 0;
+
+            int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
+            if (friendlyNameLen > 20) friendlyNameLen = 20;
+            UpdateAccountNameButton(Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : ""));
+
+            IRT.UIControls_Dict["IR"].Account_XBT_Label = AccountXBT_label;
+            IRT.UIControls_Dict["IR"].Account_XBT_Value = AccountXBT_value;
+            IRT.UIControls_Dict["IR"].Account_ETH_Value = AccountETH_value;
+            IRT.UIControls_Dict["IR"].Account_ETH_Label = AccountETH_label;
+            IRT.UIControls_Dict["IR"].Account_XRP_Value = AccountXRP_value;
+            IRT.UIControls_Dict["IR"].Account_XRP_Label = AccountXRP_label;
+            IRT.UIControls_Dict["IR"].Account_BCH_Value = AccountBCH_value;
+            IRT.UIControls_Dict["IR"].Account_BCH_Label = AccountBCH_label;
+            IRT.UIControls_Dict["IR"].Account_BSV_Value = AccountBSV_value;
+            IRT.UIControls_Dict["IR"].Account_BSV_Label = AccountBSV_label;
+            IRT.UIControls_Dict["IR"].Account_USDT_Value = AccountUSDT_value;
+            IRT.UIControls_Dict["IR"].Account_USDT_Label = AccountUSDT_label;
+            IRT.UIControls_Dict["IR"].Account_LTC_Value = AccountLTC_value;
+            IRT.UIControls_Dict["IR"].Account_LTC_Label = AccountLTC_label;
+            IRT.UIControls_Dict["IR"].Account_EOS_Value = AccountEOS_value;
+            IRT.UIControls_Dict["IR"].Account_EOS_Label = AccountEOS_label;
+            IRT.UIControls_Dict["IR"].Account_XLM_Value = AccountXLM_value;
+            IRT.UIControls_Dict["IR"].Account_XLM_Label = AccountXLM_label;
+            IRT.UIControls_Dict["IR"].Account_ETC_Value = AccountETC_value;
+            IRT.UIControls_Dict["IR"].Account_ETC_Label = AccountETC_label;
+            IRT.UIControls_Dict["IR"].Account_BAT_Value = AccountBAT_value;
+            IRT.UIControls_Dict["IR"].Account_BAT_Label = AccountBAT_label;
+            IRT.UIControls_Dict["IR"].Account_OMG_Value = AccountOMG_value;
+            IRT.UIControls_Dict["IR"].Account_OMG_Label = AccountOMG_label;
+            IRT.UIControls_Dict["IR"].Account_MKR_Value = AccountMKR_value;
+            IRT.UIControls_Dict["IR"].Account_MKR_Label = AccountMKR_label;
+            IRT.UIControls_Dict["IR"].Account_ZRX_Value = AccountZRX_value;
+            IRT.UIControls_Dict["IR"].Account_ZRX_Label = AccountZRX_label;
+            IRT.UIControls_Dict["IR"].Account_GNT_Value = AccountGNT_value;
+            IRT.UIControls_Dict["IR"].Account_GNT_Label = AccountGNT_label;
+            IRT.UIControls_Dict["IR"].Account_DAI_Value = AccountDAI_value;
+            IRT.UIControls_Dict["IR"].Account_DAI_Label = AccountDAI_label;
+            IRT.UIControls_Dict["IR"].Account_USDC_Value = AccountUSDC_value;
+            IRT.UIControls_Dict["IR"].Account_USDC_Label = AccountUSDC_label;
+            IRT.UIControls_Dict["IR"].Account_XBT_Total = AccountXBT_total;
+            IRT.UIControls_Dict["IR"].Account_ETH_Total = AccountETH_total;
+            IRT.UIControls_Dict["IR"].Account_XRP_Total = AccountXRP_total;
+            IRT.UIControls_Dict["IR"].Account_BCH_Total = AccountBCH_total;
+            IRT.UIControls_Dict["IR"].Account_BSV_Total = AccountBSV_total;
+            IRT.UIControls_Dict["IR"].Account_USDT_Total = AccountUSDT_total;
+            IRT.UIControls_Dict["IR"].Account_LTC_Total = AccountLTC_total;
+            IRT.UIControls_Dict["IR"].Account_EOS_Total = AccountEOS_total;
+            IRT.UIControls_Dict["IR"].Account_XLM_Total = AccountXLM_total;
+            IRT.UIControls_Dict["IR"].Account_ETC_Total = AccountETC_total;
+            IRT.UIControls_Dict["IR"].Account_BAT_Total = AccountBAT_total;
+            IRT.UIControls_Dict["IR"].Account_OMG_Total = AccountOMG_total;
+            IRT.UIControls_Dict["IR"].Account_MKR_Total = AccountMKR_total;
+            IRT.UIControls_Dict["IR"].Account_ZRX_Total = AccountZRX_total;
+            IRT.UIControls_Dict["IR"].Account_GNT_Total = AccountGNT_total;
+            IRT.UIControls_Dict["IR"].Account_DAI_Total = AccountDAI_total;
+            IRT.UIControls_Dict["IR"].Account_LINK_Total = AccountLINK_total;
+            IRT.UIControls_Dict["IR"].Account_LINK_Value = AccountLINK_value;
+            IRT.UIControls_Dict["IR"].Account_LINK_Label = AccountLINK_label;
+            IRT.UIControls_Dict["IR"].Account_USDC_Total = AccountUSDC_total;
+            IRT.UIControls_Dict["IR"].Account_AUD_Total = AccountAUD_total;
+            IRT.UIControls_Dict["IR"].Account_AUD_Label = AccountAUD_label;
+            IRT.UIControls_Dict["IR"].Account_NZD_Total = AccountNZD_total;
+            IRT.UIControls_Dict["IR"].Account_NZD_Label = AccountNZD_label;
+            IRT.UIControls_Dict["IR"].Account_USD_Total = AccountUSD_total;
+            IRT.UIControls_Dict["IR"].Account_USD_Label = AccountUSD_label;
+            IRT.UIControls_Dict["IR"].Account_SGD_Total = AccountSGD_total;
+            IRT.UIControls_Dict["IR"].Account_SGD_Label = AccountSGD_label;
+            IRT.UIControls_Dict["IR"].Account_COMP_Total = AccountCOMP_total;
+            IRT.UIControls_Dict["IR"].Account_COMP_Value = AccountCOMP_value;
+            IRT.UIControls_Dict["IR"].Account_COMP_Label = AccountCOMP_label;
+            IRT.UIControls_Dict["IR"].Account_SNX_Total = AccountSNX_total;
+            IRT.UIControls_Dict["IR"].Account_SNX_Value = AccountSNX_value;
+            IRT.UIControls_Dict["IR"].Account_SNX_Label = AccountSNX_label;
+            IRT.UIControls_Dict["IR"].Account_PMGT_Total = AccountPMGT_total;
+            IRT.UIControls_Dict["IR"].Account_PMGT_Value = AccountPMGT_value;
+            IRT.UIControls_Dict["IR"].Account_PMGT_Label = AccountPMGT_label;
+            IRT.UIControls_Dict["IR"].Account_YFI_Total = AccountYFI_total;
+            IRT.UIControls_Dict["IR"].Account_YFI_Value = AccountYFI_value;
+            IRT.UIControls_Dict["IR"].Account_YFI_Label = AccountYFI_label;
+            IRT.UIControls_Dict["IR"].Account_AAVE_Total = AccountAAVE_total;
+            IRT.UIControls_Dict["IR"].Account_AAVE_Value = AccountAAVE_value;
+            IRT.UIControls_Dict["IR"].Account_AAVE_Label = AccountAAVE_label;
+            IRT.UIControls_Dict["IR"].Account_KNC_Total = AccountKNC_total;
+            IRT.UIControls_Dict["IR"].Account_KNC_Value = AccountKNC_value;
+            IRT.UIControls_Dict["IR"].Account_KNC_Label = AccountKNC_label;
+            IRT.UIControls_Dict["IR"].Account_DOT_Total = AccountDOT_total;
+            IRT.UIControls_Dict["IR"].Account_DOT_Value = AccountDOT_value;
+            IRT.UIControls_Dict["IR"].Account_DOT_Label = AccountDOT_label;
+            IRT.UIControls_Dict["IR"].Account_GRT_Total = AccountGRT_total;
+            IRT.UIControls_Dict["IR"].Account_GRT_Value = AccountGRT_value;
+            IRT.UIControls_Dict["IR"].Account_GRT_Label = AccountGRT_label;
+            IRT.UIControls_Dict["IR"].Account_UNI_Total = AccountUNI_total;
+            IRT.UIControls_Dict["IR"].Account_UNI_Value = AccountUNI_value;
+            IRT.UIControls_Dict["IR"].Account_UNI_Label = AccountUNI_label;
+            IRT.UIControls_Dict["IR"].Account_ADA_Total = AccountADA_total;
+            IRT.UIControls_Dict["IR"].Account_ADA_Value = AccountADA_value;
+            IRT.UIControls_Dict["IR"].Account_ADA_Label = AccountADA_label;
+            IRT.UIControls_Dict["IR"].Account_DOGE_Total = AccountDOGE_total;
+            IRT.UIControls_Dict["IR"].Account_DOGE_Value = AccountDOGE_value;
+            IRT.UIControls_Dict["IR"].Account_DOGE_Label = AccountDOGE_label;
+            IRT.UIControls_Dict["IR"].Account_MATIC_Total = AccountMATIC_total;
+            IRT.UIControls_Dict["IR"].Account_MATIC_Value = AccountMATIC_value;
+            IRT.UIControls_Dict["IR"].Account_MATIC_Label = AccountMATIC_label;
+
+            IRT.UIControls_Dict["IR"].CreateIRAccountControlDictionary();  // now that we have finally opened this form, we can add the form labels to the dictionary
+
+            pIR.setIRAF(this); // we're aLiVe
+            InitialiseAccountsPanel();
+        }
+
+        public void UpdateAccountNameButton(string accName) {
+            AccountName_button.Text = accName;
+        }
+
+        public void DrawIRAccounts(Dictionary<string, Account> irAccounts) {
+
+            IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
                 Dictionary<string, Account> _irAccounts = (Dictionary<string, Account>)o;
-                Label CurrentSecondaryCurrecyLabel = UIControls_Dict["IR"].Label_Dict[DCEs["IR"].CurrentSecondaryCurrency + "_Account_Label"];
+                Label CurrentSecondaryCurrecyLabel = IRT.UIControls_Dict["IR"].Label_Dict[DCE_IR.CurrentSecondaryCurrency + "_Account_Label"];
                 CurrentSecondaryCurrecyLabel.ForeColor = Color.DarkBlue;
                 CurrentSecondaryCurrecyLabel.Font = new Font(CurrentSecondaryCurrecyLabel.Font.FontFamily, 12f, FontStyle.Bold);
 
-                Label SelectedCrypto = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
+                Label SelectedCrypto = IRT.UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
                 SelectedCrypto.ForeColor = Color.DarkOrange;
                 SelectedCrypto.Font = new Font(SelectedCrypto.Font.FontFamily, 12f, FontStyle.Bold);
 
-                var mSummaries = DCEs["IR"].GetCryptoPairs();
+                var mSummaries = DCE_IR.GetCryptoPairs();
 
                 foreach (KeyValuePair<string, Account> acc in _irAccounts) {
-                    if (UIControls_Dict["IR"].Label_Dict.ContainsKey(acc.Key + "_Account_Total")) {
-                        UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Total"].Text =
+                    if (IRT.UIControls_Dict["IR"].Label_Dict.ContainsKey(acc.Key + "_Account_Total")) {
+                        IRT.UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Total"].Text =
                             Utilities.FormatValue(acc.Value.AvailableBalance);
-                        IRTickerTT_generic.SetToolTip(UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Total"], acc.Value.AvailableBalance.ToString());
+                        IRTickerTT_generic.SetToolTip(IRT.UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Total"], acc.Value.AvailableBalance.ToString());
                     }
                     else {
                         Debug.Print(DateTime.Now + " new currency?? - " + acc.Key);
                     }
 
-                    if (UIControls_Dict["IR"].Label_Dict.ContainsKey(acc.Key + "_Account_Value") && mSummaries.ContainsKey(acc.Key + "-" + DCEs["IR"].CurrentSecondaryCurrency)) {
-                        UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Value"].Text =
-                            Utilities.FormatValue(acc.Value.AvailableBalance * mSummaries[acc.Key + "-" + DCEs["IR"].CurrentSecondaryCurrency].CurrentHighestBidPrice);
+                    if (IRT.UIControls_Dict["IR"].Label_Dict.ContainsKey(acc.Key + "_Account_Value") && mSummaries.ContainsKey(acc.Key + "-" + DCE_IR.CurrentSecondaryCurrency)) {
+                        IRT.UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Value"].Text =
+                            Utilities.FormatValue(acc.Value.AvailableBalance * mSummaries[acc.Key + "-" + DCE_IR.CurrentSecondaryCurrency].CurrentHighestBidPrice);
                     }
                     else {
                         //Debug.Print(DateTime.Now + " new currency (value)?? - " + acc.Key);
@@ -75,7 +205,7 @@ namespace IRTicker {
         // runs these network calls in order
         // this method should only be called from the UI because it can surface messageboxes
         // eg baiter and telegram should never use this.
-        private void bulkSequentialAPICalls1(List<PrivateIR.PrivateIREndPoints> endPoints, decimal volume = 0, decimal price = 0, string orderGuid = "") {
+        private void bulkSequentialAPICalls(List<PrivateIR.PrivateIREndPoints> endPoints, decimal volume = 0, decimal price = 0, string orderGuid = "") {
 
             foreach (PrivateIR.PrivateIREndPoints endP in endPoints) {
                 if (endP == PrivateIR.PrivateIREndPoints.GetAccounts) {
@@ -96,9 +226,8 @@ namespace IRTicker {
                     //Debug.Print("PIR: gotACcounts");
                     if ((irAccounts == null) && IRAccountsButtonJustClicked) {
                         Debug.Print(DateTime.Now + " - there was an error, closing the accounts page");
-                        synchronizationContext.Post(new SendOrPostCallback(o => {
-                            Main.Visible = true;
-                            IRAccount_panel.Visible = false;
+                        IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
+                            Close();
                         }), null);
                         return;  // close the IRAccounts panel
                     }
@@ -139,18 +268,18 @@ namespace IRTicker {
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.GetOpenOrders) {
                     try {
-                        var openOrders = pIR.GetOpenOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
+                        var openOrders = pIR.GetOpenOrders(AccountSelectedCrypto, DCE_IR.CurrentSecondaryCurrency);
                         drawOpenOrders(openOrders.Data);
                     }
                     catch (Exception ex) {
-                        showBalloon("Failed to get open orders", "Error: " + ex.Message);
+                         IRT.showBalloon("Failed to get open orders", "Error: " + ex.Message);
                         Debug.Print(DateTime.Now + " - GetOpenOrders failed with: " + ex.Message);
                     }
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.GetClosedOrders) {
                     Page<BankHistoryOrder> closedOrders;
                     try {
-                        closedOrders = pIR.GetClosedOrders(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency);
+                        closedOrders = pIR.GetClosedOrders(AccountSelectedCrypto, DCE_IR.CurrentSecondaryCurrency);
                     }
                     catch (Exception ex) {
                         string errorMsg = "";
@@ -169,7 +298,7 @@ namespace IRTicker {
 
                     BankOrder orderResult;
                     try {
-                        orderResult = pIR.PlaceMarketOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, null, -1);
+                        orderResult = pIR.PlaceMarketOrder(AccountSelectedCrypto, DCE_IR.CurrentSecondaryCurrency, null, -1);
                     }
                     catch (Exception ex) {
                         string errorMsg = "";
@@ -188,7 +317,7 @@ namespace IRTicker {
 
                     BankOrder orderResult;
                     try {
-                        orderResult = pIR.PlaceLimitOrder(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, null, -1, -1);
+                        orderResult = pIR.PlaceLimitOrder(AccountSelectedCrypto, DCE_IR.CurrentSecondaryCurrency, null, -1, -1);
                     }
                     catch (Exception ex) {
                         string errorMsg = "";
@@ -218,12 +347,12 @@ namespace IRTicker {
                     Debug.Print("cancelled order status: " + cancelledOrder.Status.ToString());
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.UpdateOrderBook) {
-                    updateOBTask = Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency));
+                    updateOBTask = Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency));
                 }
             }
         }
 
-        private string buildOrderTT1(BankHistoryOrder order, bool isOrderOpen) {
+        private string buildOrderTT(BankHistoryOrder order, bool isOrderOpen) {
             string tt = "";
             switch (order.OrderType) {
                 case OrderType.LimitBid:
@@ -241,10 +370,11 @@ namespace IRTicker {
             }
             tt += "Date created: " + order.CreatedTimestampUtc.ToLocalTime().ToString() + Environment.NewLine;
 
-            decimal vol = order.Volume;
+            // seems useless?
+            /*decimal vol = order.Volume;
             if (order.Outstanding.HasValue && (order.Outstanding.Value > 0)) {
 
-            }
+            }*/
 
             if (isOrderOpen) {
                 tt += "Original volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + order.Original.Volume + Environment.NewLine;
@@ -264,8 +394,8 @@ namespace IRTicker {
             return tt;
         }
 
-        public void drawClosedOrders1(IEnumerable<BankHistoryOrder> closedOrders) {
-            synchronizationContext.Post(new SendOrPostCallback(o => {
+        public void drawClosedOrders(IEnumerable<BankHistoryOrder> closedOrders) {
+            IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
                 IEnumerable<BankHistoryOrder> _closedOrders = (IEnumerable<BankHistoryOrder>)o;
 
                 if (_closedOrders == null) {
@@ -300,8 +430,8 @@ namespace IRTicker {
             }), closedOrders);
         }
 
-        public void drawOpenOrders1(IEnumerable<BankHistoryOrder> openOrders) {
-            synchronizationContext.Post(new SendOrPostCallback(o => {
+        public void drawOpenOrders(IEnumerable<BankHistoryOrder> openOrders) {
+            IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
                 IEnumerable<BankHistoryOrder> _openOrders = (IEnumerable<BankHistoryOrder>)o;
 
                 if (_openOrders == null) {
@@ -336,7 +466,7 @@ namespace IRTicker {
             }), openOrders);
         }
 
-        private void drawDepositAddress1(DigitalCurrencyDepositAddress deposAddress) {
+        public void drawDepositAddress(DigitalCurrencyDepositAddress deposAddress) {
             if (deposAddress == null) {  // construct an empty address object and draw blanks, this is used when our data is old and we need to show nothing until the new data is sent
                 deposAddress = new DigitalCurrencyDepositAddress();
                 deposAddress.DepositAddress = "";
@@ -344,7 +474,7 @@ namespace IRTicker {
                 deposAddress.LastCheckedTimestampUtc = null;
 
             }
-            synchronizationContext.Post(new SendOrPostCallback(o => {
+            IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
                 DigitalCurrencyDepositAddress _deposAddress = (DigitalCurrencyDepositAddress)o;
                 AccountWithdrawalCrypto_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " deposit address";
 
@@ -372,22 +502,22 @@ namespace IRTicker {
             }), deposAddress);
         }
 
-        private void setCurrencyValues1(string crypto, decimal price) {
+        public void setCurrencyValues(string crypto, decimal price) {
             if (pIR.accounts.ContainsKey(crypto)) {
-                UIControls_Dict["IR"].Label_Dict[crypto + "_Account_Value"].Text = Utilities.FormatValue(price * pIR.accounts[crypto].AvailableBalance);
+                IRT.UIControls_Dict["IR"].Label_Dict[crypto + "_Account_Value"].Text = Utilities.FormatValue(price * pIR.accounts[crypto].AvailableBalance);
             }
         }
 
         // how is this accountORders.item2 string array made up?
         // count, pricePoint (not formatted), totalVolume, cumulativeVol (not formatted), cumulativeValue, includesMyOrder 
-        public void drawAccountOrderBook1(Tuple<decimal, List<decimal[]>> accountOrders, string pair) {
+        public void drawAccountOrderBook(Tuple<decimal, List<decimal[]>> accountOrders, string pair) {
 
-            synchronizationContext.Post(new SendOrPostCallback(o => {
+            IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
 
                 Tuple<decimal, List<decimal[]>> _accountOrders = (Tuple<decimal, List<decimal[]>>)o;
 
-                if (AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency != pair) return;
-                if (!DCEs["IR"].IR_OBs.ContainsKey(pair)) return;
+                if (AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency != pair) return;
+                if (!DCE_IR.IR_OBs.ContainsKey(pair)) return;
 
                 AccountOrders_listview.Items.Clear();
 
@@ -395,7 +525,7 @@ namespace IRTicker {
 
                 foreach (decimal[] lvi in _accountOrders.Item2) {
                     Tuple<string, string> pairTup = Utilities.SplitPair(pair);
-                    AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0].ToString(), Utilities.FormatValue(lvi[1], DCEs["IR"].currencyDecimalPlaces[pairTup.Item1].Item2, false), Utilities.FormatValue(lvi[2], 8, false), Utilities.FormatValue(lvi[3]), Utilities.FormatValue(lvi[4]) }));
+                    AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0].ToString(), Utilities.FormatValue(lvi[1], DCE_IR.currencyDecimalPlaces[pairTup.Item1].Item2, false), Utilities.FormatValue(lvi[2], 8, false), Utilities.FormatValue(lvi[3]), Utilities.FormatValue(lvi[4]) }));
                     AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].SubItems[1].Tag = lvi[1];  // need to store the price in an unformatted (and therefore parseable) format
 
                     // if limit order or baiter, and can parse vol and limit price, and order book is showing the opposite side (ie if we're selling, and the OB is showing bids)
@@ -465,17 +595,17 @@ namespace IRTicker {
         }
 
         // is called when the user selects a different crypto from the side panel
-        private void cryptoClicked1(Label clickedLabel) {
+        private void cryptoClicked(Label clickedLabel) {
             if (!pIR.marketBaiterActive) {  // can't let the crypto change while we're baitin'
-              
-                Label oldLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
+
+                Label oldLabel = IRT.UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
                 oldLabel.ForeColor = Color.Black;
                 oldLabel.Font = new Font(oldLabel.Font.FontFamily, 12f, FontStyle.Bold);
 
-                oldLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Total"];
+                oldLabel = IRT.UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Total"];
                 oldLabel.ForeColor = Color.FromArgb(64, 64, 64);
 
-                oldLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Value"];
+                oldLabel = IRT.UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Value"];
                 oldLabel.ForeColor = Color.FromArgb(64, 64, 64);
 
 
@@ -492,14 +622,14 @@ namespace IRTicker {
                 if (AccountSelectedCrypto == "BTC") AccountSelectedCrypto = "XBT";
                 pIR.SelectedCrypto = AccountSelectedCrypto;  // inform the pIR object what our selected crypto is
 
-                Label newLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
+                Label newLabel = IRT.UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
                 newLabel.ForeColor = Color.DarkOrange;
                 newLabel.Font = new Font(newLabel.Font.FontFamily, 12f, FontStyle.Bold);
 
-                newLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Total"];
+                newLabel = IRT.UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Total"];
                 newLabel.ForeColor = Color.DarkOrange;
 
-                newLabel = UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Value"];
+                newLabel = IRT.UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Value"];
                 newLabel.ForeColor = Color.DarkOrange;
 
                 // simulate a change in text so we perform text validation and adjustments
@@ -507,12 +637,12 @@ namespace IRTicker {
                 AccountLimitPrice_textbox_TextChanged(null, null);
             }
 
-            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { 
+            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
                 PrivateIR.PrivateIREndPoints.GetAddress,PrivateIR.PrivateIREndPoints.GetClosedOrders,
                 PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
-        private void IRAccountClose_button_Click1(object sender, EventArgs e) {
+        /*private void IRAccountClose_button_Click(object sender, EventArgs e) {
             Main.Visible = true;  // this has to be above the UpdateLabel() call, because UpdateLabels() exits if main is invisible.
             // we stopped the UI from updating when the IR Accounts screen was showing, so let's update all the pairs now that we're closing the ACcounts page
             foreach (string dExchange in Exchanges) {
@@ -522,27 +652,27 @@ namespace IRTicker {
             LastPanel = Main;
             IRAccount_panel.Visible = false;
 
-            Label CurrentSecondaryCurrecyLabel = UIControls_Dict["IR"].Label_Dict[DCEs["IR"].CurrentSecondaryCurrency + "_Account_Label"];
+            Label CurrentSecondaryCurrecyLabel = UIControls_Dict["IR"].Label_Dict[DCE_IR.CurrentSecondaryCurrency + "_Account_Label"];
             CurrentSecondaryCurrecyLabel.ForeColor = Color.Black;
             CurrentSecondaryCurrecyLabel.Font = new Font(CurrentSecondaryCurrecyLabel.Font.FontFamily, 12f, FontStyle.Regular);
-        }
+        }*/
 
-        private void AccountWithdrawalAddress_label_Click1(object sender, EventArgs e) {
+        private void AccountWithdrawalAddress_label_Click(object sender, EventArgs e) {
             Label address = (Label)sender;
             Clipboard.SetText(address.Text);
         }
 
-        private void AccountWithdrawalNextCheck_label_Click1(object sender, EventArgs e) {
+        private void AccountWithdrawalNextCheck_label_Click(object sender, EventArgs e) {
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.CheckAddress }));
         }
 
-        private void Account_label_Click1(object sender, EventArgs e) {
+        private void Account_label_Click(object sender, EventArgs e) {
             cryptoClicked((Label)sender);
         }
 
         // market order, limit order, market baiter list box
-        private void AcccountOrderType_listbox_SelectedIndexChanged1(object sender, EventArgs e) {
-            if ((null == pIR) || !IRAccount_panel.Visible) return;  // this sub seems to get called when the app opens.. 
+        private void AcccountOrderType_listbox_SelectedIndexChanged(object sender, EventArgs e) {
+            if (null == pIR) return;  // this sub seems to get called when the app opens.. 
             if (AccountOrderType_listbox.SelectedIndex == 1) {
                 SwitchOrderBookSide_button.Enabled = true;
                 AccountLimitPrice_label.Visible = true;
@@ -578,7 +708,7 @@ namespace IRTicker {
                 //SwitchOrderBookSide_button.Enabled = false;  // we're now monitoring this side, no changes allowed.
                 AccountSwitchOrderBook(true);  // switches the OB shown
                 pIR.OrderTypeStr = "Limit";
-                //updateAccountOrderBook(AccountSelectedCrypto + "-" + DCEs["IR"].CurrentSecondaryCurrency);
+                //updateAccountOrderBook(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency);
             }
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
 
@@ -587,7 +717,7 @@ namespace IRTicker {
 
         // if they chose Market Baiter, then we do the opposite - a buy will show bids and a sell will show offers
         // if they clicked market or limit, then we show the other order book, ie if they have buy selected, then we show offers, and if the have sell selected then we show bids
-        private void AccountSwitchOrderBook1(bool switchToLimit) {
+        private void AccountSwitchOrderBook(bool switchToLimit) {
             int BuySellIndex = AccountBuySell_listbox.SelectedIndex;
             if (switchToLimit) {
                 if (BuySellIndex == 0) BuySellIndex = 1;
@@ -605,7 +735,7 @@ namespace IRTicker {
             }
         }
 
-        private void AccountBuySell_listbox_Click1(object sender, EventArgs e) {
+        private void AccountBuySell_listbox_Click(object sender, EventArgs e) {
             if (AccountOrderType_listbox.SelectedIndex < 2) {  // if we're baitin', then don't change the button
                 if (AccountBuySell_listbox.SelectedIndex == 0) {
                     AccountPlaceOrder_button.Text = "Buy now";
@@ -646,7 +776,7 @@ namespace IRTicker {
         /// checks if the vol and price are parsable
         /// </summary>
         /// <returns>item1 is the bool, item2 is volume, item3 is the price</returns>
-        private Tuple<bool, decimal, decimal> VolumePriceParseable1() {
+        private Tuple<bool, decimal, decimal> VolumePriceParseable() {
             int orderType = AccountOrderType_listbox.SelectedIndex;
             string volume = AccountOrderVolume_textbox.Text;
             string price = AccountLimitPrice_textbox.Text;
@@ -676,18 +806,18 @@ namespace IRTicker {
                 if (canParseVol && canParsePrice && (orderVol > 0) && (orderPrice >= 0)) {
                     return new Tuple<bool, decimal, decimal>(true, orderVol, orderPrice);
                 }
-                
+
                 return new Tuple<bool, decimal, decimal>(false, orderVol, orderPrice);
             }
         }
 
-        private void AccountOrderVolume_textbox_TextChanged1(object sender, EventArgs e) {
+        private void AccountOrderVolume_textbox_TextChanged(object sender, EventArgs e) {
             Tuple<bool, decimal, decimal> volPriceTup = VolumePriceParseable();
             decimal adjustedVol = volPriceTup.Item2;
             if (volPriceTup.Item2 > 0) {
                 int mantissaLen = BitConverter.GetBytes(decimal.GetBits(volPriceTup.Item2)[3])[2];
-                if (mantissaLen > DCEs["IR"].currencyDecimalPlaces[AccountSelectedCrypto].Item1) {
-                    adjustedVol = Utilities.Truncate(volPriceTup.Item2, (byte)(DCEs["IR"].currencyDecimalPlaces[AccountSelectedCrypto].Item1));
+                if (mantissaLen > DCE_IR.currencyDecimalPlaces[AccountSelectedCrypto].Item1) {
+                    adjustedVol = Utilities.Truncate(volPriceTup.Item2, (byte)(DCE_IR.currencyDecimalPlaces[AccountSelectedCrypto].Item1));
                     AccountOrderVolume_textbox.Text = adjustedVol.ToString();
                     AccountOrderVolume_textbox.SelectionStart = AccountOrderVolume_textbox.Text.Length;
                     AccountOrderVolume_textbox.SelectionLength = 0;
@@ -708,7 +838,7 @@ namespace IRTicker {
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
-        private void StopBaitin_button_Click1(object sender, EventArgs e) {
+        private void StopBaitin_button_Click(object sender, EventArgs e) {
             if (!pIR.marketBaiterActive) return;  // this button should only be able to be clicked if we're baitin'
             pIR.marketBaiterActive = false;
             AccountPlaceOrder_button.Size = new Size(294, 39);
@@ -716,7 +846,7 @@ namespace IRTicker {
             StopBaitin_button.Enabled = false;
         }
 
-        private async void AccountPlaceOrder_button_Click1(object sender, EventArgs e) {
+        private async void AccountPlaceOrder_button_Click(object sender, EventArgs e) {
             string orderSide = "";
             if (AccountBuySell_listbox.SelectedIndex == 0) orderSide = "buy";
             else orderSide = "sell";
@@ -754,7 +884,7 @@ namespace IRTicker {
                         "Average Price Calculator", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                     if (res == DialogResult.Yes) {
-                        var _AccAvgPrice = new AccAvgPrice(DCEs["IR"], pIR, this, true, AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, AccountBuySell_listbox.SelectedIndex);
+                        var _AccAvgPrice = new AccAvgPrice(DCE_IR, pIR, this, true, AccountSelectedCrypto, DCE_IR.CurrentSecondaryCurrency, AccountBuySell_listbox.SelectedIndex);
                         _AccAvgPrice.Show();
                     }
 
@@ -769,7 +899,7 @@ namespace IRTicker {
                     Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
                     PrivateIR.PrivateIREndPoints.PlaceMarketOrder, PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAccounts }, decimal.Parse(AccountOrderVolume_textbox.Text)));
                 }
-                else if (oType == 1)  {  // Limit order
+                else if (oType == 1) {  // Limit order
                     Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
                     PrivateIR.PrivateIREndPoints.PlaceLimitOrder, PrivateIR.PrivateIREndPoints.GetOpenOrders,
                     PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAccounts }, decimal.Parse(AccountOrderVolume_textbox.Text), decimal.Parse(AccountLimitPrice_textbox.Text)));
@@ -797,9 +927,9 @@ namespace IRTicker {
             }
         }
 
-        private async void startMarketBaiter1(decimal volume, decimal limitPrice) {
+        private async void startMarketBaiter(decimal volume, decimal limitPrice) {
 
-            await Task.Run(() => pIR.marketBaiterLoopAsync(AccountSelectedCrypto, DCEs["IR"].CurrentSecondaryCurrency, volume, limitPrice));
+            await Task.Run(() => pIR.marketBaiterLoopAsync(AccountSelectedCrypto, DCE_IR.CurrentSecondaryCurrency, volume, limitPrice));
 
             ValidateLimitOrder();
             AccountBuySell_listbox.Enabled = true;
@@ -813,19 +943,19 @@ namespace IRTicker {
         }
 
         //public void updateUIFromMarketBaiter(List<PrivateIR.PrivateIREndPoints> endPoints) {
-            //synchronizationContext.Post(new SendOrPostCallback(o => {
-       //         bulkSequentialAPICalls(endPoints);  // we are in the market baiter htread here, stay here
-            //}), endPoints);
+        //synchronizationContext.Post(new SendOrPostCallback(o => {
+        //         bulkSequentialAPICalls(/*(List<PrivateIR.PrivateIREndPoints>)o*/endPoints);  // we are in the market baiter htread here, stay here
+        //}), endPoints);
         //}
 
-        public void notificationFromMarketBaiter1(Tuple<string, string> notifText, bool sendToTelegram = false) {
-            synchronizationContext.Post(new SendOrPostCallback(o => {
+        public void notificationFromMarketBaiter(Tuple<string, string> notifText, bool sendToTelegram = false) {
+            IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
                 Tuple<string, string> notif = (Tuple<string, string>)o;
-                showBalloon(notif.Item1, notif.Item2);
+                IRT.showBalloon(notif.Item1, notif.Item2);
             }), notifText);
 
-            if (sendToTelegram  && (TGBot != null)) {
-                synchronizationContext.Post(new SendOrPostCallback(o => {
+            if (sendToTelegram && (TGBot != null)) {
+                IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
                     Tuple<string, string> notif = (Tuple<string, string>)o;
                     TGBot.SendMessage("*" + notif.Item1 + "*" + Environment.NewLine + "  " + notif.Item2);
                 }), notifText);
@@ -834,7 +964,7 @@ namespace IRTicker {
 
         // this method checks the limit price, and if it would make the order a market order, then highlight buttons and shit
         // can only be called if AccountOrderType_listbox.SelectedIndex is 1 or 2 (limit or bait)
-        private void ValidateLimitOrder1() {
+        private void ValidateLimitOrder() {
             if (AccountOrderType_listbox.SelectedIndex == 0) return;  // this can happen when changing cryptos, we simulate a price text box update to validate and adjust
             decimal price = decimal.Parse(AccountLimitPrice_textbox.Text);  // why no tryParse?  the only way this gets called really is if the price has been validated as a number, or it's the result of clicking the place order button, which is only clickable if the vol/price are validated.  so we should be safe here...
             if (AccountOrders_listview.Items.Count > 0) {  // only continue if we have orders in the OB
@@ -883,14 +1013,14 @@ namespace IRTicker {
             }
         }
 
-        private void AccountLimitPrice_textbox_TextChanged1(object sender, EventArgs e) {
+        private void AccountLimitPrice_textbox_TextChanged(object sender, EventArgs e) {
             Tuple<bool, decimal, decimal> volPriceTup = VolumePriceParseable();
             decimal adjustedPrice = volPriceTup.Item3;
             if (adjustedPrice >= 0) {  // item3 will be -1 if not parseable.  If parseable, let's truncate.
                 // we truncate the price field to obey our max decimal places for this crypto
                 int mantissaLen = BitConverter.GetBytes(decimal.GetBits(volPriceTup.Item3)[3])[2];
-                if (mantissaLen > DCEs["IR"].currencyDecimalPlaces[AccountSelectedCrypto].Item2) {
-                    adjustedPrice = Utilities.Truncate(volPriceTup.Item3, (byte)(DCEs["IR"].currencyDecimalPlaces[AccountSelectedCrypto].Item2));
+                if (mantissaLen > DCE_IR.currencyDecimalPlaces[AccountSelectedCrypto].Item2) {
+                    adjustedPrice = Utilities.Truncate(volPriceTup.Item3, (byte)(DCE_IR.currencyDecimalPlaces[AccountSelectedCrypto].Item2));
                     AccountLimitPrice_textbox.Text = adjustedPrice.ToString();
                     AccountLimitPrice_textbox.SelectionStart = AccountLimitPrice_textbox.Text.Length;
                     AccountLimitPrice_textbox.SelectionLength = 0;
@@ -916,7 +1046,7 @@ namespace IRTicker {
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
-        private void AccountOpenOrders_listview_DoubleClick1(object sender, EventArgs e) {
+        private void AccountOpenOrders_listview_DoubleClick(object sender, EventArgs e) {
             DialogResult res;
             try {
                 res = MessageBox.Show("Do you want to cancel this order?" + Environment.NewLine + Environment.NewLine +
@@ -939,7 +1069,7 @@ namespace IRTicker {
             }
         }
 
-        private void SwitchOrderBookSide_button_Click1(object sender, EventArgs e) {
+        private void SwitchOrderBookSide_button_Click(object sender, EventArgs e) {
             if (pIR.OrderBookSide == "Bid") {
                 pIR.OrderBookSide = "Offer";
                 AccountOrders_listview.Columns[1].Text = "Offers";
@@ -954,44 +1084,29 @@ namespace IRTicker {
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
-        private void showBalloon1(string title, string body) {
-
-            IRT_notification.Visible = true;
-
-            if (title != null) {
-                IRT_notification.BalloonTipTitle = title;
-            }
-
-            if (body != null) {
-                IRT_notification.BalloonTipText = body;
-            }
-
-            IRT_notification.ShowBalloonTip(10000);
-        }
-
-        private void AccountOrderVolume_textbox_KeyUp1(object sender, KeyEventArgs e) {
+        private void AccountOrderVolume_textbox_KeyUp(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Tab) {
                 AccountLimitPrice_textbox.SelectAll();
             }
         }
-        private void AccountLimitPrice_textbox_KeyUp1(object sender, KeyEventArgs e) {
+        private void AccountLimitPrice_textbox_KeyUp(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Tab) {
                 AccountLimitPrice_textbox.SelectAll();
             }
         }
 
-        private void AccountOrderVolume_label_DoubleClick1(object sender, EventArgs e) {
+        private void AccountOrderVolume_label_DoubleClick(object sender, EventArgs e) {
             AccountOrderVolume_textbox.Text = pIR.accounts[AccountSelectedCrypto].AvailableBalance.ToString();
         }
-        private void IRAccount_AvgPrice_Button_Click1(object sender, EventArgs e) {
-            var _AccAvgPrice = new AccAvgPrice(DCEs["IR"], pIR, this, crypto: AccountSelectedCrypto, fiat: DCEs["IR"].CurrentSecondaryCurrency, direction: AccountBuySell_listbox.SelectedIndex);
+        private void IRAccount_AvgPrice_Button_Click(object sender, EventArgs e) {
+            var _AccAvgPrice = new AccAvgPrice(DCE_IR, pIR, this, crypto: AccountSelectedCrypto, fiat: DCE_IR.CurrentSecondaryCurrency, direction: AccountBuySell_listbox.SelectedIndex);
             _AccAvgPrice.Show();
         }
 
         // I had a crash here once, can't reproduce it.  instance not set to an object or something, but I couldn't see what was wrong.
         // maybe i should check that cOrders isn't somehow null?
-        public void SignalAveragePriceUpdate1(Page<BankHistoryOrder> cOrders) {
-            synchronizationContext.Post(new SendOrPostCallback(o => {
+        public void SignalAveragePriceUpdate(Page<BankHistoryOrder> cOrders) {
+            IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
                 foreach (Form frm in Application.OpenForms) {
                     if (frm.Name == "AccAvgPrice") {
                         ((AccAvgPrice)frm).UpdatePrice((Page<BankHistoryOrder>)o);
@@ -1000,7 +1115,7 @@ namespace IRTicker {
             }), cOrders);
         }
 
-        public void RecalculateAvgPriceVariables1(AccAvgPrice closingForm) {
+        public void RecalculateAvgPriceVariables(AccAvgPrice closingForm) {
 
             // first, let's reset the pIR.earliestClosedOrderRequired - we want this to be the earliest start date that isn't the closing form's date
             DateTime oldestDT = new DateTime(3000, 1, 1);  // if someone is still using this app in the year 3000, then I must have transcended time and space.  Congrats dude.
@@ -1035,11 +1150,13 @@ namespace IRTicker {
             else pIR.earliestClosedOrderRequired = null;
         }
 
-        public void IRAccount_FillVolumeField1(string vol) {
+        public void IRAccount_FillVolumeField(string vol) {
             AccountOrderVolume_textbox.Text = vol;
 
             // simulate a change in the text
             AccountOrderVolume_textbox_TextChanged(null, null);
         }
-    }*/
+
+
+    }
 }

@@ -20,7 +20,7 @@ namespace IRTicker {
         private Client IRclient;
         public Dictionary<string, Account> accounts = new Dictionary<string, Account>();
         private ApiCredential IRcreds;
-        private IRTicker IRT;
+        private IRAccountsForm IRT;  // yeah lazy, instead of renaming this to IRAF, just leave it as IRT and then the rest of the code all works
         private static readonly Object pIR_Lock = new Object();
 
         public string OrderBookSide = "Bid";  //  maintains which side of the order book we show in the AccountOrders_listview
@@ -56,8 +56,8 @@ namespace IRTicker {
             // 
         }
 
-        public void PrivateIR_init(string APIKey, string APISecret, IRTicker _IRT, DCE _DCE_IR, TelegramBot _TGBot) {
-            IRT = _IRT;
+        public void PrivateIR_init(string APIKey, string APISecret, IRAccountsForm _IRT, DCE _DCE_IR, TelegramBot _TGBot) {
+            IRT = _IRT;  // reminder - this is the IRAccountsFrom object
             DCE_IR = _DCE_IR;
             TGBot = _TGBot;
 
@@ -76,11 +76,16 @@ namespace IRTicker {
                 Credential = IRcreds
             };
             IRclient = Client.Create(IRconf);
-            Task.Run(() => populateClosedOrders());
+            if (null != IRT) Task.Run(() => populateClosedOrders());
         }
 
         public void setTGBot(TelegramBot _TGBot) {
             TGBot = _TGBot;
+        }
+
+        public void setIRAF(IRAccountsForm _IRAF) {
+            IRT = _IRAF;
+            Task.Run(() => populateClosedOrders());
         }
 
         public Dictionary<string, Account> GetAccounts() {
@@ -180,7 +185,7 @@ namespace IRTicker {
                         cOrders = GetClosedOrders(primaryCode, secondaryCode, true);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
 
                         // need to go if the current primary/secondary is what's shown on IRAccounts, then draw it
-                        if (/*IRT.IRAccount_panel.Visible &&*/ (SelectedCrypto == primaryCode) && (DCE_IR.CurrentSecondaryCurrency == secondaryCode)) {
+                        if ((SelectedCrypto == primaryCode) && (DCE_IR.CurrentSecondaryCurrency == secondaryCode)) {
                             IRT.drawClosedOrders(cOrders.Data);
                         }
                         // IRT.drawClosedOrders(cOrders);
@@ -306,7 +311,7 @@ namespace IRTicker {
         public void compileAccountOrderBookAsync(string pair) {
 
             if (pair != (SelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency)) return;
-            if (!IRT.IRAccount_panel.Visible) {
+            if (null == IRT) {
                 if (!marketBaiterActive) return;
             }
 

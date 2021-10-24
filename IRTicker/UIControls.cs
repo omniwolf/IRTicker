@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace IRTicker {
-    class UIControls {
+    public class UIControls {
 
         public Dictionary<string, Label> Label_Dict;
 
@@ -223,7 +223,109 @@ namespace IRTicker {
         public Label Account_MATIC_Total { get; set; }
 
 
+        public void CreateIRAccountControlDictionary() {
 
+            if (Account_XBT_Label != null) Label_Dict["XBT_Account_Label"] = Account_XBT_Label;
+            if (Account_ETH_Label != null) Label_Dict["ETH_Account_Label"] = Account_ETH_Label;
+            if (Account_XRP_Label != null) Label_Dict["XRP_Account_Label"] = Account_XRP_Label;
+            if (Account_BCH_Label != null) Label_Dict["BCH_Account_Label"] = Account_BCH_Label;
+            if (Account_BSV_Label != null) Label_Dict["BSV_Account_Label"] = Account_BSV_Label;
+            if (Account_USDT_Label != null) Label_Dict["USDT_Account_Label"] = Account_USDT_Label;
+            if (Account_LTC_Label != null) Label_Dict["LTC_Account_Label"] = Account_LTC_Label;
+            if (Account_EOS_Label != null) Label_Dict["EOS_Account_Label"] = Account_EOS_Label;
+            if (Account_XLM_Label != null) Label_Dict["XLM_Account_Label"] = Account_XLM_Label;
+            if (Account_ETC_Label != null) Label_Dict["ETC_Account_Label"] = Account_ETC_Label;
+            if (Account_BAT_Label != null) Label_Dict["BAT_Account_Label"] = Account_BAT_Label;
+            if (Account_OMG_Label != null) Label_Dict["OMG_Account_Label"] = Account_OMG_Label;
+            if (Account_MKR_Label != null) Label_Dict["MKR_Account_Label"] = Account_MKR_Label;
+            if (Account_ZRX_Label != null) Label_Dict["ZRX_Account_Label"] = Account_ZRX_Label;
+            if (Account_GNT_Label != null) Label_Dict["GNT_Account_Label"] = Account_GNT_Label;
+            if (Account_DAI_Label != null) Label_Dict["DAI_Account_Label"] = Account_DAI_Label;
+            if (Account_LINK_Label != null) Label_Dict["LINK_Account_Label"] = Account_LINK_Label;
+            if (Account_USDC_Label != null) Label_Dict["USDC_Account_Label"] = Account_USDC_Label;
+            if (Account_AUD_Label != null) Label_Dict["AUD_Account_Label"] = Account_AUD_Label;
+            if (Account_NZD_Label != null) Label_Dict["NZD_Account_Label"] = Account_NZD_Label;
+            if (Account_USD_Label != null) Label_Dict["USD_Account_Label"] = Account_USD_Label;
+            if (Account_SGD_Label != null) Label_Dict["SGD_Account_Label"] = Account_SGD_Label;
+            if (Account_COMP_Label != null) Label_Dict["COMP_Account_Label"] = Account_COMP_Label;
+            if (Account_SNX_Label != null) Label_Dict["SNX_Account_Label"] = Account_SNX_Label;
+            if (Account_PMGT_Label != null) Label_Dict["PMGT_Account_Label"] = Account_PMGT_Label;
+            if (Account_YFI_Label != null) Label_Dict["YFI_Account_Label"] = Account_YFI_Label;
+            if (Account_AAVE_Label != null) Label_Dict["AAVE_Account_Label"] = Account_AAVE_Label;
+            if (Account_KNC_Label != null) Label_Dict["KNC_Account_Label"] = Account_KNC_Label;
+            if (Account_DOT_Label != null) Label_Dict["DOT_Account_Label"] = Account_DOT_Label;
+            if (Account_GRT_Label != null) Label_Dict["GRT_Account_Label"] = Account_GRT_Label;
+            if (Account_UNI_Label != null) Label_Dict["UNI_Account_Label"] = Account_UNI_Label;
+            if (Account_ADA_Label != null) Label_Dict["ADA_Account_Label"] = Account_ADA_Label;
+            if (Account_DOGE_Label != null) Label_Dict["DOGE_Account_Label"] = Account_DOGE_Label;
+            if (Account_MATIC_Label != null) Label_Dict["MATIC_Account_Label"] = Account_MATIC_Label;
+
+            if (Account_XBT_Value != null) Label_Dict["XBT_Account_Value"] = Account_XBT_Value;
+            if (Account_ETH_Value != null) Label_Dict["ETH_Account_Value"] = Account_ETH_Value;
+            if (Account_XRP_Value != null) Label_Dict["XRP_Account_Value"] = Account_XRP_Value;
+            if (Account_BCH_Value != null) Label_Dict["BCH_Account_Value"] = Account_BCH_Value;
+            if (Account_BSV_Value != null) Label_Dict["BSV_Account_Value"] = Account_BSV_Value;
+            if (Account_USDT_Value != null) Label_Dict["USDT_Account_Value"] = Account_USDT_Value;
+            if (Account_LTC_Value != null) Label_Dict["LTC_Account_Value"] = Account_LTC_Value;
+            if (Account_EOS_Value != null) Label_Dict["EOS_Account_Value"] = Account_EOS_Value;
+            if (Account_XLM_Value != null) Label_Dict["XLM_Account_Value"] = Account_XLM_Value;
+            if (Account_ETC_Value != null) Label_Dict["ETC_Account_Value"] = Account_ETC_Value;
+            if (Account_BAT_Value != null) Label_Dict["BAT_Account_Value"] = Account_BAT_Value;
+            if (Account_OMG_Value != null) Label_Dict["OMG_Account_Value"] = Account_OMG_Value;
+            if (Account_MKR_Value != null) Label_Dict["MKR_Account_Value"] = Account_MKR_Value;
+            if (Account_ZRX_Value != null) Label_Dict["ZRX_Account_Value"] = Account_ZRX_Value;
+            if (Account_GNT_Value != null) Label_Dict["GNT_Account_Value"] = Account_GNT_Value;
+            if (Account_DAI_Value != null) Label_Dict["DAI_Account_Value"] = Account_DAI_Value;
+            if (Account_LINK_Value != null) Label_Dict["LINK_Account_Value"] = Account_LINK_Value;
+            if (Account_USDC_Value != null) Label_Dict["USDC_Account_Value"] = Account_USDC_Value;
+            if (Account_COMP_Value != null) Label_Dict["COMP_Account_Value"] = Account_COMP_Value;
+            if (Account_SNX_Value != null) Label_Dict["SNX_Account_Value"] = Account_SNX_Value;
+            if (Account_PMGT_Value != null) Label_Dict["PMGT_Account_Value"] = Account_PMGT_Value;
+            if (Account_YFI_Value != null) Label_Dict["YFI_Account_Value"] = Account_YFI_Value;
+            if (Account_AAVE_Value != null) Label_Dict["AAVE_Account_Value"] = Account_AAVE_Value;
+            if (Account_KNC_Value != null) Label_Dict["KNC_Account_Value"] = Account_KNC_Value;
+            if (Account_DOT_Value != null) Label_Dict["DOT_Account_Value"] = Account_DOT_Value;
+            if (Account_GRT_Value != null) Label_Dict["GRT_Account_Value"] = Account_GRT_Value;
+            if (Account_UNI_Value != null) Label_Dict["UNI_Account_Value"] = Account_UNI_Value;
+            if (Account_ADA_Value != null) Label_Dict["ADA_Account_Value"] = Account_ADA_Value;
+            if (Account_DOGE_Value != null) Label_Dict["DOGE_Account_Value"] = Account_DOGE_Value;
+            if (Account_MATIC_Value != null) Label_Dict["MATIC_Account_Value"] = Account_MATIC_Value;
+
+            if (Account_XBT_Total != null) Label_Dict["XBT_Account_Total"] = Account_XBT_Total;
+            if (Account_ETH_Total != null) Label_Dict["ETH_Account_Total"] = Account_ETH_Total;
+            if (Account_XRP_Total != null) Label_Dict["XRP_Account_Total"] = Account_XRP_Total;
+            if (Account_BCH_Total != null) Label_Dict["BCH_Account_Total"] = Account_BCH_Total;
+            if (Account_BSV_Total != null) Label_Dict["BSV_Account_Total"] = Account_BSV_Total;
+            if (Account_USDT_Total != null) Label_Dict["USDT_Account_Total"] = Account_USDT_Total;
+            if (Account_LTC_Total != null) Label_Dict["LTC_Account_Total"] = Account_LTC_Total;
+            if (Account_EOS_Total != null) Label_Dict["EOS_Account_Total"] = Account_EOS_Total;
+            if (Account_XLM_Total != null) Label_Dict["XLM_Account_Total"] = Account_XLM_Total;
+            if (Account_ETC_Total != null) Label_Dict["ETC_Account_Total"] = Account_ETC_Total;
+            if (Account_BAT_Total != null) Label_Dict["BAT_Account_Total"] = Account_BAT_Total;
+            if (Account_OMG_Total != null) Label_Dict["OMG_Account_Total"] = Account_OMG_Total;
+            if (Account_MKR_Total != null) Label_Dict["MKR_Account_Total"] = Account_MKR_Total;
+            if (Account_ZRX_Total != null) Label_Dict["ZRX_Account_Total"] = Account_ZRX_Total;
+            if (Account_GNT_Total != null) Label_Dict["GNT_Account_Total"] = Account_GNT_Total;
+            if (Account_DAI_Total != null) Label_Dict["DAI_Account_Total"] = Account_DAI_Total;
+            if (Account_LINK_Total != null) Label_Dict["LINK_Account_Total"] = Account_LINK_Total;
+            if (Account_USDC_Total != null) Label_Dict["USDC_Account_Total"] = Account_USDC_Total;
+            if (Account_AUD_Total != null) Label_Dict["AUD_Account_Total"] = Account_AUD_Total;
+            if (Account_NZD_Total != null) Label_Dict["NZD_Account_Total"] = Account_NZD_Total;
+            if (Account_USD_Total != null) Label_Dict["USD_Account_Total"] = Account_USD_Total;
+            if (Account_SGD_Total != null) Label_Dict["SGD_Account_Total"] = Account_SGD_Total;
+            if (Account_COMP_Total != null) Label_Dict["COMP_Account_Total"] = Account_COMP_Total;
+            if (Account_SNX_Total != null) Label_Dict["SNX_Account_Total"] = Account_SNX_Total;
+            if (Account_PMGT_Total != null) Label_Dict["PMGT_Account_Total"] = Account_PMGT_Total;
+            if (Account_YFI_Total != null) Label_Dict["YFI_Account_Total"] = Account_YFI_Total;
+            if (Account_AAVE_Total != null) Label_Dict["AAVE_Account_Total"] = Account_AAVE_Total;
+            if (Account_KNC_Total != null) Label_Dict["KNC_Account_Total"] = Account_KNC_Total;
+            if (Account_DOT_Total != null) Label_Dict["DOT_Account_Total"] = Account_DOT_Total;
+            if (Account_GRT_Total != null) Label_Dict["GRT_Account_Total"] = Account_GRT_Total;
+            if (Account_UNI_Total != null) Label_Dict["UNI_Account_Total"] = Account_UNI_Total;
+            if (Account_ADA_Total != null) Label_Dict["ADA_Account_Total"] = Account_ADA_Total;
+            if (Account_DOGE_Total != null) Label_Dict["DOGE_Account_Total"] = Account_DOGE_Total;
+            if (Account_MATIC_Total != null) Label_Dict["MATIC_Account_Total"] = Account_MATIC_Total;
+        }
 
         public void CreateControlDictionaries() {
 
@@ -322,107 +424,6 @@ namespace IRTicker {
             if (ADA_Spread != null) Label_Dict.Add("ADA_Spread", ADA_Spread);
             if (DOGE_Spread != null) Label_Dict.Add("DOGE_Spread", DOGE_Spread);
             if (MATIC_Spread != null) Label_Dict.Add("MATIC_Spread", MATIC_Spread);
-
-            if (Account_XBT_Label != null) Label_Dict.Add("XBT_Account_Label", Account_XBT_Label);
-            if (Account_ETH_Label != null) Label_Dict.Add("ETH_Account_Label", Account_ETH_Label);
-            if (Account_XRP_Label != null) Label_Dict.Add("XRP_Account_Label", Account_XRP_Label);
-            if (Account_BCH_Label != null) Label_Dict.Add("BCH_Account_Label", Account_BCH_Label);
-            if (Account_BSV_Label != null) Label_Dict.Add("BSV_Account_Label", Account_BSV_Label);
-            if (Account_USDT_Label != null) Label_Dict.Add("USDT_Account_Label", Account_USDT_Label);
-            if (Account_LTC_Label != null) Label_Dict.Add("LTC_Account_Label", Account_LTC_Label);
-            if (Account_EOS_Label != null) Label_Dict.Add("EOS_Account_Label", Account_EOS_Label);
-            if (Account_XLM_Label != null) Label_Dict.Add("XLM_Account_Label", Account_XLM_Label);
-            if (Account_ETC_Label != null) Label_Dict.Add("ETC_Account_Label", Account_ETC_Label);
-            if (Account_BAT_Label != null) Label_Dict.Add("BAT_Account_Label", Account_BAT_Label);
-            if (Account_OMG_Label != null) Label_Dict.Add("OMG_Account_Label", Account_OMG_Label);
-            if (Account_MKR_Label != null) Label_Dict.Add("MKR_Account_Label", Account_MKR_Label);
-            if (Account_ZRX_Label != null) Label_Dict.Add("ZRX_Account_Label", Account_ZRX_Label);
-            if (Account_GNT_Label != null) Label_Dict.Add("GNT_Account_Label", Account_GNT_Label);
-            if (Account_DAI_Label != null) Label_Dict.Add("DAI_Account_Label", Account_DAI_Label);
-            if (Account_LINK_Label != null) Label_Dict.Add("LINK_Account_Label", Account_LINK_Label);
-            if (Account_USDC_Label != null) Label_Dict.Add("USDC_Account_Label", Account_USDC_Label);
-            if (Account_AUD_Label != null) Label_Dict.Add("AUD_Account_Label", Account_AUD_Label);
-            if (Account_NZD_Label != null) Label_Dict.Add("NZD_Account_Label", Account_NZD_Label);
-            if (Account_USD_Label != null) Label_Dict.Add("USD_Account_Label", Account_USD_Label);
-            if (Account_SGD_Label != null) Label_Dict.Add("SGD_Account_Label", Account_SGD_Label);
-            if (Account_COMP_Label != null) Label_Dict.Add("COMP_Account_Label", Account_COMP_Label);
-            if (Account_SNX_Label != null) Label_Dict.Add("SNX_Account_Label", Account_SNX_Label);
-            if (Account_PMGT_Label != null) Label_Dict.Add("PMGT_Account_Label", Account_PMGT_Label);
-            if (Account_YFI_Label != null) Label_Dict.Add("YFI_Account_Label", Account_YFI_Label);
-            if (Account_AAVE_Label != null) Label_Dict.Add("AAVE_Account_Label", Account_AAVE_Label);
-            if (Account_KNC_Label != null) Label_Dict.Add("KNC_Account_Label", Account_KNC_Label);
-            if (Account_DOT_Label != null) Label_Dict.Add("DOT_Account_Label", Account_DOT_Label);
-            if (Account_GRT_Label != null) Label_Dict.Add("GRT_Account_Label", Account_GRT_Label);
-            if (Account_UNI_Label != null) Label_Dict.Add("UNI_Account_Label", Account_UNI_Label);
-            if (Account_ADA_Label != null) Label_Dict.Add("ADA_Account_Label", Account_ADA_Label);
-            if (Account_DOGE_Label != null) Label_Dict.Add("DOGE_Account_Label", Account_DOGE_Label);
-            if (Account_MATIC_Label != null) Label_Dict.Add("MATIC_Account_Label", Account_MATIC_Label);
-
-            if (Account_XBT_Value != null) Label_Dict.Add("XBT_Account_Value", Account_XBT_Value);
-            if (Account_ETH_Value != null) Label_Dict.Add("ETH_Account_Value", Account_ETH_Value);
-            if (Account_XRP_Value != null) Label_Dict.Add("XRP_Account_Value", Account_XRP_Value);
-            if (Account_BCH_Value != null) Label_Dict.Add("BCH_Account_Value", Account_BCH_Value);
-            if (Account_BSV_Value != null) Label_Dict.Add("BSV_Account_Value", Account_BSV_Value);
-            if (Account_USDT_Value != null) Label_Dict.Add("USDT_Account_Value", Account_USDT_Value);
-            if (Account_LTC_Value != null) Label_Dict.Add("LTC_Account_Value", Account_LTC_Value);
-            if (Account_EOS_Value != null) Label_Dict.Add("EOS_Account_Value", Account_EOS_Value);
-            if (Account_XLM_Value != null) Label_Dict.Add("XLM_Account_Value", Account_XLM_Value);
-            if (Account_ETC_Value != null) Label_Dict.Add("ETC_Account_Value", Account_ETC_Value);
-            if (Account_BAT_Value != null) Label_Dict.Add("BAT_Account_Value", Account_BAT_Value);
-            if (Account_OMG_Value != null) Label_Dict.Add("OMG_Account_Value", Account_OMG_Value);
-            if (Account_MKR_Value != null) Label_Dict.Add("MKR_Account_Value", Account_MKR_Value);
-            if (Account_ZRX_Value != null) Label_Dict.Add("ZRX_Account_Value", Account_ZRX_Value);
-            if (Account_GNT_Value != null) Label_Dict.Add("GNT_Account_Value", Account_GNT_Value);
-            if (Account_DAI_Value != null) Label_Dict.Add("DAI_Account_Value", Account_DAI_Value);
-            if (Account_LINK_Value != null) Label_Dict.Add("LINK_Account_Value", Account_LINK_Value);
-            if (Account_USDC_Value != null) Label_Dict.Add("USDC_Account_Value", Account_USDC_Value);
-            if (Account_COMP_Value != null) Label_Dict.Add("COMP_Account_Value", Account_COMP_Value);
-            if (Account_SNX_Value != null) Label_Dict.Add("SNX_Account_Value", Account_SNX_Value);
-            if (Account_PMGT_Value != null) Label_Dict.Add("PMGT_Account_Value", Account_PMGT_Value);
-            if (Account_YFI_Value != null) Label_Dict.Add("YFI_Account_Value", Account_YFI_Value);
-            if (Account_AAVE_Value != null) Label_Dict.Add("AAVE_Account_Value", Account_AAVE_Value);
-            if (Account_KNC_Value != null) Label_Dict.Add("KNC_Account_Value", Account_KNC_Value);
-            if (Account_DOT_Value != null) Label_Dict.Add("DOT_Account_Value", Account_DOT_Value);
-            if (Account_GRT_Value != null) Label_Dict.Add("GRT_Account_Value", Account_GRT_Value);
-            if (Account_UNI_Value != null) Label_Dict.Add("UNI_Account_Value", Account_UNI_Value);
-            if (Account_ADA_Value != null) Label_Dict.Add("ADA_Account_Value", Account_ADA_Value);
-            if (Account_DOGE_Value != null) Label_Dict.Add("DOGE_Account_Value", Account_DOGE_Value);
-            if (Account_MATIC_Value != null) Label_Dict.Add("MATIC_Account_Value", Account_MATIC_Value);
-
-            if (Account_XBT_Total != null) Label_Dict.Add("XBT_Account_Total", Account_XBT_Total);
-            if (Account_ETH_Total != null) Label_Dict.Add("ETH_Account_Total", Account_ETH_Total);
-            if (Account_XRP_Total != null) Label_Dict.Add("XRP_Account_Total", Account_XRP_Total);
-            if (Account_BCH_Total != null) Label_Dict.Add("BCH_Account_Total", Account_BCH_Total);
-            if (Account_BSV_Total != null) Label_Dict.Add("BSV_Account_Total", Account_BSV_Total);
-            if (Account_USDT_Total != null) Label_Dict.Add("USDT_Account_Total", Account_USDT_Total);
-            if (Account_LTC_Total != null) Label_Dict.Add("LTC_Account_Total", Account_LTC_Total);
-            if (Account_EOS_Total != null) Label_Dict.Add("EOS_Account_Total", Account_EOS_Total);
-            if (Account_XLM_Total != null) Label_Dict.Add("XLM_Account_Total", Account_XLM_Total);
-            if (Account_ETC_Total != null) Label_Dict.Add("ETC_Account_Total", Account_ETC_Total);
-            if (Account_BAT_Total != null) Label_Dict.Add("BAT_Account_Total", Account_BAT_Total);
-            if (Account_OMG_Total != null) Label_Dict.Add("OMG_Account_Total", Account_OMG_Total);
-            if (Account_MKR_Total != null) Label_Dict.Add("MKR_Account_Total", Account_MKR_Total);
-            if (Account_ZRX_Total != null) Label_Dict.Add("ZRX_Account_Total", Account_ZRX_Total);
-            if (Account_GNT_Total != null) Label_Dict.Add("GNT_Account_Total", Account_GNT_Total);
-            if (Account_DAI_Total != null) Label_Dict.Add("DAI_Account_Total", Account_DAI_Total);
-            if (Account_LINK_Total != null) Label_Dict.Add("LINK_Account_Total", Account_LINK_Total);
-            if (Account_USDC_Total != null) Label_Dict.Add("USDC_Account_Total", Account_USDC_Total);
-            if (Account_AUD_Total != null) Label_Dict.Add("AUD_Account_Total", Account_AUD_Total);
-            if (Account_NZD_Total != null) Label_Dict.Add("NZD_Account_Total", Account_NZD_Total);
-            if (Account_USD_Total != null) Label_Dict.Add("USD_Account_Total", Account_USD_Total);
-            if (Account_SGD_Total != null) Label_Dict.Add("SGD_Account_Total", Account_SGD_Total);
-            if (Account_COMP_Total != null) Label_Dict.Add("COMP_Account_Total", Account_COMP_Total);
-            if (Account_SNX_Total != null) Label_Dict.Add("SNX_Account_Total", Account_SNX_Total);
-            if (Account_PMGT_Total != null) Label_Dict.Add("PMGT_Account_Total", Account_PMGT_Total);
-            if (Account_YFI_Total != null) Label_Dict.Add("YFI_Account_Total", Account_YFI_Total);
-            if (Account_AAVE_Total != null) Label_Dict.Add("AAVE_Account_Total", Account_AAVE_Total);
-            if (Account_KNC_Total != null) Label_Dict.Add("KNC_Account_Total", Account_KNC_Total);
-            if (Account_DOT_Total != null) Label_Dict.Add("DOT_Account_Total", Account_DOT_Total);
-            if (Account_GRT_Total != null) Label_Dict.Add("GRT_Account_Total", Account_GRT_Total);
-            if (Account_UNI_Total != null) Label_Dict.Add("UNI_Account_Total", Account_UNI_Total);
-            if (Account_ADA_Total != null) Label_Dict.Add("ADA_Account_Total", Account_ADA_Total);
-            if (Account_DOGE_Total != null) Label_Dict.Add("DOGE_Account_Total", Account_DOGE_Total);
-            if (Account_MATIC_Total != null) Label_Dict.Add("MATIC_Account_Total", Account_MATIC_Total);
         }
     }
 }

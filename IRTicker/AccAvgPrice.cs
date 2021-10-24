@@ -17,14 +17,14 @@ namespace IRTicker
     {
         private PrivateIR pIR;
         private DCE dce;
-        private IRTicker IRT;
+        private IRAccountsForm IRT;
         private string AvgPriceResult = "";  // holds the unformatted version of the average price
         private string TotalCryptoDealt = "";  // holds the unformatted version of the total crypto dealt
         private string TotalFiatDealt = "";  // holds the unformatted version of the total fiat dealt
         private int oldDealSizeCurrencySelected = 1;  // remembers which dealsize currency (eg crypto or fiat) is selected for when we force crypto and disable the control if they choose more than one fiat currency, and then deselect to just 1 currency and we need to remember which option they had selected bofer
         public ConcurrentDictionary<string, Tuple<Button, bool>> fiatCurrenciesSelected = new ConcurrentDictionary<string, Tuple<Button, bool>>();
 
-        public AccAvgPrice(DCE _DCE, PrivateIR _pIR, IRTicker _IRT, bool enableAutoUpdate = false, string crypto = "", string fiat = "AUD", int direction = 0) {
+        public AccAvgPrice(DCE _DCE, PrivateIR _pIR, IRAccountsForm _IRT, bool enableAutoUpdate = false, string crypto = "", string fiat = "AUD", int direction = 0) {
             InitializeComponent();
             dce = _DCE;
             pIR = _pIR;
