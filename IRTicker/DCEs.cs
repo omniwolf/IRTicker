@@ -241,6 +241,9 @@ namespace IRTicker {
                 if (SecondaryCurrencyList.Count == 0) return "N/A";
                 return SecondaryCurrencyList[ChosenSecondaryCurrency];
             }
+            set {
+                ChosenSecondaryCurrency = SecondaryCurrencyList.IndexOf(value);
+            }
         }
 
         /// <summary>

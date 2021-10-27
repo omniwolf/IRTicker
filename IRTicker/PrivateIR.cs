@@ -312,7 +312,7 @@ namespace IRTicker {
 
             if (pair != (SelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency)) return;
             if (null == IRT) {
-                if (!marketBaiterActive) return;
+                return;
             }
 
             List<decimal[]> accOrderListView = new List<decimal[]>();

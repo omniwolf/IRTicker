@@ -2462,10 +2462,19 @@ namespace IRTicker {
             }
         }
 
-        private void GroupBox_Click(string dExchange) {
-            UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: updating...)";
+        private void GroupBox_Click(string dExchange, string fiat = "") {
             string oldFiat = DCEs[dExchange].CurrentSecondaryCurrency;
-            DCEs[dExchange].NextSecondaryCurrency();
+
+            if (string.IsNullOrEmpty(fiat)) {
+                DCEs[dExchange].NextSecondaryCurrency();
+            }
+            else {
+                if (DCEs["IR"].CurrentSecondaryCurrency != fiat) DCEs["IR"].CurrentSecondaryCurrency = fiat;
+                else return;  // if they click the fiat label that is already the current fiat, then do nothing
+            }
+
+            UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: updating...)";
+
             wSocketConnect.WebSocket_Resubscribe(dExchange, "none", oldFiat, DCEs[dExchange].CurrentSecondaryCurrency);
 
             UIControls_Dict[dExchange].dExchange_GB.ForeColor = Color.Gray;
@@ -2486,11 +2495,17 @@ namespace IRTicker {
             }
         }
 
-
-
-        private async void IR_GroupBox_Click(object sender, EventArgs e) {
+        public async void IR_GroupBox_Click(object sender, EventArgs e) {
             if (DCEs["IR"].HasStaticData && !pIR.marketBaiterActive) {  // can't let the secondary currency change if market baiter is running, too dangerous
-                GroupBox_Click("IR");
+
+                // sender will be of type Label if the user clicked the fiat label in the IR Account page
+                string currency = "";
+                if (sender.GetType() == typeof(System.Windows.Forms.Label)) { 
+                    currency = ((System.Windows.Forms.Label)sender).Text;
+                    currency = currency.Replace(":", "");  // the labels will usually be "AUD:" so we need to get rid of the colon
+                }
+
+                GroupBox_Click("IR", currency);
                 GroupBoxAndLabelColourActive("IR");
 
                 await Task.Run(() => ParseExchangeThreadWorker("IR"));  // here we start a quick thread pull volume data for IR

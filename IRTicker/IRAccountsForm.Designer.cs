@@ -27,8 +27,8 @@ namespace IRTicker
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Loading...");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Loading...");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Loading...");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRAccountsForm));
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
             this.GetAccounts_panel = new System.Windows.Forms.Panel();
@@ -312,6 +312,7 @@ namespace IRTicker
             // AccountMATIC_label
             // 
             this.AccountMATIC_label.AutoSize = true;
+            this.AccountMATIC_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountMATIC_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountMATIC_label.Location = new System.Drawing.Point(12, 652);
             this.AccountMATIC_label.Name = "AccountMATIC_label";
@@ -343,6 +344,7 @@ namespace IRTicker
             // AccountDOGE_label
             // 
             this.AccountDOGE_label.AutoSize = true;
+            this.AccountDOGE_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountDOGE_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountDOGE_label.Location = new System.Drawing.Point(12, 632);
             this.AccountDOGE_label.Name = "AccountDOGE_label";
@@ -374,6 +376,7 @@ namespace IRTicker
             // AccountADA_label
             // 
             this.AccountADA_label.AutoSize = true;
+            this.AccountADA_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountADA_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountADA_label.Location = new System.Drawing.Point(12, 612);
             this.AccountADA_label.Name = "AccountADA_label";
@@ -405,6 +408,7 @@ namespace IRTicker
             // AccountUNI_label
             // 
             this.AccountUNI_label.AutoSize = true;
+            this.AccountUNI_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountUNI_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountUNI_label.Location = new System.Drawing.Point(12, 592);
             this.AccountUNI_label.Name = "AccountUNI_label";
@@ -425,12 +429,14 @@ namespace IRTicker
             // AccountSGD_label
             // 
             this.AccountSGD_label.AutoSize = true;
+            this.AccountSGD_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountSGD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
             this.AccountSGD_label.Location = new System.Drawing.Point(12, 811);
             this.AccountSGD_label.Name = "AccountSGD_label";
             this.AccountSGD_label.Size = new System.Drawing.Size(54, 24);
             this.AccountSGD_label.TabIndex = 94;
             this.AccountSGD_label.Text = "SGD:";
+            this.AccountSGD_label.Click += new System.EventHandler(this.fiatLabel_Click);
             // 
             // AccountGRT_total
             // 
@@ -455,6 +461,7 @@ namespace IRTicker
             // AccountGRT_label
             // 
             this.AccountGRT_label.AutoSize = true;
+            this.AccountGRT_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountGRT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountGRT_label.Location = new System.Drawing.Point(12, 572);
             this.AccountGRT_label.Name = "AccountGRT_label";
@@ -486,6 +493,7 @@ namespace IRTicker
             // AccountDOT_label
             // 
             this.AccountDOT_label.AutoSize = true;
+            this.AccountDOT_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountDOT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountDOT_label.Location = new System.Drawing.Point(12, 552);
             this.AccountDOT_label.Name = "AccountDOT_label";
@@ -517,6 +525,7 @@ namespace IRTicker
             // AccountKNC_label
             // 
             this.AccountKNC_label.AutoSize = true;
+            this.AccountKNC_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountKNC_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountKNC_label.Location = new System.Drawing.Point(12, 532);
             this.AccountKNC_label.Name = "AccountKNC_label";
@@ -547,6 +556,7 @@ namespace IRTicker
             // AccountAAVE_label
             // 
             this.AccountAAVE_label.AutoSize = true;
+            this.AccountAAVE_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountAAVE_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountAAVE_label.Location = new System.Drawing.Point(12, 512);
             this.AccountAAVE_label.Name = "AccountAAVE_label";
@@ -578,6 +588,7 @@ namespace IRTicker
             // AccountYFI_label
             // 
             this.AccountYFI_label.AutoSize = true;
+            this.AccountYFI_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountYFI_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountYFI_label.Location = new System.Drawing.Point(12, 492);
             this.AccountYFI_label.Name = "AccountYFI_label";
@@ -609,6 +620,7 @@ namespace IRTicker
             // AccountPMGT_label
             // 
             this.AccountPMGT_label.AutoSize = true;
+            this.AccountPMGT_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountPMGT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountPMGT_label.Location = new System.Drawing.Point(12, 472);
             this.AccountPMGT_label.Name = "AccountPMGT_label";
@@ -640,6 +652,7 @@ namespace IRTicker
             // AccountSNX_label
             // 
             this.AccountSNX_label.AutoSize = true;
+            this.AccountSNX_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountSNX_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountSNX_label.Location = new System.Drawing.Point(12, 452);
             this.AccountSNX_label.Name = "AccountSNX_label";
@@ -671,6 +684,7 @@ namespace IRTicker
             // AccountCOMP_label
             // 
             this.AccountCOMP_label.AutoSize = true;
+            this.AccountCOMP_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountCOMP_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountCOMP_label.Location = new System.Drawing.Point(12, 432);
             this.AccountCOMP_label.Name = "AccountCOMP_label";
@@ -702,6 +716,7 @@ namespace IRTicker
             // AccountUSDC_label
             // 
             this.AccountUSDC_label.AutoSize = true;
+            this.AccountUSDC_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountUSDC_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountUSDC_label.Location = new System.Drawing.Point(12, 412);
             this.AccountUSDC_label.Name = "AccountUSDC_label";
@@ -733,6 +748,7 @@ namespace IRTicker
             // AccountDAI_label
             // 
             this.AccountDAI_label.AutoSize = true;
+            this.AccountDAI_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountDAI_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountDAI_label.Location = new System.Drawing.Point(12, 392);
             this.AccountDAI_label.Name = "AccountDAI_label";
@@ -764,6 +780,7 @@ namespace IRTicker
             // AccountMKR_label
             // 
             this.AccountMKR_label.AutoSize = true;
+            this.AccountMKR_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountMKR_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountMKR_label.Location = new System.Drawing.Point(12, 372);
             this.AccountMKR_label.Name = "AccountMKR_label";
@@ -806,6 +823,7 @@ namespace IRTicker
             // AccountLINK_label
             // 
             this.AccountLINK_label.AutoSize = true;
+            this.AccountLINK_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountLINK_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountLINK_label.Location = new System.Drawing.Point(12, 352);
             this.AccountLINK_label.Name = "AccountLINK_label";
@@ -985,12 +1003,14 @@ namespace IRTicker
             // AccountUSD_label
             // 
             this.AccountUSD_label.AutoSize = true;
+            this.AccountUSD_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountUSD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountUSD_label.Location = new System.Drawing.Point(12, 783);
             this.AccountUSD_label.Name = "AccountUSD_label";
             this.AccountUSD_label.Size = new System.Drawing.Size(53, 24);
             this.AccountUSD_label.TabIndex = 35;
             this.AccountUSD_label.Text = "USD:";
+            this.AccountUSD_label.Click += new System.EventHandler(this.fiatLabel_Click);
             // 
             // AccountNZD_total
             // 
@@ -1004,12 +1024,14 @@ namespace IRTicker
             // AccountNZD_label
             // 
             this.AccountNZD_label.AutoSize = true;
+            this.AccountNZD_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountNZD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountNZD_label.Location = new System.Drawing.Point(12, 755);
             this.AccountNZD_label.Name = "AccountNZD_label";
             this.AccountNZD_label.Size = new System.Drawing.Size(54, 24);
             this.AccountNZD_label.TabIndex = 33;
             this.AccountNZD_label.Text = "NZD:";
+            this.AccountNZD_label.Click += new System.EventHandler(this.fiatLabel_Click);
             // 
             // AccountAUD_total
             // 
@@ -1023,12 +1045,15 @@ namespace IRTicker
             // AccountAUD_label
             // 
             this.AccountAUD_label.AutoSize = true;
-            this.AccountAUD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountAUD_label.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.AccountAUD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountAUD_label.ForeColor = System.Drawing.Color.DarkBlue;
             this.AccountAUD_label.Location = new System.Drawing.Point(12, 727);
             this.AccountAUD_label.Name = "AccountAUD_label";
-            this.AccountAUD_label.Size = new System.Drawing.Size(54, 24);
+            this.AccountAUD_label.Size = new System.Drawing.Size(58, 24);
             this.AccountAUD_label.TabIndex = 31;
             this.AccountAUD_label.Text = "AUD:";
+            this.AccountAUD_label.Click += new System.EventHandler(this.fiatLabel_Click);
             // 
             // AccountGNT_value
             // 
@@ -1043,6 +1068,7 @@ namespace IRTicker
             // AccountGNT_label
             // 
             this.AccountGNT_label.AutoSize = true;
+            this.AccountGNT_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountGNT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountGNT_label.Location = new System.Drawing.Point(12, 332);
             this.AccountGNT_label.Name = "AccountGNT_label";
@@ -1063,6 +1089,7 @@ namespace IRTicker
             // AccountZRX_label
             // 
             this.AccountZRX_label.AutoSize = true;
+            this.AccountZRX_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountZRX_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountZRX_label.Location = new System.Drawing.Point(12, 312);
             this.AccountZRX_label.Name = "AccountZRX_label";
@@ -1084,6 +1111,7 @@ namespace IRTicker
             // AccountOMG_label
             // 
             this.AccountOMG_label.AutoSize = true;
+            this.AccountOMG_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountOMG_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountOMG_label.Location = new System.Drawing.Point(12, 292);
             this.AccountOMG_label.Name = "AccountOMG_label";
@@ -1105,6 +1133,7 @@ namespace IRTicker
             // AccountBAT_label
             // 
             this.AccountBAT_label.AutoSize = true;
+            this.AccountBAT_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountBAT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountBAT_label.Location = new System.Drawing.Point(12, 272);
             this.AccountBAT_label.Name = "AccountBAT_label";
@@ -1126,6 +1155,7 @@ namespace IRTicker
             // AccountETC_label
             // 
             this.AccountETC_label.AutoSize = true;
+            this.AccountETC_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountETC_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountETC_label.Location = new System.Drawing.Point(12, 252);
             this.AccountETC_label.Name = "AccountETC_label";
@@ -1147,7 +1177,7 @@ namespace IRTicker
             // AccountXLM_label
             // 
             this.AccountXLM_label.AutoSize = true;
-            this.AccountXLM_label.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.AccountXLM_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountXLM_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountXLM_label.Location = new System.Drawing.Point(12, 232);
             this.AccountXLM_label.Name = "AccountXLM_label";
@@ -1169,6 +1199,7 @@ namespace IRTicker
             // AccountEOS_label
             // 
             this.AccountEOS_label.AutoSize = true;
+            this.AccountEOS_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountEOS_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountEOS_label.Location = new System.Drawing.Point(12, 212);
             this.AccountEOS_label.Name = "AccountEOS_label";
@@ -1190,6 +1221,7 @@ namespace IRTicker
             // AccountLTC_label
             // 
             this.AccountLTC_label.AutoSize = true;
+            this.AccountLTC_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountLTC_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountLTC_label.Location = new System.Drawing.Point(12, 192);
             this.AccountLTC_label.Name = "AccountLTC_label";
@@ -1211,6 +1243,7 @@ namespace IRTicker
             // AccountUSDT_label
             // 
             this.AccountUSDT_label.AutoSize = true;
+            this.AccountUSDT_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountUSDT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountUSDT_label.Location = new System.Drawing.Point(12, 172);
             this.AccountUSDT_label.Name = "AccountUSDT_label";
@@ -1232,6 +1265,7 @@ namespace IRTicker
             // AccountBSV_label
             // 
             this.AccountBSV_label.AutoSize = true;
+            this.AccountBSV_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountBSV_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountBSV_label.Location = new System.Drawing.Point(12, 152);
             this.AccountBSV_label.Name = "AccountBSV_label";
@@ -1252,6 +1286,7 @@ namespace IRTicker
             // AccountBCH_label
             // 
             this.AccountBCH_label.AutoSize = true;
+            this.AccountBCH_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountBCH_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountBCH_label.Location = new System.Drawing.Point(12, 132);
             this.AccountBCH_label.Name = "AccountBCH_label";
@@ -1273,6 +1308,7 @@ namespace IRTicker
             // AccountXRP_label
             // 
             this.AccountXRP_label.AutoSize = true;
+            this.AccountXRP_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountXRP_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountXRP_label.Location = new System.Drawing.Point(12, 112);
             this.AccountXRP_label.Name = "AccountXRP_label";
@@ -1294,6 +1330,7 @@ namespace IRTicker
             // AccountETH_label
             // 
             this.AccountETH_label.AutoSize = true;
+            this.AccountETH_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountETH_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountETH_label.Location = new System.Drawing.Point(12, 92);
             this.AccountETH_label.Name = "AccountETH_label";
@@ -1315,6 +1352,7 @@ namespace IRTicker
             // AccountXBT_label
             // 
             this.AccountXBT_label.AutoSize = true;
+            this.AccountXBT_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountXBT_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountXBT_label.ForeColor = System.Drawing.Color.DarkOrange;
             this.AccountXBT_label.Location = new System.Drawing.Point(12, 72);
@@ -1557,7 +1595,7 @@ namespace IRTicker
             this.AccountClosedOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountClosedOrders_listview.HideSelection = false;
             this.AccountClosedOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem3});
+            listViewItem1});
             this.AccountClosedOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountClosedOrders_listview.MultiSelect = false;
             this.AccountClosedOrders_listview.Name = "AccountClosedOrders_listview";
@@ -1622,7 +1660,7 @@ namespace IRTicker
             this.AccountOpenOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountOpenOrders_listview.HideSelection = false;
             this.AccountOpenOrders_listview.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem4});
+            listViewItem2});
             this.AccountOpenOrders_listview.Location = new System.Drawing.Point(9, 32);
             this.AccountOpenOrders_listview.MultiSelect = false;
             this.AccountOpenOrders_listview.Name = "AccountOpenOrders_listview";

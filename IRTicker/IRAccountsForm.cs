@@ -170,16 +170,10 @@ namespace IRTicker
         public void DrawIRAccounts(Dictionary<string, Account> irAccounts) {
 
             IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
-                Dictionary<string, Account> _irAccounts = (Dictionary<string, Account>)o;
-                Label CurrentSecondaryCurrecyLabel = IRT.UIControls_Dict["IR"].Label_Dict[DCE_IR.CurrentSecondaryCurrency + "_Account_Label"];
-                CurrentSecondaryCurrecyLabel.ForeColor = Color.DarkBlue;
-                CurrentSecondaryCurrecyLabel.Font = new Font(CurrentSecondaryCurrecyLabel.Font.FontFamily, 12f, FontStyle.Bold);
-
-                Label SelectedCrypto = IRT.UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Label"];
-                SelectedCrypto.ForeColor = Color.DarkOrange;
-                SelectedCrypto.Font = new Font(SelectedCrypto.Font.FontFamily, 12f, FontStyle.Bold);
 
                 var mSummaries = DCE_IR.GetCryptoPairs();
+
+                Dictionary<string, Account> _irAccounts = (Dictionary<string, Account>)o;
 
                 foreach (KeyValuePair<string, Account> acc in _irAccounts) {
                     if (IRT.UIControls_Dict["IR"].Label_Dict.ContainsKey(acc.Key + "_Account_Total")) {
@@ -608,7 +602,6 @@ namespace IRTicker
                 oldLabel = IRT.UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Value"];
                 oldLabel.ForeColor = Color.FromArgb(64, 64, 64);
 
-
                 AccountSelectedCrypto = clickedLabel.Text.Substring(0, clickedLabel.Text.IndexOf(':'));
 
                 AccountOpenOrders_label.Text = AccountSelectedCrypto + " open orders";
@@ -640,6 +633,32 @@ namespace IRTicker
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
                 PrivateIR.PrivateIREndPoints.GetAddress,PrivateIR.PrivateIREndPoints.GetClosedOrders,
                 PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
+        }
+
+        private void fiatClicked(Label clickedLabel) {
+
+            //  colour the fiats
+
+            // set the old fiat label back to normal
+            Label CurrentSecondaryCurrecyLabel = IRT.UIControls_Dict["IR"].Label_Dict[DCE_IR.CurrentSecondaryCurrency + "_Account_Label"];
+            CurrentSecondaryCurrecyLabel.ForeColor = Color.Black;
+            CurrentSecondaryCurrecyLabel.Font = new Font(CurrentSecondaryCurrecyLabel.Font.FontFamily, 14.25f, FontStyle.Regular);
+
+            // highlight the new fiat label
+            clickedLabel.ForeColor = Color.DarkBlue;
+            clickedLabel.Font = new Font(clickedLabel.Font.FontFamily, 14.25f, FontStyle.Bold);
+
+            drawOpenOrders(null);
+            drawClosedOrders(null);
+            drawDepositAddress(null);
+
+            AccountOrderVolume_textbox_TextChanged(null, null);
+            AccountLimitPrice_textbox_TextChanged(null, null);
+
+            IRT.IR_GroupBox_Click(clickedLabel, null);
+            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
+                PrivateIR.PrivateIREndPoints.GetClosedOrders,PrivateIR.PrivateIREndPoints.GetOpenOrders,
+                PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
         /*private void IRAccountClose_button_Click(object sender, EventArgs e) {
@@ -1157,6 +1176,9 @@ namespace IRTicker
             AccountOrderVolume_textbox_TextChanged(null, null);
         }
 
-
+        // called when you click any of the fiat labels
+        private void fiatLabel_Click(object sender, EventArgs e) {
+            fiatClicked((System.Windows.Forms.Label)sender);
+        }
     }
 }
