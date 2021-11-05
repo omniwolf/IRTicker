@@ -1002,7 +1002,7 @@ namespace IRTicker
             public double volDiff1 { get; set; }
             public double volDiff7 { get; set; }
             public double volDiff30 { get; set; }
-            public string currency { get; set; }
+            //public string currency { get; set; }
         }
 
         public class ETH
@@ -1029,17 +1029,40 @@ namespace IRTicker
             public string telegram { get; set; }
             public string twitter { get; set; }
             public string coingecko { get; set; }
+            public int ethTransfersCount { get; set; }
             public object price { get; set; }
             public List<string> publicTags { get; set; }
-            public string description { get; set; }
-            public string reddit { get; set; }
-            public int? ethTransfersCount { get; set; }
             public string facebook { get; set; }
+            public string reddit { get; set; }
+            public string description { get; set; }
+            public string links { get; set; }
+            public string storageTotalSupply { get; set; }
+        }
+
+        public class JsonExponentialConverter : JsonConverter
+        {
+            public override bool CanRead { get { return true; } }
+            public override bool CanConvert(Type objectType) {
+                return true;
+            }
+
+            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
+                serializer.Serialize(writer, value);
+            }
+
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
+                long amount = 0;
+                if (long.TryParse(reader.Value.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out amount)) {
+                    return amount;
+                }
+                return amount;
+            }
         }
 
         public class Token
         {
             public TokenInfo tokenInfo { get; set; }
+            [JsonConverter(typeof(JsonExponentialConverter))]
             public long balance { get; set; }
             public int totalIn { get; set; }
             public int totalOut { get; set; }
