@@ -390,7 +390,9 @@ namespace IRTicker {
            // return Task.CompletedTask;
         }
 
-
+        // need to handle error 
+        // MBAIT: trid to create an order, but it failed.  Will retry.  Error: Order volume must be greater or equal to BCH 0.001.
+        // when the remainder is smaller than the min size
         public async Task marketBaiterLoopAsync(string crypto, string fiat, decimal volume, decimal limitPrice) {
 
             IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> baiterBook;
