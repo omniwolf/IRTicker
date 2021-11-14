@@ -390,9 +390,6 @@ namespace IRTicker {
            // return Task.CompletedTask;
         }
 
-        // need to handle error 
-        // MBAIT: trid to create an order, but it failed.  Will retry.  Error: Order volume must be greater or equal to BCH 0.001.
-        // when the remainder is smaller than the min size
         public async Task marketBaiterLoopAsync(string crypto, string fiat, decimal volume, decimal limitPrice) {
 
             IOrderedEnumerable<KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>> baiterBook;
@@ -488,6 +485,13 @@ namespace IRTicker {
                             errorMsg = ex.InnerException.Message;
                         }
                         Debug.Print("MBAIT: trid to create an order, but it failed.  Will retry.  Error: " + errorMsg);
+
+                        if (errorMsg.Contains("Order volume must be greater or equal to")) {  // order size too small now, just finish.
+                            Debug.Print("MBAIT: OK, order is too small, so we just stop.");
+                            IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter 🎣", crypto.ToUpper() + "-" + fiat.ToUpper() + " order mostly filled, stopping as order now too small to continue.  Remaining: " + crypto.ToUpper() + " " + baiterLiveVol), true);
+                            placedOrder = null;
+                            marketBaiterActive = false;
+                        }
                     }
                     // sholudnt' call the bulkupdate method from here, it should only be called from the UI as it can result in messageboxes, etc.  Also I shouldn't need to cal UpdateOrderBook...
                     //IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, /*PrivateIREndPoints.GetAccounts, */PrivateIREndPoints.UpdateOrderBook });
