@@ -760,6 +760,11 @@ namespace IRTicker
                     return;
                 }
 
+                if ((null == closedOs) || (null == closedOs.Data)) {
+                    Debug.Print("TGB: failed to pull closed orders, closed order obj null..");
+                    return;
+                }
+
                 if (closedOs.Data.Count() > 0) {
 
                     int count = 1;
