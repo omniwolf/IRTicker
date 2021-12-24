@@ -839,11 +839,13 @@ namespace IRTicker {
                             Debug.Print(DateTime.Now + " IR spread (" + tickerStream.Data.Pair + ") is " + mSummary.spread + " :(  bid: " + mSummary.CurrentHighestBidPrice + " and offer: " + mSummary.CurrentLowestOfferPrice);
                         }
                         if (DCEs["IR"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) {  //eventPair.Item2.ToUpper()) {
-                            pollingThread.ReportProgress(21, mSummary);  // do update_pairs thing
+                            if (pollingThread.IsBusy)
+                                pollingThread.ReportProgress(21, mSummary);  // do update_pairs thing
                         }
 
                         if (Properties.Settings.Default.ShowOB && tickerStream.Data.Pair.ToUpper() == "XBT-AUD") {
-                            pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
+                            if (pollingThread.IsBusy)
+                                pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
                         }
                     }
 

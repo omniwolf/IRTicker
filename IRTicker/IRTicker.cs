@@ -728,7 +728,7 @@ namespace IRTicker {
                 if (TGBot != null) TGBot.BTCMemoji = "😭";
             }
             else if (IRvol > BTCMvol * 1.05M) {
-                slackObj.setStatus("", ":sunglasses:", status_emoji_duration, name);
+                slackObj.setStatus("", ":santa:", status_emoji_duration, name);
                 if (TGBot != null) TGBot.BTCMemoji = "😎";
             }
             else if ((IRvol <= BTCMvol * 1.05M) && (IRvol >= BTCMvol * 0.95M)) {
