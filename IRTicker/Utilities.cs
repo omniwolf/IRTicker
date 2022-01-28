@@ -179,6 +179,13 @@ namespace IRTicker {
                     if (result.StartsWith("{\"success\":false")) {
                         return new Tuple<bool, string>(false, "BadRequest");
                     }
+                    else if (string.IsNullOrEmpty(result)) {
+                        return new Tuple<bool, string>(false, "EmptyResponse");
+                    }
+                    else if (result.StartsWith("Internal Server Error")) {
+                        return new Tuple<bool, string>(false, "Internal Server Error");
+                    }
+
                     return new Tuple<bool, string>(true, result);
                 }
             }
