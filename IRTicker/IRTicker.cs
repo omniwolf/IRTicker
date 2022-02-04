@@ -35,13 +35,10 @@ namespace IRTicker {
         private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "USDT", "DOT", "GRT", "AAVE", "YFI", "PMGT", "SNX", "COMP", "LINK", "ADA", "UNI" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
-        private BlinkStick bStick;
-        private BlinkStick bStickETH;
+        private BlinkStick bStick, bStickETH, bStickUSDT, bStickXRP;
         private long lastBlock = 0;  // this holds the last block the app knows about
-        private Task taskPulseBTC;
-        private Task taskPulseETH;
-        private CancellationTokenSource cTokenPulseBTC;
-        private CancellationTokenSource cTokenPulseETH;
+        private Task taskPulseBTC, taskPulseETH, taskPulseUSDT, taskPulseXRP;
+        private CancellationTokenSource cTokenPulseBTC, cTokenPulseETH, cTokenPulseUSDT, cTokenPulseXRP;
         private Slack slackObj = new Slack();
         private DateTime lastCSVWrite = DateTime.Now;  // this holds the time we last saved the CSV file
         //private System.Windows.Forms.Panel LastPanel;  // shouldn't need this anymore with the new account form
@@ -73,46 +70,47 @@ namespace IRTicker {
 
             //bStick = BlinkStick.FindFirst();
             var bSticks = BlinkStick.FindAll();
-            if (bSticks.Length == 2) {
+            if (bSticks.Length == 4) {
                 Debug.Print("bs1: " + bSticks[0].Meta.Serial);
                 Debug.Print("bs2: " + bSticks[1].Meta.Serial);
+                Debug.Print("bs3: " + bSticks[2].Meta.Serial);
+                Debug.Print("bs4: " + bSticks[3].Meta.Serial);
 
-                if (bSticks[0].Meta.Serial == "BS028603-3.0") {
-                    bStick = bSticks[0];
-                    bStickETH = bSticks[1];
-                }
-                else {
-                    bStick = bSticks[1];
-                    bStickETH = bSticks[0];
-                }
+                int i = 0;
+                do {
+                    switch (bSticks[i].Meta.Serial) {
+                        case "BS032958-3.0":
+                            bStickETH = bSticks[i];
+                            break;
+                        case "BS041767-3.0":
+                            bStickUSDT = bSticks[i];
+                            break;
+                        case "BS028603-3.0":
+                            bStick = bSticks[i];  // BTC
+                            break;
+                        case "BS041736-3.0":
+                            bStickXRP = bSticks[i];
+                            break;
+                    }
+
+                    if (bSticks[i].OpenDevice())  // activateee
+                        bSticks[i].Blink("yellow", 1, 200);
+                    else
+                        Debug.Print("BlinkStick " + bSticks[i].Meta.Serial + " couldn't be accessed or opened");
 
 
-                if (bStick != null && bStick.OpenDevice()) {
-                    bStick.Blink("yellow", 1, 200);
-                    bStick.Blink("blue", 1, 200);
-                    //bStick.Pulse("purple", 1, 300, 50);
-                    //bStick.Pulse(RgbColor.FromRgb(69, 114, 69), 20, 700, 50);
-                    //BlinkStickBW.RunWorkerAsync(argument: RgbColor.FromRgb(69, 114, 69));
-                }
-                else {
-                    Debug.Print("BlinkStick BTC couldn't be accessed or opened");
-                }
-                if (bStickETH != null && bStickETH.OpenDevice()) {
-                    bStickETH.Blink("red", 1, 200);
-                    bStickETH.Blink("purple", 1, 200);
-                }
-                else {
-                    Debug.Print("BlinkStick ETH couldn't be accessed or opened");
-                }
+                    i++;
+                } while (i < bSticks.Length);
             }
-            else if (bSticks.Length == 1) {
+
+            if (bSticks.Length == 1) {
                 bStick = bSticks[0];  // if we only have 1 blink stick, then make it BTC
                 if (bStick != null && bStick.OpenDevice()) {
                     bStick.Blink("yellow", 1, 200);
                     bStick.Blink("blue", 1, 200);
                 }
                 else {
-                    Debug.Print("Only 1 BlinkStick. Assigning it to BTC, but it couldn't be accessed or opened");
+                    Debug.Print("Only 1 BlinkStick. Tried assigning it to BTC, but it couldn't be accessed or opened");
                 }
             }
 
@@ -1370,38 +1368,67 @@ namespace IRTicker {
                 // Time to blink some sticks
                 Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
                 Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
-                decimal IRvol = -1, BTCMvol = -1, IRETHvol = -1, BTCMETHvol = -1;
-                if (IRpairs.ContainsKey("XBT-AUD") && BTCMpairs.ContainsKey("XBT-AUD") && IRpairs.ContainsKey("ETH-AUD") && BTCMpairs.ContainsKey("ETH-AUD")) {
-                    IRvol = IRpairs["XBT-AUD"].DayVolumeXbt; ;
-                    BTCMvol = BTCMpairs["XBT-AUD"].DayVolumeXbt;
-                    IRETHvol = IRpairs["ETH-AUD"].DayVolumeXbt; ;
-                    BTCMETHvol = BTCMpairs["ETH-AUD"].DayVolumeXbt;
+                decimal IRvol_BTC = -1, BTCMvol_BTC = -1, IRvol_ETH = -1, BTCMvol_ETH = -1, IRvol_USDT = -1, BTCMvol_USDT = -1, IRvol_XRP = -1, BTCMvol_XRP = -1;
+                if (IRpairs.ContainsKey("XBT-AUD") && BTCMpairs.ContainsKey("XBT-AUD") && 
+                    IRpairs.ContainsKey("ETH-AUD") && BTCMpairs.ContainsKey("ETH-AUD") && 
+                    IRpairs.ContainsKey("USDT-AUD") && BTCMpairs.ContainsKey("USDT-AUD") && 
+                    IRpairs.ContainsKey("XRP-AUD") && BTCMpairs.ContainsKey("XRP-AUD")) {
+                    IRvol_BTC = IRpairs["XBT-AUD"].DayVolumeXbt; ;
+                    BTCMvol_BTC = BTCMpairs["XBT-AUD"].DayVolumeXbt;
+                    IRvol_ETH = IRpairs["ETH-AUD"].DayVolumeXbt; ;
+                    BTCMvol_ETH = BTCMpairs["ETH-AUD"].DayVolumeXbt;
+                    IRvol_USDT = IRpairs["USDT-AUD"].DayVolumeXbt; ;
+                    BTCMvol_USDT = BTCMpairs["USDT-AUD"].DayVolumeXbt;
+                    IRvol_XRP = IRpairs["XRP-AUD"].DayVolumeXbt; ;
+                    BTCMvol_XRP = BTCMpairs["XRP-AUD"].DayVolumeXbt;
 
 
-                    if ((bStick == null) || (bStickETH == null)) {
+                    if ((bStick == null) || (bStickETH == null) || (bStickUSDT == null) || (bStickXRP == null)) {
                         var bSticks = BlinkStick.FindAll();
-                        if (bSticks.Length == 2) {
+                        if (bSticks.Length == 4) {
 
-                            if (bSticks[0].Meta.Serial == "BS028603-3.0") {
-                                bStick = bSticks[0];
-                                bStickETH = bSticks[1];
-                            }
-                            else {
-                                bStick = bSticks[1];
-                                bStickETH = bSticks[0];
-                            }
+                            int i = 0;
+                            do {
+                                switch (bSticks[i].Meta.Serial) {
+                                    case "BS032958-3.0":
+                                        bStickETH = bSticks[i];
+                                        break;
+                                    case "BS041767-3.0":
+                                        bStickUSDT = bSticks[i];
+                                        break;
+                                    case "BS028603-3.0":
+                                        bStick = bSticks[i];  // BTC
+                                        break;
+                                    case "BS041736-3.0":
+                                        bStickXRP = bSticks[i];
+                                        break;
+                                }
+
+                                i++;
+                            } while (i < bSticks.Length);
+
                         }
                         else if (bSticks.Length == 1) bStick = bSticks[0];  // if we only have 1 blink stick, then make it BTC
                     }
                     if (bStick != null && bStick.OpenDevice()) {
                         // update blink stick
                         //setStickColour(IRvol, BTCMvol, IRETHvol, BTCMETHvol);
-                        cTokenPulseBTC = setStickColourAsync(bStick, cTokenPulseBTC, ref taskPulseBTC, IRvol, BTCMvol);
+                        cTokenPulseBTC = setStickColourAsync(bStick, cTokenPulseBTC, ref taskPulseBTC, IRvol_BTC, BTCMvol_BTC);
                     }
                     if (bStickETH != null && bStickETH.OpenDevice()) {
                         // update blink stick
                         //setStickColour(IRvol, BTCMvol, IRETHvol, BTCMETHvol);
-                        cTokenPulseETH = setStickColourAsync(bStickETH, cTokenPulseETH, ref taskPulseETH, IRETHvol, BTCMETHvol);
+                        cTokenPulseETH = setStickColourAsync(bStickETH, cTokenPulseETH, ref taskPulseETH, IRvol_ETH, BTCMvol_ETH);
+                    }
+                    if (bStickUSDT != null && bStickUSDT.OpenDevice()) {
+                        // update blink stick
+                        //setStickColour(IRvol, BTCMvol, IRETHvol, BTCMETHvol);
+                        cTokenPulseUSDT = setStickColourAsync(bStickUSDT, cTokenPulseUSDT, ref taskPulseUSDT, IRvol_USDT, BTCMvol_USDT);
+                    }
+                    if (bStickXRP != null && bStickXRP.OpenDevice()) {
+                        // update blink stick
+                        //setStickColour(IRvol, BTCMvol, IRETHvol, BTCMETHvol);
+                        cTokenPulseXRP = setStickColourAsync(bStickXRP, cTokenPulseXRP, ref taskPulseXRP, IRvol_XRP, BTCMvol_XRP);
                     }
                 }
 
@@ -2296,10 +2323,22 @@ namespace IRTicker {
                     bStickETH.TurnOff();
                 }
             }
+            if (bStickUSDT != null) {
+                if (bStickUSDT.OpenDevice()) {
+                    if (cTokenPulseUSDT != null) cTokenPulseUSDT.Cancel();
+                    bStickUSDT.TurnOff();
+                }
+            }
+            if (bStickXRP != null) {
+                if (bStickXRP.OpenDevice()) {
+                    if (cTokenPulseXRP != null) cTokenPulseXRP.Cancel();
+                    bStickXRP.TurnOff();
+                }
+            }
 
             //IRAccount_panel.Visible = false;
 
-           if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "")) {
+            if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "")) {
                 slackObj.setStatus("", "");
            }
             wSocketConnect.IR_Disconnect();  // let's see if this stops the occasional crash on exit
