@@ -1411,23 +1411,15 @@ namespace IRTicker {
                         else if (bSticks.Length == 1) bStick = bSticks[0];  // if we only have 1 blink stick, then make it BTC
                     }
                     if (bStick != null && bStick.OpenDevice()) {
-                        // update blink stick
-                        //setStickColour(IRvol, BTCMvol, IRETHvol, BTCMETHvol);
                         cTokenPulseBTC = setStickColourAsync(bStick, cTokenPulseBTC, ref taskPulseBTC, IRvol_BTC, BTCMvol_BTC);
                     }
                     if (bStickETH != null && bStickETH.OpenDevice()) {
-                        // update blink stick
-                        //setStickColour(IRvol, BTCMvol, IRETHvol, BTCMETHvol);
                         cTokenPulseETH = setStickColourAsync(bStickETH, cTokenPulseETH, ref taskPulseETH, IRvol_ETH, BTCMvol_ETH);
                     }
                     if (bStickUSDT != null && bStickUSDT.OpenDevice()) {
-                        // update blink stick
-                        //setStickColour(IRvol, BTCMvol, IRETHvol, BTCMETHvol);
                         cTokenPulseUSDT = setStickColourAsync(bStickUSDT, cTokenPulseUSDT, ref taskPulseUSDT, IRvol_USDT, BTCMvol_USDT);
                     }
                     if (bStickXRP != null && bStickXRP.OpenDevice()) {
-                        // update blink stick
-                        //setStickColour(IRvol, BTCMvol, IRETHvol, BTCMETHvol);
                         cTokenPulseXRP = setStickColourAsync(bStickXRP, cTokenPulseXRP, ref taskPulseXRP, IRvol_XRP, BTCMvol_XRP);
                     }
                 }
