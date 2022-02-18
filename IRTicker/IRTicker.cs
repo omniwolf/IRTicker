@@ -1128,6 +1128,19 @@ namespace IRTicker {
         }
 
         private void PollingThread_DoWork(object sender, DoWorkEventArgs e) {
+            try {
+                PollingThread_MeatAndPotates(sender, e);
+            }
+            catch (Exception ex) {
+                Debug.Print(DateTime.Now + " - BACKGROUND WORKER FAILED:");
+                Debug.Print(ex.Message);
+                if (null != ex.InnerException) {
+                    Debug.Print("inner exception: " + ex.InnerException.Message);
+                }
+            }
+        }            
+
+        private void PollingThread_MeatAndPotates(object sender, DoWorkEventArgs e) {
             int loopCount = 0;  // we only want to ask the API about BCH/LTC much less, so we keep track of how many times we loop so we only call the LTC/BCH every 3rd loop maybe
             do {
 
