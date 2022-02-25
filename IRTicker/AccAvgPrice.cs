@@ -285,6 +285,13 @@ namespace IRTicker
         }
 
         private void AccAvgPrice_Copy_Button_Click(object sender, EventArgs e) {
+           /* string strToCopy = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() + " " + AccAvgPrice_TotalCrypto_TextBox.Text + " sold on OB @ ";
+            
+            foreach (KeyValuePair<string, Tuple<Button, bool>> selFiat in fiatCurrenciesSelected) {
+                if (selFiat.Value.Item2)
+            }
+            */
+
             Clipboard.SetText(AvgPriceResult);
         }
 
