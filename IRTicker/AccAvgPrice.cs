@@ -285,14 +285,23 @@ namespace IRTicker
         }
 
         private void AccAvgPrice_Copy_Button_Click(object sender, EventArgs e) {
-           /* string strToCopy = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() + " " + AccAvgPrice_TotalCrypto_TextBox.Text + " sold on OB @ ";
-            
-            foreach (KeyValuePair<string, Tuple<Button, bool>> selFiat in fiatCurrenciesSelected) {
-                if (selFiat.Value.Item2)
-            }
-            */
+            string strToCopy = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() + " " + AccAvgPrice_TotalCrypto_TextBox.Text + " sold on OB @ ";
+            string fiatTicker = "";
+            bool foundFiat = false;
 
-            Clipboard.SetText(AvgPriceResult);
+            foreach (KeyValuePair<string, Tuple<Button, bool>> selFiat in fiatCurrenciesSelected) {
+                if (selFiat.Value.Item2) {  // this fiat is selected, let's just use whatever the first fiat we can see.  this copy function makes no sense with multiple selected anyway
+                    foundFiat = true;
+                    fiatTicker = selFiat.Key.Substring(0, 2) + "$";
+                    break;
+                }
+            }
+            
+            if (foundFiat) {
+                strToCopy += fiatTicker + " " + AvgPriceResult + " for " + fiatTicker + " " + AccAvgPrice_TotalFiat_TextBox.Text;
+                Clipboard.SetText(strToCopy);
+            }
+            else Clipboard.SetText(AvgPriceResult);
         }
 
         // cOrders.Data must have at least one element, this method assumes this..
