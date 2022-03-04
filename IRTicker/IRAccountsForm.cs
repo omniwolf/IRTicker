@@ -1076,7 +1076,7 @@ namespace IRTicker
                     "Cancel order", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             }
             catch (Exception ex) {
-                Debug.Print("tried to cancel an order but there were no orders selected somehow, silently failing...");
+                Debug.Print("tried to cancel an order but there were no orders selected somehow, silently failing... error: " + ex.Message);
                 return;
             }
 

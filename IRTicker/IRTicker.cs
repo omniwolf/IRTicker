@@ -70,11 +70,17 @@ namespace IRTicker {
 
             //bStick = BlinkStick.FindFirst();
             var bSticks = BlinkStick.FindAll();
-            if (bSticks.Length == 4) {
+
+            foreach (BlinkStick bStick in bSticks) {
+                Debug.Print("Found blinkStick: " + bSticks[0].Meta.Serial);
+            }
+
+
+            /*if (bSticks.Length == 4) {
                 Debug.Print("bs1: " + bSticks[0].Meta.Serial);
                 Debug.Print("bs2: " + bSticks[1].Meta.Serial);
                 Debug.Print("bs3: " + bSticks[2].Meta.Serial);
-                Debug.Print("bs4: " + bSticks[3].Meta.Serial);
+                Debug.Print("bs4: " + bSticks[3].Meta.Serial);*/
 
                 int i = 0;
                 do {
@@ -101,7 +107,7 @@ namespace IRTicker {
 
                     i++;
                 } while (i < bSticks.Length);
-            }
+            //}
 
             if (bSticks.Length == 1) {
                 bStick = bSticks[0];  // if we only have 1 blink stick, then make it BTC
@@ -1398,7 +1404,7 @@ namespace IRTicker {
 
                     if ((bStick == null) || (bStickETH == null) || (bStickUSDT == null) || (bStickXRP == null)) {
                         var bSticks = BlinkStick.FindAll();
-                        if (bSticks.Length == 4) {
+                        if (bSticks.Length > 1) {
 
                             int i = 0;
                             do {
