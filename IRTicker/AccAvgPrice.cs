@@ -285,7 +285,8 @@ namespace IRTicker
         }
 
         private void AccAvgPrice_Copy_Button_Click(object sender, EventArgs e) {
-            string strToCopy = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() + " " + AccAvgPrice_TotalCrypto_TextBox.Text + " sold on OB @ ";
+            string buysell = (AccAvgPrice_BuySell_ComboBox.SelectedIndex == 0 ? " bought " : " sold ");
+            string strToCopy = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() + " " + AccAvgPrice_TotalCrypto_TextBox.Text + buysell + "on OB @ ";
             string fiatTicker = "";
             bool foundFiat = false;
 
@@ -298,7 +299,7 @@ namespace IRTicker
             }
             
             if (foundFiat) {
-                strToCopy += fiatTicker + " " + AvgPriceResult + " for " + fiatTicker + " " + AccAvgPrice_TotalFiat_TextBox.Text;
+                strToCopy += fiatTicker + " " + AccAvgPrice_Result_TextBox.Text + " for " + fiatTicker + " " + AccAvgPrice_TotalFiat_TextBox.Text;
                 Clipboard.SetText(strToCopy);
             }
             else Clipboard.SetText(AvgPriceResult);
