@@ -81,7 +81,7 @@ namespace IRTicker {
                 Debug.Print("bs2: " + bSticks[1].Meta.Serial);
                 Debug.Print("bs3: " + bSticks[2].Meta.Serial);
                 Debug.Print("bs4: " + bSticks[3].Meta.Serial);*/
-
+            if (bSticks.Length > 0) {
                 int i = 0;
                 do {
                     switch (bSticks[i].Meta.Serial) {
@@ -107,16 +107,17 @@ namespace IRTicker {
 
                     i++;
                 } while (i < bSticks.Length);
-            //}
+                //}
 
-            if (bSticks.Length == 1) {
-                bStick = bSticks[0];  // if we only have 1 blink stick, then make it BTC
-                if (bStick != null && bStick.OpenDevice()) {
-                    bStick.Blink("yellow", 1, 200);
-                    bStick.Blink("blue", 1, 200);
-                }
-                else {
-                    Debug.Print("Only 1 BlinkStick. Tried assigning it to BTC, but it couldn't be accessed or opened");
+                if (bSticks.Length == 1) {
+                    bStick = bSticks[0];  // if we only have 1 blink stick, then make it BTC
+                    if (bStick != null && bStick.OpenDevice()) {
+                        bStick.Blink("yellow", 1, 200);
+                        bStick.Blink("blue", 1, 200);
+                    }
+                    else {
+                        Debug.Print("Only 1 BlinkStick. Tried assigning it to BTC, but it couldn't be accessed or opened");
+                    }
                 }
             }
 
