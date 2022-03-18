@@ -1691,7 +1691,12 @@ namespace IRTicker {
                         UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(pairObj.Value.spread) + " / " + vol;
 
                     // update tool tips.
-                    IRTickerTT_spread.SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], "Best bid: " + Utilities.FormatValue(pairObj.Value.CurrentHighestBidPrice) + System.Environment.NewLine + "Best offer: " + Utilities.FormatValue(pairObj.Value.CurrentLowestOfferPrice));
+                    string spreadTT = "Best bid: " + Utilities.FormatValue(pairObj.Value.CurrentHighestBidPrice) + System.Environment.NewLine +
+                        "Best offer: " + Utilities.FormatValue(pairObj.Value.CurrentLowestOfferPrice) + System.Environment.NewLine +
+                        "Spread: " + Utilities.FormatValue(((pairObj.Value.CurrentLowestOfferPrice - pairObj.Value.CurrentHighestBidPrice) / midPoint * 100), 2, false) + "%";
+
+                    IRTickerTT_spread.SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], spreadTT);
+                        
                 }
                 //else Debug.Print("Pair don't exist, pairObj.Value.SecondaryCurrencyCode: " + pairObj.Value.SecondaryCurrencyCode);
             }
@@ -1779,7 +1784,10 @@ namespace IRTicker {
                 }
 
                 // update tool tips.
-                IRTickerTT_spread.SetToolTip(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"], "Best bid: " + Utilities.FormatValue(mSummary.CurrentHighestBidPrice) + System.Environment.NewLine + "Best offer: " + Utilities.FormatValue(mSummary.CurrentLowestOfferPrice));
+                string spreadTT = "Best bid: " + Utilities.FormatValue(mSummary.CurrentHighestBidPrice) + System.Environment.NewLine +
+                    "Best offer: " + Utilities.FormatValue(mSummary.CurrentLowestOfferPrice) + System.Environment.NewLine +
+                    "Spread: " + Utilities.FormatValue(((mSummary.CurrentLowestOfferPrice - mSummary.CurrentHighestBidPrice) / midPoint * 100), 2, false) + "%";
+                IRTickerTT_spread.SetToolTip(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"], spreadTT);
             }
             else Debug.Print("Pair2 don't exist, pairObj.Value.SecondaryCurrencyCode: " + mSummary.SecondaryCurrencyCode);
         }
