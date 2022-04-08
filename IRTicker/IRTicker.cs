@@ -17,7 +17,10 @@ using BlinkStickDotNet;
 using System.Runtime.InteropServices;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
-// todo:
+// todo: blank out IR Account balance values when changing the API key (eg going from an AU entity to SG entity, if the AU has crypto the SG doesn't support it stays on the screen)
+// implement MANA
+// allow for IROTC-SG to store slush/loans sepaaretly to IROTC, so we can report to slack the balances at the end of the week
+
 
 
 namespace IRTicker {
@@ -2056,12 +2059,16 @@ namespace IRTicker {
             }
             if (reportType == 27) {  // 27 is we need to update the price colour because of nonce
                 Tuple<bool, string> nonceIssue = (Tuple<bool, string>)e.UserState;  // bool is for if an issue exists, the string is the pair it exists (or not) on
-                System.Windows.Forms.Label tempPrice = UIControls_Dict["IR"].Label_Dict[nonceIssue.Item2 + "_Price"];
-                if (nonceIssue.Item1) {  // we have a nonce issue, set to grey
-                    tempPrice.ForeColor = Color.Gray;
-                }
-                else {  // set back to whatever colour it should be
-                    tempPrice.ForeColor = Utilities.PriceColour(DCEs["IR"].GetPriceList(nonceIssue.Item2));
+                if (UIControls_Dict["IR"].Label_Dict.ContainsKey(nonceIssue.Item2)) {
+                    System.Windows.Forms.Label tempPrice = UIControls_Dict["IR"].Label_Dict[nonceIssue.Item2 + "_Price"];
+                    if (nonceIssue.Item1)
+                    {  // we have a nonce issue, set to grey
+                        tempPrice.ForeColor = Color.Gray;
+                    }
+                    else
+                    {  // set back to whatever colour it should be
+                        tempPrice.ForeColor = Utilities.PriceColour(DCEs["IR"].GetPriceList(nonceIssue.Item2));
+                    }
                 }
                 return;
             }

@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Collections.Concurrent;
 using Websocket.Client;
 
+
 namespace IRTicker {
     public class WebSocketsConnect {
 
