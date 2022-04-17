@@ -339,6 +339,15 @@ namespace IRTicker {
             UIControls_Dict["IR"].MATIC_Label = IR_MATIC_Label1;
             UIControls_Dict["IR"].MATIC_Price = IR_MATIC_Label2;
             UIControls_Dict["IR"].MATIC_Spread = IR_MATIC_Label3;
+            UIControls_Dict["IR"].MANA_Label = IR_MANA_Label1;
+            UIControls_Dict["IR"].MANA_Price = IR_MANA_Label2;
+            UIControls_Dict["IR"].MANA_Spread = IR_MANA_Label3;
+            UIControls_Dict["IR"].SOL_Label = IR_SOL_Label1;
+            UIControls_Dict["IR"].SOL_Price = IR_SOL_Label2;
+            UIControls_Dict["IR"].SOL_Spread = IR_SOL_Label3;
+            UIControls_Dict["IR"].SAND_Label = IR_SAND_Label1;
+            UIControls_Dict["IR"].SAND_Price = IR_SAND_Label2;
+            UIControls_Dict["IR"].SAND_Spread = IR_SAND_Label3;
 
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;

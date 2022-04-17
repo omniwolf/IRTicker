@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace IRTicker {
-    public class UIControls {
+namespace IRTicker
+{
+    public class UIControls
+    {
 
         public Dictionary<string, Label> Label_Dict;
 
@@ -44,6 +46,9 @@ namespace IRTicker {
         public Label ADA_Label { get; set; }
         public Label DOGE_Label { get; set; }
         public Label MATIC_Label { get; set; }
+        public Label MANA_Label { get; set; }
+        public Label SOL_Label { get; set; }
+        public Label SAND_Label { get; set; }
 
         public Label XBT_Price { get; set; }
         public Label ETH_Price { get; set; }
@@ -75,6 +80,9 @@ namespace IRTicker {
         public Label ADA_Price { get; set; }
         public Label DOGE_Price { get; set; }
         public Label MATIC_Price { get; set; }
+        public Label MANA_Price { get; set; }
+        public Label SOL_Price { get; set; }
+        public Label SAND_Price { get; set; }
 
 
         public Label XBT_Spread { get; set; }
@@ -107,6 +115,9 @@ namespace IRTicker {
         public Label ADA_Spread { get; set; }
         public Label DOGE_Spread { get; set; }
         public Label MATIC_Spread { get; set; }
+        public Label MANA_Spread { get; set; }
+        public Label SOL_Spread { get; set; }
+        public Label SAND_Spread { get; set; }
 
 
         public ComboBox AvgPrice_BuySell { get; set; }
@@ -154,6 +165,9 @@ namespace IRTicker {
         public Label Account_ADA_Label { get; set; }
         public Label Account_DOGE_Label { get; set; }
         public Label Account_MATIC_Label { get; set; }
+        public Label Account_MANA_Label { get; set; }
+        public Label Account_SOL_Label { get; set; }
+        public Label Account_SAND_Label { get; set; }
 
         public Label Account_XBT_Value { get; set; }
         public Label Account_ETH_Value { get; set; }
@@ -185,6 +199,9 @@ namespace IRTicker {
         public Label Account_ADA_Value { get; set; }
         public Label Account_DOGE_Value { get; set; }
         public Label Account_MATIC_Value { get; set; }
+        public Label Account_MANA_Value { get; set; }
+        public Label Account_SOL_Value { get; set; }
+        public Label Account_SAND_Value { get; set; }
 
 
         public Label Account_XBT_Total { get; set; }
@@ -221,9 +238,13 @@ namespace IRTicker {
         public Label Account_ADA_Total { get; set; }
         public Label Account_DOGE_Total { get; set; }
         public Label Account_MATIC_Total { get; set; }
+        public Label Account_MANA_Total { get; set; }
+        public Label Account_SOL_Total { get; set; }
+        public Label Account_SAND_Total { get; set; }
 
 
-        public void CreateIRAccountControlDictionary() {
+        public void CreateIRAccountControlDictionary()
+        {
 
             if (Account_XBT_Label != null) Label_Dict["XBT_Account_Label"] = Account_XBT_Label;
             if (Account_ETH_Label != null) Label_Dict["ETH_Account_Label"] = Account_ETH_Label;
@@ -259,6 +280,9 @@ namespace IRTicker {
             if (Account_ADA_Label != null) Label_Dict["ADA_Account_Label"] = Account_ADA_Label;
             if (Account_DOGE_Label != null) Label_Dict["DOGE_Account_Label"] = Account_DOGE_Label;
             if (Account_MATIC_Label != null) Label_Dict["MATIC_Account_Label"] = Account_MATIC_Label;
+            if (Account_MANA_Label != null) Label_Dict["MANA_Account_Label"] = Account_MANA_Label;
+            if (Account_SOL_Label != null) Label_Dict["SOL_Account_Label"] = Account_SOL_Label;
+            if (Account_SAND_Label != null) Label_Dict["SAND_Account_Label"] = Account_SAND_Label;
 
             if (Account_XBT_Value != null) Label_Dict["XBT_Account_Value"] = Account_XBT_Value;
             if (Account_ETH_Value != null) Label_Dict["ETH_Account_Value"] = Account_ETH_Value;
@@ -290,6 +314,9 @@ namespace IRTicker {
             if (Account_ADA_Value != null) Label_Dict["ADA_Account_Value"] = Account_ADA_Value;
             if (Account_DOGE_Value != null) Label_Dict["DOGE_Account_Value"] = Account_DOGE_Value;
             if (Account_MATIC_Value != null) Label_Dict["MATIC_Account_Value"] = Account_MATIC_Value;
+            if (Account_MANA_Value != null) Label_Dict["MANA_Account_Value"] = Account_MANA_Value;
+            if (Account_SOL_Value != null) Label_Dict["SOL_Account_Value"] = Account_SOL_Value;
+            if (Account_SAND_Value != null) Label_Dict["SAND_Account_Value"] = Account_SAND_Value;
 
             if (Account_XBT_Total != null) Label_Dict["XBT_Account_Total"] = Account_XBT_Total;
             if (Account_ETH_Total != null) Label_Dict["ETH_Account_Total"] = Account_ETH_Total;
@@ -325,9 +352,13 @@ namespace IRTicker {
             if (Account_ADA_Total != null) Label_Dict["ADA_Account_Total"] = Account_ADA_Total;
             if (Account_DOGE_Total != null) Label_Dict["DOGE_Account_Total"] = Account_DOGE_Total;
             if (Account_MATIC_Total != null) Label_Dict["MATIC_Account_Total"] = Account_MATIC_Total;
+            if (Account_MANA_Total != null) Label_Dict["MANA_Account_Total"] = Account_MANA_Total;
+            if (Account_SOL_Total != null) Label_Dict["SOL_Account_Total"] = Account_SOL_Total;
+            if (Account_SAND_Total != null) Label_Dict["SAND_Account_Total"] = Account_SAND_Total;
         }
 
-        public void CreateControlDictionaries() {
+        public void CreateControlDictionaries()
+        {
 
             // Labels
             Label_Dict = new Dictionary<string, Label>();
@@ -361,6 +392,9 @@ namespace IRTicker {
             if (ADA_Label != null) Label_Dict.Add("ADA_Label", ADA_Label);
             if (DOGE_Label != null) Label_Dict.Add("DOGE_Label", DOGE_Label);
             if (MATIC_Label != null) Label_Dict.Add("MATIC_Label", MATIC_Label);
+            if (MANA_Label != null) Label_Dict.Add("MANA_Label", MANA_Label);
+            if (SOL_Label != null) Label_Dict.Add("SOL_Label", SOL_Label);
+            if (SAND_Label != null) Label_Dict.Add("SAND_Label", SAND_Label);
 
 
             if (XBT_Price != null) Label_Dict.Add("XBT_Price", XBT_Price);
@@ -393,6 +427,9 @@ namespace IRTicker {
             if (ADA_Price != null) Label_Dict.Add("ADA_Price", ADA_Price);
             if (DOGE_Price != null) Label_Dict.Add("DOGE_Price", DOGE_Price);
             if (MATIC_Price != null) Label_Dict.Add("MATIC_Price", MATIC_Price);
+            if (MANA_Price != null) Label_Dict.Add("MANA_Price", MANA_Price);
+            if (SOL_Price != null) Label_Dict.Add("SOL_Price", SOL_Price);
+            if (SAND_Price != null) Label_Dict.Add("SAND_Price", SAND_Price);
 
             if (XBT_Spread != null) Label_Dict.Add("XBT_Spread", XBT_Spread);
             if (ETH_Spread != null) Label_Dict.Add("ETH_Spread", ETH_Spread);
@@ -424,6 +461,9 @@ namespace IRTicker {
             if (ADA_Spread != null) Label_Dict.Add("ADA_Spread", ADA_Spread);
             if (DOGE_Spread != null) Label_Dict.Add("DOGE_Spread", DOGE_Spread);
             if (MATIC_Spread != null) Label_Dict.Add("MATIC_Spread", MATIC_Spread);
+            if (MANA_Spread != null) Label_Dict.Add("MANA_Spread", MANA_Spread);
+            if (SOL_Spread != null) Label_Dict.Add("SOL_Spread", SOL_Spread);
+            if (SAND_Spread != null) Label_Dict.Add("SAND_Spread", SAND_Spread);
         }
     }
 }

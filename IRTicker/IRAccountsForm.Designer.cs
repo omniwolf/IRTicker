@@ -173,6 +173,15 @@ namespace IRTicker
             this.StopBaitin_button = new System.Windows.Forms.Button();
             this.IRAccount_AvgPrice_Button = new System.Windows.Forms.Button();
             this.IRAccount_panel = new System.Windows.Forms.Panel();
+            this.AccountSAND_total = new System.Windows.Forms.Label();
+            this.AccountSAND_value = new System.Windows.Forms.Label();
+            this.AccountSAND_label = new System.Windows.Forms.Label();
+            this.AccountSOL_total = new System.Windows.Forms.Label();
+            this.AccountSOL_value = new System.Windows.Forms.Label();
+            this.AccountSOL_label = new System.Windows.Forms.Label();
+            this.AccountMANA_total = new System.Windows.Forms.Label();
+            this.AccountMANA_value = new System.Windows.Forms.Label();
+            this.AccountMANA_label = new System.Windows.Forms.Label();
             this.GetAccounts_panel.SuspendLayout();
             this.IRAccountAddress_panel.SuspendLayout();
             this.AccountClosedOrders_panel.SuspendLayout();
@@ -183,6 +192,15 @@ namespace IRTicker
             // GetAccounts_panel
             // 
             this.GetAccounts_panel.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.GetAccounts_panel.Controls.Add(this.AccountSAND_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountSAND_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountSAND_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountSOL_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountSOL_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountSOL_label);
+            this.GetAccounts_panel.Controls.Add(this.AccountMANA_total);
+            this.GetAccounts_panel.Controls.Add(this.AccountMANA_value);
+            this.GetAccounts_panel.Controls.Add(this.AccountMANA_label);
             this.GetAccounts_panel.Controls.Add(this.AccountMATIC_total);
             this.GetAccounts_panel.Controls.Add(this.AccountMATIC_value);
             this.GetAccounts_panel.Controls.Add(this.AccountMATIC_label);
@@ -985,7 +1003,7 @@ namespace IRTicker
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(4, 708);
+            this.label7.Location = new System.Drawing.Point(4, 720);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(271, 13);
             this.label7.TabIndex = 37;
@@ -995,7 +1013,7 @@ namespace IRTicker
             // 
             this.AccountUSD_total.AutoSize = true;
             this.AccountUSD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountUSD_total.Location = new System.Drawing.Point(83, 783);
+            this.AccountUSD_total.Location = new System.Drawing.Point(83, 787);
             this.AccountUSD_total.Name = "AccountUSD_total";
             this.AccountUSD_total.Size = new System.Drawing.Size(0, 24);
             this.AccountUSD_total.TabIndex = 36;
@@ -1005,7 +1023,7 @@ namespace IRTicker
             this.AccountUSD_label.AutoSize = true;
             this.AccountUSD_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountUSD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountUSD_label.Location = new System.Drawing.Point(12, 783);
+            this.AccountUSD_label.Location = new System.Drawing.Point(12, 787);
             this.AccountUSD_label.Name = "AccountUSD_label";
             this.AccountUSD_label.Size = new System.Drawing.Size(53, 24);
             this.AccountUSD_label.TabIndex = 35;
@@ -1016,7 +1034,7 @@ namespace IRTicker
             // 
             this.AccountNZD_total.AutoSize = true;
             this.AccountNZD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountNZD_total.Location = new System.Drawing.Point(83, 755);
+            this.AccountNZD_total.Location = new System.Drawing.Point(83, 763);
             this.AccountNZD_total.Name = "AccountNZD_total";
             this.AccountNZD_total.Size = new System.Drawing.Size(0, 24);
             this.AccountNZD_total.TabIndex = 34;
@@ -1026,7 +1044,7 @@ namespace IRTicker
             this.AccountNZD_label.AutoSize = true;
             this.AccountNZD_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountNZD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountNZD_label.Location = new System.Drawing.Point(12, 755);
+            this.AccountNZD_label.Location = new System.Drawing.Point(12, 763);
             this.AccountNZD_label.Name = "AccountNZD_label";
             this.AccountNZD_label.Size = new System.Drawing.Size(54, 24);
             this.AccountNZD_label.TabIndex = 33;
@@ -1037,7 +1055,7 @@ namespace IRTicker
             // 
             this.AccountAUD_total.AutoSize = true;
             this.AccountAUD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountAUD_total.Location = new System.Drawing.Point(83, 727);
+            this.AccountAUD_total.Location = new System.Drawing.Point(83, 739);
             this.AccountAUD_total.Name = "AccountAUD_total";
             this.AccountAUD_total.Size = new System.Drawing.Size(0, 24);
             this.AccountAUD_total.TabIndex = 32;
@@ -1048,7 +1066,7 @@ namespace IRTicker
             this.AccountAUD_label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.AccountAUD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AccountAUD_label.ForeColor = System.Drawing.Color.DarkBlue;
-            this.AccountAUD_label.Location = new System.Drawing.Point(12, 727);
+            this.AccountAUD_label.Location = new System.Drawing.Point(12, 739);
             this.AccountAUD_label.Name = "AccountAUD_label";
             this.AccountAUD_label.Size = new System.Drawing.Size(58, 24);
             this.AccountAUD_label.TabIndex = 31;
@@ -1784,6 +1802,102 @@ namespace IRTicker
             this.IRAccount_panel.Size = new System.Drawing.Size(585, 843);
             this.IRAccount_panel.TabIndex = 62;
             // 
+            // AccountSAND_total
+            // 
+            this.AccountSAND_total.AutoSize = true;
+            this.AccountSAND_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountSAND_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountSAND_total.Location = new System.Drawing.Point(84, 712);
+            this.AccountSAND_total.Name = "AccountSAND_total";
+            this.AccountSAND_total.Size = new System.Drawing.Size(0, 18);
+            this.AccountSAND_total.TabIndex = 116;
+            // 
+            // AccountSAND_value
+            // 
+            this.AccountSAND_value.AutoSize = true;
+            this.AccountSAND_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountSAND_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountSAND_value.Location = new System.Drawing.Point(184, 712);
+            this.AccountSAND_value.Name = "AccountSAND_value";
+            this.AccountSAND_value.Size = new System.Drawing.Size(0, 18);
+            this.AccountSAND_value.TabIndex = 115;
+            // 
+            // AccountSAND_label
+            // 
+            this.AccountSAND_label.AutoSize = true;
+            this.AccountSAND_label.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.AccountSAND_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountSAND_label.Location = new System.Drawing.Point(13, 712);
+            this.AccountSAND_label.Name = "AccountSAND_label";
+            this.AccountSAND_label.Size = new System.Drawing.Size(58, 18);
+            this.AccountSAND_label.TabIndex = 114;
+            this.AccountSAND_label.Text = "SAND:";
+            this.AccountSAND_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountSOL_total
+            // 
+            this.AccountSOL_total.AutoSize = true;
+            this.AccountSOL_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountSOL_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountSOL_total.Location = new System.Drawing.Point(84, 692);
+            this.AccountSOL_total.Name = "AccountSOL_total";
+            this.AccountSOL_total.Size = new System.Drawing.Size(0, 18);
+            this.AccountSOL_total.TabIndex = 113;
+            // 
+            // AccountSOL_value
+            // 
+            this.AccountSOL_value.AutoSize = true;
+            this.AccountSOL_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountSOL_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountSOL_value.Location = new System.Drawing.Point(184, 692);
+            this.AccountSOL_value.Name = "AccountSOL_value";
+            this.AccountSOL_value.Size = new System.Drawing.Size(0, 18);
+            this.AccountSOL_value.TabIndex = 112;
+            // 
+            // AccountSOL_label
+            // 
+            this.AccountSOL_label.AutoSize = true;
+            this.AccountSOL_label.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.AccountSOL_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountSOL_label.Location = new System.Drawing.Point(13, 692);
+            this.AccountSOL_label.Name = "AccountSOL_label";
+            this.AccountSOL_label.Size = new System.Drawing.Size(46, 18);
+            this.AccountSOL_label.TabIndex = 111;
+            this.AccountSOL_label.Text = "SOL:";
+            this.AccountSOL_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountMANA_total
+            // 
+            this.AccountMANA_total.AutoSize = true;
+            this.AccountMANA_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountMANA_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountMANA_total.Location = new System.Drawing.Point(84, 672);
+            this.AccountMANA_total.Name = "AccountMANA_total";
+            this.AccountMANA_total.Size = new System.Drawing.Size(0, 18);
+            this.AccountMANA_total.TabIndex = 110;
+            // 
+            // AccountMANA_value
+            // 
+            this.AccountMANA_value.AutoSize = true;
+            this.AccountMANA_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountMANA_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountMANA_value.Location = new System.Drawing.Point(184, 672);
+            this.AccountMANA_value.Name = "AccountMANA_value";
+            this.AccountMANA_value.Size = new System.Drawing.Size(0, 18);
+            this.AccountMANA_value.TabIndex = 109;
+            // 
+            // AccountMANA_label
+            // 
+            this.AccountMANA_label.AutoSize = true;
+            this.AccountMANA_label.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.AccountMANA_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountMANA_label.Location = new System.Drawing.Point(13, 672);
+            this.AccountMANA_label.Name = "AccountMANA_label";
+            this.AccountMANA_label.Size = new System.Drawing.Size(59, 18);
+            this.AccountMANA_label.TabIndex = 108;
+            this.AccountMANA_label.Text = "MANA:";
+            this.AccountMANA_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
             // IRAccountsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1954,5 +2068,14 @@ namespace IRTicker
         private System.Windows.Forms.Button StopBaitin_button;
         private System.Windows.Forms.Button IRAccount_AvgPrice_Button;
         public System.Windows.Forms.Panel IRAccount_panel;
+        private System.Windows.Forms.Label AccountSAND_total;
+        private System.Windows.Forms.Label AccountSAND_value;
+        private System.Windows.Forms.Label AccountSAND_label;
+        private System.Windows.Forms.Label AccountSOL_total;
+        private System.Windows.Forms.Label AccountSOL_value;
+        private System.Windows.Forms.Label AccountSOL_label;
+        private System.Windows.Forms.Label AccountMANA_total;
+        private System.Windows.Forms.Label AccountMANA_value;
+        private System.Windows.Forms.Label AccountMANA_label;
     }
 }
