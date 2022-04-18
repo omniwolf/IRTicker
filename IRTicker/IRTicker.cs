@@ -1334,7 +1334,10 @@ namespace IRTicker {
             //DCE.MarketSummary mSummary = DCEs[dExchange].GetCryptoPairs()[crypto + "-" + fiat];
 
             // i guess we need to filter out the wrong pairs, also don't try and update labels that are -1 (-1 means they're a fake entry)
-            if (mSummary.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency && mSummary.LastPrice >= 0) {
+            if ((mSummary.LastPrice >= 0) &&
+                ((mSummary.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency) ||  // if it's the chosen currency, or it's IR and (SGD or USD) - we always show these now
+                ((dExchange == "IR") && (mSummary.SecondaryCurrencyCode == "USD")) ||
+                ((dExchange == "IR") && (mSummary.SecondaryCurrencyCode == "SGD")))) {
 
                 // we have a legit pair we're about to update.  if the groupBox is grey, let's black it.
                 if (UIControls_Dict[dExchange].dExchange_GB.ForeColor != Color.Black) GroupBoxAndLabelColourActive(dExchange);

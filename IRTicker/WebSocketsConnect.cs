@@ -112,12 +112,44 @@ namespace IRTicker {
                             }
                         }
 
+                        // Could I do better here?  Maybe.. possibly we don't always need to subscribe or unsubscribe from SGD and USD, the code may do it automatically.
+                        // but It would take me minutes to figure it out, and i'm tired.  new baby in a few days
+                        /*if (!channel.Contains("-usd\",")) {  // if we haven't inclruded USD, then include it.  we always need to subscribe or unsubscribe from it as it's a perm panel
+                            foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                                if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-USD")) {
+                                    string crypto1 = primaryCode;
+                                    if (crypto1 == "USDT") crypto1 = "UST";
+                                    //if (crypto1 == "USDC") crypto1 = "USC";
+                                    channel += "\"orderbook-" + crypto1.ToLower() + "-usd\", ";
+                                }
+                            }
+                        }
+
+                        if (!channel.Contains("-sgd\",")) {  // if we haven't inclruded SGD, then include it.  we always need to subscribe or unsubscribe from it as it's a perm panel
+                            foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                                if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-SGD")) {
+                                    string crypto1 = primaryCode;
+                                    if (crypto1 == "USDT") crypto1 = "UST";
+                                    //if (crypto1 == "USDC") crypto1 = "USC";
+                                    channel += "\"orderbook-" + crypto1.ToLower() + "-sgd\", ";
+                                }
+                            }
+                        }*/
+
                         channel += "]} ";
                     }
                     else {  // or just one pair
                         if (crypto.ToUpper() == "USDT") crypto = "ust";
                         //if (crypto.ToUpper() == "USDC") crypto = "usc";
-                        channel += "\"orderbook-" + crypto.ToLower() + "-" + fiat.ToLower() + "\"]}";
+                        channel += "\"orderbook-" + crypto.ToLower() + "-" + fiat.ToLower();
+                        /*if (!channel.Contains("-usd\",")) {  // if we haven't inclruded USD, then include it.  we always need to subscribe or unsubscribe from it as it's a perm panel
+                            channel += "\"orderbook-" + crypto.ToLower() + "-usd";
+                        }
+                        if (!channel.Contains("-usd\",")) {  // if we haven't inclruded SGD, then include it.  we always need to subscribe or unsubscribe from it as it's a perm panel
+                            channel += "\"orderbook-" + crypto.ToLower() + "-sgd";
+                        }*/
+
+                         channel += "\"]}";
                     }
                     Debug.Print("IR websocket subcribe/unsubscribe - " + (subscribe ? "subscribe" : "unsubscribe") + " event: " + channel);
 
@@ -242,7 +274,15 @@ namespace IRTicker {
                     Reinit_sockets(dExchange);
                     Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
                     subscribe_unsubscribe_new(dExchange, true);  // resubscriibe to all pairs
-                                                                 // commented out the below because 1. use subscribe_unsubscribe_new() instead of re-writing code, and 2. stoping and starting the timer again seems pointless
+                    /*if ((DCEs["IR"].CurrentSecondaryCurrency == "SGD") || (DCEs["IR"].CurrentSecondaryCurrency == "USD")) {  // we always need to subscribe to USD and SGD
+                        if (DCEs["IR"].CurrentSecondaryCurrency == "SGD") subscribe_unsubscribe_new(dExchange, subscribe: true, fiat: "USD");  
+                        if (DCEs["IR"].CurrentSecondaryCurrency == "USD") subscribe_unsubscribe_new(dExchange, subscribe: true, fiat: "SGD");  
+                    }
+                    else {
+                        subscribe_unsubscribe_new(dExchange, subscribe: true, fiat: "USD");
+                        subscribe_unsubscribe_new(dExchange, subscribe: true, fiat: "SGD");
+                    }*/  // the above needs to be uncommented, but  much more work is needed
+                    // commented out the below because 1. use subscribe_unsubscribe_new() instead of re-writing code, and 2. stoping and starting the timer again seems pointless
                     /*Task.Run(() => client_IR.Send(subscribeStr));
                     Debug.Print("Pulling the REST OBs...");
                     foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
@@ -302,6 +342,14 @@ namespace IRTicker {
                 do {
                     if (client_IR.IsRunning) {
                         subscribe_unsubscribe_new(dExchange, true);
+                        /*if ((DCEs["IR"].CurrentSecondaryCurrency == "SGD") || (DCEs["IR"].CurrentSecondaryCurrency == "USD")) {  // we always need to subscribe to USD and SGD
+                            if (DCEs["IR"].CurrentSecondaryCurrency == "SGD") subscribe_unsubscribe_new(dExchange, subscribe: true, fiat: "USD");
+                            if (DCEs["IR"].CurrentSecondaryCurrency == "USD") subscribe_unsubscribe_new(dExchange, subscribe: true, fiat: "SGD");
+                        }
+                        else {
+                            subscribe_unsubscribe_new(dExchange, subscribe: true, fiat: "USD");
+                            subscribe_unsubscribe_new(dExchange, subscribe: true, fiat: "SGD");
+                        }*/
                         keepLooping = false;
                     }
                     else {
@@ -398,9 +446,9 @@ namespace IRTicker {
                 Debug.Print("WebSocket_Resubscribe has been called in an illegal state - both oldfiat (" + oldFiat + ") and  newFiat (" + newFiat + ") need to both be 'none', or both be cryptos.  One can't be 'none' and the other note");
                 return;
             }
-            subscribe_unsubscribe_new(dExchange, false, crypto, (oldFiat == "none" ? DCEs[dExchange].CurrentSecondaryCurrency : oldFiat));
+            subscribe_unsubscribe_new(dExchange, subscribe:false, crypto, (oldFiat == "none" ? DCEs[dExchange].CurrentSecondaryCurrency : oldFiat));
             Reinit_sockets(dExchange, crypto, newFiat);
-            subscribe_unsubscribe_new(dExchange, true, crypto, (newFiat == "none" ? DCEs[dExchange].CurrentSecondaryCurrency : newFiat));
+            subscribe_unsubscribe_new(dExchange, subscribe:true, crypto, (newFiat == "none" ? DCEs[dExchange].CurrentSecondaryCurrency : newFiat));
         }
 
 
@@ -641,7 +689,9 @@ namespace IRTicker {
                         if (mSummary.spread < 0) {
                             Debug.Print(DateTime.Now + " IR spread (" + tickerStream.Data.Pair + ") is " + mSummary.spread + " :(  bid: " + mSummary.CurrentHighestBidPrice + " and offer: " + mSummary.CurrentLowestOfferPrice);
                         }
-                        if (DCEs["IR"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) {  //eventPair.Item2.ToUpper()) {
+                        if ((DCEs["IR"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) /*||
+                                (mSummary.SecondaryCurrencyCode == "USD") ||
+                                (mSummary.SecondaryCurrencyCode == "SGD" )*/) {  //eventPair.Item2.ToUpper()) {
                             if (pollingThread.IsBusy)
                                 pollingThread.ReportProgress(21, mSummary);  // do update_pairs thing
                         }
