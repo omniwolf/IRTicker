@@ -202,7 +202,7 @@ namespace IRTicker
                     AccAvgPrice_Result_TextBox.Text = "Error: totalValue: " + totalValue + " totalCryptoDealt: " + totalCryptoDealt;
                 }
                 else {
-                    string crypto = (AccAvgPrice_Crypto_ComboBox.SelectedItem == "BTC" ? "XBT" : AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString());
+                    string crypto = (AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() == "BTC" ? "XBT" : AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString()) ;
 
                     decimal tempRes = Math.Round((totalValue / totalCryptoDealt), dce.currencyDecimalPlaces[crypto].Item2, MidpointRounding.AwayFromZero);
                     AvgPriceResult = tempRes.ToString();

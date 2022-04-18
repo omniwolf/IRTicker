@@ -16,9 +16,8 @@ namespace IRTicker {
     public class WebSocketsConnect {
 
         private Dictionary<string, DCE> DCEs;
-        private WebSocket wSocket_BFX, wSocket_GDAX, /*wSocket_IR,*/ wSocket_BTCM;
+        private WebSocket wSocket_BTCM;
         private WebsocketClient client_IR;
-        public Dictionary<string, Subscribed_BFX> channel_Dict_BFX = new Dictionary<string, Subscribed_BFX>();  // string is a string version of the channel ID
         private BackgroundWorker pollingThread;
         private Thread UITimerThread;
         private bool UITimerThreadProceed = true;
@@ -49,85 +48,6 @@ namespace IRTicker {
 
             BTCM_Connect_v2();
 
-
-            // BFX
-            wSocket_BFX = new WebSocket("wss://api.bitfinex.com/ws");
-            wSocket_BFX.OnMessage += (sender, e) => {
-                if (e.IsText) {
-                    DCEs["BFX"].socketsAlive = true;
-                    MessageRX_BFX(e.Data);
-                }
-                else Debug.Print("BFX ws stream is not text?? - " + e.RawData.ToString());
-            };
-
-            wSocket_BFX.OnOpen += (sender, e) => {
-                Debug.Print("ws onopen - bfx");
-            };
-
-            wSocket_BFX.OnError += (sender, e) => {
-                Debug.Print("ws onerror - bfx");
-                //wSocket_BFX.Close();
-                DCEs["BFX"].NetworkAvailable = false;
-                DCEs["BFX"].socketsAlive = false;
-                DCEs["BFX"].socketsReset = true;
-                DCEs["BFX"].CurrentDCEStatus = "Socket error";
-                DCEs["BFX"].HasStaticData = false;
-                pollingThread.ReportProgress(12, "BFX");  // 12 is error
-                //WebSocket_Reconnect("BFX");
-            };
-
-            wSocket_BFX.OnClose += (sender, e) => {
-                Debug.Print("BFX stream closed... should be preceeded by some ded thingo " + DateTime.Now.ToString());
-                
-               // trying to comment this out in the hope that it will stop the reconnect loop we get into after hibernation
-                /*DCEs["BFX"].socketsAlive = false;
-                DCEs["BFX"].socketsReset = true;*/
-                DCEs["BFX"].CurrentDCEStatus = "Socket error";
-                pollingThread.ReportProgress(12, "BFX");  // 12 is error*/
-                //WebSocket_Reconnect("BFX");
-            }; 
-            wSocket_BFX.Connect();
-
-
-            // GDAX
-            wSocket_GDAX = new WebSocket("wss://ws-feed.pro.coinbase.com");
-            wSocket_GDAX.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
-
-            wSocket_GDAX.OnMessage += (sender, e) => {
-                if (e.IsText) {
-                    DCEs["GDAX"].socketsAlive = true;
-                    MessageRX_GDAX(e.Data);
-                    //Debug.Print("GDAX SOCKET: " + e.Data);
-                }
-                else Debug.Print("GDAX ws stream is not text?? - " + e.RawData.ToString());
-            };
-
-            wSocket_GDAX.OnOpen += (sender, e) => {
-                Debug.Print("ws onopen - gdax");
-            };
-
-            wSocket_GDAX.OnError += (sender, e) => {
-                Debug.Print("ws onerror - gdax - " + DateTime.Now.ToString());
-                //wSocket_GDAX.Close();
-                DCEs["GDAX"].NetworkAvailable = false;
-                DCEs["GDAX"].socketsAlive = false;
-                DCEs["GDAX"].socketsReset = true;
-                DCEs["GDAX"].CurrentDCEStatus = "Socket error";
-                DCEs["GDAX"].HasStaticData = false;
-                pollingThread.ReportProgress(12, "GDAX");  // 12 is error
-                //WebSocket_Reconnect("GDAX");
-            };
-
-            wSocket_GDAX.OnClose += (sender, e) => {
-                Debug.Print("GDAX stream was closed.. should be because we disconnected on purpose. preceeded by ded?  " + DateTime.Now.ToString());
-                // trying to comment this out in the hope that it will stop the reconnect loop we get into after hibernation
-                /*DCEs["GDAX"].socketsAlive = false;
-                DCEs["GDAX"].socketsReset = true;*/
-                DCEs["GDAX"].CurrentDCEStatus = "Socket error";
-                pollingThread.ReportProgress(12, "GDAX");  // 12 is error*/
-                //WebSocket_Disconnect("GDAX");
-            };
-            wSocket_GDAX.Connect();
         }
 
         public void GetOrderBook_IR(string crypto, string fiat) {
@@ -258,73 +178,6 @@ namespace IRTicker {
                         wSocket_BTCM.Send(channel);
                     }
                     else DCEs[dExchange].socketsReset = true;
-
-                    break;
-
-                case "BFX":
-                    //return;
-                    if (!subscribe) {  // there is no unsubscribing in BFX, so we just close it down for resubscription.  better hope we don't try and do it for 1 crypto
-                        wSocket_BFX.Close();
-                        wSocket_BFX.Connect();
-                    }
-                    else {
-                        if (crypto == "none") {
-                            foreach (string primarycode in DCEs[dExchange].PrimaryCurrencyList) {
-                                pairs.Add(primarycode);
-                            }
-                        }
-                        else pairs.Add(crypto);
-
-                        if (wSocket_BFX.IsAlive) {
-                            //DCEs[dExchange].ExchangeProducts.Add("tDOGE:-USD", new DCE.products_GDAX());
-                            foreach (string crypto1 in pairs) {
-                                string crypto2 = crypto1;
-                                if (crypto2 == "XBT") crypto2 = "BTC";
-                                if (crypto2 == "BCH") crypto2 = "BCHN:";
-                                if (crypto2 == "USDT") crypto2 = "UST";
-                                if (crypto2 == "DOGE") crypto2 = "tDOGE:";
-                                if (!DCEs[dExchange].ExchangeProducts.ContainsKey(crypto2 + "-" + fiat)) continue;  // only try to subscribe to pairs that this BFX supports
-                                channel = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"" + crypto2 + fiat + "\"}";
-                                Debug.Print("BFX subscribing to: " + channel);
-                                wSocket_BFX.Send(channel);
-                            }
-                        }
-                        else {
-                            Debug.Print(DateTime.Now + " - BFX - trying to " + (subscribe ? "subscribe" : "unsubscribe") + " from channel(s) but BFX websockets is dead");
-                            DCEs[dExchange].socketsReset = true;
-                        }
-                    }
-
-                    break;
-
-                case "GDAX":
-                    //return;
-                    if (crypto == "none") {
-                        foreach (string primarycode in DCEs[dExchange].PrimaryCurrencyList) {
-                            pairs.Add(primarycode);
-                        }
-                    }
-                    else pairs.Add(crypto);
-
-                    if (wSocket_GDAX.IsAlive) {
-                        channel = "{\"type\": \"" + (subscribe ? "subscribe" : "unsubscribe") + "\", \"channels\": [{\"name\": \"ticker\", \"product_ids\":[";
-                        foreach (string crypto1 in pairs) {
-                            if (!DCEs[dExchange].ExchangeProducts.ContainsKey(crypto1 + "-" + fiat)) continue;  // only try to subscribe to pairs that this BFX supports
-                            string crypto2 = crypto1;
-                            if (crypto2 == "XBT") crypto2 = "BTC";
-                            channel += "\"" + crypto2 + "-" + fiat + "\",";
-                        }
-
-                        channel = channel.Substring(0, channel.Length - 1);
-                        channel += "] } ] }";
-                        Debug.Print("GDAX subscribing to: " + channel);
-                        wSocket_GDAX.Send(channel);
-                    }
-                    else {
-                        Debug.Print(DateTime.Now + " - GDAX - trying to " + (subscribe ? "subscribe" : "unsubscribe") + " from channel(s) but GDAX websockets is dead");
-                        DCEs[dExchange].socketsReset = true;
-                    }
-
 
                     break;
 
@@ -576,65 +429,14 @@ namespace IRTicker {
                     wSocket_BTCM.Close();
                     wSocket_BTCM.Connect();
                     break;
-                case "BFX":
-                    wSocket_BFX.Close();
-                    wSocket_BFX.Connect();
-                    break;
-                case "GDAX":
-                    wSocket_GDAX.Close();
-                    wSocket_GDAX.Connect();
-                    break;
             }
             DCEs[dExchange].socketsReset = false;  // when closing the stream, the OnClose method is called, which sets the socketsReset to true.  need to turn this off so we don't reconnect forever
 
             //re-subscribe?
             Debug.Print(dExchange + " - re-subscribing to all pairs...");
 
-            // don't do it this way anymore
-            /*List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
-            if (true ) { //dExchange == "IR") {
-                //pairList.Add(new Tuple<string, string>("XBT", "AUD"));
-                //pairList.Add(new Tuple<string, string>("XBT", "USD"));
-                //pairList.Add(new Tuple<string, string>("XBT", "NZD"));
-                foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                    if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + DCEs[dExchange].CurrentSecondaryCurrency)) {
-                        pairList.Add(new Tuple<string, string>(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency));
-                    }
-                }
-            }
-            else {
-                foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
-                    foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                        if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                            pairList.Add(new Tuple<string, string>(primaryCode, secondaryCode));
-                        }
-                    }
-                }
-            }
-            WebSocket_Subscribe(dExchange, pairList);*/
             // for a reconnect, the IR code will automatically subscribe once the socket is active (see the loop/sleep shitty code in startSockets).  this way we only subscribe once the socket is up, and don't have to rely on the slow doWork loop to detect an issue
             if (dExchange != "IR") subscribe_unsubscribe_new(dExchange, true);  // subscribe to all 
-        }
-
-        // after calling this sub, please remove the KVP of the channel you're unsubscribing from from the channel_Dict_BFX dictionary
-        public void Unsubscribe_BFX(int channelID) {
-            try {
-                if (wSocket_BFX.IsAlive) {
-                    wSocket_BFX.Send("{\"event\":\"unsubscribe\",\"chanId\":\"" + channelID.ToString() + "\"}");
-                }
-            }
-            catch (Exception ex) {
-                Debug.Print("Exception when trying to unsubscribe - can't trust the .IsAlive property of the socket :( - " + ex.ToString());
-            }
-            //Debug.Print("just unsubscribed from " + channelID.ToString());
-        }
-
-        public void RemoveChannels(List<string> channelsToDelete) {
-            foreach (string chans in channelsToDelete) channel_Dict_BFX.Remove(chans);
-        }
-
-        public Dictionary<string, Subscribed_BFX> GetChannelsDictionary_BFX() {
-            return new Dictionary<string, Subscribed_BFX>(channel_Dict_BFX);
         }
 
         // only actually called for reconnections
@@ -843,13 +645,11 @@ namespace IRTicker {
                             if (pollingThread.IsBusy)
                                 pollingThread.ReportProgress(21, mSummary);  // do update_pairs thing
                         }
-
-                        if (Properties.Settings.Default.ShowOB && tickerStream.Data.Pair.ToUpper() == "XBT-AUD") {
+                        else if (Properties.Settings.Default.ShowOB && tickerStream.Data.Pair.ToUpper() == "XBT-AUD") {  // "else if" because we call the "25" report progress from within the "21" one, don't want to call it twice if we can help it.
                             if (pollingThread.IsBusy)
                                 pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
                         }
                     }
-
                     break;
             }
         }
@@ -906,74 +706,6 @@ namespace IRTicker {
             }
         }
 
-
-        private void MessageRX_GDAX(string message) {
-
-            if (message.Contains("\"type\":\"ticker\"")) {
-                DCEs["GDAX"].CurrentDCEStatus = "Online";
-                DCEs["GDAX"].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
-                Ticker_GDAX tickerStream = new Ticker_GDAX();
-                tickerStream = JsonConvert.DeserializeObject<Ticker_GDAX>(message);
-
-                // now we convert it into a classic MarketSummary obj, and add it to cryptopairs
-                DCE.MarketSummary mSummary = new DCE.MarketSummary();
-
-                // make it all XBT
-                if (tickerStream.product_id.ToUpper().StartsWith("BTC")) tickerStream.product_id = tickerStream.product_id.Replace(tickerStream.product_id.Substring(0, 3), "XBT");
-
-                mSummary.pair = tickerStream.product_id.ToUpper();
-                if (decimal.TryParse(tickerStream.price, out decimal price)) {
-                    mSummary.LastPrice = price;
-                }
-                else Debug.Print("Error GDAX sockets - couldn't convert price: " + tickerStream.price);
-
-                if (decimal.TryParse(tickerStream.volume_24h, out decimal vol)) {
-                    mSummary.DayVolumeXbt = vol;
-                }
-                else Debug.Print("Error GDAX sockets - couldn't convert volume: " + tickerStream.volume_24h);
-
-                if (decimal.TryParse(tickerStream.low_24h, out decimal low)) {
-                    mSummary.DayLowestPrice = low;
-                }
-                else Debug.Print("Error GDAX sockets - couldn't convert low: " + tickerStream.low_24h);
-
-                if (decimal.TryParse(tickerStream.high_24h, out decimal high)) {
-                    mSummary.DayHighestPrice = high;
-                }
-                else Debug.Print("Error GDAX sockets - couldn't convert high: " + tickerStream.high_24h);
-
-                if (decimal.TryParse(tickerStream.best_bid, out decimal bid)) {
-                    mSummary.CurrentHighestBidPrice = bid;
-                }
-                else Debug.Print("Error GDAX sockets - couldn't convert bid: " + tickerStream.best_bid);
-
-                if (decimal.TryParse(tickerStream.best_ask, out decimal offer)) {
-                    mSummary.CurrentLowestOfferPrice = offer;
-                }
-                else Debug.Print("Error GDAX sockets - couldn't convert ask: " + tickerStream.best_ask);
-
-                mSummary.CreatedTimestampUTC = tickerStream.time.ToString("o");
-
-                // market summary should be complete now
-                DCEs["GDAX"].CryptoPairsAdd(mSummary.pair, mSummary);
-                
-                if (DCEs["GDAX"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(41, mSummary);  // only update the UI for pairs we care about
-            }
-            else if (message.Contains("\"type\": \"error\"")) {
-                Debug.Print("Error from GDAX socket: " + message);
-                // so i guess at this stage we want to try again
-                wSocket_GDAX.Close();
-                DCEs["GDAX"].CurrentDCEStatus = "API response error";
-                DCEs["GDAX"].NetworkAvailable = false;
-                //DCEs["GDAX"].HasStaticData = false;
-                pollingThread.ReportProgress(12, "GDAX");  // ?2 is error
-                wSocket_GDAX.Connect();
-            }
-            else {
-                Debug.Print("rando message from GDAX sockets: " + message);
-            }
-        }
-
         /// <summary>
         /// Do not assume any exchange can be handled here... BTCM cannot for example.  Only call this method with specific known good DCEs
         /// </summary>
@@ -988,118 +720,9 @@ namespace IRTicker {
                 case "BTCM":
                     if (wSocket_BTCM.IsAlive) return true;
                     return false;
-                case "BFX":
-                    if (wSocket_BFX.IsAlive) return true;
-                    return false;
-                case "GDAX":
-                    if (wSocket_GDAX.IsAlive) return true;
-                    return false;
             }
             Debug.Print("Sockets, checking a socket alive, we have reached the end without returning.  we never should.  DCE: " + dExchange);
             return false;
-        }
-
-        /* BFX format:
-            Fields 	            Type 	Description
-            CHANNEL_ID 	        integer Channel ID
-            BID 	            float 	Price of last highest bid
-            BID_SIZE 	        float 	Size of the last highest bid
-            ASK 	            float 	Price of last lowest ask
-            ASK_SIZE 	        float 	Size of the last lowest ask
-            DAILY_CHANGE    	float 	Amount that the last price has changed since yesterday
-            DAILY_CHANGE_PERC 	float 	Amount that the price has changed expressed in percentage terms
-            LAST_PRICE 	        float 	Price of the last trade.
-            VOLUME          	float 	Daily volume
-            HIGH 	            float 	Daily high
-            LOW 	            float 	Daily low*/
-        private void MessageRX_BFX(string message) {
-            //Debug.Print("BFX stream: " + message);
-
-            if (message.StartsWith("{")) {  // it's JSON, let's parse it as such
-                if (message.Contains("\"event\":\"info\"")) {  // kinda like a header, we don't really care about this line.  it might look like this: {"event":"info","version":1.1,"platform":{"status":1}}
-                    if (!message.Contains("\"status\":1")) {
-                        Debug.Print("weird, we got a non 1 status? - " + message);
-                    }
-                }
-                else if (message.Contains("\"event\":\"subscribed\"")) {  // OK, subscription notice.  let's grab the channel ID and store it.   line might look like this: {"event":"subscribed","channel":"ticker","chanId":60,"pair":"BTCUSD"}
-                    Subscribed_BFX subscription = new Subscribed_BFX();
-                    subscription = JsonConvert.DeserializeObject<Subscribed_BFX>(message);
-                    channel_Dict_BFX[subscription.chanId.ToString()] = subscription;  // update or add
-                    //Debug.Print("subscribed to " + subscription.chanId.ToString() + " which is " + subscription.pair);
-                }
-                else if (message.Contains("\"event\":\"error\"")) {  // uh oh we done bad.  could look like this: {"channel":"ticker","pair":"BTCUSD","event":"error","msg":"subscribe: dup","code":10301}
-                    Debug.Print("Error from BFX socket: " + message);
-                    // so i guess at this stage we want to try again
-                    DCEs["BFX"].CurrentDCEStatus = "API response error";
-                    Debug.Print("BFX sent us an error, let's reset " + DateTime.Now.ToString());
-                    DCEs["BFX"].socketsAlive = false;
-                    DCEs["BFX"].socketsReset = true;
-                    pollingThread.ReportProgress(12, "BFX");  // 12 is error
-                }
-                else if (message.Contains("unsubscribed")) {
-                    Debug.Print("BFX UNSUBSCRIBED!  message: " + message);
-                }
-                else {
-                    Debug.Print("rando message from BFX sockets: " + message);
-                }
-            }
-            else if (message.StartsWith("[")) {  // is this how I tell if it's real socket data?  seems dodgy
-                //Debug.Print("BFX MESSAGE: " + message);
-                DCEs["BFX"].CurrentDCEStatus = "Online";
-                DCEs["BFX"].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
-                message = Utilities.TrimEnds(message);  // remove the [ ] characters from the ends
-                string[] streamParts = message.Split(',');
-                if (channel_Dict_BFX.ContainsKey(streamParts[0])) {
-                    if (channel_Dict_BFX[streamParts[0]].channel == "ticker" && !message.Contains(",\"hb\"]") && streamParts.Length == 11) {  // OK it's a ticker.  as long as it's not a heartbeat, let's convert all dem strings to dubs and put them in our DCE object
-                        int partCount = 1;  // start at 1 because we already pulled out the channel ID
-                        DCE.MarketSummary mSummary = new DCE.MarketSummary();
-                        mSummary.PrimaryCurrencyCode = channel_Dict_BFX[streamParts[0]].pair.Substring(0, 3);
-                        if (mSummary.PrimaryCurrencyCode.ToUpper() == "UST") mSummary.PrimaryCurrencyCode = "USDT";
-                        if (mSummary.PrimaryCurrencyCode.ToUpper() == "DOG") 
-                            mSummary.PrimaryCurrencyCode = "tDOGE:";
-                        mSummary.SecondaryCurrencyCode = channel_Dict_BFX[streamParts[0]].pair.Substring(3, 3);
-                        do {
-                            if (decimal.TryParse(streamParts[partCount], out decimal result)) {
-                                switch (partCount) {
-                                    case 1:  // BID
-                                        mSummary.CurrentHighestBidPrice = result;
-                                        break;
-                                    case 3: // ASK
-                                        mSummary.CurrentLowestOfferPrice = result;
-                                        break;
-                                    case 7:  // LAST_PRICE
-                                        mSummary.LastPrice = result;
-                                        break;
-                                    case 8:  // VOLUME
-                                        mSummary.DayVolumeXbt = result;
-                                        break;
-                                    case 9:  // HIGH
-                                        mSummary.DayHighestPrice = result;
-                                        break;
-                                    case 10:  // LOW
-                                        mSummary.DayLowestPrice = result;
-                                        break;
-                                    /*default:
-                                        Debug.Print("parsing the ticker info for BFX and have a default?  this shouldn't be possible.  parseCount: " + partCount + " and message: " + message);
-                                        break;*/
-                                }
-                            }
-                            else Debug.Print("Parsing ticker info in bFX, couldn't parse the string to a dub?? - " + streamParts[partCount]);
-
-                            partCount++;
-
-                        } while (partCount < 11);  // there should only be 11 entries
-
-                        // market summary should be complete now
-                        DCEs["BFX"].CryptoPairsAdd(channel_Dict_BFX[streamParts[0]].pairDash, mSummary);
-                        //Debug.Print("just received pair: " + mSummary.pair + ", and chanID is: " + streamParts[0]);
-                        if (DCEs["BFX"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(51, mSummary);  // only update the UI for pairs we care about
-                        
-                    }
-                }
-                else Debug.Print("weird.. BFX socket sent us a channel ID we don't have in the dict? - " + message);
-            }
-            else Debug.Print("BFX message from socket starts with something weird?? - " + message);
         }
 
         public class Data_IR_Ticker {
@@ -1131,78 +754,6 @@ namespace IRTicker {
             public string currency { get; set; }
             public string instrument { get; set; }
             public string messageType { get; set; }
-        }
-
-    public class Subscribed_BFX {
-            private string _pair;
-
-            public string @event { get; set; }
-            public string channel { get; set; }
-            public int chanId { get; set; }
-            public string pair {
-                get {
-                    if (_pair.StartsWith("BTC")) {
-                        return _pair.Replace("BTC", "XBT");
-                    }
-                    if (_pair.StartsWith("BCHN:")) {
-                        return _pair.Replace("BCHN:", "BCH");
-                    }
-                    else return _pair;
-                }
-                set {
-                    if (value.StartsWith("BTC")) {
-                        _pair = value.Replace("BTC", "XBT");
-                    }
-                    if (value.StartsWith("BCHN:")) {
-                        _pair = value.Replace("BCHN:", "BCH");
-                    }
-                    else _pair = value;
-                }
-            }
-
-            public string pairDash {
-                get {
-                    string __pair = _pair;
-                    if (_pair.StartsWith("BTC")) {
-                        __pair = _pair.Replace("BTC", "XBT");
-                    }
-                    if (_pair.StartsWith("BCHN:")) {  // should never happen.
-                        __pair = _pair.Replace("BCHN:", "BCH");
-                    }
-
-                    if (__pair.Length == 6) {
-                        return __pair.Substring(0, 3) + "-" + __pair.Substring(3, 3);
-                    }
-                    else if (__pair.Length == 7) {  // laaammmeee  actually just looked at the BFX spec and all pairs are 6 characters.  will leave this in anyawy, but it shouldn't ever come to it
-                        return __pair.Substring(0, 4) + "-" + __pair.Substring(4, 3);
-                    }
-                    else if (__pair.Length == 8) {  // OK BFX is fucked, BCHUSD is now BCHN:USD ??? gah .... actually this should never be hit because we swap "BCHN:" with "BCH" above in the pair setter?
-                        return __pair.Substring(0, 5) + "-" + __pair.Substring(5, 3);
-                    }
-                    else {
-                        Debug.Print("We have a pair from the BFX socket that isn't 3 or 4 or 5 chars?  howww - " + __pair);
-                        return "";
-                    }
-                }
-            }
-        }
-
-        public class Ticker_GDAX {
-            public string type { get; set; }
-            public long sequence { get; set; }
-            public string product_id { get; set; }
-            public string price { get; set; }
-            public string open_24h { get; set; }
-            public string volume_24h { get; set; }
-            public string low_24h { get; set; }
-            public string high_24h { get; set; }
-            public string volume_30d { get; set; }
-            public string best_bid { get; set; }
-            public string best_ask { get; set; }
-            public string side { get; set; }
-            public DateTime time { get; set; }
-            public int trade_id { get; set; }
-            public string last_size { get; set; }
         }
     }
 }
