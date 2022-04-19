@@ -124,6 +124,8 @@ namespace IRTicker {
 
             Exchanges = new List<string> {
                 { "IR" },
+                { "IRSGD" },
+                { "IRUSD" },
                 { "BTCM" },
                 { "BAR" }
             };
@@ -132,12 +134,16 @@ namespace IRTicker {
 
                 // seed the DCEs dictionary with empty DCEs for the DCEs we will be interrogating
                 { "IR", new DCE("IR", "Independent Reserve") },
+                { "IRSGD", new DCE("IRSGD", "Independent Reserve SGD") },
+                { "IRUSD", new DCE("IRUSD", "Independent Reserve USD") },
                 { "BTCM", new DCE("BTCM", "BTC Markets") },
                 { "BAR", new DCE("BAR", "Bitaroo") }
             };
 
             DCEs["IR"].BaseURL = "https://api.independentreserve.com";
             //DCEs["IR"].BaseURL = "https://dev.api.independentreserve.net";
+            DCEs["IRSGD"].BaseURL = "https://api.independentreserve.com";
+            DCEs["IRUSD"].BaseURL = "https://api.independentreserve.com";
 
             synchronizationContext = SynchronizationContext.Current;  // for the market baiter thread, see IRTicker.Private.cs
 
@@ -235,6 +241,8 @@ namespace IRTicker {
 
                 // seed the UIControls_Dict dictionary with empty UIControls
                 { "IR", new UIControls() },
+                { "IRSGD", new UIControls() },
+                { "IRUSD", new UIControls() },
                 { "BTCM", new UIControls() },
                 { "BAR", new UIControls() }
             };
@@ -974,7 +982,7 @@ namespace IRTicker {
                     if (Properties.Settings.Default.NegativeSpread) {
                         Dictionary<string, DCE.MarketSummary> mSummaries = DCEs["IR"].GetCryptoPairs();
                         foreach (var mSummary in mSummaries) {
-                            if (mSummary.Value.SecondaryCurrencyCode == DCEs["IR"].CurrentSecondaryCurrency) {
+                            if (mSummary.Value.SecondaryCurrencyCode == DCEs["IR"].CurrentSecondaryCurrency) {  
                                 if (mSummary.Value.CurrentLowestOfferPrice <= mSummary.Value.CurrentHighestBidPrice) {
                                     if (!DCEs["IR"].positiveSpread[mSummary.Value.pair]) {  // already been negative for this pair :(
                                         Debug.Print(DateTime.Now + " - negative pair detected (" + mSummary.Value.pair + ").  let's unsub resub");
