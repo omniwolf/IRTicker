@@ -37,8 +37,10 @@ namespace IRTicker {
             Debug.Print("IR websocket connecting..");
 
             //Task.Factory.StartNew(() => {
-                startSockets("IR", IRSocketsURL);
-           // })
+            startSockets("IR", IRSocketsURL);
+            startSockets("IRSGD", IRSocketsURL);
+            startSockets("IRUSD", IRSocketsURL);
+            // })
             //;
             Debug.Print("after first start sockets");
             //subscribe_unsubscribe_new("IR", true);  // subscribe to all the things
@@ -99,6 +101,8 @@ namespace IRTicker {
             List<string> pairs = new List<string>();
             switch (dExchange) {
                 case "IR":
+                case "IRUSD":
+                case "IRSGD":
                     channel = subscribe ? "{\"Event\":\"Subscribe\",\"Data\":[" : "{\"Event\":\"Unsubscribe\",\"Data\":[";
                     if (crypto == "none") {  // unsubscribe or subscribe to EVERYTHING
                         //stopSockets("IR");  // don't want to stop everything, we just need to unsubscribe like we said we would.
@@ -247,64 +251,21 @@ namespace IRTicker {
                 else {
                     Debug.Print(DateTime.Now + " - (" + dExchange + " reconnection) - clearing OB sub dicts...");
                     DCEs[dExchange].socketsAlive = false;
-                    DCEs["IR"].CurrentDCEStatus = "Reconnected";
-                    /*DCEs[dExchange].ClearOrderBookSubDicts();
-                    Debug.Print("creating a new buffer dict...");
-                    DCEs[dExchange].orderBuffer_IR = new ConcurrentDictionary<string, ConcurrentDictionary<int, Ticker_IR>>();
-                    Debug.Print("setting the pulledSnapShot dict entries to all false and initialising the orderbuffer dicts...");
-                    List<string> tempPairs = new List<string>();
-                    tempPairs.Add("XBT-AUD");
-                    tempPairs.Add("XBT-USD");
-                    tempPairs.Add("XBT-NZD");
-                    /*foreach(string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
-                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {*/
-                    /*foreach (string pair in tempPairs) {
-                        if (DCEs[dExchange].ExchangeProducts.ContainsKey(pair)) {
-                            DCEs[dExchange].pulledSnapShot[pair] = false;
-                        }
-                        // initialise orderbuffers
-                        if (!DCEs["IR"].orderBuffer_IR.ContainsKey(pair)) {  // make the dictionary element doesn't already exist
-                            if (!DCEs["IR"].orderBuffer_IR.TryAdd(pair, new ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>())) {
-                                Debug.Print(DateTime.Now + " - can't add orderBuffer_IR concurrent dicsh for " + pair);
-                                return;
-                            }
-                        }
-                        //}
-                    }*/
+                    DCEs[dExchange].CurrentDCEStatus = "Reconnected";
+
                     Reinit_sockets(dExchange);
                     Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
-                    subscribe_unsubscribe_new(dExchange, true);  // resubscriibe to all pairs
-                    /*if ((DCEs["IR"].CurrentSecondaryCurrency == "SGD") || (DCEs["IR"].CurrentSecondaryCurrency == "USD")) {  // we always need to subscribe to USD and SGD
-                        if (DCEs["IR"].CurrentSecondaryCurrency == "SGD") subscribe_unsubscribe_new(dExchange, subscribe: true, fiat: "USD");  
-                        if (DCEs["IR"].CurrentSecondaryCurrency == "USD") subscribe_unsubscribe_new(dExchange, subscribe: true, fiat: "SGD");  
+                    switch (dExchange) {
+                        case "IR":
+                            subscribe_unsubscribe_new(dExchange, true);  // resubscriibe to all pairs
+                            break;
+                        case "IRSGD":
+                            subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: "SGD");
+                            break;
+                        case "IRUSD":
+                            subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: "USD");
+                            break;
                     }
-                    else {
-                        subscribe_unsubscribe_new(dExchange, subscribe: true, fiat: "USD");
-                        subscribe_unsubscribe_new(dExchange, subscribe: true, fiat: "SGD");
-                    }*/  // the above needs to be uncommented, but  much more work is needed
-                    // commented out the below because 1. use subscribe_unsubscribe_new() instead of re-writing code, and 2. stoping and starting the timer again seems pointless
-                    /*Task.Run(() => client_IR.Send(subscribeStr));
-                    Debug.Print("Pulling the REST OBs...");
-                    foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {  // now set all pulled OB flags to false
-                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                                //GetOrderBook_IR("XBT", "AUD");
-                                //GetOrderBook_IR("XBT", "USD");
-                                //GetOrderBook_IR("XBT", "NZD");
-                                GetOrderBook_IR(primaryCode, secondaryCode);
-                            }
-                        }
-                    }
-
-                // why do we stop and start the timer here?  the socket is already up and running.. i think this is dumb.
-                    stopUITimerThread();
-
-                    Debug.Print(DateTime.Now + " - RECONNECT: about to start the UI timer!");
-                    UITimerThreadProceed = true;
-                    UITimerThread = new Thread(new ThreadStart(updateUITimer));
-                    // this command to start the thread
-                    UITimerThread.Start();
-                    Debug.Print("RECONNECT: UI timer storted.");*/
                 }
 
             });
@@ -341,15 +302,18 @@ namespace IRTicker {
                 int loopCounter = 0;
                 do {
                     if (client_IR.IsRunning) {
-                        subscribe_unsubscribe_new(dExchange, true);
-                        /*if ((DCEs["IR"].CurrentSecondaryCurrency == "SGD") || (DCEs["IR"].CurrentSecondaryCurrency == "USD")) {  // we always need to subscribe to USD and SGD
-                            if (DCEs["IR"].CurrentSecondaryCurrency == "SGD") subscribe_unsubscribe_new(dExchange, subscribe: true, fiat: "USD");
-                            if (DCEs["IR"].CurrentSecondaryCurrency == "USD") subscribe_unsubscribe_new(dExchange, subscribe: true, fiat: "SGD");
+                        switch (dExchange) {
+                            case "IR":
+                                subscribe_unsubscribe_new(dExchange, true);  // resubscriibe to all pairs
+                                break;
+                            case "IRSGD":
+                                subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: "SGD");
+                                break;
+                            case "IRUSD":
+                                subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: "USD");
+                                break;
                         }
-                        else {
-                            subscribe_unsubscribe_new(dExchange, subscribe: true, fiat: "USD");
-                            subscribe_unsubscribe_new(dExchange, subscribe: true, fiat: "SGD");
-                        }*/
+
                         keepLooping = false;
                     }
                     else {
@@ -689,9 +653,9 @@ namespace IRTicker {
                         if (mSummary.spread < 0) {
                             Debug.Print(DateTime.Now + " IR spread (" + tickerStream.Data.Pair + ") is " + mSummary.spread + " :(  bid: " + mSummary.CurrentHighestBidPrice + " and offer: " + mSummary.CurrentLowestOfferPrice);
                         }
-                        if ((DCEs["IR"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) /*||
+                        if ((DCEs["IR"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) ||
                                 (mSummary.SecondaryCurrencyCode == "USD") ||
-                                (mSummary.SecondaryCurrencyCode == "SGD" )*/) {  //eventPair.Item2.ToUpper()) {
+                                (mSummary.SecondaryCurrencyCode == "SGD" )) {  //eventPair.Item2.ToUpper()) {
                             if (pollingThread.IsBusy)
                                 pollingThread.ReportProgress(21, mSummary);  // do update_pairs thing
                         }

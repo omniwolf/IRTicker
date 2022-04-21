@@ -151,6 +151,11 @@ namespace IRTicker {
             // Actually I'm not sure about the above comment, i think some of them do?  But the main issue is most of them have
             // currencies that we don't want to deal with, so we set the currencies manually here.  IR we want all currencies, so
             // we use the API.  This is probably not really smart, as the UI is static, so when new currencies turn up IR breaks.  meh
+            DCEs["IRSGD"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"DOT\",\"XLM\",\"GRT\",\"ETC\",\"LINK\",\"USDC\",\"USDT\",\"UNI\"";
+            DCEs["IRSGD"].SecondaryCurrencyCodes = "\"SGD\"";
+
+            DCEs["IRUSD"].SecondaryCurrencyCodes = "\"USD\"";
+
             DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"XLM\",\"BAT\",\"ETC\",\"LINK\",\"COMP\",\"USDT\"";
             DCEs["BTCM"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["BTCM"].HasStaticData = false;  // want to set this to false so we run the subscribe code once.
@@ -347,6 +352,197 @@ namespace IRTicker {
             UIControls_Dict["IR"].AvgPrice_Currency = IR_CurrencyBox;
             UIControls_Dict["IR"].AvgPrice = IR_AvgPrice_Label;
 
+
+            // IR SGD
+            UIControls_Dict["IRSGD"].Name = "IRSGD";
+            UIControls_Dict["IRSGD"].dExchange_GB = IRSGD_GroupBox;
+            UIControls_Dict["IRSGD"].XBT_Label = IRSGD_XBT_Label1;
+            UIControls_Dict["IRSGD"].XBT_Price = IRSGD_XBT_Label2;
+            UIControls_Dict["IRSGD"].XBT_Spread = IRSGD_XBT_Label3;
+            UIControls_Dict["IRSGD"].ETH_Label = IRSGD_ETH_Label1;
+            UIControls_Dict["IRSGD"].ETH_Price = IRSGD_ETH_Label2;
+            UIControls_Dict["IRSGD"].ETH_Spread = IRSGD_ETH_Label3;
+            UIControls_Dict["IRSGD"].BCH_Label = IRSGD_BCH_Label1;
+            UIControls_Dict["IRSGD"].BCH_Price = IRSGD_BCH_Label2;
+            UIControls_Dict["IRSGD"].BCH_Spread = IRSGD_BCH_Label3;
+            UIControls_Dict["IRSGD"].LTC_Label = IRSGD_LTC_Label1;
+            UIControls_Dict["IRSGD"].LTC_Price = IRSGD_LTC_Label2;
+            UIControls_Dict["IRSGD"].LTC_Spread = IRSGD_LTC_Label3;
+            UIControls_Dict["IRSGD"].XRP_Label = IRSGD_XRP_Label1;
+            UIControls_Dict["IRSGD"].XRP_Price = IRSGD_XRP_Label2;
+            UIControls_Dict["IRSGD"].XRP_Spread = IRSGD_XRP_Label3;
+            UIControls_Dict["IRSGD"].OMG_Label = IRSGD_OMG_Label1;
+            UIControls_Dict["IRSGD"].OMG_Price = IRSGD_OMG_Label2;
+            UIControls_Dict["IRSGD"].OMG_Spread = IRSGD_OMG_Label3;
+            UIControls_Dict["IRSGD"].ZRX_Label = IRSGD_ZRX_Label1;
+            UIControls_Dict["IRSGD"].ZRX_Price = IRSGD_ZRX_Label2;
+            UIControls_Dict["IRSGD"].ZRX_Spread = IRSGD_ZRX_Label3;
+            UIControls_Dict["IRSGD"].EOS_Label = IRSGD_EOS_Label1;
+            UIControls_Dict["IRSGD"].EOS_Price = IRSGD_EOS_Label2;
+            UIControls_Dict["IRSGD"].EOS_Spread = IRSGD_EOS_Label3;
+            UIControls_Dict["IRSGD"].XLM_Label = IRSGD_XLM_Label1;
+            UIControls_Dict["IRSGD"].XLM_Price = IRSGD_XLM_Label2;
+            UIControls_Dict["IRSGD"].XLM_Spread = IRSGD_XLM_Label3;
+            UIControls_Dict["IRSGD"].BAT_Label = IRSGD_BAT_Label1;
+            UIControls_Dict["IRSGD"].BAT_Price = IRSGD_BAT_Label2;
+            UIControls_Dict["IRSGD"].BAT_Spread = IRSGD_BAT_Label3;
+            UIControls_Dict["IRSGD"].MKR_Label = IRSGD_MKR_Label1;
+            UIControls_Dict["IRSGD"].MKR_Price = IRSGD_MKR_Label2;
+            UIControls_Dict["IRSGD"].MKR_Spread = IRSGD_MKR_Label3;
+            UIControls_Dict["IRSGD"].ETC_Label = IRSGD_ETC_Label1;
+            UIControls_Dict["IRSGD"].ETC_Price = IRSGD_ETC_Label2;
+            UIControls_Dict["IRSGD"].ETC_Spread = IRSGD_ETC_Label3;
+            UIControls_Dict["IRSGD"].USDT_Label = IRSGD_USDT_Label1;
+            UIControls_Dict["IRSGD"].USDT_Price = IRSGD_USDT_Label2;
+            UIControls_Dict["IRSGD"].USDT_Spread = IRSGD_USDT_Label3;
+            UIControls_Dict["IRSGD"].DAI_Label = IRSGD_DAI_Label1;
+            UIControls_Dict["IRSGD"].DAI_Price = IRSGD_DAI_Label2;
+            UIControls_Dict["IRSGD"].DAI_Spread = IRSGD_DAI_Label3;
+            UIControls_Dict["IRSGD"].LINK_Label = IRSGD_LINK_Label1;
+            UIControls_Dict["IRSGD"].LINK_Price = IRSGD_LINK_Label2;
+            UIControls_Dict["IRSGD"].LINK_Spread = IRSGD_LINK_Label3;
+            UIControls_Dict["IRSGD"].USDC_Label = IRSGD_USDC_Label1;
+            UIControls_Dict["IRSGD"].USDC_Price = IRSGD_USDC_Label2;
+            UIControls_Dict["IRSGD"].USDC_Spread = IRSGD_USDC_Label3;
+            UIControls_Dict["IRSGD"].COMP_Label = IRSGD_COMP_Label1;
+            UIControls_Dict["IRSGD"].COMP_Price = IRSGD_COMP_Label2;
+            UIControls_Dict["IRSGD"].COMP_Spread = IRSGD_COMP_Label3;
+            UIControls_Dict["IRSGD"].SNX_Label = IRSGD_SNX_Label1;
+            UIControls_Dict["IRSGD"].SNX_Price = IRSGD_SNX_Label2;
+            UIControls_Dict["IRSGD"].SNX_Spread = IRSGD_SNX_Label3;
+            UIControls_Dict["IRSGD"].PMGT_Label = IRSGD_PMGT_Label1;
+            UIControls_Dict["IRSGD"].PMGT_Price = IRSGD_PMGT_Label2;
+            UIControls_Dict["IRSGD"].PMGT_Spread = IRSGD_PMGT_Label3;
+            UIControls_Dict["IRSGD"].YFI_Label = IRSGD_YFI_Label1;
+            UIControls_Dict["IRSGD"].YFI_Price = IRSGD_YFI_Label2;
+            UIControls_Dict["IRSGD"].YFI_Spread = IRSGD_YFI_Label3;
+            UIControls_Dict["IRSGD"].AAVE_Label = IRSGD_AAVE_Label1;
+            UIControls_Dict["IRSGD"].AAVE_Price = IRSGD_AAVE_Label2;
+            UIControls_Dict["IRSGD"].AAVE_Spread = IRSGD_AAVE_Label3;
+            UIControls_Dict["IRSGD"].DOT_Label = IRSGD_DOT_Label1;
+            UIControls_Dict["IRSGD"].DOT_Price = IRSGD_DOT_Label2;
+            UIControls_Dict["IRSGD"].DOT_Spread = IRSGD_DOT_Label3;
+            UIControls_Dict["IRSGD"].GRT_Label = IRSGD_GRT_Label1;
+            UIControls_Dict["IRSGD"].GRT_Price = IRSGD_GRT_Label2;
+            UIControls_Dict["IRSGD"].GRT_Spread = IRSGD_GRT_Label3;
+            UIControls_Dict["IRSGD"].UNI_Label = IRSGD_UNI_Label1;
+            UIControls_Dict["IRSGD"].UNI_Price = IRSGD_UNI_Label2;
+            UIControls_Dict["IRSGD"].UNI_Spread = IRSGD_UNI_Label3;
+            UIControls_Dict["IRSGD"].ADA_Label = IRSGD_ADA_Label1;
+            UIControls_Dict["IRSGD"].ADA_Price = IRSGD_ADA_Label2;
+            UIControls_Dict["IRSGD"].ADA_Spread = IRSGD_ADA_Label3;
+            UIControls_Dict["IRSGD"].DOGE_Label = IRSGD_DOGE_Label1;
+            UIControls_Dict["IRSGD"].DOGE_Price = IRSGD_DOGE_Label2;
+            UIControls_Dict["IRSGD"].DOGE_Spread = IRSGD_DOGE_Label3;
+            UIControls_Dict["IRSGD"].MATIC_Label = IRSGD_MATIC_Label1;
+            UIControls_Dict["IRSGD"].MATIC_Price = IRSGD_MATIC_Label2;
+            UIControls_Dict["IRSGD"].MATIC_Spread = IRSGD_MATIC_Label3;
+            UIControls_Dict["IRSGD"].MANA_Label = IRSGD_MANA_Label1;
+            UIControls_Dict["IRSGD"].MANA_Price = IRSGD_MANA_Label2;
+            UIControls_Dict["IRSGD"].MANA_Spread = IRSGD_MANA_Label3;
+            UIControls_Dict["IRSGD"].SOL_Label = IRSGD_SOL_Label1;
+            UIControls_Dict["IRSGD"].SOL_Price = IRSGD_SOL_Label2;
+            UIControls_Dict["IRSGD"].SOL_Spread = IRSGD_SOL_Label3;
+            UIControls_Dict["IRSGD"].SAND_Label = IRSGD_SAND_Label1;
+            UIControls_Dict["IRSGD"].SAND_Price = IRSGD_SAND_Label2;
+            UIControls_Dict["IRSGD"].SAND_Spread = IRSGD_SAND_Label3;
+
+
+            // IR USD
+            UIControls_Dict["IRUSD"].Name = "IRUSD";
+            UIControls_Dict["IRUSD"].dExchange_GB = IRUSD_GroupBox;
+            UIControls_Dict["IRUSD"].XBT_Label = IRUSD_XBT_Label1;
+            UIControls_Dict["IRUSD"].XBT_Price = IRUSD_XBT_Label2;
+            UIControls_Dict["IRUSD"].XBT_Spread = IRUSD_XBT_Label3;
+            UIControls_Dict["IRUSD"].ETH_Label = IRUSD_ETH_Label1;
+            UIControls_Dict["IRUSD"].ETH_Price = IRUSD_ETH_Label2;
+            UIControls_Dict["IRUSD"].ETH_Spread = IRUSD_ETH_Label3;
+            UIControls_Dict["IRUSD"].BCH_Label = IRUSD_BCH_Label1;
+            UIControls_Dict["IRUSD"].BCH_Price = IRUSD_BCH_Label2;
+            UIControls_Dict["IRUSD"].BCH_Spread = IRUSD_BCH_Label3;
+            UIControls_Dict["IRUSD"].LTC_Label = IRUSD_LTC_Label1;
+            UIControls_Dict["IRUSD"].LTC_Price = IRUSD_LTC_Label2;
+            UIControls_Dict["IRUSD"].LTC_Spread = IRUSD_LTC_Label3;
+            UIControls_Dict["IRUSD"].XRP_Label = IRUSD_XRP_Label1;
+            UIControls_Dict["IRUSD"].XRP_Price = IRUSD_XRP_Label2;
+            UIControls_Dict["IRUSD"].XRP_Spread = IRUSD_XRP_Label3;
+            UIControls_Dict["IRUSD"].OMG_Label = IRUSD_OMG_Label1;
+            UIControls_Dict["IRUSD"].OMG_Price = IRUSD_OMG_Label2;
+            UIControls_Dict["IRUSD"].OMG_Spread = IRUSD_OMG_Label3;
+            UIControls_Dict["IRUSD"].ZRX_Label = IRUSD_ZRX_Label1;
+            UIControls_Dict["IRUSD"].ZRX_Price = IRUSD_ZRX_Label2;
+            UIControls_Dict["IRUSD"].ZRX_Spread = IRUSD_ZRX_Label3;
+            UIControls_Dict["IRUSD"].EOS_Label = IRUSD_EOS_Label1;
+            UIControls_Dict["IRUSD"].EOS_Price = IRUSD_EOS_Label2;
+            UIControls_Dict["IRUSD"].EOS_Spread = IRUSD_EOS_Label3;
+            UIControls_Dict["IRUSD"].XLM_Label = IRUSD_XLM_Label1;
+            UIControls_Dict["IRUSD"].XLM_Price = IRUSD_XLM_Label2;
+            UIControls_Dict["IRUSD"].XLM_Spread = IRUSD_XLM_Label3;
+            UIControls_Dict["IRUSD"].BAT_Label = IRUSD_BAT_Label1;
+            UIControls_Dict["IRUSD"].BAT_Price = IRUSD_BAT_Label2;
+            UIControls_Dict["IRUSD"].BAT_Spread = IRUSD_BAT_Label3;
+            UIControls_Dict["IRUSD"].MKR_Label = IRUSD_MKR_Label1;
+            UIControls_Dict["IRUSD"].MKR_Price = IRUSD_MKR_Label2;
+            UIControls_Dict["IRUSD"].MKR_Spread = IRUSD_MKR_Label3;
+            UIControls_Dict["IRUSD"].ETC_Label = IRUSD_ETC_Label1;
+            UIControls_Dict["IRUSD"].ETC_Price = IRUSD_ETC_Label2;
+            UIControls_Dict["IRUSD"].ETC_Spread = IRUSD_ETC_Label3;
+            UIControls_Dict["IRUSD"].USDT_Label = IRUSD_USDT_Label1;
+            UIControls_Dict["IRUSD"].USDT_Price = IRUSD_USDT_Label2;
+            UIControls_Dict["IRUSD"].USDT_Spread = IRUSD_USDT_Label3;
+            UIControls_Dict["IRUSD"].DAI_Label = IRUSD_DAI_Label1;
+            UIControls_Dict["IRUSD"].DAI_Price = IRUSD_DAI_Label2;
+            UIControls_Dict["IRUSD"].DAI_Spread = IRUSD_DAI_Label3;
+            UIControls_Dict["IRUSD"].LINK_Label = IRUSD_LINK_Label1;
+            UIControls_Dict["IRUSD"].LINK_Price = IRUSD_LINK_Label2;
+            UIControls_Dict["IRUSD"].LINK_Spread = IRUSD_LINK_Label3;
+            UIControls_Dict["IRUSD"].USDC_Label = IRUSD_USDC_Label1;
+            UIControls_Dict["IRUSD"].USDC_Price = IRUSD_USDC_Label2;
+            UIControls_Dict["IRUSD"].USDC_Spread = IRUSD_USDC_Label3;
+            UIControls_Dict["IRUSD"].COMP_Label = IRUSD_COMP_Label1;
+            UIControls_Dict["IRUSD"].COMP_Price = IRUSD_COMP_Label2;
+            UIControls_Dict["IRUSD"].COMP_Spread = IRUSD_COMP_Label3;
+            UIControls_Dict["IRUSD"].SNX_Label = IRUSD_SNX_Label1;
+            UIControls_Dict["IRUSD"].SNX_Price = IRUSD_SNX_Label2;
+            UIControls_Dict["IRUSD"].SNX_Spread = IRUSD_SNX_Label3;
+            UIControls_Dict["IRUSD"].PMGT_Label = IRUSD_PMGT_Label1;
+            UIControls_Dict["IRUSD"].PMGT_Price = IRUSD_PMGT_Label2;
+            UIControls_Dict["IRUSD"].PMGT_Spread = IRUSD_PMGT_Label3;
+            UIControls_Dict["IRUSD"].YFI_Label = IRUSD_YFI_Label1;
+            UIControls_Dict["IRUSD"].YFI_Price = IRUSD_YFI_Label2;
+            UIControls_Dict["IRUSD"].YFI_Spread = IRUSD_YFI_Label3;
+            UIControls_Dict["IRUSD"].AAVE_Label = IRUSD_AAVE_Label1;
+            UIControls_Dict["IRUSD"].AAVE_Price = IRUSD_AAVE_Label2;
+            UIControls_Dict["IRUSD"].AAVE_Spread = IRUSD_AAVE_Label3;
+            UIControls_Dict["IRUSD"].DOT_Label = IRUSD_DOT_Label1;
+            UIControls_Dict["IRUSD"].DOT_Price = IRUSD_DOT_Label2;
+            UIControls_Dict["IRUSD"].DOT_Spread = IRUSD_DOT_Label3;
+            UIControls_Dict["IRUSD"].GRT_Label = IRUSD_GRT_Label1;
+            UIControls_Dict["IRUSD"].GRT_Price = IRUSD_GRT_Label2;
+            UIControls_Dict["IRUSD"].GRT_Spread = IRUSD_GRT_Label3;
+            UIControls_Dict["IRUSD"].UNI_Label = IRUSD_UNI_Label1;
+            UIControls_Dict["IRUSD"].UNI_Price = IRUSD_UNI_Label2;
+            UIControls_Dict["IRUSD"].UNI_Spread = IRUSD_UNI_Label3;
+            UIControls_Dict["IRUSD"].ADA_Label = IRUSD_ADA_Label1;
+            UIControls_Dict["IRUSD"].ADA_Price = IRUSD_ADA_Label2;
+            UIControls_Dict["IRUSD"].ADA_Spread = IRUSD_ADA_Label3;
+            UIControls_Dict["IRUSD"].DOGE_Label = IRUSD_DOGE_Label1;
+            UIControls_Dict["IRUSD"].DOGE_Price = IRUSD_DOGE_Label2;
+            UIControls_Dict["IRUSD"].DOGE_Spread = IRUSD_DOGE_Label3;
+            UIControls_Dict["IRUSD"].MATIC_Label = IRUSD_MATIC_Label1;
+            UIControls_Dict["IRUSD"].MATIC_Price = IRUSD_MATIC_Label2;
+            UIControls_Dict["IRUSD"].MATIC_Spread = IRUSD_MATIC_Label3;
+            UIControls_Dict["IRUSD"].MANA_Label = IRUSD_MANA_Label1;
+            UIControls_Dict["IRUSD"].MANA_Price = IRUSD_MANA_Label2;
+            UIControls_Dict["IRUSD"].MANA_Spread = IRUSD_MANA_Label3;
+            UIControls_Dict["IRUSD"].SOL_Label = IRUSD_SOL_Label1;
+            UIControls_Dict["IRUSD"].SOL_Price = IRUSD_SOL_Label2;
+            UIControls_Dict["IRUSD"].SOL_Spread = IRUSD_SOL_Label3;
+            UIControls_Dict["IRUSD"].SAND_Label = IRUSD_SAND_Label1;
+            UIControls_Dict["IRUSD"].SAND_Price = IRUSD_SAND_Label2;
+            UIControls_Dict["IRUSD"].SAND_Spread = IRUSD_SAND_Label3;
+
+
             // BTCM
 
             BTCM_panel.AutoScroll = false;
@@ -418,7 +614,9 @@ namespace IRTicker {
                 if (uic.Value.AvgPrice != null) {
                     uic.Value.AvgPrice_BuySell.SelectedIndex = 0;  // force all the buy/sell drop downs to select buy (so can never be null)
                 }
-                uic.Value.AvgPrice_Currency.SelectedIndex = 1;
+                if (null != uic.Value.AvgPrice_Currency) {
+                    uic.Value.AvgPrice_Currency.SelectedIndex = 1;
+                }
             }
         }
 
@@ -623,9 +821,17 @@ namespace IRTicker {
             if (!marketSummary.Item1) {
                 DCEs["IR"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
                 DCEs["IR"].NetworkAvailable = false;
+                if (fiat == "USD") {
+                    DCEs["IRUSD"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
+                    DCEs["IRUSD"].NetworkAvailable = false;
+                }
+                if (fiat == "SGD") {
+                    DCEs["IRSGD"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
+                    DCEs["IRSGD"].NetworkAvailable = false;
+                }
             }
             else {
-                DCEs["IR"].NetworkAvailable = true;
+                DCEs["IR"].NetworkAvailable = DCEs["IRUSD"].NetworkAvailable = DCEs["IRSGD"].NetworkAvailable = true;
                 DCE.MarketSummary mSummary;
                 try {
                     mSummary = JsonConvert.DeserializeObject<DCE.MarketSummary>(marketSummary.Item2);
@@ -633,6 +839,12 @@ namespace IRTicker {
                 catch {
                     Debug.Print(DateTime.Now + " - IR - bad REST result: " + marketSummary.Item2);
                     DCEs["IR"].NetworkAvailable = false;
+                    if (fiat == "USD") {
+                        DCEs["IRUSD"].NetworkAvailable = false;
+                    }
+                    if (fiat == "SGD") {
+                        DCEs["IRSGD"].NetworkAvailable = false;
+                    }
                     return;
                 }
 
@@ -650,6 +862,43 @@ namespace IRTicker {
                 DCEs["IR"].CurrentDCEStatus = "Online";
                 // don't update the labels if we are pulling a different fiat than the one we're showing (eg for Slack name)
                 if (updateLabels && (DCEs["IR"].CurrentSecondaryCurrency == fiat)) pollingThread.ReportProgress(21, mSummary);
+
+                // now for USD and SGD
+
+                if (fiat == "USD") {
+                    // This bit is for a) volume (we don't get vol from websockets), and b) if there have been no orders to establish a spread, then the price and spread
+                    // stay at 0.  This is 
+                    Dictionary<string, DCE.MarketSummary> cPairsUSD = DCEs["IRUSD"].GetCryptoPairs();
+                    if (cPairsUSD.ContainsKey(mSummary.pair) && cPairsUSD[mSummary.pair].spread != 0) {  // logic here is if the spread is not 0, then don't send spread info, as what we have is better
+                                                                                                   //if (crypto == "XBT") {  // don't want to overwrite the spread orders as they're probably out of date
+                        mSummary.CurrentHighestBidPrice = 0;  // sending cryptoPairsAdd a 0 bid and offer will mean the previous best bid and offer remain
+                        mSummary.CurrentLowestOfferPrice = 0;
+                    }
+                    //}
+                    mSummary.CreatedTimestampUTC = "";
+                    DCEs["IRUSD"].CryptoPairsAdd(crypto + "-" + fiat, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
+                    DCEs["IRUSD"].CurrentDCEStatus = "Online";
+                    // don't update the labels if we are pulling a different fiat than the one we're showing (eg for Slack name)
+                    if (updateLabels) pollingThread.ReportProgress(21, mSummary);
+                }
+
+                if (fiat == "SGD") {
+                    // This bit is for a) volume (we don't get vol from websockets), and b) if there have been no orders to establish a spread, then the price and spread
+                    // stay at 0.  This is 
+                    Dictionary<string, DCE.MarketSummary> cPairsSGD = DCEs["IRSGD"].GetCryptoPairs();
+                    if (cPairsSGD.ContainsKey(mSummary.pair) && cPairsSGD[mSummary.pair].spread != 0) {  // logic here is if the spread is not 0, then don't send spread info, as what we have is better
+                                                                                                         //if (crypto == "XBT") {  // don't want to overwrite the spread orders as they're probably out of date
+                        mSummary.CurrentHighestBidPrice = 0;  // sending cryptoPairsAdd a 0 bid and offer will mean the previous best bid and offer remain
+                        mSummary.CurrentLowestOfferPrice = 0;
+                    }
+                    //}
+                    mSummary.CreatedTimestampUTC = "";
+                    DCEs["IRSGD"].CryptoPairsAdd(crypto + "-" + fiat, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
+                    DCEs["IRSGD"].CurrentDCEStatus = "Online";
+                    // don't update the labels if we are pulling a different fiat than the one we're showing (eg for Slack name)
+                    if (updateLabels) pollingThread.ReportProgress(21, mSummary);
+                }
+
             }
         }
 
@@ -841,13 +1090,13 @@ namespace IRTicker {
                 if (!DCEs["IR"].HasStaticData) {  // only pull the currencies once per session as these are essentially static
                     Tuple<bool, string> primaryCurrencyCodesTpl = Utilities.Get(DCEs["IR"].BaseURL + "/Public/GetValidPrimaryCurrencyCodes");
                     if (!primaryCurrencyCodesTpl.Item1) {
-                        DCEs["IR"].CurrentDCEStatus = WebsiteError(primaryCurrencyCodesTpl.Item2);
-                        DCEs["IR"].NetworkAvailable = false;
+                        DCEs["IR"].CurrentDCEStatus = DCEs["IRUSD"].CurrentDCEStatus = DCEs["IRSGD"].CurrentDCEStatus = WebsiteError(primaryCurrencyCodesTpl.Item2);
+                        DCEs["IR"].NetworkAvailable = DCEs["IRUSD"].NetworkAvailable = DCEs["IRSGD"].NetworkAvailable = false;
                     }
                     else {
-                        DCEs["IR"].NetworkAvailable = true;
-                        DCEs["IR"].CurrentDCEStatus = "Online";
-                        DCEs["IR"].PrimaryCurrencyCodes = Utilities.TrimEnds(primaryCurrencyCodesTpl.Item2);
+                        DCEs["IR"].NetworkAvailable = DCEs["IRUSD"].NetworkAvailable = DCEs["IRSGD"].NetworkAvailable = true;
+                        DCEs["IR"].CurrentDCEStatus = DCEs["IRUSD"].CurrentDCEStatus = DCEs["IRSGD"].CurrentDCEStatus = "Online";
+                        DCEs["IR"].PrimaryCurrencyCodes = DCEs["IRUSD"].PrimaryCurrencyCodes = Utilities.TrimEnds(primaryCurrencyCodesTpl.Item2);  // no SGD - they have their own list of currencies
                         //DCEs["IR"].PrimaryCurrencyCodes = "\"XBT\"";
                     }
 
@@ -864,12 +1113,28 @@ namespace IRTicker {
 
                     }
                     if (DCEs["IR"].NetworkAvailable) {
-                        DCEs["IR"].HasStaticData = true;  // we got here with the network up?  then we got the static data!
+                        DCEs["IR"].HasStaticData = DCEs["IRUSD"].HasStaticData = DCEs["IRSGD"].HasStaticData = true;  // we got here with the network up?  then we got the static data!  and probs for USD and SGD
                         Dictionary<string, DCE.products_GDAX> productDictionary_IR = new Dictionary<string, DCE.products_GDAX>();
+                        Dictionary<string, DCE.products_GDAX> productDictionary_IRUSD = new Dictionary<string, DCE.products_GDAX>();
+                        Dictionary<string, DCE.products_GDAX> productDictionary_IRSGD = new Dictionary<string, DCE.products_GDAX>();
                         foreach (string crypto in DCEs["IR"].PrimaryCurrencyList) {
                             foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
                                 productDictionary_IR.Add(crypto + "-" + fiat, new DCE.products_GDAX(crypto + "-" + fiat));
                                 DCEs["IR"].negSpreadCount[crypto + "-" + fiat] = 0;  // init
+
+                                if (fiat == "USD") {
+                                    productDictionary_IRUSD.Add(crypto + "-" + fiat, new DCE.products_GDAX(crypto + "-" + fiat));
+                                    DCEs["IRUSD"].negSpreadCount[crypto + "-" + fiat] = 0;  // init
+                                    DCEs["IRUSD"].InitialiseOrderBookDicts_IR(crypto, fiat);
+                                    ParseDCE_IR(crypto, fiat, true);
+                                }
+
+                                else if ((fiat == "SGD") && (DCEs["IRSGD"].PrimaryCurrencyList.Contains(crypto))) {
+                                    productDictionary_IRSGD.Add(crypto + "-" + fiat, new DCE.products_GDAX(crypto + "-" + fiat));
+                                    DCEs["IRSGD"].negSpreadCount[crypto + "-" + fiat] = 0;  // init
+                                    DCEs["IRSGD"].InitialiseOrderBookDicts_IR(crypto, fiat);
+                                    ParseDCE_IR(crypto, fiat, true);
+                                }
 
                                 //create OB objects ready to be filled.  we only do this once here, and never delete them.  neverrrrr
                                 DCEs["IR"].InitialiseOrderBookDicts_IR(crypto, fiat);
@@ -898,6 +1163,8 @@ namespace IRTicker {
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "NZD");*/
 
                         if (DCEs["IR"].currencyDecimalPlaces.Count() > 0) DCEs["IR"].currencyDecimalPlaces.Clear();  // if we reset due to network outage, then clear this before 
+                        if (DCEs["IRUSD"].currencyDecimalPlaces.Count() > 0) DCEs["IRUSD"].currencyDecimalPlaces.Clear();  // if we reset due to network outage, then clear this before 
+                        if (DCEs["IRSGD"].currencyDecimalPlaces.Count() > 0) DCEs["IRSGD"].currencyDecimalPlaces.Clear();  // if we reset due to network outage, then clear this before 
 
                         if (!File.Exists("cryptoDPs.csv")) {
                             MessageBox.Show("cryptoDPs.csv can't be found in the root application folder.  Grab it from Resources folder if you can, or ask Nick.  Can re-generate this file by running the CryptoDecimalPlaces-scrape.ps1 script.  App will close now.",
@@ -917,6 +1184,8 @@ namespace IRTicker {
                                     int fiat = int.Parse(details[2]);
                                     if ((vol > 126) || (vol < -126) || (fiat > 126) || (fiat < -126)) throw new Exception("volume or fiat not within -126 and 126");  // we have to convert this to a byte, which must be within these values
                                     DCEs["IR"].currencyDecimalPlaces.Add(details[0].ToUpper(), new Tuple<int, int>(int.Parse(details[1]), int.Parse(details[2])));
+                                    DCEs["IRUSD"].currencyDecimalPlaces.Add(details[0].ToUpper(), new Tuple<int, int>(int.Parse(details[1]), int.Parse(details[2])));
+                                    DCEs["IRSGD"].currencyDecimalPlaces.Add(details[0].ToUpper(), new Tuple<int, int>(int.Parse(details[1]), int.Parse(details[2])));
                                 }
                             }
                         }
@@ -927,31 +1196,44 @@ namespace IRTicker {
                         }
 
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
+                        DCEs["IRUSD"].ExchangeProducts = productDictionary_IRUSD;
+                        DCEs["IRSGD"].ExchangeProducts = productDictionary_IRSGD;
+
                         pollingThread.ReportProgress(28, "IR");  // populate slack name currency comboboxes in settnigs
 
 
                         wSocketConnect.Reinit_sockets("IR");  // this will setup all the necessary dictionaries
+                        wSocketConnect.Reinit_sockets("IRUSD");  // this will setup all the necessary dictionaries
+                        wSocketConnect.Reinit_sockets("IRSGD");  // this will setup all the necessary dictionaries
+
                         SubscribeTickerSocket("IR");
+                        SubscribeTickerSocket("IRUSD");
+                        SubscribeTickerSocket("IRSGD");
+
                         pollingThread.ReportProgress(14, "IR");
                     }
                     else {  // network is down.  we should report it and try again?
                         pollingThread.ReportProgress(12, "IR");
-                        DCEs["IR"].HasStaticData = false;  // if we go offline, let's start again.
+                        pollingThread.ReportProgress(12, "IRUSD");
+                        pollingThread.ReportProgress(12, "IRSGD");
+
+                        DCEs["IR"].HasStaticData = DCEs["IRUSD"].HasStaticData = DCEs["IRSGD"].HasStaticData = false;  // if we go offline, let's start again.
                     }
                 }
 
                 // still need to run this to get volume data (and all coins except BTC)
+                // only need vol data for the main IR groupBox, SGD and USD don't need to show it (it's the same)
                 if (DCEs["IR"].HasStaticData && DCEs["IR"].NetworkAvailable) {
                     foreach (string primaryCode in DCEs["IR"].PrimaryCurrencyList) {
                         // if there's no crypto selected in the drop down or there's no number of coins entered, then just pull the market summary
                         if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
                             ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency, false);
                         }
-                        if ((null != IRAF) && (pIR != null)) {
+                        if ((null != IRAF) && (null != pIR)) {
                             foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
                                 try {
                                     var cOrders = pIR.GetClosedOrders(primaryCode, fiat);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
-                                    if ((null != IRAF) && (primaryCode == IRAF.AccountSelectedCrypto) && (fiat == DCEs["IR"].CurrentSecondaryCurrency) && (cOrders != null)) 
+                                    if ((null != IRAF) && (primaryCode == IRAF.AccountSelectedCrypto) && (fiat == DCEs["IR"].CurrentSecondaryCurrency) && (null != cOrders)) 
                                         IRAF.drawClosedOrders(cOrders.Data);
                                 }
                                 catch (Exception ex) {
@@ -973,35 +1255,18 @@ namespace IRTicker {
                     if ((Properties.Settings.Default.SlackNameFiatCurrency != DCEs["IR"].CurrentSecondaryCurrency) &&
                         Properties.Settings.Default.Slack && Properties.Settings.Default.SlackNameChange) {
 
-                        ParseDCE_IR("XBT", Properties.Settings.Default.SlackNameFiatCurrency, false);
+                        if (DCEs["IR"].PrimaryCurrencyList.Contains(Properties.Settings.Default.SlackNameEmojiCrypto)) {  // if the chosen crypto is a real one
+                            ParseDCE_IR(Properties.Settings.Default.SlackNameEmojiCrypto, Properties.Settings.Default.SlackNameFiatCurrency, false);
+                        }
                     }
 
 
                     // let's check the IR spread.  Cycle through all the "_Spread" labels
 
                     if (Properties.Settings.Default.NegativeSpread) {
-                        Dictionary<string, DCE.MarketSummary> mSummaries = DCEs["IR"].GetCryptoPairs();
-                        foreach (var mSummary in mSummaries) {
-                            if (mSummary.Value.SecondaryCurrencyCode == DCEs["IR"].CurrentSecondaryCurrency) {  
-                                if (mSummary.Value.CurrentLowestOfferPrice <= mSummary.Value.CurrentHighestBidPrice) {
-                                    if (!DCEs["IR"].positiveSpread[mSummary.Value.pair]) {  // already been negative for this pair :(
-                                        Debug.Print(DateTime.Now + " - negative pair detected (" + mSummary.Value.pair + ").  let's unsub resub");
-                                        // do something..
-                                        pollingThread.ReportProgress(29, mSummary.Value.pair);  // update UI to show another spread fail
-                                        wSocketConnect.WebSocket_Resubscribe("IR", mSummary.Value.PrimaryCurrencyCode);
-                                    }
-                                    else {
-                                        // spread was positive last time, set the signal and wait for the next rotation
-                                        DCEs["IR"].positiveSpread[mSummary.Value.pair] = false;
-                                        Debug.Print(DateTime.Now + " - Negave pair (" + mSummary.Value.pair + ") signaled, waiting...");
-                                    }
-                                }
-                                else {
-                                    DCEs["IR"].positiveSpread[mSummary.Value.pair] = true;  // this pair is OK.  Doesn't mean it's right, it's just not DEFINITELY wrong.
-                                                                                            //Debug.Print("Negative spread check all good for " + mSummary.Value.pair);
-                                }
-                            }
-                        }
+                        CheckNegativeSpread("IR");
+                        CheckNegativeSpread("IRUSD");
+                        CheckNegativeSpread("IRSGD");
                     }
                 }
 
@@ -1251,6 +1516,31 @@ namespace IRTicker {
                 }
 
             } while(true);  // polling is lyfe
+        }
+
+        private void CheckNegativeSpread(string dExchange) {
+            Dictionary<string, DCE.MarketSummary> mSummaries = DCEs[dExchange].GetCryptoPairs();
+            foreach (var mSummary in mSummaries) {
+                if (mSummary.Value.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency) {
+                    if (mSummary.Value.CurrentLowestOfferPrice <= mSummary.Value.CurrentHighestBidPrice) {
+                        if (!DCEs[dExchange].positiveSpread[mSummary.Value.pair]) {  // already been negative for this pair :(
+                            Debug.Print(DateTime.Now + " - negative pair detected (" + mSummary.Value.pair + ") for " + dExchange + ". let's unsub resub");
+                            // do something..
+                            pollingThread.ReportProgress(29, new Tuple<string, string>(dExchange, mSummary.Value.pair));  // update UI to show another spread fail
+                            wSocketConnect.WebSocket_Resubscribe(dExchange, mSummary.Value.PrimaryCurrencyCode);
+                        }
+                        else {
+                            // spread was positive last time, set the signal and wait for the next rotation
+                            DCEs[dExchange].positiveSpread[mSummary.Value.pair] = false;
+                            Debug.Print(DateTime.Now + " - Negave pair (" + mSummary.Value.pair + ") for " + dExchange + " signaled, waiting...");
+                        }
+                    }
+                    else {
+                        DCEs[dExchange].positiveSpread[mSummary.Value.pair] = true;  // this pair is OK.  Doesn't mean it's right, it's just not DEFINITELY wrong.
+                                                                                //Debug.Print("Negative spread check all good for " + mSummary.Value.pair);
+                    }
+                }
+            }
         }
 
         private void UpdateLabels(string dExchange) {
@@ -1647,7 +1937,17 @@ namespace IRTicker {
 
             if (reportType == 21) {  // 21 is IR update labels
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;
-                UpdateLabels_Pair("IR", mSummary);
+                switch (mSummary.SecondaryCurrencyCode) {
+                    case "SGD":
+                        UpdateLabels_Pair("IRSGD", mSummary);
+                        break;
+                    case "USD":
+                        UpdateLabels_Pair("IRUSD", mSummary);
+                        break;
+                }
+
+                if (mSummary.SecondaryCurrencyCode == DCEs["IR"].CurrentSecondaryCurrency) UpdateLabels_Pair("IR", mSummary);
+
                 //return;  // we want to go to report type 25 next to update OBView
                 reportType = 25;
             }
@@ -1733,10 +2033,10 @@ namespace IRTicker {
 
             if (reportType == 29) {  // updates the IR currency label to include the number of negative spread fail events we've had for this currency
                 // do something..
-                string pair = (string)e.UserState;
-                Tuple<string, string> pairTup = Utilities.SplitPair(pair);
-                DCEs["IR"].negSpreadCount[pair]++;
-                UIControls_Dict["IR"].Label_Dict[pairTup.Item1 + "_Label"].Text = (pairTup.Item1 == "XBT" ? "BTC" : pairTup.Item1) + " (" + DCEs["IR"].negSpreadCount[pair] + "):";
+                Tuple<string, string> dExchangePair = (Tuple<string, string>)e.UserState;  // dExchange, pair  (eg "IRSGD", "BTC-SGD")
+                Tuple<string, string> pairTup = Utilities.SplitPair(dExchangePair.Item2);
+                DCEs[dExchangePair.Item1].negSpreadCount[dExchangePair.Item2]++;
+                UIControls_Dict[dExchangePair.Item1].Label_Dict[pairTup.Item1 + "_Label"].Text = (pairTup.Item1 == "XBT" ? "BTC" : pairTup.Item1) + " (" + DCEs[dExchangePair.Item1].negSpreadCount[dExchangePair.Item2] + "):";
                 return;
             }
 

@@ -83,7 +83,7 @@
             this.LoadingPanel = new System.Windows.Forms.Panel();
             this.GIFLabel = new System.Windows.Forms.Label();
             this.Main = new System.Windows.Forms.Panel();
-            this.IR_GroupBox_USD = new System.Windows.Forms.GroupBox();
+            this.IRUSD_GroupBox = new System.Windows.Forms.GroupBox();
             this.IR_panel_USD = new System.Windows.Forms.Panel();
             this.IRUSD_SAND_Label2 = new System.Windows.Forms.Label();
             this.IRUSD_SAND_Label1 = new System.Windows.Forms.Label();
@@ -175,7 +175,7 @@
             this.IRUSD_ETH_Label1 = new System.Windows.Forms.Label();
             this.IRUSD_XBT_Label1 = new System.Windows.Forms.Label();
             this.IRUSD_XRP_Label3 = new System.Windows.Forms.Label();
-            this.IR_GroupBox_SGD = new System.Windows.Forms.GroupBox();
+            this.IRSGD_GroupBox = new System.Windows.Forms.GroupBox();
             this.IR_panel_SGD = new System.Windows.Forms.Panel();
             this.IRSGD_SAND_Label2 = new System.Windows.Forms.Label();
             this.IRSGD_SAND_Label1 = new System.Windows.Forms.Label();
@@ -470,9 +470,9 @@
             this.SlackSettings_groupBox.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
-            this.IR_GroupBox_USD.SuspendLayout();
+            this.IRUSD_GroupBox.SuspendLayout();
             this.IR_panel_USD.SuspendLayout();
-            this.IR_GroupBox_SGD.SuspendLayout();
+            this.IRSGD_GroupBox.SuspendLayout();
             this.IR_panel_SGD.SuspendLayout();
             this.cryptoFees_groupBox.SuspendLayout();
             this.cryptoFees_Panel.SuspendLayout();
@@ -1090,8 +1090,8 @@
             // Main
             // 
             this.Main.BackColor = System.Drawing.Color.White;
-            this.Main.Controls.Add(this.IR_GroupBox_USD);
-            this.Main.Controls.Add(this.IR_GroupBox_SGD);
+            this.Main.Controls.Add(this.IRUSD_GroupBox);
+            this.Main.Controls.Add(this.IRSGD_GroupBox);
             this.Main.Controls.Add(this.Balance_button);
             this.Main.Controls.Add(this.cryptoFees_groupBox);
             this.Main.Controls.Add(this.IRAccount_button);
@@ -1105,19 +1105,19 @@
             this.Main.TabIndex = 5;
             this.Main.Visible = false;
             // 
-            // IR_GroupBox_USD
+            // IRUSD_GroupBox
             // 
-            this.IR_GroupBox_USD.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("IR_GroupBox_USD.BackgroundImage")));
-            this.IR_GroupBox_USD.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.IR_GroupBox_USD.Controls.Add(this.IR_panel_USD);
-            this.IR_GroupBox_USD.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.IR_GroupBox_USD.ForeColor = System.Drawing.Color.Gray;
-            this.IR_GroupBox_USD.Location = new System.Drawing.Point(306, 305);
-            this.IR_GroupBox_USD.Name = "IR_GroupBox_USD";
-            this.IR_GroupBox_USD.Size = new System.Drawing.Size(263, 288);
-            this.IR_GroupBox_USD.TabIndex = 68;
-            this.IR_GroupBox_USD.TabStop = false;
-            this.IR_GroupBox_USD.Text = "Independent Reserve USD";
+            this.IRUSD_GroupBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("IRUSD_GroupBox.BackgroundImage")));
+            this.IRUSD_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.IRUSD_GroupBox.Controls.Add(this.IR_panel_USD);
+            this.IRUSD_GroupBox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.IRUSD_GroupBox.ForeColor = System.Drawing.Color.Gray;
+            this.IRUSD_GroupBox.Location = new System.Drawing.Point(306, 305);
+            this.IRUSD_GroupBox.Name = "IRUSD_GroupBox";
+            this.IRUSD_GroupBox.Size = new System.Drawing.Size(263, 288);
+            this.IRUSD_GroupBox.TabIndex = 68;
+            this.IRUSD_GroupBox.TabStop = false;
+            this.IRUSD_GroupBox.Text = "Independent Reserve USD";
             // 
             // IR_panel_USD
             // 
@@ -2418,19 +2418,19 @@
             this.IRUSD_XRP_Label3.Tag = "";
             this.IRUSD_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // IR_GroupBox_SGD
+            // IRSGD_GroupBox
             // 
-            this.IR_GroupBox_SGD.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("IR_GroupBox_SGD.BackgroundImage")));
-            this.IR_GroupBox_SGD.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.IR_GroupBox_SGD.Controls.Add(this.IR_panel_SGD);
-            this.IR_GroupBox_SGD.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.IR_GroupBox_SGD.ForeColor = System.Drawing.Color.Gray;
-            this.IR_GroupBox_SGD.Location = new System.Drawing.Point(306, 4);
-            this.IR_GroupBox_SGD.Name = "IR_GroupBox_SGD";
-            this.IR_GroupBox_SGD.Size = new System.Drawing.Size(263, 288);
-            this.IR_GroupBox_SGD.TabIndex = 67;
-            this.IR_GroupBox_SGD.TabStop = false;
-            this.IR_GroupBox_SGD.Text = "Independent Reserve SGD";
+            this.IRSGD_GroupBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("IRSGD_GroupBox.BackgroundImage")));
+            this.IRSGD_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.IRSGD_GroupBox.Controls.Add(this.IR_panel_SGD);
+            this.IRSGD_GroupBox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.IRSGD_GroupBox.ForeColor = System.Drawing.Color.Gray;
+            this.IRSGD_GroupBox.Location = new System.Drawing.Point(306, 4);
+            this.IRSGD_GroupBox.Name = "IRSGD_GroupBox";
+            this.IRSGD_GroupBox.Size = new System.Drawing.Size(263, 288);
+            this.IRSGD_GroupBox.TabIndex = 67;
+            this.IRSGD_GroupBox.TabStop = false;
+            this.IRSGD_GroupBox.Text = "Independent Reserve SGD";
             // 
             // IR_panel_SGD
             // 
@@ -6233,8 +6233,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1584, 841);
-            this.Controls.Add(this.Main);
             this.Controls.Add(this.Settings);
+            this.Controls.Add(this.Main);
             this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.OTCHelper);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -6255,10 +6255,10 @@
             this.SlackSettings_groupBox.PerformLayout();
             this.LoadingPanel.ResumeLayout(false);
             this.Main.ResumeLayout(false);
-            this.IR_GroupBox_USD.ResumeLayout(false);
+            this.IRUSD_GroupBox.ResumeLayout(false);
             this.IR_panel_USD.ResumeLayout(false);
             this.IR_panel_USD.PerformLayout();
-            this.IR_GroupBox_SGD.ResumeLayout(false);
+            this.IRSGD_GroupBox.ResumeLayout(false);
             this.IR_panel_SGD.ResumeLayout(false);
             this.IR_panel_SGD.PerformLayout();
             this.cryptoFees_groupBox.ResumeLayout(false);
@@ -6533,7 +6533,7 @@
         private System.Windows.Forms.Label IR_ETH_Label1;
         private System.Windows.Forms.Label IR_XBT_Label1;
         private System.Windows.Forms.Label IR_XRP_Label3;
-        private System.Windows.Forms.GroupBox IR_GroupBox_USD;
+        private System.Windows.Forms.GroupBox IRUSD_GroupBox;
         private System.Windows.Forms.Panel IR_panel_USD;
         private System.Windows.Forms.Label IRUSD_SAND_Label2;
         private System.Windows.Forms.Label IRUSD_SAND_Label1;
@@ -6625,7 +6625,7 @@
         private System.Windows.Forms.Label IRUSD_ETH_Label1;
         private System.Windows.Forms.Label IRUSD_XBT_Label1;
         private System.Windows.Forms.Label IRUSD_XRP_Label3;
-        private System.Windows.Forms.GroupBox IR_GroupBox_SGD;
+        private System.Windows.Forms.GroupBox IRSGD_GroupBox;
         private System.Windows.Forms.Panel IR_panel_SGD;
         private System.Windows.Forms.Label IRSGD_SAND_Label2;
         private System.Windows.Forms.Label IRSGD_SAND_Label1;

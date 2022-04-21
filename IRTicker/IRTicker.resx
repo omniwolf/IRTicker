@@ -130,7 +130,7 @@
     <value>By default the Telegram bot will sometimes edit the previous message instead of sending a new message just to try and reduce button spam in the Telegram chat.  If you're using an app that's reading out message to you then this won't work as the app won't read edited messages.  Enable this to make every message come through as a new message.</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="IR_GroupBox_USD.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="IRUSD_GroupBox.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAALEAAABgCAYAAABSS5NPAAXhc2lDQ1BJQ0MgUHJvZmlsZQAAeNqs/HVU
         FN/jB/6vooJiYqCigKKgNIi0googKEh3dyzb3d3dyy67dHeDit3Y3d3drV9eL3m/z+f9O79zvv98F5Tx
@@ -6646,7 +6646,7 @@
         /pSSklqZWrPm/wHRUArCcbcPXgAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="IR_GroupBox_SGD.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="IRSGD_GroupBox.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAALEAAABgCAYAAABSS5NPAAXhc2lDQ1BJQ0MgUHJvZmlsZQAAeNqs/HVU
         FN/jB/6vooJiYqCigKKgNIi0googKEh3dyzb3d3dyy67dHeDit3Y3d3drV9eL3m/z+f9O79zvv98F5Tx
