@@ -34,12 +34,12 @@ namespace IRTicker {
 
             // IR
 
-            Debug.Print("IR websocket connecting..");
+            Debug.Print("IR (+SGD, USD) websocket connecting..");
 
             //Task.Factory.StartNew(() => {
-            startSockets("IR", IRSocketsURL);
-            startSockets("IRSGD", IRSocketsURL);
-            startSockets("IRUSD", IRSocketsURL);
+            startSockets(new List<string>() { "IR", "IRUSD", "IRSGD" }, IRSocketsURL);
+            //startSockets("IRSGD", IRSocketsURL);
+            //startSockets("IRUSD", IRSocketsURL);
             // })
             //;
             Debug.Print("after first start sockets");
@@ -101,8 +101,8 @@ namespace IRTicker {
             List<string> pairs = new List<string>();
             switch (dExchange) {
                 case "IR":
-                case "IRUSD":
-                case "IRSGD":
+                //case "IRUSD":
+                //case "IRSGD":
                     channel = subscribe ? "{\"Event\":\"Subscribe\",\"Data\":[" : "{\"Event\":\"Unsubscribe\",\"Data\":[";
                     if (crypto == "none") {  // unsubscribe or subscribe to EVERYTHING
                         //stopSockets("IR");  // don't want to stop everything, we just need to unsubscribe like we said we would.
@@ -223,17 +223,17 @@ namespace IRTicker {
             }
         }
 
-        private void stopSockets(string dExchange, string pair = "none") {
+        private void stopSockets(List<string> dExchanges) {
             client_IR.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
-            DCEs[dExchange].socketsAlive = false;
+            foreach (string dExchange in dExchanges) DCEs[dExchange].socketsAlive = false;
             //startSocket_exitEvent.Set();  // hopefully this should let the existing startSockets() sub complete
-            Debug.Print("IR sockets stop command sent");
+            Debug.Print("IR (+SGD, USD) sockets stop command sent");
         }
 
-        private void startSockets(string dExchange, string socketsURL, bool doSubscribe = false) {
+        private void startSockets(List<string> dExchanges, string socketsURL, bool doSubscribe = false) {
             var url = new Uri(socketsURL);
-            DCEs[dExchange].socketsAlive = false;
-            Debug.Print(DateTime.Now + " - startSockets called for " + dExchange);
+            foreach (string dExchange in dExchanges) DCEs[dExchange].socketsAlive = false;
+            Debug.Print(DateTime.Now + " - startSockets called for IR (+SGD, USD)");
 
             //using (client_IR = new WebsocketClient(url)) {  getting rid of using statement..
             client_IR = new WebsocketClient(url);
@@ -242,29 +242,21 @@ namespace IRTicker {
             {
                 if (info.Type == ReconnectionType.Initial) {
                     Debug.Print("Initial 'reconnection', ignored");
-                    DCEs[dExchange].socketsAlive = true;
-                    DCEs[dExchange].socketsReset = false;
+                    foreach (string dExchange in dExchanges) DCEs[dExchange].socketsAlive = true;
+                    foreach (string dExchange in dExchanges) DCEs[dExchange].socketsReset = false;
                 }
                 /*else if (info.Type == ReconnectionType.Lost) {
                     Debug.Print("Lost 'reconnection' ignored, attached to a Reset button click?");
                 }*/
                 else {
-                    Debug.Print(DateTime.Now + " - (" + dExchange + " reconnection) - clearing OB sub dicts...");
-                    DCEs[dExchange].socketsAlive = false;
-                    DCEs[dExchange].CurrentDCEStatus = "Reconnected";
+                    Debug.Print(DateTime.Now + " - (IR (+SGD, USD) reconnection) - clearing OB sub dicts...");
+                    foreach (string dExchange in dExchanges) DCEs[dExchange].socketsAlive = false;
+                    foreach (string dExchange in dExchanges) DCEs[dExchange].CurrentDCEStatus = "Reconnected";
 
-                    Reinit_sockets(dExchange);
+                    foreach (string dExchange in dExchanges) Reinit_sockets(dExchange);
                     Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
-                    switch (dExchange) {
-                        case "IR":
-                            subscribe_unsubscribe_new(dExchange, true);  // resubscriibe to all pairs
-                            break;
-                        case "IRSGD":
-                            subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: "SGD");
-                            break;
-                        case "IRUSD":
-                            subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: "USD");
-                            break;
+                    foreach (string dExchange in dExchanges) {
+                        subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: DCEs[dExchange].CurrentSecondaryCurrency);  // resubscriibe to all pairs
                     }
                 }
 
@@ -272,11 +264,11 @@ namespace IRTicker {
 
             client_IR.MessageReceived.Subscribe(msg =>
             {
-                switch (dExchange) {
-                    case "IR":
+                //switch (dExchange) {
+                //    case "IR":
                         MessageRX_IR(msg.Text);
-                        break;
-                }
+                //        break;
+                //}
             });
 
             Task.Run(() => client_IR.Start());
@@ -302,16 +294,8 @@ namespace IRTicker {
                 int loopCounter = 0;
                 do {
                     if (client_IR.IsRunning) {
-                        switch (dExchange) {
-                            case "IR":
-                                subscribe_unsubscribe_new(dExchange, true);  // resubscriibe to all pairs
-                                break;
-                            case "IRSGD":
-                                subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: "SGD");
-                                break;
-                            case "IRUSD":
-                                subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: "USD");
-                                break;
+                        foreach (string dExchange in dExchanges) {
+                            subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: DCEs[dExchange].CurrentSecondaryCurrency);  // resubscriibe to all pairs
                         }
 
                         keepLooping = false;
@@ -351,7 +335,7 @@ namespace IRTicker {
             //UITimerThreadProceed = false;  don't think we actually need to stop this running ever..
             if (client_IR.IsRunning) {
                 Debug.Print(DateTime.Now + " - IR_Disconnect sub: IR running, will stop");
-                stopSockets("IR");
+                stopSockets(new List<string> () { "IR", "IRUSD", "IRSGD" });
             }
         }
 
@@ -422,19 +406,22 @@ namespace IRTicker {
                 Debug.Print("Trying to reconnect to " + dExchange + " but there's no static data.  will not.");
                 return;
             }
-            switch (dExchange) { 
-                case "IR":  // this should never be called because the IR sockets should automatically recover
-                    //if (!client_IR.IsRunning) {
-                        Debug.Print("WebSocket_Reconnect: IR?? this shouldn't be called?  shouldn't it auto-reconnect?");
-                        if (client_IR.IsRunning) {
-                            Debug.Print(DateTime.Now + " - IR running, will stop");
-                            stopSockets("IR");  
-                        }
-                        stopUITimerThread();  // if it hasn't stopped by now, we force it.
+            switch (dExchange) {
+                case "IRUSD":
+                case "IRSGD":
+                case "IR":  
+                    // IR is always IR + SGD + USD
+                    List<string> dExchanges = new List<string>() { "IR", "IRUSD", "IRSGD" };
+                    Debug.Print("WebSocket_Reconnect: IR?? this shouldn't be called?  shouldn't it auto-reconnect?");
+                    if (client_IR.IsRunning) {
+                        Debug.Print(DateTime.Now + " - IR (+SGD, USD) running, will stop");
+                        stopSockets(dExchanges);  
+                    }
+                    stopUITimerThread();  // if it hasn't stopped by now, we force it.
 
-                        Reinit_sockets("IR");
-                        startSockets("IR", IRSocketsURL, true);  // the "true" here tells the sub to also subscribe to all channels as well
-                        DCEs["IR"].HeartBeat = DateTime.Now;
+                    foreach (string dExchange1 in dExchanges) Reinit_sockets(dExchange1);
+                    startSockets(dExchanges, IRSocketsURL, doSubscribe: true);  // the "true" here tells the sub to also subscribe to all channels as well
+                    foreach (string dExchange1 in dExchanges) DCEs[dExchange1].HeartBeat = DateTime.Now;
                     //}
                     break;
                 case "BTCM":
@@ -729,6 +716,8 @@ namespace IRTicker {
 
             switch (dExchange) {
                 case "IR":
+                case "IRUSD":
+                case "IRSGD":
                     /*if (wSocket_IR.IsAlive)*/ return true;
                    // return false;
                 case "BTCM":

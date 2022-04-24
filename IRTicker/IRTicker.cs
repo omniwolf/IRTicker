@@ -1446,6 +1446,8 @@ namespace IRTicker {
                         foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
                             switch (dExchange) {
                                 case "IR":
+                                case "IRUSD":
+                                case "IRSGD":
                                     ParseDCE_IR(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency, true);
                                     break;
                                 case "BTCM":
@@ -1453,14 +1455,18 @@ namespace IRTicker {
                                     break;
                             }
                         }
-                        DCEs[dExchange].socketsReset = false;
-                        // ok we need to reset the socket.
-                        Debug.Print(DateTime.Now + " - " + dExchange + " - REST data pulled, now restarting sockets from backgroundWorker");
-                        wSocketConnect.WebSocket_Reconnect(dExchange);
+
+                        // for the reset, let's just do the IR exchange.  they all hang off the same socket connection, so they should all fail at the same time.  I don't want it reconnecting 3 times
+                        if ((dExchange != "IRUSD") && (dExchange != "IRSGD")) {
+                            DCEs[dExchange].socketsReset = false;
+                            // ok we need to reset the socket.
+                            Debug.Print(DateTime.Now + " - " + dExchange + " - REST data pulled, now restarting sockets from backgroundWorker");
+                            wSocketConnect.WebSocket_Reconnect(dExchange);
+                        }
                     }
 
                     if (loopCount == 0) {
-                        if (!wSocketConnect.IsSocketAlive(dExchange)) {
+                        if (!wSocketConnect.IsSocketAlive(dExchange)) {  // isSocketAlive is always true for IR and it's brethren.. for better or worse.
                             Debug.Print(dExchange + " ded, reconnecting");
                             wSocketConnect.WebSocket_Reconnect(dExchange);
                         }
@@ -1633,9 +1639,9 @@ namespace IRTicker {
 
             // i guess we need to filter out the wrong pairs, also don't try and update labels that are -1 (-1 means they're a fake entry)
             if ((mSummary.LastPrice >= 0) &&
-                ((mSummary.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency) ||  // if it's the chosen currency, or it's IR and (SGD or USD) - we always show these now
-                ((dExchange == "IR") && (mSummary.SecondaryCurrencyCode == "USD")) ||
-                ((dExchange == "IR") && (mSummary.SecondaryCurrencyCode == "SGD")))) {
+                ((mSummary.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency)/* ||  // if it's the chosen currency, or it's IR and (SGD or USD) - we always show these now
+                ((dExchange == "IRUSD") && (mSummary.SecondaryCurrencyCode == "USD")) ||
+                ((dExchange == "IRSGD") && (mSummary.SecondaryCurrencyCode == "SGD"))*/)) {
 
                 // we have a legit pair we're about to update.  if the groupBox is grey, let's black it.
                 if (UIControls_Dict[dExchange].dExchange_GB.ForeColor != Color.Black) GroupBoxAndLabelColourActive(dExchange);
@@ -2728,12 +2734,13 @@ namespace IRTicker {
 
         private void IR_Reset_Button_Click(object sender, EventArgs e) {
             wSocketConnect.IR_Disconnect();
-            DCEs["IR"].CurrentDCEStatus = "Resetting...";
-            Debug.Print(DateTime.Now + " - IR reset button clicked");
-            APIDown(UIControls_Dict["IR"].dExchange_GB, "IR");
+            List<string> dExchanges = new List<string>() { "IR", "IRUSD", "IRSGD" };
+            foreach (string dExchange in dExchanges) DCEs["IR"].CurrentDCEStatus = "Resetting...";
+            Debug.Print(DateTime.Now + " - IR (+SGD, USD) reset button clicked");
+            foreach (string dExchange in dExchanges) APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);
             //DCEs["IR"].socketsReset = true;
-            Debug.Print("IR websocket connecting....");
-            wSocketConnect.WebSocket_Reconnect("IR");
+            Debug.Print("IR (+USD, SGD) websocket connecting....");
+            wSocketConnect.WebSocket_Reconnect("IR");  // using "IR" here - it resets the whole sockets and reconnects to all 3 currencies
         }
 
 
