@@ -24,6 +24,7 @@ namespace IRTicker {
         //private ManualResetEvent startSocket_exitEvent = new ManualResetEvent(false);
         private string IRSocketsURL = "wss://websockets.independentreserve.com";
         //private string IRSocketsURL = "ws://dev.pushservice.independentreserve.net";
+        List<string> IRdExchanges = new List<string>() { "IR", "IRUSD", "IRSGD" };
         private PrivateIR pIR;
 
         // constructor
@@ -37,7 +38,7 @@ namespace IRTicker {
             Debug.Print("IR (+SGD, USD) websocket connecting..");
 
             //Task.Factory.StartNew(() => {
-            startSockets(new List<string>() { "IR", "IRUSD", "IRSGD" }, IRSocketsURL);
+            startSockets(IRdExchanges, IRSocketsURL);
             //startSockets("IRSGD", IRSocketsURL);
             //startSockets("IRUSD", IRSocketsURL);
             // })
@@ -94,6 +95,7 @@ namespace IRTicker {
             }
         }
 
+        // if subscribe is false then we unsubscribe
         public void subscribe_unsubscribe_new(string dExchange, bool subscribe, string crypto = "none", string fiat = "none") {
             if (fiat == "none") fiat = DCEs[dExchange].CurrentSecondaryCurrency;
             Debug.Print("subscribe_unsubscribe! -- " + dExchange + " -- did we subscribe: " + subscribe.ToString() + ", pair: " + crypto + "-" + fiat);
@@ -115,31 +117,6 @@ namespace IRTicker {
                                 channel += "\"orderbook-" + crypto1.ToLower() /* + "-" + fiat.ToLower()*/ + "\", ";  // trying to subscribe to the crypto, not the pair...
                             }
                         }
-
-                        // Could I do better here?  Maybe.. possibly we don't always need to subscribe or unsubscribe from SGD and USD, the code may do it automatically.
-                        // but It would take me minutes to figure it out, and i'm tired.  new baby in a few days
-                        /*if (!channel.Contains("-usd\",")) {  // if we haven't inclruded USD, then include it.  we always need to subscribe or unsubscribe from it as it's a perm panel
-                            foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                                if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-USD")) {
-                                    string crypto1 = primaryCode;
-                                    if (crypto1 == "USDT") crypto1 = "UST";
-                                    //if (crypto1 == "USDC") crypto1 = "USC";
-                                    channel += "\"orderbook-" + crypto1.ToLower() + "-usd\", ";
-                                }
-                            }
-                        }
-
-                        if (!channel.Contains("-sgd\",")) {  // if we haven't inclruded SGD, then include it.  we always need to subscribe or unsubscribe from it as it's a perm panel
-                            foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                                if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-SGD")) {
-                                    string crypto1 = primaryCode;
-                                    if (crypto1 == "USDT") crypto1 = "UST";
-                                    //if (crypto1 == "USDC") crypto1 = "USC";
-                                    channel += "\"orderbook-" + crypto1.ToLower() + "-sgd\", ";
-                                }
-                            }
-                        }*/
-
                         channel += "]} ";
                     }
                     else {  // or just one pair
@@ -162,7 +139,7 @@ namespace IRTicker {
                     }
                     else {
                         Debug.Print(DateTime.Now + " - IR sockets down when trying to " + (subscribe ? "subscribe" : "unsubscribe"));
-                        DCEs["IR"].socketsReset = true;
+                        DCEs[dExchange].socketsReset = true;
                         break;
                     }
                     if (subscribe) {  // if subscribing then grab the order books too.
@@ -189,6 +166,40 @@ namespace IRTicker {
                     }
 
                     break;
+
+                case "IRUSD":
+                    if (subscribe) {  // if subscribing then grab the order books too.
+                        if (crypto == "none") {
+                            foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                                if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
+                                    GetOrderBook_IR(primaryCode, fiat);
+                                }
+                            }
+                        }
+                        else {
+                            GetOrderBook_IR(crypto, fiat);
+                        }
+                    }
+
+                    break;
+
+                case "IRSGD":
+                    if (subscribe) {  // if subscribing then grab the order books too.
+                        if (crypto == "none") {
+                            foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                                if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
+                                    GetOrderBook_IR(primaryCode, fiat);
+                                }
+                            }
+                        }
+                        else {
+                            GetOrderBook_IR(crypto, fiat);
+                        }
+                    }
+
+                    break;
+
+
 
                 case "BTCM":
                     Debug.Print("trying to subscribe to BTCM");
@@ -250,15 +261,14 @@ namespace IRTicker {
                 }*/
                 else {
                     Debug.Print(DateTime.Now + " - (IR (+SGD, USD) reconnection) - clearing OB sub dicts...");
-                    foreach (string dExchange in dExchanges) DCEs[dExchange].socketsAlive = false;
-                    foreach (string dExchange in dExchanges) DCEs[dExchange].CurrentDCEStatus = "Reconnected";
-
-                    foreach (string dExchange in dExchanges) Reinit_sockets(dExchange);
-                    Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
-                    /*foreach (string dExchange in dExchanges) {  // commenting this out to test subscribing just to the crypto, not the pair (which should subscribe to all secondard currencies?
+                    foreach (string dExchange in dExchanges) {
+                        DCEs[dExchange].socketsAlive = false;
+                        DCEs[dExchange].CurrentDCEStatus = "Reconnected";
+                        Reinit_sockets(dExchange);
+                        Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
                         subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: DCEs[dExchange].CurrentSecondaryCurrency);  // resubscriibe to all pairs
-                    }*/
-                    subscribe_unsubscribe_new("IR", subscribe: true, crypto: "none", fiat: "none");  // resubscriibe to all pairs
+                    }
+                    //subscribe_unsubscribe_new("IR", subscribe: true, crypto: "none", fiat: "none");  // resubscriibe to all pairs, only "IR" because 
                     return;  // if we're subscribing, we shouldn't need to start the client or anything..?
                 }
 
@@ -296,10 +306,10 @@ namespace IRTicker {
                 int loopCounter = 0;
                 do {
                     if (client_IR.IsRunning) {
-                        /*foreach (string dExchange in dExchanges) {  // commenting this out to test subscribing just to the crypto, not the pair (which should subscribe to all secondard currencies?
+                        foreach (string dExchange in dExchanges) {  // commenting this out to test subscribing just to the crypto, not the pair (which should subscribe to all secondard currencies?
                             subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: DCEs[dExchange].CurrentSecondaryCurrency);  // resubscriibe to all pairs
-                        }*/
-                        subscribe_unsubscribe_new("IR", subscribe: true, crypto: "none", fiat: "none");  // resubscriibe to all pairs
+                        }
+                        //subscribe_unsubscribe_new("IR", subscribe: true, crypto: "none", fiat: "none");  // resubscriibe to all pairs
 
 
                         keepLooping = false;
@@ -321,12 +331,15 @@ namespace IRTicker {
         private void updateUITimer() {
 
             while (UITimerThreadProceed) {
-                foreach (KeyValuePair<string, ConcurrentDictionary<int, Ticker_IR>> pair in DCEs["IR"].orderBuffer_IR) {
-                    if (DCEs["IR"].newOrders[pair.Key] > 0) {
-                        if (pIR != null) Task.Run(() => pIR.compileAccountOrderBookAsync(pair.Key));  // hopefully this will just run this method asynchronously
-                        //pollingThread.ReportProgress(20, pair.Key);  // this will tell the accounts panel to update it's OB view
-                        if ((DCEs["IR"].orderBuffer_IR[pair.Key].Count > 0) && DCEs["IR"].pulledSnapShot[pair.Key]) applyBufferToOB(pair.Key);
-                        DCEs["IR"].newOrders[pair.Key] = 0;
+                foreach (string dExchange in IRdExchanges) {
+                    foreach (KeyValuePair<string, ConcurrentDictionary<int, Ticker_IR>> pair in DCEs[dExchange].orderBuffer_IR) {
+                        if (DCEs[dExchange].newOrders[pair.Key] > 0) {
+                            if ((dExchange != "IRSGD") && (dExchange != "IRUSD") && (pIR != null))  // only do this for IR - the other two don't have an IRAccounts panel or anything
+                                Task.Run(() => pIR.compileAccountOrderBookAsync(pair.Key));  // hopefully this will just run this method asynchronously
+                                                                                                          //pollingThread.ReportProgress(20, pair.Key);  // this will tell the accounts panel to update it's OB view
+                            if ((DCEs[dExchange].orderBuffer_IR[pair.Key].Count > 0) && DCEs[dExchange].pulledSnapShot[pair.Key]) applyBufferToOB(pair.Key, dExchange);
+                            DCEs[dExchange].newOrders[pair.Key] = 0;
+                        }
                     }
                 }
 
@@ -339,7 +352,7 @@ namespace IRTicker {
             //UITimerThreadProceed = false;  don't think we actually need to stop this running ever..
             if (client_IR.IsRunning) {
                 Debug.Print(DateTime.Now + " - IR_Disconnect sub: IR running, will stop");
-                stopSockets(new List<string> () { "IR", "IRUSD", "IRSGD" });
+                stopSockets(IRdExchanges);
             }
         }
 
@@ -415,17 +428,16 @@ namespace IRTicker {
                 case "IRSGD":
                 case "IR":  
                     // IR is always IR + SGD + USD
-                    List<string> dExchanges = new List<string>() { "IR", "IRUSD", "IRSGD" };
                     Debug.Print("WebSocket_Reconnect: IR?? this shouldn't be called?  shouldn't it auto-reconnect?");
                     if (client_IR.IsRunning) {
                         Debug.Print(DateTime.Now + " - IR (+SGD, USD) running, will stop");
-                        stopSockets(dExchanges);  
+                        stopSockets(IRdExchanges);  
                     }
                     stopUITimerThread();  // if it hasn't stopped by now, we force it.
 
-                    foreach (string dExchange1 in dExchanges) Reinit_sockets(dExchange1);
-                    startSockets(dExchanges, IRSocketsURL, doSubscribe: true);  // the "true" here tells the sub to also subscribe to all channels as well
-                    foreach (string dExchange1 in dExchanges) DCEs[dExchange1].HeartBeat = DateTime.Now;
+                    foreach (string dExchange1 in IRdExchanges) Reinit_sockets(dExchange1);
+                    startSockets(IRdExchanges, IRSocketsURL, doSubscribe: true);  // the "true" here tells the sub to also subscribe to all channels as well
+                    foreach (string dExchange1 in IRdExchanges) DCEs[dExchange1].HeartBeat = DateTime.Now;
                     //}
                     break;
                 case "BTCM":
@@ -439,7 +451,7 @@ namespace IRTicker {
             Debug.Print(dExchange + " - re-subscribing to all pairs...");
 
             // for a reconnect, the IR code will automatically subscribe once the socket is active (see the loop/sleep shitty code in startSockets).  this way we only subscribe once the socket is up, and don't have to rely on the slow doWork loop to detect an issue
-            if (dExchange != "IR") subscribe_unsubscribe_new(dExchange, true);  // subscribe to all 
+            if ((dExchange != "IR") && (dExchange != "IRUSD") && (dExchange != "IRSGD")) subscribe_unsubscribe_new(dExchange, true);  // subscribe to all
         }
 
         // only actually called for reconnections
@@ -518,7 +530,7 @@ namespace IRTicker {
             //    Debug.Print("changed GUID: " + message);  //message.Substring(message.IndexOf("OrderGuid\":\"")));
             //}
 
-            DCEs["IR"].socketsAlive = true;
+            foreach (string dExchange in IRdExchanges) DCEs[dExchange].socketsAlive = true;
             if (message.Contains("\"Event\":\"Subscriptions\"")) {
                 // ignore the subscriptions event.  it breaks parsing too :/
                 Debug.Print("IGNORING - " + message);
@@ -541,8 +553,8 @@ namespace IRTicker {
                 Debug.Print(DateTime.Now + " IR - official heartbeat");
                 return;
             }
-            DCEs["IR"].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
-            DCEs["IR"].CurrentDCEStatus = "Online";
+            foreach (string dExchange in IRdExchanges) DCEs[dExchange].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
+            foreach (string dExchange in IRdExchanges) DCEs[dExchange].CurrentDCEStatus = "Online";
 
 
             Ticker_IR tickerStream = new Ticker_IR();  // don't think we care about the pair at this stage... let's see.
@@ -586,85 +598,64 @@ namespace IRTicker {
             //string channel = tickerStream.Channel.ToUpper();
             //Debug.Print("---- Nonce received: " + tickerStream.Nonce);
 
-            string crypto = tickerStream.Event.Replace("orderbook-", "").ToUpper();
+            string crypto = tickerStream.Channel.Replace("orderbook-", "").ToUpper();
 
             // here we have the pricing for all 4 IR currencies, so figure out which we care about and throw em into buffers
 
-            // start with USD
-            string pair = crypto + "-USD";
-            if (!DCEs["IRUSD"].pulledSnapShot[pair]) {  // if we haven't even got the OB yet
-                DCEs["IRUSD"].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;  // add this event to the buffer
-                return;
+            foreach (string dExchange in IRdExchanges) {
+                if (!DCEs[dExchange].PrimaryCurrencyList.Contains(crypto)) return;  // only consider cryptos this exchange supports
+                string pair = crypto + "-" + DCEs[dExchange].CurrentSecondaryCurrency;
+                if (DCEs[dExchange].pulledSnapShot[pair]) {  // if we haven't even got the OB yet
+                    DCEs[dExchange].newOrders[pair]++;
+                }
+                DCEs[dExchange].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;  // add this event to the buffer
             }
-            else {
-
-            }
-
-            // next, SGD
-            pair = crypto + "-SGD";
-            if (!DCEs["IRSGD"].pulledSnapShot[pair]) {  // if we haven't even got the OB yet
-                DCEs["IRSGD"].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;  // add this event to the buffer
-                return;
-            }
-
-            // now we figure out what we need for the main IR groupBox
-            pair = crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency;
-            if (!DCEs["IR"].pulledSnapShot[pair]) {  // if we haven't even got the OB yet
-                DCEs["IR"].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;  // add this event to the buffer
-                //Debug.Print(" ! just added " + tickerStream.Nonce + " to the buf");
-                return;  // bail.
-            }
-
-            //Debug.Print(DateTime.Now + " - (" + pair + ") adding to buffer.  current nonce: " + DCEs["IR"].channelNonce[channel] + ", nonce we just received: " + tickerStream.Nonce);
-            DCEs["IR"].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;
-            DCEs["IR"].newOrders[pair]++;
-
         }
 
         // this sub does some nonce maintenance and then spins through the orderbookBuffer, applying sequential buffered events
-        private void applyBufferToOB(string pair) {
+        private void applyBufferToOB(string pair, string dExchange) {
 
             string channel = "ORDERBOOK-" + pair;
 
             // if we don't got a nonce yet
-            if (DCEs["IR"].channelNonce[channel] == 0) {
+            if (DCEs[dExchange].channelNonce[channel] == 0) {
                 // orderBuffer_IR must have at least one order in it, so we should be able to safely request the minimum key.
-                DCEs["IR"].channelNonce[channel] = DCEs["IR"].orderBuffer_IR[pair].Keys.Min() - 1;  // find the smallest nonce in the buffer, and set the channel nonce to one below that
+                DCEs[dExchange].channelNonce[channel] = DCEs[dExchange].orderBuffer_IR[pair].Keys.Min() - 1;  // find the smallest nonce in the buffer, and set the channel nonce to one below that
                 //Debug.Print("just set the Nonce to 1 before the first we got, it is: " + DCEs["IR"].channelNonce[channel]);
             }
 
-            while (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(DCEs["IR"].channelNonce[channel] + 1)) {  // if the buffer has the next nonce...
-                DCEs["IR"].channelNonce[channel]++;  // cool, let's advance the nonce
-                if (DCEs["IR"].orderBuffer_IR[pair].TryRemove(DCEs["IR"].channelNonce[channel], out Ticker_IR ticker)) {  // pop the ticker object,
+            while (DCEs[dExchange].orderBuffer_IR[pair].ContainsKey(DCEs[dExchange].channelNonce[channel] + 1)) {  // if the buffer has the next nonce...
+                DCEs[dExchange].channelNonce[channel]++;  // cool, let's advance the nonce
+                if (DCEs[dExchange].orderBuffer_IR[pair].TryRemove(DCEs[dExchange].channelNonce[channel], out Ticker_IR ticker)) {  // pop the ticker object,
                     //if (pair == "XBT-AUD") Debug.Print(DateTime.Now + " - (" + pair + ") parsing nonce " + ticker.Nonce + " from buffer, there are " + (DCEs["IR"].orderBuffer_IR[pair].Count) + " other buffered events in there");
-                    parseTicker_IR(ticker);  // and parse it
+                    parseTicker_IR(ticker, dExchange);  // and parse it
                 }
                 else {
                     Debug.Print(DateTime.Now + " - can't pop ticker object from buffer?? channel: " + channel);
-                    DCEs["IR"].OBResetFlag[channel] = true;  // let's start again.
-                    DCEs["IR"].channelNonce[channel]--;  // make sure it fails
+                    DCEs[dExchange].OBResetFlag[channel] = true;  // let's start again.
+                    DCEs[dExchange].channelNonce[channel]--;  // make sure it fails
                     return;
                 }
             }
-            if (DCEs["IR"].orderBuffer_IR[pair].Count > 0) {
-                /*if (pair == "XBT-AUD")*/ Debug.Print("(" + pair + ") ooo nonce - " + DCEs["IR"].orderBuffer_IR[pair].Count + " if only 1, it is: " + (DCEs["IR"].orderBuffer_IR[pair].Count == 1 ? DCEs["IR"].orderBuffer_IR[pair].Keys.FirstOrDefault().ToString() : "") + " and the current nonce is " + DCEs["IR"].channelNonce[channel]);
-                pollingThread.ReportProgress(27, new Tuple<bool, string>(true, Utilities.SplitPair(pair).Item1));  // update pair text colour to gray
+            if (DCEs[dExchange].orderBuffer_IR[pair].Count > 0) {
+                /*if (pair == "XBT-AUD")*/ Debug.Print("(" + pair + ") ooo nonce - " + DCEs[dExchange].orderBuffer_IR[pair].Count + " if only 1, it is: " + (DCEs[dExchange].orderBuffer_IR[pair].Count == 1 ? DCEs[dExchange].orderBuffer_IR[pair].Keys.FirstOrDefault().ToString() : "") + " and the current nonce is " + DCEs[dExchange].channelNonce[channel]);
+                pollingThread.ReportProgress(27, new Tuple<bool, string, string>(true, Utilities.SplitPair(pair).Item1, dExchange));  // update pair text colour to gray - true = nonce issues
             }
 
             // we should check how full our buffer is. If there's more than x items (??) then it's probably too full.
-            if (((DCEs["IR"].orderBuffer_IR[pair].Count > 5) && DCEs["IR"].pulledSnapShot[pair]) || (DCEs["IR"].OBResetFlag[channel])) {
-                Debug.Print("NONCE - too many buffered nonces, can't recover " + channel + ", or the OBResetFlag is true, time to dump and restart");
+            if (((DCEs[dExchange].orderBuffer_IR[pair].Count > 5) && DCEs[dExchange].pulledSnapShot[pair]) || (DCEs[dExchange].OBResetFlag[channel])) {
+                Debug.Print("NONCE - too many buffered nonces, can't recover " + channel + ", or the OBResetFlag is true, time to dump and restart. dExchange: " + dExchange);
 
                 if (Properties.Settings.Default.FlashForm) pollingThread.ReportProgress(26);  // flash the window if the setting is enabled
 
                 // now subscribe back to the channel
-                WebSocket_Resubscribe("IR", Utilities.SplitPair(pair).Item1);
+                WebSocket_Resubscribe("IR", Utilities.SplitPair(pair).Item1);  // in all cases, resubscribe to IR as it's the one that holds the websockets connection
             }
         }
         
 
         // event is clean, correct nonce etc, lets parse it.
-        public void parseTicker_IR(Ticker_IR tickerStream) { 
+        public void parseTicker_IR(Ticker_IR tickerStream, string dExchange) { 
 
             if (!tickerStream.Data.OrderType.StartsWith("Limit")) {
                 Debug.Print(DateTime.Now + " - (" + tickerStream.Channel + ") ignoring a " + tickerStream.Data.OrderType + " order.  event: " + tickerStream.Event + ".  guid: " + tickerStream.Data.OrderGuid);
@@ -690,11 +681,11 @@ namespace IRTicker {
                     // if this OrderBookEvent_IR function returns a legit MarketSummary obj, it means the event we just received made changes to the spread.  let's update the UI.
                     // if it returns null, then there was no spread change.
                     // this method also updates the OBs and cryptoPairs obj (cryptoPairs only if there was a spread change)
-                    DCE.MarketSummary mSummary = DCEs["IR"].OrderBookEvent_IR(tickerStream);
+                    DCE.MarketSummary mSummary = DCEs[dExchange].OrderBookEvent_IR(tickerStream);
                     if (mSummary != null) {
                         //Debug.Print("spread changing event: " + message);
                         if (mSummary.spread < 0) {
-                            Debug.Print(DateTime.Now + " IR spread (" + tickerStream.Data.Pair + ") is " + mSummary.spread + " :(  bid: " + mSummary.CurrentHighestBidPrice + " and offer: " + mSummary.CurrentLowestOfferPrice);
+                            Debug.Print(DateTime.Now + " " + dExchange + " spread (" + tickerStream.Channel + " / " + mSummary.pair + ") is " + mSummary.spread + " :(  bid: " + mSummary.CurrentHighestBidPrice + " and offer: " + mSummary.CurrentLowestOfferPrice);
                         }
                         if ((DCEs["IR"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) ||
                                 (mSummary.SecondaryCurrencyCode == "USD") ||
@@ -702,7 +693,7 @@ namespace IRTicker {
                             if (pollingThread.IsBusy)
                                 pollingThread.ReportProgress(21, mSummary);  // do update_pairs thing
                         }
-                        else if (Properties.Settings.Default.ShowOB && tickerStream.Data.Pair.ToUpper() == "XBT-AUD") {  // "else if" because we call the "25" report progress from within the "21" one, don't want to call it twice if we can help it.
+                        else if (Properties.Settings.Default.ShowOB && mSummary.pair.ToUpper() == "XBT-AUD") {  // "else if" because we call the "25" report progress from within the "21" one, don't want to call it twice if we can help it.
                             if (pollingThread.IsBusy)
                                 pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
                         }

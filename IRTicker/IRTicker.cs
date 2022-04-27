@@ -1040,7 +1040,7 @@ namespace IRTicker {
                 oBook.CreatedTimestampUtc = timeTemp.UtcDateTime;
 
                 foreach (List<decimal> ask in orderBook_BTCM.asks) {
-                    oBook.SellOrders.Add(new DCE.Order("LimitSell", ask[0], ask[1], ""));
+                    oBook.SellOrders.Add(new DCE.Order("LimitSell",ask[0], ask[1], ""));
                 }
 
                 foreach (List<decimal> bid in orderBook_BTCM.bids) {
@@ -1087,7 +1087,7 @@ namespace IRTicker {
 
 
                 ////// IR ///////
-                if (!DCEs["IR"].NetworkAvailable) DCEs["IR"].HasStaticData = false;  // if we have a network outage, let's start again.
+                if (!DCEs["IR"].NetworkAvailable) DCEs["IR"].HasStaticData = false;  // if we have a network outage, let's start again.  jesus I contradict this the very next line
                 if (!DCEs["IR"].HasStaticData) {  // only pull the currencies once per session as these are essentially static
                     Tuple<bool, string> primaryCurrencyCodesTpl = Utilities.Get(DCEs["IR"].BaseURL + "/Public/GetValidPrimaryCurrencyCodes");
                     if (!primaryCurrencyCodesTpl.Item1) {
@@ -1263,11 +1263,11 @@ namespace IRTicker {
 
 
                     // let's check the IR spread.  Cycle through all the "_Spread" labels
-
+                    // go through them one at a time, if one is good (ie returns false), then check the next one.  Only want to reset the sockets once.
                     if (Properties.Settings.Default.NegativeSpread) {
-                        CheckNegativeSpread("IR");
-                        CheckNegativeSpread("IRUSD");
-                        CheckNegativeSpread("IRSGD");
+                        if (!CheckNegativeSpread("IR"))
+                            if (!CheckNegativeSpread("IRUSD"))
+                                CheckNegativeSpread("IRSGD");
                     }
                 }
 
@@ -1449,7 +1449,7 @@ namespace IRTicker {
                                 case "IR":
                                 case "IRUSD":
                                 case "IRSGD":
-                                    ParseDCE_IR(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency, true);
+                                    ParseDCE_IR(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency, updateLabels: true);
                                     break;
                                 case "BTCM":
                                     ParseDCE_BTCM(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency);
@@ -1525,7 +1525,7 @@ namespace IRTicker {
             } while(true);  // polling is lyfe
         }
 
-        private void CheckNegativeSpread(string dExchange) {
+        private bool CheckNegativeSpread(string dExchange) {
             Dictionary<string, DCE.MarketSummary> mSummaries = DCEs[dExchange].GetCryptoPairs();
             foreach (var mSummary in mSummaries) {
                 if (mSummary.Value.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency) {
@@ -1535,6 +1535,7 @@ namespace IRTicker {
                             // do something..
                             pollingThread.ReportProgress(29, new Tuple<string, string>(dExchange, mSummary.Value.pair));  // update UI to show another spread fail
                             wSocketConnect.WebSocket_Resubscribe(dExchange, mSummary.Value.PrimaryCurrencyCode);
+                            return true;
                         }
                         else {
                             // spread was positive last time, set the signal and wait for the next rotation
@@ -1548,6 +1549,7 @@ namespace IRTicker {
                     }
                 }
             }
+            return false;  // all g, no need to take action
         }
 
         private void UpdateLabels(string dExchange) {
@@ -1713,11 +1715,12 @@ namespace IRTicker {
 
         // this works out what the average price of a market order on the OB would be for IR.  We needed to separate this logic from the other exchanges 
         // because IR's order book is represented very differently (and used constantly)
+        // IRSGD and IRSGD has no average price controls, so we can hard code IR here.
         private string DetermineAveragePrice_IR(string crypto, string fiat, string currency) {
             bool fiatSelected = currency.ToLower() == "fiat";  // if the crypto value is the same as the fiat one, it means that the selected crypto was fiat (ie they chose AUD from the drop avg price dropdown)
             crypto = (crypto == "BTC" ? "XBT" : crypto.ToUpper());
-            fiat = fiat.ToUpper();
-            string pair = crypto + "-" + fiat;
+            fiat = fiat.ToLower();
+            string pair = (crypto + "-" + fiat).ToUpper();
 
             if (!DCEs["IR"].IR_OBs.ContainsKey(pair)) return "No order book for the " + pair + " pair";
             string orderSide = "Buy";
@@ -1747,22 +1750,22 @@ namespace IRTicker {
                     foreach (KeyValuePair<string, DCE.OrderBook_IR> subOrder in pricePoint.Value) {
                         orderCount++;
                         Debug.Print("--- looking at order " + orderCount);
-                        coinCounter += subOrder.Value.Volume * (fiatSelected ? subOrder.Value.Price : 1);  // if they have selected a fiat currency, we need to multiply by the price
+                        coinCounter += subOrder.Value.Volume * (fiatSelected ? subOrder.Value.Price[fiat] : 1);  // if they have selected a fiat currency, we need to multiply by the price
                         Debug.Print("--- coinCounter is " + coinCounter + " and has just been increased by " + subOrder.Value.Volume + " (coins: " + coins + ")");
                         if (coinCounter > coins) {
-                            decimal usedCoinsInThisOrder = (subOrder.Value.Volume * (fiatSelected ? subOrder.Value.Price : 1)) - (coinCounter - coins);  // this is how many coins in this order would be required
+                            decimal usedCoinsInThisOrder = (subOrder.Value.Volume * (fiatSelected ? subOrder.Value.Price[fiat] : 1)) - (coinCounter - coins);  // this is how many coins in this order would be required
                             Debug.Print("--- we're in the final tally up if, we will use " + usedCoinsInThisOrder + "coins from this order");
-                            totalCost += usedCoinsInThisOrder * (fiatSelected ? (1 / subOrder.Value.Price) : subOrder.Value.Price);
-                            Debug.Print("--- total cost is finally " + totalCost + " and the final increase was " + usedCoinsInThisOrder / (fiatSelected ? subOrder.Value.Price : 1));
-                            weightedAverage += (usedCoinsInThisOrder / coins) * subOrder.Value.Price;
-                            string tTip = buildAvgPriceTooltip(orderSide, fiatSelected, subOrder.Value.Price, orderCount, totalCost, crypto);
+                            totalCost += usedCoinsInThisOrder * (fiatSelected ? (1 / subOrder.Value.Price[fiat]) : subOrder.Value.Price[fiat]);
+                            Debug.Print("--- total cost is finally " + totalCost + " and the final increase was " + usedCoinsInThisOrder / (fiatSelected ? subOrder.Value.Price[fiat] : 1));
+                            weightedAverage += (usedCoinsInThisOrder / coins) * subOrder.Value.Price[fiat];
+                            string tTip = buildAvgPriceTooltip(orderSide, fiatSelected, subOrder.Value.Price[fiat], orderCount, totalCost, crypto);
                             IRTickerTT_avgPrice.SetToolTip(UIControls_Dict["IR"].AvgPrice, tTip);
                             return "Average price for " + crypto + ": " + (fiatSelected ? "$" : "") + Utilities.FormatValue(weightedAverage);  // we have finished filling the hypothetical order
                         }
                         else {  // this whole sub order is required, factor it in and then loop
-                            weightedAverage += ((subOrder.Value.Volume * (fiatSelected ? subOrder.Value.Price : 1)) / coins) * subOrder.Value.Price;
-                            totalCost += subOrder.Value.Volume * (fiatSelected ? 1 : subOrder.Value.Price);  // if fiat is selected, totalCost var represents total coins
-                            Debug.Print("--- totalCost is now " + totalCost + " and was increased by " + subOrder.Value.Volume * (fiatSelected ? 1 : subOrder.Value.Price));
+                            weightedAverage += ((subOrder.Value.Volume * (fiatSelected ? subOrder.Value.Price[fiat] : 1)) / coins) * subOrder.Value.Price[fiat];
+                            totalCost += subOrder.Value.Volume * (fiatSelected ? 1 : subOrder.Value.Price[fiat]);  // if fiat is selected, totalCost var represents total coins
+                            Debug.Print("--- totalCost is now " + totalCost + " and was increased by " + subOrder.Value.Volume * (fiatSelected ? 1 : subOrder.Value.Price[fiat]));
                         }
                     }
                 }
@@ -1984,16 +1987,16 @@ namespace IRTicker {
                 return;
             }
             if (reportType == 27) {  // 27 is we need to update the price colour because of nonce
-                Tuple<bool, string> nonceIssue = (Tuple<bool, string>)e.UserState;  // bool is for if an issue exists, the string is the pair it exists (or not) on
-                if (UIControls_Dict["IR"].Label_Dict.ContainsKey(nonceIssue.Item2)) {
-                    System.Windows.Forms.Label tempPrice = UIControls_Dict["IR"].Label_Dict[nonceIssue.Item2 + "_Price"];
+                Tuple<bool, string, string> nonceIssue = (Tuple<bool, string, string>)e.UserState;  // bool is for if an issue exists, the string is the pair it exists (or not) on
+                if (UIControls_Dict[nonceIssue.Item3].Label_Dict.ContainsKey(nonceIssue.Item2)) {
+                    System.Windows.Forms.Label tempPrice = UIControls_Dict[nonceIssue.Item3].Label_Dict[nonceIssue.Item2 + "_Price"];
                     if (nonceIssue.Item1)
                     {  // we have a nonce issue, set to grey
                         tempPrice.ForeColor = Color.Gray;
                     }
                     else
                     {  // set back to whatever colour it should be
-                        tempPrice.ForeColor = Utilities.PriceColour(DCEs["IR"].GetPriceList(nonceIssue.Item2));
+                        tempPrice.ForeColor = Utilities.PriceColour(DCEs[nonceIssue.Item3].GetPriceList(nonceIssue.Item2));
                     }
                 }
                 return;
@@ -2385,6 +2388,12 @@ namespace IRTicker {
                 case "IR":
                     fColour = Color.RoyalBlue;
                     break;
+                case "IRUSD":
+                    fColour = Color.RoyalBlue;
+                    break;
+                case "IRSGD":
+                    fColour = Color.RoyalBlue;
+                    break;
                 case "BTCM":
                     fColour = Color.OliveDrab;
                     break;
@@ -2432,7 +2441,7 @@ namespace IRTicker {
             switch (dExchange) {
                 case "IR":
                     foreach (string crypto in DCEs[dExchange].PrimaryCurrencyList) {
-                        ParseDCE_IR(crypto, DCEs[dExchange].CurrentSecondaryCurrency, false);
+                        ParseDCE_IR(crypto, DCEs[dExchange].CurrentSecondaryCurrency, updateLabels: false);
                     }
                     break;
             }
@@ -2736,10 +2745,11 @@ namespace IRTicker {
         private void IR_Reset_Button_Click(object sender, EventArgs e) {
             wSocketConnect.IR_Disconnect();
             List<string> dExchanges = new List<string>() { "IR", "IRUSD", "IRSGD" };
-            foreach (string dExchange in dExchanges) DCEs["IR"].CurrentDCEStatus = "Resetting...";
+            foreach (string dExchange in dExchanges) {
+                DCEs[dExchange].CurrentDCEStatus = "Resetting...";
+                APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);
+            }
             Debug.Print(DateTime.Now + " - IR (+SGD, USD) reset button clicked");
-            foreach (string dExchange in dExchanges) APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);
-            //DCEs["IR"].socketsReset = true;
             Debug.Print("IR (+USD, SGD) websocket connecting....");
             wSocketConnect.WebSocket_Reconnect("IR");  // using "IR" here - it resets the whole sockets and reconnects to all 3 currencies
         }

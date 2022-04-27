@@ -294,9 +294,12 @@ namespace IRTicker {
 
             OrderBook_IR order = ticker.Data;
             string eventStr = ticker.Event;
-            string crypto = eventStr.Replace("orderbook-", "").ToUpper();
+            string crypto = ticker.Channel.Replace("orderbook-", "").ToUpper();
             string pair = (crypto + "-" + CurrentSecondaryCurrency).ToUpper();
-            decimal price = order.Price[CurrentSecondaryCurrency];
+
+            decimal price;
+            if (null == order.Price) price = -1;  // will be this for cancel orders
+            else price = order.Price[CurrentSecondaryCurrency.ToLower()];
 
             // if we don't have the snapshot, then we buffer
             if (!pulledSnapShot[pair]) {
@@ -342,8 +345,8 @@ namespace IRTicker {
                 if (eventStr == "NewOrder") {
                     ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
                     tempCD.TryAdd(order.OrderGuid, order);
-                    OB_IR.TryAdd(order.Price[CurrentSecondaryCurrency], tempCD);
-                    Order_OB_IR[order.OrderGuid] = order.Price[CurrentSecondaryCurrency];
+                    OB_IR.TryAdd(order.Price[CurrentSecondaryCurrency.ToLower()], tempCD);
+                    Order_OB_IR[order.OrderGuid] = order.Price[CurrentSecondaryCurrency.ToLower()];
                 }
                 return null;  // don't care about the rest.  Even though this is the first order in the book so it MUST affect the spread, it's highly possible that there is no other side of the spread, so we ret
             }
@@ -754,19 +757,19 @@ namespace IRTicker {
             // buy orders first.  
             foreach (Order order in orderBooks[pair].BuyOrders) {
                 //OrderBookEvent_IR("NewOrder", new DCE.OrderBook_IR(order.Guid, crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency, order.Price, "LimitBid", order.Volume));
-                if (bidOB.ContainsKey(order.Price[pairTup.Item2])) {  // this price already has order(s)
-                    if (!bidOB[order.Price[pairTup.Item2]].ContainsKey(order.Guid)) {  // it's possible that the dictionary already has this order because we're starting websockets before we pull the REST OB
-                        bidOB[order.Price[pairTup.Item2]].TryAdd(order.Guid, new OrderBook_IR(order.Guid, order.Price, "LimitBid", order.Volume));
+                if (bidOB.ContainsKey(order.Price)) {  // this price already has order(s)
+                    if (!bidOB[order.Price].ContainsKey(order.Guid)) {  // it's possible that the dictionary already has this order because we're starting websockets before we pull the REST OB
+                        bidOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, new Dictionary<string, decimal>() { { pairTup.Item2, order.Price } }, "LimitBid", order.Volume));
                     }
                     // what?? why not?  i have commented the next line out here (and in the sell section too) because this doesn't seem right??
                     //else continue;  // we don't want to try and add this guid to the bidGuid OB, so move on
                 }
                 else {  // new price, create the dictionary
                     ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
-                    tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, order.Price, "LimitBid", order.Volume));
-                    bidOB.TryAdd(order.Price[pairTup.Item2], tempCD);
+                    tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, new Dictionary<string, decimal>() { { pairTup.Item2, order.Price } }, "LimitBid", order.Volume));
+                    bidOB.TryAdd(order.Price, tempCD);
                 }
-                bidGuidOB[order.Guid] = order.Price[pairTup.Item2];
+                bidGuidOB[order.Guid] = order.Price;
                 /*if (!bidGuidOB.TryAdd(order.Guid, order.Price)) {
                     Debug.Print("REST population of bid Guid OB, we're adding something that's already there? - " + order.Price);
                 }*/
@@ -775,18 +778,18 @@ namespace IRTicker {
 
             // now sell orders
             foreach (Order order in orderBooks[pair].SellOrders) {
-                if (offerOB.ContainsKey(order.Price[pairTup.Item2])) {
-                    if (!offerOB[order.Price[pairTup.Item2]].ContainsKey(order.Guid)) {
-                        offerOB[order.Price[pairTup.Item2]].TryAdd(order.Guid, new OrderBook_IR(order.Guid, order.Price, "LimitOffer", order.Volume));
+                if (offerOB.ContainsKey(order.Price)) {
+                    if (!offerOB[order.Price].ContainsKey(order.Guid)) {
+                        offerOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, new Dictionary<string, decimal>() { { pairTup.Item2, order.Price } }, "LimitOffer", order.Volume));
                     }
                     //else continue;
                 }
                 else {
                     ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
-                    tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, order.Price, "LimitOffer", order.Volume));
-                    offerOB.TryAdd(order.Price[pairTup.Item2], tempCD);
+                    tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, new Dictionary<string, decimal>() { { pairTup.Item2, order.Price } }, "LimitOffer", order.Volume));
+                    offerOB.TryAdd(order.Price, tempCD);
                 }
-                offerGuidOB[order.Guid] = order.Price[pairTup.Item2];
+                offerGuidOB[order.Guid] = order.Price;
                 /*if (!offerGuidOB.TryAdd(order.Guid, order.Price)) {
                     Debug.Print("REST population of offer Guid OB, we're adding something that's already there? - " + order.Price);
                 }*/
@@ -1079,7 +1082,7 @@ namespace IRTicker {
 
         public class Order {
 
-            public Order(string _orderType, Dictionary<string, decimal> _price, decimal _volume, string _guid) {
+            public Order(string _orderType, decimal _price, decimal _volume, string _guid) {
                 OrderType = _orderType;  // this isn't actually sent to us by the API, have to assume by which List<Order> the order comes from
                 Price = _price;
                 Volume = _volume;
@@ -1087,7 +1090,7 @@ namespace IRTicker {
             }
 
             public string OrderType { get; set; }
-            public Dictionary<string, decimal> Price { get; set; }
+            public decimal Price { get; set; }
             public decimal Volume { get; set; }
             public string Guid { get; set; }
         }   
