@@ -19,6 +19,7 @@ using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 
 // todo:
+// with making SGD and USD work - I think we should subscribe to the crypto (not the pair), so we get all prices in one event and save on network stuff.  need to figure out how this would look.
 // blank out IR Account balance values when changing the API key (eg going from an AU entity to SG entity, if the AU has crypto the SG doesn't support it stays on the screen)
 // allow for IROTC-SG to store slush/loans sepaaretly to IROTC, so we can report to slack the balances at the end of the week
 

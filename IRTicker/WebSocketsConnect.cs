@@ -112,7 +112,7 @@ namespace IRTicker {
                                 string crypto1 = primaryCode;
                                 if (crypto1 == "USDT") crypto1 = "UST";
                                 //if (crypto1 == "USDC") crypto1 = "USC";
-                                channel += "\"orderbook-" + crypto1.ToLower() + "-" + fiat.ToLower() + "\", ";
+                                channel += "\"orderbook-" + crypto1.ToLower() /* + "-" + fiat.ToLower()*/ + "\", ";  // trying to subscribe to the crypto, not the pair...
                             }
                         }
 
@@ -255,9 +255,11 @@ namespace IRTicker {
 
                     foreach (string dExchange in dExchanges) Reinit_sockets(dExchange);
                     Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
-                    foreach (string dExchange in dExchanges) {
+                    /*foreach (string dExchange in dExchanges) {  // commenting this out to test subscribing just to the crypto, not the pair (which should subscribe to all secondard currencies?
                         subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: DCEs[dExchange].CurrentSecondaryCurrency);  // resubscriibe to all pairs
-                    }
+                    }*/
+                    subscribe_unsubscribe_new("IR", subscribe: true, crypto: "none", fiat: "none");  // resubscriibe to all pairs
+                    return;  // if we're subscribing, we shouldn't need to start the client or anything..?
                 }
 
             });
@@ -294,9 +296,11 @@ namespace IRTicker {
                 int loopCounter = 0;
                 do {
                     if (client_IR.IsRunning) {
-                        foreach (string dExchange in dExchanges) {
+                        /*foreach (string dExchange in dExchanges) {  // commenting this out to test subscribing just to the crypto, not the pair (which should subscribe to all secondard currencies?
                             subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: DCEs[dExchange].CurrentSecondaryCurrency);  // resubscriibe to all pairs
-                        }
+                        }*/
+                        subscribe_unsubscribe_new("IR", subscribe: true, crypto: "none", fiat: "none");  // resubscriibe to all pairs
+
 
                         keepLooping = false;
                     }
@@ -467,21 +471,44 @@ namespace IRTicker {
         }
 
         /* Sample socket data:
-        {
-        "Event":"Trade",
-        "Channel":"ticker-xbt-aud",
-        "Nonce":1,
-        "Data":{
-            "TradeGuid":"c5bde544-d8ae-4e38-9e90-405a3f93b6d6",
-            "TradeDate":"2009-01-03T18:15:05.9321664+00:00",
-            "Volume":50.0,
-            "Price":10270.0,
-            "Pair":"xbt-aud",
-            "BidGuid":"ebbeca4b-7148-4230-ad8f-833a3ccf35c2",
-            "OfferGuid":"ad5ece89-083b-49fc-8bc1-bdb7482a9b9a",
-            "Side":"Buy"
-                }
-        }*/
+            {
+                "Channel":"orderbook-eth",
+                "Nonce":28,
+                "Data":{
+                    "OrderType":"LimitBid",
+                    "OrderGuid":"dbe7b832-b9b7-4eac-84ce-9f49c2a93b87",
+                    "Price":{  // if you subscribe to a pair (orderbook-xbt-aud) then the price comes through asa decimal, not an array as shown here
+                        "aud":2500,
+                        "usd":1816.5,
+                        "nzd":2587.5,
+                        "sgd":2453
+                    },
+                    "Volume":1
+                },
+                "Event":"NewOrder"
+            }
+
+            {
+                "Channel":"orderbook-eth",
+                "Nonce":30,
+                "Data":{
+                    "OrderType":"LimitBid",
+                    "OrderGuid":"e64fb6e2-a9f8-4f52-95e7-5a3c7a9f8f53",
+                    "Volume":0.09646808
+                },
+                "Event":"OrderChanged"
+            }
+
+            {
+                "Channel":"orderbook-eth",
+                "Nonce":29,
+                "Data":{
+                    "OrderType":"LimitBid",
+                    "OrderGuid":"dbe7b832-b9b7-4eac-84ce-9f49c2a93b87"
+                },
+                "Event":"OrderCanceled"
+            }
+        */
         private void MessageRX_IR(string message) {
             if (message == null) return;
             //Debug.Print("IR MSG ---- " + message);
@@ -518,13 +545,19 @@ namespace IRTicker {
             DCEs["IR"].CurrentDCEStatus = "Online";
 
 
-            Ticker_IR tickerStream = new Ticker_IR();
+            Ticker_IR tickerStream = new Ticker_IR();  // don't think we care about the pair at this stage... let's see.
             tickerStream = JsonConvert.DeserializeObject<Ticker_IR>(message);
+
+            /*string eventStr = tickerStream.Event;
+            string crypto = eventStr.Replace("orderbook-", "");
+            string pair = crypto + "-" + CurrentSecondaryCurrency;
+
+
             if (tickerStream.Data.Pair.ToUpper().Contains("UST")) tickerStream.Data.Pair = tickerStream.Data.Pair.Replace(tickerStream.Data.Pair.Substring(0, 3), "USDT");
             //if (tickerStream.Data.Pair.ToUpper().Contains("USC")) tickerStream.Data.Pair = tickerStream.Data.Pair.Replace(tickerStream.Data.Pair.Substring(0, 3), "USDC");
             if (tickerStream.Channel.ToUpper().Contains("-UST-")) tickerStream.Channel = tickerStream.Channel.Replace(tickerStream.Channel.Substring(10, 3), "USDT");
             //if (tickerStream.Channel.ToUpper().Contains("-USC-")) tickerStream.Channel = tickerStream.Channel.Replace(tickerStream.Channel.Substring(10, 3), "USDC");
-
+            */
             // still trying to get to the bottom of orders that should be deleted that aren't
             /*if (tickerStream.Data.Pair == "xbt-aud") {
                 if (tickerStream.Event == "NewOrder") {
@@ -549,10 +582,33 @@ namespace IRTicker {
         // i think i might try and use the buffer concept every time we have an out of order nonce so it's possible to recover from
         // a few out of order nonces if they're all there, rather than just dumping everything every time.
         public void addToBuffer(Ticker_IR tickerStream) {
-            string pair = tickerStream.Data.Pair.ToUpper();
+            //string pair = tickerStream.Data.Pair.ToUpper();
             //string channel = tickerStream.Channel.ToUpper();
             //Debug.Print("---- Nonce received: " + tickerStream.Nonce);
 
+            string crypto = tickerStream.Event.Replace("orderbook-", "").ToUpper();
+
+            // here we have the pricing for all 4 IR currencies, so figure out which we care about and throw em into buffers
+
+            // start with USD
+            string pair = crypto + "-USD";
+            if (!DCEs["IRUSD"].pulledSnapShot[pair]) {  // if we haven't even got the OB yet
+                DCEs["IRUSD"].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;  // add this event to the buffer
+                return;
+            }
+            else {
+
+            }
+
+            // next, SGD
+            pair = crypto + "-SGD";
+            if (!DCEs["IRSGD"].pulledSnapShot[pair]) {  // if we haven't even got the OB yet
+                DCEs["IRSGD"].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;  // add this event to the buffer
+                return;
+            }
+
+            // now we figure out what we need for the main IR groupBox
+            pair = crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency;
             if (!DCEs["IR"].pulledSnapShot[pair]) {  // if we haven't even got the OB yet
                 DCEs["IR"].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;  // add this event to the buffer
                 //Debug.Print(" ! just added " + tickerStream.Nonce + " to the buf");
