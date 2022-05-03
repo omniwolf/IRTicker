@@ -53,11 +53,11 @@ namespace IRTicker {
 
         }
 
-        public void GetOrderBook_IR(string crypto, string fiat) {
+        public void GetOrderBook_IR(string dExchange, string crypto, string fiat) {
             if (crypto == "USDT") crypto = "UST";
             //if (crypto == "USDC") crypto = "USC";
             string pair = crypto + "-" + fiat;
-            Tuple<bool, string> orderBookTpl = Utilities.Get(DCEs["IR"].BaseURL + "/Public/GetAllOrders?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
+            Tuple<bool, string> orderBookTpl = Utilities.Get(DCEs[dExchange].BaseURL + "/Public/GetAllOrders?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
 
             // have to change back ughhh
             if (crypto.ToUpper() == "UST") crypto = "USDT";
@@ -68,30 +68,30 @@ namespace IRTicker {
                 DCE.OrderBook orderBook = JsonConvert.DeserializeObject<DCE.OrderBook>(orderBookTpl.Item2);
                 if (orderBook.PrimaryCurrencyCode.ToUpper() == "UST") orderBook.PrimaryCurrencyCode = "USDT";
                 //if (orderBook.PrimaryCurrencyCode.ToUpper() == "USC") orderBook.PrimaryCurrencyCode = "USDC";
-                DCEs["IR"].orderBooks[pair] = orderBook;
-                if ((DCEs["IR"].orderBooks[pair].BuyOrders.Count == 0) || (DCEs["IR"].orderBooks[pair].SellOrders.Count == 0)) {
-                    Debug.Print("One of the order books is empty... not continuing.  number of buy orders: " + DCEs["IR"].orderBooks[pair].BuyOrders.Count + ", and sell orders: " + DCEs["IR"].orderBooks[pair].SellOrders.Count);
+                DCEs[dExchange].orderBooks[pair] = orderBook;
+                if ((DCEs[dExchange].orderBooks[pair].BuyOrders.Count == 0) || (DCEs[dExchange].orderBooks[pair].SellOrders.Count == 0)) {
+                    Debug.Print("One of the order books is empty... not continuing.  number of buy orders: " + DCEs[dExchange].orderBooks[pair].BuyOrders.Count + ", and sell orders: " + DCEs[dExchange].orderBooks[pair].SellOrders.Count);
                     return;
                 }
 
                 // next we need to convert this orderbook into a concurrent dictionary of OrderBook_IR objects
                 // so yeah.. the "orderBook" object doesn't really get used anymore.  it's just like a staging area
-                bool OBPulled = DCEs["IR"].ConvertOrderBook_IR(pair);
+                bool OBPulled = DCEs[dExchange].ConvertOrderBook_IR(pair);
 
                 if (!OBPulled) {  // if the ob conversion process failed, then try again
-                    Debug.Print(DateTime.Now + " - IR OB conversion (" + crypto + "-" + fiat + ") failed for some reason, trying again.");
-                    subscribe_unsubscribe_new("IR", true, crypto, fiat);
+                    Debug.Print(DateTime.Now + " - IR (" + dExchange + ") OB conversion (" + crypto + "-" + fiat + ") failed for some reason, trying again.");
+                    subscribe_unsubscribe_new("IR", subscribe: true, crypto, fiat);
                     return;
                 }
 
-                Debug.Print(DateTime.Now.ToString() + " IR OB " + pair + " pulled, " + (DCEs["IR"].orderBuffer_IR.ContainsKey(pair) ? DCEs["IR"].orderBuffer_IR[pair].Count.ToString() : "n/a") + " ordes in the buffer");
+                Debug.Print(DateTime.Now.ToString() + " " + dExchange + " OB " + pair + " pulled, " + (DCEs[dExchange].orderBuffer_IR.ContainsKey(pair) ? DCEs[dExchange].orderBuffer_IR[pair].Count.ToString() : "n/a") + " ordes in the buffer");
 
                 //int remainingBuffer = ApplyBuffer_IR(pair);
                 //Print("(" + pair + ") Buffer applied, there are " + remainingBuffer + " left in the buffer (should be 0)");
-                DCEs["IR"].pulledSnapShot[pair] = true;
+                DCEs[dExchange].pulledSnapShot[pair] = true;
             }
             else {
-                Debug.Print(DateTime.Now.ToString() + " | IR - couldn't download REST OB? - " + pair);
+                Debug.Print(DateTime.Now.ToString() + " | " + dExchange + " - couldn't download REST OB? - " + pair);
             }
         }
 
@@ -122,7 +122,7 @@ namespace IRTicker {
                     else {  // or just one pair
                         if (crypto.ToUpper() == "USDT") crypto = "ust";
                         //if (crypto.ToUpper() == "USDC") crypto = "usc";
-                        channel += "\"orderbook-" + crypto.ToLower() + "-" + fiat.ToLower();
+                        channel += "\"orderbook-" + crypto.ToLower(); // + "-" + fiat.ToLower();
                         /*if (!channel.Contains("-usd\",")) {  // if we haven't inclruded USD, then include it.  we always need to subscribe or unsubscribe from it as it's a perm panel
                             channel += "\"orderbook-" + crypto.ToLower() + "-usd";
                         }
@@ -132,13 +132,13 @@ namespace IRTicker {
 
                          channel += "\"]}";
                     }
-                    Debug.Print("IR websocket subcribe/unsubscribe - " + (subscribe ? "subscribe" : "unsubscribe") + " event: " + channel);
+                    Debug.Print(dExchange + " websocket subcribe/unsubscribe - " + (subscribe ? "subscribe" : "unsubscribe") + " event: " + channel);
 
                     if (client_IR.IsRunning) {
                         Task.Run(() => client_IR.Send(channel));
                     }
                     else {
-                        Debug.Print(DateTime.Now + " - IR sockets down when trying to " + (subscribe ? "subscribe" : "unsubscribe"));
+                        Debug.Print(DateTime.Now + " - " + dExchange + " sockets down when trying to " + (subscribe ? "subscribe" : "unsubscribe"));
                         DCEs[dExchange].socketsReset = true;
                         break;
                     }
@@ -151,7 +151,7 @@ namespace IRTicker {
                                     //pairList.Add(new Tuple<string, string>("XBT", "USD"));
                                     //pairList.Add(new Tuple<string, string>("XBT", "NZD"));
                                     //pairList.Add(new Tuple<string, string>(primaryCode, fiat));
-                                    GetOrderBook_IR(primaryCode, fiat);
+                                    GetOrderBook_IR(dExchange, primaryCode, fiat);
                                 }
                             }
 
@@ -161,7 +161,7 @@ namespace IRTicker {
                             //}
                         }
                         else {
-                            GetOrderBook_IR(crypto, fiat);
+                            GetOrderBook_IR(dExchange, crypto, fiat);
                         }
                     }
 
@@ -172,12 +172,12 @@ namespace IRTicker {
                         if (crypto == "none") {
                             foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
                                 if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
-                                    GetOrderBook_IR(primaryCode, fiat);
+                                    GetOrderBook_IR(dExchange, primaryCode, fiat);
                                 }
                             }
                         }
                         else {
-                            GetOrderBook_IR(crypto, fiat);
+                            GetOrderBook_IR(dExchange, crypto, fiat);
                         }
                     }
 
@@ -188,12 +188,12 @@ namespace IRTicker {
                         if (crypto == "none") {
                             foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
                                 if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
-                                    GetOrderBook_IR(primaryCode, fiat);
+                                    GetOrderBook_IR(dExchange, primaryCode, fiat);
                                 }
                             }
                         }
                         else {
-                            GetOrderBook_IR(crypto, fiat);
+                            GetOrderBook_IR(dExchange, crypto, fiat);
                         }
                     }
 
@@ -537,7 +537,9 @@ namespace IRTicker {
                 return;
             }
             if (message.Contains("Error")) {
-                Debug.Print("IR ERROR in websockets: " + message);
+                Debug.Print("IR ERROR in websockets, resetting.  error: " + message);
+                DCEs["IR"].socketsReset = true;  // it seems when we start getting errors, the socket is unrecoverable, need to start again. 29/4/2022 (ben says maybe there's issues on the server)
+                DCEs["IR"].socketsAlive = false;
                 return;
             }
 

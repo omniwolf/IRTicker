@@ -41,7 +41,8 @@ namespace IRTicker
             this.Platform_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Platform_comboBox.FormattingEnabled = true;
             this.Platform_comboBox.Items.AddRange(new object[] {
-            "Independent Reserve",
+            "Independent Reserve IROTC",
+            "Independent Reserve IROTCSG",
             "B2C2",
             "TrigonX",
             "Coinbase",

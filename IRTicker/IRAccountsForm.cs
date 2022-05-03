@@ -172,6 +172,13 @@ namespace IRTicker
             InitialiseAccountsPanel();
         }
 
+        // resets all the label values (price, vol) to "-".  Usually used for when the API key is changed
+        public void ResetLabels() {
+            foreach (KeyValuePair<string, Label> labelKVP in IRT.UIControls_Dict["IR"].Label_Dict) {
+                if (labelKVP.Key.Contains("_Account_Value") || labelKVP.Key.Contains("_Account_Total")) labelKVP.Value.Text = "-";
+            }
+        }
+
         public void UpdateAccountNameButton(string accName) {
             AccountName_button.Text = accName;
         }

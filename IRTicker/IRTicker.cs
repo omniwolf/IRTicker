@@ -19,10 +19,6 @@ using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 
 // todo:
-// with making SGD and USD work - I think we should subscribe to the crypto (not the pair), so we get all prices in one event and save on network stuff.  need to figure out how this would look.
-// blank out IR Account balance values when changing the API key (eg going from an AU entity to SG entity, if the AU has crypto the SG doesn't support it stays on the screen)
-// allow for IROTC-SG to store slush/loans sepaaretly to IROTC, so we can report to slack the balances at the end of the week
-
 
 
 namespace IRTicker {
@@ -33,6 +29,7 @@ namespace IRTicker {
         private Dictionary<string, DCE> DCEs;  // the master dictionary that holds all the data we pull from all the crypto APIs
         public Dictionary<string, UIControls> UIControls_Dict;
         private List<string> Exchanges;
+        List<string> IRdExchanges = new List<string>() { "IR", "IRUSD", "IRSGD" };
         private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "USDT", "DOT", "GRT", "AAVE", "YFI", "PMGT", "SNX", "COMP", "LINK", "ADA", "UNI", "MATIC", "DOGE", "ADA", "MANA", "SOL", "SAND" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
@@ -135,8 +132,8 @@ namespace IRTicker {
 
                 // seed the DCEs dictionary with empty DCEs for the DCEs we will be interrogating
                 { "IR", new DCE("IR", "Independent Reserve") },
-                { "IRSGD", new DCE("IRSGD", "Independent Reserve SGD") },
-                { "IRUSD", new DCE("IRUSD", "Independent Reserve USD") },
+                { "IRSGD", new DCE("IRSGD", "Independent Reserve") },
+                { "IRUSD", new DCE("IRUSD", "Independent Reserve") },
                 { "BTCM", new DCE("BTCM", "BTC Markets") },
                 { "BAR", new DCE("BAR", "Bitaroo") }
             };
@@ -820,19 +817,14 @@ namespace IRTicker {
         public void ParseDCE_IR(string crypto, string fiat, bool updateLabels) {
             Tuple<bool, string> marketSummary = Utilities.Get(DCEs["IR"].BaseURL + "/Public/GetMarketSummary?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
             if (!marketSummary.Item1) {
-                DCEs["IR"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
-                DCEs["IR"].NetworkAvailable = false;
-                if (fiat == "USD") {
-                    DCEs["IRUSD"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
-                    DCEs["IRUSD"].NetworkAvailable = false;
-                }
-                if (fiat == "SGD") {
-                    DCEs["IRSGD"].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
-                    DCEs["IRSGD"].NetworkAvailable = false;
+                foreach (string dExchange in IRdExchanges) {
+                    DCEs[dExchange].CurrentDCEStatus = WebsiteError(marketSummary.Item2);
+                    DCEs[dExchange].NetworkAvailable = false;
+                    return;
                 }
             }
             else {
-                DCEs["IR"].NetworkAvailable = DCEs["IRUSD"].NetworkAvailable = DCEs["IRSGD"].NetworkAvailable = true;
+                foreach (string dExchange in IRdExchanges) DCEs[dExchange].NetworkAvailable = true;
                 DCE.MarketSummary mSummary;
                 try {
                     mSummary = JsonConvert.DeserializeObject<DCE.MarketSummary>(marketSummary.Item2);
@@ -849,57 +841,24 @@ namespace IRTicker {
                     return;
                 }
 
-                // This bit is for a) volume (we don't get vol from websockets), and b) if there have been no orders to establish a spread, then the price and spread
-                // stay at 0.  This is 
-                Dictionary<string, DCE.MarketSummary> cPairs = DCEs["IR"].GetCryptoPairs();
-                if (cPairs.ContainsKey(mSummary.pair) && cPairs[mSummary.pair].spread != 0) {  // logic here is if the spread is not 0, then don't send spread info, as what we have is better
-                //if (crypto == "XBT") {  // don't want to overwrite the spread orders as they're probably out of date
-                    mSummary.CurrentHighestBidPrice = 0;  // sending cryptoPairsAdd a 0 bid and offer will mean the previous best bid and offer remain
-                    mSummary.CurrentLowestOfferPrice = 0;
-                }
-                //}
-                mSummary.CreatedTimestampUTC = "";
-                DCEs["IR"].CryptoPairsAdd(crypto + "-" + fiat, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
-                DCEs["IR"].CurrentDCEStatus = "Online";
-                // don't update the labels if we are pulling a different fiat than the one we're showing (eg for Slack name)
-                if (updateLabels && (DCEs["IR"].CurrentSecondaryCurrency == fiat)) pollingThread.ReportProgress(21, mSummary);
-
-                // now for USD and SGD
-
-                if (fiat == "USD") {
+                foreach (string dExchange in IRdExchanges) {
                     // This bit is for a) volume (we don't get vol from websockets), and b) if there have been no orders to establish a spread, then the price and spread
                     // stay at 0.  This is 
-                    Dictionary<string, DCE.MarketSummary> cPairsUSD = DCEs["IRUSD"].GetCryptoPairs();
-                    if (cPairsUSD.ContainsKey(mSummary.pair) && cPairsUSD[mSummary.pair].spread != 0) {  // logic here is if the spread is not 0, then don't send spread info, as what we have is better
+                    Dictionary<string, DCE.MarketSummary> cPairs = DCEs[dExchange].GetCryptoPairs();
+                    if (cPairs.ContainsKey(mSummary.pair) && cPairs[mSummary.pair].spread != 0) {  // logic here is if the spread is not 0, then don't send spread info, as what we have is better
                                                                                                    //if (crypto == "XBT") {  // don't want to overwrite the spread orders as they're probably out of date
                         mSummary.CurrentHighestBidPrice = 0;  // sending cryptoPairsAdd a 0 bid and offer will mean the previous best bid and offer remain
                         mSummary.CurrentLowestOfferPrice = 0;
                     }
                     //}
                     mSummary.CreatedTimestampUTC = "";
-                    DCEs["IRUSD"].CryptoPairsAdd(crypto + "-" + fiat, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
-                    DCEs["IRUSD"].CurrentDCEStatus = "Online";
-                    // don't update the labels if we are pulling a different fiat than the one we're showing (eg for Slack name)
-                    if (updateLabels) pollingThread.ReportProgress(21, mSummary);
-                }
+                    if (DCEs[dExchange].CurrentSecondaryCurrency == fiat) {
+                        DCEs[dExchange].CryptoPairsAdd(crypto + "-" + fiat, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
+                        if (updateLabels) pollingThread.ReportProgress(21, mSummary);  // don't update the labels if we are pulling a different fiat than the one we're showing (eg for Slack name)
 
-                if (fiat == "SGD") {
-                    // This bit is for a) volume (we don't get vol from websockets), and b) if there have been no orders to establish a spread, then the price and spread
-                    // stay at 0.  This is 
-                    Dictionary<string, DCE.MarketSummary> cPairsSGD = DCEs["IRSGD"].GetCryptoPairs();
-                    if (cPairsSGD.ContainsKey(mSummary.pair) && cPairsSGD[mSummary.pair].spread != 0) {  // logic here is if the spread is not 0, then don't send spread info, as what we have is better
-                                                                                                         //if (crypto == "XBT") {  // don't want to overwrite the spread orders as they're probably out of date
-                        mSummary.CurrentHighestBidPrice = 0;  // sending cryptoPairsAdd a 0 bid and offer will mean the previous best bid and offer remain
-                        mSummary.CurrentLowestOfferPrice = 0;
                     }
-                    //}
-                    mSummary.CreatedTimestampUTC = "";
-                    DCEs["IRSGD"].CryptoPairsAdd(crypto + "-" + fiat, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
-                    DCEs["IRSGD"].CurrentDCEStatus = "Online";
-                    // don't update the labels if we are pulling a different fiat than the one we're showing (eg for Slack name)
-                    if (updateLabels) pollingThread.ReportProgress(21, mSummary);
+                    DCEs[dExchange].CurrentDCEStatus = "Online";
                 }
-
             }
         }
 
@@ -1230,7 +1189,7 @@ namespace IRTicker {
                         if (loopCount == 0 || !shitCoins.Contains(primaryCode)) {
                             ParseDCE_IR(primaryCode, DCEs["IR"].CurrentSecondaryCurrency, false);
                         }
-                        if ((null != IRAF) && (null != pIR)) {
+                        if ((null != IRAF) && !IRAF.IsDisposed && (null != pIR)) {
                             foreach (string fiat in DCEs["IR"].SecondaryCurrencyList) {
                                 try {
                                     var cOrders = pIR.GetClosedOrders(primaryCode, fiat);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
@@ -1247,7 +1206,7 @@ namespace IRTicker {
                                 // if i want to get fancy i can call reportProgress and drawClosedOrders()...
 
                                 // once a cycle let's give the order book a nudge.. there might be new orders that we haven't seen.
-                                if (null != IRAF) pIR.compileAccountOrderBookAsync(primaryCode + "-" + fiat);
+                                if ((null != IRAF) && !IRAF.IsDisposed) pIR.compileAccountOrderBookAsync(primaryCode + "-" + fiat);
                             }
                         }
                     }
@@ -1271,110 +1230,7 @@ namespace IRTicker {
                     }
                 }
 
-                // grab BTC and ETH fees
-                Tuple<bool, string> feeTup = Utilities.Get("https://mempool.space/api/v1/fees/recommended");
-                if (feeTup.Item1) {
-                    mempoolSpace mspaceRecommended = JsonConvert.DeserializeObject<mempoolSpace>(feeTup.Item2);
-                    BTCfee = mspaceRecommended.fastestFee;
-                }
-                else BTCfee = -1;  // tells the system to signal on the "Last updated" label
 
-                feeTup = Utilities.Get("https://data-api.defipulse.com/api/v1/egs/api/ethgasAPI.json?api-key=17888172119617872db6baf33644a66c6e0b4354f25e03cf974986aedfa2");
-                if (feeTup.Item1) {
-                    EGSRoot EGSData = JsonConvert.DeserializeObject<EGSRoot>(feeTup.Item2);
-                    ETHfee = EGSData.fast / 10;
-                }
-                else ETHfee = -1;
-
-
-                // lets grab the latest BTC block
-                Tuple<bool, string> latestBlockTup = Utilities.Get("https://blockchain.info/latestblock");
-                if (latestBlockTup.Item1) {
-                    BlockHeight bHeight = JsonConvert.DeserializeObject<BlockHeight>(latestBlockTup.Item2);
-
-                    if (lastBlock == 0) lastBlock = bHeight.Height;  // we haven' found a block before, just set it and move on
-                    else if(lastBlock != bHeight.Height) {
-                        if (bStick != null && bStick.OpenDevice()) {
-                            try {
-                                bStick.Morph("purple");
-                            }
-                            catch (Exception ex) {
-                                Debug.Print(DateTime.Now + " -- BS -- caught an exception in block height: " + ex.Message);
-                            }
-                        }
-                        lastBlock = bHeight.Height;
-                        pollingThread.ReportProgress(15);
-                        Debug.Print(DateTime.Now + " - we have a new BTC block: " + lastBlock);
-                    }
-                    //Debug.Print("current block is: " + lastBlock);
-                }
-                else {
-                    Debug.Print("couldn't pull the block height data? error: " + latestBlockTup.Item2);
-                }
-
-                // Time to blink some sticks
-                Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
-                Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
-                decimal IRvol_BTC = -1, BTCMvol_BTC = -1, IRvol_ETH = -1, BTCMvol_ETH = -1, IRvol_USDT = -1, BTCMvol_USDT = -1, IRvol_XRP = -1, BTCMvol_XRP = -1;
-                if (IRpairs.ContainsKey("XBT-AUD") && BTCMpairs.ContainsKey("XBT-AUD") && 
-                    IRpairs.ContainsKey("ETH-AUD") && BTCMpairs.ContainsKey("ETH-AUD") && 
-                    IRpairs.ContainsKey("USDT-AUD") && BTCMpairs.ContainsKey("USDT-AUD") && 
-                    IRpairs.ContainsKey("XRP-AUD") && BTCMpairs.ContainsKey("XRP-AUD")) {
-                    IRvol_BTC = IRpairs["XBT-AUD"].DayVolumeXbt; ;
-                    BTCMvol_BTC = BTCMpairs["XBT-AUD"].DayVolumeXbt;
-                    IRvol_ETH = IRpairs["ETH-AUD"].DayVolumeXbt; ;
-                    BTCMvol_ETH = BTCMpairs["ETH-AUD"].DayVolumeXbt;
-                    IRvol_USDT = IRpairs["USDT-AUD"].DayVolumeXbt; ;
-                    BTCMvol_USDT = BTCMpairs["USDT-AUD"].DayVolumeXbt;
-                    IRvol_XRP = IRpairs["XRP-AUD"].DayVolumeXbt; ;
-                    BTCMvol_XRP = BTCMpairs["XRP-AUD"].DayVolumeXbt;
-
-
-                    if ((bStick == null) || (bStickETH == null) || (bStickUSDT == null) || (bStickXRP == null)) {
-                        var bSticks = BlinkStick.FindAll();
-                        if (bSticks.Length > 1) {
-
-                            int i = 0;
-                            do {
-                                switch (bSticks[i].Meta.Serial) {
-                                    case "BS032958-3.0":
-                                        bStickETH = bSticks[i];
-                                        break;
-                                    case "BS041767-3.0":
-                                        bStickUSDT = bSticks[i];
-                                        break;
-                                    case "BS028603-3.0":
-                                        bStick = bSticks[i];  // BTC
-                                        break;
-                                    case "BS041736-3.0":
-                                        bStickXRP = bSticks[i];
-                                        break;
-                                }
-
-                                i++;
-                            } while (i < bSticks.Length);
-
-                        }
-                        else if (bSticks.Length == 1) bStick = bSticks[0];  // if we only have 1 blink stick, then make it BTC
-                    }
-                    if (bStick != null && bStick.OpenDevice()) {
-                        cTokenPulseBTC = setStickColourAsync(bStick, cTokenPulseBTC, ref taskPulseBTC, IRvol_BTC, BTCMvol_BTC);
-                    }
-                    if (bStickETH != null && bStickETH.OpenDevice()) {
-                        cTokenPulseETH = setStickColourAsync(bStickETH, cTokenPulseETH, ref taskPulseETH, IRvol_ETH, BTCMvol_ETH);
-                    }
-                    if (bStickUSDT != null && bStickUSDT.OpenDevice()) {
-                        cTokenPulseUSDT = setStickColourAsync(bStickUSDT, cTokenPulseUSDT, ref taskPulseUSDT, IRvol_USDT, BTCMvol_USDT);
-                    }
-                    if (bStickXRP != null && bStickXRP.OpenDevice()) {
-                        cTokenPulseXRP = setStickColourAsync(bStickXRP, cTokenPulseXRP, ref taskPulseXRP, IRvol_XRP, BTCMvol_XRP);
-                    }
-                }
-
-                // loopCount // - let's only update this every 3rd time, stop my slack phone app from restarting as often
-                if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "") /*&& (loopCount == 0)*/) {
-                    setSlackStatus();
-                }
 
 
                 //////// BTC Markets /////////
@@ -1477,18 +1333,111 @@ namespace IRTicker {
                 // OK we now have all the DCE and fiat rates info loaded.
 
                 pollingThread.ReportProgress(1);
-                /*  we do a loop now
-                if (DCEs["IR"].CryptoCombo != "" && !string.IsNullOrEmpty(DCEs["IR"].NumCoinsStr) && DCEs["IR"].HasStaticData) {  // we have a crypto selected and coins entered, let's get the order book for them
-                    pollingThread.ReportProgress(2);  // OK let's lock the fields down
-                    pollingThread.ReportProgress(23);  // display order book
+
+                // grab BTC and ETH fees
+                Tuple<bool, string> feeTup = Utilities.Get("https://mempool.space/api/v1/fees/recommended");
+                if (feeTup.Item1) {
+                    mempoolSpace mspaceRecommended = JsonConvert.DeserializeObject<mempoolSpace>(feeTup.Item2);
+                    BTCfee = mspaceRecommended.fastestFee;
+                }
+                else BTCfee = -1;  // tells the system to signal on the "Last updated" label
+
+                feeTup = Utilities.Get("https://data-api.defipulse.com/api/v1/egs/api/ethgasAPI.json?api-key=17888172119617872db6baf33644a66c6e0b4354f25e03cf974986aedfa2");
+                if (feeTup.Item1) {
+                    EGSRoot EGSData = JsonConvert.DeserializeObject<EGSRoot>(feeTup.Item2);
+                    ETHfee = EGSData.fast / 10;
+                }
+                else ETHfee = -1;
+
+
+                // lets grab the latest BTC block
+                Tuple<bool, string> latestBlockTup = Utilities.Get("https://blockchain.info/latestblock");
+                if (latestBlockTup.Item1) {
+                    BlockHeight bHeight = JsonConvert.DeserializeObject<BlockHeight>(latestBlockTup.Item2);
+
+                    if (lastBlock == 0) lastBlock = bHeight.Height;  // we haven' found a block before, just set it and move on
+                    else if (lastBlock != bHeight.Height) {
+                        if (bStick != null && bStick.OpenDevice()) {
+                            try {
+                                bStick.Morph("purple");
+                            }
+                            catch (Exception ex) {
+                                Debug.Print(DateTime.Now + " -- BS -- caught an exception in block height: " + ex.Message);
+                            }
+                        }
+                        lastBlock = bHeight.Height;
+                        pollingThread.ReportProgress(15);
+                        Debug.Print(DateTime.Now + " - we have a new BTC block: " + lastBlock);
+                    }
+                    //Debug.Print("current block is: " + lastBlock);
+                }
+                else {
+                    Debug.Print("couldn't pull the block height data? error: " + latestBlockTup.Item2);
                 }
 
-                if (DCEs["BTCM"].CryptoCombo != "" && !string.IsNullOrEmpty(DCEs["BTCM"].NumCoinsStr) && DCEs["BTCM"].HasStaticData) {  // we have a crypto selected and coins entered, let's get the order book for them
-                    pollingThread.ReportProgress(2);  // OK let's lock the fields down
-                    GetBTCMOrderBook(DCEs["BTCM"].CryptoCombo);
-                    pollingThread.ReportProgress(33);  // display order book
+                // Time to blink some sticks
+                Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
+                Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
+                decimal IRvol_BTC = -1, BTCMvol_BTC = -1, IRvol_ETH = -1, BTCMvol_ETH = -1, IRvol_USDT = -1, BTCMvol_USDT = -1, IRvol_XRP = -1, BTCMvol_XRP = -1;
+                if (IRpairs.ContainsKey("XBT-AUD") && BTCMpairs.ContainsKey("XBT-AUD") &&
+                    IRpairs.ContainsKey("ETH-AUD") && BTCMpairs.ContainsKey("ETH-AUD") &&
+                    IRpairs.ContainsKey("USDT-AUD") && BTCMpairs.ContainsKey("USDT-AUD") &&
+                    IRpairs.ContainsKey("XRP-AUD") && BTCMpairs.ContainsKey("XRP-AUD")) {
+                    IRvol_BTC = IRpairs["XBT-AUD"].DayVolumeXbt; ;
+                    BTCMvol_BTC = BTCMpairs["XBT-AUD"].DayVolumeXbt;
+                    IRvol_ETH = IRpairs["ETH-AUD"].DayVolumeXbt; ;
+                    BTCMvol_ETH = BTCMpairs["ETH-AUD"].DayVolumeXbt;
+                    IRvol_USDT = IRpairs["USDT-AUD"].DayVolumeXbt; ;
+                    BTCMvol_USDT = BTCMpairs["USDT-AUD"].DayVolumeXbt;
+                    IRvol_XRP = IRpairs["XRP-AUD"].DayVolumeXbt; ;
+                    BTCMvol_XRP = BTCMpairs["XRP-AUD"].DayVolumeXbt;
+
+
+                    if ((bStick == null) || (bStickETH == null) || (bStickUSDT == null) || (bStickXRP == null)) {
+                        var bSticks = BlinkStick.FindAll();
+                        if (bSticks.Length > 1) {
+
+                            int i = 0;
+                            do {
+                                switch (bSticks[i].Meta.Serial) {
+                                    case "BS032958-3.0":
+                                        bStickETH = bSticks[i];
+                                        break;
+                                    case "BS041767-3.0":
+                                        bStickUSDT = bSticks[i];
+                                        break;
+                                    case "BS028603-3.0":
+                                        bStick = bSticks[i];  // BTC
+                                        break;
+                                    case "BS041736-3.0":
+                                        bStickXRP = bSticks[i];
+                                        break;
+                                }
+
+                                i++;
+                            } while (i < bSticks.Length);
+
+                        }
+                        else if (bSticks.Length == 1) bStick = bSticks[0];  // if we only have 1 blink stick, then make it BTC
+                    }
+                    if (bStick != null && bStick.OpenDevice()) {
+                        cTokenPulseBTC = setStickColourAsync(bStick, cTokenPulseBTC, ref taskPulseBTC, IRvol_BTC, BTCMvol_BTC);
+                    }
+                    if (bStickETH != null && bStickETH.OpenDevice()) {
+                        cTokenPulseETH = setStickColourAsync(bStickETH, cTokenPulseETH, ref taskPulseETH, IRvol_ETH, BTCMvol_ETH);
+                    }
+                    if (bStickUSDT != null && bStickUSDT.OpenDevice()) {
+                        cTokenPulseUSDT = setStickColourAsync(bStickUSDT, cTokenPulseUSDT, ref taskPulseUSDT, IRvol_USDT, BTCMvol_USDT);
+                    }
+                    if (bStickXRP != null && bStickXRP.OpenDevice()) {
+                        cTokenPulseXRP = setStickColourAsync(bStickXRP, cTokenPulseXRP, ref taskPulseXRP, IRvol_XRP, BTCMvol_XRP);
+                    }
                 }
-                */
+
+                // loopCount // - let's only update this every 3rd time, stop my slack phone app from restarting as often
+                if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "") /*&& (loopCount == 0)*/) {
+                    setSlackStatus();
+                }
 
                 foreach (string dExchange in Exchanges) {
                     string cCombo = DCEs[dExchange].CryptoCombo;
@@ -1578,10 +1527,13 @@ namespace IRTicker {
                     // we use this price label so often and it's so much text to access it, i want to just create a quick variable to make the code easier to read
                     System.Windows.Forms.Label tempPrice = UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Price"];
                     tempPrice.Text = Utilities.FormatValue(midPoint);
-                    tempPrice.ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(pairObj.Key));
+
+                    Color priceCol = Utilities.PriceColour(DCEs[dExchange].GetPriceList(pairObj.Key));
+                    if (tempPrice.ForeColor != priceCol) tempPrice.ForeColor = priceCol;
 
                     // if there's a colour, make the font bigger.  otherwise not bigger.
-                    if (tempPrice.ForeColor != Color.Black) {
+                    // nah not doing this anymore.
+                    /*if (tempPrice.ForeColor != Color.Black) {
                         tempPrice.Font = new Font(tempPrice.Font.FontFamily, 10f, FontStyle.Bold);
 
                         // this next bit is crazy.  When we change the size of the text, it seems to drop down a couple of pixels.  I don't know why, the label just looks lower
@@ -1599,14 +1551,15 @@ namespace IRTicker {
                             tempPrice.Location = new Point(tempPrice.Location.X, tempPrice.Location.Y + 3);
                             tempPrice.Tag = tempPrice.Tag.ToString().Replace("emphasised", "");
                         }
-                    }
+                    }*/
 
                     string vol = "";
-                    if (pairObj.Value.DayVolumeXbt == 0) vol = "0";
-                    else if (pairObj.Value.DayVolumeXbt < 0) vol = "?";
-                    else vol = Utilities.FormatValue(pairObj.Value.DayVolumeXbt);
+                    if (pairObj.Value.DayVolumeXbt == 0) vol = " / 0";
+                    else if (pairObj.Value.DayVolumeXbt < 0) vol = " / ?";
+                    else if ((dExchange == "IRUSD") || (dExchange == "IRSGD")) vol = "";  // no vol for these exchanges, the vol is in the main groupBox
+                    else vol = " / " + Utilities.FormatValue(pairObj.Value.DayVolumeXbt);
 
-                        UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(pairObj.Value.spread) + " / " + vol;
+                        UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(pairObj.Value.spread) + vol;
 
                     // update tool tips.
                     string spreadTT = "Best bid: " + Utilities.FormatValue(pairObj.Value.CurrentHighestBidPrice) + System.Environment.NewLine +
@@ -1656,26 +1609,24 @@ namespace IRTicker {
                 System.Windows.Forms.Label tempPrice = UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Price"];
 
                 tempPrice.Text = Utilities.FormatValue(midPoint);
-                tempPrice.ForeColor = Utilities.PriceColour(DCEs[dExchange].GetPriceList(mSummary.pair));
-                // don't do this anymore, because we buffer and hold event, the buffer will often legitimately have events in it, so this isn't (anmymore) an indication that there's a nonce issue
-                // if we're experiencing nonce errors for this pair, make it gray.
-                //if ((DCEs[dExchange].orderBuffer_IR.ContainsKey(mSummary.pair.ToUpper())) && DCEs[dExchange].orderBuffer_IR[mSummary.pair.ToUpper()].Count > 0) {
-                //    tempPrice.ForeColor = Color.Gray;
-                //}
 
                 // lets update IRACCOUNTS
-                if ((null != IRAF) && dExchange == "IR") {
+                if ((null != IRAF) && !IRAF.IsDisposed && dExchange == "IR") {
                     IRAF.setCurrencyValues(mSummary.PrimaryCurrencyCode.ToUpper(), mSummary.CurrentHighestBidPrice);
                 }
 
+                // want to check we're not updating a colour to the same thing - minimise UI updates here
+                Color priceCol = Utilities.PriceColour(DCEs[dExchange].GetPriceList(mSummary.pair));
+                if (tempPrice.ForeColor != priceCol) tempPrice.ForeColor = priceCol;
 
                 // if there's a colour, make the font bigger.  otherwise not bigger.
-                if (tempPrice.ForeColor != Color.Black) {
+                // new idea, let's not mess around with the size.  
+                /*if (tempPrice.ForeColor != Color.Black) {
                     tempPrice.Font = new Font(tempPrice.Font.FontFamily, 10f, FontStyle.Bold);
 
                     // this next bit is crazy.  When we change the size of the text, it seems to drop down a couple of pixels.  I don't know why, the label just looks lower
                     // so to fix it I push the label up 2 pixels.  But I need to keep track of whether I have already pushed the label up or not, so I use the tag property
-                    if (!tempPrice.Tag.ToString().Contains("emphasised")) {
+                    if (!tempPrice.Tag.ToString().Contains("emphasised")) {  // leave the location alone - we're not changing the size anymore
                         tempPrice.Location = new Point(tempPrice.Location.X, tempPrice.Location.Y - 3);
                         if (!tempPrice.Tag.ToString().EndsWith(",")) tempPrice.Tag = tempPrice.Tag + ",";
                         tempPrice.Tag = tempPrice.Tag + "emphasised";
@@ -1688,17 +1639,15 @@ namespace IRTicker {
                         tempPrice.Location = new Point(tempPrice.Location.X, tempPrice.Location.Y + 3);
                         tempPrice.Tag = tempPrice.Tag.ToString().Replace("emphasised", "");
                     }
-                }
+                }*/
 
-                string vol = "";
-                if (mSummary.DayVolumeXbt == 0) vol = "0";
-                else if (mSummary.DayVolumeXbt < 0) vol = "?";
-                else vol = Utilities.FormatValue(mSummary.DayVolumeXbt);
+                string vol;
+                if (mSummary.DayVolumeXbt == 0) vol = " / 0";
+                else if (mSummary.DayVolumeXbt < 0) vol = " / ?";
+                else if ((dExchange == "IRUSD") || (dExchange == "IRSGD")) vol = "";  // no vol for these exchanges, the vol is in the main groupBox
+                else vol = " / " + Utilities.FormatValue(mSummary.DayVolumeXbt);
 
-                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(mSummary.spread) + " / " + vol;
-                //Debug.Print("ABOUT TO CHECK ORDER BOOK STUFF:");
-                //Debug.Print("---num coins = " + UIControls_Dict[dExchange].AvgPrice_NumCoins.Text + " avgprice_crypto = " + (UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedItem == null ? "null" : UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedItem.ToString()));
-
+                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(mSummary.spread) + vol;
                 if (DCEs[dExchange].ChangedSecondaryCurrency) { 
                     PopulateCryptoComboBox(dExchange);  // need to re-populate this as it dynamically only populates the comboxbox with cryptos that the current fiat currency has a pair with
                     DCEs[dExchange].ChangedSecondaryCurrency = false;
@@ -1707,7 +1656,7 @@ namespace IRTicker {
                 // update tool tips.
                 string spreadTT = "Best bid: " + Utilities.FormatValue(mSummary.CurrentHighestBidPrice) + System.Environment.NewLine +
                     "Best offer: " + Utilities.FormatValue(mSummary.CurrentLowestOfferPrice) + System.Environment.NewLine +
-                    "Spread: " + Utilities.FormatValue(((mSummary.CurrentLowestOfferPrice - mSummary.CurrentHighestBidPrice) / midPoint * 100), 2, false) + "%";
+                    "Spread: " + Utilities.FormatValue(((mSummary.spread) / midPoint * 100), 2, false) + "%";
                 IRTickerTT_spread.SetToolTip(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"], spreadTT);
             }
             else Debug.Print("Pair2 don't exist, pairObj.Value.SecondaryCurrencyCode: " + mSummary.SecondaryCurrencyCode);
@@ -1987,7 +1936,7 @@ namespace IRTicker {
                 return;
             }
             if (reportType == 27) {  // 27 is we need to update the price colour because of nonce
-                Tuple<bool, string, string> nonceIssue = (Tuple<bool, string, string>)e.UserState;  // bool is for if an issue exists, the string is the pair it exists (or not) on
+                Tuple<bool, string, string> nonceIssue = (Tuple<bool, string, string>)e.UserState;  // bool is for if an issue exists, the string is the pair it exists (or not) on, second string is exchange
                 if (UIControls_Dict[nonceIssue.Item3].Label_Dict.ContainsKey(nonceIssue.Item2)) {
                     System.Windows.Forms.Label tempPrice = UIControls_Dict[nonceIssue.Item3].Label_Dict[nonceIssue.Item2 + "_Price"];
                     if (nonceIssue.Item1)
@@ -2363,7 +2312,7 @@ namespace IRTicker {
                     }*/
                     Main.Visible = true;
                     Settings.Visible = false;
-                    if (null != IRAF) {
+                    if ((null != IRAF) && !IRAF.IsDisposed) {
                         IRAF.InitialiseAccountsPanel();  // seeing if this helps the tg spam
                         IRAF.drawClosedOrders(null);
                         IRAF.drawOpenOrders(null);
@@ -2939,7 +2888,7 @@ namespace IRTicker {
                 int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
                 if (friendlyNameLen > 20) friendlyNameLen = 20;
 
-                if (null != IRAF) IRAF.UpdateAccountNameButton(Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : ""));
+                if ((null != IRAF) && !IRAF.IsDisposed) IRAF.UpdateAccountNameButton(Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : ""));
 
                 if (TGBot != null) {  // need to clear the TGBot dictionaries first before we re-initialise pIR object as privateIR_init will alert TGBot to API key's closed orders
                     TGBot.closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
@@ -3103,7 +3052,7 @@ namespace IRTicker {
         }
         private void Balance_button_Click(object sender, EventArgs e) {
             if (null != pIR) {
-                Balance balForm = new Balance(DCEs["IR"], pIR);
+                Balance balForm = new Balance(DCEs["IR"], pIR);  // sending the IR DCE - it's really just to build the rows of cryptos, doesn't need any specific data
                 balForm.Show();
             }
             else MessageBox.Show("IR API config not setup, go to Settings and do it first", "API not configured", MessageBoxButtons.OK, MessageBoxIcon.Error);

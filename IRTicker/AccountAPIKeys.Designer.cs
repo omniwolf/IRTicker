@@ -96,10 +96,8 @@
             this.PubKey_textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PubKey_textBox1.Location = new System.Drawing.Point(98, 43);
             this.PubKey_textBox1.Name = "PubKey_textBox1";
-            this.PubKey_textBox1.PasswordChar = '●';
             this.PubKey_textBox1.Size = new System.Drawing.Size(338, 20);
             this.PubKey_textBox1.TabIndex = 2;
-            this.PubKey_textBox1.UseSystemPasswordChar = true;
             this.PubKey_textBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // label1
@@ -140,10 +138,8 @@
             this.PubKey_textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PubKey_textBox2.Location = new System.Drawing.Point(98, 149);
             this.PubKey_textBox2.Name = "PubKey_textBox2";
-            this.PubKey_textBox2.PasswordChar = '●';
             this.PubKey_textBox2.Size = new System.Drawing.Size(338, 20);
             this.PubKey_textBox2.TabIndex = 5;
-            this.PubKey_textBox2.UseSystemPasswordChar = true;
             this.PubKey_textBox2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // label3
@@ -184,10 +180,8 @@
             this.PubKey_textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PubKey_textBox3.Location = new System.Drawing.Point(98, 253);
             this.PubKey_textBox3.Name = "PubKey_textBox3";
-            this.PubKey_textBox3.PasswordChar = '●';
             this.PubKey_textBox3.Size = new System.Drawing.Size(338, 20);
             this.PubKey_textBox3.TabIndex = 8;
-            this.PubKey_textBox3.UseSystemPasswordChar = true;
             this.PubKey_textBox3.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // label5
@@ -228,10 +222,8 @@
             this.PubKey_textBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PubKey_textBox4.Location = new System.Drawing.Point(98, 353);
             this.PubKey_textBox4.Name = "PubKey_textBox4";
-            this.PubKey_textBox4.PasswordChar = '●';
             this.PubKey_textBox4.Size = new System.Drawing.Size(338, 20);
             this.PubKey_textBox4.TabIndex = 11;
-            this.PubKey_textBox4.UseSystemPasswordChar = true;
             this.PubKey_textBox4.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // label7
@@ -272,10 +264,8 @@
             this.PubKey_textBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PubKey_textBox5.Location = new System.Drawing.Point(98, 456);
             this.PubKey_textBox5.Name = "PubKey_textBox5";
-            this.PubKey_textBox5.PasswordChar = '●';
             this.PubKey_textBox5.Size = new System.Drawing.Size(338, 20);
             this.PubKey_textBox5.TabIndex = 14;
-            this.PubKey_textBox5.UseSystemPasswordChar = true;
             this.PubKey_textBox5.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PubKey_textBox1_KeyUp);
             // 
             // SettingsOKButton

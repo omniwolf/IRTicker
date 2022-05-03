@@ -36,7 +36,7 @@ namespace IRTicker
         List<string> IRCurrencies_and_extras = new List<string>();
 
         // which other currencies?  These:
-        List<string> Currencies_extras = new List<string>() {"SOL", "WETH", "WBTC", "CHI" };
+        List<string> Currencies_extras = new List<string>() { "SOL", "WETH", "WBTC", "CHI" };
 
         bool SaveLoanSlush = true;  // false if we're clearing stuff and don't want to make changes to the saved entries.  Taking bets on me having to remove this auto-save nonsense and build a save button again
 
@@ -56,9 +56,27 @@ namespace IRTicker
             BuildUI();
         }
 
-        private async Task<Dictionary<string, Account>> pullAccounts() {
+        enum Platform {
+            IROTC,
+            IROTCSG,
+            B2C2,
+            Coinbase,
+            MetaMask,
+            TrigonX
+        }
+
+        private async Task<Dictionary<string, Account>> pullAccounts(Platform platform) {
             // pull the balance
-             return pIR.GetAccounts();
+            switch (platform) {
+                case Platform.IROTC:
+                    return pIR.GetAccounts(Properties.Settings.Default.IROTCAPIKey, Properties.Settings.Default.IROTCAPISecret);
+                    break;
+                case Platform.IROTCSG:
+                    return pIR.GetAccounts(Properties.Settings.Default.IROTCSGAPIKey, Properties.Settings.Default.IROTCSGAPISecret);
+                    break;
+            }
+            Debug.Print("In Balance class, should never get here.  tried to pull IR settings for some thing we don't know about");
+             return null;
         }
 
         // should only be called once!
@@ -148,7 +166,7 @@ namespace IRTicker
 
             buildDynamicRows(IRCurrencies_and_extras, RowCount);
 
-            DrawIR();  // always draw IR first, 
+            DrawIR(Platform.IROTC);  // always draw IR first, 
         }
 
         // this builds the dynamic row controls.  Will be sent secondary currency list then primary currency list. Returns how many rows were created (eg RowCount)
@@ -437,10 +455,10 @@ namespace IRTicker
             return DCE_IR.GetCryptoPairs();
         }
 
-        private async void DrawIR() {
+        private async void DrawIR(Platform platform) {
 
-            Task<Dictionary<string, Account>> meeTask = pullAccounts();
-            string platformName = "Independent Reserve";
+            Task<Dictionary<string, Account>> meeTask = pullAccounts(platform);
+            string platformName = "Independent Reserve " + platform.ToString();
 
             if (!masterBalanceDict.ContainsKey(platformName)) 
                 masterBalanceDict.Add(platformName, new Dictionary<string, BalanceData>());
@@ -452,7 +470,14 @@ namespace IRTicker
             ClearDynamicRows(IRCurrencies_and_extras);
 
             // populate numbas
-            LoanSlushDecode(Properties.Settings.Default.LoanSlushEncoded, platformName);
+            switch (platform) {
+                case Platform.IROTC:
+                    LoanSlushDecode(Properties.Settings.Default.LoanSlushEncoded, platformName);
+                    break;
+                case Platform.IROTCSG:
+                    LoanSlushDecode(Properties.Settings.Default.LoanSlushEncodedIROTCSG, platformName);
+                    break;
+            }
 
             Dictionary<string, Account> pAccounts = await meeTask;  // the idea here is we pause until this task is done
 
@@ -481,8 +506,11 @@ namespace IRTicker
             }*/
 
             switch (Platform_comboBox.SelectedItem.ToString()) {
-                case "Independent Reserve":
+                case "Independent Reserve IROTC":
                     Properties.Settings.Default.LoanSlushEncoded = loanSlushEncoded;
+                    break;
+                case "Independent Reserve IROTCSG":
+                    Properties.Settings.Default.LoanSlushEncodedIROTCSG = loanSlushEncoded;
                     break;
                 case "B2C2":
                     Properties.Settings.Default.LoanSlushEncoded_B2C2 = loanSlushEncoded;
@@ -934,9 +962,15 @@ namespace IRTicker
             // platform hub
             CryptoPairs = await GetCryptoPairs();
             switch (Platform_comboBox.SelectedItem.ToString()) {
-                case "Independent Reserve":
+                case "Independent Reserve IROTC":
                     SaveLoanSlush = false;
-                    DrawIR();
+                    DrawIR(Platform.IROTC);
+                    SaveLoanSlush = true;
+                    break;
+
+                case "Independent Reserve IROTCSG":
+                    SaveLoanSlush = false;
+                    DrawIR(Platform.IROTCSG);
                     SaveLoanSlush = true;
                     break;
 

@@ -54,21 +54,35 @@ namespace IRTicker
             this.BalSettingsGDriveFolder_textbox = new System.Windows.Forms.TextBox();
             this.BalSettingsGDriveFolder_label = new System.Windows.Forms.Label();
             this.BalSettingsGDrive_folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.BalSettingsIR_groupbox1 = new System.Windows.Forms.GroupBox();
+            this.BalSettingsIROTCAPISecret_textbox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.BalSettingsIROTCAPIKey_textbox = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.BalSettingsIR_groupbox2 = new System.Windows.Forms.GroupBox();
+            this.BalSettingsCopyToIROTC_button = new System.Windows.Forms.Button();
+            this.BalSettingsIROTCSGAPISecret_textbox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.BalSettingsIROTCSGAPIKey_textbox = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.BalSettingsB2C2_groupbox.SuspendLayout();
             this.BalSettingsCoinbase_groupbox.SuspendLayout();
             this.BalSettingsTrigonX_groupbox.SuspendLayout();
             this.BalSettingsETHWallet_groupbox.SuspendLayout();
             this.BalSettingsSlack_groupbox.SuspendLayout();
             this.BalSettingsGDrive_groupbox.SuspendLayout();
+            this.BalSettingsIR_groupbox1.SuspendLayout();
+            this.BalSettingsIR_groupbox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // BalSettingsB2C2_groupbox
             // 
             this.BalSettingsB2C2_groupbox.Controls.Add(this.BalSettingsB2C2Token_textbox);
             this.BalSettingsB2C2_groupbox.Controls.Add(this.BalSettingsB2C2Token_label);
-            this.BalSettingsB2C2_groupbox.Location = new System.Drawing.Point(12, 12);
+            this.BalSettingsB2C2_groupbox.Location = new System.Drawing.Point(12, 108);
             this.BalSettingsB2C2_groupbox.Name = "BalSettingsB2C2_groupbox";
-            this.BalSettingsB2C2_groupbox.Size = new System.Drawing.Size(266, 132);
+            this.BalSettingsB2C2_groupbox.Size = new System.Drawing.Size(266, 68);
             this.BalSettingsB2C2_groupbox.TabIndex = 0;
             this.BalSettingsB2C2_groupbox.TabStop = false;
             this.BalSettingsB2C2_groupbox.Text = "B2C2";
@@ -98,7 +112,7 @@ namespace IRTicker
             this.BalSettingsCoinbase_groupbox.Controls.Add(this.BalSettingsCoinbaseAPISecret_label);
             this.BalSettingsCoinbase_groupbox.Controls.Add(this.BalSettingsCoinbaseAPIKey_textbox);
             this.BalSettingsCoinbase_groupbox.Controls.Add(this.BalSettingsCoinbaseAPIKey_label);
-            this.BalSettingsCoinbase_groupbox.Location = new System.Drawing.Point(12, 150);
+            this.BalSettingsCoinbase_groupbox.Location = new System.Drawing.Point(12, 183);
             this.BalSettingsCoinbase_groupbox.Name = "BalSettingsCoinbase_groupbox";
             this.BalSettingsCoinbase_groupbox.Size = new System.Drawing.Size(266, 132);
             this.BalSettingsCoinbase_groupbox.TabIndex = 1;
@@ -179,9 +193,9 @@ namespace IRTicker
             // 
             this.BalSettingsTrigonX_groupbox.Controls.Add(this.BalSettingsTrigonXToken_textbox);
             this.BalSettingsTrigonX_groupbox.Controls.Add(this.BalSettingsTrigonXToken_label);
-            this.BalSettingsTrigonX_groupbox.Location = new System.Drawing.Point(284, 12);
+            this.BalSettingsTrigonX_groupbox.Location = new System.Drawing.Point(284, 108);
             this.BalSettingsTrigonX_groupbox.Name = "BalSettingsTrigonX_groupbox";
-            this.BalSettingsTrigonX_groupbox.Size = new System.Drawing.Size(266, 132);
+            this.BalSettingsTrigonX_groupbox.Size = new System.Drawing.Size(266, 68);
             this.BalSettingsTrigonX_groupbox.TabIndex = 2;
             this.BalSettingsTrigonX_groupbox.TabStop = false;
             this.BalSettingsTrigonX_groupbox.Text = "TrigonX";
@@ -207,7 +221,7 @@ namespace IRTicker
             // 
             this.BalSettingsETHWallet_groupbox.Controls.Add(this.BalSettingsETHWallet_textbox);
             this.BalSettingsETHWallet_groupbox.Controls.Add(this.BalSettingsETHWallet_label);
-            this.BalSettingsETHWallet_groupbox.Location = new System.Drawing.Point(284, 150);
+            this.BalSettingsETHWallet_groupbox.Location = new System.Drawing.Point(284, 183);
             this.BalSettingsETHWallet_groupbox.Name = "BalSettingsETHWallet_groupbox";
             this.BalSettingsETHWallet_groupbox.Size = new System.Drawing.Size(266, 132);
             this.BalSettingsETHWallet_groupbox.TabIndex = 3;
@@ -237,9 +251,9 @@ namespace IRTicker
             this.BalSettingsSlack_groupbox.Controls.Add(this.BalSettingsSlackChannel_label);
             this.BalSettingsSlack_groupbox.Controls.Add(this.BalSettingsSlackToken_textbox);
             this.BalSettingsSlack_groupbox.Controls.Add(this.BalSettingsSlackToken_label);
-            this.BalSettingsSlack_groupbox.Location = new System.Drawing.Point(12, 288);
+            this.BalSettingsSlack_groupbox.Location = new System.Drawing.Point(12, 322);
             this.BalSettingsSlack_groupbox.Name = "BalSettingsSlack_groupbox";
-            this.BalSettingsSlack_groupbox.Size = new System.Drawing.Size(266, 132);
+            this.BalSettingsSlack_groupbox.Size = new System.Drawing.Size(266, 98);
             this.BalSettingsSlack_groupbox.TabIndex = 4;
             this.BalSettingsSlack_groupbox.TabStop = false;
             this.BalSettingsSlack_groupbox.Text = "Slack bot";
@@ -281,9 +295,9 @@ namespace IRTicker
             // 
             this.BalSettingsGDrive_groupbox.Controls.Add(this.BalSettingsGDriveFolder_textbox);
             this.BalSettingsGDrive_groupbox.Controls.Add(this.BalSettingsGDriveFolder_label);
-            this.BalSettingsGDrive_groupbox.Location = new System.Drawing.Point(284, 288);
+            this.BalSettingsGDrive_groupbox.Location = new System.Drawing.Point(284, 322);
             this.BalSettingsGDrive_groupbox.Name = "BalSettingsGDrive_groupbox";
-            this.BalSettingsGDrive_groupbox.Size = new System.Drawing.Size(266, 103);
+            this.BalSettingsGDrive_groupbox.Size = new System.Drawing.Size(266, 69);
             this.BalSettingsGDrive_groupbox.TabIndex = 5;
             this.BalSettingsGDrive_groupbox.TabStop = false;
             this.BalSettingsGDrive_groupbox.Text = "G drive";
@@ -306,12 +320,130 @@ namespace IRTicker
             this.BalSettingsGDriveFolder_label.TabIndex = 0;
             this.BalSettingsGDriveFolder_label.Text = "Folder:";
             // 
+            // BalSettingsIR_groupbox1
+            // 
+            this.BalSettingsIR_groupbox1.Controls.Add(this.BalSettingsCopyToIROTC_button);
+            this.BalSettingsIR_groupbox1.Controls.Add(this.BalSettingsIROTCAPISecret_textbox);
+            this.BalSettingsIR_groupbox1.Controls.Add(this.label1);
+            this.BalSettingsIR_groupbox1.Controls.Add(this.BalSettingsIROTCAPIKey_textbox);
+            this.BalSettingsIR_groupbox1.Controls.Add(this.label2);
+            this.BalSettingsIR_groupbox1.Location = new System.Drawing.Point(12, 4);
+            this.BalSettingsIR_groupbox1.Name = "BalSettingsIR_groupbox1";
+            this.BalSettingsIR_groupbox1.Size = new System.Drawing.Size(266, 98);
+            this.BalSettingsIR_groupbox1.TabIndex = 5;
+            this.BalSettingsIR_groupbox1.TabStop = false;
+            this.BalSettingsIR_groupbox1.Text = "IROTC";
+            // 
+            // BalSettingsIROTCAPISecret_textbox
+            // 
+            this.BalSettingsIROTCAPISecret_textbox.Location = new System.Drawing.Point(64, 61);
+            this.BalSettingsIROTCAPISecret_textbox.Name = "BalSettingsIROTCAPISecret_textbox";
+            this.BalSettingsIROTCAPISecret_textbox.Size = new System.Drawing.Size(188, 20);
+            this.BalSettingsIROTCAPISecret_textbox.TabIndex = 3;
+            this.BalSettingsIROTCAPISecret_textbox.UseSystemPasswordChar = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 64);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(59, 13);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "API secret:";
+            // 
+            // BalSettingsIROTCAPIKey_textbox
+            // 
+            this.BalSettingsIROTCAPIKey_textbox.Location = new System.Drawing.Point(64, 34);
+            this.BalSettingsIROTCAPIKey_textbox.Name = "BalSettingsIROTCAPIKey_textbox";
+            this.BalSettingsIROTCAPIKey_textbox.Size = new System.Drawing.Size(188, 20);
+            this.BalSettingsIROTCAPIKey_textbox.TabIndex = 1;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 37);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(47, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "API key:";
+            // 
+            // BalSettingsIR_groupbox2
+            // 
+            this.BalSettingsIR_groupbox2.Controls.Add(this.button1);
+            this.BalSettingsIR_groupbox2.Controls.Add(this.BalSettingsIROTCSGAPISecret_textbox);
+            this.BalSettingsIR_groupbox2.Controls.Add(this.label4);
+            this.BalSettingsIR_groupbox2.Controls.Add(this.label3);
+            this.BalSettingsIR_groupbox2.Controls.Add(this.BalSettingsIROTCSGAPIKey_textbox);
+            this.BalSettingsIR_groupbox2.Location = new System.Drawing.Point(284, 4);
+            this.BalSettingsIR_groupbox2.Name = "BalSettingsIR_groupbox2";
+            this.BalSettingsIR_groupbox2.Size = new System.Drawing.Size(266, 98);
+            this.BalSettingsIR_groupbox2.TabIndex = 5;
+            this.BalSettingsIR_groupbox2.TabStop = false;
+            this.BalSettingsIR_groupbox2.Text = "IROTC-SG";
+            // 
+            // BalSettingsCopyToIROTC_button
+            // 
+            this.BalSettingsCopyToIROTC_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BalSettingsCopyToIROTC_button.Location = new System.Drawing.Point(64, 8);
+            this.BalSettingsCopyToIROTC_button.Name = "BalSettingsCopyToIROTC_button";
+            this.BalSettingsCopyToIROTC_button.Size = new System.Drawing.Size(188, 23);
+            this.BalSettingsCopyToIROTC_button.TabIndex = 6;
+            this.BalSettingsCopyToIROTC_button.Text = "Copy from currently selected account";
+            this.BalSettingsCopyToIROTC_button.UseVisualStyleBackColor = true;
+            this.BalSettingsCopyToIROTC_button.Click += new System.EventHandler(this.BalSettingsCopyToIROTC_button_Click);
+            // 
+            // BalSettingsIROTCSGAPISecret_textbox
+            // 
+            this.BalSettingsIROTCSGAPISecret_textbox.Location = new System.Drawing.Point(64, 61);
+            this.BalSettingsIROTCSGAPISecret_textbox.Name = "BalSettingsIROTCSGAPISecret_textbox";
+            this.BalSettingsIROTCSGAPISecret_textbox.Size = new System.Drawing.Size(188, 20);
+            this.BalSettingsIROTCSGAPISecret_textbox.TabIndex = 10;
+            this.BalSettingsIROTCSGAPISecret_textbox.UseSystemPasswordChar = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 64);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(59, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "API secret:";
+            // 
+            // BalSettingsIROTCSGAPIKey_textbox
+            // 
+            this.BalSettingsIROTCSGAPIKey_textbox.Location = new System.Drawing.Point(64, 34);
+            this.BalSettingsIROTCSGAPIKey_textbox.Name = "BalSettingsIROTCSGAPIKey_textbox";
+            this.BalSettingsIROTCSGAPIKey_textbox.Size = new System.Drawing.Size(188, 20);
+            this.BalSettingsIROTCSGAPIKey_textbox.TabIndex = 8;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 37);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(47, 13);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "API key:";
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(64, 8);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(188, 23);
+            this.button1.TabIndex = 11;
+            this.button1.Text = "Copy from currently selected account";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // BalSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(562, 431);
+            this.Controls.Add(this.BalSettingsIR_groupbox2);
+            this.Controls.Add(this.BalSettingsIR_groupbox1);
             this.Controls.Add(this.BalSettingsGDrive_groupbox);
             this.Controls.Add(this.BalSettingsSlack_groupbox);
             this.Controls.Add(this.BalSettingsETHWallet_groupbox);
@@ -339,6 +471,10 @@ namespace IRTicker
             this.BalSettingsSlack_groupbox.PerformLayout();
             this.BalSettingsGDrive_groupbox.ResumeLayout(false);
             this.BalSettingsGDrive_groupbox.PerformLayout();
+            this.BalSettingsIR_groupbox1.ResumeLayout(false);
+            this.BalSettingsIR_groupbox1.PerformLayout();
+            this.BalSettingsIR_groupbox2.ResumeLayout(false);
+            this.BalSettingsIR_groupbox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -372,5 +508,17 @@ namespace IRTicker
         private System.Windows.Forms.TextBox BalSettingsGDriveFolder_textbox;
         private System.Windows.Forms.Label BalSettingsGDriveFolder_label;
         private System.Windows.Forms.FolderBrowserDialog BalSettingsGDrive_folderBrowserDialog;
+        private System.Windows.Forms.GroupBox BalSettingsIR_groupbox1;
+        private System.Windows.Forms.Button BalSettingsCopyToIROTC_button;
+        private System.Windows.Forms.TextBox BalSettingsIROTCAPISecret_textbox;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox BalSettingsIROTCAPIKey_textbox;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.GroupBox BalSettingsIR_groupbox2;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox BalSettingsIROTCSGAPISecret_textbox;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox BalSettingsIROTCSGAPIKey_textbox;
     }
 }

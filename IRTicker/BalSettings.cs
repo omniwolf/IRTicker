@@ -15,6 +15,12 @@ namespace IRTicker
         public BalSettings() {
             InitializeComponent();
 
+            BalSettingsIROTCAPIKey_textbox.Text = Properties.Settings.Default.IROTCAPIKey;
+            BalSettingsIROTCAPISecret_textbox.Text = Properties.Settings.Default.IROTCAPISecret;
+
+            BalSettingsIROTCSGAPIKey_textbox.Text = Properties.Settings.Default.IROTCSGAPIKey;
+            BalSettingsIROTCSGAPISecret_textbox.Text = Properties.Settings.Default.IROTCSGAPISecret;
+
             BalSettingsB2C2Token_textbox.Text = Properties.Settings.Default.B2C2Token;
 
             BalSettingsCoinbaseAPIKey_textbox.Text = Properties.Settings.Default.CoinbaseAPIKey;
@@ -36,6 +42,12 @@ namespace IRTicker
         }
 
         private void BalSettingsSave_button_Click(object sender, EventArgs e) {
+            Properties.Settings.Default.IROTCAPIKey = BalSettingsIROTCAPIKey_textbox.Text;
+            Properties.Settings.Default.IROTCAPISecret = BalSettingsIROTCAPISecret_textbox.Text;
+
+            Properties.Settings.Default.IROTCSGAPIKey = BalSettingsIROTCSGAPIKey_textbox.Text;
+            Properties.Settings.Default.IROTCSGAPISecret = BalSettingsIROTCSGAPISecret_textbox.Text;
+
             Properties.Settings.Default.B2C2Token = BalSettingsB2C2Token_textbox.Text;
 
             Properties.Settings.Default.CoinbaseAPIKey = BalSettingsCoinbaseAPIKey_textbox.Text;
@@ -60,6 +72,16 @@ namespace IRTicker
             if (GDriveRes == DialogResult.OK) {
                 BalSettingsGDriveFolder_textbox.Text = BalSettingsGDrive_folderBrowserDialog.SelectedPath;
             }
+        }
+
+        private void BalSettingsCopyToIROTC_button_Click(object sender, EventArgs e) {
+            BalSettingsIROTCAPIKey_textbox.Text = Properties.Settings.Default.IRAPIPubKey;
+            BalSettingsIROTCAPISecret_textbox.Text = Properties.Settings.Default.IRAPIPrivKey;
+        }
+
+        private void button1_Click(object sender, EventArgs e) {
+            BalSettingsIROTCSGAPIKey_textbox.Text = Properties.Settings.Default.IRAPIPubKey;
+            BalSettingsIROTCSGAPISecret_textbox.Text = Properties.Settings.Default.IRAPIPrivKey;
         }
     }
 }

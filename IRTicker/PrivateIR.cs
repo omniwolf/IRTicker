@@ -20,7 +20,7 @@ namespace IRTicker {
         private Client IRclient;
         public Dictionary<string, Account> accounts = new Dictionary<string, Account>();
         private ApiCredential IRcreds;
-        private IRAccountsForm IRT;  // yeah lazy, instead of renaming this to IRAF, just leave it as IRT and then the rest of the code all works
+        private IRAccountsForm IRAF;  // yeah lazy, instead of renaming this to IRAF, just leave it as IRT and then the rest of the code all works
         private static readonly Object pIR_Lock = new Object();
 
         public string OrderBookSide = "Bid";  //  maintains which side of the order book we show in the AccountOrders_listview
@@ -56,8 +56,8 @@ namespace IRTicker {
             // 
         }
 
-        public void PrivateIR_init(string APIKey, string APISecret, IRAccountsForm _IRT, DCE _DCE_IR, TelegramBot _TGBot) {
-            IRT = _IRT;  // reminder - this is the IRAccountsFrom object
+        public void PrivateIR_init(string APIKey, string APISecret, IRAccountsForm _IRAF, DCE _DCE_IR, TelegramBot _TGBot) {
+            IRAF = _IRAF;  // reminder - this is the IRAccountsFrom object
             DCE_IR = _DCE_IR;
             TGBot = _TGBot;
 
@@ -76,7 +76,7 @@ namespace IRTicker {
                 Credential = IRcreds
             };
             IRclient = Client.Create(IRconf);
-            if (null != IRT) Task.Run(() => populateClosedOrders());
+            if ((null != IRAF) && !IRAF.IsDisposed) Task.Run(() => populateClosedOrders());
         }
 
         public void setTGBot(TelegramBot _TGBot) {
@@ -84,15 +84,29 @@ namespace IRTicker {
         }
 
         public void setIRAF(IRAccountsForm _IRAF) {
-            IRT = _IRAF;
+            IRAF = _IRAF;
             Task.Run(() => populateClosedOrders());
         }
 
-        public Dictionary<string, Account> GetAccounts() {
-            lock (pIR_Lock) {
-                accounts = (IRclient.GetAccounts()).ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
+        public Dictionary<string, Account> GetAccounts(string APIKey = "", string APISecret = "") {
+            if (string.IsNullOrEmpty(APIKey) || (APIKey == Properties.Settings.Default.IRAPIPubKey)) {
+                lock (pIR_Lock) {
+                    accounts = (IRclient.GetAccounts()).ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
+                }
+                return accounts;
             }
-            return accounts;
+            else {  // we have been sent custom credentials, create a new client and use it.  Usually used for balance checker, checking SGD account or something.
+                IRcreds = new ApiCredential(APIKey, APISecret);
+
+                var IRconf = new ApiConfig
+                {
+                    BaseUrl = DCE_IR.BaseURL,
+                    Credential = IRcreds
+                };
+                        
+                Client IRclientAlt = Client.Create(IRconf);
+                return (IRclientAlt.GetAccounts()).ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
+            }
         }
 
         public DigitalCurrencyDepositAddress GetDepositAddress(string crypto) {
@@ -169,10 +183,15 @@ namespace IRTicker {
         public void APIKeyHasChanged() {
             APIKeyChanged = DateTime.Now;
             firstClosedOrdersPullDone = false;
+
+            if ((null != IRAF) && (!IRAF.IsDisposed)) {
+                IRAF.ResetLabels();  // set all the account values to "-"
+            }
         }
 
         // this thing runs through all IR pairs and pulls all orders for the pair to the notifiedOrders dictionary
         // so that we have a list of closed orders to compare when a new one comes in
+        // only gets called if we know the IRAF form is running
         public void populateClosedOrders() {
             // now we pull all closed orders for all pairs to ensure we have all order guids listed in the TG Bot notifiedOrders dictionary
 
@@ -186,7 +205,7 @@ namespace IRTicker {
 
                         // need to go if the current primary/secondary is what's shown on IRAccounts, then draw it
                         if ((SelectedCrypto == primaryCode) && (DCE_IR.CurrentSecondaryCurrency == secondaryCode)) {
-                            IRT.drawClosedOrders(cOrders.Data);
+                            IRAF.drawClosedOrders(cOrders.Data); 
                         }
                         // IRT.drawClosedOrders(cOrders);
                     }
@@ -277,7 +296,7 @@ namespace IRTicker {
                 // only call the TG closed orders sub if we've waited 5 seconds after an APIKey change or it's the initial pull of all orders
                 //if ((TGBot != null) && (DateTime.Now > APIKeyChanged + TimeSpan.FromMinutes(1))) TGBot.closedOrders(cOrders, APIkey);
                 if ((TGBot != null) && ((DateTime.Now > APIKeyChanged + TimeSpan.FromMinutes(1)) || initialPull)) TGBot.closedOrders(cOrders, APIkey);
-                IRT.SignalAveragePriceUpdate(cOrders);
+                if ((null != IRAF) && !IRAF.IsDisposed) IRAF.SignalAveragePriceUpdate(cOrders);
                 //if (initialPull && IRT.IRAccount_panel.Visible) IRT.drawClosedOrders(cOrders.Data);  // this isn't the right place to do this
             }
             //else Debug.Print("gecClosed orders, no orders for " + crypto + "-" + fiat);
@@ -311,9 +330,7 @@ namespace IRTicker {
         public void compileAccountOrderBookAsync(string pair) {
 
             if (pair != (SelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency)) return;
-            if (null == IRT) {
-                return;
-            }
+            if ((null == IRAF) || IRAF.IsDisposed) return;
 
             List<decimal[]> accOrderListView = new List<decimal[]>();
             decimal estValue = 0;  // this appears to be the total value of the order currently in the fields on the form
@@ -386,7 +403,7 @@ namespace IRTicker {
             // if it's a limit order, then the AccountEstOrderValue field is calculated manually (no need for OB), so here we need to make sure we don't clear it
             // this else is saying "if it's a market order, but we didn't engage trackedOrderVolume, then they probably have unparsable text in the vol box, so clear the estimate value label"
             else if (OrderTypeStr == "Market") estValue = -2; // ""
-            IRT.drawAccountOrderBook(new Tuple<decimal, List<decimal[]>>(estValue, accOrderListView), pair);  // why a tuple and not just separate variables?  We need it as one to insert into the synchronisation thing in the drawAccountOrderBook sub
+            IRAF.drawAccountOrderBook(new Tuple<decimal, List<decimal[]>>(estValue, accOrderListView), pair);  // why a tuple and not just separate variables?  We need it as one to insert into the synchronisation thing in the drawAccountOrderBook sub
            // return Task.CompletedTask;
         }
 
@@ -401,7 +418,7 @@ namespace IRTicker {
             if (BaiterBookSide == "Offer") distanceFromTopOrder = distanceFromTopOrder * -1;
 
             Debug.Print("MBAIT: distance from top: " + distanceFromTopOrder);
-            IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Starting market baiter!"));
+            IRAF.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Starting market baiter!"));
 
             while (marketBaiterActive) {
                 if (BaiterBookSide == "Offer") baiterBook = orderedOffers;
@@ -443,7 +460,7 @@ namespace IRTicker {
                         // here we check if the order is too high for the OB, or too high for the limit price we set
                         if (orderPrice > DCE_IR.IR_OBs[pair].Item2.Keys.Min()) {
                             Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is greater than the lowest bid - " + DCE_IR.IR_OBs[pair].Item2.Keys.Min());
-                            IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "The spread is too toight to fit in an order!  Maybe just market sell?"));
+                            IRAF.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "The spread is too toight to fit in an order!  Maybe just market sell?"));
                             Thread.Sleep(10000);
                             continue;  // master while loop
                         }
@@ -458,7 +475,7 @@ namespace IRTicker {
                         // check if the order is too low for the OB or lower than our set limit
                         if (orderPrice < DCE_IR.IR_OBs[pair].Item1.Keys.Max()) {
                             Debug.Print("MBAIT: orderPrice (" + orderPrice + ") is less than the highest offer - " + DCE_IR.IR_OBs[pair].Item1.Keys.Max());
-                            IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "The spread is too toight to fit in an order!  Maybe just market buy?"));
+                            IRAF.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "The spread is too toight to fit in an order!  Maybe just market buy?"));
                             Thread.Sleep(10000);
                             continue;  // master while loop
                         }
@@ -488,7 +505,7 @@ namespace IRTicker {
 
                         if (errorMsg.Contains("Order volume must be greater or equal to")) {  // order size too small now, just finish.
                             Debug.Print("MBAIT: OK, order is too small, so we just stop.");
-                            IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter 🎣", crypto.ToUpper() + "-" + fiat.ToUpper() + " order mostly filled, stopping as order now too small to continue.  Remaining: " + crypto.ToUpper() + " " + baiterLiveVol), true);
+                            IRAF.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter 🎣", crypto.ToUpper() + "-" + fiat.ToUpper() + " order mostly filled, stopping as order now too small to continue.  Remaining: " + crypto.ToUpper() + " " + baiterLiveVol), true);
                             placedOrder = null;
                             marketBaiterActive = false;
                         }
@@ -497,7 +514,7 @@ namespace IRTicker {
                     //IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, /*PrivateIREndPoints.GetAccounts, */PrivateIREndPoints.UpdateOrderBook });
                     try {
                         Page<BankHistoryOrder> oOrders = GetOpenOrders(crypto, fiat);
-                        IRT.drawOpenOrders(oOrders.Data);
+                        IRAF.drawOpenOrders(oOrders.Data);
                     }
                     catch (Exception ex) {
                         Debug.Print("MBAIT: failed to pull GetOpenOrders after placing a new order.. error: " + ex.Message);
@@ -559,7 +576,7 @@ namespace IRTicker {
                             else {  // the baiting order IS in the first price level!
                                 if (pricePoint.Value[placedOrder.OrderGuid.ToString()].Volume != baiterLiveVol) {
                                     baiterLiveVol = pricePoint.Value[placedOrder.OrderGuid.ToString()].Volume;
-                                    IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble.... (" + (placedOrder.PrimaryCurrencyCode.ToString().ToUpper() == "XBT" ? "BTC" : placedOrder.PrimaryCurrencyCode.ToString().ToUpper()) + " " + baiterLiveVol + " remaining)"));
+                                    IRAF.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Nibble.... (" + (placedOrder.PrimaryCurrencyCode.ToString().ToUpper() == "XBT" ? "BTC" : placedOrder.PrimaryCurrencyCode.ToString().ToUpper()) + " " + baiterLiveVol + " remaining)"));
                                 }
                                 foundOrder = true;
                                 break;  // we don't need to continue, the order is where we want it.
@@ -603,7 +620,7 @@ namespace IRTicker {
                                         //IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
                                         try {
                                             Page<BankHistoryOrder> oOrders = GetOpenOrders(crypto, fiat);
-                                            IRT.drawOpenOrders(oOrders.Data);
+                                            IRAF.drawOpenOrders(oOrders.Data);
                                         }
                                         catch (Exception ex) {
                                             Debug.Print("MBAIT: failed to pull GetOpenOrders after cancelling an order.. error: " + ex.Message);
@@ -633,7 +650,7 @@ namespace IRTicker {
                         Page<BankHistoryOrder> closedOs;
                         try {
                             closedOs = GetClosedOrders(crypto, fiat);  // let's check to see if we have it
-                            IRT.drawClosedOrders(closedOs.Data);
+                            IRAF.drawClosedOrders(closedOs.Data);
                         }
                         catch (Exception ex) {
                             Debug.Print("MBAIT: Damnit, can't pull closed orders for some reason: " + ex.Message);
@@ -645,7 +662,7 @@ namespace IRTicker {
                             if (closedO.OrderGuid == placedOrder.OrderGuid) {
                                 if (closedO.Status == OrderStatus.Filled) {
                                     Debug.Print("MBAIT: our order got filled.  sweet.");
-                                    IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter 🎣", crypto.ToUpper() + "-" + fiat.ToUpper() + " order filled!"), true);
+                                    IRAF.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter 🎣", crypto.ToUpper() + "-" + fiat.ToUpper() + " order filled!"), true);
                                     placedOrder = null;
                                     marketBaiterActive = false;
                                     break;  // closed orders foreach
@@ -690,7 +707,7 @@ namespace IRTicker {
                                             //IRT.updateUIFromMarketBaiter(new List<PrivateIREndPoints>() { PrivateIREndPoints.GetOpenOrders, PrivateIREndPoints.UpdateOrderBook });
                                             try {
                                                 Page<BankHistoryOrder> oOrders = GetOpenOrders(crypto, fiat);  // we need to pull this again because we just cancelled the order
-                                                IRT.drawOpenOrders(oOrders.Data);
+                                                IRAF.drawOpenOrders(oOrders.Data);
                                             }
                                             catch (Exception ex) {
                                                 Debug.Print("MBAIT: failed to pull GetOpenOrders after discovering our order was cancelled. error: " + ex.Message);
@@ -703,7 +720,7 @@ namespace IRTicker {
                                 }
                             }
                             // IRT.synchronizationContext.Post(new SendOrPostCallback(o => { IRT.drawOpenOrders((IEnumerable<BankHistoryOrder>)o); }), openOs.Data);  // whoa.. don't think we need to do this.  The drawOpenOrders already does it
-                            IRT.drawOpenOrders(openOs.Data);
+                            IRAF.drawOpenOrders(openOs.Data);
 
                             if (!foundOrder) {  // if we still haven't found it (ie it's not in the open or closed order lists), it must be cancelled I guess?  re-create.
                                 Debug.Print("MBAIT: order wasn't in open or closed orders, so we'll re-create it");
@@ -744,12 +761,12 @@ namespace IRTicker {
                 }
                 if ((bo.Status == OrderStatus.Cancelled) || (bo.Status == OrderStatus.PartiallyFilledAndCancelled)) {
                     Debug.Print("MBAIT: cancel order was successful");
-                    IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Market baiter stopped, existing order cancelled."));
+                    IRAF.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Market baiter stopped, existing order cancelled."));
                     placedOrder = null;
                 }
                 else {
                     Debug.Print("MBAIT: couldn't cancel the order?? guid: " + bo.OrderGuid);
-                    IRT.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Market baiter stopped, but order couldn't be cancelled?"));
+                    IRAF.notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Market baiter stopped, but order couldn't be cancelled?"));
                 }
             }
         }
