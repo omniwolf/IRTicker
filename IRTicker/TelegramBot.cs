@@ -31,6 +31,7 @@ namespace IRTicker
         IRTicker IRT;
 
         static ITelegramBotClient botClient;
+        CancellationTokenSource cts = null;
         TelegramState TGstate;
         int LatestMessageID;
         string LastMessage = "";  // need to track our previous message so we don't try and edit a message with the same message
@@ -50,7 +51,7 @@ namespace IRTicker
             TGstate = new TelegramState(this);
             Debug.Print("starting tgbot with: " + TGAPIKey);
 
-            var cts = new CancellationTokenSource();
+            cts = new CancellationTokenSource();
             var cancellationToken = cts.Token;
 
             botClient = new TelegramBotClient(TGAPIKey);
@@ -69,7 +70,7 @@ namespace IRTicker
 
         public void NewClient(string newToken) {
             ResetBot();
-            var cts = new CancellationTokenSource();
+            cts = new CancellationTokenSource();
             var cancellationToken = cts.Token;
 
             botClient = new TelegramBotClient(newToken);
@@ -86,13 +87,15 @@ namespace IRTicker
         }
 
         public void StopBot() {
-            if (botClient.IsReceiving) {
-                try {
-                    botClient.StopReceiving();
-                }
-                catch (Exception ex) {
-                    Debug.Print("stopping TG bot didn't work very well.  error: " + ex.Message);
-                }
+
+            try {
+                cts.Cancel();
+            }
+            catch (Exception ex) {
+                Debug.Print("stopping TG bot didn't work very well.  error: " + ex.Message);
+            }
+            finally {
+                cts.Dispose();
             }
         }
 
@@ -582,8 +585,18 @@ namespace IRTicker
 
         async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken) {
             if (exception is ApiRequestException apiRequestException) {
-                SendMessage("Error: " + apiRequestException.ToString() + Environment.NewLine + "Resetting menu...");
-                TGstate.ResetMenu();
+
+                // need to do something like "if exception contains "Unauthorized" then don't try and send a message, maybe do a dialogue box?
+
+                if (apiRequestException.ToString().Contains("Unauthorized")) {
+                    Debug.Print("TGB: Probably bad API key?  exception message: " + apiRequestException.ToString());
+                    System.Windows.Forms.MessageBox.Show("Unauthorized error.  Maybe wrong API token?  Error mesage: " + Environment.NewLine + Environment.NewLine +
+                        apiRequestException.ToString());
+                }
+                else {
+                    SendMessage("Error: " + apiRequestException.ToString() + Environment.NewLine + "Resetting menu...");
+                    TGstate.ResetMenu();
+                }
             }
         }
 
