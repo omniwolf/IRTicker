@@ -8,7 +8,6 @@ using System.Diagnostics;
 using System.Collections.Concurrent;
 using System.Windows.Forms.DataVisualization.Charting;
 using Newtonsoft.Json;
-using WebSocketSharp;
 
 namespace IRTicker {
     public class DCE {
@@ -200,7 +199,7 @@ namespace IRTicker {
         public List<string> PrimaryCurrencyList {
             get {
                 //Debug.Print("prim currency for " + FriendlyName);
-                if (_primaryCodesStr.IsNullOrEmpty()) return new List<string>();
+                if (string.IsNullOrEmpty(_primaryCodesStr)) return new List<string>();
                 List<string> codesList = new List<string>();
                 string[] codess = _primaryCodesStr.Split(',');
                 foreach(string cc in codess) {

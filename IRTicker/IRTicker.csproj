@@ -163,9 +163,6 @@
     <Reference Include="Telegram.Bot.Extensions.Polling, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Telegram.Bot.Extensions.Polling.0.2.0\lib\netstandard2.0\Telegram.Bot.Extensions.Polling.dll</HintPath>
     </Reference>
-    <Reference Include="websocket-sharp, Version=1.0.2.32519, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
-      <HintPath>..\packages\WebSocketSharp-NonPreRelease.1.0.0\lib\net35\websocket-sharp.dll</HintPath>
-    </Reference>
     <Reference Include="Websocket.Client, Version=4.3.0.0, Culture=neutral, PublicKeyToken=ae648c6d12f59b1b, processorArchitecture=MSIL">
       <HintPath>..\packages\Websocket.Client.4.3.35\lib\netstandard2.0\Websocket.Client.dll</HintPath>
     </Reference>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-using WebSocketSharp;
+//using WebSocketSharp;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using System.ComponentModel;
@@ -16,8 +16,8 @@ namespace IRTicker {
     public class WebSocketsConnect {
 
         private Dictionary<string, DCE> DCEs;
-        private WebSocket wSocket_BTCM;
-        private WebsocketClient client_IR;
+        //private WebSocket wSocket_BTCM;
+        private WebsocketClient client_IR, client_BTCM;
         private BackgroundWorker pollingThread;
         private Thread UITimerThread;
         private bool UITimerThreadProceed = true;
@@ -49,7 +49,7 @@ namespace IRTicker {
 
             // BTCM
 
-            BTCM_Connect_v2();
+            BTCM_Connect_v3();
 
         }
 
@@ -210,7 +210,7 @@ namespace IRTicker {
                     }
                     else pairs.Add(crypto);
 
-                    if (wSocket_BTCM.IsAlive) {
+                    if (client_BTCM.IsRunning) {
                         channel = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\", \"heartbeat\"], \"marketIds\":[";  // we only ever subscribe, no scenario where we need to unsubscribe.  Unsubscribing is a pain for BTCM, see here https://api.btcmarkets.net/doc/v3#tag/WS_Overview
                         foreach (string crypto1 in pairs) {
                             string crypto2 = crypto1;
@@ -222,7 +222,7 @@ namespace IRTicker {
                         Debug.Print("BTCHH channel subscription string: " + channel);
 
                         //pairList = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\"], \"marketIds\":[\"BTC-AUD\"]}";
-                        wSocket_BTCM.Send(channel);
+                        Task.Run(() => client_BTCM.Send(channel));
                     }
                     else DCEs[dExchange].socketsReset = true;
 
@@ -356,7 +356,68 @@ namespace IRTicker {
             }
         }
 
-        public void BTCM_Connect_v2() {
+        // BTCM version of startSockets()
+        private void BTCM_Connect_v3() {
+            var url = new Uri("wss://socket.btcmarkets.net/v2");
+            DCEs["BTCM"].socketsAlive = false;
+            Debug.Print(DateTime.Now + " - BTCM_Connect_v3 called for BTCM");
+
+            client_BTCM = new WebsocketClient(url);
+            client_BTCM.ReconnectTimeout = TimeSpan.FromSeconds(70);
+            
+            client_BTCM.ReconnectionHappened.Subscribe(info =>
+            {
+                if (info.Type == ReconnectionType.Initial) {
+                    Debug.Print("Initial 'reconnection', ignored");
+                    DCEs["BTCM"].socketsAlive = true;
+                    DCEs["BTCM"].socketsReset = false;
+                }
+                /*else if (info.Type == ReconnectionType.Lost) {
+                    Debug.Print("Lost 'reconnection' ignored, attached to a Reset button click?");
+                }*/
+                else {
+                    Debug.Print(DateTime.Now + " - (BTCM reconnection)");
+                    DCEs["BTCM"].socketsAlive = false;
+                    DCEs["BTCM"].CurrentDCEStatus = "Reconnected";
+
+                    Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
+                    subscribe_unsubscribe_new("BTCM", subscribe: true, crypto: "none", fiat: DCEs["BTCM"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
+                    
+                    return;  // if we're subscribing, we shouldn't need to start the client or anything..?
+                }
+
+            });
+
+            client_BTCM.MessageReceived.Subscribe(msg =>
+            {
+                MessageRX_BTCMv2(msg.Text);
+            });
+
+            client_BTCM.Start();
+
+            //Task.Run(() => client_BTCM.Start());
+
+            // if we want this code to re-subscribe (at time of writing this is only for when the user clicks the Reset button), then we loop until we have detected that
+            // the sockets is up and running, and THEN subscribe.  Maybe there's a better IRQ style way of doing this, but i'm a pleb.
+            if (false) {
+                bool keepLooping = true;
+                int loopCounter = 0;
+                do {
+                    if (client_IR.IsRunning) {
+                        subscribe_unsubscribe_new("BTCM", subscribe: true, crypto: "none");  // resubscriibe to all pairs
+                        keepLooping = false;
+                    }
+                    else {
+                        Thread.Sleep(500);
+                        loopCounter++;
+                    }
+                } while (keepLooping && (loopCounter < 10));  // 5 seconds and we're still not connected?  something else is wrong.
+            }
+        }
+
+    
+
+    /*private void BTCM_Connect_v2() {
 
             wSocket_BTCM = new WebSocket("wss://socket.btcmarkets.net/v2");
             wSocket_BTCM.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
@@ -396,7 +457,7 @@ namespace IRTicker {
             };
 
             wSocket_BTCM.Connect();
-        }
+        }*/
 
         /// <summary>
         /// UNSUBSCRIBes, re-initialises the dictionaries, then resubscribes from pairs.  if required will do all pairs or just a specific pair
@@ -441,8 +502,11 @@ namespace IRTicker {
                     //}
                     break;
                 case "BTCM":
-                    wSocket_BTCM.Close();
-                    wSocket_BTCM.Connect();
+                    if (client_BTCM.IsRunning) {
+                        client_BTCM.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
+                    }
+                    BTCM_Connect_v3();
+                    subscribe_unsubscribe_new("BTCM", subscribe: true, crypto: "none", fiat: DCEs["BTCM"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
                     break;
             }
             DCEs[dExchange].socketsReset = false;  // when closing the stream, the OnClose method is called, which sets the socketsReset to true.  need to turn this off so we don't reconnect forever
@@ -745,7 +809,7 @@ namespace IRTicker {
                 DCEs["BTCM"].CryptoPairsAdd(mSummary.pair, mSummary);
 
                 // BTCM only has one secondary currency, so it will always be hit.  keep this here in case they get more i guess.
-                if (DCEs["BTCM"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(31, mSummary);  // only update the UI for pairs we care about
+                /*if (DCEs["BTCM"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode)*/ pollingThread.ReportProgress(31, mSummary);  // only update the UI for pairs we care about // we only subscribe to AUD, so no point checking
                 DCEs["BTCM"].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
 
             }
@@ -770,7 +834,7 @@ namespace IRTicker {
                     /*if (wSocket_IR.IsAlive)*/ return true;
                    // return false;
                 case "BTCM":
-                    if (wSocket_BTCM.IsAlive) return true;
+                    if (client_BTCM.IsRunning) return true;
                     return false;
             }
             Debug.Print("Sockets, checking a socket alive, we have reached the end without returning.  we never should.  DCE: " + dExchange);
