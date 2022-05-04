@@ -623,18 +623,21 @@ namespace IRTicker {
             //BTCMBTCvol = 99;
             if (_bStick != null && _bStick.OpenDevice()) {
 
+                RgbColor currentColour = RgbColor.FromString("FF802B");  // an orange - if we see the cubes go this colour then there's probably something wrong
                 try {
                     if (IRvol > (BTCMvol * 2)) {
                         if ((pulseTask == null) || pulseTask.IsCompleted) {
                             cTokenSrc = new CancellationTokenSource();
-                            pulseTask = Task.Run(() => BWPulseforDubVol(RgbColor.FromString("#0079FF"), _bStick, cTokenSrc.Token));
+                            currentColour = RgbColor.FromString("#0079FF");
+                            pulseTask = Task.Run(() => BWPulseforDubVol(currentColour, _bStick, cTokenSrc.Token), cTokenSrc.Token);
                             //Debug.Print(DateTime.Now + " -- BS -- started the IR GOOOOOD thread");
                         }
                     }
                     else if ((IRvol * 2) < BTCMvol) {
                         if ((pulseTask == null) || pulseTask.IsCompleted) {
-                            cTokenSrc = new CancellationTokenSource();
-                            pulseTask = Task.Run(() => BWPulseforDubVol(RgbColor.FromString("#00FF00"), _bStick, cTokenSrc.Token));
+                            //cTokenSrc = new CancellationTokenSource();
+                            currentColour = RgbColor.FromString("#00FF00");
+                            pulseTask = Task.Run(() => BWPulseforDubVol(currentColour, _bStick, cTokenSrc.Token), cTokenSrc.Token);
 
                             //Debug.Print(DateTime.Now + " -- BS -- started the IR BAAAD thread");
                         }
@@ -642,29 +645,42 @@ namespace IRTicker {
                     else if (IRvol > (BTCMvol * 1.05M)) {  // more than 5%, IR winning
                         //Debug.Print(DateTime.Now + " -- BS -- IR winning");
                         if ((pulseTask != null) && !pulseTask.IsCompleted && (cTokenSrc != null)) cTokenSrc.Cancel();
-                        else if ((pulseTask == null) || pulseTask.IsCompleted) _bStick.Morph("#3176BC");
+                        else if ((pulseTask == null) || pulseTask.IsCompleted) {
+                            currentColour = RgbColor.FromString("#3176BC");
+                            _bStick.Morph(currentColour);
+                        }
                         //cTokenSrc = null;  // don't think we actually want/need to do this.  we should just let it get set to null in the catch naturally.
                     }
                     else if ((IRvol <= (BTCMvol * 1.05M)) && (IRvol >= (BTCMvol * 0.95M))) {
                         //Debug.Print(DateTime.Now + " -- BS -- trying to go white");
                         if ((pulseTask != null) && !pulseTask.IsCompleted && (cTokenSrc != null)) cTokenSrc.Cancel();
                         else {  // else there are no running tasks dub vol tasks, so we can change to white and start pulsing.  I know it's a dub vol task because the dub vol task is the only one that sets a cancellation token.
-                            _bStick.Morph("#C19E6E");
+                                currentColour = RgbColor.FromString("#C19E6E");
+                                _bStick.Morph(currentColour);
                             if (pulseTask == null || pulseTask.IsCompleted)  // only try and start the white pulse if there isn't already something happening.  
                                 pulseTask = Task.Run(() => BlinkStickWhitePulseAsync(_bStick, RgbColor.FromString((BTCMvol > IRvol ? "#42953A" : "#B6CBE1"))));
                         }
                     }
                     else if (IRvol < BTCMvol * 0.95M) {
-                        //Debug.Print(DateTime.Now + " -- BS -- BTCM is winning");
-                        if ((pulseTask != null) && !pulseTask.IsCompleted && (cTokenSrc != null)) cTokenSrc.Cancel();
-                        else if ((pulseTask == null) || pulseTask.IsCompleted) _bStick.Morph("#00A607");
+                            //Debug.Print(DateTime.Now + " -- BS -- BTCM is winning");
+                            if ((pulseTask != null) && !pulseTask.IsCompleted && (cTokenSrc != null)) cTokenSrc.Cancel();
+                            else if ((pulseTask == null) || pulseTask.IsCompleted) {
+                                currentColour = RgbColor.FromString("#00A607");
+                                _bStick.Morph(currentColour);
+                            }
 
                         //cTokenSrc = null;  // don't think we actually want/need to do this.  we should just let it get set to null in the catch naturally.
                     }
                 }
+                catch (OperationCanceledException ex) {
+                    _bStick.Morph(currentColour);  // pulsing is over, now we morph to the pulsing colour (assuming we haven't jumped phases to white or the other colour)
+                    Debug.Print(DateTime.Now + " -- BS -- exited the dub volume loop as expected, message: " + ex.Message);
+                }
                 catch (Exception ex) {
                     Debug.Print(DateTime.Now + " -- BS -- caught an exception: " + ex.Message);
-                    cTokenSrc = null;
+                }
+                finally {
+                    cTokenSrc.Dispose();
                 }
             }
             return cTokenSrc;
@@ -686,7 +702,7 @@ namespace IRTicker {
             }
         }
 
-        private void BWPulseforDubVol(RgbColor col, BlinkStick _bStick, CancellationToken cToken) {
+        private Task BWPulseforDubVol(RgbColor col, BlinkStick _bStick, CancellationToken cToken) {
 
             int pulseLength = 700;
             //int repeats = 15000 / pulseLength;
@@ -700,17 +716,19 @@ namespace IRTicker {
                         _bStick.Pulse(col, 1, pulseLength, 50);
                     }
                     catch (Exception ex) {
-                        Debug.Print(DateTime.Now + " -- BS -- caught an exception in BW: " + ex.Message);
+                        Debug.Print(DateTime.Now + " -- BS -- caught an exception in BW for pulsing: " + ex.Message);
                     }
                 }
                 if (cToken.IsCancellationRequested) {
                     try {
                         _bStick.Morph(col);
                     }
-                    catch {
-                        throw new TaskCanceledException();
+                    catch (Exception ex) {
+                        throw new Exception("Final morph failed in the double volume loop thread BWPulseforDubVol - " + ex.Message);
                     }
-                    throw new TaskCanceledException();
+
+                    cToken.ThrowIfCancellationRequested();  // this should only be called if we didn't throw when trying to morph just above.  I hope
+
                     //break;  // can't use break, because we need to set the cTokenSrc to null somewhere.  we can't do it here, and breaking doesn't signal upwards that we're finished
                 }
             } while (true);
