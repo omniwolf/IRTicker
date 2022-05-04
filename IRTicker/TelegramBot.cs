@@ -56,9 +56,14 @@ namespace IRTicker
 
             botClient = new TelegramBotClient(TGAPIKey);
 
+            var receiverOptions = new ReceiverOptions
+            {
+                AllowedUpdates = { } // receive all update types
+            };
+
             //botClient.OnMessage += Bot_OnMessage;
             //botClient.OnCallbackQuery += OnCallbackQueryReceived;
-            botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync), cancellationToken);
+            botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync), receiverOptions, cancellationToken);
 
             //botClient.EditMessageReplyMarkupAsync()*/
 
@@ -74,8 +79,12 @@ namespace IRTicker
             var cancellationToken = cts.Token;
 
             botClient = new TelegramBotClient(newToken);
-            //botClient.OnMessage += Bot_OnMessage;
-            botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync), cancellationToken);
+            var receiverOptions = new ReceiverOptions
+            {
+                AllowedUpdates = { } // receive all update types
+            };
+
+            botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync), receiverOptions, cancellationToken);
             TGstate.ResetMenu();
         }
 
@@ -328,7 +337,7 @@ namespace IRTicker
                         case CommandChosen.Nothing:
                             if (TGstate.authStage == 0) {
                                 Properties.Settings.Default.TelegramChatID = 0;
-                                await botClient.SendTextMessageAsync(message.Chat, "Hello " + message.Chat.FirstName + ", let's authenticate you.  Please enter your secret code. 🔐", Telegram.Bot.Types.Enums.ParseMode.Default);
+                                await botClient.SendTextMessageAsync(message.Chat, "Hello " + message.Chat.FirstName + @", let\'s authenticate you\.  Please enter your secret code\. 🔐", Telegram.Bot.Types.Enums.ParseMode.MarkdownV2);
                                 TGstate.authStage = 1;
                             }
                             else if (TGstate.authStage == 1) {
