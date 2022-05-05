@@ -1196,5 +1196,14 @@ namespace IRTicker
         private void fiatLabel_Click(object sender, EventArgs e) {
             fiatClicked((System.Windows.Forms.Label)sender);
         }
+
+        private void AccountName_button_Click(object sender, EventArgs e) {
+            IRT.SettingsButton_Click(null, null);  // make the settings panel visible so they can change the account
+
+            // bring to front
+            IRT.WindowState = FormWindowState.Minimized;
+            IRT.Show();
+            IRT.WindowState = FormWindowState.Normal;
+        }
     }
 }

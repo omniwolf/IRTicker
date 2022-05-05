@@ -19,7 +19,7 @@ using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 
 // todo:
-// inspect BlinkStickWhitePulseAsync - do we need to fix up the CTS stuff?
+// blinkstick tasks, a non-null CTS is never returned from the method, are we doing this right?
 
 namespace IRTicker {
     public partial class IRTicker : Form {
@@ -673,7 +673,13 @@ namespace IRTicker {
                     }
                 }
                 catch (OperationCanceledException ex) {
-                    _bStick.Morph(currentColour);  // pulsing is over, now we morph to the pulsing colour (assuming we haven't jumped phases to white or the other colour)
+                    try {
+                        _bStick.Morph(currentColour);  // pulsing is over, now we morph to the pulsing colour (assuming we haven't jumped phases to white or the other colour)
+                    }
+                    catch (Exception ex2) {
+                        throw new Exception("Final morph failed after cancelling the dub vol method/thread - " + ex2.Message);
+                    }
+
                     Debug.Print(DateTime.Now + " -- BS -- exited the dub volume loop as expected, message: " + ex.Message);
                 }
                 catch (Exception ex) {
@@ -721,16 +727,7 @@ namespace IRTicker {
                     }
                 }
                 if (cToken.IsCancellationRequested) {
-                    try {
-                        _bStick.Morph(col);
-                    }
-                    catch (Exception ex) {
-                        throw new Exception("Final morph failed in the double volume loop thread BWPulseforDubVol - " + ex.Message);
-                    }
-
                     cToken.ThrowIfCancellationRequested();  // this should only be called if we didn't throw when trying to morph just above.  I hope
-
-                    //break;  // can't use break, because we need to set the cTokenSrc to null somewhere.  we can't do it here, and breaking doesn't signal upwards that we're finished
                 }
             } while (true);
         }
@@ -2226,7 +2223,7 @@ namespace IRTicker {
             wSocketConnect.stopUITimerThread();  // needed otherwise the app never actually closes
         }
 
-        private void SettingsButton_Click(object sender, EventArgs e) {
+        public void SettingsButton_Click(object sender, EventArgs e) {
             // update session started relative label
             TimeSpan session = DateTime.Now - DateTime.Parse(SessionStartedAbs_label.Text);
             SessionStartedRel_label.Text = session.ToString("%d") + " day(s), " + session.ToString("%h") + " hour(s), " + session.ToString("%m") + " min(s)";
