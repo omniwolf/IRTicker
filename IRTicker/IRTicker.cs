@@ -19,7 +19,7 @@ using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 
 // todo:
-
+// inspect BlinkStickWhitePulseAsync - do we need to fix up the CTS stuff?
 
 namespace IRTicker {
     public partial class IRTicker : Form {
@@ -653,7 +653,7 @@ namespace IRTicker {
                     }
                     else if ((IRvol <= (BTCMvol * 1.05M)) && (IRvol >= (BTCMvol * 0.95M))) {
                         //Debug.Print(DateTime.Now + " -- BS -- trying to go white");
-                        if ((pulseTask != null) && !pulseTask.IsCompleted && (cTokenSrc != null)) cTokenSrc.Cancel();
+                        if ((pulseTask != null) && !pulseTask.IsCompleted && (cTokenSrc != null)) cTokenSrc.Cancel();  // cancelling the task will set the colour to the pulsing colour.  don't bother trying to set to white, we can do that next round.
                         else {  // else there are no running tasks dub vol tasks, so we can change to white and start pulsing.  I know it's a dub vol task because the dub vol task is the only one that sets a cancellation token.
                                 currentColour = RgbColor.FromString("#C19E6E");
                                 _bStick.Morph(currentColour);
@@ -681,6 +681,7 @@ namespace IRTicker {
                 }
                 finally {
                     cTokenSrc.Dispose();
+                    cTokenSrc = null;
                 }
             }
             return cTokenSrc;
