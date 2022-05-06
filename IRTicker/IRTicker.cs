@@ -623,21 +623,23 @@ namespace IRTicker {
             //BTCMBTCvol = 99;
             if (_bStick != null && _bStick.OpenDevice()) {
 
-                RgbColor currentColour = RgbColor.FromString("FF802B");  // an orange - if we see the cubes go this colour then there's probably something wrong
+                RgbColor currentColour;// = RgbColor.FromString("FF802B");  // an orange - if we see the cubes go this colour then there's probably something wrong
                 try {
                     if (IRvol > (BTCMvol * 2)) {
                         if ((pulseTask == null) || pulseTask.IsCompleted) {
                             cTokenSrc = new CancellationTokenSource();
+                            CancellationToken cTok = cTokenSrc.Token;
                             currentColour = RgbColor.FromString("#0079FF");
-                            pulseTask = Task.Run(() => BWPulseforDubVol(currentColour, _bStick, cTokenSrc.Token), cTokenSrc.Token);
+                            pulseTask = Task.Run(() => BWPulseforDubVol(currentColour, _bStick, cTok), cTok);
                             //Debug.Print(DateTime.Now + " -- BS -- started the IR GOOOOOD thread");
                         }
                     }
                     else if ((IRvol * 2) < BTCMvol) {
                         if ((pulseTask == null) || pulseTask.IsCompleted) {
-                            //cTokenSrc = new CancellationTokenSource();
+                            cTokenSrc = new CancellationTokenSource();
+                            CancellationToken cTok = cTokenSrc.Token;
                             currentColour = RgbColor.FromString("#00FF00");
-                            pulseTask = Task.Run(() => BWPulseforDubVol(currentColour, _bStick, cTokenSrc.Token), cTokenSrc.Token);
+                            pulseTask = Task.Run(() => BWPulseforDubVol(currentColour, _bStick, cTok), cTok);
 
                             //Debug.Print(DateTime.Now + " -- BS -- started the IR BAAAD thread");
                         }
@@ -662,32 +664,33 @@ namespace IRTicker {
                         }
                     }
                     else if (IRvol < BTCMvol * 0.95M) {
-                            //Debug.Print(DateTime.Now + " -- BS -- BTCM is winning");
-                            if ((pulseTask != null) && !pulseTask.IsCompleted && (cTokenSrc != null)) cTokenSrc.Cancel();
-                            else if ((pulseTask == null) || pulseTask.IsCompleted) {
-                                currentColour = RgbColor.FromString("#00A607");
-                                _bStick.Morph(currentColour);
-                            }
+                        //Debug.Print(DateTime.Now + " -- BS -- BTCM is winning");
+                        if ((pulseTask != null) && !pulseTask.IsCompleted && (cTokenSrc != null)) {
+                            cTokenSrc.Cancel();
+                            //pulseTask.
+                        }
+                        else if ((pulseTask == null) || pulseTask.IsCompleted) {
+                            currentColour = RgbColor.FromString("#00A607");
+                            _bStick.Morph(currentColour);
+                        }
 
                         //cTokenSrc = null;  // don't think we actually want/need to do this.  we should just let it get set to null in the catch naturally.
                     }
                 }
                 catch (OperationCanceledException ex) {
                     try {
-                        _bStick.Morph(currentColour);  // pulsing is over, now we morph to the pulsing colour (assuming we haven't jumped phases to white or the other colour)
+                        _bStick.Morph("red");  // pulsing is over, now we morph to the pulsing colour (assuming we haven't jumped phases to white or the other colour)
                     }
                     catch (Exception ex2) {
                         throw new Exception("Final morph failed after cancelling the dub vol method/thread - " + ex2.Message);
                     }
 
                     Debug.Print(DateTime.Now + " -- BS -- exited the dub volume loop as expected, message: " + ex.Message);
+                    cTokenSrc.Dispose();
+                    cTokenSrc = null;
                 }
                 catch (Exception ex) {
                     Debug.Print(DateTime.Now + " -- BS -- caught an exception: " + ex.Message);
-                }
-                finally {
-                    cTokenSrc.Dispose();
-                    cTokenSrc = null;
                 }
             }
             return cTokenSrc;
@@ -721,6 +724,7 @@ namespace IRTicker {
                 if (_bStick != null && bStick.OpenDevice()) {
                     try {
                         _bStick.Pulse(col, 1, pulseLength, 50);
+                        Thread.Sleep(pulseLength);
                     }
                     catch (Exception ex) {
                         Debug.Print(DateTime.Now + " -- BS -- caught an exception in BW for pulsing: " + ex.Message);
@@ -2170,7 +2174,12 @@ namespace IRTicker {
                 pollingThread.RunWorkerAsync(); // we need to cancel to make sure we haven't already pulled the old currency from the API
             }
             else {
-                Debug.Print(DateTime.Now + " - POLL stopped!! why?? " + e.Result + " " + e.Error + " " + e.Error.Message.ToString());
+                if (null == e.Result) {
+                    Debug.Print(DateTime.Now + " - POLL stopped??? why?  e.Result object was null");
+                }
+                else {
+                    Debug.Print(DateTime.Now + " - POLL stopped!! why?? " + e.Result + " " + e.Error + " " + e.Error.Message.ToString());
+                }
                 pollingThread.RunWorkerAsync(); // start it up again I guess
             }
         }
