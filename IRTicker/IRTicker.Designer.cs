@@ -4577,7 +4577,7 @@
             this.IR_GroupBox.TabIndex = 0;
             this.IR_GroupBox.TabStop = false;
             this.IR_GroupBox.Text = "Independent Reserve";
-            this.IR_GroupBox.Click += new System.EventHandler(this.IR_GroupBox_Click);
+            //this.IR_GroupBox.Click += new System.EventHandler(this.IR_GroupBox_Click);
             // 
             // IR_panel
             // 

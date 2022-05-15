@@ -54,20 +54,12 @@ namespace IRTicker {
         }
 
         public void GetOrderBook_IR(string dExchange, string crypto, string fiat) {
-            if (crypto == "USDT") crypto = "UST";
-            //if (crypto == "USDC") crypto = "USC";
+
             string pair = crypto + "-" + fiat;
             Tuple<bool, string> orderBookTpl = Utilities.Get(DCEs[dExchange].BaseURL + "/Public/GetAllOrders?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
 
-            // have to change back ughhh
-            if (crypto.ToUpper() == "UST") crypto = "USDT";
-            //if (crypto.ToUpper() == "USC") crypto = "USDC";
-            pair = crypto + "-" + fiat;
-
             if (orderBookTpl.Item1) {
                 DCE.OrderBook orderBook = JsonConvert.DeserializeObject<DCE.OrderBook>(orderBookTpl.Item2);
-                if (orderBook.PrimaryCurrencyCode.ToUpper() == "UST") orderBook.PrimaryCurrencyCode = "USDT";
-                //if (orderBook.PrimaryCurrencyCode.ToUpper() == "USC") orderBook.PrimaryCurrencyCode = "USDC";
                 DCEs[dExchange].orderBooks[pair] = orderBook;
                 if ((DCEs[dExchange].orderBooks[pair].BuyOrders.Count == 0) || (DCEs[dExchange].orderBooks[pair].SellOrders.Count == 0)) {
                     Debug.Print("One of the order books is empty... not continuing.  number of buy orders: " + DCEs[dExchange].orderBooks[pair].BuyOrders.Count + ", and sell orders: " + DCEs[dExchange].orderBooks[pair].SellOrders.Count);
@@ -112,30 +104,22 @@ namespace IRTicker {
                         foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
                             if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
                                 string crypto1 = primaryCode;
-                                if (crypto1 == "USDT") crypto1 = "UST";
-                                //if (crypto1 == "USDC") crypto1 = "USC";
                                 channel += "\"orderbook-" + crypto1.ToLower() /* + "-" + fiat.ToLower()*/ + "\", ";  // trying to subscribe to the crypto, not the pair...
                             }
                         }
                         channel += "]} ";
                     }
                     else {  // or just one pair
-                        if (crypto.ToUpper() == "USDT") crypto = "ust";
-                        //if (crypto.ToUpper() == "USDC") crypto = "usc";
-                        channel += "\"orderbook-" + crypto.ToLower(); // + "-" + fiat.ToLower();
-                        /*if (!channel.Contains("-usd\",")) {  // if we haven't inclruded USD, then include it.  we always need to subscribe or unsubscribe from it as it's a perm panel
-                            channel += "\"orderbook-" + crypto.ToLower() + "-usd";
-                        }
-                        if (!channel.Contains("-usd\",")) {  // if we haven't inclruded SGD, then include it.  we always need to subscribe or unsubscribe from it as it's a perm panel
-                            channel += "\"orderbook-" + crypto.ToLower() + "-sgd";
-                        }*/
 
-                         channel += "\"]}";
+                        channel += "\"orderbook-" + crypto.ToLower() + "\"]}"; // + "-" + fiat.ToLower();
                     }
                     Debug.Print(dExchange + " websocket subcribe/unsubscribe - " + (subscribe ? "subscribe" : "unsubscribe") + " event: " + channel);
 
                     if (client_IR.IsRunning) {
-                        Task.Run(() => client_IR.Send(channel));
+                        //Task.Run(() => 
+                        client_IR.Send(channel)
+                        //)
+                        ;
                     }
                     else {
                         Debug.Print(DateTime.Now + " - " + dExchange + " sockets down when trying to " + (subscribe ? "subscribe" : "unsubscribe"));
@@ -630,12 +614,6 @@ namespace IRTicker {
             string crypto = eventStr.Replace("orderbook-", "");
             string pair = crypto + "-" + CurrentSecondaryCurrency;
 
-
-            if (tickerStream.Data.Pair.ToUpper().Contains("UST")) tickerStream.Data.Pair = tickerStream.Data.Pair.Replace(tickerStream.Data.Pair.Substring(0, 3), "USDT");
-            //if (tickerStream.Data.Pair.ToUpper().Contains("USC")) tickerStream.Data.Pair = tickerStream.Data.Pair.Replace(tickerStream.Data.Pair.Substring(0, 3), "USDC");
-            if (tickerStream.Channel.ToUpper().Contains("-UST-")) tickerStream.Channel = tickerStream.Channel.Replace(tickerStream.Channel.Substring(10, 3), "USDT");
-            //if (tickerStream.Channel.ToUpper().Contains("-USC-")) tickerStream.Channel = tickerStream.Channel.Replace(tickerStream.Channel.Substring(10, 3), "USDC");
-            */
             // still trying to get to the bottom of orders that should be deleted that aren't
             /*if (tickerStream.Data.Pair == "xbt-aud") {
                 if (tickerStream.Event == "NewOrder") {
@@ -671,7 +649,9 @@ namespace IRTicker {
             foreach (string dExchange in IRdExchanges) {
                 if (!DCEs[dExchange].PrimaryCurrencyList.Contains(crypto)) return;  // only consider cryptos this exchange supports
                 string pair = crypto + "-" + DCEs[dExchange].CurrentSecondaryCurrency;
-                if (DCEs[dExchange].pulledSnapShot[pair]) {  // if we haven't even got the OB yet
+                if (!DCEs[dExchange].pulledSnapShot.Keys.Contains(pair) || !DCEs[dExchange].orderBuffer_IR.ContainsKey(pair)) return;  // can happen when we're switching currencies
+                
+                if (DCEs[dExchange].pulledSnapShot[pair]) {  // if we haven't even got the OB yet, or maybe we're in the middle of resetting the dictionaries and we haven't populated the pulledSnapshot dict with all the pairs yet..
                     DCEs[dExchange].newOrders[pair]++;
                 }
                 DCEs[dExchange].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;  // add this event to the buffer

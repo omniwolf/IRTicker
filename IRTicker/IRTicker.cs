@@ -1132,10 +1132,10 @@ namespace IRTicker {
                         }
                         else {
                             pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, IRAF, DCEs["IR"], TGBot);
-                            int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
-                            if (friendlyNameLen > 20) friendlyNameLen = 20;
+                            //int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
+                            //if (friendlyNameLen > 20) friendlyNameLen = 20;
 
-                            if (null != IRAF) IRAF.UpdateAccountNameButton(Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : ""));
+                            //if (null != IRAF) IRAF.UpdateAccountNameButton(Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : ""));
                         }
 
                         /*DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "AUD");
@@ -2854,29 +2854,50 @@ namespace IRTicker {
             populateIRAPIKeysSettings();
         }
 
-        private void populateIRAPIKeysSettings() { 
+        // if we get sent the IRAF form object, then use it.
+        public void populateIRAPIKeysSettings(IRAccountsForm currentIRAF = null) {
+
+            bool IRAFavailable = false;
+            IRAccountsForm _IRAF;
+
+            if (currentIRAF != null) {
+                _IRAF = currentIRAF;
+            }
+            else {
+                _IRAF = IRAF;
+            }
+            if ((null != _IRAF) && !_IRAF.IsDisposed) IRAFavailable = true;
+            
 
             APIKeys_comboBox.Items.Clear();
+            if (IRAFavailable) _IRAF.AccountAPIKeys_comboBox.Items.Clear();
                         
             if (!string.IsNullOrEmpty(Properties.Settings.Default.APIFriendly1) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey1) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey1)) {
                 AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly1, Properties.Settings.Default.IRAPIPubKey1, Properties.Settings.Default.IRAPIPrivKey1);
                 APIKeys_comboBox.Items.Add(grp);
+                if (IRAFavailable) _IRAF.AccountAPIKeys_comboBox.Items.Add(grp);
             }
             if (!string.IsNullOrEmpty(Properties.Settings.Default.APIFriendly2) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey2) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey2)) {
                 AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly2, Properties.Settings.Default.IRAPIPubKey2, Properties.Settings.Default.IRAPIPrivKey2);
                 APIKeys_comboBox.Items.Add(grp);
+                if (IRAFavailable) _IRAF.AccountAPIKeys_comboBox.Items.Add(grp);
             }
             if (!string.IsNullOrEmpty(Properties.Settings.Default.APIFriendly3) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey3) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey3)) {
                 AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly3, Properties.Settings.Default.IRAPIPubKey3, Properties.Settings.Default.IRAPIPrivKey3);
                 APIKeys_comboBox.Items.Add(grp);
+                if (IRAFavailable) _IRAF.AccountAPIKeys_comboBox.Items.Add(grp);
             }
             if (!string.IsNullOrEmpty(Properties.Settings.Default.APIFriendly4) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey4) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey4)) {
                 AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly4, Properties.Settings.Default.IRAPIPubKey4, Properties.Settings.Default.IRAPIPrivKey4);
                 APIKeys_comboBox.Items.Add(grp);
+                if (IRAFavailable) _IRAF.AccountAPIKeys_comboBox.Items.Add(grp);
+
             }
             if (!string.IsNullOrEmpty(Properties.Settings.Default.APIFriendly5) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey5) && !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey5)) {
                 AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly5, Properties.Settings.Default.IRAPIPubKey5, Properties.Settings.Default.IRAPIPrivKey5);
                 APIKeys_comboBox.Items.Add(grp);
+                if (IRAFavailable) _IRAF.AccountAPIKeys_comboBox.Items.Add(grp);
+
             }
 
             bool foundKey = false;
@@ -2884,6 +2905,7 @@ namespace IRTicker {
                 if (chosenKey.friendlyName == Properties.Settings.Default.APIFriendly) {
                     //Select this one somehow..
                     APIKeys_comboBox.SelectedItem = chosenKey;
+                    if (IRAFavailable) _IRAF.AccountAPIKeys_comboBox.SelectedItem = chosenKey;  // the Items collections in each combobox control is idental (see above), so no need to iterate through both
                     foundKey = true;
                 }
             }
@@ -2894,26 +2916,36 @@ namespace IRTicker {
                 AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup("", "", "");
                 APIKeys_comboBox.Items.Add(grp);
                 APIKeys_comboBox.SelectedItem = grp;
+                if (IRAFavailable) {
+                    _IRAF.AccountAPIKeys_comboBox.Items.Add(grp);
+                    _IRAF.AccountAPIKeys_comboBox.SelectedItem = grp;
+                }
                 Properties.Settings.Default.Save();
             }
         }
 
-        private async void APIKeys_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
+        private void APIKeys_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            pIRAccountChanged((System.Windows.Forms.ComboBox)sender);
+        }
 
-            if (Properties.Settings.Default.APIFriendly != ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName) {
+        public void pIRAccountChanged(System.Windows.Forms.ComboBox cb) { 
+
+            if (Properties.Settings.Default.APIFriendly != ((AccountAPIKeys.APIKeyGroup)cb.SelectedItem).friendlyName) {
 
                 // a new key has been chosen, let's reset the closed orders.
-                Debug.Print(DateTime.Now + " - API key has been changed from " + Properties.Settings.Default.APIFriendly + " to " + ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName + ", about to clear the closedOrdersFirstRun ductionary...");
+                Debug.Print(DateTime.Now + " - API key has been changed from " + Properties.Settings.Default.APIFriendly + " to " + ((AccountAPIKeys.APIKeyGroup)cb.SelectedItem).friendlyName + ", about to clear the closedOrdersFirstRun ductionary...");
 
-                Properties.Settings.Default.APIFriendly = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).friendlyName;
-                Properties.Settings.Default.IRAPIPubKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).pubKey;
-                Properties.Settings.Default.IRAPIPrivKey = ((AccountAPIKeys.APIKeyGroup)APIKeys_comboBox.SelectedItem).privKey;
+                Properties.Settings.Default.APIFriendly = ((AccountAPIKeys.APIKeyGroup)cb.SelectedItem).friendlyName;
+                Properties.Settings.Default.IRAPIPubKey = ((AccountAPIKeys.APIKeyGroup)cb.SelectedItem).pubKey;
+                Properties.Settings.Default.IRAPIPrivKey = ((AccountAPIKeys.APIKeyGroup)cb.SelectedItem).privKey;
                 Properties.Settings.Default.Save();
 
-                int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
-                if (friendlyNameLen > 20) friendlyNameLen = 20;
+                //int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
+                //if (friendlyNameLen > 20) friendlyNameLen = 20;
 
-                if ((null != IRAF) && !IRAF.IsDisposed) IRAF.UpdateAccountNameButton(Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : ""));
+                //if ((null != IRAF) && !IRAF.IsDisposed) IRAF.UpdateAccountNameButton(Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : ""));
+
+                updatePIRAccountComboBox(Properties.Settings.Default.APIFriendly);  // ensures both API key comboboxes get updated
 
                 if (TGBot != null) {  // need to clear the TGBot dictionaries first before we re-initialise pIR object as privateIR_init will alert TGBot to API key's closed orders
                     TGBot.closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
@@ -2924,9 +2956,44 @@ namespace IRTicker {
                 if (pIR != null) {
                     pIR.APIKeyHasChanged();
                     pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, IRAF, DCEs["IR"], TGBot);
-                    //await Task.Run(() => pIR.populateClosedOrders());
                 }
             }
+        }
+
+        // the idea here is we have 2 comboboxes that display the private IR API key.  We need to keep them in sync.  so when
+        // we change the key on one, we check both and update the one that's wrong.   hmm how to do this without triggering a change...
+        private void updatePIRAccountComboBox(string APIKeyName) {
+            // need to first disable the event handler, cahnge the box, then re-enable the event handler like this:
+            // combo.SelectedIndexChanged -= EventHandler<SelectedIndexChangedEventArgs> SomeEventHandler;
+            //combo.SelectedIndex = 0;
+            //combo.SelectedIndexChanged += EventHandler < SelectedIndexChangedEventArgs > SomeEventHandler;
+
+            // First check the IRTicker (settings panel) combobox
+            if (APIKeys_comboBox.SelectedItem.ToString() != APIKeyName) {  // if the currently selected item in this combobox is not correct, then cycle through the available options and select the correct one
+
+                APIKeys_comboBox.SelectedIndexChanged -= new EventHandler (APIKeys_comboBox_SelectedIndexChanged);  // we're about to change the selected item, but we don't want to trigger the code, so remove the handler
+                foreach (var item in APIKeys_comboBox.Items) {
+                    if (item.ToString() == APIKeyName) {
+                        APIKeys_comboBox.SelectedItem = item;
+                    }
+                }
+                APIKeys_comboBox.SelectedIndexChanged += new EventHandler(APIKeys_comboBox_SelectedIndexChanged);  // OK, change done - re-register the handler
+            }
+
+            // Next check the IR Accounts Form combobox
+            if ((null != IRAF) && !IRAF.IsDisposed) {
+                if (IRAF.AccountAPIKeys_comboBox.SelectedItem.ToString() != APIKeyName) {  // if the currently selected item in this combobox is not correct, then cycle through the available options and select the correct one
+
+                    IRAF.AccountAPIKeys_comboBox.SelectedIndexChanged -= new EventHandler(IRAF.AccountAPIKeys_comboBox_SelectedIndexChanged);  // we're about to change the selected item, but we don't want to trigger the code, so remove the handler
+                    foreach (var item in IRAF.AccountAPIKeys_comboBox.Items) {
+                        if (item.ToString() == APIKeyName) {
+                            IRAF.AccountAPIKeys_comboBox.SelectedItem = item;
+                        }
+                    }
+                    IRAF.AccountAPIKeys_comboBox.SelectedIndexChanged += new EventHandler(IRAF.AccountAPIKeys_comboBox_SelectedIndexChanged);  // OK, change done - re-register the handler
+                }
+            }
+
         }
 
         private void TGReset_button_Click(object sender, EventArgs e) {

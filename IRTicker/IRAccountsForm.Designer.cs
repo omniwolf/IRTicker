@@ -88,7 +88,6 @@ namespace IRTicker
             this.AccountMKR_total = new System.Windows.Forms.Label();
             this.AccountMKR_value = new System.Windows.Forms.Label();
             this.AccountMKR_label = new System.Windows.Forms.Label();
-            this.AccountName_button = new System.Windows.Forms.Button();
             this.AccountLINK_total = new System.Windows.Forms.Label();
             this.AccountLINK_value = new System.Windows.Forms.Label();
             this.AccountLINK_label = new System.Windows.Forms.Label();
@@ -182,6 +181,7 @@ namespace IRTicker
             this.StopBaitin_button = new System.Windows.Forms.Button();
             this.IRAccount_AvgPrice_Button = new System.Windows.Forms.Button();
             this.IRAccount_panel = new System.Windows.Forms.Panel();
+            this.AccountAPIKeys_comboBox = new System.Windows.Forms.ComboBox();
             this.GetAccounts_panel.SuspendLayout();
             this.IRAccountAddress_panel.SuspendLayout();
             this.AccountClosedOrders_panel.SuspendLayout();
@@ -192,6 +192,7 @@ namespace IRTicker
             // GetAccounts_panel
             // 
             this.GetAccounts_panel.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.GetAccounts_panel.Controls.Add(this.AccountAPIKeys_comboBox);
             this.GetAccounts_panel.Controls.Add(this.AccountSAND_total);
             this.GetAccounts_panel.Controls.Add(this.AccountSAND_value);
             this.GetAccounts_panel.Controls.Add(this.AccountSAND_label);
@@ -248,7 +249,6 @@ namespace IRTicker
             this.GetAccounts_panel.Controls.Add(this.AccountMKR_total);
             this.GetAccounts_panel.Controls.Add(this.AccountMKR_value);
             this.GetAccounts_panel.Controls.Add(this.AccountMKR_label);
-            this.GetAccounts_panel.Controls.Add(this.AccountName_button);
             this.GetAccounts_panel.Controls.Add(this.AccountLINK_total);
             this.GetAccounts_panel.Controls.Add(this.AccountLINK_value);
             this.GetAccounts_panel.Controls.Add(this.AccountLINK_label);
@@ -902,19 +902,6 @@ namespace IRTicker
             this.AccountMKR_label.TabIndex = 61;
             this.AccountMKR_label.Text = "MKR:";
             this.AccountMKR_label.Click += new System.EventHandler(this.Account_label_Click);
-            // 
-            // AccountName_button
-            // 
-            this.AccountName_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.AccountName_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountName_button.Location = new System.Drawing.Point(16, 9);
-            this.AccountName_button.Name = "AccountName_button";
-            this.AccountName_button.Size = new System.Drawing.Size(228, 31);
-            this.AccountName_button.TabIndex = 60;
-            this.AccountName_button.Text = "IR account";
-            this.IRTickerTT_generic.SetToolTip(this.AccountName_button, "Go to settings to change connected account");
-            this.AccountName_button.UseVisualStyleBackColor = true;
-            this.AccountName_button.Click += new System.EventHandler(this.AccountName_button_Click);
             // 
             // AccountLINK_total
             // 
@@ -1900,6 +1887,19 @@ namespace IRTicker
             this.IRAccount_panel.Size = new System.Drawing.Size(585, 843);
             this.IRAccount_panel.TabIndex = 62;
             // 
+            // AccountAPIKeys_comboBox
+            // 
+            this.AccountAPIKeys_comboBox.DisplayMember = "friendlyName";
+            this.AccountAPIKeys_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.AccountAPIKeys_comboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountAPIKeys_comboBox.FormattingEnabled = true;
+            this.AccountAPIKeys_comboBox.Location = new System.Drawing.Point(16, 13);
+            this.AccountAPIKeys_comboBox.Name = "AccountAPIKeys_comboBox";
+            this.AccountAPIKeys_comboBox.Size = new System.Drawing.Size(241, 24);
+            this.AccountAPIKeys_comboBox.TabIndex = 117;
+            this.AccountAPIKeys_comboBox.ValueMember = "friendlyName";
+            this.AccountAPIKeys_comboBox.SelectedIndexChanged += new System.EventHandler(this.AccountAPIKeys_comboBox_SelectedIndexChanged);
+            // 
             // IRAccountsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1976,7 +1976,6 @@ namespace IRTicker
         private System.Windows.Forms.Label AccountMKR_total;
         private System.Windows.Forms.Label AccountMKR_value;
         private System.Windows.Forms.Label AccountMKR_label;
-        private System.Windows.Forms.Button AccountName_button;
         private System.Windows.Forms.Label AccountLINK_total;
         private System.Windows.Forms.Label AccountLINK_value;
         private System.Windows.Forms.Label AccountLINK_label;
@@ -2079,5 +2078,6 @@ namespace IRTicker
         private System.Windows.Forms.Label AccountMANA_total;
         private System.Windows.Forms.Label AccountMANA_value;
         private System.Windows.Forms.Label AccountMANA_label;
+        public System.Windows.Forms.ComboBox AccountAPIKeys_comboBox;
     }
 }

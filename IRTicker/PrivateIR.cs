@@ -38,6 +38,7 @@ namespace IRTicker {
         public DateTime? earliestClosedOrderRequired = null;  // optimise closed orders by only pulling what's required.  If null we just pull a static 7 to cover the closed orders UI
         private bool firstClosedOrdersPullDone = false;  // we need to pull ALL orders intially so we have a record of all guids for announcing new closed orders
         private Dictionary<string, long> closedOrdersCount;  // keeps a count of how many closed orders each pair has so we can maybe try and get to the bottom of this weird issue where I sometimes see less closed orders than actually exists
+        private bool reportClosedOrders = true;  // whether we use the closed orders list view to report the progress of bulk pulling all the closed orders (it's a long process)
         private DateTime APIKeyChanged = DateTime.Now;  // records when we changed the APIKey so we can wait for a period (5 seconds?) before believing that closed orders are from the new APIKey.  If we use them immediately then often we get ClosedOrders from the old APIKey
 
         public BankOrder placedOrder = null;
@@ -76,7 +77,15 @@ namespace IRTicker {
                 Credential = IRcreds
             };
             IRclient = Client.Create(IRconf);
-            if ((null != IRAF) && !IRAF.IsDisposed) Task.Run(() => populateClosedOrders());
+            Task.Run(() => {
+                GetAccounts();
+                if ((null != IRAF) && !IRAF.IsDisposed) {
+                    IRAF.DrawIRAccounts(accounts);
+                    IRAF.drawOpenOrders(GetOpenOrders(SelectedCrypto, DCE_IR.CurrentSecondaryCurrency).Data);
+                }
+
+                populateClosedOrders();
+            });
         }
 
         public void setTGBot(TelegramBot _TGBot) {
@@ -186,6 +195,8 @@ namespace IRTicker {
 
             if ((null != IRAF) && (!IRAF.IsDisposed)) {
                 IRAF.ResetLabels();  // set all the account values to "-"
+                IRAF.drawClosedOrders(null);
+                IRAF.drawOpenOrders(null);
             }
         }
 
@@ -196,6 +207,7 @@ namespace IRTicker {
             // now we pull all closed orders for all pairs to ensure we have all order guids listed in the TG Bot notifiedOrders dictionary
 
             Page<BankHistoryOrder> cOrders;
+            reportClosedOrders = true;
 
             foreach (string primaryCode in DCE_IR.PrimaryCurrencyList) {
                 Debug.Print("Big pull of closed orders, pulling " + primaryCode);
@@ -204,8 +216,10 @@ namespace IRTicker {
                         cOrders = GetClosedOrders(primaryCode, secondaryCode, true);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
 
                         // need to go if the current primary/secondary is what's shown on IRAccounts, then draw it
-                        if ((SelectedCrypto == primaryCode) && (DCE_IR.CurrentSecondaryCurrency == secondaryCode)) {
-                            IRAF.drawClosedOrders(cOrders.Data); 
+                        if ((SelectedCrypto == primaryCode) && (DCE_IR.CurrentSecondaryCurrency == secondaryCode) &&
+                            (null != IRAF) && !IRAF.IsDisposed) {
+                            IRAF.drawClosedOrders(cOrders.Data);
+                            reportClosedOrders = false;  // stop reporting, we have drawn the actual orders.
                         }
                         // IRT.drawClosedOrders(cOrders);
                     }
@@ -253,11 +267,12 @@ namespace IRTicker {
 
             int page = 1;
             do {
-                
                 APIkey = IRcreds.Key;
                 lock (pIR_Lock) {
                     cOrders = IRclient.GetClosedFilledOrders(enumCrypto, enumFiat, page, pageSize);  // we don't care about cancelled orders
                 }
+                if (reportClosedOrders && (null != IRAF) && !IRAF.IsDisposed) IRAF.ReportClosedOrderStatus(crypto, page + "/" + cOrders.TotalPages);
+
                 if (APIkey != IRcreds.Key) {  // i don't think this will ever happen.. but who knows  /// ok.. seems to happen every time we change APIkey.  but if stops errors, so leave it
                     Debug.Print("uh oh.. it's unclear which API key we used.. probably should just bail" + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
                     return null;

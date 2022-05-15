@@ -34,6 +34,9 @@ namespace IRTicker
             //IRAccount_panel.Visible = true;
             //Main.Visible = false;
             IRAccountsButtonJustClicked = true;
+
+            IRT.populateIRAPIKeysSettings(this);
+
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
                 PrivateIR.PrivateIREndPoints.GetAccounts,
                 PrivateIR.PrivateIREndPoints.GetOpenOrders,
@@ -54,9 +57,11 @@ namespace IRTicker
             AccountBuySell_listbox.SelectedIndex = 0;
             AccountOrderType_listbox.SelectedIndex = 0;
 
-            int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
-            if (friendlyNameLen > 20) friendlyNameLen = 20;
-            UpdateAccountNameButton(Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : ""));
+            //IRT.populateIRAPIKeysSettings();  // populates the drop down box of saved API keys
+
+            //int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
+            //if (friendlyNameLen > 20) friendlyNameLen = 20;
+            //UpdateAccountNameButton(Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : ""));
 
             IRT.UIControls_Dict["IR"].Account_XBT_Label = AccountXBT_label;
             IRT.UIControls_Dict["IR"].Account_XBT_Value = AccountXBT_value;
@@ -177,10 +182,6 @@ namespace IRTicker
             foreach (KeyValuePair<string, Label> labelKVP in IRT.UIControls_Dict["IR"].Label_Dict) {
                 if (labelKVP.Key.Contains("_Account_Value") || labelKVP.Key.Contains("_Account_Total")) labelKVP.Value.Text = "-";
             }
-        }
-
-        public void UpdateAccountNameButton(string accName) {
-            AccountName_button.Text = accName;
         }
 
         public void DrawIRAccounts(Dictionary<string, Account> irAccounts) {
@@ -651,6 +652,23 @@ namespace IRTicker
                 PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
+        // a sub to report which crypto closed orders we're pulling.. just to keep the user informed
+        public void ReportClosedOrderStatus(string crypto, string pageProgress) {
+            IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
+                string _crypto = (string)o;
+
+                if (AccountClosedOrders_listview.Items.Count == 0) {
+                    AccountClosedOrders_listview.Items.Add(new ListViewItem(new string[] {
+                        "Loading", _crypto, pageProgress } ));
+                } 
+                else if (AccountClosedOrders_listview.Items[0].Text.StartsWith("Loading")) {  // only if we have nothing else to show..
+                    AccountClosedOrders_listview.Items[0] = new ListViewItem(new string[] {
+                        "Loading", _crypto, pageProgress });
+        }
+
+            }), crypto);
+        }
+
         private void fiatClicked(Label clickedLabel) {
 
             //  colour the fiats
@@ -664,10 +682,12 @@ namespace IRTicker
             clickedLabel.ForeColor = Color.DarkBlue;
             clickedLabel.Font = new Font(clickedLabel.Font.FontFamily, 14.25f, FontStyle.Bold);
 
+            // set these listview things to "loading.."
             drawOpenOrders(null);
             drawClosedOrders(null);
             drawDepositAddress(null);
 
+            // set volume and limit price fields empty
             AccountOrderVolume_textbox_TextChanged(null, null);
             AccountLimitPrice_textbox_TextChanged(null, null);
 
@@ -1204,6 +1224,10 @@ namespace IRTicker
             IRT.WindowState = FormWindowState.Minimized;
             IRT.Show();
             IRT.WindowState = FormWindowState.Normal;
+        }
+
+        public void AccountAPIKeys_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            IRT.pIRAccountChanged((System.Windows.Forms.ComboBox)sender);
         }
     }
 }
