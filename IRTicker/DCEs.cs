@@ -479,9 +479,9 @@ namespace IRTicker {
                         switch (order.OrderType) {
                             case "LimitBid":
                                 if (price >= OB_IR_cross.Keys.Min()) {  // if the price of this order is greater than the best offer, it's just crossing the spread. ignore
-                                    Debug.Print(DateTime.Now + " - (" + pair + ") Limit bid crossed the spread, attempted price: " + order.Price + ", best offer: " + OB_IR_cross.Keys.Min());
+                                    Debug.Print(DateTime.Now + " - (" + pair + ") Limit bid crossed the spread, attempted price: " + order.Price.FirstOrDefault().Value + ", best offer: " + OB_IR_cross.Keys.Min());
                                     if (OB_IR_cross.TryRemove(OB_IR_cross.Keys.Min(), out ConcurrentDictionary<string, OrderBook_IR> outVal)) {
-                                        Debug.Print("Order at $" + outVal.First().Value.Price + " removed from the Offers price dictionary");
+                                        Debug.Print("Order at $" + outVal.First().Value.Price.FirstOrDefault().Value + " removed from the Offers price dictionary");
                                         foreach (var guidOrder in outVal) {
                                             if (Order_OB_IR_cross.ContainsKey(guidOrder.Key)) {
                                                 if (Order_OB_IR_cross.TryRemove(guidOrder.Key, out decimal guidPrice)) Debug.Print("Also removed from GUID cross dictionary - " + guidOrder.Key);
@@ -495,9 +495,9 @@ namespace IRTicker {
                                 break;
                             case "LimitOffer":
                                 if (price <= OB_IR_cross.Keys.Max()) {
-                                    Debug.Print(DateTime.Now + " - (" + pair + ") Limit offer crossed the spread, attempted price: " + order.Price + ", best bid: " + OB_IR_cross.Keys.Max());
-                                    if (OB_IR_cross.TryRemove(OB_IR_cross.Keys.Max(), out ConcurrentDictionary<string, OrderBook_IR> outVal)) {
-                                        Debug.Print("Order at $" + outVal.First().Value.Price + " removed from the Bids price dictionary");
+                                    Debug.Print(DateTime.Now + " - (" + pair + ") Limit offer crossed the spread, attempted price: " + order.Price.FirstOrDefault().Value + ", best bid: " + OB_IR_cross.Keys.Max());
+                                    if (OB_IR_cross.TryRemove(OB_IR_cross.Keys.Max(), out ConcurrentDictionary<string, OrderBook_IR> outVal)) {  // crash here - OB_IR_cross no elements
+                                        Debug.Print("Order at $" + outVal.First().Value.Price.FirstOrDefault().Value + " removed from the Bids price dictionary");
                                         foreach (var guidOrder in outVal) {
                                             if (Order_OB_IR_cross.ContainsKey(guidOrder.Key)) {
                                                 if (Order_OB_IR_cross.TryRemove(guidOrder.Key, out decimal guidPrice)) Debug.Print("Also removed from GUID cross dictionary - " + guidOrder.Key);

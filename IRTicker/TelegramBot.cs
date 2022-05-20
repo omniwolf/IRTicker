@@ -75,6 +75,8 @@ namespace IRTicker
 
         public void NewClient(string newToken) {
             ResetBot();
+            closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
+            notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();
             cts = new CancellationTokenSource();
             var cancellationToken = cts.Token;
 
@@ -86,6 +88,7 @@ namespace IRTicker
 
             botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync), receiverOptions, cancellationToken);
             TGstate.ResetMenu();
+            pIR.setTGBot(this);
         }
 
         public void ResetBot() {

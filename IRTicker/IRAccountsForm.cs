@@ -40,7 +40,7 @@ namespace IRTicker
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
                 PrivateIR.PrivateIREndPoints.GetAccounts,
                 PrivateIR.PrivateIREndPoints.GetOpenOrders,
-                //PrivateIR.PrivateIREndPoints.GetClosedOrders,
+                PrivateIR.PrivateIREndPoints.GetClosedOrders,
                 PrivateIR.PrivateIREndPoints.GetAddress,
                 PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
             AccountBuySell_listbox_Click(null, null);  // simulate a click to set things up
@@ -654,6 +654,7 @@ namespace IRTicker
 
         // a sub to report which crypto closed orders we're pulling.. just to keep the user informed
         public void ReportClosedOrderStatus(string crypto, string pageProgress) {
+            if (crypto == "XBT") crypto = "BTC";
             IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
                 string _crypto = (string)o;
 

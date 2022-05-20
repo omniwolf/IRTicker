@@ -149,7 +149,7 @@ namespace IRTicker {
             // Actually I'm not sure about the above comment, i think some of them do?  But the main issue is most of them have
             // currencies that we don't want to deal with, so we set the currencies manually here.  IR we want all currencies, so
             // we use the API.  This is probably not really smart, as the UI is static, so when new currencies turn up IR breaks.  meh
-            DCEs["IRSGD"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"DOT\",\"XLM\",\"GRT\",\"ETC\",\"LINK\",\"USDC\",\"USDT\",\"UNI\"";
+            DCEs["IRSGD"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"DOT\",\"XLM\",\"GRT\",\"ETC\",\"LINK\",\"USDC\",\"USDT\",\"UNI\",\"ADA\",\"MATIC\",\"DOGE\",\"SAND\",\"MANA\",\"SOL\"";
             DCEs["IRSGD"].SecondaryCurrencyCodes = "\"SGD\"";
 
             DCEs["IRUSD"].SecondaryCurrencyCodes = "\"USD\"";
@@ -724,7 +724,7 @@ namespace IRTicker {
                 if (_bStick != null && bStick.OpenDevice()) {
                     try {
                         _bStick.Pulse(col, 1, pulseLength, 50);
-                        Thread.Sleep(pulseLength);
+                        //Thread.Sleep(pulseLength);
                     }
                     catch (Exception ex) {
                         Debug.Print(DateTime.Now + " -- BS -- caught an exception in BW for pulsing: " + ex.Message);
@@ -780,8 +780,12 @@ namespace IRTicker {
             }
             //Debug.Print("slack name is: " + name);
 
-            if (!DCEs["IR"].socketsAlive || !DCEs["IR"].NetworkAvailable) {
+            if (!DCEs["IR"].NetworkAvailable) {
                 slackObj.setStatus("", ":exclamation:", status_emoji_duration, name + " - IR API down");
+                return;
+            }
+            else if (!DCEs["IR"].socketsAlive) {
+                slackObj.setStatus("", ":exclamation:", status_emoji_duration, name + " - IR WSS down");
                 return;
             }
             else if (!DCEs["BTCM"].socketsAlive || !DCEs["BTCM"].NetworkAvailable) {
@@ -846,8 +850,13 @@ namespace IRTicker {
             else {
                 foreach (string dExchange in IRdExchanges) DCEs[dExchange].NetworkAvailable = true;
                 DCE.MarketSummary mSummary;
+                var settings = new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    MissingMemberHandling = MissingMemberHandling.Ignore
+                };
                 try {
-                    mSummary = JsonConvert.DeserializeObject<DCE.MarketSummary>(marketSummary.Item2);
+                    mSummary = JsonConvert.DeserializeObject<DCE.MarketSummary>(marketSummary.Item2, settings);
                 }
                 catch {
                     Debug.Print(DateTime.Now + " - IR - bad REST result: " + marketSummary.Item2);
@@ -1362,12 +1371,22 @@ namespace IRTicker {
                 }
                 else BTCfee = -1;  // tells the system to signal on the "Last updated" label
 
-                feeTup = Utilities.Get("https://data-api.defipulse.com/api/v1/egs/api/ethgasAPI.json?api-key=17888172119617872db6baf33644a66c6e0b4354f25e03cf974986aedfa2");
+                feeTup = Utilities.Get("https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=VGGBNCFAISMZAQKC1SDN92WDI1WF75KDKP");
+                if (feeTup.Item1) {
+                    EtherscanRoot ESData = JsonConvert.DeserializeObject<EtherscanRoot>(feeTup.Item2);
+                    if (decimal.TryParse(ESData.result.FastGasPrice, out decimal res)) {
+                        ETHfee = res;
+                    }
+                    else ETHfee = -1;
+                }
+                else ETHfee = -1;
+
+                /*feeTup = Utilities.Get("https://data-api.defipulse.com/api/v1/egs/api/ethgasAPI.json?api-key=17888172119617872db6baf33644a66c6e0b4354f25e03cf974986aedfa2");
                 if (feeTup.Item1) {
                     EGSRoot EGSData = JsonConvert.DeserializeObject<EGSRoot>(feeTup.Item2);
                     ETHfee = EGSData.fast / 10;
                 }
-                else ETHfee = -1;
+                else ETHfee = -1;*/
 
 
                 // lets grab the latest BTC block
@@ -1674,10 +1693,12 @@ namespace IRTicker {
                 }
 
                 // update tool tips.
-                string spreadTT = "Best bid: " + Utilities.FormatValue(mSummary.CurrentHighestBidPrice) + System.Environment.NewLine +
-                    "Best offer: " + Utilities.FormatValue(mSummary.CurrentLowestOfferPrice) + System.Environment.NewLine +
-                    "Spread: " + Utilities.FormatValue(((mSummary.spread) / midPoint * 100), 2, false) + "%";
-                IRTickerTT_spread.SetToolTip(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"], spreadTT);
+                if (midPoint != 0) {
+                    string spreadTT = "Best bid: " + Utilities.FormatValue(mSummary.CurrentHighestBidPrice) + System.Environment.NewLine +
+                        "Best offer: " + Utilities.FormatValue(mSummary.CurrentLowestOfferPrice) + System.Environment.NewLine +
+                        "Spread: " + Utilities.FormatValue(((mSummary.spread) / midPoint * 100), 2, false) + "%";
+                    IRTickerTT_spread.SetToolTip(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"], spreadTT);
+                }
             }
             else Debug.Print("Pair2 don't exist, pairObj.Value.SecondaryCurrencyCode: " + mSummary.SecondaryCurrencyCode);
         }
@@ -3125,6 +3146,21 @@ namespace IRTicker {
             public double _1080 { get; set; }
             public double _1100 { get; set; }
             public double _1120 { get; set; }
+        }
+
+        public class ESResult {
+            public string LastBlock { get; set; }
+            public string SafeGasPrice { get; set; }
+            public string ProposeGasPrice { get; set; }
+            public string FastGasPrice { get; set; }
+            public string suggestBaseFee { get; set; }
+            public string gasUsedRatio { get; set; }
+        }
+
+        public class EtherscanRoot {
+            public string status { get; set; }
+            public string message { get; set; }
+            public ESResult result { get; set; }
         }
 
         public class EGSRoot
