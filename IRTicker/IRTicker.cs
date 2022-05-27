@@ -1513,6 +1513,7 @@ namespace IRTicker {
             } while(true);  // polling is lyfe
         }
 
+        // this isn't going to work anymore - need to call WebSocket_Resubscribe differently... resubscribing to IRSGD for example won't do anything, need to do it to IR first
         private bool CheckNegativeSpread(string dExchange) {
             Dictionary<string, DCE.MarketSummary> mSummaries = DCEs[dExchange].GetCryptoPairs();
             foreach (var mSummary in mSummaries) {

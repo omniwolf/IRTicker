@@ -72,7 +72,7 @@ namespace IRTicker {
 
                 if (!OBPulled) {  // if the ob conversion process failed, then try again
                     Debug.Print(DateTime.Now + " - IR (" + dExchange + ") OB conversion (" + crypto + "-" + fiat + ") failed for some reason, trying again.");
-                    subscribe_unsubscribe_new("IR", subscribe: true, crypto, fiat);
+                    subscribe_unsubscribe_new(dExchange, subscribe: true, crypto, fiat);
                     return;
                 }
 
@@ -245,8 +245,13 @@ namespace IRTicker {
                         DCEs[dExchange].CurrentDCEStatus = "Reconnected";
                         Reinit_sockets(dExchange);
                         Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
-                        subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: DCEs[dExchange].CurrentSecondaryCurrency);  // resubscriibe to all pairs
                     }
+
+                    // "IR" has to be first, so can't include this in the loop :/
+                    subscribe_unsubscribe_new("IR", subscribe: true, crypto: "none", fiat: DCEs["IR"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
+                    subscribe_unsubscribe_new("IRUSD", subscribe: true, crypto: "none", fiat: DCEs["IRUSD"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
+                    subscribe_unsubscribe_new("IRSGD", subscribe: true, crypto: "none", fiat: DCEs["IRSGD"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
+
                     //subscribe_unsubscribe_new("IR", subscribe: true, crypto: "none", fiat: "none");  // resubscriibe to all pairs, only "IR" because 
                     return;  // if we're subscribing, we shouldn't need to start the client or anything..?
                 }
@@ -285,8 +290,10 @@ namespace IRTicker {
                 int loopCounter = 0;
                 do {
                     if (client_IR.IsRunning) {
+                        subscribe_unsubscribe_new("IR", subscribe: true, crypto: "none", fiat: DCEs["IR"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
                         foreach (string dExchange in dExchanges) {  // commenting this out to test subscribing just to the crypto, not the pair (which should subscribe to all secondard currencies?
-                            subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: DCEs[dExchange].CurrentSecondaryCurrency);  // resubscriibe to all pairs
+                            if (dExchange != "IR")  // did "IR" above already, must do it first
+                                subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: DCEs[dExchange].CurrentSecondaryCurrency);  // resubscriibe to all pairs
                         }
                         //subscribe_unsubscribe_new("IR", subscribe: true, crypto: "none", fiat: "none");  // resubscriibe to all pairs
 
@@ -316,8 +323,9 @@ namespace IRTicker {
                             if ((dExchange != "IRSGD") && (dExchange != "IRUSD") && (pIR != null))  // only do this for IR - the other two don't have an IRAccounts panel or anything
                                 Task.Run(() => pIR.compileAccountOrderBookAsync(pair.Key));  // hopefully this will just run this method asynchronously
                                                                                                           //pollingThread.ReportProgress(20, pair.Key);  // this will tell the accounts panel to update it's OB view
-                            if ((DCEs[dExchange].orderBuffer_IR[pair.Key].Count > 0) && DCEs[dExchange].pulledSnapShot[pair.Key]) applyBufferToOB(pair.Key, dExchange);
-                            DCEs[dExchange].newOrders[pair.Key] = 0;
+                            if ((DCEs[dExchange].orderBuffer_IR[pair.Key].Count > 0) && DCEs[dExchange].pulledSnapShot[pair.Key]) 
+                                applyBufferToOB(pair.Key, dExchange);
+                            DCEs[dExchange].newOrders[pair.Key] = 0;  // the buffer is being drained, so we reset the newOrders count
                         }
                     }
                 }
@@ -494,7 +502,8 @@ namespace IRTicker {
             Debug.Print(dExchange + " - re-subscribing to all pairs...");
 
             // for a reconnect, the IR code will automatically subscribe once the socket is active (see the loop/sleep shitty code in startSockets).  this way we only subscribe once the socket is up, and don't have to rely on the slow doWork loop to detect an issue
-            if ((dExchange != "IR") && (dExchange != "IRUSD") && (dExchange != "IRSGD")) subscribe_unsubscribe_new(dExchange, true);  // subscribe to all
+            // shouldn't need this, subscribe_ussubscribe() should be called already above
+            //if ((dExchange != "IR") && (dExchange != "IRUSD") && (dExchange != "IRSGD")) subscribe_unsubscribe_new(dExchange, true);  // subscribe to all
         }
 
         // only actually called for reconnections
@@ -511,8 +520,8 @@ namespace IRTicker {
                         DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto1 + "-" + fiat1] = false;
                         DCEs[dExchange].channelNonce["ORDERBOOK-" + crypto1 + "-" + fiat1] = 0;
                         DCEs[dExchange].newOrders[crypto1 + "-" + fiat1] = 0;
-                        if (DCEs[dExchange].orderBuffer_IR.ContainsKey(crypto1 + "-" + fiat1)) DCEs[dExchange].orderBuffer_IR[crypto1 + "-" + fiat1].Clear();
-                        else DCEs[dExchange].orderBuffer_IR[crypto1 + "-" + fiat1] = new ConcurrentDictionary<int, Ticker_IR>();
+                        //if (DCEs[dExchange].orderBuffer_IR.ContainsKey(crypto1 + "-" + fiat1)) DCEs[dExchange].orderBuffer_IR[crypto1 + "-" + fiat1].Clear();
+                        /*else*/ DCEs[dExchange].orderBuffer_IR[crypto1 + "-" + fiat1] = new ConcurrentDictionary<int, Ticker_IR>();
                     }
                 }
             }
@@ -696,7 +705,9 @@ namespace IRTicker {
                 if (Properties.Settings.Default.FlashForm) pollingThread.ReportProgress(26);  // flash the window if the setting is enabled
 
                 // now subscribe back to the channel
-                WebSocket_Resubscribe("IR", Utilities.SplitPair(pair).Item1);  // in all cases, resubscribe to IR as it's the one that holds the websockets connection
+                WebSocket_Resubscribe("IR", Utilities.SplitPair(pair).Item1);  // IR first, then the others
+                WebSocket_Resubscribe("IRUSD", Utilities.SplitPair(pair).Item1);  
+                WebSocket_Resubscribe("IRSGD", Utilities.SplitPair(pair).Item1);  
             }
         }
         
