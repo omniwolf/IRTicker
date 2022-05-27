@@ -985,7 +985,13 @@ namespace IRTicker
 
         private async void startMarketBaiter(decimal volume, decimal limitPrice) {
 
-            await Task.Run(() => pIR.marketBaiterLoopAsync(AccountSelectedCrypto, DCE_IR.CurrentSecondaryCurrency, volume, limitPrice));
+            try {
+                await Task.Run(() => pIR.marketBaiterLoopAsync(AccountSelectedCrypto, DCE_IR.CurrentSecondaryCurrency, volume, limitPrice));
+            }
+            catch (Exception ex) {
+                Debug.Print(DateTime.Now + " - Market baiter crashed.  error: " + ex.Message);
+                notificationFromMarketBaiter(new Tuple<string, string>("Market Baiter", "Market Baiter crashed, and has stopped."), true);
+            }
 
             ValidateLimitOrder();
             AccountBuySell_listbox.Enabled = true;

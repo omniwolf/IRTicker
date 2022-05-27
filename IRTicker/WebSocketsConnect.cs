@@ -138,11 +138,6 @@ namespace IRTicker {
                                     GetOrderBook_IR(dExchange, primaryCode, fiat);
                                 }
                             }
-
-                            // wtf why did i have a separate loop for this
-                            //foreach (Tuple<string, string> pair1 in pairList) {
-                            //    GetOrderBook_IR(pair1.Item1, pair1.Item2);
-                            //}
                         }
                         else {
                             GetOrderBook_IR(dExchange, crypto, fiat);
@@ -504,20 +499,26 @@ namespace IRTicker {
 
         // only actually called for reconnections
         public void Reinit_sockets(string dExchange, string crypto = "none", string fiat = "none") {
-            if (fiat == "none") fiat = DCEs[dExchange].CurrentSecondaryCurrency;
-            if (crypto == "none") {
-                foreach (string crypto1 in DCEs[dExchange].PrimaryCurrencyList) {
-                    DCEs[dExchange].pulledSnapShot[crypto1 + "-" + fiat] = false;
-                    DCEs[dExchange].positiveSpread[crypto1 + "-" + fiat] = true;
-                    DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto1 + "-" + fiat] = false;
-                    DCEs[dExchange].channelNonce["ORDERBOOK-" + crypto1 + "-" + fiat] = 0;
-                    DCEs[dExchange].newOrders[crypto1 + "-" + fiat] = 0;
-                    if (DCEs[dExchange].orderBuffer_IR.ContainsKey(crypto1 + "-" + fiat)) DCEs[dExchange].orderBuffer_IR[crypto1 + "-" + fiat].Clear();
-                    else DCEs[dExchange].orderBuffer_IR[crypto1 + "-" + fiat] = new ConcurrentDictionary<int, Ticker_IR>();
+            //if (fiat == "none") fiat = DCEs[dExchange].CurrentSecondaryCurrency;
+            //if (crypto == "none") {
+            Debug.Print(DateTime.Now + " - Reinit sockets for crypto: " + crypto + " and fiat: " + fiat);
+            foreach (string crypto1 in DCEs[dExchange].PrimaryCurrencyList) {
+                foreach (string fiat1 in DCEs[dExchange].SecondaryCurrencyList) {
+                    if (((crypto == crypto1) || (crypto == "none")) &&
+                        ((fiat == fiat1) || (fiat == "none"))) {
+                        DCEs[dExchange].pulledSnapShot[crypto1 + "-" + fiat1] = false;
+                        DCEs[dExchange].positiveSpread[crypto1 + "-" + fiat1] = true;
+                        DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto1 + "-" + fiat1] = false;
+                        DCEs[dExchange].channelNonce["ORDERBOOK-" + crypto1 + "-" + fiat1] = 0;
+                        DCEs[dExchange].newOrders[crypto1 + "-" + fiat1] = 0;
+                        if (DCEs[dExchange].orderBuffer_IR.ContainsKey(crypto1 + "-" + fiat1)) DCEs[dExchange].orderBuffer_IR[crypto1 + "-" + fiat1].Clear();
+                        else DCEs[dExchange].orderBuffer_IR[crypto1 + "-" + fiat1] = new ConcurrentDictionary<int, Ticker_IR>();
+                    }
                 }
+            }
                 
                 DCEs[dExchange].ClearOrderBookSubDicts("none", fiat);
-            }
+           /* }
             else {
                 DCEs[dExchange].pulledSnapShot[crypto + "-" + fiat] = false;
                 DCEs[dExchange].positiveSpread[crypto + "-" + fiat] = true;
@@ -527,7 +528,7 @@ namespace IRTicker {
                 DCEs[dExchange].newOrders[crypto + "-" + fiat] = 0;
                 if (DCEs[dExchange].orderBuffer_IR.ContainsKey(crypto + "-" + fiat)) DCEs[dExchange].orderBuffer_IR[crypto + "-" + fiat].Clear();
                 else DCEs[dExchange].orderBuffer_IR[crypto + "-" + fiat] = new ConcurrentDictionary<int, Ticker_IR>();
-            }
+            }*/
         }
 
         /* Sample socket data:
