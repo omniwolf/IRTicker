@@ -127,36 +127,30 @@ namespace IRTicker {
                         break;
                     }
                     if (subscribe) {  // if subscribing then grab the order books too.
-                        if (crypto == "none") {
-                            //List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
-                            foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                                if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
-                                    //pairList.Add(new Tuple<string, string>("XBT", "AUD"));
-                                    //pairList.Add(new Tuple<string, string>("XBT", "USD"));
-                                    //pairList.Add(new Tuple<string, string>("XBT", "NZD"));
-                                    //pairList.Add(new Tuple<string, string>(primaryCode, fiat));
+                                      //List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
+                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
+                                //pairList.Add(new Tuple<string, string>("XBT", "AUD"));
+                                //pairList.Add(new Tuple<string, string>("XBT", "USD"));
+                                //pairList.Add(new Tuple<string, string>("XBT", "NZD"));
+                                //pairList.Add(new Tuple<string, string>(primaryCode, fiat));
+                                if ((crypto == "none") || (crypto == primaryCode))
                                     GetOrderBook_IR(dExchange, primaryCode, fiat);
-                                }
                             }
                         }
-                        else {
-                            GetOrderBook_IR(dExchange, crypto, fiat);
-                        }
+
                     }
 
                     break;
 
                 case "IRUSD":
                     if (subscribe) {  // if subscribing then grab the order books too.
-                        if (crypto == "none") {
-                            foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                                if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
+
+                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
+                                if ((crypto == "none") || (crypto == primaryCode))
                                     GetOrderBook_IR(dExchange, primaryCode, fiat);
-                                }
                             }
-                        }
-                        else {
-                            GetOrderBook_IR(dExchange, crypto, fiat);
                         }
                     }
 
@@ -164,15 +158,12 @@ namespace IRTicker {
 
                 case "IRSGD":
                     if (subscribe) {  // if subscribing then grab the order books too.
-                        if (crypto == "none") {
-                            foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                                if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
+
+                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
+                                if ((crypto == "none") || (crypto == primaryCode))
                                     GetOrderBook_IR(dExchange, primaryCode, fiat);
-                                }
                             }
-                        }
-                        else {
-                            GetOrderBook_IR(dExchange, crypto, fiat);
                         }
                     }
 
