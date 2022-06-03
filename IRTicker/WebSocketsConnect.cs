@@ -77,6 +77,7 @@ namespace IRTicker {
                 }
 
                 Debug.Print(DateTime.Now.ToString() + " " + dExchange + " OB " + pair + " pulled, " + (DCEs[dExchange].orderBuffer_IR.ContainsKey(pair) ? DCEs[dExchange].orderBuffer_IR[pair].Count.ToString() : "n/a") + " ordes in the buffer");
+                Debug.Print("and we have " + DCEs[dExchange].IR_OBs[pair].Item1.Count + " bids and " + DCEs[dExchange].IR_OBs[pair].Item2.Count + " offers");
 
                 //int remainingBuffer = ApplyBuffer_IR(pair);
                 //Print("(" + pair + ") Buffer applied, there are " + remainingBuffer + " left in the buffer (should be 0)");
@@ -685,7 +686,7 @@ namespace IRTicker {
                 }
             }
             if (DCEs[dExchange].orderBuffer_IR[pair].Count > 0) {
-                /*if (pair == "XBT-AUD")*/ Debug.Print("(" + pair + ") ooo nonce - " + DCEs[dExchange].orderBuffer_IR[pair].Count + " if only 1, it is: " + (DCEs[dExchange].orderBuffer_IR[pair].Count == 1 ? DCEs[dExchange].orderBuffer_IR[pair].Keys.FirstOrDefault().ToString() : "") + " and the current nonce is " + DCEs[dExchange].channelNonce[channel]);
+                /*if (pair == "XBT-AUD")*/ Debug.Print(DateTime.Now + " - (" + pair + ") ooo nonce - " + DCEs[dExchange].orderBuffer_IR[pair].Count + " if only 1, it is: " + (DCEs[dExchange].orderBuffer_IR[pair].Count == 1 ? DCEs[dExchange].orderBuffer_IR[pair].Keys.FirstOrDefault().ToString() : "") + " and the current nonce is " + DCEs[dExchange].channelNonce[channel]);
                 pollingThread.ReportProgress(27, new Tuple<bool, string, string>(true, Utilities.SplitPair(pair).Item1, dExchange));  // update pair text colour to gray - true = nonce issues
             }
 

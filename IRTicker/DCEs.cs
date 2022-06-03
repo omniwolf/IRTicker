@@ -316,6 +316,7 @@ namespace IRTicker {
 
             // candidate for removal, can be caught in a catch block
             if (!IR_OBs.ContainsKey(pair) || IR_OBs[pair].Item1.Count == 0 || IR_OBs[pair].Item2.Count == 0) {
+                Debug.Print(DateTime.Now + " - OrderBookEvent_IR() - IR_OBs (" + FriendlyName + ") either doesn't contain " + pair + " or the bid/offer book is empty.  Bids count: " + IR_OBs[pair].Item1.Count + " offers count: " + IR_OBs[pair].Item2.Count);
                 return null;
             }
 
@@ -694,15 +695,21 @@ namespace IRTicker {
                 //OrderBookEvent_IR("NewOrder", new DCE.OrderBook_IR(order.Guid, crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency, order.Price, "LimitBid", order.Volume));
                 if (bidOB.ContainsKey(order.Price)) {  // this price already has order(s)
                     if (!bidOB[order.Price].ContainsKey(order.Guid)) {  // it's possible that the dictionary already has this order because we're starting websockets before we pull the REST OB
-                        bidOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, new Dictionary<string, decimal>() { { pairTup.Item2, order.Price } }, "LimitBid", order.Volume));
+                        if (!bidOB[order.Price].TryAdd(order.Guid, new OrderBook_IR(order.Guid, new Dictionary<string, decimal>() { { pairTup.Item2, order.Price } }, "LimitBid", order.Volume))) {
+                            Debug.Print(DateTime.Now + " - ConvertOrderBook_IR() - failed to add order where price level already existed...");
+                        }
                     }
                     // what?? why not?  i have commented the next line out here (and in the sell section too) because this doesn't seem right??
                     //else continue;  // we don't want to try and add this guid to the bidGuid OB, so move on
                 }
                 else {  // new price, create the dictionary
                     ConcurrentDictionary<string, OrderBook_IR> tempCD = new ConcurrentDictionary<string, OrderBook_IR>();
-                    tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, new Dictionary<string, decimal>() { { pairTup.Item2, order.Price } }, "LimitBid", order.Volume));
-                    bidOB.TryAdd(order.Price, tempCD);
+                    if (!tempCD.TryAdd(order.Guid, new OrderBook_IR(order.Guid, new Dictionary<string, decimal>() { { pairTup.Item2, order.Price } }, "LimitBid", order.Volume))) {
+                        Debug.Print(DateTime.Now + " - ConvertOrderBook_IR() - failed to create price level...");
+                    }
+                    if (!bidOB.TryAdd(order.Price, tempCD)) {
+                        Debug.Print(DateTime.Now + " - ConvertOrderBook_IR() - failed to create order after price level was created...");
+                    }
                 }
                 bidGuidOB[order.Guid] = order.Price;
                 /*if (!bidGuidOB.TryAdd(order.Guid, order.Price)) {

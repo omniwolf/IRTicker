@@ -132,8 +132,8 @@ namespace IRTicker {
 
                 // seed the DCEs dictionary with empty DCEs for the DCEs we will be interrogating
                 { "IR", new DCE("IR", "Independent Reserve") },
-                { "IRSGD", new DCE("IRSGD", "Independent Reserve") },
-                { "IRUSD", new DCE("IRUSD", "Independent Reserve") },
+                { "IRSGD", new DCE("IRSGD", "Independent Reserve (SGD)") },
+                { "IRUSD", new DCE("IRUSD", "Independent Reserve (USD)") },
                 { "BTCM", new DCE("BTCM", "BTC Markets") },
                 { "BAR", new DCE("BAR", "Bitaroo") }
             };
