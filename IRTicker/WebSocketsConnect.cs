@@ -514,11 +514,11 @@ namespace IRTicker {
                         DCEs[dExchange].newOrders[crypto1 + "-" + fiat1] = 0;
                         //if (DCEs[dExchange].orderBuffer_IR.ContainsKey(crypto1 + "-" + fiat1)) DCEs[dExchange].orderBuffer_IR[crypto1 + "-" + fiat1].Clear();
                         /*else*/ DCEs[dExchange].orderBuffer_IR[crypto1 + "-" + fiat1] = new ConcurrentDictionary<int, Ticker_IR>();
+                        DCEs[dExchange].ClearOrderBookSubDicts(crypto1, fiat1);
                     }
                 }
             }
-                
-                DCEs[dExchange].ClearOrderBookSubDicts("none", fiat);
+
            /* }
             else {
                 DCEs[dExchange].pulledSnapShot[crypto + "-" + fiat] = false;

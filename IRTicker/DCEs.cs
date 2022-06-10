@@ -822,7 +822,7 @@ namespace IRTicker {
                     }
                 }
             }
-            else {
+            else if ((crypto != "none") && (fiat != "none")) {
                 string pairStr = (crypto + "-" + fiat).ToUpper();
                 if (IR_OBs.ContainsKey(pairStr)) {
                     lock (IR_OBs[pairStr].Item1) {
