@@ -195,6 +195,11 @@ namespace IRTicker
             }
 
             AccAvgPrice_Status_Label.Text = "Found " + count + (count == 1 ? " order that matches" : " orders that match") + " this criteria";
+            string crypto = (AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() == "BTC" ? "XBT" : AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString());
+            int decimals = dce.currencyDecimalPlaces[crypto].Item1;  // crypto vol should go to 8 dp
+
+            if (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex == 2) decimals = 2;  // fiat just do 2
+
 
             if (count > 0) {
 
@@ -202,7 +207,6 @@ namespace IRTicker
                     AccAvgPrice_Result_TextBox.Text = "Error: totalValue: " + totalValue + " totalCryptoDealt: " + totalCryptoDealt;
                 }
                 else {
-                    string crypto = (AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() == "BTC" ? "XBT" : AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString()) ;
 
                     decimal tempRes = Math.Round((totalValue / totalCryptoDealt), dce.currencyDecimalPlaces[crypto].Item2, MidpointRounding.AwayFromZero);
                     AvgPriceResult = tempRes.ToString();
@@ -226,9 +230,6 @@ namespace IRTicker
                             // deal size user entry is good
                             if (dealSize > 0) {
                                 decimal dealtSoFar = (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex == 1 ? totalCryptoDealt : totalValue);
-                                int decimals = dce.currencyDecimalPlaces[crypto].Item1;  // crypto vol should go to 8 dp
-
-                                if (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex == 2) decimals = 2;  // fiat just do 2
 
                                 // colour the remaining box
                                 if ((dealSize - dealtSoFar) < 0) AccAvgPrice_RemainingToDeal_TextBox.BackColor = Color.MistyRose;
@@ -258,6 +259,8 @@ namespace IRTicker
                     else {  // don't have enough info to calculate remaining deal size, so blank it out
                         AccAvgPrice_RemainingToDeal_TextBox.BackColor = SystemColors.Control;
                         AccAvgPrice_RemainingToDeal_TextBox.Text = "";
+                        AccAvgPrice_RemainingToDeal_TextBox.Tag = "";  // put the raw unformatted number in the tag, so we can copy this if they double click the label
+
                     }
                 }
             }
@@ -267,8 +270,17 @@ namespace IRTicker
                 AccAvgPrice_CopyAvg_Button.Enabled = false;
                 AccAvgPrice_TotalCrypto_TextBox.Text = "";
                 AccAvgPrice_TotalFiat_TextBox.Text = "";
-                AccAvgPrice_RemainingToDeal_TextBox.Text = "";
-                AccAvgPrice_RemainingToDeal_TextBox.BackColor = SystemColors.Control;
+                if (!string.IsNullOrEmpty(AccAvgPrice_DealSize_TextBox.Text)) {
+                    if (decimal.TryParse(AccAvgPrice_DealSize_TextBox.Text, out decimal res)) {
+                        AccAvgPrice_RemainingToDeal_TextBox.Text = Utilities.FormatValue(res, decimals, false);
+                        AccAvgPrice_RemainingToDeal_TextBox.Tag = res;  // put the raw unformatted number in the tag, so we can copy this if they double click the label
+                    }
+                }
+                else {
+                    AccAvgPrice_RemainingToDeal_TextBox.Text = "";
+                    AccAvgPrice_RemainingToDeal_TextBox.Tag = "";  // put the raw unformatted number in the tag, so we can copy this if they double click the label
+                    AccAvgPrice_RemainingToDeal_TextBox.BackColor = SystemColors.Control;
+                }
                 AccAvgPrice_RemaingToDealCurrency_Label.Text = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString();
 
             }

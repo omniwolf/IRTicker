@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 
 // todo:
 // blinkstick tasks, a non-null CTS is never returned from the method, are we doing this right?
+// go to the "// Time to blink some sticks" section - we only pull AUD volume for blink sticks, but if the currentSecondaryCurrency for IR is something other than AUD, then the volume for the pairs is not updated, and the blink sticks will never change.  Need to ensure we are pulling volume from the currentSecondaryCurrency for IR as it'll be up to date
 
 namespace IRTicker {
     public partial class IRTicker : Form {
@@ -1418,17 +1419,18 @@ namespace IRTicker {
                 Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
                 Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
                 decimal IRvol_BTC = -1, BTCMvol_BTC = -1, IRvol_ETH = -1, BTCMvol_ETH = -1, IRvol_USDT = -1, BTCMvol_USDT = -1, IRvol_XRP = -1, BTCMvol_XRP = -1;
-                if (IRpairs.ContainsKey("XBT-AUD") && BTCMpairs.ContainsKey("XBT-AUD") &&
-                    IRpairs.ContainsKey("ETH-AUD") && BTCMpairs.ContainsKey("ETH-AUD") &&
-                    IRpairs.ContainsKey("USDT-AUD") && BTCMpairs.ContainsKey("USDT-AUD") &&
-                    IRpairs.ContainsKey("XRP-AUD") && BTCMpairs.ContainsKey("XRP-AUD")) {
-                    IRvol_BTC = IRpairs["XBT-AUD"].DayVolumeXbt; ;
+                string currentSecondary = DCEs["IR"].CurrentSecondaryCurrency;
+                if (IRpairs.ContainsKey("XBT-" + currentSecondary) && BTCMpairs.ContainsKey("XBT-AUD") &&
+                    IRpairs.ContainsKey("ETH-" + currentSecondary) && BTCMpairs.ContainsKey("ETH-AUD") &&
+                    IRpairs.ContainsKey("USDT-" + currentSecondary) && BTCMpairs.ContainsKey("USDT-AUD") &&
+                    IRpairs.ContainsKey("XRP-" + currentSecondary) && BTCMpairs.ContainsKey("XRP-AUD")) {
+                    IRvol_BTC = IRpairs["XBT-" + currentSecondary].DayVolumeXbt; ;
                     BTCMvol_BTC = BTCMpairs["XBT-AUD"].DayVolumeXbt;
-                    IRvol_ETH = IRpairs["ETH-AUD"].DayVolumeXbt; ;
+                    IRvol_ETH = IRpairs["ETH-" + currentSecondary].DayVolumeXbt; ;
                     BTCMvol_ETH = BTCMpairs["ETH-AUD"].DayVolumeXbt;
-                    IRvol_USDT = IRpairs["USDT-AUD"].DayVolumeXbt; ;
+                    IRvol_USDT = IRpairs["USDT-" + currentSecondary].DayVolumeXbt; ;
                     BTCMvol_USDT = BTCMpairs["USDT-AUD"].DayVolumeXbt;
-                    IRvol_XRP = IRpairs["XRP-AUD"].DayVolumeXbt; ;
+                    IRvol_XRP = IRpairs["XRP-" + currentSecondary].DayVolumeXbt; ;
                     BTCMvol_XRP = BTCMpairs["XRP-AUD"].DayVolumeXbt;
 
 
