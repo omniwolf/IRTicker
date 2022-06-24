@@ -106,12 +106,12 @@ namespace IRTicker {
                 return accounts;
             }
             else {  // we have been sent custom credentials, create a new client and use it.  Usually used for balance checker, checking SGD account or something.
-                IRcreds = new ApiCredential(APIKey, APISecret);
+                ApiCredential IRcredsAlt = new ApiCredential(APIKey, APISecret);
 
                 var IRconf = new ApiConfig
                 {
                     BaseUrl = DCE_IR.BaseURL,
-                    Credential = IRcreds
+                    Credential = IRcredsAlt
                 };
                         
                 Client IRclientAlt = Client.Create(IRconf);

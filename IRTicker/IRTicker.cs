@@ -744,12 +744,13 @@ namespace IRTicker {
 
             if (string.IsNullOrEmpty(Properties.Settings.Default.SlackNameEmojiCrypto) || string.IsNullOrEmpty(Properties.Settings.Default.SlackNameFiatCurrency)) return;
             string crypto = (Properties.Settings.Default.SlackNameEmojiCrypto == "BTC" ? "XBT" : Properties.Settings.Default.SlackNameEmojiCrypto);
+            string pair = crypto + "-" + DCEs["IR"].CurrentSecondaryCurrency;
 
             Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
             Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
             decimal IRvol = -1, BTCMvol = -1;
-            if (IRpairs.ContainsKey(crypto + "-AUD")) IRvol = IRpairs[crypto + "-AUD"].DayVolumeXbt;
-            if (BTCMpairs.ContainsKey(crypto + "-AUD")) BTCMvol = BTCMpairs[crypto + "-AUD"].DayVolumeXbt;
+            if (IRpairs.ContainsKey(pair)) IRvol = IRpairs[pair].DayVolumeXbt;
+            if (BTCMpairs.ContainsKey(pair)) BTCMvol = BTCMpairs[pair].DayVolumeXbt;
 
 
             string name = "";
