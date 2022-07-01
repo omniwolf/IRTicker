@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 // todo:
 // blinkstick tasks, a non-null CTS is never returned from the method, are we doing this right?
-// go to the "// Time to blink some sticks" section - we only pull AUD volume for blink sticks, but if the currentSecondaryCurrency for IR is something other than AUD, then the volume for the pairs is not updated, and the blink sticks will never change.  Need to ensure we are pulling volume from the currentSecondaryCurrency for IR as it'll be up to date
+// allow clicking the group box on IR to change the secondary currency again
 
 namespace IRTicker {
     public partial class IRTicker : Form {
@@ -750,7 +750,7 @@ namespace IRTicker {
             Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
             decimal IRvol = -1, BTCMvol = -1;
             if (IRpairs.ContainsKey(pair)) IRvol = IRpairs[pair].DayVolumeXbt;
-            if (BTCMpairs.ContainsKey(pair)) BTCMvol = BTCMpairs[pair].DayVolumeXbt;
+            if (BTCMpairs.ContainsKey(crypto + "-AUD")) BTCMvol = BTCMpairs[crypto + "-AUD"].DayVolumeXbt;
 
 
             string name = "";
@@ -2196,7 +2196,7 @@ namespace IRTicker {
         private void PollingThread_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
             if (e.Cancelled) {  // if it was cancelled, we start it up again.  The only reason it would be cancelled is if the user chooses a different secondary currency.
                 Debug.Print(DateTime.Now + " - Poll was cancelled, now restarting...");
-                pollingThread.RunWorkerAsync(); // we need to cancel to make sure we haven't already pulled the old currency from the API
+
             }
             else {
                 if (null == e.Result) {
@@ -2205,8 +2205,18 @@ namespace IRTicker {
                 else {
                     Debug.Print(DateTime.Now + " - POLL stopped!! why?? " + e.Result + " " + e.Error + " " + e.Error.Message.ToString());
                 }
-                pollingThread.RunWorkerAsync(); // start it up again I guess
             }
+
+            // regardless, I guess we need to start it up again
+            pollingThread.Dispose();
+            pollingThread = null;
+            pollingThread = new BackgroundWorker();
+            pollingThread.WorkerReportsProgress = true;
+            pollingThread.WorkerSupportsCancellation = true;
+            pollingThread.DoWork += new System.ComponentModel.DoWorkEventHandler(this.PollingThread_DoWork);
+            pollingThread.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.PollingThread_ReportProgress);
+            pollingThread.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.PollingThread_RunWorkerCompleted);
+            pollingThread.RunWorkerAsync(); // we need to cancel to make sure we haven't already pulled the old currency from the API
         }
 
         // when they close the app, rename the crypto dirs to blah - old.  this way if they user happens to check the toolbar thing they'll know they're not being updated anymore
