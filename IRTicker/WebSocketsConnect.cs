@@ -708,7 +708,7 @@ namespace IRTicker {
         public void parseTicker_IR(Ticker_IR tickerStream, string dExchange) { 
 
             if (!tickerStream.Data.OrderType.StartsWith("Limit")) {
-                Debug.Print(DateTime.Now + " - (" + tickerStream.Channel + ") ignoring a " + tickerStream.Data.OrderType + " order.  event: " + tickerStream.Event + ".  guid: " + tickerStream.Data.OrderGuid);
+                Debug.Print(DateTime.Now + " - (" + tickerStream.Channel + ") ignoring a " + tickerStream.Data.OrderType + " order - " + tickerStream.Channel.Substring(10) + " " + tickerStream.Data.Volume + ".  event: " + tickerStream.Event + ".  guid: " + tickerStream.Data.OrderGuid);
                 return;  // ignore market orders
             }
 

@@ -21,7 +21,6 @@ using System.Threading.Tasks;
 // todo:
 // blinkstick tasks, a non-null CTS is never returned from the method, are we doing this right?
 // allow clicking the group box on IR to change the secondary currency again
-// include in debug message about market orders the size of the order
 
 namespace IRTicker {
     public partial class IRTicker : Form {
