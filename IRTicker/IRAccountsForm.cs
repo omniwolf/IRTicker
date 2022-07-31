@@ -35,6 +35,11 @@ namespace IRTicker
             //Main.Visible = false;
             IRAccountsButtonJustClicked = true;
 
+            // highlight the correct fiat label
+            Label CurrentSecondaryCurrecyLabel = IRT.UIControls_Dict["IR"].Label_Dict[DCE_IR.CurrentSecondaryCurrency + "_Account_Label"];
+            CurrentSecondaryCurrecyLabel.ForeColor = Color.DarkBlue;
+            CurrentSecondaryCurrecyLabel.Font = new Font(CurrentSecondaryCurrecyLabel.Font.FontFamily, 14.25f, FontStyle.Bold);
+
             IRT.populateIRAPIKeysSettings(this);
 
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
@@ -670,12 +675,16 @@ namespace IRTicker
             }), crypto);
         }
 
-        private void fiatClicked(Label clickedLabel) {
+        public void fiatClicked(Label clickedLabel, string oldFiat = "") {
 
             //  colour the fiats
 
             // set the old fiat label back to normal
-            Label CurrentSecondaryCurrecyLabel = IRT.UIControls_Dict["IR"].Label_Dict[DCE_IR.CurrentSecondaryCurrency + "_Account_Label"];
+            if (string.IsNullOrEmpty(oldFiat)) {
+                oldFiat = DCE_IR.CurrentSecondaryCurrency;
+            }
+
+            Label CurrentSecondaryCurrecyLabel = IRT.UIControls_Dict["IR"].Label_Dict[oldFiat + "_Account_Label"];
             CurrentSecondaryCurrecyLabel.ForeColor = Color.Black;
             CurrentSecondaryCurrecyLabel.Font = new Font(CurrentSecondaryCurrecyLabel.Font.FontFamily, 14.25f, FontStyle.Regular);
 
@@ -692,7 +701,6 @@ namespace IRTicker
             AccountOrderVolume_textbox_TextChanged(null, null);
             AccountLimitPrice_textbox_TextChanged(null, null);
 
-            IRT.IR_GroupBox_Click(clickedLabel, null);
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
                 PrivateIR.PrivateIREndPoints.GetClosedOrders,PrivateIR.PrivateIREndPoints.GetOpenOrders,
                 PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
@@ -1222,6 +1230,7 @@ namespace IRTicker
         // called when you click any of the fiat labels
         private void fiatLabel_Click(object sender, EventArgs e) {
             fiatClicked((System.Windows.Forms.Label)sender);
+            IRT.IR_GroupBox_Click(sender, null);
         }
 
         private void AccountName_button_Click(object sender, EventArgs e) {

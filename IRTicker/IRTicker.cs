@@ -20,7 +20,6 @@ using System.Threading.Tasks;
 
 // todo:
 // blinkstick tasks, a non-null CTS is never returned from the method, are we doing this right?
-// allow clicking the group box on IR to change the secondary currency again
 
 namespace IRTicker {
     public partial class IRTicker : Form {
@@ -840,7 +839,7 @@ namespace IRTicker {
         }
 
         // this grabs data from the API, creates a MarketSummary object, and pops it in the cryptoPairs dictionary
-        public void ParseDCE_IR(string crypto, string fiat, bool updateLabels) {
+        public void ParseDCE_IR(string crypto, string fiat, bool updateLabels, bool updateSpread = false) {
             Tuple<bool, string> marketSummary = Utilities.Get(DCEs["IR"].BaseURL + "/Public/GetMarketSummary?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
             if (!marketSummary.Item1) {
                 foreach (string dExchange in IRdExchanges) {
@@ -876,18 +875,18 @@ namespace IRTicker {
                     // This bit is for a) volume (we don't get vol from websockets), and b) if there have been no orders to establish a spread, then the price and spread
                     // stay at 0.  This is 
                     Dictionary<string, DCE.MarketSummary> cPairs = DCEs[dExchange].GetCryptoPairs();
-                    if (cPairs.ContainsKey(mSummary.pair) && cPairs[mSummary.pair].spread != 0) {  // logic here is if the spread is not 0, then don't send spread info, as what we have is better
-                                                                                                   //if (crypto == "XBT") {  // don't want to overwrite the spread orders as they're probably out of date
+                    if (cPairs.ContainsKey(mSummary.pair) && (cPairs[mSummary.pair].spread != 0) && !updateSpread) {  // logic here is if the spread is not 0, then don't send spread info, as what we have is better
+                    //if (crypto == "XBT") {  // don't want to overwrite the spread orders as they're probably out of date
                         mSummary.CurrentHighestBidPrice = 0;  // sending cryptoPairsAdd a 0 bid and offer will mean the previous best bid and offer remain
                         mSummary.CurrentLowestOfferPrice = 0;
                     }
                     //}
                     mSummary.CreatedTimestampUTC = "";
-                    if (DCEs[dExchange].CurrentSecondaryCurrency == fiat) {
+                    //if (DCEs[dExchange].CurrentSecondaryCurrency == fiat) {
                         DCEs[dExchange].CryptoPairsAdd(crypto + "-" + fiat, mSummary);  // this cryptoPairs dictionary holds a list of all the DCE's trading pairs
                         if (updateLabels) pollingThread.ReportProgress(21, mSummary);  // don't update the labels if we are pulling a different fiat than the one we're showing (eg for Slack name)
 
-                    }
+                    //}
                     DCEs[dExchange].CurrentDCEStatus = "Online";
                 }
             }
@@ -1120,7 +1119,7 @@ namespace IRTicker {
                                     ParseDCE_IR(crypto, fiat, true);
                                 }
 
-                                else if ((fiat == "SGD") && (DCEs["IRSGD"].PrimaryCurrencyList.Contains(crypto))) {
+                                else if ((fiat == "SGD") && DCEs["IRSGD"].PrimaryCurrencyList.Contains(crypto)) {  // extra check about crypto because SGD doesn't pair with all cryptos
                                     productDictionary_IRSGD.Add(crypto + "-" + fiat, new DCE.products_GDAX(crypto + "-" + fiat));
                                     DCEs["IRSGD"].negSpreadCount[crypto + "-" + fiat] = 0;  // init
                                     DCEs["IRSGD"].InitialiseOrderBookDicts_IR(crypto, fiat);
@@ -1236,7 +1235,7 @@ namespace IRTicker {
                                 }
                                 // if i want to get fancy i can call reportProgress and drawClosedOrders()...
 
-                                // once a cycle let's give the order book a nudge.. there might be new orders that we haven't seen.
+                                // once a cycle let's give the IR Accounts order book a nudge.. there might be new orders that we haven't seen.
                                 if ((null != IRAF) && !IRAF.IsDisposed) pIR.compileAccountOrderBookAsync(primaryCode + "-" + fiat);
                             }
                         }
@@ -1245,9 +1244,10 @@ namespace IRTicker {
                     // need to pull this other fiat currency market summary data if our chosen slack currency is not the one we're looking at (and the slack stuff is enabled)
                     if ((Properties.Settings.Default.SlackNameFiatCurrency != DCEs["IR"].CurrentSecondaryCurrency) &&
                         Properties.Settings.Default.Slack && Properties.Settings.Default.SlackNameChange) {
-
-                        if (DCEs["IR"].PrimaryCurrencyList.Contains(Properties.Settings.Default.SlackNameEmojiCrypto)) {  // if the chosen crypto is a real one
-                            ParseDCE_IR(Properties.Settings.Default.SlackNameEmojiCrypto, Properties.Settings.Default.SlackNameFiatCurrency, false);
+                        string slackCrypto = Properties.Settings.Default.SlackNameEmojiCrypto;
+                        if (slackCrypto == "BTC") slackCrypto = "XBT";
+                        if (DCEs["IR"].PrimaryCurrencyList.Contains(slackCrypto)) {  // if the chosen crypto is a real one
+                            ParseDCE_IR(slackCrypto, Properties.Settings.Default.SlackNameFiatCurrency, updateLabels: false, updateSpread: true);  // we force a spread update only if the slack secondary currency is different to the current secondary currency
                         }
                     }
 
@@ -2428,6 +2428,11 @@ namespace IRTicker {
 
             if (string.IsNullOrEmpty(fiat)) {
                 DCEs[dExchange].NextSecondaryCurrency();
+                if ((null != IRAF) && !IRAF.IsDisposed) {  // if the IRAccounts form is open, let's update it
+                    System.Windows.Forms.Label labelToSelect = UIControls_Dict["IR"].Label_Dict[DCEs[dExchange].CurrentSecondaryCurrency + "_Account_Label"];
+                    IRAF.fiatClicked(labelToSelect, oldFiat);
+                }
+
             }
             else {
                 if (DCEs["IR"].CurrentSecondaryCurrency != fiat) DCEs["IR"].CurrentSecondaryCurrency = fiat;

@@ -1149,11 +1149,11 @@ namespace IRTicker
             // 
             this.AccountAUD_label.AutoSize = true;
             this.AccountAUD_label.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.AccountAUD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountAUD_label.ForeColor = System.Drawing.Color.DarkBlue;
+            this.AccountAUD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountAUD_label.ForeColor = System.Drawing.SystemColors.ControlText;
             this.AccountAUD_label.Location = new System.Drawing.Point(12, 739);
             this.AccountAUD_label.Name = "AccountAUD_label";
-            this.AccountAUD_label.Size = new System.Drawing.Size(58, 24);
+            this.AccountAUD_label.Size = new System.Drawing.Size(54, 24);
             this.AccountAUD_label.TabIndex = 31;
             this.AccountAUD_label.Text = "AUD:";
             this.AccountAUD_label.Click += new System.EventHandler(this.fiatLabel_Click);
