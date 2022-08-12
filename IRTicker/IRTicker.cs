@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 
 // todo:
 // blinkstick tasks, a non-null CTS is never returned from the method, are we doing this right?
+// double clicking a bid or offer on the Accounts screen should fill in that order's details to the buy fields 
 
 namespace IRTicker {
     public partial class IRTicker : Form {
