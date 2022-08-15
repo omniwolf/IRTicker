@@ -32,6 +32,7 @@ namespace IRTicker
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IRAccountsForm));
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
             this.GetAccounts_panel = new System.Windows.Forms.Panel();
+            this.AccountAPIKeys_comboBox = new System.Windows.Forms.ComboBox();
             this.AccountSAND_total = new System.Windows.Forms.Label();
             this.AccountSAND_value = new System.Windows.Forms.Label();
             this.AccountSAND_label = new System.Windows.Forms.Label();
@@ -181,7 +182,6 @@ namespace IRTicker
             this.StopBaitin_button = new System.Windows.Forms.Button();
             this.IRAccount_AvgPrice_Button = new System.Windows.Forms.Button();
             this.IRAccount_panel = new System.Windows.Forms.Panel();
-            this.AccountAPIKeys_comboBox = new System.Windows.Forms.ComboBox();
             this.GetAccounts_panel.SuspendLayout();
             this.IRAccountAddress_panel.SuspendLayout();
             this.AccountClosedOrders_panel.SuspendLayout();
@@ -306,6 +306,19 @@ namespace IRTicker
             this.GetAccounts_panel.Name = "GetAccounts_panel";
             this.GetAccounts_panel.Size = new System.Drawing.Size(276, 843);
             this.GetAccounts_panel.TabIndex = 0;
+            // 
+            // AccountAPIKeys_comboBox
+            // 
+            this.AccountAPIKeys_comboBox.DisplayMember = "friendlyName";
+            this.AccountAPIKeys_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.AccountAPIKeys_comboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountAPIKeys_comboBox.FormattingEnabled = true;
+            this.AccountAPIKeys_comboBox.Location = new System.Drawing.Point(16, 13);
+            this.AccountAPIKeys_comboBox.Name = "AccountAPIKeys_comboBox";
+            this.AccountAPIKeys_comboBox.Size = new System.Drawing.Size(241, 24);
+            this.AccountAPIKeys_comboBox.TabIndex = 117;
+            this.AccountAPIKeys_comboBox.ValueMember = "friendlyName";
+            this.AccountAPIKeys_comboBox.SelectedIndexChanged += new System.EventHandler(this.AccountAPIKeys_comboBox_SelectedIndexChanged);
             // 
             // AccountSAND_total
             // 
@@ -1632,6 +1645,7 @@ namespace IRTicker
             this.AccountOrders_listview.TabIndex = 9;
             this.AccountOrders_listview.UseCompatibleStateImageBehavior = false;
             this.AccountOrders_listview.View = System.Windows.Forms.View.Details;
+            this.AccountOrders_listview.DoubleClick += new System.EventHandler(this.AccountOrders_listview_DoubleClick);
             // 
             // OrderNumber
             // 
@@ -1886,19 +1900,6 @@ namespace IRTicker
             this.IRAccount_panel.Name = "IRAccount_panel";
             this.IRAccount_panel.Size = new System.Drawing.Size(585, 843);
             this.IRAccount_panel.TabIndex = 62;
-            // 
-            // AccountAPIKeys_comboBox
-            // 
-            this.AccountAPIKeys_comboBox.DisplayMember = "friendlyName";
-            this.AccountAPIKeys_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.AccountAPIKeys_comboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountAPIKeys_comboBox.FormattingEnabled = true;
-            this.AccountAPIKeys_comboBox.Location = new System.Drawing.Point(16, 13);
-            this.AccountAPIKeys_comboBox.Name = "AccountAPIKeys_comboBox";
-            this.AccountAPIKeys_comboBox.Size = new System.Drawing.Size(241, 24);
-            this.AccountAPIKeys_comboBox.TabIndex = 117;
-            this.AccountAPIKeys_comboBox.ValueMember = "friendlyName";
-            this.AccountAPIKeys_comboBox.SelectedIndexChanged += new System.EventHandler(this.AccountAPIKeys_comboBox_SelectedIndexChanged);
             // 
             // IRAccountsForm
             // 

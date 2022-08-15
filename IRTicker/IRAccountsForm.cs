@@ -543,6 +543,7 @@ namespace IRTicker
                     Tuple<string, string> pairTup = Utilities.SplitPair(pair);
                     AccountOrders_listview.Items.Add(new ListViewItem(new string[] { lvi[0].ToString(), Utilities.FormatValue(lvi[1], DCE_IR.currencyDecimalPlaces[pairTup.Item1].Item2, false), Utilities.FormatValue(lvi[2], 8, false), Utilities.FormatValue(lvi[3]), Utilities.FormatValue(lvi[4]) }));
                     AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].SubItems[1].Tag = lvi[1];  // need to store the price in an unformatted (and therefore parseable) format
+                    AccountOrders_listview.Items[AccountOrders_listview.Items.Count - 1].SubItems[3].Tag = lvi[3];  // need to store the cumulative volume in an unformatted (and therefore parseable) format
 
                     // if limit order or baiter, and can parse vol and limit price, and order book is showing the opposite side (ie if we're selling, and the OB is showing bids)
                     // if cumVol >= formVol then highlight
@@ -1038,8 +1039,9 @@ namespace IRTicker
             if (AccountOrderType_listbox.SelectedIndex == 0) return;  // this can happen when changing cryptos, we simulate a price text box update to validate and adjust
             decimal price = decimal.Parse(AccountLimitPrice_textbox.Text);  // why no tryParse?  the only way this gets called really is if the price has been validated as a number, or it's the result of clicking the place order button, which is only clickable if the vol/price are validated.  so we should be safe here...
             if (AccountOrders_listview.Items.Count > 0) {  // only continue if we have orders in the OB
+                decimal unformattedPrice = (decimal)AccountOrders_listview.Items[0].SubItems[1].Tag;
                 if (AccountBuySell_listbox.SelectedIndex == 0) {  // buy
-                    if (price >= decimal.Parse(AccountOrders_listview.Items[0].SubItems[1].Tag.ToString())) {
+                    if (price >= unformattedPrice) {
                         AccountPlaceOrder_button.Text = "Possible MARKET buy";
                         AccountLimitPrice_label.ForeColor = AccountPlaceOrder_button.ForeColor = Color.Red;
                         IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "Price is higher than the lowest offer, this will be a market order!");
@@ -1060,7 +1062,7 @@ namespace IRTicker
                     }
                 }
                 else {  // sell
-                    if (price <= decimal.Parse(AccountOrders_listview.Items[0].SubItems[1].Tag.ToString())) {
+                    if (price <= unformattedPrice) {
                         AccountPlaceOrder_button.Text = "Possible MARKET sell";
                         AccountLimitPrice_label.ForeColor = AccountPlaceOrder_button.ForeColor = Color.Red;
                         IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "Price is lower than the higest bid, this will be a market order!");
@@ -1244,6 +1246,21 @@ namespace IRTicker
 
         public void AccountAPIKeys_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
             IRT.pIRAccountChanged((System.Windows.Forms.ComboBox)sender);
+        }
+
+        // double clicking a row in the OB view will populate the price and volume fields
+        // with values that will buy/sell up to and including the order double clicked
+        private void AccountOrders_listview_DoubleClick(object sender, EventArgs e) {
+            if (AccountOrders_listview.SelectedItems.Count == 0) return;
+
+            // this will only work if the order hasn't disappeared.  if it has, these will be 0
+            decimal price = (decimal)AccountOrders_listview.SelectedItems[0].SubItems[1].Tag;
+            decimal volume = (decimal)AccountOrders_listview.SelectedItems[0].SubItems[3].Tag;
+            
+            if ((price > 0) && (volume > 0)) {
+                AccountLimitPrice_textbox.Text = price.ToString();
+                AccountOrderVolume_textbox.Text = volume.ToString();
+            }
         }
     }
 }
