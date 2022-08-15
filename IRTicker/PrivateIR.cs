@@ -354,14 +354,14 @@ namespace IRTicker {
             decimal estValue = 0;  // this appears to be the total value of the order currently in the fields on the form
 
             // here we grab the buy and sell order book, make a copy, and then sort it
-            // do we need to sort both?  surely we can check the side, and only sort the side we care about??  
-                KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCE_IR.IR_OBs[pair].Item2.ToArray();  // because we're buying from the sell orders
-                orderedOffers = arrayBook.OrderBy(k => k.Key);
-                //Debug.Print("--- Account picked the sell side, top order is: " + orderedBook.First().Key);
+            // why sort both?  because even though we only view one side, we may need the other  to do some calculations or whatever
+            KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>[] arrayBook = DCE_IR.IR_OBs[pair].Item2.ToArray();  // because we're buying from the sell orders
+            orderedOffers = arrayBook.OrderBy(k => k.Key);
+            //Debug.Print("--- Account picked the sell side, top order is: " + orderedBook.First().Key);
 
-                arrayBook = DCE_IR.IR_OBs[pair].Item1.ToArray();  // because we're selling to the buy orders
-                orderedBids = arrayBook.OrderByDescending(k => k.Key);
-                //Debug.Print("--- Account picked the buy side, top order is: " + orderedBook.First().Key);
+            arrayBook = DCE_IR.IR_OBs[pair].Item1.ToArray();  // because we're selling to the buy orders
+            orderedBids = arrayBook.OrderByDescending(k => k.Key);
+            //Debug.Print("--- Account picked the buy side, top order is: " + orderedBook.First().Key);
 
             int count = 1;
             decimal cumulativeVol = 0;
