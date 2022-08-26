@@ -1036,7 +1036,7 @@ namespace IRTicker
         // this method checks the limit price, and if it would make the order a market order, then highlight buttons and shit
         // can only be called if AccountOrderType_listbox.SelectedIndex is 1 or 2 (limit or bait)
         private void ValidateLimitOrder() {
-            if (AccountOrderType_listbox.SelectedIndex == 0) return;  // this can happen when changing cryptos, we simulate a price text box update to validate and adjust
+            if ((AccountOrderType_listbox.SelectedIndex == 0) || string.IsNullOrEmpty(AccountLimitPrice_textbox.Text)) return;  // this can happen when changing cryptos, we simulate a price text box update to validate and adjust
             decimal price = decimal.Parse(AccountLimitPrice_textbox.Text);  // why no tryParse?  the only way this gets called really is if the price has been validated as a number, or it's the result of clicking the place order button, which is only clickable if the vol/price are validated.  so we should be safe here...
             if (AccountOrders_listview.Items.Count > 0) {  // only continue if we have orders in the OB
                 decimal unformattedPrice = (decimal)AccountOrders_listview.Items[0].SubItems[1].Tag;
