@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 // todo:
 // blinkstick tasks, a non-null CTS is never returned from the method, are we doing this right?
 // accounts panel - tabbing to the price field selects all, but not to the volume field.  can fix?
+// ctrl+z in the price field on IRAccounts brings back the previous price that was in there?
 
 namespace IRTicker {
     public partial class IRTicker : Form {
