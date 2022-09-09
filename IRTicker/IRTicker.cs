@@ -1715,7 +1715,7 @@ namespace IRTicker {
         private string DetermineAveragePrice_IR(string crypto, string fiat, string currency) {
             bool fiatSelected = currency.ToLower() == "fiat";  // if the crypto value is the same as the fiat one, it means that the selected crypto was fiat (ie they chose AUD from the drop avg price dropdown)
             crypto = (crypto == "BTC" ? "XBT" : crypto.ToUpper());
-            fiat = fiat.ToLower();
+            fiat = fiat.ToUpper();
             string pair = (crypto + "-" + fiat).ToUpper();
 
             if (!DCEs["IR"].IR_OBs.ContainsKey(pair)) return "No order book for the " + pair + " pair";
