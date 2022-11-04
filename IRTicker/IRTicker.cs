@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 // accounts panel - tabbing to the price field selects all, but not to the volume field.  can fix?
 // ctrl+z in the price field on IRAccounts brings back the previous price that was in there?
 // bug - when the volume is 0, we print the " / 0" in the SGD and USD panels for some reason
+// need more decimal places in the avg price window
 
 namespace IRTicker {
     public partial class IRTicker : Form {

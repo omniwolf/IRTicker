@@ -404,7 +404,9 @@ namespace IRTicker
                 tt += "Volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + order.Volume + Environment.NewLine;
                 tt += "Avg price: $ " + Utilities.FormatValue(order.AvgPrice.Value) + Environment.NewLine;
                 tt += "Notional value: $ " + Utilities.FormatValue(order.Value.Value) + Environment.NewLine;
-                tt += "Fee: " + Utilities.FormatValue(order.FeePercent, 2, false) + "%" + Environment.NewLine;
+                tt += "Fee: " + Utilities.FormatValue((order.FeePercent * 100), 2, false) + "%" + Environment.NewLine;
+                tt += "Notional sans fee: $ " + Utilities.FormatValue(order.Value.Value * 0.95M) + Environment.NewLine;
+                tt += "Fee value: $ " + Utilities.FormatValue(order.Value.Value * 0.05M) + Environment.NewLine;
             }
             tt += "Status: " + order.Status;
             return tt;
