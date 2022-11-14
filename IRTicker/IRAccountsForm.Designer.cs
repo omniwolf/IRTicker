@@ -1599,6 +1599,7 @@ namespace IRTicker
             this.AccountLimitPrice_textbox.Visible = false;
             this.AccountLimitPrice_textbox.TextChanged += new System.EventHandler(this.AccountLimitPrice_textbox_TextChanged);
             this.AccountLimitPrice_textbox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.AccountLimitPrice_textbox_KeyUp);
+            this.AccountLimitPrice_textbox.Leave += new System.EventHandler(this.AccountLimitPrice_textbox_Leave);
             // 
             // AccountLimitPrice_label
             // 
@@ -1913,6 +1914,8 @@ namespace IRTicker
             this.MinimumSize = new System.Drawing.Size(600, 880);
             this.Name = "IRAccountsForm";
             this.Text = "IRAccountsForm";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.IRAccountsForm_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.IRAccountsForm_KeyUp);
             this.GetAccounts_panel.ResumeLayout(false);
             this.GetAccounts_panel.PerformLayout();
             this.IRAccountAddress_panel.ResumeLayout(false);

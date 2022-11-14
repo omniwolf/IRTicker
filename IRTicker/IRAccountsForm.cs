@@ -15,8 +15,7 @@ using System.Collections.Concurrent;
 
 namespace IRTicker
 {
-    public partial class IRAccountsForm : Form
-    {
+    public partial class IRAccountsForm : Form {
 
         public string AccountSelectedCrypto = "XBT";
         private Task updateOBTask;
@@ -26,6 +25,10 @@ namespace IRTicker
         private PrivateIR pIR;
         private DCE DCE_IR;
         private TelegramBot TGBot;
+
+        private string lastPriceForUndo;  // holds the last typed price so when we "undo", we have a price to go back to
+        private string buffer_lastPriceForUndo; // need to buffer the current price so we know what to set the undo value to
+        private bool undoIsUpdatingPrice = false; // we temp sent this to true when we're updating the price so that we don't mess with other undo variables in the textChanged sub
 
         public void InitialiseAccountsPanel() {
             AccountOrderVolume_textbox.Enabled = true;
@@ -191,7 +194,8 @@ namespace IRTicker
 
         public void DrawIRAccounts(Dictionary<string, Account> irAccounts) {
 
-            IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
+            IRT.synchronizationContext.Post(new SendOrPostCallback(o =>
+            {
 
                 var mSummaries = DCE_IR.GetCryptoPairs();
 
@@ -242,7 +246,8 @@ namespace IRTicker
                     //Debug.Print("PIR: gotACcounts");
                     if ((irAccounts == null) && IRAccountsButtonJustClicked) {
                         Debug.Print(DateTime.Now + " - there was an error, closing the accounts page");
-                        IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
+                        IRT.synchronizationContext.Post(new SendOrPostCallback(o =>
+                        {
                             Close();
                         }), null);
                         return;  // close the IRAccounts panel
@@ -288,7 +293,7 @@ namespace IRTicker
                         drawOpenOrders(openOrders.Data);
                     }
                     catch (Exception ex) {
-                         IRT.showBalloon("Failed to get open orders", "Error: " + ex.Message);
+                        IRT.showBalloon("Failed to get open orders", "Error: " + ex.Message);
                         Debug.Print(DateTime.Now + " - GetOpenOrders failed with: " + ex.Message);
                     }
                 }
@@ -413,7 +418,8 @@ namespace IRTicker
         }
 
         public void drawClosedOrders(IEnumerable<BankHistoryOrder> closedOrders) {
-            IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
+            IRT.synchronizationContext.Post(new SendOrPostCallback(o =>
+            {
                 IEnumerable<BankHistoryOrder> _closedOrders = (IEnumerable<BankHistoryOrder>)o;
 
                 if (_closedOrders == null) {
@@ -449,7 +455,8 @@ namespace IRTicker
         }
 
         public void drawOpenOrders(IEnumerable<BankHistoryOrder> openOrders) {
-            IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
+            IRT.synchronizationContext.Post(new SendOrPostCallback(o =>
+            {
                 IEnumerable<BankHistoryOrder> _openOrders = (IEnumerable<BankHistoryOrder>)o;
 
                 if (_openOrders == null) {
@@ -492,7 +499,8 @@ namespace IRTicker
                 deposAddress.LastCheckedTimestampUtc = null;
 
             }
-            IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
+            IRT.synchronizationContext.Post(new SendOrPostCallback(o =>
+            {
                 DigitalCurrencyDepositAddress _deposAddress = (DigitalCurrencyDepositAddress)o;
                 AccountWithdrawalCrypto_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " deposit address";
 
@@ -530,7 +538,8 @@ namespace IRTicker
         // count, pricePoint (not formatted), totalVolume, cumulativeVol (not formatted), cumulativeValue, includesMyOrder 
         public void drawAccountOrderBook(Tuple<decimal, List<decimal[]>> accountOrders, string pair) {
 
-            IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
+            IRT.synchronizationContext.Post(new SendOrPostCallback(o =>
+            {
 
                 Tuple<decimal, List<decimal[]>> _accountOrders = (Tuple<decimal, List<decimal[]>>)o;
 
@@ -663,17 +672,18 @@ namespace IRTicker
         // a sub to report which crypto closed orders we're pulling.. just to keep the user informed
         public void ReportClosedOrderStatus(string crypto, string pageProgress) {
             if (crypto == "XBT") crypto = "BTC";
-            IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
+            IRT.synchronizationContext.Post(new SendOrPostCallback(o =>
+            {
                 string _crypto = (string)o;
 
                 if (AccountClosedOrders_listview.Items.Count == 0) {
                     AccountClosedOrders_listview.Items.Add(new ListViewItem(new string[] {
-                        "Loading", _crypto, pageProgress } ));
-                } 
+                        "Loading", _crypto, pageProgress }));
+                }
                 else if (AccountClosedOrders_listview.Items[0].Text.StartsWith("Loading")) {  // only if we have nothing else to show..
                     AccountClosedOrders_listview.Items[0] = new ListViewItem(new string[] {
                         "Loading", _crypto, pageProgress });
-        }
+                }
 
             }), crypto);
         }
@@ -842,7 +852,7 @@ namespace IRTicker
         /// <summary>
         /// checks if the vol and price are parsable
         /// </summary>
-        /// <returns>item1 is the bool, item2 is volume, item3 is the price</returns>
+        /// <returns>item1 (bool) is whether or not we could parse, item2 is volume, item3 is the price</returns>
         private Tuple<bool, decimal, decimal> VolumePriceParseable() {
             int orderType = AccountOrderType_listbox.SelectedIndex;
             string volume = AccountOrderVolume_textbox.Text;
@@ -864,12 +874,12 @@ namespace IRTicker
                     orderPrice = _orderPrice;
                     canParsePrice = true;
                 }
-                else orderPrice = -1;
+
                 if (decimal.TryParse(volume, out decimal _orderVol)) {
                     orderVol = _orderVol;
                     canParseVol = true;
                 }
-                else orderVol = -1;
+
                 if (canParseVol && canParsePrice && (orderVol > 0) && (orderPrice >= 0)) {
                     return new Tuple<bool, decimal, decimal>(true, orderVol, orderPrice);
                 }
@@ -1022,13 +1032,15 @@ namespace IRTicker
         //}
 
         public void notificationFromMarketBaiter(Tuple<string, string> notifText, bool sendToTelegram = false) {
-            IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
+            IRT.synchronizationContext.Post(new SendOrPostCallback(o =>
+            {
                 Tuple<string, string> notif = (Tuple<string, string>)o;
                 IRT.showBalloon(notif.Item1, notif.Item2);
             }), notifText);
 
             if (sendToTelegram && (TGBot != null)) {
-                IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
+                IRT.synchronizationContext.Post(new SendOrPostCallback(o =>
+                {
                     Tuple<string, string> notif = (Tuple<string, string>)o;
                     TGBot.SendMessage("*" + notif.Item1 + "*" + Environment.NewLine + "  " + notif.Item2);
                 }), notifText);
@@ -1117,6 +1129,14 @@ namespace IRTicker
                 AccountPlaceOrder_button.Enabled = false;
                 AccountEstOrderValue_value.Text = "";
             }
+
+            // Price has possibly changed, let's investigate and set the undo value if appropriate
+            if (!undoIsUpdatingPrice) {  // only do stuff if this change is not triggered by CTRL + Z in the first place
+                if (AccountLimitPrice_textbox.Text != buffer_lastPriceForUndo) {  // this is a new value, let's update the undo value
+                    lastPriceForUndo = buffer_lastPriceForUndo;
+                }
+            }
+                
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
@@ -1160,7 +1180,7 @@ namespace IRTicker
 
         private void AccountOrderVolume_textbox_KeyUp(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Tab) {
-                AccountLimitPrice_textbox.SelectAll();
+                AccountOrderVolume_textbox.SelectAll();
             }
         }
         private void AccountLimitPrice_textbox_KeyUp(object sender, KeyEventArgs e) {
@@ -1180,7 +1200,8 @@ namespace IRTicker
         // I had a crash here once, can't reproduce it.  instance not set to an object or something, but I couldn't see what was wrong.
         // maybe i should check that cOrders isn't somehow null?
         public void SignalAveragePriceUpdate(Page<BankHistoryOrder> cOrders) {
-            IRT.synchronizationContext.Post(new SendOrPostCallback(o => {
+            IRT.synchronizationContext.Post(new SendOrPostCallback(o =>
+            {
                 foreach (Form frm in Application.OpenForms) {
                     if (frm.Name == "AccAvgPrice") {
                         ((AccAvgPrice)frm).UpdatePrice((Page<BankHistoryOrder>)o);
@@ -1258,10 +1279,46 @@ namespace IRTicker
             // this will only work if the order hasn't disappeared.  if it has, these will be 0
             decimal price = (decimal)AccountOrders_listview.SelectedItems[0].SubItems[1].Tag;
             decimal volume = (decimal)AccountOrders_listview.SelectedItems[0].SubItems[3].Tag;
-            
+
             if ((price > 0) && (volume > 0)) {
                 AccountLimitPrice_textbox.Text = price.ToString();
                 AccountOrderVolume_textbox.Text = volume.ToString();
+            }
+        }
+
+        private void AccountLimitPrice_textbox_Leave(object sender, EventArgs e) {
+             
+            buffer_lastPriceForUndo = AccountLimitPrice_textbox.Text;
+        }
+
+        bool bUndoDown = false;
+        private void IRAccountsForm_KeyDown(object sender, KeyEventArgs e) {
+            switch (e.KeyCode) {
+
+                case Keys.Z:
+                    if (bUndoDown)
+                        break;
+
+                    if (e.Modifiers == (Keys.Control | Keys.Shift)) {
+                        bUndoDown = true;
+                    }
+                    else if (Control.ModifierKeys == Keys.Control) {
+                        bUndoDown = true;
+                        if (AccountLimitPrice_textbox.Focused) {
+                            undoIsUpdatingPrice = true;  // stop the textChanged undo code from running when we're changing the price because of undo keys..
+                            AccountLimitPrice_textbox.Text = lastPriceForUndo;
+                            undoIsUpdatingPrice = false;  // alright, undo text change is done, continue to store undo data as normal.
+                        }
+                    }
+                    break;
+            }
+        }
+
+        private void IRAccountsForm_KeyUp(object sender, KeyEventArgs e) {
+            if (bUndoDown) {
+                if (e.KeyCode == Keys.Z) {
+                    bUndoDown = false;
+                }
             }
         }
     }

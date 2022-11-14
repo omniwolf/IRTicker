@@ -208,7 +208,7 @@ namespace IRTicker
                 }
                 else {
 
-                    decimal tempRes = Math.Round((totalValue / totalCryptoDealt), dce.currencyDecimalPlaces[crypto].Item2, MidpointRounding.AwayFromZero);
+                    decimal tempRes = Math.Round((totalValue / totalCryptoDealt), 8, MidpointRounding.AwayFromZero);
                     AvgPriceResult = tempRes.ToString();
 
                     if (isMultipleFiatCurrenciesSelected) {
@@ -216,7 +216,7 @@ namespace IRTicker
                         AccAvgPrice_TotalFiat_TextBox.Text = "N/A";
                     }
                     else {
-                        AccAvgPrice_Result_TextBox.Text = Utilities.FormatValue(tempRes, dce.currencyDecimalPlaces[crypto].Item2, false);
+                        AccAvgPrice_Result_TextBox.Text = Utilities.FormatValue(tempRes, 8, false);
                         AccAvgPrice_TotalFiat_TextBox.Text = Utilities.FormatValue(totalValue, 2, false);
                     }
 

@@ -28,6 +28,8 @@ namespace IRTicker {
         /// a value between 10 and 1000 will automatically get 2 decimal places, this is strict
         /// a value over 1000 will get no decimal places, this is strict
         /// a value under 10 will be default get 5 decimal places, but this is configurable using maxDecimalPlaces.
+        /// decimalsForLargeNumbersOnly = if set to true (default), then we only apply custom `decimalPlaces` arguement IF the value is greater than 1000, `decimalPlaces` is ignored for numbers under 1000.
+        /// decimalsForLargeNumbersOnly = if set to false, then the `decimalPlaces` arguement is used for ALL numbers sent to this method.
         /// </summary>
         /// <param name="val">the value we're formatting</param>
         /// <param name="decimalPlaces">max decimal places to return.  Defaults to 5, this is only for limiting if you want less than 5 where the value is less than 10</param>
@@ -47,8 +49,11 @@ namespace IRTicker {
             if (val >= 10) formatString = "##0.00";
             if (val >= 1000) formatString = "### ### ### ##0";
 
+            // -1 means the method was not sent any decimalPlaces value
             if (decimalPlaces == -1) return (positiveInput ? val.ToString(formatString).Trim() : "-" + val.ToString(formatString).Trim());
 
+            // we get here if we have a decimalPlaces value, and the decimalsForLargeNumbersOnly is true.
+            // the idea is that even if we have a custom decimalPlaces value, we ignore it if the number is LESS THAN 1000
             if (decimalsForLargeNumbersOnly && (val < 1000)) return (positiveInput ? val.ToString(formatString).Trim() : "-" + val.ToString(formatString).Trim());
 
             // custom decimal places

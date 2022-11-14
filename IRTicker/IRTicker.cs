@@ -20,10 +20,6 @@ using System.Threading.Tasks;
 
 // todo:
 // blinkstick tasks, a non-null CTS is never returned from the method, are we doing this right?
-// accounts panel - tabbing to the price field selects all, but not to the volume field.  can fix?
-// ctrl+z in the price field on IRAccounts brings back the previous price that was in there?
-// bug - when the volume is 0, we print the " / 0" in the SGD and USD panels for some reason
-// need more decimal places in the avg price window
 
 namespace IRTicker {
     public partial class IRTicker : Form {
@@ -1601,10 +1597,12 @@ namespace IRTicker {
                     }*/
 
                     string vol = "";
-                    if (pairObj.Value.DayVolumeXbt == 0) vol = " / 0";
-                    else if (pairObj.Value.DayVolumeXbt < 0) vol = " / ?";
-                    else if ((dExchange == "IRUSD") || (dExchange == "IRSGD")) vol = "";  // no vol for these exchanges, the vol is in the main groupBox
-                    else vol = " / " + Utilities.FormatValue(pairObj.Value.DayVolumeXbt);
+                    if ((dExchange == "IRUSD") || (dExchange == "IRSGD")) vol = "";  // no vol for these exchanges, the vol is in the main groupBox
+                    else {
+                        if (pairObj.Value.DayVolumeXbt == 0) vol = " / 0";
+                        else if (pairObj.Value.DayVolumeXbt < 0) vol = " / ?";
+                        else vol = " / " + Utilities.FormatValue(pairObj.Value.DayVolumeXbt);
+                    }
 
                         UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(pairObj.Value.spread) + vol;
 
@@ -1689,10 +1687,12 @@ namespace IRTicker {
                 }*/
 
                 string vol;
-                if (mSummary.DayVolumeXbt == 0) vol = " / 0";
-                else if (mSummary.DayVolumeXbt < 0) vol = " / ?";
-                else if ((dExchange == "IRUSD") || (dExchange == "IRSGD")) vol = "";  // no vol for these exchanges, the vol is in the main groupBox
-                else vol = " / " + Utilities.FormatValue(mSummary.DayVolumeXbt);
+                if ((dExchange == "IRUSD") || (dExchange == "IRSGD")) vol = "";  // no vol for these exchanges, the vol is in the main groupBox
+                else {
+                    if (mSummary.DayVolumeXbt == 0) vol = " / 0";
+                    else if (mSummary.DayVolumeXbt < 0) vol = " / ?";
+                    else vol = " / " + Utilities.FormatValue(mSummary.DayVolumeXbt);
+                }
 
                 UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(mSummary.spread) + vol;
                 if (DCEs[dExchange].ChangedSecondaryCurrency) { 
