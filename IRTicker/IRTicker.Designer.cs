@@ -465,6 +465,21 @@
             this.IRTickerTT_avgPrice = new System.Windows.Forms.ToolTip(this.components);
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
             this.IRT_notification = new System.Windows.Forms.NotifyIcon(this.components);
+            this.BTCM_AAVE_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_AAVE_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_AAVE_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_USDC_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_USDC_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_USDC_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_MANA_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_MANA_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_MANA_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_SAND_Label1 = new System.Windows.Forms.Label();
+            this.BTCM_UNI_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_SAND_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_UNI_Label3 = new System.Windows.Forms.Label();
+            this.BTCM_SAND_Label2 = new System.Windows.Forms.Label();
+            this.BTCM_UNI_Label1 = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.IRAccountSettings_groupBox.SuspendLayout();
             this.SlackSettings_groupBox.SuspendLayout();
@@ -3874,6 +3889,21 @@
             // BTCM_panel
             // 
             this.BTCM_panel.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_panel.Controls.Add(this.BTCM_AAVE_Label2);
+            this.BTCM_panel.Controls.Add(this.BTCM_AAVE_Label3);
+            this.BTCM_panel.Controls.Add(this.BTCM_AAVE_Label1);
+            this.BTCM_panel.Controls.Add(this.BTCM_USDC_Label2);
+            this.BTCM_panel.Controls.Add(this.BTCM_USDC_Label3);
+            this.BTCM_panel.Controls.Add(this.BTCM_USDC_Label1);
+            this.BTCM_panel.Controls.Add(this.BTCM_MANA_Label2);
+            this.BTCM_panel.Controls.Add(this.BTCM_MANA_Label3);
+            this.BTCM_panel.Controls.Add(this.BTCM_MANA_Label1);
+            this.BTCM_panel.Controls.Add(this.BTCM_SAND_Label1);
+            this.BTCM_panel.Controls.Add(this.BTCM_UNI_Label2);
+            this.BTCM_panel.Controls.Add(this.BTCM_SAND_Label3);
+            this.BTCM_panel.Controls.Add(this.BTCM_UNI_Label3);
+            this.BTCM_panel.Controls.Add(this.BTCM_SAND_Label2);
+            this.BTCM_panel.Controls.Add(this.BTCM_UNI_Label1);
             this.BTCM_panel.Controls.Add(this.BTCM_USDT_Label1);
             this.BTCM_panel.Controls.Add(this.BTCM_USDT_Label3);
             this.BTCM_panel.Controls.Add(this.BTCM_USDT_Label2);
@@ -3958,7 +3988,7 @@
             this.BTCM_COMP_Label2.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_COMP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_COMP_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_COMP_Label2.Location = new System.Drawing.Point(45, 225);
+            this.BTCM_COMP_Label2.Location = new System.Drawing.Point(45, 245);
             this.BTCM_COMP_Label2.Name = "BTCM_COMP_Label2";
             this.BTCM_COMP_Label2.Size = new System.Drawing.Size(0, 13);
             this.BTCM_COMP_Label2.TabIndex = 66;
@@ -3969,7 +3999,7 @@
             this.BTCM_COMP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_COMP_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_COMP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_COMP_Label3.Location = new System.Drawing.Point(119, 225);
+            this.BTCM_COMP_Label3.Location = new System.Drawing.Point(119, 245);
             this.BTCM_COMP_Label3.Name = "BTCM_COMP_Label3";
             this.BTCM_COMP_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_COMP_Label3.TabIndex = 67;
@@ -3982,7 +4012,7 @@
             this.BTCM_COMP_Label1.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_COMP_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_COMP_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_COMP_Label1.Location = new System.Drawing.Point(3, 225);
+            this.BTCM_COMP_Label1.Location = new System.Drawing.Point(3, 245);
             this.BTCM_COMP_Label1.Name = "BTCM_COMP_Label1";
             this.BTCM_COMP_Label1.Size = new System.Drawing.Size(46, 13);
             this.BTCM_COMP_Label1.TabIndex = 65;
@@ -3995,7 +4025,7 @@
             this.BTCM_LINK_Label2.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_LINK_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_LINK_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_LINK_Label2.Location = new System.Drawing.Point(45, 205);
+            this.BTCM_LINK_Label2.Location = new System.Drawing.Point(45, 225);
             this.BTCM_LINK_Label2.Name = "BTCM_LINK_Label2";
             this.BTCM_LINK_Label2.Size = new System.Drawing.Size(0, 13);
             this.BTCM_LINK_Label2.TabIndex = 63;
@@ -4019,7 +4049,7 @@
             this.BTCM_LINK_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_LINK_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_LINK_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_LINK_Label3.Location = new System.Drawing.Point(119, 205);
+            this.BTCM_LINK_Label3.Location = new System.Drawing.Point(119, 225);
             this.BTCM_LINK_Label3.Name = "BTCM_LINK_Label3";
             this.BTCM_LINK_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_LINK_Label3.TabIndex = 64;
@@ -4032,7 +4062,7 @@
             this.BTCM_LTC_Label1.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_LTC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_LTC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_LTC_Label1.Location = new System.Drawing.Point(3, 105);
+            this.BTCM_LTC_Label1.Location = new System.Drawing.Point(3, 125);
             this.BTCM_LTC_Label1.Name = "BTCM_LTC_Label1";
             this.BTCM_LTC_Label1.Size = new System.Drawing.Size(34, 13);
             this.BTCM_LTC_Label1.TabIndex = 11;
@@ -4045,7 +4075,7 @@
             this.BTCM_LINK_Label1.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_LINK_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_LINK_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_LINK_Label1.Location = new System.Drawing.Point(3, 205);
+            this.BTCM_LINK_Label1.Location = new System.Drawing.Point(3, 225);
             this.BTCM_LINK_Label1.Name = "BTCM_LINK_Label1";
             this.BTCM_LINK_Label1.Size = new System.Drawing.Size(39, 13);
             this.BTCM_LINK_Label1.TabIndex = 62;
@@ -4058,7 +4088,7 @@
             this.BTCM_BCH_Label1.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_BCH_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_BCH_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_BCH_Label1.Location = new System.Drawing.Point(3, 85);
+            this.BTCM_BCH_Label1.Location = new System.Drawing.Point(3, 105);
             this.BTCM_BCH_Label1.Name = "BTCM_BCH_Label1";
             this.BTCM_BCH_Label1.Size = new System.Drawing.Size(36, 13);
             this.BTCM_BCH_Label1.TabIndex = 10;
@@ -4123,7 +4153,7 @@
             this.BTCM_ETC_Label2.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_ETC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_ETC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_ETC_Label2.Location = new System.Drawing.Point(45, 125);
+            this.BTCM_ETC_Label2.Location = new System.Drawing.Point(45, 145);
             this.BTCM_ETC_Label2.Name = "BTCM_ETC_Label2";
             this.BTCM_ETC_Label2.Size = new System.Drawing.Size(0, 13);
             this.BTCM_ETC_Label2.TabIndex = 32;
@@ -4134,7 +4164,7 @@
             this.BTCM_BCH_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_BCH_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_BCH_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_BCH_Label3.Location = new System.Drawing.Point(119, 85);
+            this.BTCM_BCH_Label3.Location = new System.Drawing.Point(119, 105);
             this.BTCM_BCH_Label3.Name = "BTCM_BCH_Label3";
             this.BTCM_BCH_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_BCH_Label3.TabIndex = 14;
@@ -4147,7 +4177,7 @@
             this.BTCM_ETC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_ETC_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_ETC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_ETC_Label3.Location = new System.Drawing.Point(119, 125);
+            this.BTCM_ETC_Label3.Location = new System.Drawing.Point(119, 145);
             this.BTCM_ETC_Label3.Name = "BTCM_ETC_Label3";
             this.BTCM_ETC_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_ETC_Label3.TabIndex = 31;
@@ -4159,7 +4189,7 @@
             this.BTCM_LTC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_LTC_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_LTC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_LTC_Label3.Location = new System.Drawing.Point(119, 105);
+            this.BTCM_LTC_Label3.Location = new System.Drawing.Point(119, 125);
             this.BTCM_LTC_Label3.Name = "BTCM_LTC_Label3";
             this.BTCM_LTC_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_LTC_Label3.TabIndex = 15;
@@ -4173,7 +4203,7 @@
             this.BTCM_ETC_Label1.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_ETC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_ETC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_ETC_Label1.Location = new System.Drawing.Point(3, 125);
+            this.BTCM_ETC_Label1.Location = new System.Drawing.Point(3, 145);
             this.BTCM_ETC_Label1.Name = "BTCM_ETC_Label1";
             this.BTCM_ETC_Label1.Size = new System.Drawing.Size(35, 13);
             this.BTCM_ETC_Label1.TabIndex = 30;
@@ -4199,7 +4229,7 @@
             this.BTCM_BAT_Label2.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_BAT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_BAT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_BAT_Label2.Location = new System.Drawing.Point(45, 185);
+            this.BTCM_BAT_Label2.Location = new System.Drawing.Point(45, 205);
             this.BTCM_BAT_Label2.Name = "BTCM_BAT_Label2";
             this.BTCM_BAT_Label2.Size = new System.Drawing.Size(0, 13);
             this.BTCM_BAT_Label2.TabIndex = 29;
@@ -4211,7 +4241,7 @@
             this.BTCM_LTC_Label2.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_LTC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_LTC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_LTC_Label2.Location = new System.Drawing.Point(45, 105);
+            this.BTCM_LTC_Label2.Location = new System.Drawing.Point(45, 125);
             this.BTCM_LTC_Label2.Name = "BTCM_LTC_Label2";
             this.BTCM_LTC_Label2.Size = new System.Drawing.Size(0, 13);
             this.BTCM_LTC_Label2.TabIndex = 15;
@@ -4222,7 +4252,7 @@
             this.BTCM_BAT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_BAT_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_BAT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_BAT_Label3.Location = new System.Drawing.Point(119, 185);
+            this.BTCM_BAT_Label3.Location = new System.Drawing.Point(119, 205);
             this.BTCM_BAT_Label3.Name = "BTCM_BAT_Label3";
             this.BTCM_BAT_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_BAT_Label3.TabIndex = 28;
@@ -4235,7 +4265,7 @@
             this.BTCM_BCH_Label2.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_BCH_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_BCH_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_BCH_Label2.Location = new System.Drawing.Point(45, 85);
+            this.BTCM_BCH_Label2.Location = new System.Drawing.Point(45, 105);
             this.BTCM_BCH_Label2.Name = "BTCM_BCH_Label2";
             this.BTCM_BCH_Label2.Size = new System.Drawing.Size(0, 13);
             this.BTCM_BCH_Label2.TabIndex = 14;
@@ -4247,7 +4277,7 @@
             this.BTCM_BAT_Label1.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_BAT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_BAT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_BAT_Label1.Location = new System.Drawing.Point(3, 185);
+            this.BTCM_BAT_Label1.Location = new System.Drawing.Point(3, 205);
             this.BTCM_BAT_Label1.Name = "BTCM_BAT_Label1";
             this.BTCM_BAT_Label1.Size = new System.Drawing.Size(35, 13);
             this.BTCM_BAT_Label1.TabIndex = 27;
@@ -4296,7 +4326,7 @@
             this.BTCM_OMG_Label1.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_OMG_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_OMG_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_OMG_Label1.Location = new System.Drawing.Point(3, 165);
+            this.BTCM_OMG_Label1.Location = new System.Drawing.Point(3, 185);
             this.BTCM_OMG_Label1.Name = "BTCM_OMG_Label1";
             this.BTCM_OMG_Label1.Size = new System.Drawing.Size(39, 13);
             this.BTCM_OMG_Label1.TabIndex = 18;
@@ -4309,7 +4339,7 @@
             this.BTCM_XLM_Label2.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_XLM_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_XLM_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_XLM_Label2.Location = new System.Drawing.Point(45, 145);
+            this.BTCM_XLM_Label2.Location = new System.Drawing.Point(45, 165);
             this.BTCM_XLM_Label2.Name = "BTCM_XLM_Label2";
             this.BTCM_XLM_Label2.Size = new System.Drawing.Size(0, 13);
             this.BTCM_XLM_Label2.TabIndex = 23;
@@ -4320,7 +4350,7 @@
             this.BTCM_OMG_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_OMG_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_OMG_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_OMG_Label3.Location = new System.Drawing.Point(119, 165);
+            this.BTCM_OMG_Label3.Location = new System.Drawing.Point(119, 185);
             this.BTCM_OMG_Label3.Name = "BTCM_OMG_Label3";
             this.BTCM_OMG_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_OMG_Label3.TabIndex = 20;
@@ -4333,7 +4363,7 @@
             this.BTCM_XLM_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.BTCM_XLM_Label3.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_XLM_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.BTCM_XLM_Label3.Location = new System.Drawing.Point(119, 145);
+            this.BTCM_XLM_Label3.Location = new System.Drawing.Point(119, 165);
             this.BTCM_XLM_Label3.Name = "BTCM_XLM_Label3";
             this.BTCM_XLM_Label3.Size = new System.Drawing.Size(124, 13);
             this.BTCM_XLM_Label3.TabIndex = 22;
@@ -4346,7 +4376,7 @@
             this.BTCM_OMG_Label2.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_OMG_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_OMG_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_OMG_Label2.Location = new System.Drawing.Point(45, 165);
+            this.BTCM_OMG_Label2.Location = new System.Drawing.Point(45, 185);
             this.BTCM_OMG_Label2.Name = "BTCM_OMG_Label2";
             this.BTCM_OMG_Label2.Size = new System.Drawing.Size(0, 13);
             this.BTCM_OMG_Label2.TabIndex = 19;
@@ -4358,7 +4388,7 @@
             this.BTCM_XLM_Label1.BackColor = System.Drawing.Color.Transparent;
             this.BTCM_XLM_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.BTCM_XLM_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTCM_XLM_Label1.Location = new System.Drawing.Point(3, 145);
+            this.BTCM_XLM_Label1.Location = new System.Drawing.Point(3, 165);
             this.BTCM_XLM_Label1.Name = "BTCM_XLM_Label1";
             this.BTCM_XLM_Label1.Size = new System.Drawing.Size(36, 13);
             this.BTCM_XLM_Label1.TabIndex = 21;
@@ -6228,6 +6258,191 @@
             this.IRT_notification.Icon = ((System.Drawing.Icon)(resources.GetObject("IRT_notification.Icon")));
             this.IRT_notification.Text = "IR Ticker";
             // 
+            // BTCM_AAVE_Label2
+            // 
+            this.BTCM_AAVE_Label2.AutoSize = true;
+            this.BTCM_AAVE_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_AAVE_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_AAVE_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_AAVE_Label2.Location = new System.Drawing.Point(45, 325);
+            this.BTCM_AAVE_Label2.Name = "BTCM_AAVE_Label2";
+            this.BTCM_AAVE_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BTCM_AAVE_Label2.TabIndex = 84;
+            this.BTCM_AAVE_Label2.Tag = "BTCM";
+            // 
+            // BTCM_AAVE_Label3
+            // 
+            this.BTCM_AAVE_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.BTCM_AAVE_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_AAVE_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_AAVE_Label3.Location = new System.Drawing.Point(119, 325);
+            this.BTCM_AAVE_Label3.Name = "BTCM_AAVE_Label3";
+            this.BTCM_AAVE_Label3.Size = new System.Drawing.Size(124, 13);
+            this.BTCM_AAVE_Label3.TabIndex = 85;
+            this.BTCM_AAVE_Label3.Tag = "";
+            this.BTCM_AAVE_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BTCM_AAVE_Label1
+            // 
+            this.BTCM_AAVE_Label1.AutoSize = true;
+            this.BTCM_AAVE_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_AAVE_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_AAVE_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_AAVE_Label1.Location = new System.Drawing.Point(3, 325);
+            this.BTCM_AAVE_Label1.Name = "BTCM_AAVE_Label1";
+            this.BTCM_AAVE_Label1.Size = new System.Drawing.Size(43, 13);
+            this.BTCM_AAVE_Label1.TabIndex = 83;
+            this.BTCM_AAVE_Label1.Tag = "DCECryptoLabel";
+            this.BTCM_AAVE_Label1.Text = "AAVE:";
+            // 
+            // BTCM_USDC_Label2
+            // 
+            this.BTCM_USDC_Label2.AutoSize = true;
+            this.BTCM_USDC_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_USDC_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_USDC_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_USDC_Label2.Location = new System.Drawing.Point(45, 85);
+            this.BTCM_USDC_Label2.Name = "BTCM_USDC_Label2";
+            this.BTCM_USDC_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BTCM_USDC_Label2.TabIndex = 81;
+            this.BTCM_USDC_Label2.Tag = "BTCM";
+            // 
+            // BTCM_USDC_Label3
+            // 
+            this.BTCM_USDC_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.BTCM_USDC_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_USDC_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_USDC_Label3.Location = new System.Drawing.Point(119, 85);
+            this.BTCM_USDC_Label3.Name = "BTCM_USDC_Label3";
+            this.BTCM_USDC_Label3.Size = new System.Drawing.Size(124, 13);
+            this.BTCM_USDC_Label3.TabIndex = 82;
+            this.BTCM_USDC_Label3.Tag = "";
+            this.BTCM_USDC_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BTCM_USDC_Label1
+            // 
+            this.BTCM_USDC_Label1.AutoSize = true;
+            this.BTCM_USDC_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_USDC_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_USDC_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_USDC_Label1.Location = new System.Drawing.Point(3, 85);
+            this.BTCM_USDC_Label1.Name = "BTCM_USDC_Label1";
+            this.BTCM_USDC_Label1.Size = new System.Drawing.Size(45, 13);
+            this.BTCM_USDC_Label1.TabIndex = 80;
+            this.BTCM_USDC_Label1.Tag = "DCECryptoLabel";
+            this.BTCM_USDC_Label1.Text = "USDC:";
+            // 
+            // BTCM_MANA_Label2
+            // 
+            this.BTCM_MANA_Label2.AutoSize = true;
+            this.BTCM_MANA_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_MANA_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_MANA_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_MANA_Label2.Location = new System.Drawing.Point(45, 305);
+            this.BTCM_MANA_Label2.Name = "BTCM_MANA_Label2";
+            this.BTCM_MANA_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BTCM_MANA_Label2.TabIndex = 79;
+            this.BTCM_MANA_Label2.Tag = "BTCM";
+            // 
+            // BTCM_MANA_Label3
+            // 
+            this.BTCM_MANA_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.BTCM_MANA_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_MANA_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_MANA_Label3.Location = new System.Drawing.Point(119, 305);
+            this.BTCM_MANA_Label3.Name = "BTCM_MANA_Label3";
+            this.BTCM_MANA_Label3.Size = new System.Drawing.Size(124, 13);
+            this.BTCM_MANA_Label3.TabIndex = 78;
+            this.BTCM_MANA_Label3.Tag = "";
+            this.BTCM_MANA_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BTCM_MANA_Label1
+            // 
+            this.BTCM_MANA_Label1.AutoSize = true;
+            this.BTCM_MANA_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_MANA_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_MANA_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_MANA_Label1.Location = new System.Drawing.Point(3, 305);
+            this.BTCM_MANA_Label1.Name = "BTCM_MANA_Label1";
+            this.BTCM_MANA_Label1.Size = new System.Drawing.Size(46, 13);
+            this.BTCM_MANA_Label1.TabIndex = 77;
+            this.BTCM_MANA_Label1.Tag = "DCECryptoLabel";
+            this.BTCM_MANA_Label1.Text = "MANA:";
+            // 
+            // BTCM_SAND_Label1
+            // 
+            this.BTCM_SAND_Label1.AutoSize = true;
+            this.BTCM_SAND_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_SAND_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_SAND_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_SAND_Label1.Location = new System.Drawing.Point(3, 285);
+            this.BTCM_SAND_Label1.Name = "BTCM_SAND_Label1";
+            this.BTCM_SAND_Label1.Size = new System.Drawing.Size(45, 13);
+            this.BTCM_SAND_Label1.TabIndex = 71;
+            this.BTCM_SAND_Label1.Tag = "DCECryptoLabel";
+            this.BTCM_SAND_Label1.Text = "SAND:";
+            // 
+            // BTCM_UNI_Label2
+            // 
+            this.BTCM_UNI_Label2.AutoSize = true;
+            this.BTCM_UNI_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_UNI_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_UNI_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_UNI_Label2.Location = new System.Drawing.Point(45, 265);
+            this.BTCM_UNI_Label2.Name = "BTCM_UNI_Label2";
+            this.BTCM_UNI_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BTCM_UNI_Label2.TabIndex = 76;
+            this.BTCM_UNI_Label2.Tag = "BTCM";
+            // 
+            // BTCM_SAND_Label3
+            // 
+            this.BTCM_SAND_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.BTCM_SAND_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_SAND_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_SAND_Label3.Location = new System.Drawing.Point(119, 285);
+            this.BTCM_SAND_Label3.Name = "BTCM_SAND_Label3";
+            this.BTCM_SAND_Label3.Size = new System.Drawing.Size(124, 13);
+            this.BTCM_SAND_Label3.TabIndex = 73;
+            this.BTCM_SAND_Label3.Tag = "";
+            this.BTCM_SAND_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BTCM_UNI_Label3
+            // 
+            this.BTCM_UNI_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.BTCM_UNI_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_UNI_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_UNI_Label3.Location = new System.Drawing.Point(119, 265);
+            this.BTCM_UNI_Label3.Name = "BTCM_UNI_Label3";
+            this.BTCM_UNI_Label3.Size = new System.Drawing.Size(124, 13);
+            this.BTCM_UNI_Label3.TabIndex = 75;
+            this.BTCM_UNI_Label3.Tag = "";
+            this.BTCM_UNI_Label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // BTCM_SAND_Label2
+            // 
+            this.BTCM_SAND_Label2.AutoSize = true;
+            this.BTCM_SAND_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_SAND_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_SAND_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_SAND_Label2.Location = new System.Drawing.Point(45, 285);
+            this.BTCM_SAND_Label2.Name = "BTCM_SAND_Label2";
+            this.BTCM_SAND_Label2.Size = new System.Drawing.Size(0, 13);
+            this.BTCM_SAND_Label2.TabIndex = 72;
+            this.BTCM_SAND_Label2.Tag = "BTCM";
+            // 
+            // BTCM_UNI_Label1
+            // 
+            this.BTCM_UNI_Label1.AutoSize = true;
+            this.BTCM_UNI_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.BTCM_UNI_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.BTCM_UNI_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTCM_UNI_Label1.Location = new System.Drawing.Point(3, 265);
+            this.BTCM_UNI_Label1.Name = "BTCM_UNI_Label1";
+            this.BTCM_UNI_Label1.Size = new System.Drawing.Size(33, 13);
+            this.BTCM_UNI_Label1.TabIndex = 74;
+            this.BTCM_UNI_Label1.Tag = "DCECryptoLabel";
+            this.BTCM_UNI_Label1.Text = "UNI:";
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -6717,6 +6932,21 @@
         private System.Windows.Forms.Label IRSGD_ETH_Label1;
         private System.Windows.Forms.Label IRSGD_XBT_Label1;
         private System.Windows.Forms.Label IRSGD_XRP_Label3;
+        private System.Windows.Forms.Label BTCM_AAVE_Label2;
+        private System.Windows.Forms.Label BTCM_AAVE_Label3;
+        private System.Windows.Forms.Label BTCM_AAVE_Label1;
+        private System.Windows.Forms.Label BTCM_USDC_Label2;
+        private System.Windows.Forms.Label BTCM_USDC_Label3;
+        private System.Windows.Forms.Label BTCM_USDC_Label1;
+        private System.Windows.Forms.Label BTCM_MANA_Label2;
+        private System.Windows.Forms.Label BTCM_MANA_Label3;
+        private System.Windows.Forms.Label BTCM_MANA_Label1;
+        private System.Windows.Forms.Label BTCM_SAND_Label1;
+        private System.Windows.Forms.Label BTCM_UNI_Label2;
+        private System.Windows.Forms.Label BTCM_SAND_Label3;
+        private System.Windows.Forms.Label BTCM_UNI_Label3;
+        private System.Windows.Forms.Label BTCM_SAND_Label2;
+        private System.Windows.Forms.Label BTCM_UNI_Label1;
     }
 }
 

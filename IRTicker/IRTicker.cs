@@ -154,7 +154,7 @@ namespace IRTicker {
 
             DCEs["IRUSD"].SecondaryCurrencyCodes = "\"USD\"";
 
-            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"XLM\",\"BAT\",\"ETC\",\"LINK\",\"COMP\",\"USDT\"";
+            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"XLM\",\"BAT\",\"ETC\",\"LINK\",\"COMP\",\"USDT\",\"UNI\",\"SAND\",\"MANA\",\"USDC\",\"AAVE\"";
             DCEs["BTCM"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["BTCM"].HasStaticData = false;  // want to set this to false so we run the subscribe code once.
 
@@ -588,6 +588,21 @@ namespace IRTicker {
             UIControls_Dict["BTCM"].USDT_Label = BTCM_USDT_Label1;
             UIControls_Dict["BTCM"].USDT_Price = BTCM_USDT_Label2;
             UIControls_Dict["BTCM"].USDT_Spread = BTCM_USDT_Label3;
+            UIControls_Dict["BTCM"].USDC_Label = BTCM_USDC_Label1;
+            UIControls_Dict["BTCM"].USDC_Price = BTCM_USDC_Label2;
+            UIControls_Dict["BTCM"].USDC_Spread = BTCM_USDC_Label3;
+            UIControls_Dict["BTCM"].UNI_Label = BTCM_UNI_Label1;
+            UIControls_Dict["BTCM"].UNI_Price = BTCM_UNI_Label2;
+            UIControls_Dict["BTCM"].UNI_Spread = BTCM_UNI_Label3;
+            UIControls_Dict["BTCM"].SAND_Label = BTCM_SAND_Label1;
+            UIControls_Dict["BTCM"].SAND_Price = BTCM_SAND_Label2;
+            UIControls_Dict["BTCM"].SAND_Spread = BTCM_SAND_Label3;
+            UIControls_Dict["BTCM"].MANA_Label = BTCM_MANA_Label1;
+            UIControls_Dict["BTCM"].MANA_Price = BTCM_MANA_Label2;
+            UIControls_Dict["BTCM"].MANA_Spread = BTCM_MANA_Label3;
+            UIControls_Dict["BTCM"].AAVE_Label = BTCM_AAVE_Label1;
+            UIControls_Dict["BTCM"].AAVE_Price = BTCM_AAVE_Label2;
+            UIControls_Dict["BTCM"].AAVE_Spread = BTCM_AAVE_Label3;
 
             UIControls_Dict["BTCM"].AvgPrice_BuySell = BTCM_BuySellComboBox;
             UIControls_Dict["BTCM"].AvgPrice_NumCoins = BTCM_NumCoinsTextBox;
