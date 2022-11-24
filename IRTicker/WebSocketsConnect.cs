@@ -38,7 +38,7 @@ namespace IRTicker {
             Debug.Print("IR (+SGD, USD) websocket connecting..");
 
             //Task.Factory.StartNew(() => {
-            startSockets(IRdExchanges, IRSocketsURL);
+            if (DCEs.ContainsKey("IR")) startSockets(IRdExchanges, IRSocketsURL);
             //startSockets("IRSGD", IRSocketsURL);
             //startSockets("IRUSD", IRSocketsURL);
             // })
@@ -49,7 +49,7 @@ namespace IRTicker {
 
             // BTCM
 
-            BTCM_Connect_v3();
+            if (DCEs.ContainsKey("BTCM")) BTCM_Connect_v3();  // only start if there's the key
 
         }
 
