@@ -736,7 +736,12 @@ namespace IRTicker
 
         private void AccountWithdrawalAddress_label_Click(object sender, EventArgs e) {
             Label address = (Label)sender;
-            Clipboard.SetText(address.Text);
+            if (!string.IsNullOrEmpty(address.Text)) {
+                Clipboard.SetText(address.Text);
+            }
+            else {
+                address.Text = "No address to copy?";
+            }
         }
 
         private void AccountWithdrawalNextCheck_label_Click(object sender, EventArgs e) {
