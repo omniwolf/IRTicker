@@ -1039,11 +1039,6 @@ namespace IRTicker {
 
         }
 
-        public void SubscribeTickerSocket(string dExchange) {
-            // subscribe to all the pairs
-            wSocketConnect.subscribe_unsubscribe_new(dExchange, true);  // this sub is now kinda useless
-        }
-
         private void GetBTCMOrderBook(string crypto) {
             Tuple<bool, string> orderBookTpl = Utilities.Get("https://api.btcmarkets.net/market/" + (crypto == "XBT" ? "BTC" : crypto) + "/" + DCEs["BTCM"].CurrentSecondaryCurrency + "/orderbook");
             if (orderBookTpl.Item1) { 
@@ -1162,10 +1157,6 @@ namespace IRTicker {
                                 }
                             }
 
-                            // now that we have the currencies, lets grab all closedorders and put into notifiedOrders
-                            // we do this in the privateIR_init() sub now
-                            // if (null != pIR) pIR.populateClosedOrders();
-
                             if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
                                 IRAccount_button.Enabled = false;
                                 pIR = null;
@@ -1226,9 +1217,9 @@ namespace IRTicker {
                             wSocketConnect.Reinit_sockets("IRUSD");  // this will setup all the necessary dictionaries
                             wSocketConnect.Reinit_sockets("IRSGD");  // this will setup all the necessary dictionaries
 
-                            SubscribeTickerSocket("IR");
-                            SubscribeTickerSocket("IRUSD");
-                            SubscribeTickerSocket("IRSGD");
+                            wSocketConnect.subscribe_unsubscribe_new("IR", true);  // this sub is now kinda useless
+                            wSocketConnect.subscribe_unsubscribe_new("IRUSD", true);  // this sub is now kinda useless
+                            wSocketConnect.subscribe_unsubscribe_new("IRSGD", true);  // this sub is now kinda useless
 
                             pollingThread.ReportProgress(14, "IR");
                         }
@@ -1321,7 +1312,7 @@ namespace IRTicker {
                             ParseDCE_BTCM(primaryCode, DCEs["BTCM"].CurrentSecondaryCurrency);
                         }
 
-                        SubscribeTickerSocket("BTCM");
+                        wSocketConnect.subscribe_unsubscribe_new("BTCM", true);
                         pollingThread.ReportProgress(14, "BTCM");
                         DCEs["BTCM"].HasStaticData = true;
                     }

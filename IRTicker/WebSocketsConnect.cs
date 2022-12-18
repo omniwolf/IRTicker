@@ -117,10 +117,11 @@ namespace IRTicker {
                     Debug.Print(dExchange + " websocket subcribe/unsubscribe - " + (subscribe ? "subscribe" : "unsubscribe") + " event: " + channel);
 
                     if (client_IR.IsRunning) {
-                        //Task.Run(() => 
-                        client_IR.Send(channel)
-                        //)
-                        ;
+                        //client_IR.Send(channel);
+
+                        client_IR.Send("{\"Event\": \"Subscribe\",\"Data\": [\"dai-aud\"]");
+
+
                     }
                     else {
                         Debug.Print(DateTime.Now + " - " + dExchange + " sockets down when trying to " + (subscribe ? "subscribe" : "unsubscribe"));
@@ -573,7 +574,7 @@ namespace IRTicker {
         */
         private void MessageRX_IR(string message) {
             if (message == null) return;
-            //Debug.Print("IR MSG ---- " + message);
+            Debug.Print("IR MSG ---- " + message);
 
             // catching order cancelled events and logging it to try and figure out what's up.
             //if (message.Contains("OrderChanged") && message.Contains("xbt-aud")) {
