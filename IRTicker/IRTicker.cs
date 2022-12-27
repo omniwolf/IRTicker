@@ -1390,11 +1390,19 @@ namespace IRTicker {
 
                 feeTup = Utilities.Get("https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=VGGBNCFAISMZAQKC1SDN92WDI1WF75KDKP");
                 if (feeTup.Item1) {
-                    EtherscanRoot ESData = JsonConvert.DeserializeObject<EtherscanRoot>(feeTup.Item2);
-                    if (decimal.TryParse(ESData.result.FastGasPrice, out decimal res)) {
-                        ETHfee = res;
+                    EtherscanRoot ESData;
+                    try {
+                        ESData = JsonConvert.DeserializeObject<EtherscanRoot>(feeTup.Item2);
+                        if (decimal.TryParse(ESData.result.FastGasPrice, out decimal res)) {
+                            ETHfee = res;
+                        }
+                        else ETHfee = -1;
                     }
-                    else ETHfee = -1;
+                    catch (Exception ex) {
+                        Debug.Print("Etherscan gas fee error: " + ex.ToString());
+                        ETHfee = -1;
+                    }
+
                 }
                 else ETHfee = -1;
 
