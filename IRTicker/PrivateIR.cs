@@ -78,7 +78,7 @@ namespace IRTicker {
             };
             IRclient = Client.Create(IRconf);
             Task.Run(() => {
-                GetAccounts();
+                GetAccounts();  // maybe need to put a try around this?  API fails shouldn't cause an app crash
                 if ((null != IRAF) && !IRAF.IsDisposed) {
                     IRAF.DrawIRAccounts(accounts);
                     IRAF.drawOpenOrders(GetOpenOrders(SelectedCrypto, DCE_IR.CurrentSecondaryCurrency).Data);
