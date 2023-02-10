@@ -919,7 +919,15 @@ namespace IRTicker {
                 DCEs["BTCM"].NetworkAvailable = false;
             }
             else {
-                DCE.MarketSummary_BTCM mSummary_BTCM = JsonConvert.DeserializeObject<DCE.MarketSummary_BTCM>(marketSummary.Item2);
+                DCE.MarketSummary_BTCM mSummary_BTCM;
+                try {
+                    mSummary_BTCM = JsonConvert.DeserializeObject<DCE.MarketSummary_BTCM>(marketSummary.Item2);
+                }
+                catch {
+                    Debug.Print(DateTime.Now + " - BTCM - bad REST result: " + marketSummary.Item2);
+                    DCEs["BTCM"].NetworkAvailable = false;
+                    return;
+                }
 
                 DCE.MarketSummary mSummary = new DCE.MarketSummary();
                 mSummary.CurrentHighestBidPrice = mSummary_BTCM.bestBid;
@@ -946,8 +954,15 @@ namespace IRTicker {
                 DCEs["BAR"].NetworkAvailable = false;
             }
             else {
-                DCE.MarketSummary_BAR mSummary_BAR = JsonConvert.DeserializeObject<DCE.MarketSummary_BAR>(marketSummary.Item2);
-
+                DCE.MarketSummary_BAR mSummary_BAR;
+                try {
+                    mSummary_BAR = JsonConvert.DeserializeObject<DCE.MarketSummary_BAR>(marketSummary.Item2);
+                }
+                catch {
+                    Debug.Print(DateTime.Now + " - BAR - bad REST result: " + marketSummary.Item2);
+                    DCEs["BAR"].NetworkAvailable = false;
+                    return;
+                }
                 DCE.MarketSummary mSummary = new DCE.MarketSummary();
 
                 if ((mSummary_BAR.orderBook.buy.Count > 0) && decimal.TryParse(mSummary_BAR.orderBook.buy.FirstOrDefault().price, out decimal bid)) {
@@ -1034,8 +1049,16 @@ namespace IRTicker {
 
         private void GetBTCMOrderBook(string crypto) {
             Tuple<bool, string> orderBookTpl = Utilities.Get("https://api.btcmarkets.net/market/" + (crypto == "XBT" ? "BTC" : crypto) + "/" + DCEs["BTCM"].CurrentSecondaryCurrency + "/orderbook");
-            if (orderBookTpl.Item1) { 
-                DCE.OrderBook_BTCM orderBook_BTCM = JsonConvert.DeserializeObject<DCE.OrderBook_BTCM>(orderBookTpl.Item2);
+            if (orderBookTpl.Item1) {
+                DCE.OrderBook_BTCM orderBook_BTCM;
+                try {
+                    orderBook_BTCM = JsonConvert.DeserializeObject<DCE.OrderBook_BTCM>(orderBookTpl.Item2);
+                }
+                catch (Exception ex) {
+                    Debug.Print(DateTime.Now + " - BTCM - bad REST result for order book: " + ex.Message);
+                    DCEs["BTCM"].NetworkAvailable = false;
+                    return;
+                }
 
                 // convert the BTCM order book into the IR format
                 DCE.OrderBook oBook = new DCE.OrderBook();
@@ -1384,7 +1407,16 @@ namespace IRTicker {
                 // grab BTC and ETH fees
                 Tuple<bool, string> feeTup = Utilities.Get("https://mempool.space/api/v1/fees/recommended");
                 if (feeTup.Item1) {
-                    mempoolSpace mspaceRecommended = JsonConvert.DeserializeObject<mempoolSpace>(feeTup.Item2);
+                    mempoolSpace mspaceRecommended;
+
+                    try {
+                        mspaceRecommended = JsonConvert.DeserializeObject<mempoolSpace>(feeTup.Item2);
+                    }
+                    catch (Exception ex) {
+                        Debug.Print(DateTime.Now + " - mempool.space - bad REST result: " + ex.Message);
+                        DCEs["BAR"].NetworkAvailable = false;
+                        return;
+                    }
                     BTCfee = mspaceRecommended.fastestFee;
                 }
                 else BTCfee = -1;  // tells the system to signal on the "Last updated" label
@@ -1418,7 +1450,15 @@ namespace IRTicker {
                 // lets grab the latest BTC block
                 Tuple<bool, string> latestBlockTup = Utilities.Get("https://blockchain.info/latestblock");
                 if (latestBlockTup.Item1) {
-                    BlockHeight bHeight = JsonConvert.DeserializeObject<BlockHeight>(latestBlockTup.Item2);
+                    BlockHeight bHeight;
+                    try {
+                        bHeight = JsonConvert.DeserializeObject<BlockHeight>(latestBlockTup.Item2);
+                    }
+                    catch (Exception ex) {
+                        Debug.Print(DateTime.Now + " - blockchain.info - bad REST result: " + ex.Message);
+                        DCEs["BAR"].NetworkAvailable = false;
+                        return;
+                    }
 
                     if (lastBlock == 0) lastBlock = bHeight.Height;  // we haven' found a block before, just set it and move on
                     else if (lastBlock != bHeight.Height) {
