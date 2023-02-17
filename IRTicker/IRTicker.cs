@@ -1453,28 +1453,27 @@ namespace IRTicker {
                     BlockHeight bHeight;
                     try {
                         bHeight = JsonConvert.DeserializeObject<BlockHeight>(latestBlockTup.Item2);
+
+                        if (lastBlock == 0) lastBlock = bHeight.Height;  // we haven' found a block before, just set it and move on
+                        else if (lastBlock != bHeight.Height) {
+                            if (bStick != null && bStick.OpenDevice()) {
+                                try {
+                                    bStick.Morph("purple");
+                                }
+                                catch (Exception ex) {
+                                    Debug.Print(DateTime.Now + " -- BS -- caught an exception in block height: " + ex.Message);
+                                }
+                            }
+                            lastBlock = bHeight.Height;
+                            pollingThread.ReportProgress(15);
+                            Debug.Print(DateTime.Now + " - we have a new BTC block: " + lastBlock);
+                        }
+                        //Debug.Print("current block is: " + lastBlock);
                     }
                     catch (Exception ex) {
                         Debug.Print(DateTime.Now + " - blockchain.info - bad REST result: " + ex.Message);
-                        DCEs["BAR"].NetworkAvailable = false;
-                        return;
+                        //return;
                     }
-
-                    if (lastBlock == 0) lastBlock = bHeight.Height;  // we haven' found a block before, just set it and move on
-                    else if (lastBlock != bHeight.Height) {
-                        if (bStick != null && bStick.OpenDevice()) {
-                            try {
-                                bStick.Morph("purple");
-                            }
-                            catch (Exception ex) {
-                                Debug.Print(DateTime.Now + " -- BS -- caught an exception in block height: " + ex.Message);
-                            }
-                        }
-                        lastBlock = bHeight.Height;
-                        pollingThread.ReportProgress(15);
-                        Debug.Print(DateTime.Now + " - we have a new BTC block: " + lastBlock);
-                    }
-                    //Debug.Print("current block is: " + lastBlock);
                 }
                 else {
                     Debug.Print("couldn't pull the block height data? error: " + latestBlockTup.Item2);
