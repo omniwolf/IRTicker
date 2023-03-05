@@ -1407,19 +1407,18 @@ namespace IRTicker {
                 // grab BTC and ETH fees
                 Tuple<bool, string> feeTup = Utilities.Get("https://mempool.space/api/v1/fees/recommended");
                 if (feeTup.Item1) {
-                    mempoolSpace mspaceRecommended;
 
                     try {
-                        mspaceRecommended = JsonConvert.DeserializeObject<mempoolSpace>(feeTup.Item2);
+                        mempoolSpace mspaceRecommended = JsonConvert.DeserializeObject<mempoolSpace>(feeTup.Item2);
+                        BTCfee = mspaceRecommended.fastestFee;
                     }
                     catch (Exception ex) {
                         Debug.Print(DateTime.Now + " - mempool.space - bad REST result: " + ex.Message);
-                        DCEs["BAR"].NetworkAvailable = false;
-                        return;
+                        BTCfee = -1;
                     }
-                    BTCfee = mspaceRecommended.fastestFee;
+
                 }
-                else BTCfee = -1;  // tells the system to signal on the "Last updated" label
+                else BTCfee = -1;  // tells the system to signal failure on the "Last updated" label
 
                 feeTup = Utilities.Get("https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=VGGBNCFAISMZAQKC1SDN92WDI1WF75KDKP");
                 if (feeTup.Item1) {
