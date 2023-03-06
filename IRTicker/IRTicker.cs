@@ -1085,16 +1085,16 @@ namespace IRTicker {
         }
 
         private void PollingThread_DoWork(object sender, DoWorkEventArgs e) {
-            try {
+            //try {
                 PollingThread_MeatAndPotates(sender, e);
-            }
+            /*}
             catch (Exception ex) {
                 Debug.Print(DateTime.Now + " - BACKGROUND WORKER FAILED:");
                 Debug.Print(ex.Message);
                 if (null != ex.InnerException) {
                     Debug.Print("inner exception: " + ex.InnerException.Message);
                 }
-            }
+            }*/
         }            
 
         private void PollingThread_MeatAndPotates(object sender, DoWorkEventArgs e) {

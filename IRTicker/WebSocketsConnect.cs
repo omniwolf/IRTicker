@@ -7,6 +7,7 @@ using System.Threading;
 //using WebSocketSharp;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.ComponentModel;
 using System.Collections.Concurrent;
 using Websocket.Client;
@@ -98,14 +99,18 @@ namespace IRTicker {
                 case "IR":
                 //case "IRUSD":
                 //case "IRSGD":
-                    channel = subscribe ? "{\"Event\":\"Subscribe\",\"Data\":[" : "{\"Event\":\"Unsubscribe\",\"Data\":[";
+                    //channel = subscribe ? "{\"Event\":\"Subscribe\",\"Data\":[" : "{\"Event\":\"Unsubscribe\",\"Data\":[";
+                    JObject channel_obj = new JObject();  // using proper objects to build the subscribe request, not silly strings
+                    channel_obj["Event"] = "Subscribe";
+                    JArray data = new JArray();
                     if (crypto == "none") {  // unsubscribe or subscribe to EVERYTHING
                         //stopSockets("IR");  // don't want to stop everything, we just need to unsubscribe like we said we would.
                         //List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
                         foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
                             if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
                                 string crypto1 = primaryCode;
-                                channel += "\"orderbook-" + crypto1.ToLower() /* + "-" + fiat.ToLower()*/ + "\", ";  // trying to subscribe to the crypto, not the pair...
+                                //channel += "\"orderbook-" + crypto1.ToLower() /* + "-" + fiat.ToLower()*/ + "\", ";  // trying to subscribe to the crypto, not the pair...
+                                data.Add("orderbook-" + crypto1.ToLower());
                             }
                         }
                         channel += "]} ";
@@ -113,7 +118,11 @@ namespace IRTicker {
                     else {  // or just one pair
 
                         channel += "\"orderbook-" + crypto.ToLower() + "\"]}"; // + "-" + fiat.ToLower();
+                        data.Add("orderbook-" + crypto.ToLower());
                     }
+
+                    channel_obj["Data"] = data;
+                    channel = channel_obj.ToString();
                     Debug.Print(dExchange + " websocket subcribe/unsubscribe - " + (subscribe ? "subscribe" : "unsubscribe") + " event: " + channel);
 
                     if (client_IR.IsRunning) {
