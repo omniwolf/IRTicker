@@ -1266,17 +1266,22 @@ namespace IRTicker
 
                     if (ordersToNotify.Count > 0) {
                         // send message..
-                        foreach (BankHistoryOrder cOrder in ordersToNotify) {
-                            if (cOrder.Status == OrderStatus.Filled) {
-                                string crypto = cOrder.PrimaryCurrencyCode.ToString().ToUpper();
-                                await SendMessage("*Order Filled!* 🤝" + Environment.NewLine +
-                                    "  Pair: " + crypto + "-" + cOrder.SecondaryCurrencyCode.ToString().ToUpper() + Environment.NewLine +
-                                    "  Value: $" + Utilities.FormatValue(cOrder.Value.Value, 2) + Environment.NewLine +
-                                    "  Avg price: $" + Utilities.FormatValue(cOrder.AvgPrice.Value, 2) + Environment.NewLine +
-                                    "  Volume: " + crypto + ": " + Utilities.FormatValue(cOrder.Volume, 8, false) + Environment.NewLine +
-                                    "  Order created: " + cOrder.CreatedTimestampUtc.ToLocalTime());
-                                NextMsgIsNew = true;  // don't edit this message if the next message normally would
+                        try {
+                            foreach (BankHistoryOrder cOrder in ordersToNotify) {
+                                if (cOrder.Status == OrderStatus.Filled) {
+                                    string crypto = cOrder.PrimaryCurrencyCode.ToString().ToUpper();
+                                    await SendMessage("*Order Filled!* 🤝" + Environment.NewLine +
+                                        "  Pair: " + crypto + "-" + cOrder.SecondaryCurrencyCode.ToString().ToUpper() + Environment.NewLine +
+                                        "  Value: $" + Utilities.FormatValue(cOrder.Value.Value, 2) + Environment.NewLine +
+                                        "  Avg price: $" + Utilities.FormatValue(cOrder.AvgPrice.Value, 2) + Environment.NewLine +
+                                        "  Volume: " + crypto + ": " + Utilities.FormatValue(cOrder.Volume, 8, false) + Environment.NewLine +
+                                        "  Order created: " + cOrder.CreatedTimestampUtc.ToLocalTime());
+                                    NextMsgIsNew = true;  // don't edit this message if the next message normally would
+                                }
                             }
+                        }
+                        catch (Exception ex) {
+                            Debug.Print("ERROR - tried to send a TG message about Order Filled, but nah: " + ex.Message);
                         }
                         try {
                             pIR.GetAccounts();
