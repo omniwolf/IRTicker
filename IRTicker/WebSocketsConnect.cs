@@ -618,8 +618,10 @@ namespace IRTicker {
             foreach (string dExchange in IRdExchanges) DCEs[dExchange].CurrentDCEStatus = "Online";
 
 
-            Ticker_IR tickerStream = new Ticker_IR();  // don't think we care about the pair at this stage... let's see.
-            tickerStream = JsonConvert.DeserializeObject<Ticker_IR>(message);
+            //Ticker_IR tickerStream = new Ticker_IR();  // don't think we care about the pair at this stage... let's see.
+            //tickerStream = JsonConvert.DeserializeObject<Ticker_IR>(message);
+
+            Ticker_IR tickerStream = JsonConvert.DeserializeObject<Ticker_IR>(message, new Ticker_IR_Converter());
 
             /*string eventStr = tickerStream.Event;
             string crypto = eventStr.Replace("orderbook-", "");
@@ -832,6 +834,28 @@ namespace IRTicker {
             }
             Debug.Print("Sockets, checking a socket alive, we have reached the end without returning.  we never should.  DCE: " + dExchange);
             return false;
+        }
+
+        // let's us create a case insensive dictionary inside the Ticker_IR object that we deserialise from the websockets stream
+        // we want a case insensitive Price dictionary so we can reference "aud" and "AUD" and not care.
+        public class Ticker_IR_Converter : JsonConverter<Ticker_IR> {
+            public override Ticker_IR ReadJson(JsonReader reader, Type objectType, Ticker_IR existingValue, bool hasExistingValue, JsonSerializer serializer) {
+                JObject obj = JObject.Load(reader);
+
+                Ticker_IR ticker = new Ticker_IR();
+                serializer.Populate(obj.CreateReader(), ticker);
+
+                // Convert the Price dictionary to a case-insensitive dictionary if it's not null
+                if (ticker.Data.Price != null) {
+                    ticker.Data.Price = new Dictionary<string, decimal>(ticker.Data.Price, StringComparer.OrdinalIgnoreCase);
+                }
+
+                return ticker;
+            }
+
+            public override void WriteJson(JsonWriter writer, Ticker_IR value, JsonSerializer serializer) {
+                throw new NotImplementedException();
+            }
         }
 
         public class Data_IR_Ticker {
