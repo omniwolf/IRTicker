@@ -398,8 +398,12 @@ namespace IRTicker
             }*/
 
             if (isOrderOpen) {
-                tt += "Original volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + order.Original.Volume + Environment.NewLine;
-                tt += "Price: $ " + Utilities.FormatValue(order.Price.Value) + Environment.NewLine;
+                if ((order.Original != null) && (order.Original.Volume != null)) {
+                    tt += "Original volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + order.Original.Volume + Environment.NewLine;
+                }
+                if (order.Price.HasValue) {
+                    tt += "Price: $ " + Utilities.FormatValue(order.Price.Value) + Environment.NewLine;
+                }
                 if (order.Outstanding.HasValue && (order.Outstanding.Value > 0)) {
                     tt += "Outstanding volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + order.Outstanding.Value + Environment.NewLine;
                 }
@@ -407,11 +411,13 @@ namespace IRTicker
 
             else {
                 tt += "Volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + order.Volume + Environment.NewLine;
-                tt += "Avg price: $ " + Utilities.FormatValue(order.AvgPrice.Value) + Environment.NewLine;
-                tt += "Notional value: $ " + Utilities.FormatValue(order.Value.Value) + Environment.NewLine;
+                if (order.AvgPrice.HasValue) tt += "Avg price: $ " + Utilities.FormatValue(order.AvgPrice.Value) + Environment.NewLine;
                 tt += "Fee: " + Utilities.FormatValue((order.FeePercent * 100), 2, false) + "%" + Environment.NewLine;
-                tt += "Notional sans fee: $ " + Utilities.FormatValue(order.Value.Value * (1 - order.FeePercent)) + Environment.NewLine;
-                tt += "Fee value: $ " + Utilities.FormatValue(order.Value.Value * order.FeePercent) + Environment.NewLine;
+                if (order.Value.HasValue) {
+                    tt += "Notional value: $ " + Utilities.FormatValue(order.Value.Value) + Environment.NewLine;
+                    tt += "Notional sans fee: $ " + Utilities.FormatValue(order.Value.Value * (1 - order.FeePercent), 8, false) + Environment.NewLine;
+                    tt += "Fee value: $ " + Utilities.FormatValue(order.Value.Value * order.FeePercent) + Environment.NewLine;
+                }
             }
             tt += "Status: " + order.Status;
             return tt;
