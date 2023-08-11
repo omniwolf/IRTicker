@@ -22,7 +22,6 @@ namespace IRTicker
         public Label LTC_Label { get; set; }
         public Label XRP_Label { get; set; }
         public Label EOS_Label { get; set; }
-        public Label OMG_Label { get; set; }
         public Label ZRX_Label { get; set; }
         public Label XLM_Label { get; set; }
         public Label BAT_Label { get; set; }
@@ -36,7 +35,6 @@ namespace IRTicker
         public Label USDC_Label { get; set; }
         public Label COMP_Label { get; set; }
         public Label SNX_Label { get; set; }
-        public Label PMGT_Label { get; set; }
         public Label YFI_Label { get; set; }
         public Label AAVE_Label { get; set; }
         public Label KNC_Label { get; set; }
@@ -56,7 +54,6 @@ namespace IRTicker
         public Label LTC_Price { get; set; }
         public Label XRP_Price { get; set; }
         public Label EOS_Price { get; set; }
-        public Label OMG_Price { get; set; }
         public Label ZRX_Price { get; set; }
         public Label XLM_Price { get; set; }
         public Label BAT_Price { get; set; }
@@ -70,7 +67,6 @@ namespace IRTicker
         public Label USDC_Price { get; set; }
         public Label COMP_Price { get; set; }
         public Label SNX_Price { get; set; }
-        public Label PMGT_Price { get; set; }
         public Label YFI_Price { get; set; }
         public Label AAVE_Price { get; set; }
         public Label KNC_Price { get; set; }
@@ -91,7 +87,6 @@ namespace IRTicker
         public Label LTC_Spread { get; set; }
         public Label XRP_Spread { get; set; }
         public Label EOS_Spread { get; set; }
-        public Label OMG_Spread { get; set; }
         public Label ZRX_Spread { get; set; }
         public Label XLM_Spread { get; set; }
         public Label BAT_Spread { get; set; }
@@ -105,7 +100,6 @@ namespace IRTicker
         public Label USDC_Spread { get; set; }
         public Label COMP_Spread { get; set; }
         public Label SNX_Spread { get; set; }
-        public Label PMGT_Spread { get; set; }
         public Label YFI_Spread { get; set; }
         public Label AAVE_Spread { get; set; }
         public Label KNC_Spread { get; set; }
@@ -368,7 +362,6 @@ namespace IRTicker
             if (XRP_Label != null) Label_Dict.Add("XRP_Label", XRP_Label);
             if (BCH_Label != null) Label_Dict.Add("BCH_Label", BCH_Label);
             if (EOS_Label != null) Label_Dict.Add("EOS_Label", EOS_Label);
-            if (OMG_Label != null) Label_Dict.Add("OMG_Label", OMG_Label);
             if (ZRX_Label != null) Label_Dict.Add("ZRX_Label", ZRX_Label);
             if (XLM_Label != null) Label_Dict.Add("XLM_Label", XLM_Label);
             if (BAT_Label != null) Label_Dict.Add("BAT_Label", BAT_Label);
@@ -382,7 +375,6 @@ namespace IRTicker
             if (USDC_Label != null) Label_Dict.Add("USDC_Label", USDC_Label);
             if (COMP_Label != null) Label_Dict.Add("COMP_Label", COMP_Label);
             if (SNX_Label != null) Label_Dict.Add("SNX_Label", SNX_Label);
-            if (PMGT_Label != null) Label_Dict.Add("PMGT_Label", PMGT_Label);
             if (YFI_Label != null) Label_Dict.Add("YFI_Label", YFI_Label);
             if (AAVE_Label != null) Label_Dict.Add("AAVE_Label", AAVE_Label);
             if (KNC_Label != null) Label_Dict.Add("KNC_Label", KNC_Label);
@@ -403,7 +395,6 @@ namespace IRTicker
             if (XRP_Price != null) Label_Dict.Add("XRP_Price", XRP_Price);
             if (BCH_Price != null) Label_Dict.Add("BCH_Price", BCH_Price);
             if (EOS_Price != null) Label_Dict.Add("EOS_Price", EOS_Price);
-            if (OMG_Price != null) Label_Dict.Add("OMG_Price", OMG_Price);
             if (ZRX_Price != null) Label_Dict.Add("ZRX_Price", ZRX_Price);
             if (XLM_Price != null) Label_Dict.Add("XLM_Price", XLM_Price);
             if (BAT_Price != null) Label_Dict.Add("BAT_Price", BAT_Price);
@@ -417,7 +408,6 @@ namespace IRTicker
             if (USDC_Price != null) Label_Dict.Add("USDC_Price", USDC_Price);
             if (COMP_Price != null) Label_Dict.Add("COMP_Price", COMP_Price);
             if (SNX_Price != null) Label_Dict.Add("SNX_Price", SNX_Price);
-            if (PMGT_Price != null) Label_Dict.Add("PMGT_Price", PMGT_Price);
             if (YFI_Price != null) Label_Dict.Add("YFI_Price", YFI_Price);
             if (AAVE_Price != null) Label_Dict.Add("AAVE_Price", AAVE_Price);
             if (KNC_Price != null) Label_Dict.Add("KNC_Price", KNC_Price);
@@ -437,7 +427,6 @@ namespace IRTicker
             if (XRP_Spread != null) Label_Dict.Add("XRP_Spread", XRP_Spread);
             if (BCH_Spread != null) Label_Dict.Add("BCH_Spread", BCH_Spread);
             if (EOS_Spread != null) Label_Dict.Add("EOS_Spread", EOS_Spread);
-            if (OMG_Spread != null) Label_Dict.Add("OMG_Spread", OMG_Spread);
             if (ZRX_Spread != null) Label_Dict.Add("ZRX_Spread", ZRX_Spread);
             if (XLM_Spread != null) Label_Dict.Add("XLM_Spread", XLM_Spread);
             if (BAT_Spread != null) Label_Dict.Add("BAT_Spread", BAT_Spread);
@@ -451,7 +440,6 @@ namespace IRTicker
             if (USDC_Spread != null) Label_Dict.Add("USDC_Spread", USDC_Spread);
             if (COMP_Spread != null) Label_Dict.Add("COMP_Spread", COMP_Spread);
             if (SNX_Spread != null) Label_Dict.Add("SNX_Spread", SNX_Spread);
-            if (PMGT_Spread != null) Label_Dict.Add("PMGT_Spread", PMGT_Spread);
             if (YFI_Spread != null) Label_Dict.Add("YFI_Spread", YFI_Spread);
             if (AAVE_Spread != null) Label_Dict.Add("AAVE_Spread", AAVE_Spread);
             if (KNC_Spread != null) Label_Dict.Add("KNC_Spread", KNC_Spread);

@@ -754,7 +754,6 @@ namespace IRTicker
             this.AccountPMGT_label.Size = new System.Drawing.Size(61, 18);
             this.AccountPMGT_label.TabIndex = 76;
             this.AccountPMGT_label.Text = "PMGT:";
-            this.AccountPMGT_label.Click += new System.EventHandler(this.Account_label_Click);
             // 
             // AccountSNX_total
             // 
@@ -1234,7 +1233,6 @@ namespace IRTicker
             this.AccountOMG_label.Size = new System.Drawing.Size(53, 18);
             this.AccountOMG_label.TabIndex = 22;
             this.AccountOMG_label.Text = "OMG:";
-            this.AccountOMG_label.Click += new System.EventHandler(this.Account_label_Click);
             // 
             // AccountBAT_value
             // 

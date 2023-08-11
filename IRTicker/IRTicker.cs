@@ -155,7 +155,7 @@ namespace IRTicker {
 
             DCEs["IRUSD"].SecondaryCurrencyCodes = "\"USD\"";
 
-            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"OMG\",\"XLM\",\"BAT\",\"ETC\",\"LINK\",\"COMP\",\"USDT\",\"UNI\",\"SAND\",\"MANA\",\"USDC\",\"AAVE\"";
+            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"XLM\",\"BAT\",\"ETC\",\"LINK\",\"COMP\",\"USDT\",\"UNI\",\"SAND\",\"MANA\",\"USDC\",\"AAVE\",\"DOT\",\"SOL\",\"ADA\"";
             DCEs["BTCM"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["BTCM"].HasStaticData = false;  // want to set this to false so we run the subscribe code once.
 
@@ -269,9 +269,6 @@ namespace IRTicker {
             UIControls_Dict["IR"].XRP_Label = IR_XRP_Label1;
             UIControls_Dict["IR"].XRP_Price = IR_XRP_Label2;
             UIControls_Dict["IR"].XRP_Spread = IR_XRP_Label3;
-            UIControls_Dict["IR"].OMG_Label = IR_OMG_Label1;
-            UIControls_Dict["IR"].OMG_Price = IR_OMG_Label2;
-            UIControls_Dict["IR"].OMG_Spread = IR_OMG_Label3;
             UIControls_Dict["IR"].ZRX_Label = IR_ZRX_Label1;
             UIControls_Dict["IR"].ZRX_Price = IR_ZRX_Label2;
             UIControls_Dict["IR"].ZRX_Spread = IR_ZRX_Label3;
@@ -308,9 +305,6 @@ namespace IRTicker {
             UIControls_Dict["IR"].SNX_Label = IR_SNX_Label1;
             UIControls_Dict["IR"].SNX_Price = IR_SNX_Label2;
             UIControls_Dict["IR"].SNX_Spread = IR_SNX_Label3;
-            UIControls_Dict["IR"].PMGT_Label = IR_PMGT_Label1;
-            UIControls_Dict["IR"].PMGT_Price = IR_PMGT_Label2;
-            UIControls_Dict["IR"].PMGT_Spread = IR_PMGT_Label3;
             UIControls_Dict["IR"].YFI_Label = IR_YFI_Label1;
             UIControls_Dict["IR"].YFI_Price = IR_YFI_Label2;
             UIControls_Dict["IR"].YFI_Spread = IR_YFI_Label3;
@@ -370,9 +364,6 @@ namespace IRTicker {
             UIControls_Dict["IRSGD"].XRP_Label = IRSGD_XRP_Label1;
             UIControls_Dict["IRSGD"].XRP_Price = IRSGD_XRP_Label2;
             UIControls_Dict["IRSGD"].XRP_Spread = IRSGD_XRP_Label3;
-            UIControls_Dict["IRSGD"].OMG_Label = IRSGD_OMG_Label1;
-            UIControls_Dict["IRSGD"].OMG_Price = IRSGD_OMG_Label2;
-            UIControls_Dict["IRSGD"].OMG_Spread = IRSGD_OMG_Label3;
             UIControls_Dict["IRSGD"].ZRX_Label = IRSGD_ZRX_Label1;
             UIControls_Dict["IRSGD"].ZRX_Price = IRSGD_ZRX_Label2;
             UIControls_Dict["IRSGD"].ZRX_Spread = IRSGD_ZRX_Label3;
@@ -409,9 +400,6 @@ namespace IRTicker {
             UIControls_Dict["IRSGD"].SNX_Label = IRSGD_SNX_Label1;
             UIControls_Dict["IRSGD"].SNX_Price = IRSGD_SNX_Label2;
             UIControls_Dict["IRSGD"].SNX_Spread = IRSGD_SNX_Label3;
-            UIControls_Dict["IRSGD"].PMGT_Label = IRSGD_PMGT_Label1;
-            UIControls_Dict["IRSGD"].PMGT_Price = IRSGD_PMGT_Label2;
-            UIControls_Dict["IRSGD"].PMGT_Spread = IRSGD_PMGT_Label3;
             UIControls_Dict["IRSGD"].YFI_Label = IRSGD_YFI_Label1;
             UIControls_Dict["IRSGD"].YFI_Price = IRSGD_YFI_Label2;
             UIControls_Dict["IRSGD"].YFI_Spread = IRSGD_YFI_Label3;
@@ -465,9 +453,6 @@ namespace IRTicker {
             UIControls_Dict["IRUSD"].XRP_Label = IRUSD_XRP_Label1;
             UIControls_Dict["IRUSD"].XRP_Price = IRUSD_XRP_Label2;
             UIControls_Dict["IRUSD"].XRP_Spread = IRUSD_XRP_Label3;
-            UIControls_Dict["IRUSD"].OMG_Label = IRUSD_OMG_Label1;
-            UIControls_Dict["IRUSD"].OMG_Price = IRUSD_OMG_Label2;
-            UIControls_Dict["IRUSD"].OMG_Spread = IRUSD_OMG_Label3;
             UIControls_Dict["IRUSD"].ZRX_Label = IRUSD_ZRX_Label1;
             UIControls_Dict["IRUSD"].ZRX_Price = IRUSD_ZRX_Label2;
             UIControls_Dict["IRUSD"].ZRX_Spread = IRUSD_ZRX_Label3;
@@ -504,9 +489,6 @@ namespace IRTicker {
             UIControls_Dict["IRUSD"].SNX_Label = IRUSD_SNX_Label1;
             UIControls_Dict["IRUSD"].SNX_Price = IRUSD_SNX_Label2;
             UIControls_Dict["IRUSD"].SNX_Spread = IRUSD_SNX_Label3;
-            UIControls_Dict["IRUSD"].PMGT_Label = IRUSD_PMGT_Label1;
-            UIControls_Dict["IRUSD"].PMGT_Price = IRUSD_PMGT_Label2;
-            UIControls_Dict["IRUSD"].PMGT_Spread = IRUSD_PMGT_Label3;
             UIControls_Dict["IRUSD"].YFI_Label = IRUSD_YFI_Label1;
             UIControls_Dict["IRUSD"].YFI_Price = IRUSD_YFI_Label2;
             UIControls_Dict["IRUSD"].YFI_Spread = IRUSD_YFI_Label3;
@@ -568,9 +550,6 @@ namespace IRTicker {
             UIControls_Dict["BTCM"].XRP_Label = BTCM_XRP_Label1;
             UIControls_Dict["BTCM"].XRP_Price = BTCM_XRP_Label2;
             UIControls_Dict["BTCM"].XRP_Spread = BTCM_XRP_Label3;
-            UIControls_Dict["BTCM"].OMG_Label = BTCM_OMG_Label1;
-            UIControls_Dict["BTCM"].OMG_Price = BTCM_OMG_Label2;
-            UIControls_Dict["BTCM"].OMG_Spread = BTCM_OMG_Label3;
             UIControls_Dict["BTCM"].XLM_Label = BTCM_XLM_Label1;
             UIControls_Dict["BTCM"].XLM_Price = BTCM_XLM_Label2;
             UIControls_Dict["BTCM"].XLM_Spread = BTCM_XLM_Label3;
@@ -604,6 +583,16 @@ namespace IRTicker {
             UIControls_Dict["BTCM"].AAVE_Label = BTCM_AAVE_Label1;
             UIControls_Dict["BTCM"].AAVE_Price = BTCM_AAVE_Label2;
             UIControls_Dict["BTCM"].AAVE_Spread = BTCM_AAVE_Label3;
+
+            UIControls_Dict["BTCM"].DOT_Label = BTCM_DOT_Label1;
+            UIControls_Dict["BTCM"].DOT_Price = BTCM_DOT_Label2;
+            UIControls_Dict["BTCM"].DOT_Spread = BTCM_DOT_Label3;
+            UIControls_Dict["BTCM"].SOL_Label = BTCM_SOL_Label1;
+            UIControls_Dict["BTCM"].SOL_Price = BTCM_SOL_Label2;
+            UIControls_Dict["BTCM"].SOL_Spread = BTCM_SOL_Label3;
+            UIControls_Dict["BTCM"].ADA_Label = BTCM_ADA_Label1;
+            UIControls_Dict["BTCM"].ADA_Price = BTCM_ADA_Label2;
+            UIControls_Dict["BTCM"].ADA_Spread = BTCM_ADA_Label3;
 
             UIControls_Dict["BTCM"].AvgPrice_BuySell = BTCM_BuySellComboBox;
             UIControls_Dict["BTCM"].AvgPrice_NumCoins = BTCM_NumCoinsTextBox;
