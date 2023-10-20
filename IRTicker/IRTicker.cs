@@ -17,6 +17,7 @@ using BlinkStickDotNet;
 using System.Runtime.InteropServices;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 // todo:
 // if the volume in IRAccounts is more than the availabe balance, maybe we can make the vol input field background red or something.  same on avg price window?
@@ -1084,7 +1085,29 @@ namespace IRTicker {
                     Debug.Print("inner exception: " + ex.InnerException.Message);
                 }
             }*/
-        }            
+        }
+
+        private void getIRDecimalPlaceInfo() {
+            var result = Utilities.Get(DCEs["IR"].BaseURL + "/Public/GetPrimaryCurrencyConfig");
+
+            if (result.Item1) { // If the request was successful
+                // Parse the JSON result as an array
+                JArray currencies = JArray.Parse(result.Item2);
+                foreach (var currency in currencies) {
+                    string code = currency["Code"].ToString();
+                    int primaryDecimals = currency["DecimalPlaces"]["OrderPrimaryCurrency"].Value<int>();
+                    int secondaryDecimals = currency["DecimalPlaces"]["OrderSecondaryCurrency"].Value<int>();
+
+                    DCEs["IR"].currencyDecimalPlaces[code.ToUpper()] = new Tuple<int, int>(primaryDecimals, secondaryDecimals);
+                    DCEs["IRUSD"].currencyDecimalPlaces[code.ToUpper()] = new Tuple<int, int>(primaryDecimals, secondaryDecimals);
+                    DCEs["IRSGD"].currencyDecimalPlaces[code.ToUpper()] = new Tuple<int, int>(primaryDecimals, secondaryDecimals);
+
+                }
+            }
+            else {
+                Debug.Print("Failed to fetch currency config: " + result.Item2);
+            }
+        }
 
         private void PollingThread_MeatAndPotates(object sender, DoWorkEventArgs e) {
             int loopCount = 0;  // we only want to ask the API about BCH/LTC much less, so we keep track of how many times we loop so we only call the LTC/BCH every 3rd loop maybe
@@ -1184,7 +1207,10 @@ namespace IRTicker {
                         if (DCEs["IRUSD"].currencyDecimalPlaces.Count() > 0) DCEs["IRUSD"].currencyDecimalPlaces.Clear();  // if we reset due to network outage, then clear this before 
                         if (DCEs["IRSGD"].currencyDecimalPlaces.Count() > 0) DCEs["IRSGD"].currencyDecimalPlaces.Clear();  // if we reset due to network outage, then clear this before 
 
-                        if (!File.Exists("cryptoDPs.csv")) {
+                        getIRDecimalPlaceInfo();
+
+                        // using APIs now instead of powershell and webpage scraping.
+                        /*if (!File.Exists("cryptoDPs.csv")) {
                             MessageBox.Show("cryptoDPs.csv can't be found in the root application folder.  Grab it from Resources folder if you can, or ask Nick.  Can re-generate this file by running the CryptoDecimalPlaces-scrape.ps1 script.  App will close now.",
                                 "Error: can't find decimal places file", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Application.Exit();
@@ -1211,7 +1237,7 @@ namespace IRTicker {
                             MessageBox.Show("cryptoDPs.csv can't be read, can't parse the lines for ints maybe?  Error: " + ex.Message + " App will close now.",
                                 "Error: can't read decimal places file", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             Application.Exit();
-                        }
+                        }*/
 
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
                         DCEs["IRUSD"].ExchangeProducts = productDictionary_IRUSD;
