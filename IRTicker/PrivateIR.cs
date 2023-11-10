@@ -265,7 +265,7 @@ namespace IRTicker {
             // Either we have a date, need to pull all orders newer than or equal to this date, or it's the first run and we need to pull everything
             // also - we only pull  more than 8 if the crypto we're pulling is the currently chosen crypto.  `Crypto` is the currently chosen crypto... (i know.. great var name)
             if ((earliestClosedOrderRequired.HasValue && AvgPriceSelectedCrypto.Contains(crypto) && (fiatCurrenciesSelected.Contains(fiat))) || initialPull)  {  
-                pageSize = 50;
+                pageSize = 5000;
             }
 
             int page = 1;

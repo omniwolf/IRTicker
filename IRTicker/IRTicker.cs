@@ -838,7 +838,7 @@ namespace IRTicker {
             else if (string.IsNullOrEmpty(errorCode)) return "Network error";
             else if (errorCode.ToUpper().Contains("BADREQUEST") || errorCode.ToUpper().Contains("NOTFOUND")) return "Bad request";
             else {
-                MessageBox.Show("Unknown failure: " + errorCode, "Show this to Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show("Unknown failure: " + errorCode, "Show this to Nick", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return "??";
             }
         }
