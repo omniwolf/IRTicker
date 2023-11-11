@@ -1378,6 +1378,7 @@ namespace IRTicker {
                         // we haven't received a heartbeat in 100 seconds..
                         Debug.Print(DateTime.Now + " - " + dExchange + " - haven't received any messages via sockets in 100 seconds.  reconnecting..");
                         DCEs[dExchange].socketsAlive = false;
+                        DCEs[dExchange].CurrentDCEStatus = "reconnecting...";
                         DCEs[dExchange].socketsReset = true;
                         pollingThread.ReportProgress(12, dExchange);
                     }
@@ -2175,7 +2176,7 @@ namespace IRTicker {
                     if (!DCEs[dExchange].socketsAlive) {  // this should happen if REST is up but sockets are down.  if REST is also down we wouldn't get here i hope.
                         Debug.Print(DateTime.Now + " - 1 setting sockets down, we are in the main reportProgress and socktsAlive is false - " + dExchange);
                         UpdateLabels(dExchange);
-                        UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")" + " - sockets down";
+                        UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ") - " + DCEs["BTCM"].CurrentDCEStatus;
                     }
 
                     if (!DCEs[dExchange].HasStaticData) APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);
@@ -2192,7 +2193,7 @@ namespace IRTicker {
                     UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ")";
                     if (!DCEs[dExchange].socketsAlive) {  // website might be up, this should never be reached.  only exchang to get here should be BAR, and it's sockets will by definition always be "
                         Debug.Print(DateTime.Now + " - 2 setting sockets down, we are in the main reportProgress and socktsAlive is false - " + dExchange);
-                        UIControls_Dict[dExchange].dExchange_GB.Text += " - sockets down";
+                        UIControls_Dict[dExchange].dExchange_GB.Text += " - " + DCEs["BTCM"].CurrentDCEStatus;
                     }
 
                     UpdateLabels(dExchange);
@@ -2839,7 +2840,8 @@ namespace IRTicker {
 
         private void IR_Reset_Button_Click(object sender, EventArgs e) {
             wSocketConnect.IR_Disconnect();
-            List<string> dExchanges = new List<string>() { "IR", "IRUSD", "IRSGD" };
+            wSocketConnect.BTCM_Disconnect();
+            List<string> dExchanges = new List<string>() { "IR", "IRUSD", "IRSGD", "BTCM" };
             foreach (string dExchange in dExchanges) {
                 DCEs[dExchange].CurrentDCEStatus = "Resetting...";
                 APIDown(UIControls_Dict[dExchange].dExchange_GB, dExchange);
@@ -2847,6 +2849,7 @@ namespace IRTicker {
             Debug.Print(DateTime.Now + " - IR (+SGD, USD) reset button clicked");
             Debug.Print("IR (+USD, SGD) websocket connecting....");
             wSocketConnect.WebSocket_Reconnect("IR");  // using "IR" here - it resets the whole sockets and reconnects to all 3 currencies
+            wSocketConnect.WebSocket_Reconnect("BTCM");
         }
 
 

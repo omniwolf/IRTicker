@@ -27,6 +27,8 @@ namespace IRTicker {
         //private string IRSocketsURL = "ws://dev.pushservice.independentreserve.net";
         List<string> IRdExchanges = new List<string>() { "IR", "IRUSD", "IRSGD" };
         private PrivateIR pIR;
+        private List<DateTime> ThrottleConnection_BTCM = new List<DateTime>();  // tracks .Start() attempts on the wss API
+        private List<DateTime> ThrottleSubscription_BTCM = new List<DateTime>();  // tracks .Send() subscription attempts on the API
 
         // constructor
         public WebSocketsConnect(Dictionary<string, DCE> _DCEs, BackgroundWorker _pollingThread, PrivateIR _pIR) {
@@ -94,13 +96,13 @@ namespace IRTicker {
             if (fiat == "none") fiat = DCEs[dExchange].CurrentSecondaryCurrency;
             Debug.Print("subscribe_unsubscribe! -- " + dExchange + " -- did we subscribe: " + subscribe.ToString() + ", pair: " + crypto + "-" + fiat);
             string channel = "";
+            JObject channel_obj = new JObject();  // using proper objects to build the subscribe request, not silly strings
             List<string> pairs = new List<string>();
+
             switch (dExchange) {
                 case "IR":
                 //case "IRUSD":
                 //case "IRSGD":
-                    //channel = subscribe ? "{\"Event\":\"Subscribe\",\"Data\":[" : "{\"Event\":\"Unsubscribe\",\"Data\":[";
-                    JObject channel_obj = new JObject();  // using proper objects to build the subscribe request, not silly strings
                     channel_obj["Event"] = "Subscribe";
                     JArray data = new JArray();
                     if (crypto == "none") {  // unsubscribe or subscribe to EVERYTHING
@@ -109,7 +111,6 @@ namespace IRTicker {
                         foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
                             if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
                                 string crypto1 = primaryCode;
-                                //channel += "\"orderbook-" + crypto1.ToLower() /* + "-" + fiat.ToLower()*/ + "\", ";  // trying to subscribe to the crypto, not the pair...
                                 data.Add("orderbook-" + crypto1.ToLower());
                             }
                         }
@@ -117,7 +118,6 @@ namespace IRTicker {
                     }
                     else {  // or just one pair
 
-                        channel += "\"orderbook-" + crypto.ToLower() + "\"]}"; // + "-" + fiat.ToLower();
                         data.Add("orderbook-" + crypto.ToLower());
                     }
 
@@ -191,18 +191,54 @@ namespace IRTicker {
                     else pairs.Add(crypto);
 
                     if (client_BTCM.IsRunning) {
+                        channel_obj["messageType"] = "subscribe";
+                        JArray channels = new JArray
+                        {
+                            "tick",
+                            "heartbeat"
+                        };
+
+                        JArray marketIds = new JArray();
+
                         channel = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\", \"heartbeat\"], \"marketIds\":[";  // we only ever subscribe, no scenario where we need to unsubscribe.  Unsubscribing is a pain for BTCM, see here https://api.btcmarkets.net/doc/v3#tag/WS_Overview
                         foreach (string crypto1 in pairs) {
                             string crypto2 = crypto1;
                             if (crypto2 == "XBT") crypto2 = "BTC";
 
-                            channel += "\"" + crypto2 + "-" + fiat + "\", ";
+                            marketIds.Add(crypto2 + "-" + fiat);
+                            //channel += "\"" + crypto2 + "-" + fiat + "\", ";
                         }
-                        channel = channel.Substring(0, channel.Length - 2) + "]}";
+                        //channel = channel.Substring(0, channel.Length - 2) + "]}";
+                        channel_obj["channels"] = channels;
+                        channel_obj["marketIds"] = marketIds;
+                        channel = channel_obj.ToString();
+
                         Debug.Print("BTCHH channel subscription string: " + channel);
 
                         //pairList = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\"], \"marketIds\":[\"BTC-AUD\"]}";
-                        Task.Run(() => client_BTCM.Send(channel));
+
+                        // this is where we subscribe to the btcm tick channel.  Somehow my app has spammed them badly in the past, so we need to try and throttle any connections.
+                        // BTCM seems to allow about 1000 connection attempts in an hour (I was doing between 10k and 23k when they banned me).  Even 1000 is way more than
+                        // I need, let's stop connecting if I have done 100 in an hour
+                        bool tooManyConnectionAttempts = false;
+                        if (ThrottleSubscription_BTCM.Count >= 100) {
+                            Debug.Print(DateTime.Now + " - we have over 100 attempts to sub to BTCM channels.  Checking if it's within the last hour...");
+                            DateTime hundredthFromNewest = ThrottleSubscription_BTCM[ThrottleSubscription_BTCM.Count - 100];
+                            if (DateTime.Now < (hundredthFromNewest + TimeSpan.FromHours(1))) {
+                                Debug.Print(" -- it is, throttle code has kicked in.  Won't connect");
+                                DCEs["BTCM"].socketsAlive = false;
+                                DCEs["BTCM"].CurrentDCEStatus = "Internally throttled";
+                                tooManyConnectionAttempts = true;
+                            }
+                        }
+
+                        if (!tooManyConnectionAttempts) {
+                            Task.Run(() => client_BTCM.Send(channel));
+                            ThrottleSubscription_BTCM.Add(DateTime.Now);
+                            if (ThrottleSubscription_BTCM.Count > 500) ThrottleSubscription_BTCM.RemoveAt(0);  // clean up the list, don't let it grow forever
+                        }
+
+
                     }
                     else DCEs[dExchange].socketsReset = true;
 
@@ -219,6 +255,13 @@ namespace IRTicker {
             foreach (string dExchange in dExchanges) DCEs[dExchange].socketsAlive = false;
             //startSocket_exitEvent.Set();  // hopefully this should let the existing startSockets() sub complete
             Debug.Print("IR (+SGD, USD) sockets stop command sent");
+        }
+
+        private void stopSockets_BTCM() {
+            client_BTCM.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
+            DCEs["BTCM"].socketsAlive = false;
+            //startSocket_exitEvent.Set();  // hopefully this should let the existing startSockets() sub complete
+            Debug.Print("BTCM sockets stop command sent");
         }
 
         private void startSockets(List<string> dExchanges, string socketsURL, bool doSubscribe = false) {
@@ -344,6 +387,14 @@ namespace IRTicker {
             }
         }
 
+        public void BTCM_Disconnect() {
+            //UITimerThreadProceed = false;  don't think we actually need to stop this running ever..
+            if (client_BTCM.IsRunning) {
+                Debug.Print(DateTime.Now + " - BTCM_Disconnect sub: BTCM running, will stop");
+                stopSockets_BTCM();
+            }
+        }
+
         // BTCM version of startSockets()
         private void BTCM_Connect_v3() {
             var url = new Uri("wss://socket.btcmarkets.net/v2");
@@ -356,7 +407,7 @@ namespace IRTicker {
             client_BTCM.ReconnectionHappened.Subscribe(info =>
             {
                 if (info.Type == ReconnectionType.Initial) {
-                    Debug.Print("Initial 'reconnection', ignored");
+                    Debug.Print("BTCM Initial 'reconnection', ignored");
                     DCEs["BTCM"].socketsAlive = true;
                     DCEs["BTCM"].socketsReset = false;
                 }
@@ -381,7 +432,26 @@ namespace IRTicker {
                 MessageRX_BTCMv2(msg.Text);
             });
 
-            client_BTCM.Start();
+            // this is where we connect to the btcm sockets.  Somehow my app has spammed them badly in the past, so we need to try and throttle any connections.
+            // BTCM seems to allow about 1000 connection attempts in an hour (I was doing between 10k and 23k when they banned me).  Even 1000 is way more than
+            // I need, let's stop connecting if I have done 100 in an hour
+            bool tooManyConnectionAttempts = false;
+            if (ThrottleConnection_BTCM.Count >= 100) {
+                Debug.Print(DateTime.Now + " - we have over 100 attempts to connect to BTCM sockets.  Checking if it's within the last hour...");
+                DateTime hundredthFromNewest = ThrottleConnection_BTCM[ThrottleConnection_BTCM.Count - 100];
+                if (DateTime.Now < (hundredthFromNewest + TimeSpan.FromHours(1))) {
+                    Debug.Print(" -- it is, throttle code has kicked in.  Won't connect");
+                    DCEs["BTCM"].socketsAlive = false;
+                    DCEs["BTCM"].CurrentDCEStatus = "Internally throttled";
+                    tooManyConnectionAttempts = true;
+                }
+            }
+
+            if (!tooManyConnectionAttempts) {
+                client_BTCM.Start();
+                ThrottleConnection_BTCM.Add(DateTime.Now);
+                if (ThrottleConnection_BTCM.Count > 500) ThrottleConnection_BTCM.RemoveAt(0);  // clean up the list, don't let it grow forever
+            }
 
             //Task.Run(() => client_BTCM.Start());
 
@@ -480,6 +550,7 @@ namespace IRTicker {
                     Debug.Print("WebSocket_Reconnect: IR?? this shouldn't be called?  shouldn't it auto-reconnect?");
                     if (client_IR.IsRunning) {
                         Debug.Print(DateTime.Now + " - IR (+SGD, USD) running, will stop");
+                        DCEs[dExchange].CurrentDCEStatus = "Reconnecting...";
                         stopSockets(IRdExchanges);  
                     }
                     stopUITimerThread();  // if it hasn't stopped by now, we force it.
@@ -599,6 +670,7 @@ namespace IRTicker {
                 Debug.Print("IR ERROR in websockets, resetting.  error: " + message);
                 DCEs["IR"].socketsReset = true;  // it seems when we start getting errors, the socket is unrecoverable, need to start again. 29/4/2022 (ben says maybe there's issues on the server)
                 DCEs["IR"].socketsAlive = false;
+                DCEs["IR"].CurrentDCEStatus = "Resetting...";
                 return;
             }
 
