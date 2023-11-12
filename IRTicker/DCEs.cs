@@ -470,7 +470,7 @@ namespace IRTicker {
                             // if this new order crosses the spread, then I think it's likely that the order on the other side is probably stale, so let's try deleting it and see if this messes things up terribly
                             // seems to be working..
                             // schalk has asked to remove this to see what happens
-                            /*switch (order.OrderType) {
+                            switch (order.OrderType) {
                                 case "LimitBid":
                                     if (price >= OB_IR_cross.Keys.Min()) {  // if the price of this order is greater than the best offer, it's just crossing the spread. ignore
                                         Debug.Print(DateTime.Now + " - (" + pair + ") Limit bid crossed the spread, attempted price: " + order.Price.FirstOrDefault().Value + ", best offer: " + OB_IR_cross.Keys.Min());
@@ -503,7 +503,7 @@ namespace IRTicker {
                                         else Debug.Print("Couldn't remove order??");
                                     }
                                     break;
-                            }*/
+                            }
 
                             //Debug.Print("New order new price - " + order.Price);
                         }
