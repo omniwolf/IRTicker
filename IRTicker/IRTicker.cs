@@ -1408,7 +1408,7 @@ namespace IRTicker {
                         }
                     }
 
-                    if (loopCount == 0) {
+                    else if (loopCount == 0) {
                         if (!wSocketConnect.IsSocketAlive(dExchange)) {  // isSocketAlive is always true for IR and it's brethren.. for better or worse.
                             Debug.Print(dExchange + " ded, reconnecting");
                             wSocketConnect.WebSocket_Reconnect(dExchange);
@@ -2175,6 +2175,7 @@ namespace IRTicker {
 
                     if (!DCEs[dExchange].socketsAlive) {  // this should happen if REST is up but sockets are down.  if REST is also down we wouldn't get here i hope.
                         Debug.Print(DateTime.Now + " - 1 setting sockets down, we are in the main reportProgress and socktsAlive is false - " + dExchange);
+                        DCEs[dExchange].socketsReset = true;  // right.. ?
                         UpdateLabels(dExchange);
                         UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ") - " + DCEs["BTCM"].CurrentDCEStatus;
                     }
