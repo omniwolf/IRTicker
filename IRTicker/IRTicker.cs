@@ -706,7 +706,7 @@ namespace IRTicker {
             int pulseLength = 200;
             //Debug.Print(DateTime.Now + " - BS - white thread should pulse a colour");
 
-            if (_bStick != null && bStick.OpenDevice()) {
+            if (_bStick != null && _bStick.OpenDevice()) {
                 try {
                     //bStick.Pulse(col, 1, pulseLength, 50);
                     _bStick.Morph(col, pulseLength);
@@ -727,7 +727,7 @@ namespace IRTicker {
 
             do {
 
-                if (_bStick != null && bStick.OpenDevice()) {
+                if (_bStick != null && _bStick.OpenDevice()) {
                     try {
                         _bStick.Pulse(col, 1, pulseLength, 50);
                         //Thread.Sleep(pulseLength);
