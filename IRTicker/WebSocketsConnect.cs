@@ -414,6 +414,9 @@ namespace IRTicker {
                 /*else if (info.Type == ReconnectionType.Lost) {
                     Debug.Print("Lost 'reconnection' ignored, attached to a Reset button click?");
                 }*/
+                else if (info.Type == ReconnectionType.NoMessageReceived) {
+                    Debug.Print("NoMessageReceived 'reconnection' ignored, have seen data still coming through when receiving this");
+                }
                 else {
                     Debug.Print(DateTime.Now + " - (BTCM reconnection)");
                     DCEs["BTCM"].socketsAlive = false;
@@ -421,7 +424,7 @@ namespace IRTicker {
 
                     Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
                     subscribe_unsubscribe_new("BTCM", subscribe: true, crypto: "none", fiat: DCEs["BTCM"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
-                    
+
                     return;  // if we're subscribing, we shouldn't need to start the client or anything..?
                 }
 
@@ -461,7 +464,7 @@ namespace IRTicker {
                 bool keepLooping = true;
                 int loopCounter = 0;
                 do {
-                    if (client_IR.IsRunning) {
+                    if (client_BTCM.IsRunning) {
                         subscribe_unsubscribe_new("BTCM", subscribe: true, crypto: "none");  // resubscriibe to all pairs
                         keepLooping = false;
                     }
