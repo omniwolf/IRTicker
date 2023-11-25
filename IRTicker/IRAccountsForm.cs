@@ -11,6 +11,7 @@ using IndependentReserve.DotNetClientApi.Data;
 using System.Threading;
 using System.Diagnostics;
 using System.Collections.Concurrent;
+using static IRTicker.Balance;
 
 
 namespace IRTicker
@@ -1269,15 +1270,6 @@ namespace IRTicker
             IRT.IR_GroupBox_Click(sender, null);
         }
 
-        private void AccountName_button_Click(object sender, EventArgs e) {
-            IRT.SettingsButton_Click(null, null);  // make the settings panel visible so they can change the account
-
-            // bring to front
-            IRT.WindowState = FormWindowState.Minimized;
-            IRT.Show();
-            IRT.WindowState = FormWindowState.Normal;
-        }
-
         public void AccountAPIKeys_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
             IRT.pIRAccountChanged((System.Windows.Forms.ComboBox)sender);
         }
@@ -1288,11 +1280,12 @@ namespace IRTicker
             if (AccountOrders_listview.SelectedItems.Count == 0) return;
 
             // this will only work if the order hasn't disappeared.  if it has, these will be 0
-            decimal price = (decimal)AccountOrders_listview.SelectedItems[0].SubItems[1].Tag;
+            //decimal price = (decimal)AccountOrders_listview.SelectedItems[0].SubItems[1].Tag;  // let's not set the price - usually we want this to be static when trading
             decimal volume = (decimal)AccountOrders_listview.SelectedItems[0].SubItems[3].Tag;
 
-            if ((price > 0) && (volume > 0)) {
-                AccountLimitPrice_textbox.Text = price.ToString();
+            //if ((price > 0) && (volume > 0)) {
+            if (volume > 0) {
+                //AccountLimitPrice_textbox.Text = price.ToString();  // let's not set the price - usually we want this to be static when trading
                 AccountOrderVolume_textbox.Text = volume.ToString();
             }
         }
