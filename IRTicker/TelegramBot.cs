@@ -41,6 +41,7 @@ namespace IRTicker
 
         public ConcurrentDictionary<string, bool> closedOrdersFirstRun = new ConcurrentDictionary<string, bool>();
         public ConcurrentDictionary<string, List<Guid>> notifiedOrders = new ConcurrentDictionary<string, List<Guid>>();
+        private DateTime sessionStarted = DateTime.Now;  // track when the sesssion starts so we know to only notify of orders closed AFTER this
 
         public TelegramBot(string TGAPIKey, PrivateIR _pIR, DCE _DCE_IR, IRTicker _IRT) {
 
@@ -1268,7 +1269,7 @@ namespace IRTicker
                         // send message..
                         try {
                             foreach (BankHistoryOrder cOrder in ordersToNotify) {
-                                if (cOrder.Status == OrderStatus.Filled) {
+                                if ((cOrder.Status == OrderStatus.Filled) && (cOrder.CreatedTimestampUtc > sessionStarted.ToUniversalTime())) {
                                     string crypto = cOrder.PrimaryCurrencyCode.ToString().ToUpper();
                                     await SendMessage("*Order Filled!* 🤝" + Environment.NewLine +
                                         "  Pair: " + crypto + "-" + cOrder.SecondaryCurrencyCode.ToString().ToUpper() + Environment.NewLine +

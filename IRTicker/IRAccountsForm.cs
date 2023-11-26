@@ -913,6 +913,9 @@ namespace IRTicker
                 }
                 pIR.Volume = adjustedVol;  // need to set this here because we need to tell pIR if we have a legit vol, even if the price is illegit or not entered yet
             }
+            else {  // volume field does not have a number in it, so we set vol to 0
+                pIR.Volume = 0;
+            }
 
             if (volPriceTup.Item1) {
                 if (AccountOrderType_listbox.SelectedIndex > 0) {  // limit or bait, we set the estimated notional label
