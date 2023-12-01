@@ -282,7 +282,13 @@ namespace IRTicker {
             do {
                 APIkey = IRcreds.Key;
                 lock (pIR_Lock) {
-                    cOrders = IRclient.GetClosedFilledOrders(enumCrypto, enumFiat, page, pageSize);  // we don't care about cancelled orders
+                    try {
+                        cOrders = IRclient.GetClosedFilledOrders(enumCrypto, enumFiat, page, pageSize);  // we don't care about cancelled orders
+                    }
+                    catch (Exception e){
+                        getClosedOrdersLock.Remove(pair);
+                        throw new Exception("Failed to GetClosedFilledOrders for " + pair + ".  Error: " + e.Message);
+                    }
                 }
                 //if (initialPull && (null != IRAF) && !IRAF.IsDisposed && (null != cOrders)) IRAF.ReportClosedOrderStatus(crypto, page + "/" + cOrders.TotalPages);
 
@@ -292,6 +298,7 @@ namespace IRTicker {
                     return null;
                 }
 
+                if (null == cOrders) break;
                 if (cOrders.TotalItems <= 0) break;  // we have no orders, let's get out of here
                 //if ((page == 1) && (crypto == "XBT") && (fiat == "AUD")) Debug.Print(DateTime.Now + " - GetClosedOrders(" + crypto + "-" + fiat + "): total pages: " + cOrders.TotalPages + " and total items: " + cOrders.TotalItems + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
 
@@ -313,6 +320,11 @@ namespace IRTicker {
                 if (!earliestClosedOrderRequired.HasValue) break;  // we only need to get the first page if we don't have a date
 
             } while (allCOrders.Last().CreatedTimestampUtc >= earliestClosedOrderRequired.Value.ToUniversalTime());
+
+            if (null == cOrders) {
+                getClosedOrdersLock.Remove(pair);
+                return null;
+            }
 
             if (cOrders.TotalItems >= closedOrdersCount[pair]) {
                 closedOrdersCount[pair] = cOrders.TotalItems;

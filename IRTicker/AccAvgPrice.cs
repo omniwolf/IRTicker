@@ -136,7 +136,6 @@ namespace IRTicker
                         Task<Page<BankHistoryOrder>> cOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetClosedOrders(crypto, fiatButton.Key));
                         cOrdersTask.Start();
                         ultimateBHO = await cOrdersTask;
-
                         foreach (BankHistoryOrder order in ultimateBHO.Data) {  // bad pattern here.  we should check that ultimateBHO is null, but basically if it is null, we want to do everything in the catch block... so just let it fail and get caught
                             allOrders.Add(order);
                         }
