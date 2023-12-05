@@ -145,8 +145,6 @@ namespace IRTicker
             this.IRAccountAddress_panel = new System.Windows.Forms.Panel();
             this.AccountWithdrawalTag_value = new System.Windows.Forms.Label();
             this.AccountWithdrawalTag_label = new System.Windows.Forms.Label();
-            this.AccountWithdrawalLastCheck_label = new System.Windows.Forms.Label();
-            this.AccountWithdrawalNextCheck_label = new System.Windows.Forms.Label();
             this.AccountWithdrawalAddress_label = new System.Windows.Forms.Label();
             this.AccountWithdrawalCrypto_label = new System.Windows.Forms.Label();
             this.AccountBuySell_listbox = new System.Windows.Forms.ListBox();
@@ -182,6 +180,8 @@ namespace IRTicker
             this.StopBaitin_button = new System.Windows.Forms.Button();
             this.IRAccount_AvgPrice_Button = new System.Windows.Forms.Button();
             this.IRAccount_panel = new System.Windows.Forms.Panel();
+            this.AccountTradingFees_label = new System.Windows.Forms.Label();
+            this.AccountTradingFees_value = new System.Windows.Forms.Label();
             this.GetAccounts_panel.SuspendLayout();
             this.IRAccountAddress_panel.SuspendLayout();
             this.AccountClosedOrders_panel.SuspendLayout();
@@ -1479,10 +1479,10 @@ namespace IRTicker
             // IRAccountAddress_panel
             // 
             this.IRAccountAddress_panel.BackColor = System.Drawing.Color.Salmon;
+            this.IRAccountAddress_panel.Controls.Add(this.AccountTradingFees_value);
+            this.IRAccountAddress_panel.Controls.Add(this.AccountTradingFees_label);
             this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalTag_value);
             this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalTag_label);
-            this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalLastCheck_label);
-            this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalNextCheck_label);
             this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalAddress_label);
             this.IRAccountAddress_panel.Controls.Add(this.AccountWithdrawalCrypto_label);
             this.IRAccountAddress_panel.Location = new System.Drawing.Point(276, 705);
@@ -1512,27 +1512,6 @@ namespace IRTicker
             this.AccountWithdrawalTag_label.TabIndex = 4;
             this.AccountWithdrawalTag_label.Text = "Tag:";
             this.AccountWithdrawalTag_label.Visible = false;
-            // 
-            // AccountWithdrawalLastCheck_label
-            // 
-            this.AccountWithdrawalLastCheck_label.AutoSize = true;
-            this.AccountWithdrawalLastCheck_label.Cursor = System.Windows.Forms.Cursors.Default;
-            this.AccountWithdrawalLastCheck_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountWithdrawalLastCheck_label.Location = new System.Drawing.Point(11, 90);
-            this.AccountWithdrawalLastCheck_label.Name = "AccountWithdrawalLastCheck_label";
-            this.AccountWithdrawalLastCheck_label.Size = new System.Drawing.Size(0, 12);
-            this.AccountWithdrawalLastCheck_label.TabIndex = 47;
-            // 
-            // AccountWithdrawalNextCheck_label
-            // 
-            this.AccountWithdrawalNextCheck_label.AutoSize = true;
-            this.AccountWithdrawalNextCheck_label.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.AccountWithdrawalNextCheck_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountWithdrawalNextCheck_label.Location = new System.Drawing.Point(11, 115);
-            this.AccountWithdrawalNextCheck_label.Name = "AccountWithdrawalNextCheck_label";
-            this.AccountWithdrawalNextCheck_label.Size = new System.Drawing.Size(0, 12);
-            this.AccountWithdrawalNextCheck_label.TabIndex = 2;
-            this.AccountWithdrawalNextCheck_label.Click += new System.EventHandler(this.AccountWithdrawalNextCheck_label_Click);
             // 
             // AccountWithdrawalAddress_label
             // 
@@ -1645,6 +1624,7 @@ namespace IRTicker
             this.AccountOrders_listview.UseCompatibleStateImageBehavior = false;
             this.AccountOrders_listview.View = System.Windows.Forms.View.Details;
             this.AccountOrders_listview.DoubleClick += new System.EventHandler(this.AccountOrders_listview_DoubleClick);
+            this.AccountOrders_listview.MouseClick += new System.Windows.Forms.MouseEventHandler(this.AccountOrders_listview_MouseClick);
             // 
             // OrderNumber
             // 
@@ -1900,6 +1880,27 @@ namespace IRTicker
             this.IRAccount_panel.Size = new System.Drawing.Size(585, 843);
             this.IRAccount_panel.TabIndex = 62;
             // 
+            // AccountTradingFees_label
+            // 
+            this.AccountTradingFees_label.AutoSize = true;
+            this.AccountTradingFees_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountTradingFees_label.Location = new System.Drawing.Point(5, 106);
+            this.AccountTradingFees_label.Name = "AccountTradingFees_label";
+            this.AccountTradingFees_label.Size = new System.Drawing.Size(93, 20);
+            this.AccountTradingFees_label.TabIndex = 6;
+            this.AccountTradingFees_label.Text = "Trading fee:";
+            // 
+            // AccountTradingFees_value
+            // 
+            this.AccountTradingFees_value.AutoSize = true;
+            this.AccountTradingFees_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountTradingFees_value.Location = new System.Drawing.Point(104, 106);
+            this.AccountTradingFees_value.Name = "AccountTradingFees_value";
+            this.AccountTradingFees_value.Size = new System.Drawing.Size(0, 20);
+            this.AccountTradingFees_value.TabIndex = 7;
+            this.IRTickerTT_generic.SetToolTip(this.AccountTradingFees_value, "Click to refresh");
+            this.AccountTradingFees_value.MouseClick += new System.Windows.Forms.MouseEventHandler(this.AccountTradingFees_value_MouseClick);
+            // 
             // IRAccountsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2034,8 +2035,6 @@ namespace IRTicker
         private System.Windows.Forms.Panel IRAccountAddress_panel;
         private System.Windows.Forms.Label AccountWithdrawalTag_value;
         private System.Windows.Forms.Label AccountWithdrawalTag_label;
-        private System.Windows.Forms.Label AccountWithdrawalLastCheck_label;
-        private System.Windows.Forms.Label AccountWithdrawalNextCheck_label;
         private System.Windows.Forms.Label AccountWithdrawalAddress_label;
         private System.Windows.Forms.Label AccountWithdrawalCrypto_label;
         private System.Windows.Forms.ListBox AccountBuySell_listbox;
@@ -2081,5 +2080,7 @@ namespace IRTicker
         private System.Windows.Forms.Label AccountMANA_value;
         private System.Windows.Forms.Label AccountMANA_label;
         public System.Windows.Forms.ComboBox AccountAPIKeys_comboBox;
+        private System.Windows.Forms.Label AccountTradingFees_label;
+        private System.Windows.Forms.Label AccountTradingFees_value;
     }
 }

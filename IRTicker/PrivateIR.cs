@@ -127,7 +127,20 @@ namespace IRTicker {
             }
         }
 
-        //
+        // what's this?  the try/catch in the top level function?
+        public IEnumerable<BrokerageFee> GetTradingFees() {
+            try {
+                lock (pIR_Lock) {
+                    return IRclient.GetBrokerageFees();
+                }
+            }
+            catch (Exception ex) {
+                Debug.Print(DateTime.Now + " - GetTradingFees() error, couldn't get fees: " + ex.Message);
+                return null;
+            }
+        }
+
+        // don't use this anymore with blockscan
         public DigitalCurrencyDepositAddress CheckAddressNow(string crypto, string address) {
             if (crypto.ToUpper() == "BTC") crypto = "XBT";
             DigitalCurrencyDepositAddress result;
@@ -826,7 +839,8 @@ namespace IRTicker {
             PlaceMarketOrder,
             PlaceLimitOrder,
             CancelOrder,
-            UpdateOrderBook
+            UpdateOrderBook,
+            GetTradingFees
         }
     }
 }

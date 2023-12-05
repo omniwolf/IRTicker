@@ -51,6 +51,7 @@ namespace IRTicker
                 PrivateIR.PrivateIREndPoints.GetOpenOrders,
                 PrivateIR.PrivateIREndPoints.GetClosedOrders,
                 PrivateIR.PrivateIREndPoints.GetAddress,
+                PrivateIR.PrivateIREndPoints.GetTradingFees,
                 PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
             AccountBuySell_listbox_Click(null, null);  // simulate a click to set things up
         }
@@ -273,10 +274,13 @@ namespace IRTicker
                     drawDepositAddress(addressData);
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.CheckAddress) {
-                    string address = AccountWithdrawalAddress_label.Text;
+
+                    // we don't really need to sync addresses anymore with Blockscan.  Reusing the form space for trading fees...
+
+                    /*string address = AccountWithdrawalAddress_label.Text;
                     DigitalCurrencyDepositAddress addressData;
                     try {
-                        addressData = pIR.CheckAddressNow(AccountSelectedCrypto, address);
+                        addressData = pIR.CheckAddressNow(AccountSelectedCrypto, address);  // we don't really need to sync addresses anymore with Blockscan
                     }
                     catch (Exception ex) {
                         string errorMsg = "";
@@ -286,7 +290,13 @@ namespace IRTicker
                             errorMsg, "Error - CheckAddress", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    if (addressData != null) drawDepositAddress(addressData);
+                    if (addressData != null) drawDepositAddress(addressData);*/
+                }
+                else if (endP == PrivateIR.PrivateIREndPoints.GetTradingFees) {
+                    IEnumerable<BrokerageFee> fees = pIR.GetTradingFees();
+                    if (null != fees) {
+                        drawTradingFees(fees);
+                    }
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.GetOpenOrders) {
                     try {
@@ -461,6 +471,23 @@ namespace IRTicker
             }), closedOrders);
         }
 
+        private void drawTradingFees(IEnumerable<BrokerageFee> fees) {
+
+            foreach (BrokerageFee fee in fees) {
+                if (fee.CurrencyCode.ToString().ToUpper() == AccountSelectedCrypto) {
+
+                    // we have the fee entry.  Let's pop into the UI thread and update the UI
+                    IRT.synchronizationContext.Post(new SendOrPostCallback(o =>
+                    {
+                        BrokerageFee _fee = (BrokerageFee)o;
+
+                        AccountTradingFees_value.Text = (_fee.Fee * 100).ToString() + "%";
+
+                    }), fee);
+                    break;  // can only have 1 crypto selected, so if we find a match, that's all we need to do.
+                }
+            }
+        }
         public void drawOpenOrders(IEnumerable<BankHistoryOrder> openOrders) {
             IRT.synchronizationContext.Post(new SendOrPostCallback(o =>
             {
@@ -513,7 +540,8 @@ namespace IRTicker
 
                 AccountWithdrawalAddress_label.Text = _deposAddress.DepositAddress;
 
-                string nextCheck = "";
+                // don't do this anymore with blockscan.  using the space for fees
+                /*string nextCheck = "";
                 if (_deposAddress.NextUpdateTimestampUtc != null) {
                     if (_deposAddress.NextUpdateTimestampUtc.Value.ToLocalTime() < DateTime.Now) nextCheck = "ASAP";
                     else nextCheck = _deposAddress.NextUpdateTimestampUtc.Value.ToLocalTime().ToString();
@@ -522,7 +550,7 @@ namespace IRTicker
 
                 string lastChecked = "";
                 if (_deposAddress.LastCheckedTimestampUtc != null) lastChecked = _deposAddress.LastCheckedTimestampUtc.Value.ToLocalTime().ToString();
-                AccountWithdrawalLastCheck_label.Text = "Last checked: " + lastChecked;
+                AccountWithdrawalLastCheck_label.Text = "Last checked: " + lastChecked;*/
 
                 if (string.IsNullOrEmpty(_deposAddress.Tag)) {
                     AccountWithdrawalTag_label.Visible = false;
@@ -672,7 +700,7 @@ namespace IRTicker
             }
 
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
-                PrivateIR.PrivateIREndPoints.GetAddress,PrivateIR.PrivateIREndPoints.GetClosedOrders,
+                PrivateIR.PrivateIREndPoints.GetAddress,PrivateIR.PrivateIREndPoints.GetClosedOrders,PrivateIR.PrivateIREndPoints.GetTradingFees,
                 PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
@@ -722,7 +750,7 @@ namespace IRTicker
             AccountLimitPrice_textbox_TextChanged(null, null);
 
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
-                PrivateIR.PrivateIREndPoints.GetClosedOrders,PrivateIR.PrivateIREndPoints.GetOpenOrders,
+                PrivateIR.PrivateIREndPoints.GetClosedOrders,PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetTradingFees,
                 PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
         }
 
@@ -1274,7 +1302,11 @@ namespace IRTicker
         }
 
         public void AccountAPIKeys_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
+
+            AccountTradingFees_value.Text = "?";
             IRT.pIRAccountChanged((System.Windows.Forms.ComboBox)sender);
+            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetTradingFees }));
+
         }
 
         // double clicking a row in the OB view will populate the price and volume fields
@@ -1327,6 +1359,35 @@ namespace IRTicker
                     bUndoDown = false;
                 }
             }
+        }
+
+        // when they click an order in the order book list view
+        private void AccountOrders_listview_MouseClick(object sender, MouseEventArgs e) {
+            if (e.Button == MouseButtons.Right) {
+                // Determine the item that was clicked
+                ListViewItem item = AccountOrders_listview.GetItemAt(e.X, e.Y);
+                if (item != null) {
+                    // Item is not null, a row was clicked
+                    // Perform your action here
+                    // For example, you can show a context menu
+                    if (AccountOrders_listview.SelectedItems.Count == 0) return;
+
+                    // this will only work if the order hasn't disappeared.  if it has, these will be 0
+                    //decimal price = (decimal)AccountOrders_listview.SelectedItems[0].SubItems[1].Tag;  // let's not set the price - usually we want this to be static when trading
+                    decimal volume = (decimal)AccountOrders_listview.SelectedItems[0].SubItems[3].Tag;
+
+                    //if ((price > 0) && (volume > 0)) {
+                    if (volume > 0) {
+                        //AccountLimitPrice_textbox.Text = price.ToString();  // let's not set the price - usually we want this to be static when trading
+                        AccountOrderVolume_textbox.Text = volume.ToString();
+                    }
+                }
+            }
+        }
+
+        private void AccountTradingFees_value_MouseClick(object sender, MouseEventArgs e) {
+            AccountTradingFees_value.Text = "Refreshing...";
+            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetTradingFees }));
         }
     }
 }
