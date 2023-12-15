@@ -19,7 +19,7 @@ namespace IRTicker
     public partial class IRAccountsForm : Form {
 
         public string AccountSelectedCrypto = "XBT";
-        private Task updateOBTask;
+        //private Task updateOBTask;  // this is a local variable now, down in baiter code.
         private bool IRAccountsButtonJustClicked = true;  // true if the use has just clicked the IR Accounts button.  If true and GetAccounts fails, then we close the IR Accounts panel and head back to the Main panel.  If false and GetAccounts fails, we just do it silently
 
         private IRTicker IRT;
@@ -51,8 +51,8 @@ namespace IRTicker
                 PrivateIR.PrivateIREndPoints.GetOpenOrders,
                 PrivateIR.PrivateIREndPoints.GetClosedOrders,
                 PrivateIR.PrivateIREndPoints.GetAddress,
-                PrivateIR.PrivateIREndPoints.GetTradingFees,
-                PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
+                PrivateIR.PrivateIREndPoints.GetTradingFees 
+            }));
             AccountBuySell_listbox_Click(null, null);  // simulate a click to set things up
         }
 
@@ -378,9 +378,6 @@ namespace IRTicker
                     }
                     Debug.Print("cancelled order status: " + cancelledOrder.Status.ToString());
                 }
-                else if (endP == PrivateIR.PrivateIREndPoints.UpdateOrderBook) {
-                    updateOBTask = Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency));
-                }
             }
         }
 
@@ -701,7 +698,9 @@ namespace IRTicker
 
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
                 PrivateIR.PrivateIREndPoints.GetAddress,PrivateIR.PrivateIREndPoints.GetClosedOrders,PrivateIR.PrivateIREndPoints.GetTradingFees,
-                PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
+                PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetAccounts
+            }));
+            Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency));
         }
 
         // a sub to report which crypto closed orders we're pulling.. just to keep the user informed
@@ -751,7 +750,9 @@ namespace IRTicker
 
             Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
                 PrivateIR.PrivateIREndPoints.GetClosedOrders,PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetTradingFees,
-                PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
+                PrivateIR.PrivateIREndPoints.GetAccounts
+            }));
+            Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency));
         }
 
         /*private void IRAccountClose_button_Click(object sender, EventArgs e) {
@@ -827,7 +828,7 @@ namespace IRTicker
                 pIR.OrderTypeStr = "Limit";
                 //updateAccountOrderBook(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency);
             }
-            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
+            Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency));
 
             AccountPlaceOrder_button.Enabled = VolumePriceParseable().Item1;
         }
@@ -882,11 +883,11 @@ namespace IRTicker
                         AccountPlaceOrder_button.Text = "Sell now";
                     }
                 }
-                //Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
             }
             if ((AccountOrderType_listbox.SelectedIndex > 0) &&  //  limit or bait
                 decimal.TryParse(AccountLimitPrice_textbox.Text, out decimal ignore)) ValidateLimitOrder();
-            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
+
+            Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency));
         }
 
         /// <summary>
@@ -955,7 +956,7 @@ namespace IRTicker
                 AccountPlaceOrder_button.Enabled = false;
                 AccountEstOrderValue_value.Text = "";
             }
-            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
+            Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency));
         }
 
         private void StopBaitin_button_Click(object sender, EventArgs e) {
@@ -1035,8 +1036,9 @@ namespace IRTicker
                     Text = "IR Ticker - Market Baiter Running...";  // this is the form title bar
                     AccountBuySell_listbox.Enabled = false;
                     AccountOrderType_listbox.Enabled = false;
-                    Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));  // build the baiterBook
-                    await updateOBTask;  // the idea here is to await the completion of the pIR.compileAccountOrderBookAsync(...) method
+                    // stop using bulksequentialAPICalls for updating OB - it's not a private call.  I'm pretty sure this below await thing would have worked sometimes at best
+                    await Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency));
+                    //await updateOBTask;  // the idea here is to await the completion of the pIR.compileAccountOrderBookAsync(...) method
                     startMarketBaiter(decimal.Parse(AccountOrderVolume_textbox.Text), decimal.Parse(AccountLimitPrice_textbox.Text));
                 }
 
@@ -1065,7 +1067,8 @@ namespace IRTicker
             StopBaitin_button.Visible = false;
             StopBaitin_button.Enabled = false;
             Text = "IR Ticker";
-            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
+            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetClosedOrders, PrivateIR.PrivateIREndPoints.GetAccounts }));
+            Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency));
         }
 
         //public void updateUIFromMarketBaiter(List<PrivateIR.PrivateIREndPoints> endPoints) {
@@ -1179,8 +1182,7 @@ namespace IRTicker
                     lastPriceForUndo = buffer_lastPriceForUndo;
                 }
             }
-                
-            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
+            Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency));
         }
 
         private void AccountOpenOrders_listview_DoubleClick(object sender, EventArgs e) {
@@ -1201,8 +1203,12 @@ namespace IRTicker
             if (res == DialogResult.Yes) {
                 if (AccountOpenOrders_listview.SelectedItems.Count == 0) return;
                 string orderGuid = ((BankHistoryOrder)AccountOpenOrders_listview.SelectedItems[0].Tag).OrderGuid.ToString();
+
                 Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() {
-                    PrivateIR.PrivateIREndPoints.CancelOrder, PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetAccounts, PrivateIR.PrivateIREndPoints.UpdateOrderBook }, 0, 0, orderGuid));
+                    PrivateIR.PrivateIREndPoints.CancelOrder, PrivateIR.PrivateIREndPoints.GetOpenOrders, PrivateIR.PrivateIREndPoints.GetAccounts 
+                }, 0, 0, orderGuid));
+
+                Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency));
             }
         }
 
@@ -1217,8 +1223,7 @@ namespace IRTicker
                 AccountOrders_listview.Columns[1].Text = "Bids";
                 AccountOrders_listview.BackColor = Color.Thistle;
             }
-
-            Task.Run(() => bulkSequentialAPICalls(new List<PrivateIR.PrivateIREndPoints>() { PrivateIR.PrivateIREndPoints.UpdateOrderBook }));
+            Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency));
         }
 
         private void AccountOrderVolume_textbox_KeyUp(object sender, KeyEventArgs e) {

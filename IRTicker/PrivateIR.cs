@@ -332,7 +332,7 @@ namespace IRTicker {
 
                 if (!earliestClosedOrderRequired.HasValue) break;  // we only need to get the first page if we don't have a date
 
-            } while (allCOrders.Last().CreatedTimestampUtc >= earliestClosedOrderRequired.Value.ToUniversalTime());
+            } while ((allCOrders.Last().CreatedTimestampUtc >= earliestClosedOrderRequired.Value.ToUniversalTime()) && (page <= cOrders.TotalPages));
 
             if (null == cOrders) {
                 getClosedOrdersLock.Remove(pair);

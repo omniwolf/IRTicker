@@ -1272,7 +1272,7 @@ namespace IRTicker
                                 if ((cOrder.Status == OrderStatus.Filled) && (cOrder.CreatedTimestampUtc > sessionStarted.ToUniversalTime())) {
                                     string crypto = cOrder.PrimaryCurrencyCode.ToString().ToUpper();
                                     await SendMessage("*Order Filled!* 🤝" + Environment.NewLine +
-                                        "  Pair: " + crypto + "-" + cOrder.SecondaryCurrencyCode.ToString().ToUpper() + Environment.NewLine +
+                                        "  Pair: " + crypto + "-" + cOrder.SecondaryCurrencyCode.ToString().ToUpper() + "" + Environment.NewLine +
                                         "  Value: $" + Utilities.FormatValue(cOrder.Value.Value, 2) + Environment.NewLine +
                                         "  Avg price: $" + Utilities.FormatValue(cOrder.AvgPrice.Value, 2) + Environment.NewLine +
                                         "  Volume: " + crypto + ": " + Utilities.FormatValue(cOrder.Volume, 8, false) + Environment.NewLine +
