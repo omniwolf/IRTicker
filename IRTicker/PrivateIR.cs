@@ -251,7 +251,8 @@ namespace IRTicker {
             //firstClosedOrdersPullDone = true;
 
             // if the IRAF is open, we should display the closed orders
-            if ((null != IRAF) && !IRAF.IsDisposed) IRAF.drawClosedOrders(GetClosedOrders(SelectedCrypto, DCE_IR.CurrentSecondaryCurrency).Data);
+            // I don't think we need this - we have already done it like 20 lines above??
+            //if ((null != IRAF) && !IRAF.IsDisposed) IRAF.drawClosedOrders(GetClosedOrders(SelectedCrypto, DCE_IR.CurrentSecondaryCurrency).Data);
         }
 
         /// <summary>
