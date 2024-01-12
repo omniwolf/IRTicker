@@ -200,7 +200,7 @@ namespace IRTicker {
 
                         JArray marketIds = new JArray();
 
-                        channel = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\", \"heartbeat\"], \"marketIds\":[";  // we only ever subscribe, no scenario where we need to unsubscribe.  Unsubscribing is a pain for BTCM, see here https://api.btcmarkets.net/doc/v3#tag/WS_Overview
+                        //channel = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\", \"heartbeat\"], \"marketIds\":[";  // we only ever subscribe, no scenario where we need to unsubscribe.  Unsubscribing is a pain for BTCM, see here https://api.btcmarkets.net/doc/v3#tag/WS_Overview
                         foreach (string crypto1 in pairs) {
                             string crypto2 = crypto1;
                             if (crypto2 == "XBT") crypto2 = "BTC";
