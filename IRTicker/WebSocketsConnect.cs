@@ -52,7 +52,7 @@ namespace IRTicker {
 
             // BTCM
 
-            BTCM_Connect_v3();
+            BTCM_Connect_v3().Wait();
 
         }
 
@@ -233,7 +233,7 @@ namespace IRTicker {
                         }
 
                         if (!tooManyConnectionAttempts) {
-                            Task.Run(() => client_BTCM.Send(channel));
+                            /*Task.Run(() => */client_BTCM.Send(channel);  // i don't think I need to spawn a new thread for this?
                             ThrottleSubscription_BTCM.Add(DateTime.Now);
                             if (ThrottleSubscription_BTCM.Count > 500) ThrottleSubscription_BTCM.RemoveAt(0);  // clean up the list, don't let it grow forever
                         }
@@ -396,7 +396,7 @@ namespace IRTicker {
         }
 
         // BTCM version of startSockets()
-        private void BTCM_Connect_v3() {
+        private async Task BTCM_Connect_v3() {
             var url = new Uri("wss://socket.btcmarkets.net/v2");
             DCEs["BTCM"].socketsAlive = false;
             Debug.Print(DateTime.Now + " - BTCM_Connect_v3 called for BTCM");
@@ -451,7 +451,7 @@ namespace IRTicker {
             }
 
             if (!tooManyConnectionAttempts) {
-                client_BTCM.Start();
+                await client_BTCM.Start();
                 ThrottleConnection_BTCM.Add(DateTime.Now);
                 if (ThrottleConnection_BTCM.Count > 500) ThrottleConnection_BTCM.RemoveAt(0);  // clean up the list, don't let it grow forever
             }
@@ -567,7 +567,7 @@ namespace IRTicker {
                     if (client_BTCM.IsRunning) {
                         client_BTCM.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
                     }
-                    BTCM_Connect_v3();
+                    BTCM_Connect_v3().Wait();
                     subscribe_unsubscribe_new("BTCM", subscribe: true, crypto: "none", fiat: DCEs["BTCM"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
                     break;
             }
@@ -674,6 +674,7 @@ namespace IRTicker {
                 DCEs["IR"].socketsReset = true;  // it seems when we start getting errors, the socket is unrecoverable, need to start again. 29/4/2022 (ben says maybe there's issues on the server)
                 DCEs["IR"].socketsAlive = false;
                 DCEs["IR"].CurrentDCEStatus = "Resetting...";
+                stopSockets(IRdExchanges);
                 return;
             }
 

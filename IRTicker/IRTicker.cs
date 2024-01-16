@@ -2175,7 +2175,7 @@ namespace IRTicker {
 
                     if (!DCEs[dExchange].socketsAlive) {  // this should happen if REST is up but sockets are down.  if REST is also down we wouldn't get here i hope.
                         Debug.Print(DateTime.Now + " - 1 setting sockets down, we are in the main reportProgress and socktsAlive is false - " + dExchange);
-                        DCEs[dExchange].socketsReset = true;  // right.. ?
+                        //DCEs[dExchange].socketsReset = true;  // right.. ?  // no.. wrong!  sockets can be not alive, but we don't want to reset.  eg if it's in a reconnection state.
                         UpdateLabels(dExchange);
                         UIControls_Dict[dExchange].dExchange_GB.Text = DCEs[dExchange].FriendlyName + " (fiat pair: " + DCEs[dExchange].CurrentSecondaryCurrency + ") - " + DCEs["BTCM"].CurrentDCEStatus;
                     }
