@@ -240,7 +240,11 @@ namespace IRTicker {
 
 
                     }
-                    else DCEs[dExchange].socketsReset = true;
+                    else {
+                        Debug.Print("BTCM tried to subscribe, but we're not connected.");
+                        DCEs[dExchange].socketsReset = true;
+                        Thread.Sleep(1000);
+                    }
 
                     break;
 
