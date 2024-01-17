@@ -52,7 +52,7 @@ namespace IRTicker {
 
             // BTCM
 
-            BTCM_Connect_v3().Wait();
+            BTCM_Connect_v3();
 
         }
 
@@ -543,7 +543,7 @@ namespace IRTicker {
         }
 
 
-        public void WebSocket_Reconnect(string dExchange) {
+        public async Task WebSocket_Reconnect(string dExchange) {
             Debug.Print("WebSocket_Reconnect for " + dExchange);
             if (!DCEs[dExchange].HasStaticData) {
                 Debug.Print("Trying to reconnect to " + dExchange + " but there's no static data.  will not.");
@@ -569,9 +569,9 @@ namespace IRTicker {
                     break;
                 case "BTCM":
                     if (client_BTCM.IsRunning) {
-                        client_BTCM.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
+                        await client_BTCM.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
                     }
-                    BTCM_Connect_v3().Wait();
+                    await BTCM_Connect_v3();
                     subscribe_unsubscribe_new("BTCM", subscribe: true, crypto: "none", fiat: DCEs["BTCM"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
                     break;
             }

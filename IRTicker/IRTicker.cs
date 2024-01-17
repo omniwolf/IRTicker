@@ -2839,7 +2839,7 @@ namespace IRTicker {
             SpreadGraph_Dict.TryAdd("BTCM-OMG-" + DCEs["BTCM"].CurrentSecondaryCurrency, SGForm);
         }
 
-        private void IR_Reset_Button_Click(object sender, EventArgs e) {
+        private async void IR_Reset_Button_Click(object sender, EventArgs e) {
             wSocketConnect.IR_Disconnect();
             wSocketConnect.BTCM_Disconnect();
             List<string> dExchanges = new List<string>() { "IR", "IRUSD", "IRSGD", "BTCM" };
@@ -2849,8 +2849,8 @@ namespace IRTicker {
             }
             Debug.Print(DateTime.Now + " - IR (+SGD, USD) reset button clicked");
             Debug.Print("IR (+USD, SGD) websocket connecting....");
-            wSocketConnect.WebSocket_Reconnect("IR");  // using "IR" here - it resets the whole sockets and reconnects to all 3 currencies
-            wSocketConnect.WebSocket_Reconnect("BTCM");
+            await wSocketConnect.WebSocket_Reconnect("IR");  // using "IR" here - it resets the whole sockets and reconnects to all 3 currencies
+            await wSocketConnect.WebSocket_Reconnect("BTCM");
         }
 
 
