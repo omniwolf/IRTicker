@@ -229,16 +229,16 @@ namespace IRTicker {
                                 DCEs["BTCM"].socketsAlive = false;
                                 DCEs["BTCM"].CurrentDCEStatus = "Internally throttled";
                                 tooManyConnectionAttempts = true;
+                                Thread.Sleep(1000);
                             }
                         }
 
                         if (!tooManyConnectionAttempts) {
+                            Debug.Print("Sending subscription request to BTCM...");
                             /*Task.Run(() => */client_BTCM.Send(channel);  // i don't think I need to spawn a new thread for this?
                             ThrottleSubscription_BTCM.Add(DateTime.Now);
                             if (ThrottleSubscription_BTCM.Count > 500) ThrottleSubscription_BTCM.RemoveAt(0);  // clean up the list, don't let it grow forever
                         }
-
-
                     }
                     else {
                         Debug.Print("BTCM tried to subscribe, but we're not connected.");
@@ -419,7 +419,7 @@ namespace IRTicker {
                     Debug.Print("Lost 'reconnection' ignored, attached to a Reset button click?");
                 }*/
                 else if (info.Type == ReconnectionType.NoMessageReceived) {
-                    Debug.Print("NoMessageReceived 'reconnection' ignored, have seen data still coming through when receiving this");
+                    Debug.Print(DateTime.Now + " - NoMessageReceived 'reconnection' ignored, have seen data still coming through when receiving this");
                 }
                 else {
                     Debug.Print(DateTime.Now + " - (BTCM reconnection)");
