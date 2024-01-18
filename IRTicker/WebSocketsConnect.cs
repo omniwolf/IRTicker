@@ -52,7 +52,8 @@ namespace IRTicker {
 
             // BTCM
 
-            BTCM_Connect_v3();
+            // stop connecting while our IP is blocked
+            //BTCM_Connect_v3();
 
         }
 
@@ -182,6 +183,7 @@ namespace IRTicker {
 
 
                 case "BTCM":
+                    break;
                     Debug.Print("trying to subscribe to BTCM");
                     if (crypto == "none") {
                         foreach (string primarycode in DCEs[dExchange].PrimaryCurrencyList) {
@@ -568,6 +570,8 @@ namespace IRTicker {
                     //}
                     break;
                 case "BTCM":
+                    // blocked IP
+                    break;
                     if (client_BTCM.IsRunning) {
                         await client_BTCM.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
                     }
@@ -909,6 +913,8 @@ namespace IRTicker {
                     /*if (wSocket_IR.IsAlive)*/ return true;
                    // return false;
                 case "BTCM":
+                    // blocked IP
+                    return true;
                     if (client_BTCM.IsRunning) return true;
                     return false;
             }
