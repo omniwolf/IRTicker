@@ -1,0 +1,666 @@
+{
+"Currencies": [
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Aud",
+      "Name": "Australian Dollar",
+      "Ticker": "Aud",
+      "CurrencyType": "Secondary",
+      "Entities": [
+        "Au",
+        "Sg"
+      ],
+      "SortOrder": 50,
+      "RefNoPrefix": "A",
+      "Family": "Fiat",
+      "DepositType": "Unknown",
+      "FiatPriceDecimalPlaces": 2,
+      "FiatPriceStringFormat": "0.00",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Usd",
+      "Name": "US Dollar",
+      "Ticker": "Usd",
+      "CurrencyType": "Secondary",
+      "Entities": [
+        "Au",
+        "Sg"
+      ],
+      "SortOrder": 150,
+      "RefNoPrefix": "U",
+      "Family": "Fiat",
+      "DepositType": "Unknown",
+      "FiatPriceDecimalPlaces": 2,
+      "FiatPriceStringFormat": "0.00",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Nzd",
+      "Name": "New Zealand Dollar",
+      "Ticker": "Nzd",
+      "CurrencyType": "Secondary",
+      "Entities": [
+        "Au",
+        "Sg"
+      ],
+      "SortOrder": 250,
+      "RefNoPrefix": "NZ",
+      "Family": "Fiat",
+      "DepositType": "Unknown",
+      "FiatPriceDecimalPlaces": 2,
+      "FiatPriceStringFormat": "0.00",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Xbt",
+      "Name": "Bitcoin",
+      "Ticker": "Btc",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au",
+        "Sg"
+      ],
+      "SortOrder": 350,
+      "Family": "Bitcoin",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 2,
+      "FiatPriceStringFormat": "0.00",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "bitcoin"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Eth",
+      "Name": "Ethereum",
+      "Ticker": "Eth",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au",
+        "Sg"
+      ],
+      "SortOrder": 450,
+      "Family": "Ethereum",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 2,
+      "FiatPriceStringFormat": "0.00",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Xrp",
+      "Name": "Ripple",
+      "Ticker": "Xrp",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au",
+        "Sg"
+      ],
+      "SortOrder": 550,
+      "Family": "Ripple",
+      "DepositType": "AddressAndTag",
+      "FiatPriceDecimalPlaces": 5,
+      "FiatPriceStringFormat": "0.00000",
+      "AlwaysEnforceMinimumWithdrawal": true,
+      "IsDelisted": false,
+      "UrlProtocol": "ripple"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Bch",
+      "Name": "Bitcoin Cash",
+      "Ticker": "Bch",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 650,
+      "Family": "Bitcoin",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 2,
+      "FiatPriceStringFormat": "0.00",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "bitcoincash"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Bsv",
+      "Name": "Bitcoin SV",
+      "Ticker": "Bsv",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 750,
+      "Family": "Bitcoin",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 2,
+      "FiatPriceStringFormat": "0.00",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "bitcoincashsv"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Ust",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Ust",
+        "ContractAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+        "DecimalPlaces": 6
+      },
+      "Name": "Tether USD",
+      "Ticker": "Usdt",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 850,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 5,
+      "FiatPriceStringFormat": "0.00000",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Usc",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Usc",
+        "ContractAddress": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        "DecimalPlaces": 6
+      },
+      "Name": "USD Coin",
+      "Ticker": "Usdc",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 900,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 5,
+      "FiatPriceStringFormat": "0.00000",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Ltc",
+      "Name": "Litecoin",
+      "Ticker": "Ltc",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 950,
+      "Family": "Bitcoin",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 2,
+      "FiatPriceStringFormat": "0.00",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "litecoin"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Eos",
+      "Name": "EOS",
+      "Ticker": "Eos",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 1050,
+      "Family": "Eos",
+      "DepositType": "AddressAndTag",
+      "FiatPriceDecimalPlaces": 4,
+      "FiatPriceStringFormat": "0.0000",
+      "ClonesDepositAddress": "Xrp",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "eos"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Xlm",
+      "Name": "Stellar Lumens",
+      "Ticker": "Xlm",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 1150,
+      "Family": "Stellar",
+      "DepositType": "AddressAndTag",
+      "FiatPriceDecimalPlaces": 5,
+      "FiatPriceStringFormat": "0.00000",
+      "ClonesDepositAddress": "Xrp",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "stellar"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Etc",
+      "Name": "Ethereum Classic",
+      "Ticker": "Etc",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 1250,
+      "Family": "Ethereum",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 2,
+      "FiatPriceStringFormat": "0.00",
+      "ClonesDepositAddress": "Eth",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ethereumclassic"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Bat",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Bat",
+        "ContractAddress": "0x0d8775f648430679a709e98d2b0cb6250d2887ef",
+        "DecimalPlaces": 18
+      },
+      "Name": "Basic Attention Token",
+      "Ticker": "Bat",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 1350,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 5,
+      "FiatPriceStringFormat": "0.00000",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Omg",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Omg",
+        "ContractAddress": "0xd26114cd6EE289AccF82350c8d8487fedB8A0C07",
+        "DecimalPlaces": 18
+      },
+      "Name": "OmiseGO",
+      "Ticker": "Omg",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 1450,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 4,
+      "FiatPriceStringFormat": "0.0000",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Rep",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Rep",
+        "ContractAddress": "0x1985365e9f78359a9B6AD760e32412f4a445E862",
+        "DecimalPlaces": 18
+      },
+      "Name": "Augur",
+      "Ticker": "Rep",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 1550,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 2,
+      "FiatPriceStringFormat": "0.00",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": true,
+      "UrlProtocol": "ether"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Zrx",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Zrx",
+        "ContractAddress": "0xe41d2489571d322189246dafa5ebde1f4699f498",
+        "DecimalPlaces": 18
+      },
+      "Name": "0x",
+      "Ticker": "Zrx",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 1650,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 5,
+      "FiatPriceStringFormat": "0.00000",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Gnt",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Gnt",
+        "ContractAddress": "0xa74476443119A942dE498590Fe1f2454d7D4aC0d",
+        "DecimalPlaces": 18
+      },
+      "Name": "Golem",
+      "Ticker": "Gnt",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 1750,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 5,
+      "FiatPriceStringFormat": "0.00000",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Pla",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Pla",
+        "ContractAddress": "0x0198f46f520f33cd4329bd4be380a25a90536cd5",
+        "DecimalPlaces": 18
+      },
+      "Name": "PlayChip",
+      "Ticker": "Pla",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 1850,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 5,
+      "FiatPriceStringFormat": "0.00000",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": true,
+      "UrlProtocol": "ether"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Pmg",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Pmg",
+        "ContractAddress": "0xaffcdd96531bcd66faed95fc61e443d08f79efef",
+        "DecimalPlaces": 5
+      },
+      "Name": "Perth Mint Gold Token",
+      "Ticker": "Pmgt",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 1950,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 2,
+      "FiatPriceStringFormat": "0.00",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": true,
+      "UrlProtocol": "ether"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Lnk",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Lnk",
+        "ContractAddress": "0x514910771af9ca656af840dff83e8264ecf986ca",
+        "DecimalPlaces": 18
+      },
+      "Name": "Chainlink",
+      "Ticker": "Link",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 2050,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 4,
+      "FiatPriceStringFormat": "0.0000",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Mkr",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Mkr",
+        "ContractAddress": "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
+        "DecimalPlaces": 18
+      },
+      "Name": "Maker",
+      "Ticker": "Mkr",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 2150,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 2,
+      "FiatPriceStringFormat": "0.00",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Dai",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Dai",
+        "ContractAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+        "DecimalPlaces": 18
+      },
+      "Name": "Dai",
+      "Ticker": "Dai",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 2250,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 5,
+      "FiatPriceStringFormat": "0.00000",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  },
+{
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Com",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Com",
+        "ContractAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+        "DecimalPlaces": 18
+      },
+      "Name": "Comp",
+      "Ticker": "Comp",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 2350,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 2,
+      "FiatPriceStringFormat": "0.00",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  },
+{
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Snx",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Snx",
+        "ContractAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+        "DecimalPlaces": 18
+      },
+      "Name": "Snx",
+      "Ticker": "Snx",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 2450,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 5,
+      "FiatPriceStringFormat": "0.00000",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Yfi",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Yfi",
+        "ContractAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+        "DecimalPlaces": 18
+      },
+      "Name": "Yfi",
+      "Ticker": "Yfi",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 2550,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 2,
+      "FiatPriceStringFormat": "0.00",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Aave",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Aave",
+        "ContractAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+        "DecimalPlaces": 18
+      },
+      "Name": "Ave",
+      "Ticker": "Ave",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 2650,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 4,
+      "FiatPriceStringFormat": "0.0000",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  },
+  {
+    "Ir.Common.Attributes.CurrencyConfiguration": {
+      "Code": "Knc",
+      "TokenContract": {
+        "HostCurrency": "Eth",
+        "CurrencyCode": "Knc",
+        "ContractAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+        "DecimalPlaces": 18
+      },
+      "Name": "Knc",
+      "Ticker": "Knc",
+      "CurrencyType": "Primary",
+      "Entities": [
+        "Au"
+      ],
+      "SortOrder": 2750,
+      "Family": "Erc20",
+      "DepositType": "Address",
+      "FiatPriceDecimalPlaces": 5,
+      "FiatPriceStringFormat": "0.00000",
+      "AlwaysEnforceMinimumWithdrawal": false,
+      "IsDelisted": false,
+      "UrlProtocol": "ether"
+    }
+  }
+] 
+}

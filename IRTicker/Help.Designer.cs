@@ -44,7 +44,7 @@
             this.HelpBody_Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.HelpBody_Label.Location = new System.Drawing.Point(40, 103);
             this.HelpBody_Label.Name = "HelpBody_Label";
-            this.HelpBody_Label.Size = new System.Drawing.Size(739, 340);
+            this.HelpBody_Label.Size = new System.Drawing.Size(747, 340);
             this.HelpBody_Label.TabIndex = 1;
             this.HelpBody_Label.Text = resources.GetString("HelpBody_Label.Text");
             this.HelpBody_Label.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.HelpBody_Label_MouseDoubleClick);

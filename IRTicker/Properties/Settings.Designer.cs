@@ -12,7 +12,7 @@ namespace IRTicker.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.1.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -32,18 +32,6 @@ namespace IRTicker.Properties {
             }
             set {
                 this["RefreshFreq"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ExportFull {
-            get {
-                return ((bool)(this["ExportFull"]));
-            }
-            set {
-                this["ExportFull"] = value;
             }
         }
         
@@ -73,13 +61,649 @@ namespace IRTicker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ToolbarFolder {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Slack {
             get {
-                return ((string)(this["ToolbarFolder"]));
+                return ((bool)(this["Slack"]));
             }
             set {
-                this["ToolbarFolder"] = value;
+                this["Slack"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FlashForm {
+            get {
+                return ((bool)(this["FlashForm"]));
+            }
+            set {
+                this["FlashForm"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SlackToken {
+            get {
+                return ((string)(this["SlackToken"]));
+            }
+            set {
+                this["SlackToken"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowOB {
+            get {
+                return ((bool)(this["ShowOB"]));
+            }
+            set {
+                this["ShowOB"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SlackNameChange {
+            get {
+                return ((bool)(this["SlackNameChange"]));
+            }
+            set {
+                this["SlackNameChange"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SlackDefaultName {
+            get {
+                return ((string)(this["SlackDefaultName"]));
+            }
+            set {
+                this["SlackDefaultName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("250")]
+        public int UITimerFreq {
+            get {
+                return ((int)(this["UITimerFreq"]));
+            }
+            set {
+                this["UITimerFreq"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool NegativeSpread {
+            get {
+                return ((bool)(this["NegativeSpread"]));
+            }
+            set {
+                this["NegativeSpread"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("AUD")]
+        public string SlackNameFiatCurrency {
+            get {
+                return ((string)(this["SlackNameFiatCurrency"]));
+            }
+            set {
+                this["SlackNameFiatCurrency"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("G:\\My Drive\\IR\\IRTicker\\Spread history data\\")]
+        public string SpreadHistoryCustomFolder {
+            get {
+                return ((string)(this["SpreadHistoryCustomFolder"]));
+            }
+            set {
+                this["SpreadHistoryCustomFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKey {
+            get {
+                return ((string)(this["IRAPIPubKey"]));
+            }
+            set {
+                this["IRAPIPubKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKey {
+            get {
+                return ((string)(this["IRAPIPrivKey"]));
+            }
+            set {
+                this["IRAPIPrivKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKey1 {
+            get {
+                return ((string)(this["IRAPIPubKey1"]));
+            }
+            set {
+                this["IRAPIPubKey1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKey2 {
+            get {
+                return ((string)(this["IRAPIPubKey2"]));
+            }
+            set {
+                this["IRAPIPubKey2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKey3 {
+            get {
+                return ((string)(this["IRAPIPubKey3"]));
+            }
+            set {
+                this["IRAPIPubKey3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKey4 {
+            get {
+                return ((string)(this["IRAPIPubKey4"]));
+            }
+            set {
+                this["IRAPIPubKey4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPubKey5 {
+            get {
+                return ((string)(this["IRAPIPubKey5"]));
+            }
+            set {
+                this["IRAPIPubKey5"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKey1 {
+            get {
+                return ((string)(this["IRAPIPrivKey1"]));
+            }
+            set {
+                this["IRAPIPrivKey1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKey2 {
+            get {
+                return ((string)(this["IRAPIPrivKey2"]));
+            }
+            set {
+                this["IRAPIPrivKey2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKey3 {
+            get {
+                return ((string)(this["IRAPIPrivKey3"]));
+            }
+            set {
+                this["IRAPIPrivKey3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKey4 {
+            get {
+                return ((string)(this["IRAPIPrivKey4"]));
+            }
+            set {
+                this["IRAPIPrivKey4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IRAPIPrivKey5 {
+            get {
+                return ((string)(this["IRAPIPrivKey5"]));
+            }
+            set {
+                this["IRAPIPrivKey5"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string APIFriendly1 {
+            get {
+                return ((string)(this["APIFriendly1"]));
+            }
+            set {
+                this["APIFriendly1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string APIFriendly2 {
+            get {
+                return ((string)(this["APIFriendly2"]));
+            }
+            set {
+                this["APIFriendly2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string APIFriendly3 {
+            get {
+                return ((string)(this["APIFriendly3"]));
+            }
+            set {
+                this["APIFriendly3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string APIFriendly4 {
+            get {
+                return ((string)(this["APIFriendly4"]));
+            }
+            set {
+                this["APIFriendly4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string APIFriendly5 {
+            get {
+                return ((string)(this["APIFriendly5"]));
+            }
+            set {
+                this["APIFriendly5"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string APIFriendly {
+            get {
+                return ((string)(this["APIFriendly"]));
+            }
+            set {
+                this["APIFriendly"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TelegramCode {
+            get {
+                return ((string)(this["TelegramCode"]));
+            }
+            set {
+                this["TelegramCode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public long TelegramChatID {
+            get {
+                return ((long)(this["TelegramChatID"]));
+            }
+            set {
+                this["TelegramChatID"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public string EnableWindowsFormsHighDpiAutoResizing {
+            get {
+                return ((string)(this["EnableWindowsFormsHighDpiAutoResizing"]));
+            }
+            set {
+                this["EnableWindowsFormsHighDpiAutoResizing"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TelegramAPIToken {
+            get {
+                return ((string)(this["TelegramAPIToken"]));
+            }
+            set {
+                this["TelegramAPIToken"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TelegramAllNewMessages {
+            get {
+                return ((bool)(this["TelegramAllNewMessages"]));
+            }
+            set {
+                this["TelegramAllNewMessages"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BTC")]
+        public string SlackNameEmojiCrypto {
+            get {
+                return ((string)(this["SlackNameEmojiCrypto"]));
+            }
+            set {
+                this["SlackNameEmojiCrypto"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TGBot_Enable {
+            get {
+                return ((bool)(this["TGBot_Enable"]));
+            }
+            set {
+                this["TGBot_Enable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LoanSlushEncoded {
+            get {
+                return ((string)(this["LoanSlushEncoded"]));
+            }
+            set {
+                this["LoanSlushEncoded"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LoanSlushEncoded_B2C2 {
+            get {
+                return ((string)(this["LoanSlushEncoded_B2C2"]));
+            }
+            set {
+                this["LoanSlushEncoded_B2C2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string B2C2Token {
+            get {
+                return ((string)(this["B2C2Token"]));
+            }
+            set {
+                this["B2C2Token"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CoinbaseAPIKey {
+            get {
+                return ((string)(this["CoinbaseAPIKey"]));
+            }
+            set {
+                this["CoinbaseAPIKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CoinbaseAPISecret {
+            get {
+                return ((string)(this["CoinbaseAPISecret"]));
+            }
+            set {
+                this["CoinbaseAPISecret"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CoinbasePassPhrase {
+            get {
+                return ((string)(this["CoinbasePassPhrase"]));
+            }
+            set {
+                this["CoinbasePassPhrase"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LoanSlushEncoded_Coinbase {
+            get {
+                return ((string)(this["LoanSlushEncoded_Coinbase"]));
+            }
+            set {
+                this["LoanSlushEncoded_Coinbase"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TrigonXToken {
+            get {
+                return ((string)(this["TrigonXToken"]));
+            }
+            set {
+                this["TrigonXToken"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ETHWalletAddress {
+            get {
+                return ((string)(this["ETHWalletAddress"]));
+            }
+            set {
+                this["ETHWalletAddress"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LoanSlushEncoded_IROTCMetaMask {
+            get {
+                return ((string)(this["LoanSlushEncoded_IROTCMetaMask"]));
+            }
+            set {
+                this["LoanSlushEncoded_IROTCMetaMask"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SlackBotToken {
+            get {
+                return ((string)(this["SlackBotToken"]));
+            }
+            set {
+                this["SlackBotToken"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SlackBotChannel {
+            get {
+                return ((string)(this["SlackBotChannel"]));
+            }
+            set {
+                this["SlackBotChannel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GDriveFolder_BalSettings {
+            get {
+                return ((string)(this["GDriveFolder_BalSettings"]));
+            }
+            set {
+                this["GDriveFolder_BalSettings"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LoanSlushEncoded_TrigonX {
+            get {
+                return ((string)(this["LoanSlushEncoded_TrigonX"]));
+            }
+            set {
+                this["LoanSlushEncoded_TrigonX"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IROTCAPIKey {
+            get {
+                return ((string)(this["IROTCAPIKey"]));
+            }
+            set {
+                this["IROTCAPIKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IROTCAPISecret {
+            get {
+                return ((string)(this["IROTCAPISecret"]));
+            }
+            set {
+                this["IROTCAPISecret"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IROTCSGAPIKey {
+            get {
+                return ((string)(this["IROTCSGAPIKey"]));
+            }
+            set {
+                this["IROTCSGAPIKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string IROTCSGAPISecret {
+            get {
+                return ((string)(this["IROTCSGAPISecret"]));
+            }
+            set {
+                this["IROTCSGAPISecret"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LoanSlushEncodedIROTCSG {
+            get {
+                return ((string)(this["LoanSlushEncodedIROTCSG"]));
+            }
+            set {
+                this["LoanSlushEncodedIROTCSG"] = value;
             }
         }
     }

@@ -3,390 +3,486 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WebSocketSharp;
+using System.Threading;
+//using WebSocketSharp;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.ComponentModel;
-using Quobject.SocketIoClientDotNet.Client;
 using System.Collections.Concurrent;
-
+using Websocket.Client;
 
 
 namespace IRTicker {
     public class WebSocketsConnect {
 
         private Dictionary<string, DCE> DCEs;
-        private WebSocket wSocket_BFX, wSocket_GDAX, wSocket_IR, wSocket_BTCM;
-        private Socket socket_BTCM;
-        public Dictionary<string, Subscribed_BFX> channel_Dict_BFX = new Dictionary<string, Subscribed_BFX>();  // string is a string version of the channel ID
+        //private WebSocket wSocket_BTCM;
+        private WebsocketClient client_IR, client_BTCM;
         private BackgroundWorker pollingThread;
+        private Thread UITimerThread;
+        private bool UITimerThreadProceed = true;
+        //private ManualResetEvent startSocket_exitEvent = new ManualResetEvent(false);
+        private string IRSocketsURL = "wss://websockets.independentreserve.com";
+        //private string IRSocketsURL = "ws://dev.pushservice.independentreserve.net";
+        List<string> IRdExchanges = new List<string>() { "IR", "IRUSD", "IRSGD" };
+        private PrivateIR pIR;
+        private List<DateTime> ThrottleConnection_BTCM = new List<DateTime>();  // tracks .Start() attempts on the wss API
+        private List<DateTime> ThrottleSubscription_BTCM = new List<DateTime>();  // tracks .Send() subscription attempts on the API
 
         // constructor
-        public WebSocketsConnect(Dictionary<string, DCE> _DCEs, BackgroundWorker _pollingThread) {
+        public WebSocketsConnect(Dictionary<string, DCE> _DCEs, BackgroundWorker _pollingThread, PrivateIR _pIR) {
             DCEs = _DCEs;
             pollingThread = _pollingThread;
+            pIR = _pIR;
 
             // IR
-            IR_Connect();
-            
+
+            Debug.Print("IR (+SGD, USD) websocket connecting..");
+
+            //Task.Factory.StartNew(() => {
+            startSockets(IRdExchanges, IRSocketsURL);
+            //startSockets("IRSGD", IRSocketsURL);
+            //startSockets("IRUSD", IRSocketsURL);
+            // })
+            //;
+            Debug.Print("after first start sockets");
+            //subscribe_unsubscribe_new("IR", true);  // subscribe to all the things
+
+
             // BTCM
 
-            BTCM_Connect_v2();
+            BTCM_Connect_v3();
 
-
-            // BFX
-            wSocket_BFX = new WebSocket("wss://api.bitfinex.com/ws");
-            wSocket_BFX.OnMessage += (sender, e) => {
-                if (e.IsText) {
-                    DCEs["BFX"].socketsAlive = true;
-                    MessageRX_BFX(e.Data);
-                }
-                else Debug.Print("BFX ws stream is not text?? - " + e.RawData.ToString());
-            };
-
-            wSocket_BFX.OnOpen += (sender, e) => {
-                Debug.Print("ws onopen - bfx");
-            };
-
-            wSocket_BFX.OnError += (sender, e) => {
-                Debug.Print("ws onerror - bfx");
-                wSocket_BFX.Close();
-                DCEs["BFX"].NetworkAvailable = false;
-                DCEs["BFX"].socketsAlive = false;
-                DCEs["BFX"].CurrentDCEStatus = "Socket error";
-                DCEs["BFX"].HasStaticData = false;
-                pollingThread.ReportProgress(12, "BFX");  // 12 is error
-                WebSocket_Reconnect("BFX");
-            };
-
-            wSocket_BFX.OnClose += (sender, e) => {
-                Debug.Print("BFX stream closed... should be preceeded by some ded thingo " + DateTime.Now.ToString());
-                DCEs["BFX"].socketsAlive = false;
-                //WebSocket_Reconnect("BFX");
-            }; 
-            wSocket_BFX.Connect();
-
-
-            // GDAX
-            wSocket_GDAX = new WebSocket("wss://ws-feed.pro.coinbase.com");
-
-            wSocket_GDAX.OnMessage += (sender, e) => {
-                if (e.IsText) {
-                    DCEs["GDAX"].socketsAlive = true;
-                    MessageRX_GDAX(e.Data);
-                    //Debug.Print("GDAX SOCKET: " + e.Data);
-                }
-                else Debug.Print("GDAX ws stream is not text?? - " + e.RawData.ToString());
-            };
-
-            wSocket_GDAX.OnOpen += (sender, e) => {
-                Debug.Print("ws onopen - gdax");
-            };
-
-            wSocket_GDAX.OnError += (sender, e) => {
-                Debug.Print("ws onerror - gdax - " + DateTime.Now.ToString());
-                wSocket_GDAX.Close();
-                DCEs["GDAX"].NetworkAvailable = false;
-                DCEs["GDAX"].socketsAlive = false;
-                DCEs["GDAX"].CurrentDCEStatus = "Socket error";
-                DCEs["GDAX"].HasStaticData = false;
-                pollingThread.ReportProgress(12, "GDAX");  // 12 is error
-                WebSocket_Reconnect("GDAX");
-            };
-
-            wSocket_GDAX.OnClose += (sender, e) => {
-                Debug.Print("GDAX stream was closed.. should be because we disconnected on purpose. preceeded by ded?  " + DateTime.Now.ToString());
-                DCEs["GDAX"].socketsAlive = false;
-                //WebSocket_Disconnect("GDAX");
-            };
-            wSocket_GDAX.Connect();
         }
 
-        public void GetOrderBook_IR(string crypto, string fiat) {
-            if (crypto == "USDT") crypto = "UST";
-            string pair = crypto + "-" + fiat;
-            Tuple<bool, string> orderBookTpl = Utilities.Get("https://api.independentreserve.com/Public/GetAllOrders?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
+        public void GetOrderBook_IR(string dExchange, string crypto, string fiat) {
 
-            // have to change back ughhh
-            if (crypto == "UST") crypto = "USDT";
-            pair = crypto + "-" + fiat;
+            string pair = crypto + "-" + fiat;
+            Tuple<bool, string> orderBookTpl = Utilities.Get(DCEs[dExchange].BaseURL + "/Public/GetAllOrders?primaryCurrencyCode=" + crypto + "&secondaryCurrencyCode=" + fiat);
 
             if (orderBookTpl.Item1) {
                 DCE.OrderBook orderBook = JsonConvert.DeserializeObject<DCE.OrderBook>(orderBookTpl.Item2);
-                if (orderBook.PrimaryCurrencyCode.ToUpper() == "UST") orderBook.PrimaryCurrencyCode = "USDT";
-                DCEs["IR"].orderBooks[pair] = orderBook;
+                DCEs[dExchange].orderBooks[pair] = orderBook;
+                if ((DCEs[dExchange].orderBooks[pair].BuyOrders.Count == 0) || (DCEs[dExchange].orderBooks[pair].SellOrders.Count == 0)) {
+                    Debug.Print("One of the order books is empty... not continuing.  number of buy orders: " + DCEs[dExchange].orderBooks[pair].BuyOrders.Count + ", and sell orders: " + DCEs[dExchange].orderBooks[pair].SellOrders.Count);
+                    return;
+                }
 
                 // next we need to convert this orderbook into a concurrent dictionary of OrderBook_IR objects
                 // so yeah.. the "orderBook" object doesn't really get used anymore.  it's just like a staging area
-                DCEs["IR"].ConvertOrderBook_IR(pair);
+                bool OBPulled = DCEs[dExchange].ConvertOrderBook_IR(pair);
 
-                Debug.Print(DateTime.Now.ToString() + " IR OB " + crypto + fiat + " done");
+                if (!OBPulled) {  // if the ob conversion process failed, then try again
+                    Debug.Print(DateTime.Now + " - IR (" + dExchange + ") OB conversion (" + crypto + "-" + fiat + ") failed for some reason, trying again.");
+                    subscribe_unsubscribe_new(dExchange, subscribe: true, crypto, fiat);
+                    return;
+                }
+
+                Debug.Print(DateTime.Now.ToString() + " " + dExchange + " OB " + pair + " pulled, " + (DCEs[dExchange].orderBuffer_IR.ContainsKey(pair) ? DCEs[dExchange].orderBuffer_IR[pair].Count.ToString() : "n/a") + " ordes in the buffer");
+                Debug.Print("and we have " + DCEs[dExchange].IR_OBs[pair].Item1.Count + " bids and " + DCEs[dExchange].IR_OBs[pair].Item2.Count + " offers");
 
                 //int remainingBuffer = ApplyBuffer_IR(pair);
                 //Print("(" + pair + ") Buffer applied, there are " + remainingBuffer + " left in the buffer (should be 0)");
-                DCEs["IR"].pulledSnapShot[pair] = true;
+                DCEs[dExchange].pulledSnapShot[pair] = true;
             }
             else {
-                Debug.Print(DateTime.Now.ToString() + " | IR - couldn't download REST OB? - " + pair);
+                Debug.Print(DateTime.Now.ToString() + " | " + dExchange + " - couldn't download REST OB? - " + pair);
             }
         }
 
-        private int ApplyBuffer_IR(string pair) {
-            // this pair doesn't even exist in the OB
-            // the pair is there, but nothing in it.
-            if (!DCEs["IR"].orderBuffer_IR.ContainsKey(pair) || DCEs["IR"].orderBuffer_IR[pair].Count == 0) {
-                DCEs["IR"].pulledSnapShot[pair] = true;
-                return 0;
-            }
-
-            if (DCEs["IR"].channelNonce["ORDERBOOK-" + pair] == 0) {
-                DCEs["IR"].channelNonce["ORDERBOOK-" + pair] = DCEs["IR"].orderBuffer_IR[pair].Keys.Min() - 1;
-            }
-
-            Debug.Print(DateTime.Now + " --- about to apply buffer.  missing change or remove order errors are probably expected. current nonce: " + DCEs["IR"].channelNonce["ORDERBOOK-" + pair] + " -- -");
-
-            // there's some problem here.  it doesn't appear to be popping all the buffers?
-            while (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(DCEs["IR"].channelNonce["ORDERBOOK-" + pair] + 1)) {
-                DCEs["IR"].channelNonce["ORDERBOOK-" + pair] += 1;
-                Debug.Print(DateTime.Now + " - popping an order (nonce: " + DCEs["IR"].channelNonce["ORDERBOOK-" + pair] + ") from the " + pair + " buffer, total prior to pop: " + DCEs["IR"].orderBuffer_IR[pair].Count);
-                if (DCEs["IR"].orderBuffer_IR[pair].TryRemove(DCEs["IR"].channelNonce["ORDERBOOK-" + pair], out Ticker_IR ticker)) {
-                    Debug.Print("1TryRemove supposedly worked, total now is " + DCEs["IR"].orderBuffer_IR[pair].Count + ", popped nonce is: " + ticker.Nonce);
-                    if (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(ticker.Nonce)) {
-                        Debug.Print("1yep defo in there -- BAD");
-                    }
-                    else {
-                        Debug.Print("1nup not in there -- good");
-                    }
-                    parseTicker_IR(ticker);
-                }
-                else {
-                    Debug.Print(DateTime.Now + " - couldn't remove order from orderbuffer??");
-                }
-                Debug.Print("2TryRemove supposedly worked, total now is " + DCEs["IR"].orderBuffer_IR[pair].Count + ", popped nonce is: " + ticker.Nonce);
-                Debug.Print("next nonce in the buffer is: " + DCEs["IR"].orderBuffer_IR[pair].Keys.Min());
-                if (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(DCEs["IR"].channelNonce["ORDERBOOK-" + pair])) {
-                    Debug.Print("2yep defo in there -- bad");
-                }
-                else {
-                    Debug.Print("2nup not in there - good");
-                }
-                if (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(DCEs["IR"].channelNonce["ORDERBOOK-" + pair] + 1)) {
-                    Debug.Print("next nonce (" + (DCEs["IR"].channelNonce["ORDERBOOK-" + pair] + 1) + " is there waiting! -- good");
-                }
-                else {
-                    Debug.Print("next nonce notin buffer BAD, even though buffer size is " + DCEs["IR"].orderBuffer_IR[pair].Count);
-                }
-            }
-
-            DCEs["IR"].pulledSnapShot[pair] = true;
-            //Debug.Print(DateTime.Now + " --- buffer has been applied, any new errors are probably real");
-
-            return DCEs["IR"].orderBuffer_IR[pair].Count;
-        }
-
-        public void WebSocket_Subscribe(string dExchange, List<Tuple<string, string>> pairs) {
+        // if subscribe is false then we unsubscribe
+        public void subscribe_unsubscribe_new(string dExchange, bool subscribe, string crypto = "none", string fiat = "none") {
+            if (fiat == "none") fiat = DCEs[dExchange].CurrentSecondaryCurrency;
+            Debug.Print("subscribe_unsubscribe! -- " + dExchange + " -- did we subscribe: " + subscribe.ToString() + ", pair: " + crypto + "-" + fiat);
             string channel = "";
+            JObject channel_obj = new JObject();  // using proper objects to build the subscribe request, not silly strings
+            List<string> pairs = new List<string>();
+
             switch (dExchange) {
                 case "IR":
-                    //Debug.Print("subscrbe IR: " + "{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\", \"" + "\"orderbook-" + crypto + "-" + fiat + "\"]} ");
-                    //wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"ticker-" + crypto + "-" + fiat + "\", \"orderbook-" + crypto + "-" + fiat + "\"]} ");
-                    if (wSocket_IR.IsAlive) {
-                        channel = "{\"Event\":\"Subscribe\",\"Data\":[";
-                        foreach (Tuple<string, string> pair in pairs) {
-                            string crypto = pair.Item1;
-                            string fiat = pair.Item2;
-                            DCEs["IR"].pulledSnapShot[crypto + "-" + fiat] = false;  // initialise the pulledSnapShot variable for this pair
-                            if (crypto == "USDT") crypto = "UST";
-                            channel += "\"orderbook-" + crypto + "-" + fiat + "\", ";
-                            if (crypto == "UST") crypto = "USDT";
-                            DCEs[dExchange].channelNonce[("ORDERBOOK-" + crypto + "-" + fiat)] = 0;  // initialise the nonce dictionary
-                            DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;  // false means no error, no need to dump OB
+                //case "IRUSD":
+                //case "IRSGD":
+                    channel_obj["Event"] = "Subscribe";
+                    JArray data = new JArray();
+                    if (crypto == "none") {  // unsubscribe or subscribe to EVERYTHING
+                        //stopSockets("IR");  // don't want to stop everything, we just need to unsubscribe like we said we would.
+                        //List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
+                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
+                                string crypto1 = primaryCode;
+                                data.Add("orderbook-" + crypto1.ToLower());
+                            }
                         }
                         channel += "]} ";
-                        Debug.Print("IR websocket subscribe: " + channel);
-                        wSocket_IR.Send(channel);
-                        //wSocket_IR.Send("{\"Event\":\"Subscribe\",\"Data\":[\"orderbook-" + crypto + "-" + fiat + "\"]} ");
+                    }
+                    else {  // or just one pair
 
-                        foreach (Tuple<string, string> pair in pairs) {
-                            GetOrderBook_IR(pair.Item1, pair.Item2);
-                        }
+                        data.Add("orderbook-" + crypto.ToLower());
+                    }
 
+                    channel_obj["Data"] = data;
+                    channel = channel_obj.ToString();
+                    Debug.Print(dExchange + " websocket subcribe/unsubscribe - " + (subscribe ? "subscribe" : "unsubscribe") + " event: " + channel);
 
+                    if (client_IR.IsRunning) {
+                        //Task.Run(() => 
+                        client_IR.Send(channel)
+                        //)
+                        ;
                     }
                     else {
-                        DCEs["IR"].socketsReset = true;
-                        Debug.Print(DateTime.Now + " - Trying to subscribe but sockets ain't alive!  IR");
+                        Debug.Print(DateTime.Now + " - " + dExchange + " sockets down when trying to " + (subscribe ? "subscribe" : "unsubscribe"));
+                        DCEs[dExchange].socketsReset = true;
+                        break;
                     }
+                    if (subscribe) {  // if subscribing then grab the order books too.
+                                      //List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
+                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
+                                //pairList.Add(new Tuple<string, string>("XBT", "AUD"));
+                                //pairList.Add(new Tuple<string, string>("XBT", "USD"));
+                                //pairList.Add(new Tuple<string, string>("XBT", "NZD"));
+                                //pairList.Add(new Tuple<string, string>(primaryCode, fiat));
+                                if ((crypto == "none") || (crypto == primaryCode))
+                                    GetOrderBook_IR(dExchange, primaryCode, fiat);
+                            }
+                        }
+
+                    }
+
                     break;
+
+                case "IRUSD":
+                    if (subscribe) {  // if subscribing then grab the order books too.
+
+                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
+                                if ((crypto == "none") || (crypto == primaryCode))
+                                    GetOrderBook_IR(dExchange, primaryCode, fiat);
+                            }
+                        }
+                    }
+
+                    break;
+
+                case "IRSGD":
+                    if (subscribe) {  // if subscribing then grab the order books too.
+
+                        foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
+                            if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + fiat)) {
+                                if ((crypto == "none") || (crypto == primaryCode))
+                                    GetOrderBook_IR(dExchange, primaryCode, fiat);
+                            }
+                        }
+                    }
+
+                    break;
+
+
+
                 case "BTCM":
-                    if (true) {
-                        if (wSocket_BTCM.IsAlive) {
-                            channel = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\", \"heartbeat\"], \"marketIds\":[";
-                            foreach (Tuple<string, string> pair in pairs) {
-                                string crypto = pair.Item1;
-                                string fiat = pair.Item2;
-                                if (crypto == "XBT") crypto = "BTC";
-                                //if (crypto == "BCH") crypto = "BCHABC";
-
-                                channel += "\"" + crypto + "-" + fiat + "\", ";
-                            }
-                            channel = channel.Substring(0, channel.Length - 2) + "]}";
-                            Debug.Print("BTCH channel subscription string: " + channel);
-
-                            //pairList = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\"], \"marketIds\":[\"BTC-AUD\"]}";
-                            wSocket_BTCM.Send(channel);
+                    Debug.Print("trying to subscribe to BTCM");
+                    if (crypto == "none") {
+                        foreach (string primarycode in DCEs[dExchange].PrimaryCurrencyList) {
+                            pairs.Add(primarycode);
                         }
-                        else DCEs["BTCM"].socketsReset = true;
+                    }
+                    else pairs.Add(crypto);
+
+                    if (client_BTCM.IsRunning) {
+                        channel_obj["messageType"] = "subscribe";
+                        JArray channels = new JArray
+                        {
+                            "tick",
+                            "heartbeat"
+                        };
+
+                        JArray marketIds = new JArray();
+
+                        //channel = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\", \"heartbeat\"], \"marketIds\":[";  // we only ever subscribe, no scenario where we need to unsubscribe.  Unsubscribing is a pain for BTCM, see here https://api.btcmarkets.net/doc/v3#tag/WS_Overview
+                        foreach (string crypto1 in pairs) {
+                            string crypto2 = crypto1;
+                            if (crypto2 == "XBT") crypto2 = "BTC";
+
+                            marketIds.Add(crypto2 + "-" + fiat);
+                            //channel += "\"" + crypto2 + "-" + fiat + "\", ";
+                        }
+                        //channel = channel.Substring(0, channel.Length - 2) + "]}";
+                        channel_obj["channels"] = channels;
+                        channel_obj["marketIds"] = marketIds;
+                        channel = channel_obj.ToString();
+
+                        Debug.Print("BTCHH channel subscription string: " + channel);
+
+                        //pairList = "{\"messageType\":\"subscribe\", \"channels\":[\"tick\"], \"marketIds\":[\"BTC-AUD\"]}";
+
+                        // this is where we subscribe to the btcm tick channel.  Somehow my app has spammed them badly in the past, so we need to try and throttle any connections.
+                        // BTCM seems to allow about 1000 connection attempts in an hour (I was doing between 10k and 23k when they banned me).  Even 1000 is way more than
+                        // I need, let's stop connecting if I have done 100 in an hour
+                        bool tooManyConnectionAttempts = false;
+                        if (ThrottleSubscription_BTCM.Count >= 100) {
+                            Debug.Print(DateTime.Now + " - we have over 100 attempts to sub to BTCM channels.  Checking if it's within the last hour...");
+                            DateTime hundredthFromNewest = ThrottleSubscription_BTCM[ThrottleSubscription_BTCM.Count - 100];
+                            if (DateTime.Now < (hundredthFromNewest + TimeSpan.FromHours(1))) {
+                                Debug.Print(" -- it is, throttle code has kicked in.  Won't connect");
+                                DCEs["BTCM"].socketsAlive = false;
+                                DCEs["BTCM"].CurrentDCEStatus = "Internally throttled";
+                                tooManyConnectionAttempts = true;
+                                Thread.Sleep(1000);
+                            }
+                        }
+
+                        if (!tooManyConnectionAttempts) {
+                            Debug.Print("Sending subscription request to BTCM...");
+                            /*Task.Run(() => */client_BTCM.Send(channel);  // i don't think I need to spawn a new thread for this?
+                            ThrottleSubscription_BTCM.Add(DateTime.Now);
+                            if (ThrottleSubscription_BTCM.Count > 500) ThrottleSubscription_BTCM.RemoveAt(0);  // clean up the list, don't let it grow forever
+                        }
                     }
                     else {
-                        //Debug.Print("trying to subscribe to BTCM " + crypto);
-
-                       /* if (crypto == "XBT") crypto = "BTC";
-                        if (crypto == "BCH") crypto = "BCHABC";
-                        socket_BTCM.Emit("join", "Ticker-BTCMarkets-" + crypto + "-" + fiat);*/
+                        Debug.Print("BTCM tried to subscribe, but we're not connected.");
+                        DCEs[dExchange].socketsReset = true;
+                        Thread.Sleep(1000);
                     }
 
                     break;
-                case "BFX":
-                    if (wSocket_BFX.IsAlive) {
-                        foreach (Tuple<string, string> pair in pairs) {
-                            string crypto = pair.Item1;
-                            string fiat = pair.Item2;
 
-                            if (crypto == "XBT") crypto = "BTC";
-                            if (crypto == "BCH") crypto = "BAB";
-                            if (crypto == "USDT") {
-                                crypto = "UST";
-                            }
-                            channel = "{\"event\":\"subscribe\", \"channel\":\"ticker\", \"pair\":\"" + crypto + fiat + "\"}";
-                            wSocket_BFX.Send(channel);
-                        }
-                    }
-
-                    break;
-                case "GDAX":
-                    if (wSocket_GDAX.IsAlive) {
-                        channel = "{\"type\": \"subscribe\", \"channels\": [{\"name\": \"ticker\", \"product_ids\":[";
-                        foreach (Tuple<string, string> pair in pairs) {
-                            string crypto = pair.Item1;
-                            string fiat = pair.Item2;
-                            if (crypto == "XBT") crypto = "BTC";
-                            channel += "\"" + crypto + "-" + fiat + "\",";
-                        }
-                        channel = channel.Substring(0, channel.Length - 1);
-                        channel += "] } ] }";
-                        wSocket_GDAX.Send(channel);
-                    }
+                default:
+                    Debug.Print(" ------ whoops, subscribe_unsubscribe_enw doesn't support this exchange: " + dExchange);
                     break;
             }
         }
 
-        public void IR_Connect() {
-            wSocket_IR = new WebSocket("wss://websockets.independentreserve.com");
-            wSocket_IR.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+        private void stopSockets(List<string> dExchanges) {
+            client_IR.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
+            foreach (string dExchange in dExchanges) DCEs[dExchange].socketsAlive = false;
+            //startSocket_exitEvent.Set();  // hopefully this should let the existing startSockets() sub complete
+            Debug.Print("IR (+SGD, USD) sockets stop command sent");
+        }
 
-            wSocket_IR.OnMessage += (sender, e) => {
-                if (e.IsText) {
-                    //Debug.Print(DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToString("HH:mm:ss") + " - IR sockets: " + e.Data);
-                    DCEs["IR"].socketsAlive = true;
-                    MessageRX_IR(e.Data);
+        private void stopSockets_BTCM() {
+            client_BTCM.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
+            DCEs["BTCM"].socketsAlive = false;
+            //startSocket_exitEvent.Set();  // hopefully this should let the existing startSockets() sub complete
+            Debug.Print("BTCM sockets stop command sent");
+        }
+
+        private void startSockets(List<string> dExchanges, string socketsURL, bool doSubscribe = false) {
+            var url = new Uri(socketsURL);
+            foreach (string dExchange in dExchanges) DCEs[dExchange].socketsAlive = false;
+            Debug.Print(DateTime.Now + " - startSockets called for IR (+SGD, USD)");
+
+            //using (client_IR = new WebsocketClient(url)) {  getting rid of using statement..
+            client_IR = new WebsocketClient(url);
+            client_IR.ReconnectTimeout = TimeSpan.FromSeconds(70);
+            client_IR.ReconnectionHappened.Subscribe(info =>
+            {
+                if (info.Type == ReconnectionType.Initial) {
+                    Debug.Print("Initial 'reconnection', ignored");
+                    foreach (string dExchange in dExchanges) DCEs[dExchange].socketsAlive = true;
+                    foreach (string dExchange in dExchanges) DCEs[dExchange].socketsReset = false;
                 }
-                else Debug.Print("IR ws stream is not text?? - " + e.RawData.ToString());
-            };
+                /*else if (info.Type == ReconnectionType.Lost) {
+                    Debug.Print("Lost 'reconnection' ignored, attached to a Reset button click?");
+                }*/
+                else {
+                    Debug.Print(DateTime.Now + " - (IR (+SGD, USD) reconnection) - clearing OB sub dicts...");
+                    foreach (string dExchange in dExchanges) {
+                        DCEs[dExchange].socketsAlive = false;
+                        DCEs[dExchange].CurrentDCEStatus = "Reconnected";
+                        Reinit_sockets(dExchange);
+                        Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
+                    }
 
-            wSocket_IR.OnOpen += (sender, e) => {
-                Debug.Print("ws onopen - IR");
-            };
+                    // "IR" has to be first, so can't include this in the loop :/
+                    subscribe_unsubscribe_new("IR", subscribe: true, crypto: "none", fiat: DCEs["IR"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
+                    subscribe_unsubscribe_new("IRUSD", subscribe: true, crypto: "none", fiat: DCEs["IRUSD"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
+                    subscribe_unsubscribe_new("IRSGD", subscribe: true, crypto: "none", fiat: DCEs["IRSGD"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
 
-            wSocket_IR.OnError += (sender, e) => {
-                Debug.Print("ws onerror - IR");
-                wSocket_IR.Close();
-                DCEs["IR"].NetworkAvailable = false;
-                DCEs["IR"].CurrentDCEStatus = "Socket error";
-                //DCEs["IR"].HasStaticData = false;  // i don't think we should ever set this to false... once we have the static data that's all we need.
-                pollingThread.ReportProgress(12, "IR");  // 12 is error
-                //WebSocket_Reconnect("IR");
-                DCEs["IR"].socketsReset = true;
-                DCEs["IR"].socketsAlive = false;
-            };
+                    //subscribe_unsubscribe_new("IR", subscribe: true, crypto: "none", fiat: "none");  // resubscriibe to all pairs, only "IR" because 
+                    return;  // if we're subscribing, we shouldn't need to start the client or anything..?
+                }
 
-            wSocket_IR.OnClose += (sender, e) => {
-                Debug.Print(DateTime.Now + " IR stream closed... should be preceeded by some ded thingo " + DateTime.Now.ToString());
-                DCEs["IR"].socketsAlive = false;
-            };
+            });
 
-            wSocket_IR.Connect();
+            client_IR.MessageReceived.Subscribe(msg =>
+            {
+                //switch (dExchange) {
+                //    case "IR":
+                        MessageRX_IR(msg.Text);
+                //        break;
+                //}
+            });
+
+            Task.Run(() => client_IR.Start());
+
+            //DCEs["IR"].socketsReset = false;  // i think this needs to be set.
+
+            Debug.Print(DateTime.Now + " - about to start the UI timer!");
+                                
+            UITimerThread = new Thread(new ThreadStart(updateUITimer));
+            // this command to start the thread
+            UITimerThread.Start();
+            Debug.Print("UI timer storted.");
+            //await Task.Run(() => client_IR.Send("1"));
+            //Debug.Print(DateTime.Now + " - we have moved on after the client_IR.send where we subscribe!");
+
+            //startSocket_exitEvent.WaitOne();
+            //}  trying to remove the using statement
+
+            // if we want this code to re-subscribe (at time of writing this is only for when the user clicks the Reset button), then we loop until we have detected that
+            // the sockets is up and running, and THEN subscribe.  Maybe there's a better IRQ style way of doing this, but i'm a pleb.
+            if (doSubscribe) {
+                bool keepLooping = true;
+                int loopCounter = 0;
+                do {
+                    if (client_IR.IsRunning) {
+                        subscribe_unsubscribe_new("IR", subscribe: true, crypto: "none", fiat: DCEs["IR"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
+                        foreach (string dExchange in dExchanges) {  // commenting this out to test subscribing just to the crypto, not the pair (which should subscribe to all secondard currencies?
+                            if (dExchange != "IR")  // did "IR" above already, must do it first
+                                subscribe_unsubscribe_new(dExchange, subscribe: true, crypto: "none", fiat: DCEs[dExchange].CurrentSecondaryCurrency);  // resubscriibe to all pairs
+                        }
+                        //subscribe_unsubscribe_new("IR", subscribe: true, crypto: "none", fiat: "none");  // resubscriibe to all pairs
+
+
+                        keepLooping = false;
+                    }
+                    else {
+                        Thread.Sleep(500);
+                        loopCounter++;
+                    }
+                } while (keepLooping && (loopCounter < 10)) ;  // 5 seconds and we're still not connected?  something else is wrong.
+            }
+        }
+
+        // shuts down the UITimerThread.  Only called when the app is terminating.
+        public void stopUITimerThread() {
+            if (UITimerThread != null && UITimerThread.IsAlive) UITimerThread.Abort();
+        }
+
+
+        private void updateUITimer() {
+
+            while (UITimerThreadProceed) {
+                foreach (string dExchange in IRdExchanges) {
+                    foreach (KeyValuePair<string, ConcurrentDictionary<int, Ticker_IR>> pair in DCEs[dExchange].orderBuffer_IR) {
+                        if (DCEs[dExchange].newOrders[pair.Key] > 0) {
+                            if ((dExchange != "IRSGD") && (dExchange != "IRUSD") && (pIR != null))  // only do this for IR - the other two don't have an IRAccounts panel or anything
+                                Task.Run(() => pIR.compileAccountOrderBookAsync(pair.Key));  // hopefully this will just run this method asynchronously
+                                                                                                          //pollingThread.ReportProgress(20, pair.Key);  // this will tell the accounts panel to update it's OB view
+                            if ((DCEs[dExchange].orderBuffer_IR[pair.Key].Count > 0) && DCEs[dExchange].pulledSnapShot[pair.Key]) 
+                                applyBufferToOB(pair.Key, dExchange);
+                            DCEs[dExchange].newOrders[pair.Key] = 0;  // the buffer is being drained, so we reset the newOrders count
+                        }
+                    }
+                }
+
+                Thread.Sleep(Properties.Settings.Default.UITimerFreq);
+            }
+            Debug.Print("UITimer thread while loop completed...");
         }
 
         public void IR_Disconnect() {
-            wSocket_IR.Close();
-            DCEs["IR"].ClearOrderBookSubDicts();
+            //UITimerThreadProceed = false;  don't think we actually need to stop this running ever..
+            if (client_IR.IsRunning) {
+                Debug.Print(DateTime.Now + " - IR_Disconnect sub: IR running, will stop");
+                stopSockets(IRdExchanges);
+            }
         }
 
-        public void BTCM_Connect() {
-            // BTCM
-
-            IO.Options op = new IO.Options();
-            op.Secure = true;
-            op.Upgrade = false;
-            op.Transports = System.Collections.Immutable.ImmutableList.Create("websocket");
-
-
-            Debug.Print("starting btcm socket...");
-            socket_BTCM = IO.Socket("https://socket.btcmarkets.net", op);
-            socket_BTCM.On(Socket.EVENT_CONNECT, () => {
-                Debug.Print("connecting to btcm channel...");
-                //socket_BTCM.Emit("join", "Ticker-BTCMarkets-BTC-AUD");
-
-            });
-
-            socket_BTCM.On("newTicker", (data) => {
-                DCEs["BTCM"].socketsAlive = true;
-                MessageRX_BTCM(data.ToString());
-            });
-
-            socket_BTCM.On(Socket.EVENT_ERROR, (e) => {
-                Debug.Print("ws onerror - btcm");
-                socket_BTCM.Close();
-                DCEs["BTCM"].NetworkAvailable = false;
-                DCEs["BTCM"].socketsAlive = false;
-                DCEs["BTCM"].CurrentDCEStatus = "Socket error";
-                //DCEs["BTCM"].HasStaticData = false;
-                pollingThread.ReportProgress(12, "BTCM");  // 12 is error
-                WebSocket_Reconnect("BTCM");
-            });
-
-            socket_BTCM.On(Socket.EVENT_CONNECT_ERROR, (e) => {
-                Debug.Print("ws connection error - btcm");
-                socket_BTCM.Close();
-                DCEs["BTCM"].NetworkAvailable = false;
-                DCEs["BTCM"].socketsAlive = false;
-                DCEs["BTCM"].CurrentDCEStatus = "Socket connection error";
-                //DCEs["BTCM"].HasStaticData = false;
-                pollingThread.ReportProgress(12, "BTCM");  // 12 is error
-                WebSocket_Reconnect("BTCM");
-            });
-
-            socket_BTCM.On(Socket.EVENT_CONNECT_TIMEOUT, (e) => {
-                Debug.Print("ws connection timeout - btcm");
-                socket_BTCM.Close();
-                DCEs["BTCM"].NetworkAvailable = false;
-                DCEs["BTCM"].socketsAlive = false;
-                DCEs["BTCM"].CurrentDCEStatus = "Socket timeout";
-                //DCEs["BTCM"].HasStaticData = false;
-                pollingThread.ReportProgress(12, "BTCM");  // 12 is error
-                WebSocket_Reconnect("BTCM");
-            });
-
-            socket_BTCM.On(Socket.EVENT_DISCONNECT, () => {
-                // aww shit
-                Debug.Print("BTCM socket disconnected.  reconnecting...");
-                DCEs["BTCM"].socketsAlive = false;
-                WebSocket_Reconnect("BTCM");
-            });
+        public void BTCM_Disconnect() {
+            //UITimerThreadProceed = false;  don't think we actually need to stop this running ever..
+            if (client_BTCM.IsRunning) {
+                Debug.Print(DateTime.Now + " - BTCM_Disconnect sub: BTCM running, will stop");
+                stopSockets_BTCM();
+            }
         }
 
-        public void BTCM_Connect_v2() {
+        // BTCM version of startSockets()
+        private async Task BTCM_Connect_v3() {
+            var url = new Uri("wss://socket.btcmarkets.net/v2");
+            DCEs["BTCM"].socketsAlive = false;
+            Debug.Print(DateTime.Now + " - BTCM_Connect_v3 called for BTCM");
+
+            client_BTCM = new WebsocketClient(url);
+            client_BTCM.ReconnectTimeout = TimeSpan.FromSeconds(70);
+            
+            client_BTCM.ReconnectionHappened.Subscribe(info =>
+            {
+                if (info.Type == ReconnectionType.Initial) {
+                    Debug.Print("BTCM Initial 'reconnection', ignored");
+                    DCEs["BTCM"].socketsAlive = true;
+                    DCEs["BTCM"].socketsReset = false;
+                }
+                /*else if (info.Type == ReconnectionType.Lost) {
+                    Debug.Print("Lost 'reconnection' ignored, attached to a Reset button click?");
+                }*/
+                else if (info.Type == ReconnectionType.NoMessageReceived) {
+                    Debug.Print(DateTime.Now + " - NoMessageReceived 'reconnection' ignored, have seen data still coming through when receiving this");
+                }
+                else {
+                    Debug.Print(DateTime.Now + " - (BTCM reconnection)");
+                    DCEs["BTCM"].socketsAlive = false;
+                    DCEs["BTCM"].CurrentDCEStatus = "Reconnected";
+
+                    Debug.Print($"Reconnection happened, type: {info.Type}, resubscribing...");
+                    subscribe_unsubscribe_new("BTCM", subscribe: true, crypto: "none", fiat: DCEs["BTCM"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
+
+                    return;  // if we're subscribing, we shouldn't need to start the client or anything..?
+                }
+
+            });
+
+            client_BTCM.MessageReceived.Subscribe(msg =>
+            {
+                MessageRX_BTCMv2(msg.Text);
+            });
+
+            // this is where we connect to the btcm sockets.  Somehow my app has spammed them badly in the past, so we need to try and throttle any connections.
+            // BTCM seems to allow about 1000 connection attempts in an hour (I was doing between 10k and 23k when they banned me).  Even 1000 is way more than
+            // I need, let's stop connecting if I have done 100 in an hour
+            bool tooManyConnectionAttempts = false;
+            if (ThrottleConnection_BTCM.Count >= 100) {
+                Debug.Print(DateTime.Now + " - we have over 100 attempts to connect to BTCM sockets.  Checking if it's within the last hour...");
+                DateTime hundredthFromNewest = ThrottleConnection_BTCM[ThrottleConnection_BTCM.Count - 100];
+                if (DateTime.Now < (hundredthFromNewest + TimeSpan.FromHours(1))) {
+                    Debug.Print(" -- it is, throttle code has kicked in.  Won't connect");
+                    DCEs["BTCM"].socketsAlive = false;
+                    DCEs["BTCM"].CurrentDCEStatus = "Internally throttled";
+                    tooManyConnectionAttempts = true;
+                }
+            }
+
+            if (!tooManyConnectionAttempts) {
+                await client_BTCM.Start();
+                ThrottleConnection_BTCM.Add(DateTime.Now);
+                if (ThrottleConnection_BTCM.Count > 500) ThrottleConnection_BTCM.RemoveAt(0);  // clean up the list, don't let it grow forever
+            }
+
+            //Task.Run(() => client_BTCM.Start());
+
+            // if we want this code to re-subscribe (at time of writing this is only for when the user clicks the Reset button), then we loop until we have detected that
+            // the sockets is up and running, and THEN subscribe.  Maybe there's a better IRQ style way of doing this, but i'm a pleb.
+            if (false) {
+                bool keepLooping = true;
+                int loopCounter = 0;
+                do {
+                    if (client_BTCM.IsRunning) {
+                        subscribe_unsubscribe_new("BTCM", subscribe: true, crypto: "none");  // resubscriibe to all pairs
+                        keepLooping = false;
+                    }
+                    else {
+                        Thread.Sleep(500);
+                        loopCounter++;
+                    }
+                } while (keepLooping && (loopCounter < 10));  // 5 seconds and we're still not connected?  something else is wrong.
+            }
+        }
+
+    
+
+    /*private void BTCM_Connect_v2() {
 
             wSocket_BTCM = new WebSocket("wss://socket.btcmarkets.net/v2");
             wSocket_BTCM.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
@@ -407,7 +503,7 @@ namespace IRTicker {
             wSocket_BTCM.OnError += (sender, e) => {
                 Debug.Print("ws onerror - BTCMv2");
                 wSocket_BTCM.Close();
-                DCEs["BTCM"].NetworkAvailable = false;
+                //DCEs["BTCM"].NetworkAvailable = false;
                 DCEs["BTCM"].socketsAlive = false;
                 DCEs["BTCM"].CurrentDCEStatus = "Socket error";
                 
@@ -417,135 +513,172 @@ namespace IRTicker {
 
             wSocket_BTCM.OnClose += (sender, e) => {
                 Debug.Print(DateTime.Now + " BTCMv2 stream closed... should be preceeded by some ded thingo ");
-                DCEs["BTCM"].NetworkAvailable = false;
+                //DCEs["BTCM"].NetworkAvailable = false;
                 DCEs["BTCM"].socketsAlive = false;
+                DCEs["BTCM"].socketsReset = true;
                 DCEs["BTCM"].CurrentDCEStatus = "Socket error";
 
                 pollingThread.ReportProgress(12, "BTCM");  // 12 is error
-                // shouldn't actually need to set socketsreset to true here because we already set it in the OnError method, and otherwise why would we close the stream?
-                //DCEs["BTCM"].socketsReset = true;
             };
 
             wSocket_BTCM.Connect();
+        }*/
+
+        /// <summary>
+        /// UNSUBSCRIBes, re-initialises the dictionaries, then resubscribes from pairs.  if required will do all pairs or just a specific pair
+        /// </summary>
+        /// <param name="dExchange">exchange</param>
+        /// <param name="crypto">crypto we're reinitialising, "none" to do all the cryptos</param>
+        /// <param name="oldFiat">if we're unsubscribing from one fiat and re-subscribing to a new one, this and newFiat need to be populated</param>
+        /// <param name="newFiat">as above, if we're moving from one fiat to another this needs to be populated along with oldFiat</param>
+        public void WebSocket_Resubscribe(string dExchange, string crypto = "none", string oldFiat = "none", string newFiat = "none") {
+
+            if ((oldFiat == "none" && newFiat != "none") || (oldFiat != "none" && newFiat == "none")) {
+                Debug.Print("WebSocket_Resubscribe has been called in an illegal state - both oldfiat (" + oldFiat + ") and  newFiat (" + newFiat + ") need to both be 'none', or both be cryptos.  One can't be 'none' and the other note");
+                return;
+            }
+            subscribe_unsubscribe_new(dExchange, subscribe:false, crypto, (oldFiat == "none" ? DCEs[dExchange].CurrentSecondaryCurrency : oldFiat));
+            Reinit_sockets(dExchange, crypto, newFiat);
+            subscribe_unsubscribe_new(dExchange, subscribe:true, crypto, (newFiat == "none" ? DCEs[dExchange].CurrentSecondaryCurrency : newFiat));
         }
 
 
-        public void WebSocket_Reconnect(string dExchange) {
+        public async Task WebSocket_Reconnect(string dExchange) {
             Debug.Print("WebSocket_Reconnect for " + dExchange);
             if (!DCEs[dExchange].HasStaticData) {
                 Debug.Print("Trying to reconnect to " + dExchange + " but there's no static data.  will not.");
                 return;
             }
             switch (dExchange) {
-                case "IR":
-                    Debug.Print("switched to IR");
-                    if (wSocket_IR.IsAlive) {
-                        Debug.Print("IR - websockets is alive, closing websocket");
-                        wSocket_IR.Close();
-                        Debug.Print("IR - closed websocket");
+                case "IRUSD":
+                case "IRSGD":
+                case "IR":  
+                    // IR is always IR + SGD + USD
+                    Debug.Print("WebSocket_Reconnect: IR?? this shouldn't be called?  shouldn't it auto-reconnect?");
+                    if (client_IR.IsRunning) {
+                        Debug.Print(DateTime.Now + " - IR (+SGD, USD) running, will stop");
+                        DCEs[dExchange].CurrentDCEStatus = "Reconnecting...";
+                        stopSockets(IRdExchanges);  
                     }
+                    stopUITimerThread();  // if it hasn't stopped by now, we force it.
 
-                    IR_Connect();  // create all the sockets stuff again from scratch :/
-                    DCEs["IR"].HeartBeat = DateTime.Now;
-                    // clean out all the OBs
-                    //DCEs[dExchange].IR_OBs = new ConcurrentDictionary<string, Tuple<ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>, ConcurrentDictionary<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>>>>();
-                    Debug.Print(DateTime.Now + " IR - About to .clear the IR_OBs");
-                    DCEs[dExchange].ClearOrderBookSubDicts();
-                    Debug.Print(dExchange + " - cleared the order book dictionary, IR_OBs size: " + DCEs["IR"].IR_OBs.Count);
+                    foreach (string dExchange1 in IRdExchanges) Reinit_sockets(dExchange1);
+                    startSockets(IRdExchanges, IRSocketsURL, doSubscribe: true);  // the "true" here tells the sub to also subscribe to all channels as well
+                    foreach (string dExchange1 in IRdExchanges) DCEs[dExchange1].HeartBeat = DateTime.Now;
+                    //}
                     break;
                 case "BTCM":
-                    wSocket_BTCM.Close();
-                    BTCM_Connect_v2();  // with sockets.io we need to start from scratch
-                    break;
-                case "BFX":
-                    wSocket_BFX.Close();
-                    wSocket_BFX.Connect();
-                    break;
-                case "GDAX":
-                    wSocket_GDAX.Close();
-                    wSocket_GDAX.Connect();
+                    if (client_BTCM.IsRunning) {
+                        await client_BTCM.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
+                    }
+                    await BTCM_Connect_v3();
+                    subscribe_unsubscribe_new("BTCM", subscribe: true, crypto: "none", fiat: DCEs["BTCM"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
                     break;
             }
+            DCEs[dExchange].socketsReset = false;  // when closing the stream, the OnClose method is called, which sets the socketsReset to true.  need to turn this off so we don't reconnect forever
 
             //re-subscribe?
             Debug.Print(dExchange + " - re-subscribing to all pairs...");
-            List<Tuple<string, string>> pairList = new List<Tuple<string, string>>();
-            foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
-                foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                    if (DCEs[dExchange].ExchangeProducts.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                        pairList.Add(new Tuple<string, string>(primaryCode, secondaryCode));
+
+            // for a reconnect, the IR code will automatically subscribe once the socket is active (see the loop/sleep shitty code in startSockets).  this way we only subscribe once the socket is up, and don't have to rely on the slow doWork loop to detect an issue
+            // shouldn't need this, subscribe_ussubscribe() should be called already above
+            //if ((dExchange != "IR") && (dExchange != "IRUSD") && (dExchange != "IRSGD")) subscribe_unsubscribe_new(dExchange, true);  // subscribe to all
+        }
+
+        // only actually called for reconnections
+        public void Reinit_sockets(string dExchange, string crypto = "none", string fiat = "none") {
+            //if (fiat == "none") fiat = DCEs[dExchange].CurrentSecondaryCurrency;
+            //if (crypto == "none") {
+            Debug.Print(DateTime.Now + " - Reinit sockets for crypto: " + crypto + " and fiat: " + fiat);
+            foreach (string crypto1 in DCEs[dExchange].PrimaryCurrencyList) {
+                foreach (string fiat1 in DCEs[dExchange].SecondaryCurrencyList) {
+                    if (((crypto == crypto1) || (crypto == "none")) &&
+                        ((fiat == fiat1) || (fiat == "none"))) {
+                        DCEs[dExchange].pulledSnapShot[crypto1 + "-" + fiat1] = false;
+                        DCEs[dExchange].positiveSpread[crypto1 + "-" + fiat1] = true;
+                        DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto1 + "-" + fiat1] = false;
+                        DCEs[dExchange].channelNonce["ORDERBOOK-" + crypto1 + "-" + fiat1] = 0;
+                        DCEs[dExchange].newOrders[crypto1 + "-" + fiat1] = 0;
+                        //if (DCEs[dExchange].orderBuffer_IR.ContainsKey(crypto1 + "-" + fiat1)) DCEs[dExchange].orderBuffer_IR[crypto1 + "-" + fiat1].Clear();
+                        /*else*/ DCEs[dExchange].orderBuffer_IR[crypto1 + "-" + fiat1] = new ConcurrentDictionary<int, Ticker_IR>();
+                        DCEs[dExchange].ClearOrderBookSubDicts(crypto1, fiat1);
                     }
                 }
             }
-            WebSocket_Subscribe(dExchange, pairList);
 
-            // don't need this anymore because we pull the OB in the subscribe code.
-            /*if (dExchange == "IR") {  // only for IR do we need to grab OBs via REST _after_ we have started the socket machine.  This is to reduce missed events.
-                // re-populate the OBs using REST
-                Debug.Print(dExchange + " - building new REST OBs");
-                foreach (string secondaryCode in DCEs[dExchange].SecondaryCurrencyList) {
-                    foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
-                        //if (DCEs[dExchange].IR_OBs.ContainsKey(primaryCode + "-" + secondaryCode)) {
-                            DCEs[dExchange].GetIROrderBook(primaryCode, secondaryCode);
-                        //}
-                    }
-                }
-                Debug.Print("Rest OBs built.  IR_OBs size: " + DCEs[dExchange].IR_OBs.Count);
+           /* }
+            else {
+                DCEs[dExchange].pulledSnapShot[crypto + "-" + fiat] = false;
+                DCEs[dExchange].positiveSpread[crypto + "-" + fiat] = true;
+                DCEs[dExchange].OBResetFlag["ORDERBOOK-" + crypto + "-" + fiat] = false;
+                DCEs[dExchange].channelNonce["ORDERBOOK-" + crypto + "-" + fiat] = 0;
+                DCEs[dExchange].ClearOrderBookSubDicts(crypto, fiat);
+                DCEs[dExchange].newOrders[crypto + "-" + fiat] = 0;
+                if (DCEs[dExchange].orderBuffer_IR.ContainsKey(crypto + "-" + fiat)) DCEs[dExchange].orderBuffer_IR[crypto + "-" + fiat].Clear();
+                else DCEs[dExchange].orderBuffer_IR[crypto + "-" + fiat] = new ConcurrentDictionary<int, Ticker_IR>();
             }*/
         }
 
-        // after calling this sub, please remove the KVP of the channel you're unsubscribing from from the channel_Dict_BFX dictionary
-        public void Unsubscribe_BFX(int channelID) {
-            try {
-                if (wSocket_BFX.IsAlive) {
-                    wSocket_BFX.Send("{\"event\":\"unsubscribe\",\"chanId\":\"" + channelID.ToString() + "\"}");
-                }
-            }
-            catch (Exception ex) {
-                Debug.Print("Exception when trying to unsubscribe - can't trust the .IsAlive property of the socket :( - " + ex.ToString());
-            }
-            //Debug.Print("just unsubscribed from " + channelID.ToString());
-        }
-
-        public void RemoveChannels(List<string> channelsToDelete) {
-            foreach (string chans in channelsToDelete) channel_Dict_BFX.Remove(chans);
-        }
-
-        public Dictionary<string, Subscribed_BFX> GetChannelsDictionary_BFX() {
-            return new Dictionary<string, Subscribed_BFX>(channel_Dict_BFX);
-        }
-
-
-        public void Init_IR(string pair) {
-            DCEs["IR"].pulledSnapShot[pair] = false;
-            DCEs["IR"].OBResetFlag["ORDERBOOK-" + pair] = false;
-        }
-
         /* Sample socket data:
-        {
-        "Event":"Trade",
-        "Channel":"ticker-xbt-aud",
-        "Nonce":1,
-        "Data":{
-            "TradeGuid":"c5bde544-d8ae-4e38-9e90-405a3f93b6d6",
-            "TradeDate":"2009-01-03T18:15:05.9321664+00:00",
-            "Volume":50.0,
-            "Price":10270.0,
-            "Pair":"xbt-aud",
-            "BidGuid":"ebbeca4b-7148-4230-ad8f-833a3ccf35c2",
-            "OfferGuid":"ad5ece89-083b-49fc-8bc1-bdb7482a9b9a",
-            "Side":"Buy"
-                }
-        }*/
+            {
+                "Channel":"orderbook-eth",
+                "Nonce":28,
+                "Data":{
+                    "OrderType":"LimitBid",
+                    "OrderGuid":"dbe7b832-b9b7-4eac-84ce-9f49c2a93b87",
+                    "Price":{  // if you subscribe to a pair (orderbook-xbt-aud) then the price comes through asa decimal, not an array as shown here
+                        "aud":2500,
+                        "usd":1816.5,
+                        "nzd":2587.5,
+                        "sgd":2453
+                    },
+                    "Volume":1
+                },
+                "Event":"NewOrder"
+            }
+
+            {
+                "Channel":"orderbook-eth",
+                "Nonce":30,
+                "Data":{
+                    "OrderType":"LimitBid",
+                    "OrderGuid":"e64fb6e2-a9f8-4f52-95e7-5a3c7a9f8f53",
+                    "Volume":0.09646808
+                },
+                "Event":"OrderChanged"
+            }
+
+            {
+                "Channel":"orderbook-eth",
+                "Nonce":29,
+                "Data":{
+                    "OrderType":"LimitBid",
+                    "OrderGuid":"dbe7b832-b9b7-4eac-84ce-9f49c2a93b87"
+                },
+                "Event":"OrderCanceled"
+            }
+        */
         private void MessageRX_IR(string message) {
             if (message == null) return;
+            //Debug.Print("IR MSG ---- " + message);
+
+            // catching order cancelled events and logging it to try and figure out what's up.
+            //if (message.Contains("OrderChanged") && message.Contains("xbt-aud")) {
+            //    Debug.Print("changed GUID: " + message);  //message.Substring(message.IndexOf("OrderGuid\":\"")));
+            //}
+
+            foreach (string dExchange in IRdExchanges) DCEs[dExchange].socketsAlive = true;
             if (message.Contains("\"Event\":\"Subscriptions\"")) {
                 // ignore the subscriptions event.  it breaks parsing too :/
                 Debug.Print("IGNORING - " + message);
                 return;
             }
             if (message.Contains("Error")) {
-                Debug.Print("IR ERROR in websockets: " + message);
+                Debug.Print("IR ERROR in websockets, resetting.  error: " + message);
+                DCEs["IR"].socketsReset = true;  // it seems when we start getting errors, the socket is unrecoverable, need to start again. 29/4/2022 (ben says maybe there's issues on the server)
+                DCEs["IR"].socketsAlive = false;
+                DCEs["IR"].CurrentDCEStatus = "Resetting...";
+                stopSockets(IRdExchanges);
                 return;
             }
 
@@ -561,12 +694,18 @@ namespace IRTicker {
                 Debug.Print(DateTime.Now + " IR - official heartbeat");
                 return;
             }
-            DCEs["IR"].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
+            foreach (string dExchange in IRdExchanges) DCEs[dExchange].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
+            foreach (string dExchange in IRdExchanges) DCEs[dExchange].CurrentDCEStatus = "Online";
 
-            Ticker_IR tickerStream = new Ticker_IR();
-            tickerStream = JsonConvert.DeserializeObject<Ticker_IR>(message);
-            if (tickerStream.Data.Pair.ToUpper().Contains("UST")) tickerStream.Data.Pair = tickerStream.Data.Pair.Replace(tickerStream.Data.Pair.Substring(0, 3), "USDT");
-            if (tickerStream.Channel.ToUpper().Contains("-UST-")) tickerStream.Channel = tickerStream.Channel.Replace(tickerStream.Channel.Substring(10, 3), "USDT");
+
+            //Ticker_IR tickerStream = new Ticker_IR();  // don't think we care about the pair at this stage... let's see.
+            //tickerStream = JsonConvert.DeserializeObject<Ticker_IR>(message);
+
+            Ticker_IR tickerStream = JsonConvert.DeserializeObject<Ticker_IR>(message, new Ticker_IR_Converter());
+
+            /*string eventStr = tickerStream.Event;
+            string crypto = eventStr.Replace("orderbook-", "");
+            string pair = crypto + "-" + CurrentSecondaryCurrency;
 
             // still trying to get to the bottom of orders that should be deleted that aren't
             /*if (tickerStream.Data.Pair == "xbt-aud") {
@@ -585,116 +724,82 @@ namespace IRTicker {
                 }
             }*/
 
-            validateNonce(tickerStream);
+            addToBuffer(tickerStream);
         }
 
         // validate nonce will also add to a buffer if we're still yet to properly pull the REST OB. 
         // i think i might try and use the buffer concept every time we have an out of order nonce so it's possible to recover from
         // a few out of order nonces if they're all there, rather than just dumping everything every time.
-        public void validateNonce(Ticker_IR tickerStream) {
-            string pair = tickerStream.Data.Pair.ToUpper();
-            string channel = tickerStream.Channel.ToUpper();
+        public void addToBuffer(Ticker_IR tickerStream) {
+            //string pair = tickerStream.Data.Pair.ToUpper();
+            //string channel = tickerStream.Channel.ToUpper();
             //Debug.Print("---- Nonce received: " + tickerStream.Nonce);
 
-            // first do orderBuffer stuff
-            if (!DCEs["IR"].orderBuffer_IR.ContainsKey(pair)) {  // make sure there exists the dictionary element
-                if (!DCEs["IR"].orderBuffer_IR.TryAdd(pair, new ConcurrentDictionary<int, WebSocketsConnect.Ticker_IR>())) {
-                    Debug.Print(DateTime.Now + " - can't add orderBuffer_IR concurrent dicsh for " + pair);
-                    return;
-                }
-            }
-            if (!DCEs["IR"].pulledSnapShot[pair]) {  // if we haven't even got the OB yet
-                DCEs["IR"].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;  // add this event to the buffer
-                Debug.Print(" ! just added " + tickerStream.Nonce + " to the buf");
-                return;  // bail.
-            }
+            string crypto = tickerStream.Channel.Replace("orderbook-", "").ToUpper();
 
-            //Debug.Print(DateTime.Now + " - (" + pair + ") adding to buffer.  current nonce: " + DCEs["IR"].channelNonce[channel] + ", nonce we just received: " + tickerStream.Nonce);
-            DCEs["IR"].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;
+            // here we have the pricing for all 4 IR currencies, so figure out which we care about and throw em into buffers
+
+            foreach (string dExchange in IRdExchanges) {
+                if (!DCEs[dExchange].PrimaryCurrencyList.Contains(crypto)) return;  // only consider cryptos this exchange supports
+                string pair = crypto + "-" + DCEs[dExchange].CurrentSecondaryCurrency;
+                if (!DCEs[dExchange].pulledSnapShot.Keys.Contains(pair) || !DCEs[dExchange].orderBuffer_IR.ContainsKey(pair)) return;  // can happen when we're switching currencies
+                
+                if (DCEs[dExchange].pulledSnapShot[pair]) {  // if we haven't even got the OB yet, or maybe we're in the middle of resetting the dictionaries and we haven't populated the pulledSnapshot dict with all the pairs yet..
+                    DCEs[dExchange].newOrders[pair]++;
+                }
+                DCEs[dExchange].orderBuffer_IR[pair][tickerStream.Nonce] = tickerStream;  // add this event to the buffer
+            }
+        }
+
+        // this sub does some nonce maintenance and then spins through the orderbookBuffer, applying sequential buffered events
+        private void applyBufferToOB(string pair, string dExchange) {
+
+            string channel = "ORDERBOOK-" + pair;
 
             // if we don't got a nonce yet
-            if (DCEs["IR"].channelNonce[channel] == 0) {
+            if (DCEs[dExchange].channelNonce[channel] == 0) {
                 // orderBuffer_IR must have at least one order in it, so we should be able to safely request the minimum key.
-                DCEs["IR"].channelNonce[channel] = DCEs["IR"].orderBuffer_IR[pair].Keys.Min() - 1;  // find the smallest nonce in the buffer, and set the channel nonce to one below that
+                DCEs[dExchange].channelNonce[channel] = DCEs[dExchange].orderBuffer_IR[pair].Keys.Min() - 1;  // find the smallest nonce in the buffer, and set the channel nonce to one below that
+                //Debug.Print("just set the Nonce to 1 before the first we got, it is: " + DCEs["IR"].channelNonce[channel]);
             }
 
-            // we should check how full our buffer is. If there's more than 10 items (??) then it's probably too full.
-            if ((DCEs["IR"].orderBuffer_IR[pair].Count > 100) || (DCEs["IR"].OBResetFlag[channel])) {
-                Debug.Print("NONCE - too many buffered nonces, can't recover " + tickerStream.Channel + ", time to dump and restart");
-
-                if (wSocket_IR.IsAlive) {
-
-                    wSocket_IR.Send("{\"Event\":\"Unsubscribe\",\"Data\":[\"" + tickerStream.Channel + "\"]} ");
-
-                    // now need to dump the OBs. 
-                    DCEs["IR"].IR_OBs[pair].Item1.Clear();
-                    DCEs["IR"].IR_OBs[pair].Item2.Clear();
-                    DCEs["IR"].orderBuffer_IR[pair].Clear();
-
-                    Init_IR(pair);  // only reset it once the OBs are clear
-
-                    // now subscribe back to the channel
-                    Tuple<string, string> pairTup = Utilities.SplitPair(pair);
-                    List<Tuple<string, string>> tempList = new List<Tuple<string, string>>();
-                    tempList.Add(new Tuple<string, string>(pairTup.Item1, pairTup.Item2));
-                    WebSocket_Subscribe("IR", tempList);
-                    return;
-                }
-                else DCEs["IR"].socketsReset = true;
-                return;
-            }
-
-            // always want to try and process the buffer, maybe the next nonce is in there.
-            //return;  // no need to interpret the rest of the event, we've either pushed onto the buffer, or we're starting fresh.
-
-            //else DCEs["IR"].nonceErrorTracker[channel] = false;  // if this is false and we're setting it again to false, fine - normal operation.  If this was true and we're now setting it to false, this means that we had some nonce errors but they seem to have settled down, and we can now dump and reconnect
-
-
-            // commented this out because I'm now trying to buffer out of order nonces, so the buffer process should be the only one to update the nonce
-            //DCEs["IR"].channelNonce[channel] = tickerStream.Nonce;  // regardless of whether it was in sequence, update it.
-
-
-
-            // have removed this because i think we should be prescriptive about getting the order book.  If we just always get it when it's not there
-            // then we might grab it 5 times in one second
-            /*if (!DCEs["IR"].IR_OBs.ContainsKey(tickerStream.Data.Pair.ToUpper())) {
-                Debug.Print(DateTime.Now.ToString() + " IR - receieved an event we don't have a pair for (" + tickerStream.Data.Pair + "), will grab it");
-
-                Tuple<string, string> tempTup = Utilities.SplitPair(tickerStream.Data.Pair.ToUpper());
-
-                DCEs["IR"].GetIROrderBook(tempTup.Item1, tempTup.Item2);
-                //WebSocket_Subscribe("IR", tempTup.Item1, tempTup.Item2);
-                //return;
-            }*/
-
-            // commented the below out, maybe we have all the right nonces in the buffer.  let's just process the buffer regardless.
-            // to get here we must have a good nonce
-            //DCEs["IR"].channelNonce[channel] = tickerStream.Nonce; 
-            //parseTicker_IR(tickerStream);
-
-            // OK let's check if the buffer has some more events to add
-            //Debug.Print(DateTime.Now + " - starting buffer loop, " + DCEs["IR"].orderBuffer_IR[pair].Count + " events buffered");
-            while (DCEs["IR"].orderBuffer_IR[pair].ContainsKey(DCEs["IR"].channelNonce[channel] + 1)) {  // if the buffer has the next nonce...
-                DCEs["IR"].channelNonce[channel]++;  // cool, let's advance the nonce
-                if (DCEs["IR"].orderBuffer_IR[pair].TryRemove(DCEs["IR"].channelNonce[channel], out Ticker_IR ticker)) {  // pop the ticker object,
-                    //Debug.Print(DateTime.Now + " - (" + pair + ") parsing nonce " + ticker.Nonce + " from buffer, there are " + (DCEs["IR"].orderBuffer_IR[pair].Count) + " other buffered events in there");
-                    parseTicker_IR(ticker);  // and parse it
+            while (DCEs[dExchange].orderBuffer_IR[pair].ContainsKey(DCEs[dExchange].channelNonce[channel] + 1)) {  // if the buffer has the next nonce...
+                DCEs[dExchange].channelNonce[channel]++;  // cool, let's advance the nonce
+                if (DCEs[dExchange].orderBuffer_IR[pair].TryRemove(DCEs[dExchange].channelNonce[channel], out Ticker_IR ticker)) {  // pop the ticker object,
+                    //if (pair == "XBT-AUD") Debug.Print(DateTime.Now + " - (" + pair + ") parsing nonce " + ticker.Nonce + " from buffer, there are " + (DCEs["IR"].orderBuffer_IR[pair].Count) + " other buffered events in there");
+                    parseTicker_IR(ticker, dExchange);  // and parse it
                 }
                 else {
                     Debug.Print(DateTime.Now + " - can't pop ticker object from buffer?? channel: " + channel);
-                    DCEs["IR"].OBResetFlag[channel] = true;  // let's start again.
-                    DCEs["IR"].channelNonce[channel]--;  // make sure it fails
+                    DCEs[dExchange].OBResetFlag[channel] = true;  // let's start again.
+                    DCEs[dExchange].channelNonce[channel]--;  // make sure it fails
                     return;
                 }
+            }
+            if (DCEs[dExchange].orderBuffer_IR[pair].Count > 0) {
+                /*if (pair == "XBT-AUD")*/ Debug.Print(DateTime.Now + " - (" + pair + ") ooo nonce - " + DCEs[dExchange].orderBuffer_IR[pair].Count + " if only 1, it is: " + (DCEs[dExchange].orderBuffer_IR[pair].Count == 1 ? DCEs[dExchange].orderBuffer_IR[pair].Keys.FirstOrDefault().ToString() : "") + " and the current nonce is " + DCEs[dExchange].channelNonce[channel]);
+                pollingThread.ReportProgress(27, new Tuple<bool, string, string>(true, Utilities.SplitPair(pair).Item1, dExchange));  // update pair text colour to gray - true = nonce issues
+            }
+
+            // we should check how full our buffer is. If there's more than x items (??) then it's probably too full.
+            if (((DCEs[dExchange].orderBuffer_IR[pair].Count > 5) && DCEs[dExchange].pulledSnapShot[pair]) || (DCEs[dExchange].OBResetFlag[channel])) {
+                Debug.Print("NONCE - too many buffered nonces, can't recover " + channel + ", or the OBResetFlag is true, time to dump and restart. dExchange: " + dExchange);
+
+                if (Properties.Settings.Default.FlashForm) pollingThread.ReportProgress(26);  // flash the window if the setting is enabled
+
+                // now subscribe back to the channel
+                WebSocket_Resubscribe("IR", Utilities.SplitPair(pair).Item1);  // IR first, then the others
+                WebSocket_Resubscribe("IRUSD", Utilities.SplitPair(pair).Item1);  
+                WebSocket_Resubscribe("IRSGD", Utilities.SplitPair(pair).Item1);  
             }
         }
         
 
         // event is clean, correct nonce etc, lets parse it.
-        public void parseTicker_IR(Ticker_IR tickerStream) { 
+        public void parseTicker_IR(Ticker_IR tickerStream, string dExchange) { 
 
             if (!tickerStream.Data.OrderType.StartsWith("Limit")) {
-                Debug.Print(DateTime.Now + " - ignoring a " + tickerStream.Data.OrderType + " order.  event: " + tickerStream.Event);
+                Debug.Print(DateTime.Now + " - (" + tickerStream.Channel + ") ignoring a " + tickerStream.Data.OrderType + " order - " + tickerStream.Channel.Substring(10) + " " + tickerStream.Data.Volume + ".  event: " + tickerStream.Event + ".  guid: " + tickerStream.Data.OrderGuid);
                 return;  // ignore market orders
             }
 
@@ -713,106 +818,29 @@ namespace IRTicker {
                 case "NewOrder":
                 case "OrderChanged":
                 case "OrderCanceled":
-
-                    /*Debug.Print("IR new: " + message);
-                    break;*/
-
-                    // this if block is pure debugging
-                    /*if (((tickerStream.Event == "OrderChanged" && tickerStream.Data.Volume == 0) || (tickerStream.Event == "OrderCanceled")) && tickerStream.Data.Pair.ToUpper() == "PLA-AUD") {
-                        bool foundCancelled = false;
-                        //Debug.Print("EVENT changed, worknig out price...");
-                        if (tickerStream.Data.OrderType.ToUpper().EndsWith("BID")) {
-                                                       
-                            //var BidOrders = DCEs["IR"].IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1;
-                            //foreach (var PriceLevel in BidOrders) {
-                                //if (PriceLevel.Value.ContainsKey(tickerStream.Data.OrderGuid)) {
-                                if (DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1.ContainsKey(tickerStream.Data.OrderGuid)) { 
-                                    Debug.Print(DateTime.Now.ToString() + " | EVENT(" + tickerStream.Data.Pair + ") " + tickerStream.Event + ": " + DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item1[tickerStream.Data.OrderGuid]);
-                                    foundCancelled = true;
-                                }
-                            //}
-                        }
-                        else {
-                            //var OfferOrders = DCEs["IR"].IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2;
-                           // foreach (var PriceLevel in OfferOrders) {
-                                //if (PriceLevel.Value.ContainsKey(tickerStream.Data.OrderGuid)) {
-                                if (DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2.ContainsKey(tickerStream.Data.OrderGuid)) { 
-                                    Debug.Print(DateTime.Now.ToString() + " | EVENT(" + tickerStream.Data.Pair + ") " + tickerStream.Event + ": " + DCEs["IR"].OrderGuid_IR_OBs[tickerStream.Data.Pair.ToUpper()].Item2[tickerStream.Data.OrderGuid]);
-                                    foundCancelled = true;
-                                }
-                            
-                        }
-                        if (!foundCancelled) {
-                            Debug.Print("we have a " + tickerStream.Event + " order, but can't find it in either orderbook? " + tickerStream.Data.OrderGuid + " " + tickerStream.Data.OrderType);
-                        }
-                    }*/
-
-
+                                       
                     // if this OrderBookEvent_IR function returns a legit MarketSummary obj, it means the event we just received made changes to the spread.  let's update the UI.
                     // if it returns null, then there was no spread change.
                     // this method also updates the OBs and cryptoPairs obj (cryptoPairs only if there was a spread change)
-                    DCE.MarketSummary mSummary = DCEs["IR"].OrderBookEvent_IR(tickerStream);
+                    DCE.MarketSummary mSummary = DCEs[dExchange].OrderBookEvent_IR(tickerStream);
                     if (mSummary != null) {
                         //Debug.Print("spread changing event: " + message);
                         if (mSummary.spread < 0) {
-                            Debug.Print(DateTime.Now + " IR spread (" + tickerStream.Data.Pair + ") is " + mSummary.spread + " :(  bid: " + mSummary.CurrentHighestBidPrice + " and offer: " + mSummary.CurrentLowestOfferPrice);
+                            Debug.Print(DateTime.Now + " " + dExchange + " spread (" + tickerStream.Channel + " / " + mSummary.pair + ") is " + mSummary.spread + " :(  bid: " + mSummary.CurrentHighestBidPrice + " and offer: " + mSummary.CurrentLowestOfferPrice);
                         }
-                        if (DCEs["IR"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) {  //eventPair.Item2.ToUpper()) {
-                            pollingThread.ReportProgress(21, mSummary);  // do update_pairs thing
-                            //pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
+                        if ((DCEs["IR"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) ||
+                                (mSummary.SecondaryCurrencyCode == "USD") ||
+                                (mSummary.SecondaryCurrencyCode == "SGD" )) {  //eventPair.Item2.ToUpper()) {
+                            if (pollingThread.IsBusy)
+                                pollingThread.ReportProgress(21, mSummary);  // do update_pairs thing
                         }
-                        else {
-                            //pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
-                        }
-                        if (tickerStream.Data.Pair.ToUpper() == "XBT-AUD") {
-                            pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
+                        else if (Properties.Settings.Default.ShowOB && mSummary.pair.ToUpper() == "XBT-AUD") {  // "else if" because we call the "25" report progress from within the "21" one, don't want to call it twice if we can help it.
+                            if (pollingThread.IsBusy)
+                                pollingThread.ReportProgress(25, mSummary);  // update the OBView thingo
                         }
                     }
-
                     break;
             }
-        }
-
-        /* Sample socket data:
-         * {
-         *      "volume24h": 21357294294,
-         *      "bestBid": 964871000000,
-         *      "bestAsk": 965578000000,
-         *      "lastPrice": 965600000000,
-         *      "timestamp": 1535538694373,
-         *      "snapshotId": 1535538694373000,
-         *      "marketId": 2001,
-         *      "currency": "AUD",
-         *      "instrument": "BTC"
-         * }
-         */
-        private void MessageRX_BTCM(string message) {
-            //Debug.Print("BTCM STREAM: " + message);
-
-            Ticker_BTCM tickerStream = new Ticker_BTCM();
-            tickerStream = JsonConvert.DeserializeObject<Ticker_BTCM>(message);
-
-            DCE.MarketSummary mSummary = new DCE.MarketSummary();
-
-            if (tickerStream.instrument.ToUpper().StartsWith("BTC")) tickerStream.instrument = tickerStream.instrument.Replace(tickerStream.instrument.Substring(0, 3), "XBT");
-            if (tickerStream.instrument.ToUpper().StartsWith("BCHABC")) tickerStream.instrument = tickerStream.instrument.Replace(tickerStream.instrument.Substring(0, 6), "BCH");
-            mSummary.DayVolume = tickerStream.volume24h / 100000000;  // 100 million
-            mSummary.CurrentHighestBidPrice = tickerStream.bestBid / 100000000; // 100 million
-            mSummary.CurrentLowestOfferPrice = tickerStream.bestAsk / 100000000;  // 100 mil
-            mSummary.LastPrice = tickerStream.lastPrice / 100000000;  // 100 mil
-
-            // had to comment this out because i changed the Ticker_BTCM class timestame property type
-            //DateTimeOffset DTO = DateTimeOffset.FromUnixTimeMilliseconds(tickerStream.timestamp);
-            //mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
-
-            mSummary.SecondaryCurrencyCode = tickerStream.currency;
-            mSummary.PrimaryCurrencyCode = tickerStream.instrument;
-
-            // market summary should be complete now
-            DCEs["BTCM"].CryptoPairsAdd(mSummary.pair, mSummary);
-
-            // BTCM only has one secondary currency, so it will always be hit.  keep this here in case they get more i guess.
-            if (DCEs["BTCM"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(31, mSummary);  // only update the UI for pairs we care about
         }
 
     /// <summary>
@@ -833,6 +861,7 @@ namespace IRTicker {
 
             if (message.Contains("\"messageType\":\"tick\"")) {
                 DCEs["BTCM"].socketsAlive = true;
+                DCEs["BTCM"].CurrentDCEStatus = "Online";
                 Ticker_BTCM tickerStream = new Ticker_BTCM();
                 tickerStream = JsonConvert.DeserializeObject<Ticker_BTCM>(message);
 
@@ -841,7 +870,7 @@ namespace IRTicker {
                 if (tickerStream.marketId.ToUpper().StartsWith("BTC")) tickerStream.marketId = tickerStream.marketId.Replace(tickerStream.marketId.Substring(0, 3), "XBT");
                 if (tickerStream.marketId.ToUpper().StartsWith("BCHABC")) tickerStream.marketId= tickerStream.marketId.Replace(tickerStream.marketId.Substring(0, 6), "BCH");
 
-                mSummary.DayVolume = tickerStream.volume24h;
+                mSummary.DayVolumeXbt = tickerStream.volume24h;
                 mSummary.CurrentHighestBidPrice = tickerStream.bestBid;
                 mSummary.CurrentLowestOfferPrice = tickerStream.bestAsk;
                 mSummary.LastPrice = tickerStream.lastPrice;
@@ -855,7 +884,7 @@ namespace IRTicker {
                 DCEs["BTCM"].CryptoPairsAdd(mSummary.pair, mSummary);
 
                 // BTCM only has one secondary currency, so it will always be hit.  keep this here in case they get more i guess.
-                if (DCEs["BTCM"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(31, mSummary);  // only update the UI for pairs we care about
+                /*if (DCEs["BTCM"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode)*/ pollingThread.ReportProgress(31, mSummary);  // only update the UI for pairs we care about // we only subscribe to AUD, so no point checking
                 DCEs["BTCM"].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
 
             }
@@ -863,72 +892,6 @@ namespace IRTicker {
                 // let's keep track of this.
                 //Debug.Print(DateTime.Now + " - BTCMv2 - legit heartbeat");
                 DCEs["BTCM"].HeartBeat = DateTime.Now;  // any message through the socket counts as a heartbeat
-            }
-        }
-
-
-        private void MessageRX_GDAX(string message) {
-
-            if (message.Contains("\"type\":\"ticker\"")) {
-                Ticker_GDAX tickerStream = new Ticker_GDAX();
-                tickerStream = JsonConvert.DeserializeObject<Ticker_GDAX>(message);
-
-                // now we convert it into a classic MarketSummary obj, and add it to cryptopairs
-                DCE.MarketSummary mSummary = new DCE.MarketSummary();
-
-                // make it all XBT
-                if (tickerStream.product_id.ToUpper().StartsWith("BTC")) tickerStream.product_id = tickerStream.product_id.Replace(tickerStream.product_id.Substring(0, 3), "XBT");
-
-                mSummary.pair = tickerStream.product_id.ToUpper();
-                if (decimal.TryParse(tickerStream.price, out decimal price)) {
-                    mSummary.LastPrice = price;
-                }
-                else Debug.Print("Error GDAX sockets - couldn't convert price: " + tickerStream.price);
-
-                if (decimal.TryParse(tickerStream.volume_24h, out decimal vol)) {
-                    mSummary.DayVolume = vol;
-                }
-                else Debug.Print("Error GDAX sockets - couldn't convert volume: " + tickerStream.volume_24h);
-
-                if (decimal.TryParse(tickerStream.low_24h, out decimal low)) {
-                    mSummary.DayLowestPrice = low;
-                }
-                else Debug.Print("Error GDAX sockets - couldn't convert low: " + tickerStream.low_24h);
-
-                if (decimal.TryParse(tickerStream.high_24h, out decimal high)) {
-                    mSummary.DayHighestPrice = high;
-                }
-                else Debug.Print("Error GDAX sockets - couldn't convert high: " + tickerStream.high_24h);
-
-                if (decimal.TryParse(tickerStream.best_bid, out decimal bid)) {
-                    mSummary.CurrentHighestBidPrice = bid;
-                }
-                else Debug.Print("Error GDAX sockets - couldn't convert bid: " + tickerStream.best_bid);
-
-                if (decimal.TryParse(tickerStream.best_ask, out decimal offer)) {
-                    mSummary.CurrentLowestOfferPrice = offer;
-                }
-                else Debug.Print("Error GDAX sockets - couldn't convert ask: " + tickerStream.best_ask);
-
-                mSummary.CreatedTimestampUTC = tickerStream.time.ToString("o");
-
-                // market summary should be complete now
-                DCEs["GDAX"].CryptoPairsAdd(mSummary.pair, mSummary);
-                
-                if (DCEs["GDAX"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(41, mSummary);  // only update the UI for pairs we care about
-            }
-            else if (message.Contains("\"type\": \"error\"")) {
-                Debug.Print("Error from GDAX socket: " + message);
-                // so i guess at this stage we want to try again
-                wSocket_GDAX.Close();
-                DCEs["GDAX"].CurrentDCEStatus = "API response error";
-                DCEs["GDAX"].NetworkAvailable = false;
-                //DCEs["GDAX"].HasStaticData = false;
-                pollingThread.ReportProgress(12, "GDAX");  // ?2 is error
-                wSocket_GDAX.Connect();
-            }
-            else {
-                Debug.Print("rando message from GDAX sockets: " + message);
             }
         }
 
@@ -941,120 +904,38 @@ namespace IRTicker {
 
             switch (dExchange) {
                 case "IR":
-                    if (wSocket_IR.IsAlive) return true;
-                    return false;
+                case "IRUSD":
+                case "IRSGD":
+                    /*if (wSocket_IR.IsAlive)*/ return true;
+                   // return false;
                 case "BTCM":
-                    if (wSocket_BTCM.IsAlive) return true;
-                    return false;
-                case "BFX":
-                    if (wSocket_BFX.IsAlive) return true;
-                    return false;
-                case "GDAX":
-                    if (wSocket_GDAX.IsAlive) return true;
+                    if (client_BTCM.IsRunning) return true;
                     return false;
             }
             Debug.Print("Sockets, checking a socket alive, we have reached the end without returning.  we never should.  DCE: " + dExchange);
             return false;
         }
 
-        /* BFX format:
-            Fields 	            Type 	Description
-            CHANNEL_ID 	        integer Channel ID
-            BID 	            float 	Price of last highest bid
-            BID_SIZE 	        float 	Size of the last highest bid
-            ASK 	            float 	Price of last lowest ask
-            ASK_SIZE 	        float 	Size of the last lowest ask
-            DAILY_CHANGE    	float 	Amount that the last price has changed since yesterday
-            DAILY_CHANGE_PERC 	float 	Amount that the price has changed expressed in percentage terms
-            LAST_PRICE 	        float 	Price of the last trade.
-            VOLUME          	float 	Daily volume
-            HIGH 	            float 	Daily high
-            LOW 	            float 	Daily low*/
-        private void MessageRX_BFX(string message) {
-            //Debug.Print("BFX stream: " + message);
+        // let's us create a case insensive dictionary inside the Ticker_IR object that we deserialise from the websockets stream
+        // we want a case insensitive Price dictionary so we can reference "aud" and "AUD" and not care.
+        public class Ticker_IR_Converter : JsonConverter<Ticker_IR> {
+            public override Ticker_IR ReadJson(JsonReader reader, Type objectType, Ticker_IR existingValue, bool hasExistingValue, JsonSerializer serializer) {
+                JObject obj = JObject.Load(reader);
 
-            if (message.StartsWith("{")) {  // it's JSON, let's parse it as such
-                if (message.Contains("\"event\":\"info\"")) {  // kinda like a header, we don't really care about this line.  it might look like this: {"event":"info","version":1.1,"platform":{"status":1}}
-                    if (!message.Contains("\"status\":1")) {
-                        Debug.Print("weird, we got a non 1 status? - " + message);
-                    }
+                Ticker_IR ticker = new Ticker_IR();
+                serializer.Populate(obj.CreateReader(), ticker);
+
+                // Convert the Price dictionary to a case-insensitive dictionary if it's not null
+                if (ticker.Data.Price != null) {
+                    ticker.Data.Price = new Dictionary<string, decimal>(ticker.Data.Price, StringComparer.OrdinalIgnoreCase);
                 }
-                else if (message.Contains("\"event\":\"subscribed\"")) {  // OK, subscription notice.  let's grab the channel ID and store it.   line might look like this: {"event":"subscribed","channel":"ticker","chanId":60,"pair":"BTCUSD"}
-                    Subscribed_BFX subscription = new Subscribed_BFX();
-                    subscription = JsonConvert.DeserializeObject<Subscribed_BFX>(message);
-                    channel_Dict_BFX[subscription.chanId.ToString()] = subscription;  // update or add
-                    //Debug.Print("subscribed to " + subscription.chanId.ToString() + " which is " + subscription.pair);
-                }
-                else if (message.Contains("\"event\":\"error\"")) {  // uh oh we done bad.  could look like this: {"channel":"ticker","pair":"BTCUSD","event":"error","msg":"subscribe: dup","code":10301}
-                    Debug.Print("Error from BFX socket: " + message);
-                    // so i guess at this stage we want to try again
-                    wSocket_BFX.Close();
-                    DCEs["BFX"].CurrentDCEStatus = "API response error";
-                    DCEs["BFX"].NetworkAvailable = false;
-                    //DCEs["BFX"].HasStaticData = false;
-                    pollingThread.ReportProgress(12, "BFX");  // 12 is error
-                    wSocket_BFX.Connect();
-                }
-                else if (message.Contains("unsubscribed")) {
-                    //Debug.Print("UNSUBSCRIBED!  message: " + message);
-                }
-                else {
-                    Debug.Print("rando message from BFX sockets: " + message);
-                }
+
+                return ticker;
             }
-            else if (message.StartsWith("[")) {  // is this how I tell if it's real socket data?  seems dodgy
-                //Debug.Print("BFX MESSAGE: " + message);
-                message = Utilities.TrimEnds(message);  // remove the [ ] characters from the ends
-                string[] streamParts = message.Split(',');
-                if (channel_Dict_BFX.ContainsKey(streamParts[0])) {
-                    if (channel_Dict_BFX[streamParts[0]].channel == "ticker" && !message.Contains(",\"hb\"]") && streamParts.Length == 11) {  // OK it's a ticker.  as long as it's not a heartbeat, let's convert all dem strings to dubs and put them in our DCE object
-                        int partCount = 1;  // start at 1 because we already pulled out the channel ID
-                        DCE.MarketSummary mSummary = new DCE.MarketSummary();
-                        mSummary.PrimaryCurrencyCode = channel_Dict_BFX[streamParts[0]].pair.Substring(0, 3);
-                        if (mSummary.PrimaryCurrencyCode.ToUpper() == "UST") mSummary.PrimaryCurrencyCode = "USDT";
-                        mSummary.SecondaryCurrencyCode = channel_Dict_BFX[streamParts[0]].pair.Substring(3, 3);
-                        do {
-                            if (decimal.TryParse(streamParts[partCount], out decimal result)) {
-                                switch (partCount) {
-                                    case 1:  // BID
-                                        mSummary.CurrentHighestBidPrice = result;
-                                        break;
-                                    case 3: // ASK
-                                        mSummary.CurrentLowestOfferPrice = result;
-                                        break;
-                                    case 7:  // LAST_PRICE
-                                        mSummary.LastPrice = result;
-                                        break;
-                                    case 8:  // VOLUME
-                                        mSummary.DayVolume = result;
-                                        break;
-                                    case 9:  // HIGH
-                                        mSummary.DayHighestPrice = result;
-                                        break;
-                                    case 10:  // LOW
-                                        mSummary.DayLowestPrice = result;
-                                        break;
-                                    /*default:
-                                        Debug.Print("parsing the ticker info for BFX and have a default?  this shouldn't be possible.  parseCount: " + partCount + " and message: " + message);
-                                        break;*/
-                                }
-                            }
-                            else Debug.Print("Parsing ticker info in bFX, couldn't parse the string to a dub?? - " + streamParts[partCount]);
 
-                            partCount++;
-
-                        } while (partCount < 11);  // there should only be 11 entries
-
-                        // market summary should be complete now
-                        DCEs["BFX"].CryptoPairsAdd(channel_Dict_BFX[streamParts[0]].pairDash, mSummary);
-                        //Debug.Print("just received pair: " + mSummary.pair + ", and chanID is: " + streamParts[0]);
-                        if (DCEs["BFX"].CurrentSecondaryCurrency == mSummary.SecondaryCurrencyCode) pollingThread.ReportProgress(51, mSummary);  // only update the UI for pairs we care about
-                        
-                    }
-                }
-                else Debug.Print("weird.. BFX socket sent us a channel ID we don't have in the dict? - " + message);
+            public override void WriteJson(JsonWriter writer, Ticker_IR value, JsonSerializer serializer) {
+                throw new NotImplementedException();
             }
-            else Debug.Print("BFX message from socket starts with something weird?? - " + message);
         }
 
         public class Data_IR_Ticker {
@@ -1086,75 +967,6 @@ namespace IRTicker {
             public string currency { get; set; }
             public string instrument { get; set; }
             public string messageType { get; set; }
-        }
-
-    public class Subscribed_BFX {
-            private string _pair;
-
-            public string @event { get; set; }
-            public string channel { get; set; }
-            public int chanId { get; set; }
-            public string pair {
-                get {
-                    if (_pair.StartsWith("BTC")) {
-                        return _pair.Replace("BTC", "XBT");
-                    }
-                    if (_pair.StartsWith("BAB")) {
-                        return _pair.Replace("BAB", "BCH");
-                    }
-                    else return _pair;
-                }
-                set {
-                    if (value.StartsWith("BTC")) {
-                        _pair = value.Replace("BTC", "XBT");
-                    }
-                    if (value.StartsWith("BAB")) {
-                        _pair = value.Replace("BAB", "BCH");
-                    }
-                    else _pair = value;
-                }
-            }
-
-            public string pairDash {
-                get {
-                    string __pair = _pair;
-                    if (_pair.StartsWith("BTC")) {
-                        __pair = _pair.Replace("BTC", "XBT");
-                    }
-                    if (_pair.StartsWith("BAB")) {
-                        __pair = _pair.Replace("BAB", "BCH");
-                    }
-
-                    if (__pair.Length == 6) {
-                        return __pair.Substring(0, 3) + "-" + __pair.Substring(3, 3);
-                    }
-                    else if (__pair.Length == 7) {  // laaammmeee  actually just looked at the BFX spec and all pairs are 6 characters.  will leave this in anyawy, but it shouldn't ever come to it
-                        return __pair.Substring(0, 4) + "-" + __pair.Substring(4, 3);
-                    }
-                    else {
-                        Debug.Print("We have a pair from the BFX socket that isn't 3 or 4 chars?  howww - " + __pair);
-                        return "";
-                    }
-                }
-            }
-        }
-
-        public class Ticker_GDAX {
-            public string type { get; set; }
-            public long sequence { get; set; }
-            public string product_id { get; set; }
-            public string price { get; set; }
-            public string open_24h { get; set; }
-            public string volume_24h { get; set; }
-            public string low_24h { get; set; }
-            public string high_24h { get; set; }
-            public string volume_30d { get; set; }
-            public string best_bid { get; set; }
-            public string best_ask { get; set; }
-            public string side { get; set; }
-            public DateTime time { get; set; }
-            public int trade_id { get; set; }
-            public string last_size { get; set; }
         }
     }
 }
