@@ -572,7 +572,7 @@ namespace IRTicker {
                     break;
                 case "BTCM":
                     // blocked IP  // keep this blocked.
-                    break;
+                    //break;  // ok let reconnections happen again.
                     if (client_BTCM.IsRunning) {
                         await client_BTCM.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
                     }
