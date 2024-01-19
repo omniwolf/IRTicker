@@ -1360,7 +1360,7 @@ namespace IRTicker {
                     }
 
                     // don't connect while IP is blocked.
-                    //SubscribeTickerSocket("BTCM");
+                    SubscribeTickerSocket("BTCM");  // do it now
                     pollingThread.ReportProgress(14, "BTCM");
                     DCEs["BTCM"].HasStaticData = true;
                 }
