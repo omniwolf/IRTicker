@@ -576,6 +576,7 @@ namespace IRTicker {
                     if (client_BTCM.IsRunning) {
                         await client_BTCM.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
                     }
+                    client_BTCM.Dispose();
                     await BTCM_Connect_v3();
                     subscribe_unsubscribe_new("BTCM", subscribe: true, crypto: "none", fiat: DCEs["BTCM"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
                     break;

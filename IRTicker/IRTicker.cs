@@ -1490,7 +1490,8 @@ namespace IRTicker {
                         else if (lastBlock != bHeight.Height) {
                             if (bStick != null && bStick.OpenDevice()) {
                                 try {
-                                    bStick.Morph("purple");
+                                    //bStick.Morph("purple");  // while we have no other cubing going on (due to BTCM IP block), just pulse
+                                    bStick.Pulse("purple");
                                 }
                                 catch (Exception ex) {
                                     Debug.Print(DateTime.Now + " -- BS -- caught an exception in block height: " + ex.Message);
