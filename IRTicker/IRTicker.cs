@@ -2347,6 +2347,7 @@ namespace IRTicker {
                 slackObj.setStatus("", "");
            }
             wSocketConnect.IR_Disconnect();  // let's see if this stops the occasional crash on exit
+            wSocketConnect.BTCM_Disconnect();
             wSocketConnect.stopUITimerThread();  // needed otherwise the app never actually closes
         }
 

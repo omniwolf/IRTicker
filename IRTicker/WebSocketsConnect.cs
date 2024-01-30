@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using System.ComponentModel;
 using System.Collections.Concurrent;
 using Websocket.Client;
+using IndependentReserve.DotNetClientApi;
 
 
 namespace IRTicker {
@@ -256,6 +257,7 @@ namespace IRTicker {
 
         private void stopSockets(List<string> dExchanges) {
             client_IR.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
+            client_IR.Dispose();
             foreach (string dExchange in dExchanges) DCEs[dExchange].socketsAlive = false;
             //startSocket_exitEvent.Set();  // hopefully this should let the existing startSockets() sub complete
             Debug.Print("IR (+SGD, USD) sockets stop command sent");
@@ -263,6 +265,7 @@ namespace IRTicker {
 
         private void stopSockets_BTCM() {
             client_BTCM.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
+            client_BTCM.Dispose();
             DCEs["BTCM"].socketsAlive = false;
             //startSocket_exitEvent.Set();  // hopefully this should let the existing startSockets() sub complete
             Debug.Print("BTCM sockets stop command sent");
@@ -405,11 +408,27 @@ namespace IRTicker {
             DCEs["BTCM"].socketsAlive = false;
             Debug.Print(DateTime.Now + " - BTCM_Connect_v3 called for BTCM");
 
+
+            if (client_BTCM != null && client_BTCM.IsStarted) {
+                client_BTCM.Dispose();
+                client_BTCM = null; // Clear the reference
+            }
+
             client_BTCM = new WebsocketClient(url);
-            client_BTCM.ReconnectTimeout = TimeSpan.FromSeconds(70);
-            
+            //client_BTCM.ReconnectTimeout = TimeSpan.FromSeconds(70);  // need to manually manage reconnections, this library goes nuts
+
+            client_BTCM.IsReconnectionEnabled = false; // Disable automatic reconnection
+
+            client_BTCM.DisconnectionHappened.Subscribe(async info =>
+            {
+                // Implement your custom logic here for when the connection is lost
+                Console.WriteLine("BTCM Connection lost. Implement custom reconnection logic here.");
+                await Task.Delay(1000);
+            });
+
             client_BTCM.ReconnectionHappened.Subscribe(info =>
             {
+                Debug.Print(DateTime.Now + " - BTCM RECONNECTION - this shouldn't happen.");
                 if (info.Type == ReconnectionType.Initial) {
                     Debug.Print("BTCM Initial 'reconnection', ignored");
                     DCEs["BTCM"].socketsAlive = true;
