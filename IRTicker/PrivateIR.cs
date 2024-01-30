@@ -710,7 +710,12 @@ namespace IRTicker {
                         Page<BankHistoryOrder> closedOs;
                         try {
                             closedOs = GetClosedOrders(crypto, fiat);  // let's check to see if we have it
-                            IRAF.drawClosedOrders(closedOs.Data);
+                            if (null != closedOs) {
+                                IRAF.drawClosedOrders(closedOs.Data);
+                            }
+                            else {
+                                continue;
+                            }
                         }
                         catch (Exception ex) {
                             Debug.Print("MBAIT: Damnit, can't pull closed orders for some reason: " + ex.Message);
