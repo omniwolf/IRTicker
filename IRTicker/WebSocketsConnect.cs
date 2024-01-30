@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using System.ComponentModel;
 using System.Collections.Concurrent;
 using Websocket.Client;
+using IndependentReserve.DotNetClientApi;
 
 
 namespace IRTicker {
@@ -408,9 +409,29 @@ namespace IRTicker {
             DCEs["BTCM"].socketsAlive = false;
             Debug.Print(DateTime.Now + " - BTCM_Connect_v3 called for BTCM");
 
+            // Dispose the existing client if it exists and is started
+            if (client_BTCM != null && client_BTCM.IsStarted) {
+                client_BTCM.Dispose();
+                client_BTCM = null; // Clear the reference
+            }
+
             client_BTCM = new WebsocketClient(url);
             client_BTCM.ReconnectTimeout = TimeSpan.FromSeconds(70);
-            
+
+            client_BTCM.IsReconnectionEnabled = false; // Disable automatic reconnection
+
+            client_BTCM.DisconnectionHappened.Subscribe(async info => {
+                // Implement your custom logic here for when the connection is lost
+                Console.WriteLine("Connection lost. Implement custom reconnection logic here.");
+                await Task.Delay(1000);
+                client_BTCM.Dispose();
+                DCEs["BTCM"].socketsAlive = false;
+                DCEs["BTCM"].CurrentDCEStatus = "Socket error";
+
+                pollingThread.ReportProgress(12, "BTCM");  // 12 is error
+                DCEs["BTCM"].socketsReset = true;
+            });
+
             client_BTCM.ReconnectionHappened.Subscribe(info =>
             {
                 if (info.Type == ReconnectionType.Initial) {
@@ -576,7 +597,6 @@ namespace IRTicker {
                     if (client_BTCM.IsRunning) {
                         await client_BTCM.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
                     }
-                    client_BTCM.Dispose();
                     await BTCM_Connect_v3();
                     subscribe_unsubscribe_new("BTCM", subscribe: true, crypto: "none", fiat: DCEs["BTCM"].CurrentSecondaryCurrency);  // resubscriibe to all pairs
                     break;
@@ -676,7 +696,7 @@ namespace IRTicker {
             foreach (string dExchange in IRdExchanges) DCEs[dExchange].socketsAlive = true;
             if (message.Contains("\"Event\":\"Subscriptions\"")) {
                 // ignore the subscriptions event.  it breaks parsing too :/
-                Debug.Print("IGNORING - " + message);
+                Debug.Print("IR IGNORING - " + message);
                 return;
             }
             if (message.Contains("Error")) {

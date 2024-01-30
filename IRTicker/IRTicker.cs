@@ -1355,8 +1355,7 @@ namespace IRTicker {
 
                     // we do one connection to the REST API because it can take some time for sockets to populate all the pairs.
                     foreach (string primaryCode in DCEs["BTCM"].PrimaryCurrencyList) {
-                        // don't connect while IP is blocked.
-                        //ParseDCE_BTCM(primaryCode, DCEs["BTCM"].CurrentSecondaryCurrency);
+                        ParseDCE_BTCM(primaryCode, DCEs["BTCM"].CurrentSecondaryCurrency);
                     }
 
                     // don't connect while IP is blocked.
@@ -1410,8 +1409,7 @@ namespace IRTicker {
                                     ParseDCE_IR(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency, updateLabels: true);
                                     break;
                                 case "BTCM":
-                                    //blocked IP
-                                    //ParseDCE_BTCM(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency);
+                                    ParseDCE_BTCM(primaryCode, DCEs[dExchange].CurrentSecondaryCurrency);
                                     break;
                             }
                         }
@@ -2861,8 +2859,7 @@ namespace IRTicker {
 
         private async void IR_Reset_Button_Click(object sender, EventArgs e) {
             wSocketConnect.IR_Disconnect();
-            // blocked IP
-            //wSocketConnect.BTCM_Disconnect();
+            wSocketConnect.BTCM_Disconnect();
             List<string> dExchanges = new List<string>() { "IR", "IRUSD", "IRSGD", "BTCM" };
             foreach (string dExchange in dExchanges) {
                 DCEs[dExchange].CurrentDCEStatus = "Resetting...";
