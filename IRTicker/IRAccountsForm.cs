@@ -209,16 +209,10 @@ namespace IRTicker
                             Utilities.FormatValue(acc.Value.AvailableBalance);
                         IRTickerTT_generic.SetToolTip(IRT.UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Total"], acc.Value.AvailableBalance.ToString());
                     }
-                    else {
-                        Debug.Print(DateTime.Now + " new currency?? - " + acc.Key);
-                    }
 
                     if (IRT.UIControls_Dict["IR"].Label_Dict.ContainsKey(acc.Key + "_Account_Value") && mSummaries.ContainsKey(acc.Key + "-" + DCE_IR.CurrentSecondaryCurrency)) {
                         IRT.UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Value"].Text =
                             Utilities.FormatValue(acc.Value.AvailableBalance * mSummaries[acc.Key + "-" + DCE_IR.CurrentSecondaryCurrency].CurrentHighestBidPrice);
-                    }
-                    else {
-                        //Debug.Print(DateTime.Now + " new currency (value)?? - " + acc.Key);
                     }
                 }
             }), irAccounts);

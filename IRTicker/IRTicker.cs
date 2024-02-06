@@ -788,7 +788,7 @@ namespace IRTicker {
             //Debug.Print("slack name is: " + name);
 
             // the below if is for BTCM blocked IP
-            if (DCEs["IR"].NetworkAvailable) {
+            /*if (DCEs["IR"].NetworkAvailable) {
 
                 slackObj.setStatus("", ":pick:", status_emoji_duration, name);
                 return;
@@ -796,10 +796,8 @@ namespace IRTicker {
             else {
                 slackObj.setStatus("", ":exclamation:", status_emoji_duration, name + " - IR API down");
                 return;
-            }
+            }*/
 
-            // BTCM blocked IP, don't bother with cube emoji
-            /*
             if (!DCEs["IR"].NetworkAvailable) {
                 slackObj.setStatus("", ":exclamation:", status_emoji_duration, name + " - IR API down");
                 return;
@@ -813,7 +811,7 @@ namespace IRTicker {
                 if (TGBot != null) TGBot.BTCMemoji = "🤷‍";
                 return;
             }
-            */
+            
 
             if (IRvol < 0) {
                 slackObj.setStatus("", ":question:", status_emoji_duration, name);
@@ -1338,7 +1336,7 @@ namespace IRTicker {
 
                     if (DCEs["BTCM"].CryptoCombo == primaryCode && !string.IsNullOrEmpty(DCEs["BTCM"].NumCoinsStr)) {  // we have a crypto selected and coins entered, let's get the order book for them
                         // blocked IP
-                        //GetBTCMOrderBook(primaryCode);
+                        GetBTCMOrderBook(primaryCode);
                     }
                 }
 
@@ -1512,7 +1510,7 @@ namespace IRTicker {
 
                 // no point in blink stick if we have no BTCM to compare to (while IP is blocked)
                 // Time to blink some sticks
-               /* Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
+                Dictionary<string, DCE.MarketSummary> IRpairs = DCEs["IR"].GetCryptoPairs();
                 Dictionary<string, DCE.MarketSummary> BTCMpairs = DCEs["BTCM"].GetCryptoPairs();
                 decimal IRvol_BTC = -1, BTCMvol_BTC = -1, IRvol_ETH = -1, BTCMvol_ETH = -1, IRvol_USDT = -1, BTCMvol_USDT = -1, IRvol_XRP = -1, BTCMvol_XRP = -1;
                 string currentSecondary = DCEs["IR"].CurrentSecondaryCurrency;
@@ -1569,7 +1567,7 @@ namespace IRTicker {
                     if (bStickXRP != null && bStickXRP.OpenDevice()) {
                         cTokenPulseXRP = setStickColourAsync(bStickXRP, cTokenPulseXRP, ref taskPulseXRP, IRvol_XRP, BTCMvol_XRP);
                     }
-                }*/
+                }
 
                 // loopCount // - let's only update this every 3rd time, stop my slack phone app from restarting as often
                 if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "") /*&& (loopCount == 0)*/) {
@@ -1584,7 +1582,7 @@ namespace IRTicker {
                         switch (dExchange) {
                             case "BTCM":
                                 //blocked IP
-                                //GetBTCMOrderBook(cCombo);
+                                GetBTCMOrderBook(cCombo);
                                 break;
                         }
                         pollingThread.ReportProgress(13, dExchange);  // display order book

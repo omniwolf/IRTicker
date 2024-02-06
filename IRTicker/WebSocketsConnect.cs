@@ -479,7 +479,7 @@ namespace IRTicker {
             }
 
             if (!tooManyConnectionAttempts) {
-                //await client_BTCM.Start();
+                await client_BTCM.Start();
                 ThrottleConnection_BTCM.Add(DateTime.Now);
                 if (ThrottleConnection_BTCM.Count > 500) ThrottleConnection_BTCM.RemoveAt(0);  // clean up the list, don't let it grow forever
             }
