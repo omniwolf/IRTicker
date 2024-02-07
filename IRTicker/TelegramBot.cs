@@ -341,7 +341,7 @@ namespace IRTicker
                         case CommandChosen.Nothing:
                             if (TGstate.authStage == 0) {
                                 Properties.Settings.Default.TelegramChatID = 0;
-                                await botClient.SendTextMessageAsync(message.Chat, "Hello " + message.Chat.FirstName + @", let\'s authenticate you\.  Please enter your secret code\. 🔐", Telegram.Bot.Types.Enums.ParseMode.MarkdownV2);
+                                await botClient.SendTextMessageAsync(chatId: message.Chat, text: "Hello " + message.Chat.FirstName + @", let\'s authenticate you\.  Please enter your secret code\. 🔐", parseMode: Telegram.Bot.Types.Enums.ParseMode.MarkdownV2);
                                 TGstate.authStage = 1;
                             }
                             else if (TGstate.authStage == 1) {
@@ -353,7 +353,7 @@ namespace IRTicker
                                     TGstate.ResetMenu();
                                 }
                                 else {
-                                    await botClient.SendTextMessageAsync(message.Chat, "⚠️ Code NOT accepted ⚠️");
+                                    await botClient.SendTextMessageAsync(chatId: message.Chat, text: "⚠️ Code NOT accepted ⚠️");
                                     TGstate.authStage = 0;
                                 }
                             }
@@ -361,7 +361,7 @@ namespace IRTicker
 
                                 if (message.Chat.Id != Properties.Settings.Default.TelegramChatID) {
                                     Debug.Print("TGBot: intercepted a message from an unrecognised chat!  ID: " + message.Chat.Id);
-                                    await botClient.SendTextMessageAsync(message.Chat, "Hi, someone else has already authenticated with this bot.  If you're in control of IR Ticker, reset the Telegram settings in IR Ticker to re-autheticate.");
+                                    await botClient.SendTextMessageAsync(chatId: message.Chat, text: "Hi, someone else has already authenticated with this bot.  If you're in control of IR Ticker, reset the Telegram settings in IR Ticker to re-autheticate.");
                                     return;
                                 }
 
@@ -1218,8 +1218,8 @@ namespace IRTicker
             if (message.Equals(LastMessage) && editMessage) return;  // if we're editing, we're not allowed to try and send exactly the same message
             LastMessage = message;
 
-            if (editMessage) LatestMessageID = (await botClient.EditMessageTextAsync(Properties.Settings.Default.TelegramChatID, LatestMessageID, message, pMode, replyMarkup: buttons)).MessageId;
-            else LatestMessageID = (await botClient.SendTextMessageAsync(Properties.Settings.Default.TelegramChatID, message, pMode, replyMarkup: buttons)).MessageId;
+            if (editMessage) LatestMessageID = (await botClient.EditMessageTextAsync(chatId: Properties.Settings.Default.TelegramChatID, messageId: LatestMessageID, text: message, parseMode: pMode, replyMarkup: buttons)).MessageId;
+            else LatestMessageID = (await botClient.SendTextMessageAsync(chatId: Properties.Settings.Default.TelegramChatID, text: message, parseMode: pMode, replyMarkup: buttons)).MessageId;
         }
 
         public async void closedOrders(Page<BankHistoryOrder> cOrders, string APIkey) {
