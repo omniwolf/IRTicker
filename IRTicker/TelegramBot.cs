@@ -14,7 +14,7 @@ using System.Runtime.Remoting;
 using System.Collections.Concurrent;
 using Telegram.Bot.Requests;
 using System.IO.Ports;
-using System.Reactive.Linq;
+//using System.Reactive.Linq;
 using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Extensions.Polling;
 using System.Threading;
