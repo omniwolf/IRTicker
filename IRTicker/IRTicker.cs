@@ -15,7 +15,6 @@ using System.Collections.Concurrent;
 using System.Windows.Forms.DataVisualization.Charting;
 using BlinkStickDotNet;
 using System.Runtime.InteropServices;
-using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
