@@ -680,7 +680,7 @@ namespace IRTicker {
 
         // this should be called once we have the orderbooks variable populated.  this method will split the orderbooks object into
         // 2 concurrent dictionaries (1 for bids, 2 for offers)
-        public bool ConvertOrderBook_IR(string pair) {  // !!!!!!!!!!!!!! need to probably change all adds to TryAdd to make sure they're safe, work out how to handle duplicate adds
+        public void ConvertOrderBook_IR(string pair) {  // !!!!!!!!!!!!!! need to probably change all adds to TryAdd to make sure they're safe, work out how to handle duplicate adds
 
             pair = pair.ToUpper();  // always uppercase
             Tuple<string, string> pairTup = Utilities.SplitPair(pair);
@@ -742,15 +742,17 @@ namespace IRTicker {
             DateTimeOffset DTO = DateTimeOffset.Now;
             MarketSummary mSummary = new MarketSummary();
             mSummary.CreatedTimestampUTC = DTO.LocalDateTime.ToString("o");
-            if (bidOB.Count == 0) return false; // i had this line a couple of lines above, and still somehow I was crashing because bidOB.count was 0.  
-            mSummary.CurrentHighestBidPrice = bidOB.Keys.Max();
-            if (offerOB.Count == 0) return false;
-            mSummary.CurrentLowestOfferPrice = offerOB.Keys.Min();
-            mSummary.pair = pair;
-            mSummary.DayVolumeXbt = -1;
-            CryptoPairsAdd(pair, mSummary);
-
-            return true;
+            try {
+                mSummary.CurrentHighestBidPrice = bidOB.Keys.Max();
+                mSummary.CurrentLowestOfferPrice = offerOB.Keys.Min();
+                mSummary.pair = pair;
+                mSummary.DayVolumeXbt = -1;
+                CryptoPairsAdd(pair, mSummary);
+            }
+            catch (Exception ex) {  // this could be legit.  an order book can be empty...
+                Debug.Print(DateTime.Now + " - order book (" + pair + ") empty when trying to parse order book and setting the current bid/offer");
+                Debug.Print("error: " + ex.Message);
+            }
         }
 
 
