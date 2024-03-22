@@ -1108,10 +1108,15 @@ namespace IRTicker {
                     int primaryDecimals = currency["DecimalPlaces"]["OrderPrimaryCurrency"].Value<int>();
                     int secondaryDecimals = currency["DecimalPlaces"]["OrderSecondaryCurrency"].Value<int>();
 
-                    DCEs["IR"].currencyDecimalPlaces[code.ToUpper()] = new Tuple<int, int>(primaryDecimals, secondaryDecimals);
-                    DCEs["IRUSD"].currencyDecimalPlaces[code.ToUpper()] = new Tuple<int, int>(primaryDecimals, secondaryDecimals);
-                    DCEs["IRSGD"].currencyDecimalPlaces[code.ToUpper()] = new Tuple<int, int>(primaryDecimals, secondaryDecimals);
-
+                    //if (DCEs["IR"].currencyDecimalPlaces.Count == 0) {
+                        DCEs["IR"].currencyDecimalPlaces[code.ToUpper()] = new Tuple<int, int>(primaryDecimals, secondaryDecimals);
+                    //}
+                    //if (DCEs["IRUSD"].currencyDecimalPlaces.Count == 0) {
+                        DCEs["IRUSD"].currencyDecimalPlaces[code.ToUpper()] = new Tuple<int, int>(primaryDecimals, secondaryDecimals);
+                    //}
+                    //if (DCEs["IRSGD"].currencyDecimalPlaces.Count == 0) {
+                        DCEs["IRSGD"].currencyDecimalPlaces[code.ToUpper()] = new Tuple<int, int>(primaryDecimals, secondaryDecimals);
+                    //}
                 }
             }
             else {
@@ -1213,10 +1218,11 @@ namespace IRTicker {
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "USD");
                         DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "NZD");*/
 
-                        if (DCEs["IR"].currencyDecimalPlaces.Count() > 0) DCEs["IR"].currencyDecimalPlaces.Clear();  // if we reset due to network outage, then clear this before 
+                        // i think this is silly.  the decimal places aren't going to change, why re-request them.  i think this is causing crashes where while cleared we try and draw the order book and there's nothing there
+                        /*if (DCEs["IR"].currencyDecimalPlaces.Count() > 0) DCEs["IR"].currencyDecimalPlaces.Clear();  // if we reset due to network outage, then clear this before 
                         if (DCEs["IRUSD"].currencyDecimalPlaces.Count() > 0) DCEs["IRUSD"].currencyDecimalPlaces.Clear();  // if we reset due to network outage, then clear this before 
                         if (DCEs["IRSGD"].currencyDecimalPlaces.Count() > 0) DCEs["IRSGD"].currencyDecimalPlaces.Clear();  // if we reset due to network outage, then clear this before 
-
+                        */
                         getIRDecimalPlaceInfo();
 
                         // using APIs now instead of powershell and webpage scraping.
