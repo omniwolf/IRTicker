@@ -338,6 +338,9 @@ namespace IRTicker {
             UIControls_Dict["IR"].SAND_Label = IR_SAND_Label1;
             UIControls_Dict["IR"].SAND_Price = IR_SAND_Label2;
             UIControls_Dict["IR"].SAND_Spread = IR_SAND_Label3;
+            UIControls_Dict["IR"].SHIB_Label = IR_SHIB_Label1;
+            UIControls_Dict["IR"].SHIB_Price = IR_SHIB_Label2;
+            UIControls_Dict["IR"].SHIB_Spread = IR_SHIB_Label3;
 
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
@@ -433,6 +436,9 @@ namespace IRTicker {
             UIControls_Dict["IRSGD"].SAND_Label = IRSGD_SAND_Label1;
             UIControls_Dict["IRSGD"].SAND_Price = IRSGD_SAND_Label2;
             UIControls_Dict["IRSGD"].SAND_Spread = IRSGD_SAND_Label3;
+            UIControls_Dict["IRSGD"].SHIB_Label = IRSGD_SHIB_Label1;
+            UIControls_Dict["IRSGD"].SHIB_Price = IRSGD_SHIB_Label2;
+            UIControls_Dict["IRSGD"].SHIB_Spread = IRSGD_SHIB_Label3;
 
 
             // IR USD
@@ -522,6 +528,9 @@ namespace IRTicker {
             UIControls_Dict["IRUSD"].SAND_Label = IRUSD_SAND_Label1;
             UIControls_Dict["IRUSD"].SAND_Price = IRUSD_SAND_Label2;
             UIControls_Dict["IRUSD"].SAND_Spread = IRUSD_SAND_Label3;
+            UIControls_Dict["IRUSD"].SHIB_Label = IRUSD_SHIB_Label1;
+            UIControls_Dict["IRUSD"].SHIB_Price = IRUSD_SHIB_Label2;
+            UIControls_Dict["IRUSD"].SHIB_Spread = IRUSD_SHIB_Label3;
 
 
             // BTCM

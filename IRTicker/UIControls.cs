@@ -47,6 +47,7 @@ namespace IRTicker
         public Label MANA_Label { get; set; }
         public Label SOL_Label { get; set; }
         public Label SAND_Label { get; set; }
+        public Label SHIB_Label { get; set; }
 
         public Label XBT_Price { get; set; }
         public Label ETH_Price { get; set; }
@@ -79,6 +80,7 @@ namespace IRTicker
         public Label MANA_Price { get; set; }
         public Label SOL_Price { get; set; }
         public Label SAND_Price { get; set; }
+        public Label SHIB_Price { get; set; }
 
 
         public Label XBT_Spread { get; set; }
@@ -112,6 +114,7 @@ namespace IRTicker
         public Label MANA_Spread { get; set; }
         public Label SOL_Spread { get; set; }
         public Label SAND_Spread { get; set; }
+        public Label SHIB_Spread { get; set; }
 
 
         public ComboBox AvgPrice_BuySell { get; set; }
@@ -162,6 +165,7 @@ namespace IRTicker
         public Label Account_MANA_Label { get; set; }
         public Label Account_SOL_Label { get; set; }
         public Label Account_SAND_Label { get; set; }
+        public Label Account_SHIB_Label { get; set; }
 
         public Label Account_XBT_Value { get; set; }
         public Label Account_ETH_Value { get; set; }
@@ -196,6 +200,7 @@ namespace IRTicker
         public Label Account_MANA_Value { get; set; }
         public Label Account_SOL_Value { get; set; }
         public Label Account_SAND_Value { get; set; }
+        public Label Account_SHIB_Value { get; set; }
 
 
         public Label Account_XBT_Total { get; set; }
@@ -235,6 +240,7 @@ namespace IRTicker
         public Label Account_MANA_Total { get; set; }
         public Label Account_SOL_Total { get; set; }
         public Label Account_SAND_Total { get; set; }
+        public Label Account_SHIB_Total { get; set; }
 
 
         public void CreateIRAccountControlDictionary()
@@ -277,6 +283,7 @@ namespace IRTicker
             if (Account_MANA_Label != null) Label_Dict["MANA_Account_Label"] = Account_MANA_Label;
             if (Account_SOL_Label != null) Label_Dict["SOL_Account_Label"] = Account_SOL_Label;
             if (Account_SAND_Label != null) Label_Dict["SAND_Account_Label"] = Account_SAND_Label;
+            if (Account_SHIB_Label != null) Label_Dict["SHIB_Account_Label"] = Account_SHIB_Label;
 
             if (Account_XBT_Value != null) Label_Dict["XBT_Account_Value"] = Account_XBT_Value;
             if (Account_ETH_Value != null) Label_Dict["ETH_Account_Value"] = Account_ETH_Value;
@@ -311,6 +318,7 @@ namespace IRTicker
             if (Account_MANA_Value != null) Label_Dict["MANA_Account_Value"] = Account_MANA_Value;
             if (Account_SOL_Value != null) Label_Dict["SOL_Account_Value"] = Account_SOL_Value;
             if (Account_SAND_Value != null) Label_Dict["SAND_Account_Value"] = Account_SAND_Value;
+            if (Account_SHIB_Value != null) Label_Dict["SHIB_Account_Value"] = Account_SHIB_Value;
 
             if (Account_XBT_Total != null) Label_Dict["XBT_Account_Total"] = Account_XBT_Total;
             if (Account_ETH_Total != null) Label_Dict["ETH_Account_Total"] = Account_ETH_Total;
@@ -349,6 +357,7 @@ namespace IRTicker
             if (Account_MANA_Total != null) Label_Dict["MANA_Account_Total"] = Account_MANA_Total;
             if (Account_SOL_Total != null) Label_Dict["SOL_Account_Total"] = Account_SOL_Total;
             if (Account_SAND_Total != null) Label_Dict["SAND_Account_Total"] = Account_SAND_Total;
+            if (Account_SHIB_Total != null) Label_Dict["SHIB_Account_Total"] = Account_SHIB_Total;
         }
 
         public void CreateControlDictionaries()
@@ -387,6 +396,7 @@ namespace IRTicker
             if (MANA_Label != null) Label_Dict.Add("MANA_Label", MANA_Label);
             if (SOL_Label != null) Label_Dict.Add("SOL_Label", SOL_Label);
             if (SAND_Label != null) Label_Dict.Add("SAND_Label", SAND_Label);
+            if (SHIB_Label != null) Label_Dict.Add("SHIB_Label", SHIB_Label);
 
 
             if (XBT_Price != null) Label_Dict.Add("XBT_Price", XBT_Price);
@@ -420,6 +430,7 @@ namespace IRTicker
             if (MANA_Price != null) Label_Dict.Add("MANA_Price", MANA_Price);
             if (SOL_Price != null) Label_Dict.Add("SOL_Price", SOL_Price);
             if (SAND_Price != null) Label_Dict.Add("SAND_Price", SAND_Price);
+            if (SHIB_Price != null) Label_Dict.Add("SHIB_Price", SHIB_Price);
 
             if (XBT_Spread != null) Label_Dict.Add("XBT_Spread", XBT_Spread);
             if (ETH_Spread != null) Label_Dict.Add("ETH_Spread", ETH_Spread);
@@ -452,6 +463,7 @@ namespace IRTicker
             if (MANA_Spread != null) Label_Dict.Add("MANA_Spread", MANA_Spread);
             if (SOL_Spread != null) Label_Dict.Add("SOL_Spread", SOL_Spread);
             if (SAND_Spread != null) Label_Dict.Add("SAND_Spread", SAND_Spread);
+            if (SHIB_Spread != null) Label_Dict.Add("SHIB_Spread", SHIB_Spread);
         }
     }
 }

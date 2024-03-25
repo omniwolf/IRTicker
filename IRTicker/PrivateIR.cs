@@ -297,7 +297,7 @@ namespace IRTicker {
                 APIkey = IRcreds.Key;
                 lock (pIR_Lock) {
                     try {
-                        cOrders = IRclient.GetClosedFilledOrders(enumCrypto, enumFiat, page, pageSize);  // we don't care about cancelled orders
+                        cOrders = IRclient.GetClosedFilledOrders(enumCrypto, enumFiat, page, pageSize, true);  // we don't care about cancelled orders
                     }
                     catch (Exception e){
                         getClosedOrdersLock.Remove(pair);
