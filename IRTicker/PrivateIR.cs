@@ -228,7 +228,7 @@ namespace IRTicker {
                 Debug.Print("Big pull of closed orders, pulling " + primaryCode);
                 foreach (string secondaryCode in DCE_IR.SecondaryCurrencyList) {
                     try {
-                        cOrders = GetClosedOrders(primaryCode, secondaryCode, true);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
+                        cOrders = GetClosedOrders(primaryCode, secondaryCode);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
 
                         // need to go if the current primary/secondary is what's shown on IRAccounts, then draw it
                         if ((SelectedCrypto == primaryCode) && (DCE_IR.CurrentSecondaryCurrency == secondaryCode) &&
@@ -262,7 +262,7 @@ namespace IRTicker {
         /// <param name="fiat"></param>
         /// <param name="initialPull"></param>
         /// <returns></returns>
-        public Page<BankHistoryOrder> GetClosedOrders(string crypto, string fiat, bool initialPull = false) {
+        public Page<BankHistoryOrder> GetClosedOrders(string crypto, string fiat) {
 
             //if (!firstClosedOrdersPullDone && !initialPull) return null;  // If we haven't done the first giant pull, and something tries to do a closed order pull, ignore it.  Only start servicing calls once the initial pull is complete
 
