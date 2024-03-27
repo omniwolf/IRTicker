@@ -221,7 +221,7 @@ namespace IRTicker {
         public void populateClosedOrders() {
             // now we pull all closed orders for all pairs to ensure we have all order guids listed in the TG Bot notifiedOrders dictionary
 
-            Page<BankHistoryOrder> cOrders;
+            List<BankHistoryOrder> cOrders;
             //reportClosedOrders = true;
 
             foreach (string primaryCode in DCE_IR.PrimaryCurrencyList) {
@@ -234,7 +234,7 @@ namespace IRTicker {
                         if ((SelectedCrypto == primaryCode) && (DCE_IR.CurrentSecondaryCurrency == secondaryCode) &&
                             (null != IRAF) && !IRAF.IsDisposed && (null != cOrders)) 
                         {
-                            IRAF.drawClosedOrders(cOrders.Data);
+                            IRAF.drawClosedOrders(cOrders);
                             //reportClosedOrders = false;  // stop reporting, we have drawn the actual orders.
                         }
                     }
@@ -260,9 +260,9 @@ namespace IRTicker {
         /// </summary>
         /// <param name="crypto"></param>
         /// <param name="fiat"></param>
-        /// <param name="initialPull"></param>
+        /// <param name="signalAccAvgPriceUpdate">If set to true, we will tell the system to update the AccAvgPrice form.  If false, it means we have been called from the form, so don't then try and update it again... some kinda nasty loop will ensue </param>
         /// <returns></returns>
-        public Page<BankHistoryOrder> GetClosedOrders(string crypto, string fiat) {
+        public List<BankHistoryOrder> GetClosedOrders(string crypto, string fiat, bool signalAccAvgPriceUpdate = true) {
 
             //if (!firstClosedOrdersPullDone && !initialPull) return null;  // If we haven't done the first giant pull, and something tries to do a closed order pull, ignore it.  Only start servicing calls once the initial pull is complete
 
@@ -288,24 +288,23 @@ namespace IRTicker {
             // don't do this anymore - we don't ever need a big pull.
             // Either we have a date, need to pull all orders newer than or equal to this date, or it's the first run and we need to pull everything
             // also - we only pull  more than 8 if the crypto we're pulling is the currently chosen crypto.  `Crypto` is the currently chosen crypto... (i know.. great var name)
-            //if ((earliestClosedOrderRequired.HasValue && AvgPriceSelectedCrypto.Contains(crypto) && (fiatCurrenciesSelected.Contains(fiat))) || initialPull)  {  
-                //pageSize = 5000;
-            //}
+            if (earliestClosedOrderRequired.HasValue && AvgPriceSelectedCrypto.Contains(crypto) && fiatCurrenciesSelected.Contains(fiat)) {  
+                pageSize = 5000;
+            }
 
             int page = 1;
             do {
                 APIkey = IRcreds.Key;
                 lock (pIR_Lock) {
                     try {
-                        cOrders = IRclient.GetClosedFilledOrders(enumCrypto, enumFiat, page, pageSize, true);  // we don't care about cancelled orders
+                        cOrders = IRclient.GetClosedFilledOrders(enumCrypto, enumFiat, page, pageSize, false, (page > 1 ? earliestClosedOrderRequired : null));  // if we're pulling the first page, get the full amount.  We don't want to limit based on the AccAvgPrice time stamp, because we always want to pull at least ~10 orders so we can draw them in the closed orders panel.  After the first page, then we can limit
                     }
                     catch (Exception e){
                         getClosedOrdersLock.Remove(pair);
                         throw new Exception("Failed to GetClosedFilledOrders for " + pair + ".  Error: " + e.Message);
                     }
                 }
-                //if (initialPull && (null != IRAF) && !IRAF.IsDisposed && (null != cOrders)) IRAF.ReportClosedOrderStatus(crypto, page + "/" + cOrders.TotalPages);
-
+                
                 if (APIkey != IRcreds.Key) {  // i don't think this will ever happen.. but who knows  /// ok.. seems to happen every time we change APIkey.  but if stops errors, so leave it
                     Debug.Print("uh oh.. it's unclear which API key we used.. probably should just bail" + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
                     getClosedOrdersLock.Remove(pair);
@@ -313,11 +312,14 @@ namespace IRTicker {
                 }
 
                 if (null == cOrders) break;
-                if (cOrders.TotalItems <= 0) break;  // we have no orders, let's get out of here
+                // we don't use have totalItems returned anymore because I'm trying to be a good boy
+                //if (cOrders.TotalItems <= 0) break;  // we have no orders, let's get out of here
                 //if ((page == 1) && (crypto == "XBT") && (fiat == "AUD")) Debug.Print(DateTime.Now + " - GetClosedOrders(" + crypto + "-" + fiat + "): total pages: " + cOrders.TotalPages + " and total items: " + cOrders.TotalItems + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
 
                 foreach (BankHistoryOrder order in cOrders.Data) {
-                    allCOrders.Add(order);
+                    if (!allCOrders.Any(o => o.OrderGuid == order.OrderGuid)) {  // it's possible that after we've pulled page 1, before we pull page 2, an order is closed and added to the list, and then page 2 has order(s) from page 1.  must check for uniqueness
+                        allCOrders.Add(order);
+                    }
                 }
                 page++;
                 // flipping this do/while - now we always break if there's no avgPrice form open.  only reason we spin through is to get all orders to calculate values for that form.
@@ -331,36 +333,40 @@ namespace IRTicker {
                     }
                 }*/
 
+                if (!AvgPriceSelectedCrypto.Contains(crypto) || (!fiatCurrenciesSelected.Contains(fiat))) break;  // if we're pulling orders for some different crypto, just bail
                 if (!earliestClosedOrderRequired.HasValue) break;  // we only need to get the first page if we don't have a date
+                if (cOrders.Data.Count() < pageSize) break;  // if the API has returned less than a full page, we have received all orders, no need to keep asking for more
 
-            } while ((allCOrders.Last().CreatedTimestampUtc >= earliestClosedOrderRequired.Value.ToUniversalTime()) && (page <= cOrders.TotalPages));
+            } while (allCOrders.Last().CreatedTimestampUtc >= earliestClosedOrderRequired.Value.ToUniversalTime());
 
-            if (null == cOrders) {
+            // cOrders can be null, this seems ill-conceived, cOrders could be page 1 or 2 or whatever.  Why do we try and use it again?
+            /*if (null == cOrders) {
                 getClosedOrdersLock.Remove(pair);
                 return null;
             }
 
+            // setting totalItems is not required anymore.
             if (cOrders.TotalItems >= closedOrdersCount[pair]) {
                 closedOrdersCount[pair] = cOrders.TotalItems;
             }
             else {
                 Debug.Print("pIR: We have LESS closed orders for " + pair + " than we did at the last closedOrders pull?? why???  Before: " + closedOrdersCount[pair] + " after: " + cOrders.TotalItems);
-            }
+            }*/
 
             if ((crypto == "XBT") && (fiat == "AUD")) Debug.Print("TOTAL ITEMS pulled for BTC-AUD: " + allCOrders.Count);
 
                 //if (page < cOrders.TotalPages) return null;  // we don't want to send partial results, we either get it all or die trying  // AACTTUALLY... partial results are good now
-                cOrders.Data = allCOrders;
+                //cOrders.Data = allCOrders;
             if (cOrders.Data.Count() > 0) {
                 // only call the TG closed orders sub if we've waited 5 seconds after an APIKey change or it's the initial pull of all orders
                 //if ((TGBot != null) && (DateTime.Now > APIKeyChanged + TimeSpan.FromMinutes(1))) TGBot.closedOrders(cOrders, APIkey);
-                if ((TGBot != null) /*&& ((DateTime.Now > APIKeyChanged + TimeSpan.FromMinutes(1)) || initialPull)*/) TGBot.closedOrders(cOrders, APIkey);
-                if ((null != IRAF) && !IRAF.IsDisposed) IRAF.SignalAveragePriceUpdate(cOrders);
+                if ((TGBot != null) /*&& ((DateTime.Now > APIKeyChanged + TimeSpan.FromMinutes(1)) || initialPull)*/) TGBot.closedOrders(allCOrders, APIkey);
+                if ((null != IRAF) && !IRAF.IsDisposed && signalAccAvgPriceUpdate) IRAF.SignalAveragePriceUpdate(allCOrders);
                 //if (initialPull && IRT.IRAccount_panel.Visible) IRT.drawClosedOrders(cOrders.Data);  // this isn't the right place to do this
             }
             //else Debug.Print("gecClosed orders, no orders for " + crypto + "-" + fiat);
             getClosedOrdersLock.Remove(pair);
-            return cOrders;
+            return allCOrders;
         }
 
         public BankOrder CancelOrder(string guid) {
@@ -707,11 +713,11 @@ namespace IRTicker {
                     if (retryRequired) { Thread.Sleep(100); continue; }
                     if (!foundOrder) {
                         Debug.Print("MBAIT: Our order doesn't exist in the OB, possibly filled? " + placedOrder.OrderGuid.ToString());
-                        Page<BankHistoryOrder> closedOs;
+                        List<BankHistoryOrder> closedOs;
                         try {
                             closedOs = GetClosedOrders(crypto, fiat);  // let's check to see if we have it
                             if (null != closedOs) {
-                                IRAF.drawClosedOrders(closedOs.Data);
+                                IRAF.drawClosedOrders(closedOs);
                             }
                             else {
                                 continue;
@@ -723,7 +729,7 @@ namespace IRTicker {
                             continue;
                         }
                         
-                        foreach (BankHistoryOrder closedO in closedOs.Data) {
+                        foreach (BankHistoryOrder closedO in closedOs) {
                             if (closedO.OrderGuid == placedOrder.OrderGuid) {
                                 if (closedO.Status == OrderStatus.Filled) {
                                     Debug.Print("MBAIT: our order got filled.  sweet.");

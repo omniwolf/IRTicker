@@ -1303,7 +1303,7 @@ namespace IRTicker {
                                 try {
                                     var cOrders = pIR.GetClosedOrders(primaryCode, fiat);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
                                     if ((null != IRAF) && (primaryCode == IRAF.AccountSelectedCrypto) && (fiat == DCEs["IR"].CurrentSecondaryCurrency) && (null != cOrders)) 
-                                        IRAF.drawClosedOrders(cOrders.Data);
+                                        IRAF.drawClosedOrders(cOrders);
                                 }
                                 catch (Exception ex) {
                                     string errorMsg = ex.Message;
