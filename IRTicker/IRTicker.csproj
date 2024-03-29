@@ -313,16 +313,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ir_eagel_transparent___small_Oe3_icon.ico" />
+    <None Include="Resources\colour-circle.gif" />
+    <None Include="Resources\web-sparks.gif" />
     <None Include="Resources\btcm-tri2.png" />
     <None Include="Resources\darkmatter2.gif" />
-    <None Include="Resources\pink-clouds.gif" />
     <None Include="Resources\btcm3.jpg" />
     <None Include="Resources\coinbasepro-logo3.jpg" />
     <None Include="Resources\rainbow-space-bricks.jpg.gif" />
     <None Include="Resources\coinspot-faded2.png" />
     <None Include="Resources\IR Eagel Transparent - small-faded2.png" />
-    <None Include="Resources\gravity.gif" />
-    <None Include="Resources\gwave.gif" />
     <None Include="Resources\bfx-faded.png" />
   </ItemGroup>
   <ItemGroup>

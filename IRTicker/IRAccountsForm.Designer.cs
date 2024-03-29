@@ -1577,12 +1577,12 @@ namespace IRTicker
             this.AccountOrders_listview.GridLines = true;
             this.AccountOrders_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.AccountOrders_listview.HideSelection = false;
-            this.AccountOrders_listview.Location = new System.Drawing.Point(288, 148);
+            this.AccountOrders_listview.Location = new System.Drawing.Point(286, 148);
             this.AccountOrders_listview.MultiSelect = false;
             this.AccountOrders_listview.Name = "AccountOrders_listview";
             this.AccountOrders_listview.Scrollable = false;
             this.AccountOrders_listview.ShowGroups = false;
-            this.AccountOrders_listview.Size = new System.Drawing.Size(306, 192);
+            this.AccountOrders_listview.Size = new System.Drawing.Size(308, 192);
             this.AccountOrders_listview.TabIndex = 9;
             this.AccountOrders_listview.UseCompatibleStateImageBehavior = false;
             this.AccountOrders_listview.View = System.Windows.Forms.View.Details;
@@ -1597,21 +1597,21 @@ namespace IRTicker
             // OrderPrice
             // 
             this.OrderPrice.Text = "Price";
+            this.OrderPrice.Width = 70;
             // 
             // OrderVolume
             // 
             this.OrderVolume.Text = "Volume";
-            this.OrderVolume.Width = 70;
+            this.OrderVolume.Width = 80;
             // 
             // CumulativeVol
             // 
             this.CumulativeVol.Text = "Cum. vol";
-            this.CumulativeVol.Width = 70;
+            this.CumulativeVol.Width = 75;
             // 
             // Value
             // 
-            this.Value.Text = "Cum. value";
-            this.Value.Width = 70;
+            this.Value.Text = "Cum. val";
             // 
             // AccountEstOrderValue_label
             // 
@@ -1669,12 +1669,12 @@ namespace IRTicker
             // columnHeader1
             // 
             this.columnHeader1.Text = "Date";
-            this.columnHeader1.Width = 80;
+            this.columnHeader1.Width = 70;
             // 
             // columnHeader2
             // 
             this.columnHeader2.Text = "Volume";
-            this.columnHeader2.Width = 70;
+            this.columnHeader2.Width = 80;
             // 
             // columnHeader3
             // 
@@ -1735,12 +1735,12 @@ namespace IRTicker
             // columnHeader5
             // 
             this.columnHeader5.Text = "Date";
-            this.columnHeader5.Width = 80;
+            this.columnHeader5.Width = 70;
             // 
             // columnHeader6
             // 
             this.columnHeader6.Text = "Volume";
-            this.columnHeader6.Width = 70;
+            this.columnHeader6.Width = 80;
             // 
             // columnHeader7
             // 

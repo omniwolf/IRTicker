@@ -285,6 +285,7 @@ namespace IRTicker {
             }
 
             int pageSize = 10;  // we only need 7 for the UI, but grab 10 in case 
+            // OK, we DO do this again! if we're pulling orders for the AccAvgPrice form, then make the first page 5000.
             // don't do this anymore - we don't ever need a big pull.
             // Either we have a date, need to pull all orders newer than or equal to this date, or it's the first run and we need to pull everything
             // also - we only pull  more than 8 if the crypto we're pulling is the currently chosen crypto.  `Crypto` is the currently chosen crypto... (i know.. great var name)
@@ -322,16 +323,6 @@ namespace IRTicker {
                     }
                 }
                 page++;
-                // flipping this do/while - now we always break if there's no avgPrice form open.  only reason we spin through is to get all orders to calculate values for that form.
-                /*if (!initialPull) {  // only want to consider breaking out of this loop early if this isn't the first pull.  If it's the first pull we need ALL closed orders
-                    if (!AvgPriceSelectedCrypto.Contains(crypto) || (!fiatCurrenciesSelected.Contains(fiat))) break;  // if we're pulling orders for some different crypto, just bail
-                    if (!earliestClosedOrderRequired.HasValue) break;  // we only need to get the first page if we don't have a date
-                    else {  // ok we do have a date, need to work out if we bail or continue here
-                        if (allCOrders.Last().CreatedTimestampUtc < earliestClosedOrderRequired.Value.ToUniversalTime()) {
-                            break;
-                        }
-                    }
-                }*/
 
                 if (!AvgPriceSelectedCrypto.Contains(crypto) || (!fiatCurrenciesSelected.Contains(fiat))) break;  // if we're pulling orders for some different crypto, just bail
                 if (!earliestClosedOrderRequired.HasValue) break;  // we only need to get the first page if we don't have a date
@@ -339,24 +330,8 @@ namespace IRTicker {
 
             } while (allCOrders.Last().CreatedTimestampUtc >= earliestClosedOrderRequired.Value.ToUniversalTime());
 
-            // cOrders can be null, this seems ill-conceived, cOrders could be page 1 or 2 or whatever.  Why do we try and use it again?
-            /*if (null == cOrders) {
-                getClosedOrdersLock.Remove(pair);
-                return null;
-            }
-
-            // setting totalItems is not required anymore.
-            if (cOrders.TotalItems >= closedOrdersCount[pair]) {
-                closedOrdersCount[pair] = cOrders.TotalItems;
-            }
-            else {
-                Debug.Print("pIR: We have LESS closed orders for " + pair + " than we did at the last closedOrders pull?? why???  Before: " + closedOrdersCount[pair] + " after: " + cOrders.TotalItems);
-            }*/
-
             if ((crypto == "XBT") && (fiat == "AUD")) Debug.Print("TOTAL ITEMS pulled for BTC-AUD: " + allCOrders.Count);
 
-                //if (page < cOrders.TotalPages) return null;  // we don't want to send partial results, we either get it all or die trying  // AACTTUALLY... partial results are good now
-                //cOrders.Data = allCOrders;
             if (allCOrders.Count() > 0) {
                 // only call the TG closed orders sub if we've waited 5 seconds after an APIKey change or it's the initial pull of all orders
                 //if ((TGBot != null) && (DateTime.Now > APIKeyChanged + TimeSpan.FromMinutes(1))) TGBot.closedOrders(cOrders, APIkey);

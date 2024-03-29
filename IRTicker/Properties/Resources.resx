@@ -124,12 +124,6 @@
   <data name="bfx_faded" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\bfx-faded.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="gravity" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\gravity.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="gwave" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\gwave.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="coinspot_faded2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\coinspot-faded2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -145,13 +139,16 @@
   <data name="coinbasepro_logo3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\coinbasepro-logo3.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="pink_clouds" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\pink-clouds.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="darkmatter2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\darkmatter2.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="btcm_tri2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\btcm-tri2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="colour_circle" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\colour-circle.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="web_sparks" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\web-sparks.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
