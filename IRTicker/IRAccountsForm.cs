@@ -396,14 +396,8 @@ namespace IRTicker
             }
             tt += "Date created: " + order.CreatedTimestampUtc.ToLocalTime().ToString() + Environment.NewLine;
 
-            // seems useless?
-            /*decimal vol = order.Volume;
-            if (order.Outstanding.HasValue && (order.Outstanding.Value > 0)) {
-
-            }*/
-
             if (isOrderOpen) {
-                if ((order.Original != null) && (order.Original.Volume != null)) {
+                if (order.Original != null) {
                     tt += "Original volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + order.Original.Volume + Environment.NewLine;
                 }
                 if (order.Price.HasValue) {

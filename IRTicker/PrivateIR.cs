@@ -357,7 +357,7 @@ namespace IRTicker {
 
                 //if (page < cOrders.TotalPages) return null;  // we don't want to send partial results, we either get it all or die trying  // AACTTUALLY... partial results are good now
                 //cOrders.Data = allCOrders;
-            if (cOrders.Data.Count() > 0) {
+            if (allCOrders.Count() > 0) {
                 // only call the TG closed orders sub if we've waited 5 seconds after an APIKey change or it's the initial pull of all orders
                 //if ((TGBot != null) && (DateTime.Now > APIKeyChanged + TimeSpan.FromMinutes(1))) TGBot.closedOrders(cOrders, APIkey);
                 if ((TGBot != null) /*&& ((DateTime.Now > APIKeyChanged + TimeSpan.FromMinutes(1)) || initialPull)*/) TGBot.closedOrders(allCOrders, APIkey);
