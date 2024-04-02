@@ -774,7 +774,7 @@ namespace IRTicker
             if (!string.IsNullOrEmpty(pairTup.Item1) && !string.IsNullOrEmpty(pairTup.Item2)) {
                 TGstate.ChosenPair = pairTup;
                 // list the closed orders
-                Page<BankHistoryOrder> closedOs;
+                List<BankHistoryOrder> closedOs;
                 try {
                     closedOs = pIR.GetClosedOrders(pairTup.Item1, pairTup.Item2);
                 }
@@ -786,16 +786,16 @@ namespace IRTicker
                     return;
                 }
 
-                if ((null == closedOs) || (null == closedOs.Data)) {
+                if (null == closedOs) {
                     Debug.Print("TGB: failed to pull closed orders, closed order obj null..");
                     return;
                 }
 
-                if (closedOs.Data.Count() > 0) {
+                if (closedOs.Count() > 0) {
 
                     int count = 1;
                     string masterStr = "`View Closed Orders` :: " + pairTup.Item1.ToUpper() + "-" + pairTup.Item2.ToUpper() + Environment.NewLine;
-                    foreach (BankHistoryOrder bho in closedOs.Data) {
+                    foreach (BankHistoryOrder bho in closedOs) {
                         if (bho.Status == OrderStatus.Cancelled) continue;
                         masterStr += Environment.NewLine + "  *" + count + "*. " + (bho.OrderType == OrderType.LimitBid ? "Limit bid  " : "Limit offer") +
                             " | Price: $" + Utilities.FormatValue(bho.AvgPrice.Value, 2) + Environment.NewLine +
@@ -1222,19 +1222,19 @@ namespace IRTicker
             else LatestMessageID = (await botClient.SendTextMessageAsync(chatId: Properties.Settings.Default.TelegramChatID, text: message, parseMode: pMode, replyMarkup: buttons)).MessageId;
         }
 
-        public async void closedOrders(Page<BankHistoryOrder> cOrders, string APIkey) {
-            if (cOrders.Data.Count() > 0) {
+        public async void closedOrders(List<BankHistoryOrder> cOrders, string APIkey) {
+            if (cOrders.Count() > 0) {
 
                 if (APIkey != Properties.Settings.Default.IRAPIPubKey) {
                     Debug.Print("closedOrders - bailed due to mismatched APIkey");
                     return;  // different key, I guess this is the wrong data?
                 }
 
-                if (cOrders.Data.First().PrimaryCurrencyCode.ToString().ToUpper() == "BTC")
+                if (cOrders.First().PrimaryCurrencyCode.ToString().ToUpper() == "BTC")
                     Debug.Print("TG closed orders: we have been sent a BTC order??");
 
-                string cryptoTmp = (cOrders.Data.First().PrimaryCurrencyCode.ToString().ToUpper() == "XBT" ? "BTC" : cOrders.Data.First().PrimaryCurrencyCode.ToString());
-                string pair = (cryptoTmp + "-" + cOrders.Data.First().SecondaryCurrencyCode).ToUpper();
+                string cryptoTmp = (cOrders.First().PrimaryCurrencyCode.ToString().ToUpper() == "XBT" ? "BTC" : cOrders.First().PrimaryCurrencyCode.ToString());
+                string pair = (cryptoTmp + "-" + cOrders.First().SecondaryCurrencyCode).ToUpper();
                 List<BankHistoryOrder> ordersToNotify = new List<BankHistoryOrder>();
 
                 /*if (pair == "BTC-AUD") {
@@ -1249,7 +1249,7 @@ namespace IRTicker
                 if (!closedOrdersFirstRun.ContainsKey(pair)) closedOrdersFirstRun.TryAdd(pair, true);
 
                 // for some reason we're doubling up orders here I think into notifiedOrders
-                foreach (BankHistoryOrder cOrder in cOrders.Data) {
+                foreach (BankHistoryOrder cOrder in cOrders) {
                     if (!notifiedOrders[pair].Contains(cOrder.OrderGuid)) {
                         ordersToNotify.Add(cOrder);
                         notifiedOrders[pair].Add(cOrder.OrderGuid);  // persistent for the session

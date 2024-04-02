@@ -44,13 +44,21 @@ namespace IRTicker {
                 positiveInput = false;
             }
 
+            string suffix = "";
+
             // default settings
             if (val < 10) formatString = "0.00###";
+            if (val < 0.01M) formatString = "0.00######";
             if (val >= 10) formatString = "##0.00";
-            if (val >= 1000) formatString = "### ### ### ##0";
+            if (val >= 1000) formatString = "### ### ##0";
+            if (val >= 1000000000) {
+                val = Math.Round(val / 1_000_000_000, 3);  // _ is just a visual separator - the compiler ignores
+                formatString = "0.###";
+                suffix = "B";
+            }
 
             // -1 means the method was not sent any decimalPlaces value
-            if (decimalPlaces == -1) return (positiveInput ? val.ToString(formatString).Trim() : "-" + val.ToString(formatString).Trim());
+            if (decimalPlaces == -1) return (positiveInput ? val.ToString(formatString).Trim() : "-" + val.ToString(formatString).Trim()) + suffix;
 
             // we get here if we have a decimalPlaces value, and the decimalsForLargeNumbersOnly is true.
             // the idea is that even if we have a custom decimalPlaces value, we ignore it if the number is LESS THAN 1000
@@ -59,7 +67,11 @@ namespace IRTicker {
             // custom decimal places
             if (val < 10) formatString = "0";
             if (val >= 10) formatString = "##0";
-            if (val >= 1000) formatString = "### ### ### ##0";
+            if (val >= 1000) formatString = "### ### ##0";
+            if (val >= 1000000000) {
+                val = Math.Round(val / 1_000_000_000, 3);
+                formatString = "0.###";
+            }
 
 
             int loopCounter = 0;

@@ -19,7 +19,7 @@ namespace IRTicker.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -113,29 +113,19 @@ namespace IRTicker.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap colour_circle {
+            get {
+                object obj = ResourceManager.GetObject("colour_circle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap darkmatter2 {
             get {
                 object obj = ResourceManager.GetObject("darkmatter2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap gravity {
-            get {
-                object obj = ResourceManager.GetObject("gravity", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap gwave {
-            get {
-                object obj = ResourceManager.GetObject("gwave", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -163,9 +153,9 @@ namespace IRTicker.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap pink_clouds {
+        internal static System.Drawing.Bitmap rainbow_space_bricks_jpg {
             get {
-                object obj = ResourceManager.GetObject("pink_clouds", resourceCulture);
+                object obj = ResourceManager.GetObject("rainbow_space_bricks_jpg", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -173,9 +163,9 @@ namespace IRTicker.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap rainbow_space_bricks_jpg {
+        internal static System.Drawing.Bitmap web_sparks {
             get {
-                object obj = ResourceManager.GetObject("rainbow_space_bricks_jpg", resourceCulture);
+                object obj = ResourceManager.GetObject("web_sparks", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

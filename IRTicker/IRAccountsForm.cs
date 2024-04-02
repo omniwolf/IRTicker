@@ -306,7 +306,7 @@ namespace IRTicker
                     }
                 }
                 else if (endP == PrivateIR.PrivateIREndPoints.GetClosedOrders) {
-                    Page<BankHistoryOrder> closedOrders;
+                    List<BankHistoryOrder> closedOrders;
                     try {
                         closedOrders = pIR.GetClosedOrders(AccountSelectedCrypto, DCE_IR.CurrentSecondaryCurrency);
                     }
@@ -318,7 +318,7 @@ namespace IRTicker
                         continue;
                     }
                     if (closedOrders != null) {
-                        drawClosedOrders(closedOrders.Data);
+                        drawClosedOrders(closedOrders);
                     }
                 }
                 // need to be more robust, and pull multiple pages if necessary
@@ -396,14 +396,8 @@ namespace IRTicker
             }
             tt += "Date created: " + order.CreatedTimestampUtc.ToLocalTime().ToString() + Environment.NewLine;
 
-            // seems useless?
-            /*decimal vol = order.Volume;
-            if (order.Outstanding.HasValue && (order.Outstanding.Value > 0)) {
-
-            }*/
-
             if (isOrderOpen) {
-                if ((order.Original != null) && (order.Original.Volume != null)) {
+                if (order.Original != null) {
                     tt += "Original volume: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + order.Original.Volume + Environment.NewLine;
                 }
                 if (order.Price.HasValue) {
@@ -440,6 +434,7 @@ namespace IRTicker
                 else {
                     AccountClosedOrders_label.Text = (AccountSelectedCrypto == "XBT" ? "BTC" : AccountSelectedCrypto) + " closed orders";
                     AccountClosedOrders_listview.Items.Clear();
+                    int drawCount = 0;  // we only need to draw 7 items, keep track and bail when done.
                     foreach (BankHistoryOrder order in _closedOrders) {
                         if ((order.Status != OrderStatus.Filled) && (order.Status != OrderStatus.PartiallyFilledAndCancelled) && (order.Status != OrderStatus.PartiallyFilledAndFailed)) continue;
                         decimal vol = order.Volume;
@@ -460,6 +455,8 @@ namespace IRTicker
                             AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].BackColor = Color.PeachPuff;
                         }
                         AccountClosedOrders_listview.Items[AccountClosedOrders_listview.Items.Count - 1].Tag = order;
+                        drawCount++;
+                        if (drawCount > 6) break;  // table can only support 7 entries, so bail here.
                     }
                 }
             }), closedOrders);
@@ -1244,12 +1241,12 @@ namespace IRTicker
 
         // I had a crash here once, can't reproduce it.  instance not set to an object or something, but I couldn't see what was wrong.
         // maybe i should check that cOrders isn't somehow null?
-        public void SignalAveragePriceUpdate(Page<BankHistoryOrder> cOrders) {
+        public void SignalAveragePriceUpdate(List<BankHistoryOrder> cOrders) {
             IRT.synchronizationContext.Post(new SendOrPostCallback(o =>
             {
                 foreach (Form frm in Application.OpenForms) {
                     if (frm.Name == "AccAvgPrice") {
-                        ((AccAvgPrice)frm).UpdatePrice((Page<BankHistoryOrder>)o);
+                        ((AccAvgPrice)frm).UpdatePrice((List<BankHistoryOrder>)o);
                     }
                 }
             }), cOrders);

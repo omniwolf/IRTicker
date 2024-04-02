@@ -1303,7 +1303,7 @@ namespace IRTicker {
                                 try {
                                     var cOrders = pIR.GetClosedOrders(primaryCode, fiat);  // grab the closed orders on a schedule, this way we will know if an order has been filled and can alert.
                                     if ((null != IRAF) && (primaryCode == IRAF.AccountSelectedCrypto) && (fiat == DCEs["IR"].CurrentSecondaryCurrency) && (null != cOrders)) 
-                                        IRAF.drawClosedOrders(cOrders.Data);
+                                        IRAF.drawClosedOrders(cOrders);
                                 }
                                 catch (Exception ex) {
                                     string errorMsg = ex.Message;
@@ -1682,42 +1682,21 @@ namespace IRTicker {
                     Color priceCol = Utilities.PriceColour(DCEs[dExchange].GetPriceList(pairObj.Key));
                     if (tempPrice.ForeColor != priceCol) tempPrice.ForeColor = priceCol;
 
-                    // if there's a colour, make the font bigger.  otherwise not bigger.
-                    // nah not doing this anymore.
-                    /*if (tempPrice.ForeColor != Color.Black) {
-                        tempPrice.Font = new Font(tempPrice.Font.FontFamily, 10f, FontStyle.Bold);
-
-                        // this next bit is crazy.  When we change the size of the text, it seems to drop down a couple of pixels.  I don't know why, the label just looks lower
-                        // so to fix it I push the label up 2 pixels.  But I need to keep track of whether I have already pushed the label up or not, so I use the tag property
-                        if (!tempPrice.Tag.ToString().Contains("emphasised")) {
-                            tempPrice.Location = new Point(tempPrice.Location.X, tempPrice.Location.Y - 3);
-                            if (!tempPrice.Tag.ToString().EndsWith(",")) tempPrice.Tag = tempPrice.Tag + ",";
-                            tempPrice.Tag = tempPrice.Tag + "emphasised";
-                        }
-                    }
-                    else {
-                        tempPrice.Font = new Font(tempPrice.Font.FontFamily, 8.25f, FontStyle.Bold);
-
-                        if (tempPrice.Tag.ToString().Contains("emphasised")) {  // coming down off a high, if we were emphasised, but we're now not, we need to drop the label 2 pixels
-                            tempPrice.Location = new Point(tempPrice.Location.X, tempPrice.Location.Y + 3);
-                            tempPrice.Tag = tempPrice.Tag.ToString().Replace("emphasised", "");
-                        }
-                    }*/
-
                     string vol = "";
-                    if ((dExchange == "IRUSD") || (dExchange == "IRSGD")) vol = "";  // no vol for these exchanges, the vol is in the main groupBox
+                    if ((dExchange == "IRUSD") || (dExchange == "IRSGD")) vol = " bps";  // no vol for these exchanges, the vol is in the main groupBox
                     else {
                         if (pairObj.Value.DayVolumeXbt == 0) vol = " / 0";
                         else if (pairObj.Value.DayVolumeXbt < 0) vol = " / ?";
                         else vol = " / " + Utilities.FormatValue(pairObj.Value.DayVolumeXbt);
                     }
 
-                        UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(pairObj.Value.spread) + vol;
+                        UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue((pairObj.Value.spread / midPoint * 10000), 0, false) + vol;
 
                     // update tool tips.
                     string spreadTT = "Best bid: " + Utilities.FormatValue(pairObj.Value.CurrentHighestBidPrice) + System.Environment.NewLine +
                         "Best offer: " + Utilities.FormatValue(pairObj.Value.CurrentLowestOfferPrice) + System.Environment.NewLine +
-                        "Spread: " + Utilities.FormatValue(((pairObj.Value.CurrentLowestOfferPrice - pairObj.Value.CurrentHighestBidPrice) / midPoint * 100), 2, false) + "%";
+                        "Spread: $ " + Utilities.FormatValue(pairObj.Value.spread) + System.Environment.NewLine +
+                        "Volume value: $ " + Utilities.FormatValue(pairObj.Value.DayVolumeXbt * midPoint);
 
                     IRTickerTT_spread.SetToolTip(UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"], spreadTT);
                         
@@ -1725,13 +1704,6 @@ namespace IRTicker {
                 //else Debug.Print("Pair don't exist, pairObj.Value.SecondaryCurrencyCode: " + pairObj.Value.SecondaryCurrencyCode);
             }
 
-            // have commented this out as all exchanges with an order book should be done through reportProgress 23, 33, 43, etc
-            /*if (!String.IsNullOrEmpty(UIControls_Dict[dExchange].AvgPrice_NumCoins.Text) && UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex != 0) {  // need to check this before trying to evaluate it
-                UIControls_Dict[dExchange].AvgPrice.Text = DetermineAveragePrice(DCEs[dExchange].CryptoCombo, DCEs[dExchange].CurrentSecondaryCurrency, dExchange);
-                UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Black;
-                UIControls_Dict[dExchange].AvgPrice_Crypto.SelectedIndex = 0;  // reset this so we don't pull the order book every time.
-            }*/
-            /*else*/
             if (UIControls_Dict[dExchange].AvgPrice != null) {
                 UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Gray;  // any text there is now a poll old, so gray it out so the user knows it's stale.
                 UIControls_Dict[dExchange].AvgPrice_Crypto.Enabled = true;  // we disable it if they change the fiat currency as we need to re-populate the crypto combo box first
@@ -1772,37 +1744,15 @@ namespace IRTicker {
                 Color priceCol = Utilities.PriceColour(DCEs[dExchange].GetPriceList(mSummary.pair));
                 if (tempPrice.ForeColor != priceCol) tempPrice.ForeColor = priceCol;
 
-                // if there's a colour, make the font bigger.  otherwise not bigger.
-                // new idea, let's not mess around with the size.  
-                /*if (tempPrice.ForeColor != Color.Black) {
-                    tempPrice.Font = new Font(tempPrice.Font.FontFamily, 10f, FontStyle.Bold);
-
-                    // this next bit is crazy.  When we change the size of the text, it seems to drop down a couple of pixels.  I don't know why, the label just looks lower
-                    // so to fix it I push the label up 2 pixels.  But I need to keep track of whether I have already pushed the label up or not, so I use the tag property
-                    if (!tempPrice.Tag.ToString().Contains("emphasised")) {  // leave the location alone - we're not changing the size anymore
-                        tempPrice.Location = new Point(tempPrice.Location.X, tempPrice.Location.Y - 3);
-                        if (!tempPrice.Tag.ToString().EndsWith(",")) tempPrice.Tag = tempPrice.Tag + ",";
-                        tempPrice.Tag = tempPrice.Tag + "emphasised";
-                    }
-                }
-                else {
-                    tempPrice.Font = new Font(tempPrice.Font.FontFamily, 8.25f, FontStyle.Bold);
-
-                    if (tempPrice.Tag.ToString().Contains("emphasised")) {
-                        tempPrice.Location = new Point(tempPrice.Location.X, tempPrice.Location.Y + 3);
-                        tempPrice.Tag = tempPrice.Tag.ToString().Replace("emphasised", "");
-                    }
-                }*/
-
                 string vol;
-                if ((dExchange == "IRUSD") || (dExchange == "IRSGD")) vol = "";  // no vol for these exchanges, the vol is in the main groupBox
+                if ((dExchange == "IRUSD") || (dExchange == "IRSGD")) vol = " bps";  // no vol for these exchanges, the vol is in the main groupBox
                 else {
                     if (mSummary.DayVolumeXbt == 0) vol = " / 0";
                     else if (mSummary.DayVolumeXbt < 0) vol = " / ?";
                     else vol = " / " + Utilities.FormatValue(mSummary.DayVolumeXbt);
                 }
 
-                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(mSummary.spread) + vol;
+                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(((mSummary.spread) / midPoint * 10000), 0, false) + vol;
                 if (DCEs[dExchange].ChangedSecondaryCurrency) { 
                     PopulateCryptoComboBox(dExchange);  // need to re-populate this as it dynamically only populates the comboxbox with cryptos that the current fiat currency has a pair with
                     DCEs[dExchange].ChangedSecondaryCurrency = false;
@@ -1812,7 +1762,8 @@ namespace IRTicker {
                 if (midPoint != 0) {
                     string spreadTT = "Best bid: " + Utilities.FormatValue(mSummary.CurrentHighestBidPrice) + System.Environment.NewLine +
                         "Best offer: " + Utilities.FormatValue(mSummary.CurrentLowestOfferPrice) + System.Environment.NewLine +
-                        "Spread: " + Utilities.FormatValue(((mSummary.spread) / midPoint * 100), 2, false) + "%";
+                        "Spread: $ " + Utilities.FormatValue(mSummary.spread) + System.Environment.NewLine +
+                        "Volume value: $ " + Utilities.FormatValue(mSummary.DayVolumeXbt * midPoint);
                     IRTickerTT_spread.SetToolTip(UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"], spreadTT);
                 }
             }

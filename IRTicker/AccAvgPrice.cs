@@ -125,7 +125,7 @@ namespace IRTicker
 
 
             string crypto = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString();
-            Page<BankHistoryOrder> ultimateBHO = new Page<BankHistoryOrder>();
+            List<BankHistoryOrder> ultimateBHO = new List<BankHistoryOrder>();
             List<BankHistoryOrder> allOrders = new List<BankHistoryOrder>();
             int fiatCurrenciesSelectedCount = 0;
             try {
@@ -133,16 +133,19 @@ namespace IRTicker
                 foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
                     if (fiatButton.Value.Item2) {
                         fiatCurrenciesSelectedCount++;
-                        Task<Page<BankHistoryOrder>> cOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetClosedOrders(crypto, fiatButton.Key));
+                        Task<List<BankHistoryOrder>> cOrdersTask = new Task<List<BankHistoryOrder>>(() => pIR.GetClosedOrders(crypto, fiatButton.Key, false));  // false - we just want the results, don't try and tell every other function about it.
                         cOrdersTask.Start();
                         ultimateBHO = await cOrdersTask;
-                        foreach (BankHistoryOrder order in ultimateBHO.Data) {  // bad pattern here.  we should check that ultimateBHO is null, but basically if it is null, we want to do everything in the catch block... so just let it fail and get caught
+
+                        allOrders.AddRange(ultimateBHO);
+
+                        /*foreach (BankHistoryOrder order in ultimateBHO) {  // bad pattern here.  we should check that ultimateBHO is null, but basically if it is null, we want to do everything in the catch block... so just let it fail and get caught
                             allOrders.Add(order);
-                        }
+                        }*/
                     }
                 }
-                ultimateBHO.Data = allOrders;
-                CalculateAvgPrice(ultimateBHO, (fiatCurrenciesSelectedCount > 1));
+                //ultimateBHO.Data = allOrders;
+                CalculateAvgPrice(allOrders, (fiatCurrenciesSelectedCount > 1));
             }
             catch (Exception ex) {
                 Debug.Print(DateTime.Now + " - failed to pull closed orders when clicking the average price go button.  error: " + ex.Message);
@@ -160,13 +163,13 @@ namespace IRTicker
             }
         }
 
-        public void CalculateAvgPrice(Page<BankHistoryOrder> cOrders, bool isMultipleFiatCurrenciesSelected) {
+        public void CalculateAvgPrice(List<BankHistoryOrder> cOrders, bool isMultipleFiatCurrenciesSelected) {
 
             int count = 0;
             decimal totalCryptoDealt = 0;
             decimal totalValue = 0;
 
-            foreach (BankHistoryOrder cOrder in cOrders.Data) {
+            foreach (BankHistoryOrder cOrder in cOrders) {
                 // first we make sure the order isn't still open
                 if ((cOrder.Status == OrderStatus.Filled) || (cOrder.Status == OrderStatus.PartiallyFilledAndCancelled) || (cOrder.Status == OrderStatus.PartiallyFilled) ||
                     (cOrder.Status == OrderStatus.PartiallyFilledAndExpired) || (cOrder.Status == OrderStatus.PartiallyFilledAndFailed)) {
@@ -317,13 +320,13 @@ namespace IRTicker
         }
 
         // cOrders.Data must have at least one element, this method assumes this..
-        public async void UpdatePrice(Page<BankHistoryOrder> cOrders) {
+        public async void UpdatePrice(List<BankHistoryOrder> cOrders) {
 
             // off the bat - if the fiat currency isn't my main currency, then bail.  we assume here that there is at least one element in the Data container
             // not anymore, can have more than one fiat selected
             //if (cOrders.Data.ElementAt(0).SecondaryCurrencyCode.ToString().ToUpper() != dce.CurrentSecondaryCurrency) return;
 
-            string cOrdersFiat = cOrders.Data.ElementAt(0).SecondaryCurrencyCode.ToString().ToUpper();
+            string cOrdersFiat = cOrders.ElementAt(0).SecondaryCurrencyCode.ToString().ToUpper();
 
             int fiatSelectedCount = 0;
             bool sentFiatIsSelected = false;
@@ -336,8 +339,8 @@ namespace IRTicker
 
             if (!sentFiatIsSelected) return;  // the secondary currency of the sent orders is not in our list, so don't process it
 
-            if ((AccAvgPrice_AutoUpdate_CheckBox.Checked) && (AccAvgPrice_Crypto_ComboBox.SelectedIndex > 0) && (fiatSelectedCount > 0)) {
-                string crypto = cOrders.Data.ElementAt(0).PrimaryCurrencyCode.ToString().ToUpper();
+            if (AccAvgPrice_AutoUpdate_CheckBox.Checked && (AccAvgPrice_Crypto_ComboBox.SelectedIndex > 0) && (fiatSelectedCount > 0)) {
+                string crypto = cOrders.ElementAt(0).PrimaryCurrencyCode.ToString().ToUpper();
 
                 switch (crypto) {
                     case "XBT":
@@ -363,7 +366,7 @@ namespace IRTicker
                     // top of this sub.
 
                     //Page<BankHistoryOrder> ultimateBHO = new Page<BankHistoryOrder>();
-                    List<BankHistoryOrder> allOrders = new List<BankHistoryOrder>(cOrders.Data);
+                   // List<BankHistoryOrder> allOrders = new List<BankHistoryOrder>(cOrders);
                     int selectedFiatCurrencies = 0;
                     try {
                         // now we need to grab all the orders for each fiat currency selected and concatenate them into one, then stuff it back in the Page<> object and send it to get calculated
@@ -371,17 +374,20 @@ namespace IRTicker
                             if (fiatButton.Value.Item2) {
                                 selectedFiatCurrencies++;
                                 if (fiatButton.Key != cOrdersFiat) {  // don't bother pulling orders for the fiat orders we were sent.  Only other fiats that are selected
-                                    Task<Page<BankHistoryOrder>> cOrdersTask = new Task<Page<BankHistoryOrder>>(() => pIR.GetClosedOrders(crypto, fiatButton.Key));
+                                    Task<List<BankHistoryOrder>> cOrdersTask = new Task<List<BankHistoryOrder>>(() => pIR.GetClosedOrders(crypto, fiatButton.Key, false));  // false means we don't try and call this function from inside that one and loop
                                     cOrdersTask.Start();
-                                    Page<BankHistoryOrder> secondaryFiatOrders = await cOrdersTask;
+                                    List<BankHistoryOrder> secondaryFiatOrders = await cOrdersTask;
 
-                                    foreach (BankHistoryOrder order in secondaryFiatOrders.Data) {
+                                    cOrders.AddRange(secondaryFiatOrders);  // smooshes secondaryFiatOrders into allOrders
+
+                                    // better way is to just concatenate lists
+                                    /*foreach (BankHistoryOrder order in secondaryFiatOrders) {
                                         allOrders.Add(order);
-                                    }
+                                    }*/
                                 }
                             }
                         }
-                        cOrders.Data = allOrders;
+                        //cOrders = allOrders;
                     }
                     catch (Exception ex) {
                         Debug.Print(DateTime.Now + " - failed to pull closed orders when requested in UpdatePrice() sub.  error: " + ex.Message);
