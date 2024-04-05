@@ -1719,10 +1719,7 @@ namespace IRTicker {
             //DCE.MarketSummary mSummary = DCEs[dExchange].GetCryptoPairs()[crypto + "-" + fiat];
 
             // i guess we need to filter out the wrong pairs, also don't try and update labels that are -1 (-1 means they're a fake entry)
-            if ((mSummary.LastPrice >= 0) &&
-                ((mSummary.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency)/* ||  // if it's the chosen currency, or it's IR and (SGD or USD) - we always show these now
-                ((dExchange == "IRUSD") && (mSummary.SecondaryCurrencyCode == "USD")) ||
-                ((dExchange == "IRSGD") && (mSummary.SecondaryCurrencyCode == "SGD"))*/)) {
+            if ((mSummary.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency) && (mSummary.LastPrice >= 0)) {  // if it's the chosen currency, or it's IR and (SGD or USD) - we always show these now
 
                 // we have a legit pair we're about to update.  if the groupBox is grey, let's black it.
                 if (UIControls_Dict[dExchange].dExchange_GB.ForeColor != Color.Black) GroupBoxAndLabelColourActive(dExchange);
@@ -1752,14 +1749,16 @@ namespace IRTicker {
                     else vol = " / " + Utilities.FormatValue(mSummary.DayVolumeXbt);
                 }
 
-                UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(((mSummary.spread) / midPoint * 10000), 0, false) + vol;
-                if (DCEs[dExchange].ChangedSecondaryCurrency) { 
+                // do we really need this being evaluated on every label update?  seems overkill.  Let's see if it works without this.
+                /*if (DCEs[dExchange].ChangedSecondaryCurrency) { 
                     PopulateCryptoComboBox(dExchange);  // need to re-populate this as it dynamically only populates the comboxbox with cryptos that the current fiat currency has a pair with
                     DCEs[dExchange].ChangedSecondaryCurrency = false;
-                }
+                }*/
 
-                // update tool tips.
                 if (midPoint != 0) {
+                    UIControls_Dict[dExchange].Label_Dict[mSummary.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue(((mSummary.spread) / midPoint * 10000), 0, false) + vol;
+
+                    // update tool tips.
                     string spreadTT = "Best bid: " + Utilities.FormatValue(mSummary.CurrentHighestBidPrice) + System.Environment.NewLine +
                         "Best offer: " + Utilities.FormatValue(mSummary.CurrentLowestOfferPrice) + System.Environment.NewLine +
                         "Spread: $ " + Utilities.FormatValue(mSummary.spread) + System.Environment.NewLine +
