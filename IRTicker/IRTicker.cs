@@ -1628,6 +1628,10 @@ namespace IRTicker {
         private bool CheckNegativeSpread(string dExchange) {
             Dictionary<string, DCE.MarketSummary> mSummaries = DCEs[dExchange].GetCryptoPairs();
             foreach (var mSummary in mSummaries) {
+                // First check that we have this currency in the UI
+                if (!UIControls_Dict[dExchange].Label_Dict.ContainsKey(mSummary.Value.PrimaryCurrencyCode + "_Label")){
+                    continue;
+                }
                 if (mSummary.Value.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency) {
                     if (mSummary.Value.CurrentLowestOfferPrice <= mSummary.Value.CurrentHighestBidPrice) {
                         if (!DCEs[dExchange].positiveSpread[mSummary.Value.pair]) {  // already been negative for this pair :(
@@ -1670,6 +1674,13 @@ namespace IRTicker {
             // here we run through each available pair in the DCE object, and populate the corresponding labels with the info
             //bool avgPriceSet = false;
             foreach (KeyValuePair<string, DCE.MarketSummary> pairObj in cPairs) {
+
+                // first let's make sure we have the UI controls to display this
+                if (!UIControls_Dict[dExchange].Label_Dict.ContainsKey(pairObj.Value.PrimaryCurrencyCode + "_Price")) {
+                    Debug.Print("UpdateLabels - missing pair: " + pairObj.Value.PrimaryCurrencyCode);
+                    continue;
+                }
+
                 // i guess we need to filter out the wrong pairs, also don't try and update labels that are -1 (-1 means they're a fake entry)
                 if (pairObj.Value.SecondaryCurrencyCode == DCEs[dExchange].CurrentSecondaryCurrency && pairObj.Value.LastPrice >= 0) {
 
