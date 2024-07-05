@@ -183,6 +183,9 @@ namespace IRTicker
             IRT.UIControls_Dict["IR"].Account_SHIB_Total = AccountSHIB_total;
             IRT.UIControls_Dict["IR"].Account_SHIB_Value = AccountSHIB_value;
             IRT.UIControls_Dict["IR"].Account_SHIB_Label = AccountSHIB_label;
+            IRT.UIControls_Dict["IR"].Account_TRX_Total = AccountTRX_total;
+            IRT.UIControls_Dict["IR"].Account_TRX_Value = AccountTRX_value;
+            IRT.UIControls_Dict["IR"].Account_TRX_Label = AccountTRX_label;
 
             IRT.UIControls_Dict["IR"].CreateIRAccountControlDictionary();  // now that we have finally opened this form, we can add the form labels to the dictionary
 

@@ -61,8 +61,8 @@
     <Reference Include="BlinkStickDotNet.Animations, Version=2.0.16.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\BlinkStickDotNet.Animations.2.0.16\lib\net40\BlinkStickDotNet.Animations.dll</HintPath>
     </Reference>
-    <Reference Include="DotNetClientApi, Version=2.1.0.380, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\IndependentReserve.Client.2.1.0.380\lib\netstandard2.0\DotNetClientApi.dll</HintPath>
+    <Reference Include="DotNetClientApi, Version=2.1.0.408, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\IndependentReserve.Client.2.1.0.408\lib\netstandard2.0\DotNetClientApi.dll</HintPath>
     </Reference>
     <Reference Include="HidSharp, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HidSharp.2.1.0\lib\net35\HidSharp.dll</HintPath>

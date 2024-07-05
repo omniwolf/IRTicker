@@ -341,6 +341,9 @@ namespace IRTicker {
             UIControls_Dict["IR"].SHIB_Label = IR_SHIB_Label1;
             UIControls_Dict["IR"].SHIB_Price = IR_SHIB_Label2;
             UIControls_Dict["IR"].SHIB_Spread = IR_SHIB_Label3;
+            UIControls_Dict["IR"].TRX_Label = IR_TRX_Label1;
+            UIControls_Dict["IR"].TRX_Price = IR_TRX_Label2;
+            UIControls_Dict["IR"].TRX_Spread = IR_TRX_Label3;
 
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
@@ -531,6 +534,9 @@ namespace IRTicker {
             UIControls_Dict["IRUSD"].SHIB_Label = IRUSD_SHIB_Label1;
             UIControls_Dict["IRUSD"].SHIB_Price = IRUSD_SHIB_Label2;
             UIControls_Dict["IRUSD"].SHIB_Spread = IRUSD_SHIB_Label3;
+            UIControls_Dict["IRUSD"].TRX_Label = IRUSD_TRX_Label1;
+            UIControls_Dict["IRUSD"].TRX_Price = IRUSD_TRX_Label2;
+            UIControls_Dict["IRUSD"].TRX_Spread = IRUSD_TRX_Label3;
 
 
             // BTCM
@@ -1677,7 +1683,7 @@ namespace IRTicker {
 
                 // first let's make sure we have the UI controls to display this
                 if (!UIControls_Dict[dExchange].Label_Dict.ContainsKey(pairObj.Value.PrimaryCurrencyCode + "_Price")) {
-                    Debug.Print("UpdateLabels - missing pair: " + pairObj.Value.PrimaryCurrencyCode);
+                    Debug.Print("UpdateLabels - missing pair: " + pairObj.Value.PrimaryCurrencyCode + " for exchange " + dExchange);
                     continue;
                 }
 
