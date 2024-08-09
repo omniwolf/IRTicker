@@ -21,6 +21,8 @@ using Newtonsoft.Json.Linq;
 // todo:
 // if the volume in IRAccounts is more than the availabe balance, maybe we can make the vol input field background red or something.  same on avg price window?
 // blinkstick tasks, a non-null CTS is never returned from the method, are we doing this right?
+// auto refresh avg price window should be ticked by default
+// still show slack emoji even if BTCM sockets are down
 
 namespace IRTicker {
     public partial class IRTicker : Form {
