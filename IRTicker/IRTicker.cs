@@ -23,6 +23,7 @@ using Newtonsoft.Json.Linq;
 // blinkstick tasks, a non-null CTS is never returned from the method, are we doing this right?
 // auto refresh avg price window should be ticked by default
 // still show slack emoji even if BTCM sockets are down
+// minimise/humanise volume numbers that are > 100mio, shib is constantly clipping
 
 namespace IRTicker {
     public partial class IRTicker : Form {
