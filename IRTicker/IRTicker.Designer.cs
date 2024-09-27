@@ -83,7 +83,11 @@
             this.LoadingPanel = new System.Windows.Forms.Panel();
             this.GIFLabel = new System.Windows.Forms.Label();
             this.Main = new System.Windows.Forms.Panel();
+            this.IRUSD_GroupBox = new System.Windows.Forms.GroupBox();
             this.IR_panel_USD = new System.Windows.Forms.Panel();
+            this.IRUSD_TRX_Label2 = new System.Windows.Forms.Label();
+            this.IRUSD_TRX_Label1 = new System.Windows.Forms.Label();
+            this.IRUSD_TRX_Label3 = new System.Windows.Forms.Label();
             this.IRUSD_SHIB_Label2 = new System.Windows.Forms.Label();
             this.IRUSD_SHIB_Label1 = new System.Windows.Forms.Label();
             this.IRUSD_SHIB_Label3 = new System.Windows.Forms.Label();
@@ -171,12 +175,8 @@
             this.IRUSD_ETH_Label1 = new System.Windows.Forms.Label();
             this.IRUSD_XBT_Label1 = new System.Windows.Forms.Label();
             this.IRUSD_XRP_Label3 = new System.Windows.Forms.Label();
-            this.IRUSD_GroupBox = new System.Windows.Forms.GroupBox();
             this.IRSGD_GroupBox = new System.Windows.Forms.GroupBox();
             this.IR_panel_SGD = new System.Windows.Forms.Panel();
-            this.IRSGD_SHIB_Label2 = new System.Windows.Forms.Label();
-            this.IRSGD_SHIB_Label1 = new System.Windows.Forms.Label();
-            this.IRSGD_SHIB_Label3 = new System.Windows.Forms.Label();
             this.IRSGD_SAND_Label2 = new System.Windows.Forms.Label();
             this.IRSGD_SAND_Label1 = new System.Windows.Forms.Label();
             this.IRSGD_SAND_Label3 = new System.Windows.Forms.Label();
@@ -204,49 +204,22 @@
             this.IRSGD_DOT_Label2 = new System.Windows.Forms.Label();
             this.IRSGD_DOT_Label1 = new System.Windows.Forms.Label();
             this.IRSGD_DOT_Label3 = new System.Windows.Forms.Label();
-            this.IRSGD_AAVE_Label2 = new System.Windows.Forms.Label();
-            this.IRSGD_AAVE_Label1 = new System.Windows.Forms.Label();
-            this.IRSGD_AAVE_Label3 = new System.Windows.Forms.Label();
-            this.IRSGD_YFI_Label2 = new System.Windows.Forms.Label();
-            this.IRSGD_YFI_Label1 = new System.Windows.Forms.Label();
-            this.IRSGD_YFI_Label3 = new System.Windows.Forms.Label();
-            this.IRSGD_SNX_Label2 = new System.Windows.Forms.Label();
-            this.IRSGD_SNX_Label1 = new System.Windows.Forms.Label();
-            this.IRSGD_SNX_Label3 = new System.Windows.Forms.Label();
-            this.IRSGD_COMP_Label2 = new System.Windows.Forms.Label();
-            this.IRSGD_COMP_Label1 = new System.Windows.Forms.Label();
-            this.IRSGD_COMP_Label3 = new System.Windows.Forms.Label();
             this.IRSGD_USDC_Label2 = new System.Windows.Forms.Label();
             this.IRSGD_USDC_Label1 = new System.Windows.Forms.Label();
             this.IRSGD_USDC_Label3 = new System.Windows.Forms.Label();
             this.IRSGD_LINK_Label2 = new System.Windows.Forms.Label();
             this.IRSGD_LINK_Label1 = new System.Windows.Forms.Label();
             this.IRSGD_LINK_Label3 = new System.Windows.Forms.Label();
-            this.IRSGD_DAI_Label2 = new System.Windows.Forms.Label();
-            this.IRSGD_DAI_Label1 = new System.Windows.Forms.Label();
-            this.IRSGD_DAI_Label3 = new System.Windows.Forms.Label();
             this.IRSGD_USDT_Label2 = new System.Windows.Forms.Label();
             this.IRSGD_USDT_Label3 = new System.Windows.Forms.Label();
             this.IRSGD_USDT_Label1 = new System.Windows.Forms.Label();
             this.IRSGD_ETC_Label2 = new System.Windows.Forms.Label();
             this.IRSGD_ETC_Label3 = new System.Windows.Forms.Label();
             this.IRSGD_ETC_Label1 = new System.Windows.Forms.Label();
-            this.IRSGD_MKR_Label2 = new System.Windows.Forms.Label();
-            this.IRSGD_MKR_Label1 = new System.Windows.Forms.Label();
-            this.IRSGD_MKR_Label3 = new System.Windows.Forms.Label();
-            this.IRSGD_BAT_Label2 = new System.Windows.Forms.Label();
-            this.IRSGD_BAT_Label1 = new System.Windows.Forms.Label();
-            this.IRSGD_BAT_Label3 = new System.Windows.Forms.Label();
             this.IRSGD_XLM_Label2 = new System.Windows.Forms.Label();
             this.IRSGD_XLM_Label3 = new System.Windows.Forms.Label();
             this.IRSGD_XLM_Label1 = new System.Windows.Forms.Label();
-            this.IRSGD_EOS_Label2 = new System.Windows.Forms.Label();
-            this.IRSGD_EOS_Label3 = new System.Windows.Forms.Label();
-            this.IRSGD_EOS_Label1 = new System.Windows.Forms.Label();
-            this.IRSGD_ZRX_Label2 = new System.Windows.Forms.Label();
-            this.IRSGD_ZRX_Label1 = new System.Windows.Forms.Label();
             this.IRSGD_XRP_Label2 = new System.Windows.Forms.Label();
-            this.IRSGD_ZRX_Label3 = new System.Windows.Forms.Label();
             this.IRSGD_XRP_Label1 = new System.Windows.Forms.Label();
             this.IRSGD_XBT_Label2 = new System.Windows.Forms.Label();
             this.IRSGD_ETH_Label2 = new System.Windows.Forms.Label();
@@ -349,6 +322,9 @@
             this.SettingsButton = new System.Windows.Forms.Button();
             this.IR_GroupBox = new System.Windows.Forms.GroupBox();
             this.IR_panel = new System.Windows.Forms.Panel();
+            this.IR_TRX_Label2 = new System.Windows.Forms.Label();
+            this.IR_TRX_Label1 = new System.Windows.Forms.Label();
+            this.IR_TRX_Label3 = new System.Windows.Forms.Label();
             this.IR_SHIB_Label2 = new System.Windows.Forms.Label();
             this.IR_SHIB_Label1 = new System.Windows.Forms.Label();
             this.IR_SHIB_Label3 = new System.Windows.Forms.Label();
@@ -477,19 +453,13 @@
             this.IRTickerTT_avgPrice = new System.Windows.Forms.ToolTip(this.components);
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
             this.IRT_notification = new System.Windows.Forms.NotifyIcon(this.components);
-            this.IR_TRX_Label2 = new System.Windows.Forms.Label();
-            this.IR_TRX_Label1 = new System.Windows.Forms.Label();
-            this.IR_TRX_Label3 = new System.Windows.Forms.Label();
-            this.IRUSD_TRX_Label2 = new System.Windows.Forms.Label();
-            this.IRUSD_TRX_Label1 = new System.Windows.Forms.Label();
-            this.IRUSD_TRX_Label3 = new System.Windows.Forms.Label();
             this.Settings.SuspendLayout();
             this.IRAccountSettings_groupBox.SuspendLayout();
             this.SlackSettings_groupBox.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
             this.Main.SuspendLayout();
-            this.IR_panel_USD.SuspendLayout();
             this.IRUSD_GroupBox.SuspendLayout();
+            this.IR_panel_USD.SuspendLayout();
             this.IRSGD_GroupBox.SuspendLayout();
             this.IR_panel_SGD.SuspendLayout();
             this.cryptoFees_groupBox.SuspendLayout();
@@ -1123,6 +1093,20 @@
             this.Main.TabIndex = 5;
             this.Main.Visible = false;
             // 
+            // IRUSD_GroupBox
+            // 
+            this.IRUSD_GroupBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("IRUSD_GroupBox.BackgroundImage")));
+            this.IRUSD_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.IRUSD_GroupBox.Controls.Add(this.IR_panel_USD);
+            this.IRUSD_GroupBox.Cursor = System.Windows.Forms.Cursors.Default;
+            this.IRUSD_GroupBox.ForeColor = System.Drawing.Color.Gray;
+            this.IRUSD_GroupBox.Location = new System.Drawing.Point(306, 305);
+            this.IRUSD_GroupBox.Name = "IRUSD_GroupBox";
+            this.IRUSD_GroupBox.Size = new System.Drawing.Size(263, 288);
+            this.IRUSD_GroupBox.TabIndex = 68;
+            this.IRUSD_GroupBox.TabStop = false;
+            this.IRUSD_GroupBox.Text = "Independent Reserve";
+            // 
             // IR_panel_USD
             // 
             this.IR_panel_USD.AutoScroll = true;
@@ -1221,6 +1205,46 @@
             this.IR_panel_USD.Name = "IR_panel_USD";
             this.IR_panel_USD.Size = new System.Drawing.Size(262, 269);
             this.IR_panel_USD.TabIndex = 66;
+            // 
+            // IRUSD_TRX_Label2
+            // 
+            this.IRUSD_TRX_Label2.AutoSize = true;
+            this.IRUSD_TRX_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.IRUSD_TRX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IRUSD_TRX_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IRUSD_TRX_Label2.Location = new System.Drawing.Point(60, 507);
+            this.IRUSD_TRX_Label2.Name = "IRUSD_TRX_Label2";
+            this.IRUSD_TRX_Label2.Size = new System.Drawing.Size(0, 13);
+            this.IRUSD_TRX_Label2.TabIndex = 195;
+            this.IRUSD_TRX_Label2.Tag = "IR";
+            this.IRUSD_TRX_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IRUSD_TRX_Label1
+            // 
+            this.IRUSD_TRX_Label1.AutoSize = true;
+            this.IRUSD_TRX_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.IRUSD_TRX_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IRUSD_TRX_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IRUSD_TRX_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.IRUSD_TRX_Label1.Location = new System.Drawing.Point(6, 507);
+            this.IRUSD_TRX_Label1.Name = "IRUSD_TRX_Label1";
+            this.IRUSD_TRX_Label1.Size = new System.Drawing.Size(36, 13);
+            this.IRUSD_TRX_Label1.TabIndex = 194;
+            this.IRUSD_TRX_Label1.Tag = "DCECryptoLabel";
+            this.IRUSD_TRX_Label1.Text = "TRX:";
+            this.IRUSD_TRX_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IRUSD_TRX_Label3
+            // 
+            this.IRUSD_TRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.IRUSD_TRX_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.IRUSD_TRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IRUSD_TRX_Label3.Location = new System.Drawing.Point(121, 507);
+            this.IRUSD_TRX_Label3.Name = "IRUSD_TRX_Label3";
+            this.IRUSD_TRX_Label3.Size = new System.Drawing.Size(124, 13);
+            this.IRUSD_TRX_Label3.TabIndex = 193;
+            this.IRUSD_TRX_Label3.Tag = "";
+            this.IRUSD_TRX_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // IRUSD_SHIB_Label2
             // 
@@ -2382,20 +2406,6 @@
             this.IRUSD_XRP_Label3.Tag = "";
             this.IRUSD_XRP_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // IRUSD_GroupBox
-            // 
-            this.IRUSD_GroupBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("IRUSD_GroupBox.BackgroundImage")));
-            this.IRUSD_GroupBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.IRUSD_GroupBox.Controls.Add(this.IR_panel_USD);
-            this.IRUSD_GroupBox.Cursor = System.Windows.Forms.Cursors.Default;
-            this.IRUSD_GroupBox.ForeColor = System.Drawing.Color.Gray;
-            this.IRUSD_GroupBox.Location = new System.Drawing.Point(306, 305);
-            this.IRUSD_GroupBox.Name = "IRUSD_GroupBox";
-            this.IRUSD_GroupBox.Size = new System.Drawing.Size(263, 288);
-            this.IRUSD_GroupBox.TabIndex = 68;
-            this.IRUSD_GroupBox.TabStop = false;
-            this.IRUSD_GroupBox.Text = "Independent Reserve";
-            // 
             // IRSGD_GroupBox
             // 
             this.IRSGD_GroupBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("IRSGD_GroupBox.BackgroundImage")));
@@ -2414,9 +2424,6 @@
             // 
             this.IR_panel_SGD.AutoScroll = true;
             this.IR_panel_SGD.BackColor = System.Drawing.Color.Transparent;
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_SHIB_Label2);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_SHIB_Label1);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_SHIB_Label3);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_SAND_Label2);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_SAND_Label1);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_SAND_Label3);
@@ -2444,49 +2451,22 @@
             this.IR_panel_SGD.Controls.Add(this.IRSGD_DOT_Label2);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_DOT_Label1);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_DOT_Label3);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_AAVE_Label2);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_AAVE_Label1);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_AAVE_Label3);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_YFI_Label2);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_YFI_Label1);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_YFI_Label3);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_SNX_Label2);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_SNX_Label1);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_SNX_Label3);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_COMP_Label2);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_COMP_Label1);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_COMP_Label3);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_USDC_Label2);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_USDC_Label1);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_USDC_Label3);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_LINK_Label2);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_LINK_Label1);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_LINK_Label3);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_DAI_Label2);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_DAI_Label1);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_DAI_Label3);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_USDT_Label2);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_USDT_Label3);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_USDT_Label1);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_ETC_Label2);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_ETC_Label3);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_ETC_Label1);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_MKR_Label2);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_MKR_Label1);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_MKR_Label3);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_BAT_Label2);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_BAT_Label1);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_BAT_Label3);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_XLM_Label2);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_XLM_Label3);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_XLM_Label1);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_EOS_Label2);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_EOS_Label3);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_EOS_Label1);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_ZRX_Label2);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_ZRX_Label1);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_XRP_Label2);
-            this.IR_panel_SGD.Controls.Add(this.IRSGD_ZRX_Label3);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_XRP_Label1);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_XBT_Label2);
             this.IR_panel_SGD.Controls.Add(this.IRSGD_ETH_Label2);
@@ -2505,46 +2485,6 @@
             this.IR_panel_SGD.Name = "IR_panel_SGD";
             this.IR_panel_SGD.Size = new System.Drawing.Size(262, 269);
             this.IR_panel_SGD.TabIndex = 66;
-            // 
-            // IRSGD_SHIB_Label2
-            // 
-            this.IRSGD_SHIB_Label2.AutoSize = true;
-            this.IRSGD_SHIB_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_SHIB_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_SHIB_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_SHIB_Label2.Location = new System.Drawing.Point(60, 547);
-            this.IRSGD_SHIB_Label2.Name = "IRSGD_SHIB_Label2";
-            this.IRSGD_SHIB_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IRSGD_SHIB_Label2.TabIndex = 192;
-            this.IRSGD_SHIB_Label2.Tag = "IR";
-            this.IRSGD_SHIB_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_SHIB_Label1
-            // 
-            this.IRSGD_SHIB_Label1.AutoSize = true;
-            this.IRSGD_SHIB_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_SHIB_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_SHIB_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_SHIB_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IRSGD_SHIB_Label1.Location = new System.Drawing.Point(6, 547);
-            this.IRSGD_SHIB_Label1.Name = "IRSGD_SHIB_Label1";
-            this.IRSGD_SHIB_Label1.Size = new System.Drawing.Size(40, 13);
-            this.IRSGD_SHIB_Label1.TabIndex = 191;
-            this.IRSGD_SHIB_Label1.Tag = "DCECryptoLabel";
-            this.IRSGD_SHIB_Label1.Text = "SHIB:";
-            this.IRSGD_SHIB_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_SHIB_Label3
-            // 
-            this.IRSGD_SHIB_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.IRSGD_SHIB_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_SHIB_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_SHIB_Label3.Location = new System.Drawing.Point(115, 547);
-            this.IRSGD_SHIB_Label3.Name = "IRSGD_SHIB_Label3";
-            this.IRSGD_SHIB_Label3.Size = new System.Drawing.Size(124, 13);
-            this.IRSGD_SHIB_Label3.TabIndex = 190;
-            this.IRSGD_SHIB_Label3.Tag = "";
-            this.IRSGD_SHIB_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // IRSGD_SAND_Label2
             // 
@@ -2906,166 +2846,6 @@
             this.IRSGD_DOT_Label3.Tag = "";
             this.IRSGD_DOT_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // IRSGD_AAVE_Label2
-            // 
-            this.IRSGD_AAVE_Label2.AutoSize = true;
-            this.IRSGD_AAVE_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_AAVE_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_AAVE_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_AAVE_Label2.Location = new System.Drawing.Point(60, 427);
-            this.IRSGD_AAVE_Label2.Name = "IRSGD_AAVE_Label2";
-            this.IRSGD_AAVE_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IRSGD_AAVE_Label2.TabIndex = 162;
-            this.IRSGD_AAVE_Label2.Tag = "IR";
-            this.IRSGD_AAVE_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_AAVE_Label1
-            // 
-            this.IRSGD_AAVE_Label1.AutoSize = true;
-            this.IRSGD_AAVE_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_AAVE_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_AAVE_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_AAVE_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IRSGD_AAVE_Label1.Location = new System.Drawing.Point(6, 427);
-            this.IRSGD_AAVE_Label1.Name = "IRSGD_AAVE_Label1";
-            this.IRSGD_AAVE_Label1.Size = new System.Drawing.Size(43, 13);
-            this.IRSGD_AAVE_Label1.TabIndex = 161;
-            this.IRSGD_AAVE_Label1.Tag = "DCECryptoLabel";
-            this.IRSGD_AAVE_Label1.Text = "AAVE:";
-            this.IRSGD_AAVE_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_AAVE_Label3
-            // 
-            this.IRSGD_AAVE_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.IRSGD_AAVE_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_AAVE_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_AAVE_Label3.Location = new System.Drawing.Point(115, 427);
-            this.IRSGD_AAVE_Label3.Name = "IRSGD_AAVE_Label3";
-            this.IRSGD_AAVE_Label3.Size = new System.Drawing.Size(124, 13);
-            this.IRSGD_AAVE_Label3.TabIndex = 160;
-            this.IRSGD_AAVE_Label3.Tag = "";
-            this.IRSGD_AAVE_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // IRSGD_YFI_Label2
-            // 
-            this.IRSGD_YFI_Label2.AutoSize = true;
-            this.IRSGD_YFI_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_YFI_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_YFI_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_YFI_Label2.Location = new System.Drawing.Point(61, 387);
-            this.IRSGD_YFI_Label2.Name = "IRSGD_YFI_Label2";
-            this.IRSGD_YFI_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IRSGD_YFI_Label2.TabIndex = 159;
-            this.IRSGD_YFI_Label2.Tag = "IR";
-            this.IRSGD_YFI_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_YFI_Label1
-            // 
-            this.IRSGD_YFI_Label1.AutoSize = true;
-            this.IRSGD_YFI_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_YFI_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_YFI_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_YFI_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IRSGD_YFI_Label1.Location = new System.Drawing.Point(7, 387);
-            this.IRSGD_YFI_Label1.Name = "IRSGD_YFI_Label1";
-            this.IRSGD_YFI_Label1.Size = new System.Drawing.Size(30, 13);
-            this.IRSGD_YFI_Label1.TabIndex = 158;
-            this.IRSGD_YFI_Label1.Tag = "DCECryptoLabel";
-            this.IRSGD_YFI_Label1.Text = "YFI:";
-            this.IRSGD_YFI_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_YFI_Label3
-            // 
-            this.IRSGD_YFI_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.IRSGD_YFI_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_YFI_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_YFI_Label3.Location = new System.Drawing.Point(115, 387);
-            this.IRSGD_YFI_Label3.Name = "IRSGD_YFI_Label3";
-            this.IRSGD_YFI_Label3.Size = new System.Drawing.Size(124, 13);
-            this.IRSGD_YFI_Label3.TabIndex = 157;
-            this.IRSGD_YFI_Label3.Tag = "";
-            this.IRSGD_YFI_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // IRSGD_SNX_Label2
-            // 
-            this.IRSGD_SNX_Label2.AutoSize = true;
-            this.IRSGD_SNX_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_SNX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_SNX_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_SNX_Label2.Location = new System.Drawing.Point(60, 567);
-            this.IRSGD_SNX_Label2.Name = "IRSGD_SNX_Label2";
-            this.IRSGD_SNX_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IRSGD_SNX_Label2.TabIndex = 153;
-            this.IRSGD_SNX_Label2.Tag = "IR";
-            this.IRSGD_SNX_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_SNX_Label1
-            // 
-            this.IRSGD_SNX_Label1.AutoSize = true;
-            this.IRSGD_SNX_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_SNX_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_SNX_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_SNX_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IRSGD_SNX_Label1.Location = new System.Drawing.Point(6, 567);
-            this.IRSGD_SNX_Label1.Name = "IRSGD_SNX_Label1";
-            this.IRSGD_SNX_Label1.Size = new System.Drawing.Size(36, 13);
-            this.IRSGD_SNX_Label1.TabIndex = 152;
-            this.IRSGD_SNX_Label1.Tag = "DCECryptoLabel";
-            this.IRSGD_SNX_Label1.Text = "SNX:";
-            this.IRSGD_SNX_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_SNX_Label3
-            // 
-            this.IRSGD_SNX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.IRSGD_SNX_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_SNX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_SNX_Label3.Location = new System.Drawing.Point(115, 567);
-            this.IRSGD_SNX_Label3.Name = "IRSGD_SNX_Label3";
-            this.IRSGD_SNX_Label3.Size = new System.Drawing.Size(124, 13);
-            this.IRSGD_SNX_Label3.TabIndex = 151;
-            this.IRSGD_SNX_Label3.Tag = "";
-            this.IRSGD_SNX_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // IRSGD_COMP_Label2
-            // 
-            this.IRSGD_COMP_Label2.AutoSize = true;
-            this.IRSGD_COMP_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_COMP_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_COMP_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_COMP_Label2.Location = new System.Drawing.Point(60, 467);
-            this.IRSGD_COMP_Label2.Name = "IRSGD_COMP_Label2";
-            this.IRSGD_COMP_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IRSGD_COMP_Label2.TabIndex = 150;
-            this.IRSGD_COMP_Label2.Tag = "IR";
-            this.IRSGD_COMP_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_COMP_Label1
-            // 
-            this.IRSGD_COMP_Label1.AutoSize = true;
-            this.IRSGD_COMP_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_COMP_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_COMP_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_COMP_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IRSGD_COMP_Label1.Location = new System.Drawing.Point(6, 467);
-            this.IRSGD_COMP_Label1.Name = "IRSGD_COMP_Label1";
-            this.IRSGD_COMP_Label1.Size = new System.Drawing.Size(46, 13);
-            this.IRSGD_COMP_Label1.TabIndex = 149;
-            this.IRSGD_COMP_Label1.Tag = "DCECryptoLabel";
-            this.IRSGD_COMP_Label1.Text = "COMP:";
-            this.IRSGD_COMP_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_COMP_Label3
-            // 
-            this.IRSGD_COMP_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.IRSGD_COMP_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_COMP_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_COMP_Label3.Location = new System.Drawing.Point(115, 467);
-            this.IRSGD_COMP_Label3.Name = "IRSGD_COMP_Label3";
-            this.IRSGD_COMP_Label3.Size = new System.Drawing.Size(124, 13);
-            this.IRSGD_COMP_Label3.TabIndex = 148;
-            this.IRSGD_COMP_Label3.Tag = "";
-            this.IRSGD_COMP_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // IRSGD_USDC_Label2
             // 
             this.IRSGD_USDC_Label2.AutoSize = true;
@@ -3145,46 +2925,6 @@
             this.IRSGD_LINK_Label3.TabIndex = 142;
             this.IRSGD_LINK_Label3.Tag = "";
             this.IRSGD_LINK_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // IRSGD_DAI_Label2
-            // 
-            this.IRSGD_DAI_Label2.AutoSize = true;
-            this.IRSGD_DAI_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_DAI_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_DAI_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_DAI_Label2.Location = new System.Drawing.Point(60, 487);
-            this.IRSGD_DAI_Label2.Name = "IRSGD_DAI_Label2";
-            this.IRSGD_DAI_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IRSGD_DAI_Label2.TabIndex = 141;
-            this.IRSGD_DAI_Label2.Tag = "IR";
-            this.IRSGD_DAI_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_DAI_Label1
-            // 
-            this.IRSGD_DAI_Label1.AutoSize = true;
-            this.IRSGD_DAI_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_DAI_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_DAI_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_DAI_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IRSGD_DAI_Label1.Location = new System.Drawing.Point(6, 487);
-            this.IRSGD_DAI_Label1.Name = "IRSGD_DAI_Label1";
-            this.IRSGD_DAI_Label1.Size = new System.Drawing.Size(32, 13);
-            this.IRSGD_DAI_Label1.TabIndex = 140;
-            this.IRSGD_DAI_Label1.Tag = "DCECryptoLabel";
-            this.IRSGD_DAI_Label1.Text = "DAI:";
-            this.IRSGD_DAI_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_DAI_Label3
-            // 
-            this.IRSGD_DAI_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.IRSGD_DAI_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_DAI_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_DAI_Label3.Location = new System.Drawing.Point(115, 487);
-            this.IRSGD_DAI_Label3.Name = "IRSGD_DAI_Label3";
-            this.IRSGD_DAI_Label3.Size = new System.Drawing.Size(124, 13);
-            this.IRSGD_DAI_Label3.TabIndex = 139;
-            this.IRSGD_DAI_Label3.Tag = "";
-            this.IRSGD_DAI_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // IRSGD_USDT_Label2
             // 
@@ -3266,86 +3006,6 @@
             this.IRSGD_ETC_Label1.Text = "ETC:";
             this.IRSGD_ETC_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // IRSGD_MKR_Label2
-            // 
-            this.IRSGD_MKR_Label2.AutoSize = true;
-            this.IRSGD_MKR_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_MKR_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_MKR_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_MKR_Label2.Location = new System.Drawing.Point(60, 527);
-            this.IRSGD_MKR_Label2.Name = "IRSGD_MKR_Label2";
-            this.IRSGD_MKR_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IRSGD_MKR_Label2.TabIndex = 132;
-            this.IRSGD_MKR_Label2.Tag = "IR";
-            this.IRSGD_MKR_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_MKR_Label1
-            // 
-            this.IRSGD_MKR_Label1.AutoSize = true;
-            this.IRSGD_MKR_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_MKR_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_MKR_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_MKR_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IRSGD_MKR_Label1.Location = new System.Drawing.Point(6, 527);
-            this.IRSGD_MKR_Label1.Name = "IRSGD_MKR_Label1";
-            this.IRSGD_MKR_Label1.Size = new System.Drawing.Size(38, 13);
-            this.IRSGD_MKR_Label1.TabIndex = 131;
-            this.IRSGD_MKR_Label1.Tag = "DCECryptoLabel";
-            this.IRSGD_MKR_Label1.Text = "MKR:";
-            this.IRSGD_MKR_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_MKR_Label3
-            // 
-            this.IRSGD_MKR_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.IRSGD_MKR_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_MKR_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_MKR_Label3.Location = new System.Drawing.Point(115, 527);
-            this.IRSGD_MKR_Label3.Name = "IRSGD_MKR_Label3";
-            this.IRSGD_MKR_Label3.Size = new System.Drawing.Size(124, 13);
-            this.IRSGD_MKR_Label3.TabIndex = 130;
-            this.IRSGD_MKR_Label3.Tag = "";
-            this.IRSGD_MKR_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // IRSGD_BAT_Label2
-            // 
-            this.IRSGD_BAT_Label2.AutoSize = true;
-            this.IRSGD_BAT_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_BAT_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_BAT_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_BAT_Label2.Location = new System.Drawing.Point(60, 447);
-            this.IRSGD_BAT_Label2.Name = "IRSGD_BAT_Label2";
-            this.IRSGD_BAT_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IRSGD_BAT_Label2.TabIndex = 129;
-            this.IRSGD_BAT_Label2.Tag = "IR";
-            this.IRSGD_BAT_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_BAT_Label1
-            // 
-            this.IRSGD_BAT_Label1.AutoSize = true;
-            this.IRSGD_BAT_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_BAT_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_BAT_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_BAT_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IRSGD_BAT_Label1.Location = new System.Drawing.Point(6, 447);
-            this.IRSGD_BAT_Label1.Name = "IRSGD_BAT_Label1";
-            this.IRSGD_BAT_Label1.Size = new System.Drawing.Size(35, 13);
-            this.IRSGD_BAT_Label1.TabIndex = 128;
-            this.IRSGD_BAT_Label1.Tag = "DCECryptoLabel";
-            this.IRSGD_BAT_Label1.Text = "BAT:";
-            this.IRSGD_BAT_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_BAT_Label3
-            // 
-            this.IRSGD_BAT_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.IRSGD_BAT_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_BAT_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_BAT_Label3.Location = new System.Drawing.Point(115, 447);
-            this.IRSGD_BAT_Label3.Name = "IRSGD_BAT_Label3";
-            this.IRSGD_BAT_Label3.Size = new System.Drawing.Size(124, 13);
-            this.IRSGD_BAT_Label3.TabIndex = 127;
-            this.IRSGD_BAT_Label3.Tag = "";
-            this.IRSGD_BAT_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // IRSGD_XLM_Label2
             // 
             this.IRSGD_XLM_Label2.AutoSize = true;
@@ -3386,74 +3046,6 @@
             this.IRSGD_XLM_Label1.Text = "XLM:";
             this.IRSGD_XLM_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
-            // IRSGD_EOS_Label2
-            // 
-            this.IRSGD_EOS_Label2.AutoSize = true;
-            this.IRSGD_EOS_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_EOS_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_EOS_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_EOS_Label2.Location = new System.Drawing.Point(60, 507);
-            this.IRSGD_EOS_Label2.Name = "IRSGD_EOS_Label2";
-            this.IRSGD_EOS_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IRSGD_EOS_Label2.TabIndex = 122;
-            this.IRSGD_EOS_Label2.Tag = "IR";
-            this.IRSGD_EOS_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_EOS_Label3
-            // 
-            this.IRSGD_EOS_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.IRSGD_EOS_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_EOS_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_EOS_Label3.Location = new System.Drawing.Point(115, 507);
-            this.IRSGD_EOS_Label3.Name = "IRSGD_EOS_Label3";
-            this.IRSGD_EOS_Label3.Size = new System.Drawing.Size(124, 13);
-            this.IRSGD_EOS_Label3.TabIndex = 123;
-            this.IRSGD_EOS_Label3.Tag = "";
-            this.IRSGD_EOS_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // IRSGD_EOS_Label1
-            // 
-            this.IRSGD_EOS_Label1.AutoSize = true;
-            this.IRSGD_EOS_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_EOS_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_EOS_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_EOS_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IRSGD_EOS_Label1.Location = new System.Drawing.Point(6, 507);
-            this.IRSGD_EOS_Label1.Name = "IRSGD_EOS_Label1";
-            this.IRSGD_EOS_Label1.Size = new System.Drawing.Size(36, 13);
-            this.IRSGD_EOS_Label1.TabIndex = 121;
-            this.IRSGD_EOS_Label1.Tag = "DCECryptoLabel";
-            this.IRSGD_EOS_Label1.Text = "EOS:";
-            this.IRSGD_EOS_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_ZRX_Label2
-            // 
-            this.IRSGD_ZRX_Label2.AutoSize = true;
-            this.IRSGD_ZRX_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_ZRX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_ZRX_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_ZRX_Label2.Location = new System.Drawing.Point(60, 407);
-            this.IRSGD_ZRX_Label2.Name = "IRSGD_ZRX_Label2";
-            this.IRSGD_ZRX_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IRSGD_ZRX_Label2.TabIndex = 120;
-            this.IRSGD_ZRX_Label2.Tag = "IR";
-            this.IRSGD_ZRX_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_ZRX_Label1
-            // 
-            this.IRSGD_ZRX_Label1.AutoSize = true;
-            this.IRSGD_ZRX_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_ZRX_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_ZRX_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRSGD_ZRX_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IRSGD_ZRX_Label1.Location = new System.Drawing.Point(6, 407);
-            this.IRSGD_ZRX_Label1.Name = "IRSGD_ZRX_Label1";
-            this.IRSGD_ZRX_Label1.Size = new System.Drawing.Size(36, 13);
-            this.IRSGD_ZRX_Label1.TabIndex = 119;
-            this.IRSGD_ZRX_Label1.Tag = "DCECryptoLabel";
-            this.IRSGD_ZRX_Label1.Text = "ZRX:";
-            this.IRSGD_ZRX_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
             // IRSGD_XRP_Label2
             // 
             this.IRSGD_XRP_Label2.AutoSize = true;
@@ -3466,18 +3058,6 @@
             this.IRSGD_XRP_Label2.TabIndex = 113;
             this.IRSGD_XRP_Label2.Tag = "IR";
             this.IRSGD_XRP_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRSGD_ZRX_Label3
-            // 
-            this.IRSGD_ZRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.IRSGD_ZRX_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IRSGD_ZRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRSGD_ZRX_Label3.Location = new System.Drawing.Point(115, 407);
-            this.IRSGD_ZRX_Label3.Name = "IRSGD_ZRX_Label3";
-            this.IRSGD_ZRX_Label3.Size = new System.Drawing.Size(124, 13);
-            this.IRSGD_ZRX_Label3.TabIndex = 114;
-            this.IRSGD_ZRX_Label3.Tag = "";
-            this.IRSGD_ZRX_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // IRSGD_XRP_Label1
             // 
@@ -4892,6 +4472,46 @@
             this.IR_panel.Name = "IR_panel";
             this.IR_panel.Size = new System.Drawing.Size(262, 501);
             this.IR_panel.TabIndex = 66;
+            // 
+            // IR_TRX_Label2
+            // 
+            this.IR_TRX_Label2.AutoSize = true;
+            this.IR_TRX_Label2.BackColor = System.Drawing.Color.Transparent;
+            this.IR_TRX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_TRX_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_TRX_Label2.Location = new System.Drawing.Point(70, 507);
+            this.IR_TRX_Label2.Name = "IR_TRX_Label2";
+            this.IR_TRX_Label2.Size = new System.Drawing.Size(0, 13);
+            this.IR_TRX_Label2.TabIndex = 195;
+            this.IR_TRX_Label2.Tag = "IR";
+            this.IR_TRX_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IR_TRX_Label1
+            // 
+            this.IR_TRX_Label1.AutoSize = true;
+            this.IR_TRX_Label1.BackColor = System.Drawing.Color.Transparent;
+            this.IR_TRX_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_TRX_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IR_TRX_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
+            this.IR_TRX_Label1.Location = new System.Drawing.Point(6, 507);
+            this.IR_TRX_Label1.Name = "IR_TRX_Label1";
+            this.IR_TRX_Label1.Size = new System.Drawing.Size(36, 13);
+            this.IR_TRX_Label1.TabIndex = 194;
+            this.IR_TRX_Label1.Tag = "DCECryptoLabel";
+            this.IR_TRX_Label1.Text = "TRX:";
+            this.IR_TRX_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // IR_TRX_Label3
+            // 
+            this.IR_TRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.IR_TRX_Label3.BackColor = System.Drawing.Color.Transparent;
+            this.IR_TRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.IR_TRX_Label3.Location = new System.Drawing.Point(111, 507);
+            this.IR_TRX_Label3.Name = "IR_TRX_Label3";
+            this.IR_TRX_Label3.Size = new System.Drawing.Size(124, 13);
+            this.IR_TRX_Label3.TabIndex = 193;
+            this.IR_TRX_Label3.Tag = "";
+            this.IR_TRX_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // IR_SHIB_Label2
             // 
@@ -6403,86 +6023,6 @@
             this.IRT_notification.Icon = ((System.Drawing.Icon)(resources.GetObject("IRT_notification.Icon")));
             this.IRT_notification.Text = "IR Ticker";
             // 
-            // IR_TRX_Label2
-            // 
-            this.IR_TRX_Label2.AutoSize = true;
-            this.IR_TRX_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IR_TRX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_TRX_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_TRX_Label2.Location = new System.Drawing.Point(70, 507);
-            this.IR_TRX_Label2.Name = "IR_TRX_Label2";
-            this.IR_TRX_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IR_TRX_Label2.TabIndex = 195;
-            this.IR_TRX_Label2.Tag = "IR";
-            this.IR_TRX_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IR_TRX_Label1
-            // 
-            this.IR_TRX_Label1.AutoSize = true;
-            this.IR_TRX_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IR_TRX_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_TRX_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IR_TRX_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IR_TRX_Label1.Location = new System.Drawing.Point(6, 507);
-            this.IR_TRX_Label1.Name = "IR_TRX_Label1";
-            this.IR_TRX_Label1.Size = new System.Drawing.Size(36, 13);
-            this.IR_TRX_Label1.TabIndex = 194;
-            this.IR_TRX_Label1.Tag = "DCECryptoLabel";
-            this.IR_TRX_Label1.Text = "TRX:";
-            this.IR_TRX_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IR_TRX_Label3
-            // 
-            this.IR_TRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.IR_TRX_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IR_TRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IR_TRX_Label3.Location = new System.Drawing.Point(111, 507);
-            this.IR_TRX_Label3.Name = "IR_TRX_Label3";
-            this.IR_TRX_Label3.Size = new System.Drawing.Size(124, 13);
-            this.IR_TRX_Label3.TabIndex = 193;
-            this.IR_TRX_Label3.Tag = "";
-            this.IR_TRX_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // IRUSD_TRX_Label2
-            // 
-            this.IRUSD_TRX_Label2.AutoSize = true;
-            this.IRUSD_TRX_Label2.BackColor = System.Drawing.Color.Transparent;
-            this.IRUSD_TRX_Label2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRUSD_TRX_Label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRUSD_TRX_Label2.Location = new System.Drawing.Point(60, 507);
-            this.IRUSD_TRX_Label2.Name = "IRUSD_TRX_Label2";
-            this.IRUSD_TRX_Label2.Size = new System.Drawing.Size(0, 13);
-            this.IRUSD_TRX_Label2.TabIndex = 195;
-            this.IRUSD_TRX_Label2.Tag = "IR";
-            this.IRUSD_TRX_Label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRUSD_TRX_Label1
-            // 
-            this.IRUSD_TRX_Label1.AutoSize = true;
-            this.IRUSD_TRX_Label1.BackColor = System.Drawing.Color.Transparent;
-            this.IRUSD_TRX_Label1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRUSD_TRX_Label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRUSD_TRX_Label1.ForeColor = System.Drawing.Color.LightSteelBlue;
-            this.IRUSD_TRX_Label1.Location = new System.Drawing.Point(6, 507);
-            this.IRUSD_TRX_Label1.Name = "IRUSD_TRX_Label1";
-            this.IRUSD_TRX_Label1.Size = new System.Drawing.Size(36, 13);
-            this.IRUSD_TRX_Label1.TabIndex = 194;
-            this.IRUSD_TRX_Label1.Tag = "DCECryptoLabel";
-            this.IRUSD_TRX_Label1.Text = "TRX:";
-            this.IRUSD_TRX_Label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // IRUSD_TRX_Label3
-            // 
-            this.IRUSD_TRX_Label3.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.IRUSD_TRX_Label3.BackColor = System.Drawing.Color.Transparent;
-            this.IRUSD_TRX_Label3.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IRUSD_TRX_Label3.Location = new System.Drawing.Point(121, 507);
-            this.IRUSD_TRX_Label3.Name = "IRUSD_TRX_Label3";
-            this.IRUSD_TRX_Label3.Size = new System.Drawing.Size(124, 13);
-            this.IRUSD_TRX_Label3.TabIndex = 193;
-            this.IRUSD_TRX_Label3.Tag = "";
-            this.IRUSD_TRX_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -6510,9 +6050,9 @@
             this.SlackSettings_groupBox.PerformLayout();
             this.LoadingPanel.ResumeLayout(false);
             this.Main.ResumeLayout(false);
+            this.IRUSD_GroupBox.ResumeLayout(false);
             this.IR_panel_USD.ResumeLayout(false);
             this.IR_panel_USD.PerformLayout();
-            this.IRUSD_GroupBox.ResumeLayout(false);
             this.IRSGD_GroupBox.ResumeLayout(false);
             this.IR_panel_SGD.ResumeLayout(false);
             this.IR_panel_SGD.PerformLayout();
@@ -6894,49 +6434,22 @@
         private System.Windows.Forms.Label IRSGD_DOT_Label2;
         private System.Windows.Forms.Label IRSGD_DOT_Label1;
         private System.Windows.Forms.Label IRSGD_DOT_Label3;
-        private System.Windows.Forms.Label IRSGD_AAVE_Label2;
-        private System.Windows.Forms.Label IRSGD_AAVE_Label1;
-        private System.Windows.Forms.Label IRSGD_AAVE_Label3;
-        private System.Windows.Forms.Label IRSGD_YFI_Label2;
-        private System.Windows.Forms.Label IRSGD_YFI_Label1;
-        private System.Windows.Forms.Label IRSGD_YFI_Label3;
-        private System.Windows.Forms.Label IRSGD_SNX_Label2;
-        private System.Windows.Forms.Label IRSGD_SNX_Label1;
-        private System.Windows.Forms.Label IRSGD_SNX_Label3;
-        private System.Windows.Forms.Label IRSGD_COMP_Label2;
-        private System.Windows.Forms.Label IRSGD_COMP_Label1;
-        private System.Windows.Forms.Label IRSGD_COMP_Label3;
         private System.Windows.Forms.Label IRSGD_USDC_Label2;
         private System.Windows.Forms.Label IRSGD_USDC_Label1;
         private System.Windows.Forms.Label IRSGD_USDC_Label3;
         private System.Windows.Forms.Label IRSGD_LINK_Label2;
         private System.Windows.Forms.Label IRSGD_LINK_Label1;
         private System.Windows.Forms.Label IRSGD_LINK_Label3;
-        private System.Windows.Forms.Label IRSGD_DAI_Label2;
-        private System.Windows.Forms.Label IRSGD_DAI_Label1;
-        private System.Windows.Forms.Label IRSGD_DAI_Label3;
         private System.Windows.Forms.Label IRSGD_USDT_Label2;
         private System.Windows.Forms.Label IRSGD_USDT_Label3;
         private System.Windows.Forms.Label IRSGD_USDT_Label1;
         private System.Windows.Forms.Label IRSGD_ETC_Label2;
         private System.Windows.Forms.Label IRSGD_ETC_Label3;
         private System.Windows.Forms.Label IRSGD_ETC_Label1;
-        private System.Windows.Forms.Label IRSGD_MKR_Label2;
-        private System.Windows.Forms.Label IRSGD_MKR_Label1;
-        private System.Windows.Forms.Label IRSGD_MKR_Label3;
-        private System.Windows.Forms.Label IRSGD_BAT_Label2;
-        private System.Windows.Forms.Label IRSGD_BAT_Label1;
-        private System.Windows.Forms.Label IRSGD_BAT_Label3;
         private System.Windows.Forms.Label IRSGD_XLM_Label2;
         private System.Windows.Forms.Label IRSGD_XLM_Label3;
         private System.Windows.Forms.Label IRSGD_XLM_Label1;
-        private System.Windows.Forms.Label IRSGD_EOS_Label2;
-        private System.Windows.Forms.Label IRSGD_EOS_Label3;
-        private System.Windows.Forms.Label IRSGD_EOS_Label1;
-        private System.Windows.Forms.Label IRSGD_ZRX_Label2;
-        private System.Windows.Forms.Label IRSGD_ZRX_Label1;
         private System.Windows.Forms.Label IRSGD_XRP_Label2;
-        private System.Windows.Forms.Label IRSGD_ZRX_Label3;
         private System.Windows.Forms.Label IRSGD_XRP_Label1;
         private System.Windows.Forms.Label IRSGD_XBT_Label2;
         private System.Windows.Forms.Label IRSGD_ETH_Label2;
@@ -6981,9 +6494,6 @@
         private System.Windows.Forms.Label IRUSD_SHIB_Label2;
         private System.Windows.Forms.Label IRUSD_SHIB_Label1;
         private System.Windows.Forms.Label IRUSD_SHIB_Label3;
-        private System.Windows.Forms.Label IRSGD_SHIB_Label2;
-        private System.Windows.Forms.Label IRSGD_SHIB_Label1;
-        private System.Windows.Forms.Label IRSGD_SHIB_Label3;
         private System.Windows.Forms.Label IR_TRX_Label2;
         private System.Windows.Forms.Label IR_TRX_Label1;
         private System.Windows.Forms.Label IR_TRX_Label3;

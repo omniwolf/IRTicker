@@ -373,48 +373,21 @@ namespace IRTicker {
             UIControls_Dict["IRSGD"].XRP_Label = IRSGD_XRP_Label1;
             UIControls_Dict["IRSGD"].XRP_Price = IRSGD_XRP_Label2;
             UIControls_Dict["IRSGD"].XRP_Spread = IRSGD_XRP_Label3;
-            UIControls_Dict["IRSGD"].ZRX_Label = IRSGD_ZRX_Label1;
-            UIControls_Dict["IRSGD"].ZRX_Price = IRSGD_ZRX_Label2;
-            UIControls_Dict["IRSGD"].ZRX_Spread = IRSGD_ZRX_Label3;
-            UIControls_Dict["IRSGD"].EOS_Label = IRSGD_EOS_Label1;
-            UIControls_Dict["IRSGD"].EOS_Price = IRSGD_EOS_Label2;
-            UIControls_Dict["IRSGD"].EOS_Spread = IRSGD_EOS_Label3;
             UIControls_Dict["IRSGD"].XLM_Label = IRSGD_XLM_Label1;
             UIControls_Dict["IRSGD"].XLM_Price = IRSGD_XLM_Label2;
             UIControls_Dict["IRSGD"].XLM_Spread = IRSGD_XLM_Label3;
-            UIControls_Dict["IRSGD"].BAT_Label = IRSGD_BAT_Label1;
-            UIControls_Dict["IRSGD"].BAT_Price = IRSGD_BAT_Label2;
-            UIControls_Dict["IRSGD"].BAT_Spread = IRSGD_BAT_Label3;
-            UIControls_Dict["IRSGD"].MKR_Label = IRSGD_MKR_Label1;
-            UIControls_Dict["IRSGD"].MKR_Price = IRSGD_MKR_Label2;
-            UIControls_Dict["IRSGD"].MKR_Spread = IRSGD_MKR_Label3;
             UIControls_Dict["IRSGD"].ETC_Label = IRSGD_ETC_Label1;
             UIControls_Dict["IRSGD"].ETC_Price = IRSGD_ETC_Label2;
             UIControls_Dict["IRSGD"].ETC_Spread = IRSGD_ETC_Label3;
             UIControls_Dict["IRSGD"].USDT_Label = IRSGD_USDT_Label1;
             UIControls_Dict["IRSGD"].USDT_Price = IRSGD_USDT_Label2;
             UIControls_Dict["IRSGD"].USDT_Spread = IRSGD_USDT_Label3;
-            UIControls_Dict["IRSGD"].DAI_Label = IRSGD_DAI_Label1;
-            UIControls_Dict["IRSGD"].DAI_Price = IRSGD_DAI_Label2;
-            UIControls_Dict["IRSGD"].DAI_Spread = IRSGD_DAI_Label3;
             UIControls_Dict["IRSGD"].LINK_Label = IRSGD_LINK_Label1;
             UIControls_Dict["IRSGD"].LINK_Price = IRSGD_LINK_Label2;
             UIControls_Dict["IRSGD"].LINK_Spread = IRSGD_LINK_Label3;
             UIControls_Dict["IRSGD"].USDC_Label = IRSGD_USDC_Label1;
             UIControls_Dict["IRSGD"].USDC_Price = IRSGD_USDC_Label2;
             UIControls_Dict["IRSGD"].USDC_Spread = IRSGD_USDC_Label3;
-            UIControls_Dict["IRSGD"].COMP_Label = IRSGD_COMP_Label1;
-            UIControls_Dict["IRSGD"].COMP_Price = IRSGD_COMP_Label2;
-            UIControls_Dict["IRSGD"].COMP_Spread = IRSGD_COMP_Label3;
-            UIControls_Dict["IRSGD"].SNX_Label = IRSGD_SNX_Label1;
-            UIControls_Dict["IRSGD"].SNX_Price = IRSGD_SNX_Label2;
-            UIControls_Dict["IRSGD"].SNX_Spread = IRSGD_SNX_Label3;
-            UIControls_Dict["IRSGD"].YFI_Label = IRSGD_YFI_Label1;
-            UIControls_Dict["IRSGD"].YFI_Price = IRSGD_YFI_Label2;
-            UIControls_Dict["IRSGD"].YFI_Spread = IRSGD_YFI_Label3;
-            UIControls_Dict["IRSGD"].AAVE_Label = IRSGD_AAVE_Label1;
-            UIControls_Dict["IRSGD"].AAVE_Price = IRSGD_AAVE_Label2;
-            UIControls_Dict["IRSGD"].AAVE_Spread = IRSGD_AAVE_Label3;
             UIControls_Dict["IRSGD"].DOT_Label = IRSGD_DOT_Label1;
             UIControls_Dict["IRSGD"].DOT_Price = IRSGD_DOT_Label2;
             UIControls_Dict["IRSGD"].DOT_Spread = IRSGD_DOT_Label3;
@@ -442,9 +415,7 @@ namespace IRTicker {
             UIControls_Dict["IRSGD"].SAND_Label = IRSGD_SAND_Label1;
             UIControls_Dict["IRSGD"].SAND_Price = IRSGD_SAND_Label2;
             UIControls_Dict["IRSGD"].SAND_Spread = IRSGD_SAND_Label3;
-            UIControls_Dict["IRSGD"].SHIB_Label = IRSGD_SHIB_Label1;
-            UIControls_Dict["IRSGD"].SHIB_Price = IRSGD_SHIB_Label2;
-            UIControls_Dict["IRSGD"].SHIB_Spread = IRSGD_SHIB_Label3;
+
 
 
             // IR USD
@@ -908,6 +879,10 @@ namespace IRTicker {
                 foreach (string dExchange in IRdExchanges) {
                     // This bit is for a) volume (we don't get vol from websockets), and b) if there have been no orders to establish a spread, then the price and spread
                     // stay at 0.  This is 
+
+                    // first, if the exchange doesn't have this crypto, move on.
+                    if (!DCEs[dExchange].PrimaryCurrencyList.Contains(crypto)) continue;
+
                     Dictionary<string, DCE.MarketSummary> cPairs = DCEs[dExchange].GetCryptoPairs();
                     if (cPairs.ContainsKey(mSummary.pair) && (cPairs[mSummary.pair].spread != 0) && !updateSpread) {  // logic here is if the spread is not 0, then don't send spread info, as what we have is better
                     //if (crypto == "XBT") {  // don't want to overwrite the spread orders as they're probably out of date
@@ -2233,7 +2208,7 @@ namespace IRTicker {
 
             if (ETHfee > 0) {
                 cryptoFees_ETH_value.ForeColor = Color.Black;
-                cryptoFees_ETH_value.Text = ETHfee + " gwei";
+                cryptoFees_ETH_value.Text = Utilities.FormatValue(ETHfee) + " gwei";
                 IRTickerTT_generic.SetToolTip(cryptoFees_ETH_value, "");  // fees API is good, no TT required
             }
             else {
