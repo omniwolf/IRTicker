@@ -24,6 +24,7 @@ using Newtonsoft.Json.Linq;
 // auto refresh avg price window should be ticked by default
 // still show slack emoji even if BTCM sockets are down
 // minimise/humanise volume numbers that are > 100mio, shib is constantly clipping
+// in the confirmation modal for trading, add commas to the number
 
 namespace IRTicker {
     public partial class IRTicker : Form {
