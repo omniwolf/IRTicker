@@ -25,6 +25,7 @@ using Newtonsoft.Json.Linq;
 // still show slack emoji even if BTCM sockets are down
 // minimise/humanise volume numbers that are > 100mio, shib is constantly clipping
 // in the confirmation modal for trading, add commas to the number
+// the "possible market sell" text on trading button is really not accurate, need to have more triggers to update it
 
 namespace IRTicker {
     public partial class IRTicker : Form {
