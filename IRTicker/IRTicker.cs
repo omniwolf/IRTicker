@@ -21,7 +21,6 @@ using Newtonsoft.Json.Linq;
 // todo:
 // blinkstick tasks, a non-null CTS is never returned from the method, are we doing this right?
 // still show slack emoji even if BTCM sockets are down
-// minimise/humanise volume numbers that are > 100mio, shib is constantly clipping
 // in the confirmation modal for trading, add commas to the number
 // the "possible market sell" text on trading button is really not accurate, need to have more triggers to update it
 
@@ -1683,7 +1682,7 @@ namespace IRTicker {
                     else {
                         if (pairObj.Value.DayVolumeXbt == 0) vol = " / 0";
                         else if (pairObj.Value.DayVolumeXbt < 0) vol = " / ?";
-                        else vol = " / " + Utilities.FormatValue(pairObj.Value.DayVolumeXbt);
+                        else vol = " / " + HumaniseVolume(pairObj.Value.DayVolumeXbt);
                     }
 
                         UIControls_Dict[dExchange].Label_Dict[pairObj.Value.PrimaryCurrencyCode + "_Spread"].Text = Utilities.FormatValue((pairObj.Value.spread / midPoint * 10000), 0, false) + vol;
@@ -1704,6 +1703,17 @@ namespace IRTicker {
                 UIControls_Dict[dExchange].AvgPrice.ForeColor = Color.Gray;  // any text there is now a poll old, so gray it out so the user knows it's stale.
                 UIControls_Dict[dExchange].AvgPrice_Crypto.Enabled = true;  // we disable it if they change the fiat currency as we need to re-populate the crypto combo box first
             }
+        }
+
+        public static string HumaniseVolume(decimal number) {
+            if (number < 1_000_000)
+                return Utilities.FormatValue(number); // Return as-is with commas
+            else if (number >= 1_000_000_000_000) // Trillions
+                return $"{number / 1_000_000_000_000m:0.#}T";
+            else if (number >= 1_000_000_000) // Billions
+                return $"{number / 1_000_000_000m:0.#}B";
+            else //if (number >= 1_000_000) // Millions
+                return $"{number / 1_000_000m:0.#}M";
         }
 
         // Updates labels, but just a specific pair (used for websockets because we get each pair separartely)
@@ -1742,7 +1752,7 @@ namespace IRTicker {
                 else {
                     if (mSummary.DayVolumeXbt == 0) vol = " / 0";
                     else if (mSummary.DayVolumeXbt < 0) vol = " / ?";
-                    else vol = " / " + Utilities.FormatValue(mSummary.DayVolumeXbt);
+                    else vol = " / " + HumaniseVolume(mSummary.DayVolumeXbt);
                 }
 
                 // do we really need this being evaluated on every label update?  seems overkill.  Let's see if it works without this.
