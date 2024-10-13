@@ -23,6 +23,7 @@ using Newtonsoft.Json.Linq;
 // still show slack emoji even if BTCM sockets are down
 // in the confirmation modal for trading, add commas to the number
 // the "possible market sell" text on trading button is really not accurate, need to have more triggers to update it
+// need to look at how we seem to use the wrong order book to calculate value, eg if our order is to buy, but we show the bids, it will use the bids to determine a market order value
 
 namespace IRTicker {
     public partial class IRTicker : Form {
@@ -2486,7 +2487,7 @@ namespace IRTicker {
             UIControls_Dict[dExchange].dExchange_GB.ForeColor = Color.Black;
 
             foreach (KeyValuePair<string, System.Windows.Forms.Label> UICobj in UIControls_Dict[dExchange].Label_Dict) {
-                if ((string)UICobj.Value.Tag == "DCECryptoLabel") {
+                if (UICobj.Value.Tag is string tag && tag == "DCECryptoLabel") {
                     UICobj.Value.ForeColor = fColour;
                 }
             }

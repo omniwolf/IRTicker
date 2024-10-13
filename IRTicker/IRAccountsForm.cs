@@ -593,7 +593,8 @@ namespace IRTicker
 
                     if (volPriceTup.Item1) {
                         if (((AccountBuySell_listbox.SelectedIndex == 0) && (pIR.OrderBookSide == "Offer")) ||
-                            ((AccountBuySell_listbox.SelectedIndex == 1) && (pIR.OrderBookSide == "Bid"))) {
+                            ((AccountBuySell_listbox.SelectedIndex == 1) && (pIR.OrderBookSide == "Bid"))) 
+                        {
                             if (lvi[3] < volPriceTup.Item2) {
                                 if (AccountOrderType_listbox.SelectedIndex > 0) {  // if we are have a limit or bait order type chosen, let's also stop highlighting at the price value
                                     if ((AccountBuySell_listbox.SelectedIndex == 0) && (lvi[1] <= volPriceTup.Item3) ||
@@ -650,6 +651,8 @@ namespace IRTicker
                         AccountEstOrderValue_value.Tag = _accountOrders.Item1;  // store the decimal here for later use
                     }
                 }
+
+                ValidateLimitOrder();  // update the main order button
 
                 checkSufficientVolume(null);  // account balance may have changed, let's update this validation
 
@@ -747,7 +750,8 @@ namespace IRTicker
             drawClosedOrders(null);
             drawDepositAddress(null);
 
-            // set volume and limit price fields empty
+            ValidateLimitOrder();  // update the main order button
+
             AccountOrderVolume_textbox_TextChanged(null, null);
             AccountLimitPrice_textbox_TextChanged(null, null);
 
@@ -1163,7 +1167,7 @@ namespace IRTicker
             if ((AccountOrderType_listbox.SelectedIndex == 0) || string.IsNullOrEmpty(AccountLimitPrice_textbox.Text)) return;  // this can happen when changing cryptos, we simulate a price text box update to validate and adjust
             decimal price = decimal.Parse(AccountLimitPrice_textbox.Text);  // why no tryParse?  the only way this gets called really is if the price has been validated as a number, or it's the result of clicking the place order button, which is only clickable if the vol/price are validated.  so we should be safe here...
             if (AccountOrders_listview.Items.Count > 0) {  // only continue if we have orders in the OB
-                decimal unformattedPrice = (decimal)AccountOrders_listview.Items[0].SubItems[1].Tag;
+                decimal unformattedPrice = (decimal)AccountOrders_listview.Items[0].SubItems[1].Tag;  // this is only correct if we're viewing the correct side of the order book
                 if (AccountBuySell_listbox.SelectedIndex == 0) {  // buy
                     if (price >= unformattedPrice) {
                         AccountPlaceOrder_button.Text = "Possible MARKET buy";
