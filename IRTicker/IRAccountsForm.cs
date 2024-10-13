@@ -1042,7 +1042,7 @@ namespace IRTicker
             DialogResult res = DialogResult.Cancel;
             if ((oType < 2) || pIR.marketBaiterActive) {  // assume limit order if we're baitin' and user tries to place a new order
                 res = MessageBox.Show("Placing " + orderSide + " order!" + Environment.NewLine + Environment.NewLine +
-                    "Size of order: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + AccountOrderVolume_textbox.Text + Environment.NewLine +
+                    "Size of order: " + (AccountSelectedCrypto == "XBT" ? "BTC " : AccountSelectedCrypto + " ") + Utilities.FormatValue(decimal.Parse(AccountOrderVolume_textbox.Text)) + Environment.NewLine +
                     (oType == 0 ? "" : oType == 1 ? Utilities.FirstLetterToUpper(orderSide) + " price: $ " + Utilities.FormatValue(decimal.Parse(AccountLimitPrice_textbox.Text)) + Environment.NewLine : "") +
                     "Estimated value of order: " + AccountEstOrderValue_value.Text,
                     "Confirm order", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk);
