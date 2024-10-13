@@ -213,7 +213,9 @@ namespace IRTicker
                     if (IRT.UIControls_Dict["IR"].Label_Dict.ContainsKey(acc.Key + "_Account_Total")) {
                         IRT.UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Total"].Text =
                             Utilities.FormatValue(acc.Value.AvailableBalance);
+                        IRT.UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Total"].Tag = acc.Value.AvailableBalance;
                         IRTickerTT_generic.SetToolTip(IRT.UIControls_Dict["IR"].Label_Dict[acc.Key + "_Account_Total"], acc.Value.AvailableBalance.ToString());
+
                     }
 
                     if (IRT.UIControls_Dict["IR"].Label_Dict.ContainsKey(acc.Key + "_Account_Value") && mSummaries.ContainsKey(acc.Key + "-" + DCE_IR.CurrentSecondaryCurrency)) {
@@ -569,7 +571,6 @@ namespace IRTicker
 
             IRT.synchronizationContext.Post(new SendOrPostCallback(o =>
             {
-
                 Tuple<decimal, List<decimal[]>> _accountOrders = (Tuple<decimal, List<decimal[]>>)o;
 
                 if (AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency != pair) return;
@@ -637,15 +638,20 @@ namespace IRTicker
                 }
                 if (_accountOrders.Item1 == -1) {
                     AccountEstOrderValue_value.Text = "Not enough depth!";
+                    AccountEstOrderValue_value.Tag = null;
                 }
                 else if (_accountOrders.Item1 == -2) {
                     AccountEstOrderValue_value.Text = "";
+                    AccountEstOrderValue_value.Tag = null;
                 }
                 else {  // leave it alone if a limit order
                     if (AccountOrderType_listbox.SelectedIndex == 0) {
                         AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(_accountOrders.Item1);
+                        AccountEstOrderValue_value.Tag = _accountOrders.Item1;  // store the decimal here for later use
                     }
                 }
+
+                checkSufficientVolume(null);  // account balance may have changed, let's update this validation
 
             }), accountOrders);
 
@@ -943,17 +949,78 @@ namespace IRTicker
                 pIR.Volume = 0;
             }
 
+            checkSufficientVolume(adjustedVol);
+
             if (volPriceTup.Item1) {
                 if (AccountOrderType_listbox.SelectedIndex > 0) {  // limit or bait, we set the estimated notional label
                     AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(adjustedVol * volPriceTup.Item3);
+                    AccountEstOrderValue_value.Tag = adjustedVol * volPriceTup.Item3;
                 }
                 AccountPlaceOrder_button.Enabled = true;
             }
             else {
                 AccountPlaceOrder_button.Enabled = false;
                 AccountEstOrderValue_value.Text = "";
+                AccountEstOrderValue_value.Tag = null;
             }
             Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency));
+        }
+
+        /**
+         * Compares the volume entered against how much the account has to trade, colours the volume input field red if we don't have enough
+         * @param {decimal} currentVol - the current volume entered into the field.  We send this because sometimes the calling function might edit the volume.  If null, we will attempt to pull and parse the volume from the UI field
+         * return {void}
+         */        
+        private void checkSufficientVolume(decimal? _currentVol) {
+
+            decimal currentVol;
+
+            // we we're trying to buy or sell more than we can, colour the volume textbox red
+            decimal totalToCheck;
+            if (AccountBuySell_listbox.SelectedIndex == 0) { // buy selected, we compare the secondary currency
+                if (null != IRT.UIControls_Dict["IR"].Label_Dict[DCE_IR.CurrentSecondaryCurrency + "_Account_Total"].Tag) {
+                    totalToCheck = (decimal)IRT.UIControls_Dict["IR"].Label_Dict[DCE_IR.CurrentSecondaryCurrency + "_Account_Total"].Tag;
+                    if (null != AccountEstOrderValue_value.Tag) {  // for a buy deal, we compare the value of the trade against the fiat.  we store the value of the trade in the AccountEstOrderValue_value.Tag property
+                        currentVol = (decimal)AccountEstOrderValue_value.Tag;
+                    }
+                    else {
+                        Debug.Print("IRAccounts - there's no order value in AccountEstEOrderValue_value.Tag?  weird.  In the checkSufficientVolume method.");
+                        return;
+                    }
+                }
+                else {
+                    Debug.Print("IRAccounts - No total for " + DCE_IR.CurrentSecondaryCurrency + " stored in the tag, bailing");
+                    return;
+                }
+            }
+            else {  // for a sell we check the primary
+                if (null != IRT.UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Total"].Tag) {
+                    totalToCheck = (decimal)IRT.UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Total"].Tag;
+                    if (_currentVol.HasValue) {
+                        currentVol = _currentVol.Value;
+                    }
+                    else {
+                        if (decimal.TryParse(AccountOrderVolume_textbox.Text, out decimal vol)) {
+                            currentVol = vol;
+                        }
+                        else {
+                            Debug.Print("IRAccounts - can't parse the volume field?  weird.  In the checkSufficientVolume method.  vol: " + AccountOrderVolume_textbox.Text);
+                            return;
+                        }
+                    }
+                }
+                else {
+                    Debug.Print("IRAccounts - No total for " + AccountSelectedCrypto + " stored in the tag, bailing");
+                    return;
+                }
+            }
+
+            if (totalToCheck < currentVol) {
+                AccountOrderVolume_textbox.BackColor = Color.OrangeRed;
+            }
+            else {
+                AccountOrderVolume_textbox.BackColor = Color.White;
+            }
         }
 
         private void StopBaitin_button_Click(object sender, EventArgs e) {
@@ -1161,16 +1228,19 @@ namespace IRTicker
                 AccountPlaceOrder_button.Enabled = true;
                 ValidateLimitOrder();
                 AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(volPriceTup.Item2 * adjustedPrice);
+                AccountEstOrderValue_value.Tag = volPriceTup.Item2 * adjustedPrice;
             }
             // if VolumePriceParseable() not true, but we can parse the price field on it's own, then we can still colour some UI elements
             else if (adjustedPrice >= 0) {
                 AccountPlaceOrder_button.Enabled = false;
                 AccountEstOrderValue_value.Text = "";
+                AccountEstOrderValue_value.Tag = null;
                 ValidateLimitOrder();
             }
             else {
                 AccountPlaceOrder_button.Enabled = false;
                 AccountEstOrderValue_value.Text = "";
+                AccountEstOrderValue_value.Tag = null;
             }
 
             // Price has possibly changed, let's investigate and set the undo value if appropriate
