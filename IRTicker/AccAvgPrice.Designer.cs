@@ -48,7 +48,6 @@
             this.AccAvgPrice_DealSizeCurrency_ComboBox = new System.Windows.Forms.ComboBox();
             this.AccAvgPrice_SendRemainingToVolumeField_button = new System.Windows.Forms.Button();
             this.AccAvgPrice_DealComment_TextBox = new System.Windows.Forms.TextBox();
-            this.AccAvgPrice_Persist_CheckBox = new System.Windows.Forms.CheckBox();
             this.AccAvgPrice_EndDay_Label = new System.Windows.Forms.Label();
             this.AccAvgPrice_StartDay_Label = new System.Windows.Forms.Label();
             this.AccAvgPrice_TotalCrypto_TextBox = new System.Windows.Forms.TextBox();
@@ -207,6 +206,8 @@
             // 
             this.AccAvgPrice_AutoUpdate_CheckBox.AutoSize = true;
             this.AccAvgPrice_AutoUpdate_CheckBox.BackColor = System.Drawing.Color.Transparent;
+            this.AccAvgPrice_AutoUpdate_CheckBox.Checked = true;
+            this.AccAvgPrice_AutoUpdate_CheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.AccAvgPrice_AutoUpdate_CheckBox.Location = new System.Drawing.Point(230, 68);
             this.AccAvgPrice_AutoUpdate_CheckBox.Name = "AccAvgPrice_AutoUpdate_CheckBox";
             this.AccAvgPrice_AutoUpdate_CheckBox.Size = new System.Drawing.Size(110, 17);
@@ -284,20 +285,6 @@
             this.AccAvgPrice_DealComment_TextBox.Size = new System.Drawing.Size(106, 20);
             this.AccAvgPrice_DealComment_TextBox.TabIndex = 36;
             this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_DealComment_TextBox, "Enter here what size you need to do on the order book.");
-            // 
-            // AccAvgPrice_Persist_CheckBox
-            // 
-            this.AccAvgPrice_Persist_CheckBox.AutoSize = true;
-            this.AccAvgPrice_Persist_CheckBox.BackColor = System.Drawing.Color.Transparent;
-            this.AccAvgPrice_Persist_CheckBox.Location = new System.Drawing.Point(230, 93);
-            this.AccAvgPrice_Persist_CheckBox.Name = "AccAvgPrice_Persist_CheckBox";
-            this.AccAvgPrice_Persist_CheckBox.Size = new System.Drawing.Size(72, 17);
-            this.AccAvgPrice_Persist_CheckBox.TabIndex = 37;
-            this.AccAvgPrice_Persist_CheckBox.Text = "Persistent";
-            this.AccAvgPrice_TT.SetToolTip(this.AccAvgPrice_Persist_CheckBox, "If ticked, next time the first Average Price Calculator window is opened, this wi" +
-        "ll be opened too");
-            this.AccAvgPrice_Persist_CheckBox.UseVisualStyleBackColor = false;
-            this.AccAvgPrice_Persist_CheckBox.CheckedChanged += new System.EventHandler(this.AccAvgPrice_Persist_CheckBox_CheckedChanged);
             // 
             // AccAvgPrice_EndDay_Label
             // 
@@ -461,7 +448,6 @@
             this.ClientSize = new System.Drawing.Size(344, 371);
             this.Controls.Add(this.AccAvgPrice_EndDay_Label);
             this.Controls.Add(this.AccAvgPrice_StartDay_Label);
-            this.Controls.Add(this.AccAvgPrice_Persist_CheckBox);
             this.Controls.Add(this.AccAvgPrice_DealComment_TextBox);
             this.Controls.Add(this.AccAvgPrice_DealComment_Label);
             this.Controls.Add(this.AccAvgPrice_FiatSGD_button);
@@ -543,7 +529,6 @@
         private System.Windows.Forms.Button AccAvgPrice_FiatSGD_button;
         private System.Windows.Forms.Label AccAvgPrice_DealComment_Label;
         private System.Windows.Forms.TextBox AccAvgPrice_DealComment_TextBox;
-        private System.Windows.Forms.CheckBox AccAvgPrice_Persist_CheckBox;
         private System.Windows.Forms.Label AccAvgPrice_EndDay_Label;
         private System.Windows.Forms.Label AccAvgPrice_StartDay_Label;
         public System.Windows.Forms.DateTimePicker AccAvgPrice_Start_DTPicker;

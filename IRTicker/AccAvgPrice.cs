@@ -532,44 +532,5 @@ namespace IRTicker
         private void AccAvgPrice_Load(object sender, EventArgs e) {
             IRT.RecalculateAvgPriceVariables(null);
         }
-
-        private void AccAvgPrice_Persist_CheckBox_CheckedChanged(object sender, EventArgs e) {
-            SerialiseFormSettings();
-        }
-
-        private string SerialiseFormSettings() {
-            string masterStr =
-                AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() + ";";
-
-            string fiats = "";
-            foreach (var fiatButt in fiatCurrenciesSelected) {
-                if (fiatButt.Value.Item2) {
-                    fiats += fiatButt.Key + ",";
-                }
-            }
-
-            masterStr += fiats + ";" +
-                AccAvgPrice_BuySell_ComboBox.SelectedItem.ToString() + ";" +
-                AccAvgPrice_Start_DTPicker.Value.ToString("u") + ";" +  // "u" format should be 2008-10-31 17:04:32Z
-                AccAvgPrice_End_DTPicker.Value.ToString("u") + ";" +
-                AccAvgPrice_DealSize_TextBox.Text.ToString() + ";" +
-                AccAvgPrice_DealSizeCurrency_ComboBox.SelectedItem.ToString() + ";" +
-                AccAvgPrice_DealComment_TextBox.Text;
-
-            return masterStr;
-        }
-
-        // will probably need this up in the IRTicker class...
-        class AccAvgPriceSettings
-        {
-            public string Crypto { get; set; }  // "XBT", "ETH", etc
-            public string Fiats { get; set; }  // comma separated, eg "AUD,USD" 
-            public string Direction { get; set; }  // "Buy" or "Sell"
-            public string StartDateTime { get; set; }  // DateTime object in string format.. "z" ?
-            public string EndDateTime { get; set; }  // same as StartDateTime
-            public string DealSize { get; set; }  // string version of a decimal
-            public string DealSizeType { get; set; }  // "Crypto" or "Fiat"
-            public string Comment { get; set; }  // "some rando string.  hmm what if semicolons in it?  Need to sanitise semicolons
-        }
     }
 }
