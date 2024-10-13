@@ -19,9 +19,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 // todo:
-// if the volume in IRAccounts is more than the availabe balance, maybe we can make the vol input field background red or something.  same on avg price window?
 // blinkstick tasks, a non-null CTS is never returned from the method, are we doing this right?
-// auto refresh avg price window should be ticked by default
 // still show slack emoji even if BTCM sockets are down
 // minimise/humanise volume numbers that are > 100mio, shib is constantly clipping
 // in the confirmation modal for trading, add commas to the number
@@ -796,12 +794,13 @@ namespace IRTicker {
                 slackObj.setStatus("", ":exclamation:", status_emoji_duration, name + " - IR WSS down");
                 return;
             }
-            else if (!DCEs["BTCM"].socketsAlive || !DCEs["BTCM"].NetworkAvailable) {
+            
+            // if the BTCM sockets are down, we still probably have volume from REST, so continue reporting.  
+            else if (/*!DCEs["BTCM"].socketsAlive ||*/ !DCEs["BTCM"].NetworkAvailable) {
                 slackObj.setStatus("", ":man-shrugging:", status_emoji_duration, name);  // should change this to still show the price, and not bother saying "BTCM API down" 
                 if (TGBot != null) TGBot.BTCMemoji = "🤷‍";
                 return;
-            }
-            
+            }            
 
             if (IRvol < 0) {
                 slackObj.setStatus("", ":question:", status_emoji_duration, name);
@@ -825,7 +824,7 @@ namespace IRTicker {
             }
             else if ((IRvol <= BTCMvol * 1.05M) && (IRvol >= BTCMvol * 0.95M)) {
                 slackObj.setStatus("", ":neutral_face:", status_emoji_duration, name);
-                if (TGBot != null) TGBot.BTCMemoji = "😐";
+                if (TGBot != null) TGBot.BTCMemoji = "😑";
             }
             else if (IRvol < BTCMvol * 0.95M) {
                 slackObj.setStatus("", ":slightly_frowning_face:", status_emoji_duration, name);
