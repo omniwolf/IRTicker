@@ -953,8 +953,6 @@ namespace IRTicker
                 pIR.Volume = 0;
             }
 
-            checkSufficientVolume(adjustedVol);
-
             if (volPriceTup.Item1) {
                 if (AccountOrderType_listbox.SelectedIndex > 0) {  // limit or bait, we set the estimated notional label
                     AccountEstOrderValue_value.Text = "$ " + Utilities.FormatValue(adjustedVol * volPriceTup.Item3);
@@ -967,6 +965,8 @@ namespace IRTicker
                 AccountEstOrderValue_value.Text = "";
                 AccountEstOrderValue_value.Tag = null;
             }
+            checkSufficientVolume(pIR.Volume);
+
             Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency));
         }
 
@@ -988,8 +988,7 @@ namespace IRTicker
                         currentVol = (decimal)AccountEstOrderValue_value.Tag;
                     }
                     else {
-                        Debug.Print("IRAccounts - there's no order value in AccountEstEOrderValue_value.Tag?  weird.  In the checkSufficientVolume method.");
-                        return;
+                        currentVol = -1;  // if it's null, let's assume no volume, so we colour white
                     }
                 }
                 else {
@@ -1007,8 +1006,7 @@ namespace IRTicker
                         if (decimal.TryParse(AccountOrderVolume_textbox.Text, out decimal vol)) {
                             currentVol = vol;
                         }
-                        else {
-                            Debug.Print("IRAccounts - can't parse the volume field?  weird.  In the checkSufficientVolume method.  vol: " + AccountOrderVolume_textbox.Text);
+                        else {  // volume field is blank or has letters or somethnig
                             return;
                         }
                     }

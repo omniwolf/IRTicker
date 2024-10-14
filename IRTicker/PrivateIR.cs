@@ -433,6 +433,41 @@ namespace IRTicker {
                 if ((count > 9) && (trackedOrderVolume <= 0)) break;
             }
 
+            string buySell_bidOffer = (BuySell == "Buy" ? "Bid" : "Offer");  // homogenise the BuySell and OrderBookSide variables so we can compare directly
+
+            // if we're looking at the bids, but our order is a buy, we can't simulate a market order, so we have to spin through the other order book
+            // vice versa for offers
+            if ((OrderTypeStr == "Market") && (OrderBookSide == buySell_bidOffer)) {
+                // reset these guys to calculate again
+                totalOrderValue = 0;
+                if (Volume > 0) {
+                    trackedOrderVolume = Volume;
+
+                    foreach (KeyValuePair<decimal, ConcurrentDictionary<string, DCE.OrderBook_IR>> pricePoint in (OrderBookSide == "Offer" ? orderedBids : orderedOffers)) {
+                        decimal totalVolume = 0;
+
+                        foreach (KeyValuePair<string, DCE.OrderBook_IR> order in pricePoint.Value) {
+                            totalVolume += order.Value.Volume;
+                            if (trackedOrderVolume != -1) {  // only bother working out this stuff we have a real Tracked value
+                                if (trackedOrderVolume > order.Value.Volume) {
+                                    totalOrderValue += (order.Value.Volume * pricePoint.Key);
+                                    trackedOrderVolume -= order.Value.Volume;
+                                }
+                                else {  // ok, this is the last order to fill our proposed order
+                                    totalOrderValue += (trackedOrderVolume * pricePoint.Key);
+                                    trackedOrderVolume = 0;  // no more counting
+                                }
+                            }
+                        }
+
+                        // as each order is caluclated, the trackedOrderVolume reduces by that order size until it's 0, meaning we have used
+                        // up the number of orders needed to full the requested volume.  We can now stop looking at orders and move on.
+                        if (trackedOrderVolume <= 0) break;
+                    }
+                }
+            }
+
+
             if ((OrderTypeStr == "Market") && (trackedOrderVolume >= 0)) {
                 if (trackedOrderVolume > 0) {
                     estValue = -1; //"Not enough depth!";
