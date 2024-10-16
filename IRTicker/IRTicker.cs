@@ -21,9 +21,6 @@ using Newtonsoft.Json.Linq;
 // todo:
 // blinkstick tasks, a non-null CTS is never returned from the method, are we doing this right?
 // still show slack emoji even if BTCM sockets are down
-// in the confirmation modal for trading, add commas to the number
-// the "possible market sell" text on trading button is really not accurate, need to have more triggers to update it
-// need to look at how we seem to use the wrong order book to calculate value, eg if our order is to buy, but we show the bids, it will use the bids to determine a market order value
 
 namespace IRTicker {
     public partial class IRTicker : Form {

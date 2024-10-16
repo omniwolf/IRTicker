@@ -11,7 +11,6 @@ using IndependentReserve.DotNetClientApi.Data;
 using System.Threading;
 using System.Diagnostics;
 using System.Collections.Concurrent;
-using static IRTicker.Balance;
 
 
 namespace IRTicker
@@ -30,6 +29,7 @@ namespace IRTicker
         private string lastPriceForUndo;  // holds the last typed price so when we "undo", we have a price to go back to
         private string buffer_lastPriceForUndo; // need to buffer the current price so we know what to set the undo value to
         private bool undoIsUpdatingPrice = false; // we temp sent this to true when we're updating the price so that we don't mess with other undo variables in the textChanged sub
+        private decimal topPriceOtherOB;  // holds the top order of the side of the book we can't see (eg the top bid if we're showing the offers)
 
         public void InitialiseAccountsPanel() {
             AccountOrderVolume_textbox.Enabled = true;
@@ -567,7 +567,9 @@ namespace IRTicker
 
         // how is this accountORders.item2 string array made up?
         // count, pricePoint (not formatted), totalVolume, cumulativeVol (not formatted), cumulativeValue, includesMyOrder 
-        public void drawAccountOrderBook(Tuple<decimal, List<decimal[]>> accountOrders, string pair) {
+        public void drawAccountOrderBook(Tuple<decimal, List<decimal[]>> accountOrders, string pair, decimal _topPriceOtherOB) {
+
+            topPriceOtherOB = _topPriceOtherOB;
 
             IRT.synchronizationContext.Post(new SendOrPostCallback(o =>
             {
@@ -639,7 +641,7 @@ namespace IRTicker
                 }
                 if (_accountOrders.Item1 == -1) {
                     AccountEstOrderValue_value.Text = "Not enough depth!";
-                    AccountEstOrderValue_value.Tag = null;
+                    AccountEstOrderValue_value.Tag = -1m;
                 }
                 else if (_accountOrders.Item1 == -2) {
                     AccountEstOrderValue_value.Text = "";
@@ -654,7 +656,7 @@ namespace IRTicker
 
                 ValidateLimitOrder();  // update the main order button
 
-                checkSufficientVolume(null);  // account balance may have changed, let's update this validation
+                checkSufficientVolume(null, _accountOrders.Item1 != -1);  // account balance may have changed, let's update this validation
 
             }), accountOrders);
 
@@ -965,7 +967,15 @@ namespace IRTicker
                 AccountEstOrderValue_value.Text = "";
                 AccountEstOrderValue_value.Tag = null;
             }
-            checkSufficientVolume(pIR.Volume);
+
+            bool isEnoughDepth = true;
+            if ((null != AccountEstOrderValue_value.Tag) && AccountEstOrderValue_value.Tag.GetType() == typeof(decimal)) {
+                if ((decimal)AccountEstOrderValue_value.Tag == -1) {
+                    isEnoughDepth = false;
+                }
+            }
+
+            checkSufficientVolume(pIR.Volume, isEnoughDepth);
 
             Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency));
         }
@@ -975,7 +985,12 @@ namespace IRTicker
          * @param {decimal} currentVol - the current volume entered into the field.  We send this because sometimes the calling function might edit the volume.  If null, we will attempt to pull and parse the volume from the UI field
          * return {void}
          */        
-        private void checkSufficientVolume(decimal? _currentVol) {
+        private void checkSufficientVolume(decimal? _currentVol, bool isEnoughDepth = true) {
+
+            if (!isEnoughDepth) {
+                AccountOrderVolume_textbox.BackColor = Color.OrangeRed;
+                return;
+            }
 
             decimal currentVol;
 
@@ -984,6 +999,10 @@ namespace IRTicker
             if (AccountBuySell_listbox.SelectedIndex == 0) { // buy selected, we compare the secondary currency
                 if (null != IRT.UIControls_Dict["IR"].Label_Dict[DCE_IR.CurrentSecondaryCurrency + "_Account_Total"].Tag) {
                     totalToCheck = (decimal)IRT.UIControls_Dict["IR"].Label_Dict[DCE_IR.CurrentSecondaryCurrency + "_Account_Total"].Tag;
+                    if ((null != AccountEstOrderValue_value.Tag) && (AccountEstOrderValue_value.Tag.GetType() == typeof(decimal)) && ((decimal)AccountEstOrderValue_value.Tag == -1)) {  // -1 means not enough depth in the order book
+                        AccountOrderVolume_textbox.BackColor = Color.OrangeRed; 
+                        return;
+                    }
                     if (null != AccountEstOrderValue_value.Tag) {  // for a buy deal, we compare the value of the trade against the fiat.  we store the value of the trade in the AccountEstOrderValue_value.Tag property
                         currentVol = (decimal)AccountEstOrderValue_value.Tag;
                     }
@@ -1162,12 +1181,21 @@ namespace IRTicker
         // this method checks the limit price, and if it would make the order a market order, then highlight buttons and shit
         // can only be called if AccountOrderType_listbox.SelectedIndex is 1 or 2 (limit or bait)
         private void ValidateLimitOrder() {
+
             if ((AccountOrderType_listbox.SelectedIndex == 0) || string.IsNullOrEmpty(AccountLimitPrice_textbox.Text)) return;  // this can happen when changing cryptos, we simulate a price text box update to validate and adjust
             decimal price = decimal.Parse(AccountLimitPrice_textbox.Text);  // why no tryParse?  the only way this gets called really is if the price has been validated as a number, or it's the result of clicking the place order button, which is only clickable if the vol/price are validated.  so we should be safe here...
             if (AccountOrders_listview.Items.Count > 0) {  // only continue if we have orders in the OB
-                decimal unformattedPrice = (decimal)AccountOrders_listview.Items[0].SubItems[1].Tag;  // this is only correct if we're viewing the correct side of the order book
+                // we need to make sure we have the top order of the order book we'd be trading on with a market order.  If it's on the
+                // side of the order book we're not showing, then the best price of the correct order book will be stored in the topPriceOtherOB variable.
+                decimal topPrice = (decimal)AccountOrders_listview.Items[0].SubItems[1].Tag;
+                string buySell = (AccountBuySell_listbox.SelectedIndex == 0 ? "Bid" : "Offer");
+                if (buySell == pIR.OrderBookSide) {
+                    topPrice = topPriceOtherOB;
+                }
+
+                //decimal unformattedPrice = (decimal)AccountOrders_listview.Items[0].SubItems[1].Tag;  // this is only correct if we're viewing the correct side of the order book
                 if (AccountBuySell_listbox.SelectedIndex == 0) {  // buy
-                    if (price >= unformattedPrice) {
+                    if (price >= topPrice) {
                         AccountPlaceOrder_button.Text = "Possible MARKET buy";
                         AccountLimitPrice_label.ForeColor = AccountPlaceOrder_button.ForeColor = Color.Red;
                         IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "Price is higher than the lowest offer, this will be a market order!");
@@ -1188,7 +1216,7 @@ namespace IRTicker
                     }
                 }
                 else {  // sell
-                    if (price <= unformattedPrice) {
+                    if (price <= topPrice) {
                         AccountPlaceOrder_button.Text = "Possible MARKET sell";
                         AccountLimitPrice_label.ForeColor = AccountPlaceOrder_button.ForeColor = Color.Red;
                         IRTickerTT_generic.SetToolTip(AccountPlaceOrder_button, "Price is lower than the higest bid, this will be a market order!");

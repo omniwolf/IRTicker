@@ -391,6 +391,7 @@ namespace IRTicker {
             decimal cumulativeValue = 0;
             decimal totalOrderValue = 0;
             decimal trackedOrderVolume = -1;  // this holds the size of the order so we can work out how much it's worth by simulating a market order as we iterate through the orders
+            decimal topPriceOtherOB = (OrderBookSide == "Offer" ? orderedBids.FirstOrDefault().Key : orderedOffers.FirstOrDefault().Key);
 
             // if we can parse the volume box, and it's a market order, let's work out the order value.  No need to track for limit order, can just do simple maths
             if (OrderTypeStr == "Market") {
@@ -479,7 +480,7 @@ namespace IRTicker {
             // if it's a limit order, then the AccountEstOrderValue field is calculated manually (no need for OB), so here we need to make sure we don't clear it
             // this else is saying "if it's a market order, but we didn't engage trackedOrderVolume, then they probably have unparsable text in the vol box, so clear the estimate value label"
             else if (OrderTypeStr == "Market") estValue = -2; // ""
-            IRAF.drawAccountOrderBook(new Tuple<decimal, List<decimal[]>>(estValue, accOrderListView), pair);  // why a tuple and not just separate variables?  We need it as one to insert into the synchronisation thing in the drawAccountOrderBook sub
+            IRAF.drawAccountOrderBook(new Tuple<decimal, List<decimal[]>>(estValue, accOrderListView), pair, topPriceOtherOB);  // why a tuple and not just separate variables?  We need it as one to insert into the synchronisation thing in the drawAccountOrderBook sub
            // return Task.CompletedTask;
         }
 
