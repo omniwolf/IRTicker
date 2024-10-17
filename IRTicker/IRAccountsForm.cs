@@ -53,7 +53,7 @@ namespace IRTicker
                 PrivateIR.PrivateIREndPoints.GetAddress,
                 PrivateIR.PrivateIREndPoints.GetTradingFees 
             }));
-            AccountBuySell_listbox_Click(null, null);  // simulate a click to set things up
+            //AccountBuySell_listbox_Click(null, null);  // simulate a click to set things up
         }
 
         public IRAccountsForm(IRTicker _IRT, PrivateIR _pIR, DCE _DCE_IR, TelegramBot _TGBot) {
@@ -860,6 +860,7 @@ namespace IRTicker
                 AccountOrders_listview.Columns[1].Text = "Offers";
                 AccountOrders_listview.BackColor = Color.PeachPuff;
             }
+            //checkSufficientVolume(null);
         }
 
         private void AccountBuySell_listbox_Click(object sender, EventArgs e) {

@@ -1704,13 +1704,13 @@ namespace IRTicker {
         }
 
         public static string HumaniseVolume(decimal number) {
-            if (number < 1_000_000)
+            if (number < 10_000_000)
                 return Utilities.FormatValue(number); // Return as-is with commas
             else if (number >= 1_000_000_000_000) // Trillions
                 return $"{number / 1_000_000_000_000m:0.#}T";
             else if (number >= 1_000_000_000) // Billions
                 return $"{number / 1_000_000_000m:0.#}B";
-            else //if (number >= 1_000_000) // Millions
+            else //if (number >= 10_000_000) // Millions
                 return $"{number / 1_000_000m:0.#}M";
         }
 

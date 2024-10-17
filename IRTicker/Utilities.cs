@@ -51,7 +51,7 @@ namespace IRTicker {
             if (val < 0.01M) formatString = "0.00######";
             if (val >= 10) formatString = "##0.00";
             if (val >= 1000) formatString = "### ### ##0";
-            if (val >= 1000000000) {
+            if (val >= 1_000_000_000) {
                 val = Math.Round(val / 1_000_000_000, 3);  // _ is just a visual separator - the compiler ignores
                 formatString = "0.###";
                 suffix = "B";
