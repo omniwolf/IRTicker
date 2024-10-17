@@ -860,7 +860,7 @@ namespace IRTicker
                 AccountOrders_listview.Columns[1].Text = "Offers";
                 AccountOrders_listview.BackColor = Color.PeachPuff;
             }
-            //checkSufficientVolume(null);
+            checkSufficientVolume(null);
         }
 
         private void AccountBuySell_listbox_Click(object sender, EventArgs e) {
@@ -998,7 +998,10 @@ namespace IRTicker
             // we we're trying to buy or sell more than we can, colour the volume textbox red
             decimal totalToCheck;
             if (AccountBuySell_listbox.SelectedIndex == 0) { // buy selected, we compare the secondary currency
-                if (null != IRT.UIControls_Dict["IR"].Label_Dict[DCE_IR.CurrentSecondaryCurrency + "_Account_Total"].Tag) {
+                if (IRT.UIControls_Dict.ContainsKey("IR") && (null != IRT.UIControls_Dict["IR"].Label_Dict) &&
+                    IRT.UIControls_Dict["IR"].Label_Dict.ContainsKey(DCE_IR.CurrentSecondaryCurrency + "_Account_Total") &&
+                    null != IRT.UIControls_Dict["IR"].Label_Dict[DCE_IR.CurrentSecondaryCurrency + "_Account_Total"].Tag)
+                {
                     totalToCheck = (decimal)IRT.UIControls_Dict["IR"].Label_Dict[DCE_IR.CurrentSecondaryCurrency + "_Account_Total"].Tag;
                     if ((null != AccountEstOrderValue_value.Tag) && (AccountEstOrderValue_value.Tag.GetType() == typeof(decimal)) && ((decimal)AccountEstOrderValue_value.Tag == -1)) {  // -1 means not enough depth in the order book
                         AccountOrderVolume_textbox.BackColor = Color.OrangeRed; 
@@ -1012,7 +1015,7 @@ namespace IRTicker
                     }
                 }
                 else {
-                    Debug.Print("IRAccounts - No total for " + DCE_IR.CurrentSecondaryCurrency + " stored in the tag, bailing");
+                    Debug.Print("IRAccounts - No total for " + DCE_IR.CurrentSecondaryCurrency + " stored in the tag (or the label hasn't been loaded), bailing");
                     return;
                 }
             }
@@ -1027,6 +1030,7 @@ namespace IRTicker
                             currentVol = vol;
                         }
                         else {  // volume field is blank or has letters or somethnig
+                            AccountOrderVolume_textbox.BackColor = Color.White;
                             return;
                         }
                     }
