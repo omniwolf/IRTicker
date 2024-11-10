@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using IndependentReserve.DotNetClientApi.Data;
 using IndependentReserve.DotNetClientApi;
-using IndependentReserve.DotNetClientApi.Data;
-using System.Diagnostics;
-using System.Threading;
+using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace IRTicker {
-    public class PrivateIR {
+    internal class PrivateCB {
 
         //private static readonly HttpClient client = new HttpClient();
-        private Client IRclient;
         public Dictionary<string, Account> accounts = new Dictionary<string, Account>();
         private ApiCredential IRcreds;
         private IRAccountsForm IRAF;  // yeah lazy, instead of renaming this to IRAF, just leave it as IRT and then the rest of the code all works
@@ -45,11 +45,7 @@ namespace IRTicker {
         private DCE DCE_IR;
         private TelegramBot TGBot;
 
-        /*public PrivateIR(string _BaseURL, string APIKey, string APISecret, IRTicker _IRT, DCE _DCE_IR) {
-            PrivateIR_init(_BaseURL, APIKey, APISecret, _IRT, _DCE_IR);
-        }*/  // don't think this constructor is used anymore..
-
-        public PrivateIR() {
+        public PrivateCB() {
             // 
         }
 
@@ -68,7 +64,8 @@ namespace IRTicker {
 
             IRcreds = new ApiCredential(APIKey, APISecret);
 
-            var IRconf = new ApiConfig {
+            var IRconf = new ApiConfig
+            {
                 BaseUrl = DCE_IR.BaseURL,
                 Credential = IRcreds
             };
@@ -109,7 +106,7 @@ namespace IRTicker {
                     BaseUrl = DCE_IR.BaseURL,
                     Credential = IRcredsAlt
                 };
-                        
+
                 Client IRclientAlt = Client.Create(IRconf);
                 return (IRclientAlt.GetAccounts()).ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
             }
@@ -217,8 +214,7 @@ namespace IRTicker {
 
                         // need to go if the current primary/secondary is what's shown on IRAccounts, then draw it
                         if ((SelectedCrypto == primaryCode) && (DCE_IR.CurrentSecondaryCurrency == secondaryCode) &&
-                            (null != IRAF) && !IRAF.IsDisposed && (null != cOrders)) 
-                        {
+                            (null != IRAF) && !IRAF.IsDisposed && (null != cOrders)) {
                             IRAF.drawClosedOrders(cOrders);
                             //reportClosedOrders = false;  // stop reporting, we have drawn the actual orders.
                         }
@@ -274,7 +270,7 @@ namespace IRTicker {
             // don't do this anymore - we don't ever need a big pull.
             // Either we have a date, need to pull all orders newer than or equal to this date, or it's the first run and we need to pull everything
             // also - we only pull  more than 8 if the crypto we're pulling is the currently chosen crypto.  `Crypto` is the currently chosen crypto... (i know.. great var name)
-            if (earliestClosedOrderRequired.HasValue && AvgPriceSelectedCrypto.Contains(crypto) && fiatCurrenciesSelected.Contains(fiat)) {  
+            if (earliestClosedOrderRequired.HasValue && AvgPriceSelectedCrypto.Contains(crypto) && fiatCurrenciesSelected.Contains(fiat)) {
                 pageSize = 5000;
             }
 
@@ -285,12 +281,12 @@ namespace IRTicker {
                     try {
                         cOrders = IRclient.GetClosedFilledOrders(enumCrypto, enumFiat, page, pageSize, false, (page > 1 ? earliestClosedOrderRequired : null));  // if we're pulling the first page, get the full amount.  We don't want to limit based on the AccAvgPrice time stamp, because we always want to pull at least ~10 orders so we can draw them in the closed orders panel.  After the first page, then we can limit
                     }
-                    catch (Exception e){
+                    catch (Exception e) {
                         getClosedOrdersLock.Remove(pair);
                         throw new Exception("Failed to GetClosedFilledOrders for " + pair + ".  Error: " + e.Message);
                     }
                 }
-                
+
                 if (APIkey != IRcreds.Key) {  // i don't think this will ever happen.. but who knows  /// ok.. seems to happen every time we change APIkey.  but if stops errors, so leave it
                     Debug.Print("uh oh.. it's unclear which API key we used.. probably should just bail" + " -- sent APIKey: " + APIkey + ", stored APIKey: " + Properties.Settings.Default.IRAPIPubKey);
                     getClosedOrdersLock.Remove(pair);
@@ -466,7 +462,7 @@ namespace IRTicker {
             // this else is saying "if it's a market order, but we didn't engage trackedOrderVolume, then they probably have unparsable text in the vol box, so clear the estimate value label"
             else if (OrderTypeStr == "Market") estValue = -2; // ""
             IRAF.drawAccountOrderBook(new Tuple<decimal, List<decimal[]>>(estValue, accOrderListView), pair, topPriceOtherOB);  // why a tuple and not just separate variables?  We need it as one to insert into the synchronisation thing in the drawAccountOrderBook sub
-           // return Task.CompletedTask;
+                                                                                                                                // return Task.CompletedTask;
         }
 
         public async Task marketBaiterLoopAsync(string crypto, string fiat, decimal volume, decimal limitPrice) {
@@ -475,7 +471,7 @@ namespace IRTicker {
             Task rateLimitPlaceOrder = Task.Delay(1);
             string pair = crypto + "-" + fiat;
             baiterLiveVol = volume;
-            
+
             decimal distanceFromTopOrder = (decimal)(Math.Pow(0.1, DCE_IR.currencyDecimalPlaces[crypto].Item2) * 5);  // how far infront of the best order should we be?  will be different for different cryptos
             if (BaiterBookSide == "Offer") distanceFromTopOrder = distanceFromTopOrder * -1;
 
@@ -515,7 +511,7 @@ namespace IRTicker {
                     orderPrice = (OurOrderAtTop ? baiterBook.ElementAt(1).Key + distanceFromTopOrder : baiterBook.First().Key + distanceFromTopOrder);
 
                     //orderPrice = baiterBook.First().Key + distanceFromTopOrder;
-                    
+
                     if (BaiterBookSide == "Bid") {
                         Debug.Print("MBAIT: bid order price: " + orderPrice);
 
@@ -717,7 +713,7 @@ namespace IRTicker {
                             Thread.Sleep(100);
                             continue;
                         }
-                        
+
                         foreach (BankHistoryOrder closedO in closedOs) {
                             if (closedO.OrderGuid == placedOrder.OrderGuid) {
                                 if (closedO.Status == OrderStatus.Filled) {
@@ -827,5 +823,6 @@ namespace IRTicker {
             UpdateOrderBook,
             GetTradingFees
         }
+
     }
 }

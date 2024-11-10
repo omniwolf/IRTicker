@@ -225,6 +225,7 @@
     <Compile Include="OBview.Designer.cs">
       <DependentUpon>OBview.cs</DependentUpon>
     </Compile>
+    <Compile Include="PrivateCB.cs" />
     <Compile Include="PrivateIR.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
