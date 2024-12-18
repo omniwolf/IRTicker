@@ -1199,52 +1199,9 @@ namespace IRTicker {
                         }
                         else {
                             pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, IRAF, DCEs["IR"], TGBot);
-                            //int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
-                            //if (friendlyNameLen > 20) friendlyNameLen = 20;
-
-                            //if (null != IRAF) IRAF.UpdateAccountNameButton(Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : ""));
                         }
 
-                        /*DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "AUD");
-                        DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "USD");
-                        DCEs["IR"].InitialiseOrderBookDicts_IR("XBT", "NZD");*/
-
-                        // i think this is silly.  the decimal places aren't going to change, why re-request them.  i think this is causing crashes where while cleared we try and draw the order book and there's nothing there
-                        /*if (DCEs["IR"].currencyDecimalPlaces.Count() > 0) DCEs["IR"].currencyDecimalPlaces.Clear();  // if we reset due to network outage, then clear this before 
-                        if (DCEs["IRUSD"].currencyDecimalPlaces.Count() > 0) DCEs["IRUSD"].currencyDecimalPlaces.Clear();  // if we reset due to network outage, then clear this before 
-                        if (DCEs["IRSGD"].currencyDecimalPlaces.Count() > 0) DCEs["IRSGD"].currencyDecimalPlaces.Clear();  // if we reset due to network outage, then clear this before 
-                        */
                         getIRDecimalPlaceInfo();
-
-                        // using APIs now instead of powershell and webpage scraping.
-                        /*if (!File.Exists("cryptoDPs.csv")) {
-                            MessageBox.Show("cryptoDPs.csv can't be found in the root application folder.  Grab it from Resources folder if you can, or ask Nick.  Can re-generate this file by running the CryptoDecimalPlaces-scrape.ps1 script.  App will close now.",
-                                "Error: can't find decimal places file", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            Application.Exit();
-                            return;
-                        }
-                        try {
-                            using (StreamReader r = new StreamReader("cryptoDPs.csv")) {
-                                //string json = r.ReadToEnd();
-                                //CurrencyRoot = JsonConvert.DeserializeObject<IRCurrencies>(json);
-                                string line;
-                                while ((line = r.ReadLine()) != null) {
-                                    if (string.IsNullOrEmpty(line)) break;
-                                    string[] details = line.Split(',');
-                                    int vol = int.Parse(details[1]);
-                                    int fiat = int.Parse(details[2]);
-                                    if ((vol > 126) || (vol < -126) || (fiat > 126) || (fiat < -126)) throw new Exception("volume or fiat not within -126 and 126");  // we have to convert this to a byte, which must be within these values
-                                    DCEs["IR"].currencyDecimalPlaces.Add(details[0].ToUpper(), new Tuple<int, int>(int.Parse(details[1]), int.Parse(details[2])));
-                                    DCEs["IRUSD"].currencyDecimalPlaces.Add(details[0].ToUpper(), new Tuple<int, int>(int.Parse(details[1]), int.Parse(details[2])));
-                                    DCEs["IRSGD"].currencyDecimalPlaces.Add(details[0].ToUpper(), new Tuple<int, int>(int.Parse(details[1]), int.Parse(details[2])));
-                                }
-                            }
-                        }
-                        catch (Exception ex) {
-                            MessageBox.Show("cryptoDPs.csv can't be read, can't parse the lines for ints maybe?  Error: " + ex.Message + " App will close now.",
-                                "Error: can't read decimal places file", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            Application.Exit();
-                        }*/
 
                         DCEs["IR"].ExchangeProducts = productDictionary_IR;
                         DCEs["IRUSD"].ExchangeProducts = productDictionary_IRUSD;
@@ -1300,6 +1257,8 @@ namespace IRTicker {
                                 if ((null != IRAF) && !IRAF.IsDisposed) pIR.compileAccountOrderBookAsync(primaryCode + "-" + fiat);
                             }
                         }
+                        // COINBASE
+                        // maybe here we can see if iraf is showing CB and if so, check CB closed orders?  or maybe we always cehck closed orders
                     }
 
                     // need to pull this other fiat currency market summary data if our chosen slack currency is not the one we're looking at (and the slack stuff is enabled)
@@ -1996,14 +1955,6 @@ namespace IRTicker {
                 BTC_LastBlock_Time_value.Text = DateTime.Now.ToString("t");
                 return;
             }
-
-            /*if (reportType == 20) {
-                if (IRAccount_panel.Visible || marketBaiterActive) {
-                    string pair = (string)e.UserState;
-                    pIR.updateAccountOrderBook(pair);
-                }
-                return;
-            }*/
 
             if (reportType == 21) {  // 21 is IR update labels
                 DCE.MarketSummary mSummary = (DCE.MarketSummary)e.UserState;

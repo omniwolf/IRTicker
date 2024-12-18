@@ -69,10 +69,6 @@ namespace IRTicker
 
             //IRT.populateIRAPIKeysSettings();  // populates the drop down box of saved API keys
 
-            //int friendlyNameLen = Properties.Settings.Default.APIFriendly.Length;
-            //if (friendlyNameLen > 20) friendlyNameLen = 20;
-            //UpdateAccountNameButton(Properties.Settings.Default.APIFriendly.Substring(0, friendlyNameLen) + (friendlyNameLen != Properties.Settings.Default.APIFriendly.Length ? "..." : ""));
-
             IRT.UIControls_Dict["IR"].Account_XBT_Label = AccountXBT_label;
             IRT.UIControls_Dict["IR"].Account_XBT_Value = AccountXBT_value;
             IRT.UIControls_Dict["IR"].Account_ETH_Value = AccountETH_value;
