@@ -197,6 +197,12 @@
     <Compile Include="BalSettings.Designer.cs">
       <DependentUpon>BalSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="CBAccountsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CBAccountsForm.Designer.cs">
+      <DependentUpon>CBAccountsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CE.cs" />
     <Compile Include="CoinbaseClient.cs" />
     <Compile Include="DCEs.cs" />
@@ -225,7 +231,6 @@
     <Compile Include="OBview.Designer.cs">
       <DependentUpon>OBview.cs</DependentUpon>
     </Compile>
-    <Compile Include="PrivateCB.cs" />
     <Compile Include="PrivateIR.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -265,6 +270,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BalSettings.resx">
       <DependentUpon>BalSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CBAccountsForm.resx">
+      <DependentUpon>CBAccountsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DCEControl.resx">
       <DependentUpon>DCEControl.cs</DependentUpon>
