@@ -200,6 +200,7 @@
     <Compile Include="CBAccountsForm.Designer.cs">
       <DependentUpon>CBAccountsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CBWebSockets.cs" />
     <Compile Include="CE.cs" />
     <Compile Include="CoinbaseClient.cs" />
     <Compile Include="DCEs.cs" />
