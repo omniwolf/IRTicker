@@ -355,7 +355,7 @@ namespace IRTicker {
 
         public void compileAccountOrderBookAsync(string pair) {
 
-            if (pair != (SelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency)) return;
+            if ((null != DCE_IR) && (pair != (SelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency))) return;
             if ((null == IRAF) || IRAF.IsDisposed) return;
 
             List<decimal[]> accOrderListView = new List<decimal[]>();
