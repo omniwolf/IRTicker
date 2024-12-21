@@ -34,6 +34,15 @@
             this.refreshFrequencyLabel = new System.Windows.Forms.Label();
             this.pollingThread = new System.ComponentModel.BackgroundWorker();
             this.Settings = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.Settings_coinbase_panel = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.Settings_coinbase_secret_textbox = new System.Windows.Forms.TextBox();
+            this.Settings_coinbase_secret_label = new System.Windows.Forms.Label();
+            this.Settings_coinbase_apikey_label = new System.Windows.Forms.Label();
+            this.Settings_coinbase_apikey_textbox = new System.Windows.Forms.TextBox();
+            this.Settings_coinbase_passphrase_textbox = new System.Windows.Forms.TextBox();
+            this.Settings_coinbase_passphrase_label = new System.Windows.Forms.Label();
             this.IRAccountSettings_groupBox = new System.Windows.Forms.GroupBox();
             this.TGBot_Enable_checkBox = new System.Windows.Forms.CheckBox();
             this.TGBot_Enable_label = new System.Windows.Forms.Label();
@@ -47,14 +56,16 @@
             this.IR_APIKey_label = new System.Windows.Forms.Label();
             this.EditKeys_button = new System.Windows.Forms.Button();
             this.APIKeys_comboBox = new System.Windows.Forms.ComboBox();
-            this.SettingsSeparator_label = new System.Windows.Forms.Label();
-            this.SessionStartedRel_label = new System.Windows.Forms.Label();
-            this.SessionStartedAbs_label = new System.Windows.Forms.Label();
-            this.SessionStart_label = new System.Windows.Forms.Label();
+            this.ExportSummarised_Label = new System.Windows.Forms.Label();
+            this.ExportSummarised_Checkbox = new System.Windows.Forms.CheckBox();
             this.spreadHistoryCustomFolderValue_Textbox = new System.Windows.Forms.TextBox();
+            this.flashForm_label = new System.Windows.Forms.Label();
             this.spreadHistoryCustomFolder_label = new System.Windows.Forms.Label();
+            this.flashForm_checkBox = new System.Windows.Forms.CheckBox();
             this.NegativeSpread_checkBox = new System.Windows.Forms.CheckBox();
+            this.OB_label = new System.Windows.Forms.Label();
             this.NegativeSpread_label = new System.Windows.Forms.Label();
+            this.OB_checkBox = new System.Windows.Forms.CheckBox();
             this.SlackSettings_groupBox = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.SlackNameEmojiCrypto_comboBox = new System.Windows.Forms.ComboBox();
@@ -67,17 +78,13 @@
             this.slackNameChangeLabel = new System.Windows.Forms.Label();
             this.slackDefaultNameTextBox = new System.Windows.Forms.TextBox();
             this.slackNameChangeCheckBox = new System.Windows.Forms.CheckBox();
-            this.UITimerFreq_maskedTextBox = new System.Windows.Forms.MaskedTextBox();
             this.UITimerFreq_label = new System.Windows.Forms.Label();
-            this.OB_checkBox = new System.Windows.Forms.CheckBox();
-            this.OB_label = new System.Windows.Forms.Label();
-            this.flashForm_checkBox = new System.Windows.Forms.CheckBox();
-            this.flashForm_label = new System.Windows.Forms.Label();
-            this.ExportSummarised_Checkbox = new System.Windows.Forms.CheckBox();
-            this.ExportSummarised_Label = new System.Windows.Forms.Label();
+            this.UITimerFreq_maskedTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.SettingsSeparator_label = new System.Windows.Forms.Label();
+            this.SessionStartedRel_label = new System.Windows.Forms.Label();
+            this.SessionStartedAbs_label = new System.Windows.Forms.Label();
+            this.SessionStart_label = new System.Windows.Forms.Label();
             this.Help_Button = new System.Windows.Forms.Button();
-            this.EnableGDAXLevel3_CheckBox = new System.Windows.Forms.CheckBox();
-            this.EnableGDAXLevel3 = new System.Windows.Forms.Label();
             this.VersionLabel = new System.Windows.Forms.Label();
             this.SettingsOKButton = new System.Windows.Forms.Button();
             this.LoadingPanel = new System.Windows.Forms.Panel();
@@ -245,7 +252,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.cryptoFees_ETH_value = new System.Windows.Forms.Label();
             this.cryptoFees_BTC_value = new System.Windows.Forms.Label();
-            this.IRAccount_button = new System.Windows.Forms.Button();
             this.BTCM_GroupBox = new System.Windows.Forms.GroupBox();
             this.BTCM_panel = new System.Windows.Forms.Panel();
             this.BTCM_ADA_Label2 = new System.Windows.Forms.Label();
@@ -453,7 +459,10 @@
             this.IRTickerTT_avgPrice = new System.Windows.Forms.ToolTip(this.components);
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
             this.IRT_notification = new System.Windows.Forms.NotifyIcon(this.components);
+            this.TradingVenues_comboBox = new System.Windows.Forms.ComboBox();
             this.Settings.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.Settings_coinbase_panel.SuspendLayout();
             this.IRAccountSettings_groupBox.SuspendLayout();
             this.SlackSettings_groupBox.SuspendLayout();
             this.LoadingPanel.SuspendLayout();
@@ -475,7 +484,7 @@
             // refreshFrequencyTextbox
             // 
             this.refreshFrequencyTextbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.refreshFrequencyTextbox.Location = new System.Drawing.Point(437, 12);
+            this.refreshFrequencyTextbox.Location = new System.Drawing.Point(414, 2);
             this.refreshFrequencyTextbox.Mask = "00000";
             this.refreshFrequencyTextbox.Name = "refreshFrequencyTextbox";
             this.refreshFrequencyTextbox.PromptChar = ' ';
@@ -489,7 +498,7 @@
             // refreshFrequencyLabel
             // 
             this.refreshFrequencyLabel.AutoSize = true;
-            this.refreshFrequencyLabel.Location = new System.Drawing.Point(73, 19);
+            this.refreshFrequencyLabel.Location = new System.Drawing.Point(50, 9);
             this.refreshFrequencyLabel.Name = "refreshFrequencyLabel";
             this.refreshFrequencyLabel.Size = new System.Drawing.Size(223, 13);
             this.refreshFrequencyLabel.TabIndex = 1;
@@ -506,36 +515,134 @@
             // Settings
             // 
             this.Settings.BackColor = System.Drawing.Color.White;
-            this.Settings.Controls.Add(this.IRAccountSettings_groupBox);
+            this.Settings.Controls.Add(this.panel1);
             this.Settings.Controls.Add(this.SettingsSeparator_label);
             this.Settings.Controls.Add(this.SessionStartedRel_label);
             this.Settings.Controls.Add(this.SessionStartedAbs_label);
             this.Settings.Controls.Add(this.SessionStart_label);
-            this.Settings.Controls.Add(this.spreadHistoryCustomFolderValue_Textbox);
-            this.Settings.Controls.Add(this.spreadHistoryCustomFolder_label);
-            this.Settings.Controls.Add(this.NegativeSpread_checkBox);
-            this.Settings.Controls.Add(this.NegativeSpread_label);
-            this.Settings.Controls.Add(this.SlackSettings_groupBox);
-            this.Settings.Controls.Add(this.UITimerFreq_maskedTextBox);
-            this.Settings.Controls.Add(this.UITimerFreq_label);
-            this.Settings.Controls.Add(this.OB_checkBox);
-            this.Settings.Controls.Add(this.OB_label);
-            this.Settings.Controls.Add(this.flashForm_checkBox);
-            this.Settings.Controls.Add(this.flashForm_label);
-            this.Settings.Controls.Add(this.ExportSummarised_Checkbox);
-            this.Settings.Controls.Add(this.ExportSummarised_Label);
             this.Settings.Controls.Add(this.Help_Button);
-            this.Settings.Controls.Add(this.EnableGDAXLevel3_CheckBox);
-            this.Settings.Controls.Add(this.EnableGDAXLevel3);
             this.Settings.Controls.Add(this.VersionLabel);
             this.Settings.Controls.Add(this.SettingsOKButton);
-            this.Settings.Controls.Add(this.refreshFrequencyLabel);
-            this.Settings.Controls.Add(this.refreshFrequencyTextbox);
             this.Settings.Location = new System.Drawing.Point(0, 0);
             this.Settings.Name = "Settings";
-            this.Settings.Size = new System.Drawing.Size(582, 840);
+            this.Settings.Size = new System.Drawing.Size(585, 842);
             this.Settings.TabIndex = 4;
             this.Settings.Visible = false;
+            // 
+            // panel1
+            // 
+            this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.Settings_coinbase_panel);
+            this.panel1.Controls.Add(this.refreshFrequencyLabel);
+            this.panel1.Controls.Add(this.IRAccountSettings_groupBox);
+            this.panel1.Controls.Add(this.refreshFrequencyTextbox);
+            this.panel1.Controls.Add(this.ExportSummarised_Label);
+            this.panel1.Controls.Add(this.ExportSummarised_Checkbox);
+            this.panel1.Controls.Add(this.spreadHistoryCustomFolderValue_Textbox);
+            this.panel1.Controls.Add(this.flashForm_label);
+            this.panel1.Controls.Add(this.spreadHistoryCustomFolder_label);
+            this.panel1.Controls.Add(this.flashForm_checkBox);
+            this.panel1.Controls.Add(this.NegativeSpread_checkBox);
+            this.panel1.Controls.Add(this.OB_label);
+            this.panel1.Controls.Add(this.NegativeSpread_label);
+            this.panel1.Controls.Add(this.OB_checkBox);
+            this.panel1.Controls.Add(this.SlackSettings_groupBox);
+            this.panel1.Controls.Add(this.UITimerFreq_label);
+            this.panel1.Controls.Add(this.UITimerFreq_maskedTextBox);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(585, 755);
+            this.panel1.TabIndex = 42;
+            // 
+            // Settings_coinbase_panel
+            // 
+            this.Settings_coinbase_panel.BackColor = System.Drawing.Color.Gainsboro;
+            this.Settings_coinbase_panel.Controls.Add(this.label1);
+            this.Settings_coinbase_panel.Controls.Add(this.Settings_coinbase_secret_textbox);
+            this.Settings_coinbase_panel.Controls.Add(this.Settings_coinbase_secret_label);
+            this.Settings_coinbase_panel.Controls.Add(this.Settings_coinbase_apikey_label);
+            this.Settings_coinbase_panel.Controls.Add(this.Settings_coinbase_apikey_textbox);
+            this.Settings_coinbase_panel.Controls.Add(this.Settings_coinbase_passphrase_textbox);
+            this.Settings_coinbase_panel.Controls.Add(this.Settings_coinbase_passphrase_label);
+            this.Settings_coinbase_panel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Settings_coinbase_panel.Location = new System.Drawing.Point(53, 703);
+            this.Settings_coinbase_panel.Name = "Settings_coinbase_panel";
+            this.Settings_coinbase_panel.Size = new System.Drawing.Size(461, 193);
+            this.Settings_coinbase_panel.TabIndex = 48;
+            this.Settings_coinbase_panel.TabStop = false;
+            this.Settings_coinbase_panel.Text = "Coinbase account";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(27, 125);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(296, 48);
+            this.label1.TabIndex = 48;
+            this.label1.Text = "Coinbase key needs at least Trade permissions.\r\nThese API key details are shared " +
+    "between here\r\nand the Balance settings screen.";
+            // 
+            // Settings_coinbase_secret_textbox
+            // 
+            this.Settings_coinbase_secret_textbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Settings_coinbase_secret_textbox.Location = new System.Drawing.Point(106, 90);
+            this.Settings_coinbase_secret_textbox.Name = "Settings_coinbase_secret_textbox";
+            this.Settings_coinbase_secret_textbox.Size = new System.Drawing.Size(338, 20);
+            this.Settings_coinbase_secret_textbox.TabIndex = 46;
+            this.IRTickerTT_generic.SetToolTip(this.Settings_coinbase_secret_textbox, "Leave blank to disable Telegram integration");
+            this.Settings_coinbase_secret_textbox.UseSystemPasswordChar = true;
+            // 
+            // Settings_coinbase_secret_label
+            // 
+            this.Settings_coinbase_secret_label.AccessibleName = "";
+            this.Settings_coinbase_secret_label.AutoSize = true;
+            this.Settings_coinbase_secret_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Settings_coinbase_secret_label.Location = new System.Drawing.Point(24, 91);
+            this.Settings_coinbase_secret_label.Name = "Settings_coinbase_secret_label";
+            this.Settings_coinbase_secret_label.Size = new System.Drawing.Size(46, 16);
+            this.Settings_coinbase_secret_label.TabIndex = 47;
+            this.Settings_coinbase_secret_label.Text = "Secret";
+            // 
+            // Settings_coinbase_apikey_label
+            // 
+            this.Settings_coinbase_apikey_label.AccessibleName = "";
+            this.Settings_coinbase_apikey_label.AutoSize = true;
+            this.Settings_coinbase_apikey_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Settings_coinbase_apikey_label.Location = new System.Drawing.Point(24, 32);
+            this.Settings_coinbase_apikey_label.Name = "Settings_coinbase_apikey_label";
+            this.Settings_coinbase_apikey_label.Size = new System.Drawing.Size(53, 16);
+            this.Settings_coinbase_apikey_label.TabIndex = 45;
+            this.Settings_coinbase_apikey_label.Text = "API key";
+            // 
+            // Settings_coinbase_apikey_textbox
+            // 
+            this.Settings_coinbase_apikey_textbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Settings_coinbase_apikey_textbox.Location = new System.Drawing.Point(106, 30);
+            this.Settings_coinbase_apikey_textbox.Name = "Settings_coinbase_apikey_textbox";
+            this.Settings_coinbase_apikey_textbox.Size = new System.Drawing.Size(338, 20);
+            this.Settings_coinbase_apikey_textbox.TabIndex = 37;
+            // 
+            // Settings_coinbase_passphrase_textbox
+            // 
+            this.Settings_coinbase_passphrase_textbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Settings_coinbase_passphrase_textbox.Location = new System.Drawing.Point(106, 59);
+            this.Settings_coinbase_passphrase_textbox.Name = "Settings_coinbase_passphrase_textbox";
+            this.Settings_coinbase_passphrase_textbox.Size = new System.Drawing.Size(338, 20);
+            this.Settings_coinbase_passphrase_textbox.TabIndex = 37;
+            this.IRTickerTT_generic.SetToolTip(this.Settings_coinbase_passphrase_textbox, "Leave blank to disable Telegram integration");
+            this.Settings_coinbase_passphrase_textbox.UseSystemPasswordChar = true;
+            // 
+            // Settings_coinbase_passphrase_label
+            // 
+            this.Settings_coinbase_passphrase_label.AccessibleName = "";
+            this.Settings_coinbase_passphrase_label.AutoSize = true;
+            this.Settings_coinbase_passphrase_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Settings_coinbase_passphrase_label.Location = new System.Drawing.Point(24, 60);
+            this.Settings_coinbase_passphrase_label.Name = "Settings_coinbase_passphrase_label";
+            this.Settings_coinbase_passphrase_label.Size = new System.Drawing.Size(80, 16);
+            this.Settings_coinbase_passphrase_label.TabIndex = 42;
+            this.Settings_coinbase_passphrase_label.Text = "Passphrase";
             // 
             // IRAccountSettings_groupBox
             // 
@@ -553,7 +660,7 @@
             this.IRAccountSettings_groupBox.Controls.Add(this.EditKeys_button);
             this.IRAccountSettings_groupBox.Controls.Add(this.APIKeys_comboBox);
             this.IRAccountSettings_groupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IRAccountSettings_groupBox.Location = new System.Drawing.Point(76, 551);
+            this.IRAccountSettings_groupBox.Location = new System.Drawing.Point(53, 501);
             this.IRAccountSettings_groupBox.Name = "IRAccountSettings_groupBox";
             this.IRAccountSettings_groupBox.Size = new System.Drawing.Size(461, 190);
             this.IRAccountSettings_groupBox.TabIndex = 37;
@@ -691,45 +798,33 @@
             this.APIKeys_comboBox.ValueMember = "friendlyName";
             this.APIKeys_comboBox.SelectedIndexChanged += new System.EventHandler(this.APIKeys_comboBox_SelectedIndexChanged);
             // 
-            // SettingsSeparator_label
+            // ExportSummarised_Label
             // 
-            this.SettingsSeparator_label.AutoSize = true;
-            this.SettingsSeparator_label.Location = new System.Drawing.Point(90, 749);
-            this.SettingsSeparator_label.Name = "SettingsSeparator_label";
-            this.SettingsSeparator_label.Size = new System.Drawing.Size(409, 13);
-            this.SettingsSeparator_label.TabIndex = 41;
-            this.SettingsSeparator_label.Text = "___________________________________________________________________";
+            this.ExportSummarised_Label.AccessibleName = "";
+            this.ExportSummarised_Label.AutoSize = true;
+            this.ExportSummarised_Label.Location = new System.Drawing.Point(50, 44);
+            this.ExportSummarised_Label.Name = "ExportSummarised_Label";
+            this.ExportSummarised_Label.Size = new System.Drawing.Size(146, 13);
+            this.ExportSummarised_Label.TabIndex = 17;
+            this.ExportSummarised_Label.Text = "Export summary spread data?";
+            this.IRTickerTT_generic.SetToolTip(this.ExportSummarised_Label, "This will save one datapoint per hour, which is averaged over the last hour.");
             // 
-            // SessionStartedRel_label
+            // ExportSummarised_Checkbox
             // 
-            this.SessionStartedRel_label.AutoSize = true;
-            this.SessionStartedRel_label.Location = new System.Drawing.Point(271, 818);
-            this.SessionStartedRel_label.Name = "SessionStartedRel_label";
-            this.SessionStartedRel_label.Size = new System.Drawing.Size(0, 13);
-            this.SessionStartedRel_label.TabIndex = 40;
-            // 
-            // SessionStartedAbs_label
-            // 
-            this.SessionStartedAbs_label.AutoSize = true;
-            this.SessionStartedAbs_label.Location = new System.Drawing.Point(271, 779);
-            this.SessionStartedAbs_label.Name = "SessionStartedAbs_label";
-            this.SessionStartedAbs_label.Size = new System.Drawing.Size(0, 13);
-            this.SessionStartedAbs_label.TabIndex = 39;
-            // 
-            // SessionStart_label
-            // 
-            this.SessionStart_label.AutoSize = true;
-            this.SessionStart_label.Location = new System.Drawing.Point(185, 779);
-            this.SessionStart_label.Name = "SessionStart_label";
-            this.SessionStart_label.Size = new System.Drawing.Size(82, 13);
-            this.SessionStart_label.TabIndex = 38;
-            this.SessionStart_label.Text = "Session started:";
+            this.ExportSummarised_Checkbox.AccessibleName = "";
+            this.ExportSummarised_Checkbox.AutoSize = true;
+            this.ExportSummarised_Checkbox.Location = new System.Drawing.Point(467, 44);
+            this.ExportSummarised_Checkbox.Name = "ExportSummarised_Checkbox";
+            this.ExportSummarised_Checkbox.Size = new System.Drawing.Size(15, 14);
+            this.ExportSummarised_Checkbox.TabIndex = 18;
+            this.ExportSummarised_Checkbox.UseVisualStyleBackColor = true;
+            this.ExportSummarised_Checkbox.CheckedChanged += new System.EventHandler(this.ExportSummarised_Checkbox_CheckedChanged);
             // 
             // spreadHistoryCustomFolderValue_Textbox
             // 
             this.spreadHistoryCustomFolderValue_Textbox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.spreadHistoryCustomFolderValue_Textbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.spreadHistoryCustomFolderValue_Textbox.Location = new System.Drawing.Point(226, 113);
+            this.spreadHistoryCustomFolderValue_Textbox.Location = new System.Drawing.Point(203, 73);
             this.spreadHistoryCustomFolderValue_Textbox.Name = "spreadHistoryCustomFolderValue_Textbox";
             this.spreadHistoryCustomFolderValue_Textbox.ReadOnly = true;
             this.spreadHistoryCustomFolderValue_Textbox.Size = new System.Drawing.Size(279, 20);
@@ -738,11 +833,20 @@
             this.IRTickerTT_generic.SetToolTip(this.spreadHistoryCustomFolderValue_Textbox, "Default is G:\\My Drive\\IR\\IRTicker\\Spread history data\\");
             this.spreadHistoryCustomFolderValue_Textbox.Click += new System.EventHandler(this.spreadHistoryCustomFolderValue_Textbox_Click);
             // 
+            // flashForm_label
+            // 
+            this.flashForm_label.AccessibleName = "";
+            this.flashForm_label.Location = new System.Drawing.Point(50, 372);
+            this.flashForm_label.Name = "flashForm_label";
+            this.flashForm_label.Size = new System.Drawing.Size(298, 26);
+            this.flashForm_label.TabIndex = 21;
+            this.flashForm_label.Text = "Flash the window if IR resets (only useful for debugging)";
+            // 
             // spreadHistoryCustomFolder_label
             // 
             this.spreadHistoryCustomFolder_label.AccessibleName = "";
             this.spreadHistoryCustomFolder_label.AutoSize = true;
-            this.spreadHistoryCustomFolder_label.Location = new System.Drawing.Point(73, 113);
+            this.spreadHistoryCustomFolder_label.Location = new System.Drawing.Point(50, 73);
             this.spreadHistoryCustomFolder_label.Name = "spreadHistoryCustomFolder_label";
             this.spreadHistoryCustomFolder_label.Size = new System.Drawing.Size(144, 26);
             this.spreadHistoryCustomFolder_label.TabIndex = 35;
@@ -750,28 +854,61 @@
             this.IRTickerTT_generic.SetToolTip(this.spreadHistoryCustomFolder_label, "A folder under this one will be created to store the CSVs in, it will be named yo" +
         "ur current logged in username");
             // 
+            // flashForm_checkBox
+            // 
+            this.flashForm_checkBox.AccessibleName = "";
+            this.flashForm_checkBox.AutoSize = true;
+            this.flashForm_checkBox.Location = new System.Drawing.Point(467, 372);
+            this.flashForm_checkBox.Name = "flashForm_checkBox";
+            this.flashForm_checkBox.Size = new System.Drawing.Size(15, 14);
+            this.flashForm_checkBox.TabIndex = 22;
+            this.flashForm_checkBox.UseVisualStyleBackColor = true;
+            this.flashForm_checkBox.CheckedChanged += new System.EventHandler(this.flashForm_checkBox_CheckedChanged);
+            // 
             // NegativeSpread_checkBox
             // 
             this.NegativeSpread_checkBox.AccessibleName = "";
             this.NegativeSpread_checkBox.AutoSize = true;
             this.NegativeSpread_checkBox.Checked = true;
             this.NegativeSpread_checkBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.NegativeSpread_checkBox.Location = new System.Drawing.Point(490, 518);
+            this.NegativeSpread_checkBox.Location = new System.Drawing.Point(467, 468);
             this.NegativeSpread_checkBox.Name = "NegativeSpread_checkBox";
             this.NegativeSpread_checkBox.Size = new System.Drawing.Size(15, 14);
             this.NegativeSpread_checkBox.TabIndex = 34;
             this.NegativeSpread_checkBox.UseVisualStyleBackColor = true;
             this.NegativeSpread_checkBox.CheckedChanged += new System.EventHandler(this.NegativeSpread_checkBox_CheckedChanged);
             // 
+            // OB_label
+            // 
+            this.OB_label.AccessibleName = "";
+            this.OB_label.AutoSize = true;
+            this.OB_label.Location = new System.Drawing.Point(50, 402);
+            this.OB_label.Name = "OB_label";
+            this.OB_label.Size = new System.Drawing.Size(372, 26);
+            this.OB_label.TabIndex = 24;
+            this.OB_label.Text = "Show real time BTC-AUD orderbook for IR?\r\nRequires app restart.  This was mainly " +
+    "used for debugging, so it\'s pretty messy";
+            // 
             // NegativeSpread_label
             // 
             this.NegativeSpread_label.AccessibleName = "";
             this.NegativeSpread_label.AutoSize = true;
-            this.NegativeSpread_label.Location = new System.Drawing.Point(73, 518);
+            this.NegativeSpread_label.Location = new System.Drawing.Point(50, 468);
             this.NegativeSpread_label.Name = "NegativeSpread_label";
             this.NegativeSpread_label.Size = new System.Drawing.Size(226, 13);
             this.NegativeSpread_label.TabIndex = 33;
             this.NegativeSpread_label.Text = "Monitor for negative spreads and reset if found";
+            // 
+            // OB_checkBox
+            // 
+            this.OB_checkBox.AccessibleName = "";
+            this.OB_checkBox.AutoSize = true;
+            this.OB_checkBox.Location = new System.Drawing.Point(467, 402);
+            this.OB_checkBox.Name = "OB_checkBox";
+            this.OB_checkBox.Size = new System.Drawing.Size(15, 14);
+            this.OB_checkBox.TabIndex = 25;
+            this.OB_checkBox.UseVisualStyleBackColor = true;
+            this.OB_checkBox.CheckedChanged += new System.EventHandler(this.OB_checkBox_CheckedChanged);
             // 
             // SlackSettings_groupBox
             // 
@@ -788,7 +925,7 @@
             this.SlackSettings_groupBox.Controls.Add(this.slackDefaultNameTextBox);
             this.SlackSettings_groupBox.Controls.Add(this.slackNameChangeCheckBox);
             this.SlackSettings_groupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SlackSettings_groupBox.Location = new System.Drawing.Point(76, 155);
+            this.SlackSettings_groupBox.Location = new System.Drawing.Point(53, 115);
             this.SlackSettings_groupBox.Name = "SlackSettings_groupBox";
             this.SlackSettings_groupBox.Size = new System.Drawing.Size(461, 242);
             this.SlackSettings_groupBox.TabIndex = 32;
@@ -917,89 +1054,58 @@
             this.slackNameChangeCheckBox.UseVisualStyleBackColor = true;
             this.slackNameChangeCheckBox.CheckedChanged += new System.EventHandler(this.slackNameChangeCheckBox_CheckedChanged);
             // 
+            // UITimerFreq_label
+            // 
+            this.UITimerFreq_label.AccessibleName = "";
+            this.UITimerFreq_label.AutoSize = true;
+            this.UITimerFreq_label.Location = new System.Drawing.Point(50, 440);
+            this.UITimerFreq_label.Name = "UITimerFreq_label";
+            this.UITimerFreq_label.Size = new System.Drawing.Size(252, 13);
+            this.UITimerFreq_label.TabIndex = 30;
+            this.UITimerFreq_label.Text = "How often to update the UI get for BTC on IR in ms:";
+            // 
             // UITimerFreq_maskedTextBox
             // 
-            this.UITimerFreq_maskedTextBox.Location = new System.Drawing.Point(405, 487);
+            this.UITimerFreq_maskedTextBox.Location = new System.Drawing.Point(382, 437);
             this.UITimerFreq_maskedTextBox.Mask = "0000";
             this.UITimerFreq_maskedTextBox.Name = "UITimerFreq_maskedTextBox";
             this.UITimerFreq_maskedTextBox.PromptChar = ' ';
             this.UITimerFreq_maskedTextBox.Size = new System.Drawing.Size(100, 20);
             this.UITimerFreq_maskedTextBox.TabIndex = 31;
             // 
-            // UITimerFreq_label
+            // SettingsSeparator_label
             // 
-            this.UITimerFreq_label.AccessibleName = "";
-            this.UITimerFreq_label.AutoSize = true;
-            this.UITimerFreq_label.Location = new System.Drawing.Point(73, 490);
-            this.UITimerFreq_label.Name = "UITimerFreq_label";
-            this.UITimerFreq_label.Size = new System.Drawing.Size(252, 13);
-            this.UITimerFreq_label.TabIndex = 30;
-            this.UITimerFreq_label.Text = "How often to update the UI get for BTC on IR in ms:";
+            this.SettingsSeparator_label.AutoSize = true;
+            this.SettingsSeparator_label.Location = new System.Drawing.Point(90, 749);
+            this.SettingsSeparator_label.Name = "SettingsSeparator_label";
+            this.SettingsSeparator_label.Size = new System.Drawing.Size(409, 13);
+            this.SettingsSeparator_label.TabIndex = 41;
+            this.SettingsSeparator_label.Text = "___________________________________________________________________";
             // 
-            // OB_checkBox
+            // SessionStartedRel_label
             // 
-            this.OB_checkBox.AccessibleName = "";
-            this.OB_checkBox.AutoSize = true;
-            this.OB_checkBox.Location = new System.Drawing.Point(490, 452);
-            this.OB_checkBox.Name = "OB_checkBox";
-            this.OB_checkBox.Size = new System.Drawing.Size(15, 14);
-            this.OB_checkBox.TabIndex = 25;
-            this.OB_checkBox.UseVisualStyleBackColor = true;
-            this.OB_checkBox.CheckedChanged += new System.EventHandler(this.OB_checkBox_CheckedChanged);
+            this.SessionStartedRel_label.AutoSize = true;
+            this.SessionStartedRel_label.Location = new System.Drawing.Point(271, 818);
+            this.SessionStartedRel_label.Name = "SessionStartedRel_label";
+            this.SessionStartedRel_label.Size = new System.Drawing.Size(0, 13);
+            this.SessionStartedRel_label.TabIndex = 40;
             // 
-            // OB_label
+            // SessionStartedAbs_label
             // 
-            this.OB_label.AccessibleName = "";
-            this.OB_label.AutoSize = true;
-            this.OB_label.Location = new System.Drawing.Point(73, 452);
-            this.OB_label.Name = "OB_label";
-            this.OB_label.Size = new System.Drawing.Size(372, 26);
-            this.OB_label.TabIndex = 24;
-            this.OB_label.Text = "Show real time BTC-AUD orderbook for IR?\r\nRequires app restart.  This was mainly " +
-    "used for debugging, so it\'s pretty messy";
+            this.SessionStartedAbs_label.AutoSize = true;
+            this.SessionStartedAbs_label.Location = new System.Drawing.Point(271, 779);
+            this.SessionStartedAbs_label.Name = "SessionStartedAbs_label";
+            this.SessionStartedAbs_label.Size = new System.Drawing.Size(0, 13);
+            this.SessionStartedAbs_label.TabIndex = 39;
             // 
-            // flashForm_checkBox
+            // SessionStart_label
             // 
-            this.flashForm_checkBox.AccessibleName = "";
-            this.flashForm_checkBox.AutoSize = true;
-            this.flashForm_checkBox.Location = new System.Drawing.Point(490, 412);
-            this.flashForm_checkBox.Name = "flashForm_checkBox";
-            this.flashForm_checkBox.Size = new System.Drawing.Size(15, 14);
-            this.flashForm_checkBox.TabIndex = 22;
-            this.flashForm_checkBox.UseVisualStyleBackColor = true;
-            this.flashForm_checkBox.CheckedChanged += new System.EventHandler(this.flashForm_checkBox_CheckedChanged);
-            // 
-            // flashForm_label
-            // 
-            this.flashForm_label.AccessibleName = "";
-            this.flashForm_label.AutoSize = true;
-            this.flashForm_label.Location = new System.Drawing.Point(73, 412);
-            this.flashForm_label.Name = "flashForm_label";
-            this.flashForm_label.Size = new System.Drawing.Size(198, 26);
-            this.flashForm_label.TabIndex = 21;
-            this.flashForm_label.Text = "Flash the window if IR resets (only useful\r\nfor debugging)";
-            // 
-            // ExportSummarised_Checkbox
-            // 
-            this.ExportSummarised_Checkbox.AccessibleName = "";
-            this.ExportSummarised_Checkbox.AutoSize = true;
-            this.ExportSummarised_Checkbox.Location = new System.Drawing.Point(490, 84);
-            this.ExportSummarised_Checkbox.Name = "ExportSummarised_Checkbox";
-            this.ExportSummarised_Checkbox.Size = new System.Drawing.Size(15, 14);
-            this.ExportSummarised_Checkbox.TabIndex = 18;
-            this.ExportSummarised_Checkbox.UseVisualStyleBackColor = true;
-            this.ExportSummarised_Checkbox.CheckedChanged += new System.EventHandler(this.ExportSummarised_Checkbox_CheckedChanged);
-            // 
-            // ExportSummarised_Label
-            // 
-            this.ExportSummarised_Label.AccessibleName = "";
-            this.ExportSummarised_Label.AutoSize = true;
-            this.ExportSummarised_Label.Location = new System.Drawing.Point(73, 84);
-            this.ExportSummarised_Label.Name = "ExportSummarised_Label";
-            this.ExportSummarised_Label.Size = new System.Drawing.Size(146, 13);
-            this.ExportSummarised_Label.TabIndex = 17;
-            this.ExportSummarised_Label.Text = "Export summary spread data?";
-            this.IRTickerTT_generic.SetToolTip(this.ExportSummarised_Label, "This will save one datapoint per hour, which is averaged over the last hour.");
+            this.SessionStart_label.AutoSize = true;
+            this.SessionStart_label.Location = new System.Drawing.Point(185, 779);
+            this.SessionStart_label.Name = "SessionStart_label";
+            this.SessionStart_label.Size = new System.Drawing.Size(82, 13);
+            this.SessionStart_label.TabIndex = 38;
+            this.SessionStart_label.Text = "Session started:";
             // 
             // Help_Button
             // 
@@ -1011,30 +1117,6 @@
             this.Help_Button.Text = "Help";
             this.Help_Button.UseVisualStyleBackColor = true;
             this.Help_Button.Click += new System.EventHandler(this.Help_Button_Click);
-            // 
-            // EnableGDAXLevel3_CheckBox
-            // 
-            this.EnableGDAXLevel3_CheckBox.AccessibleName = "";
-            this.EnableGDAXLevel3_CheckBox.AutoSize = true;
-            this.EnableGDAXLevel3_CheckBox.Checked = true;
-            this.EnableGDAXLevel3_CheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.EnableGDAXLevel3_CheckBox.Location = new System.Drawing.Point(490, 56);
-            this.EnableGDAXLevel3_CheckBox.Name = "EnableGDAXLevel3_CheckBox";
-            this.EnableGDAXLevel3_CheckBox.Size = new System.Drawing.Size(15, 14);
-            this.EnableGDAXLevel3_CheckBox.TabIndex = 13;
-            this.EnableGDAXLevel3_CheckBox.UseVisualStyleBackColor = true;
-            // 
-            // EnableGDAXLevel3
-            // 
-            this.EnableGDAXLevel3.AccessibleName = "";
-            this.EnableGDAXLevel3.AutoSize = true;
-            this.EnableGDAXLevel3.Location = new System.Drawing.Point(73, 56);
-            this.EnableGDAXLevel3.Name = "EnableGDAXLevel3";
-            this.EnableGDAXLevel3.Size = new System.Drawing.Size(166, 13);
-            this.EnableGDAXLevel3.TabIndex = 12;
-            this.EnableGDAXLevel3.Text = "Pull full Coinbase Pro order book?";
-            this.IRTickerTT_generic.SetToolTip(this.EnableGDAXLevel3, "Not recommended if you\'re doing lots of average price calculations - you will get" +
-        " rate limited");
             // 
             // VersionLabel
             // 
@@ -1078,11 +1160,11 @@
             // Main
             // 
             this.Main.BackColor = System.Drawing.Color.White;
+            this.Main.Controls.Add(this.TradingVenues_comboBox);
             this.Main.Controls.Add(this.IRUSD_GroupBox);
             this.Main.Controls.Add(this.IRSGD_GroupBox);
             this.Main.Controls.Add(this.Balance_button);
             this.Main.Controls.Add(this.cryptoFees_groupBox);
-            this.Main.Controls.Add(this.IRAccount_button);
             this.Main.Controls.Add(this.BTCM_GroupBox);
             this.Main.Controls.Add(this.BAR_GroupBox);
             this.Main.Controls.Add(this.SettingsButton);
@@ -3355,17 +3437,6 @@
             this.cryptoFees_BTC_value.Name = "cryptoFees_BTC_value";
             this.cryptoFees_BTC_value.Size = new System.Drawing.Size(0, 13);
             this.cryptoFees_BTC_value.TabIndex = 4;
-            // 
-            // IRAccount_button
-            // 
-            this.IRAccount_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.IRAccount_button.Location = new System.Drawing.Point(412, 810);
-            this.IRAccount_button.Name = "IRAccount_button";
-            this.IRAccount_button.Size = new System.Drawing.Size(75, 23);
-            this.IRAccount_button.TabIndex = 17;
-            this.IRAccount_button.Text = "IR Account";
-            this.IRAccount_button.UseVisualStyleBackColor = true;
-            this.IRAccount_button.Click += new System.EventHandler(this.IRAccount_button_Click);
             // 
             // BTCM_GroupBox
             // 
@@ -6023,14 +6094,28 @@
             this.IRT_notification.Icon = ((System.Drawing.Icon)(resources.GetObject("IRT_notification.Icon")));
             this.IRT_notification.Text = "IR Ticker";
             // 
+            // TradingVenues_comboBox
+            // 
+            this.TradingVenues_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.TradingVenues_comboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TradingVenues_comboBox.FormattingEnabled = true;
+            this.TradingVenues_comboBox.ItemHeight = 16;
+            this.TradingVenues_comboBox.Items.AddRange(new object[] {
+            "Trade"});
+            this.TradingVenues_comboBox.Location = new System.Drawing.Point(411, 810);
+            this.TradingVenues_comboBox.Name = "TradingVenues_comboBox";
+            this.TradingVenues_comboBox.Size = new System.Drawing.Size(75, 24);
+            this.TradingVenues_comboBox.TabIndex = 69;
+            this.TradingVenues_comboBox.SelectedIndexChanged += new System.EventHandler(this.TradingVenues_comboBox_SelectedIndexChanged);
+            // 
             // IRTicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(584, 841);
             this.Controls.Add(this.Main);
-            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.Settings);
+            this.Controls.Add(this.LoadingPanel);
             this.Controls.Add(this.OTCHelper);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HelpButton = true;
@@ -6044,6 +6129,10 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.IRTicker_Closing);
             this.Settings.ResumeLayout(false);
             this.Settings.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.Settings_coinbase_panel.ResumeLayout(false);
+            this.Settings_coinbase_panel.PerformLayout();
             this.IRAccountSettings_groupBox.ResumeLayout(false);
             this.IRAccountSettings_groupBox.PerformLayout();
             this.SlackSettings_groupBox.ResumeLayout(false);
@@ -6120,8 +6209,6 @@
         private System.Windows.Forms.ComboBox BTCM_BuySellComboBox;
         private System.Windows.Forms.Label BTCM_AvgPrice_Label;
         private System.Windows.Forms.Label IR_AvgPrice_Label;
-        private System.Windows.Forms.CheckBox EnableGDAXLevel3_CheckBox;
-        private System.Windows.Forms.Label EnableGDAXLevel3;
         private System.Windows.Forms.ToolTip IRTickerTT_spread;
         public System.Windows.Forms.Button Help_Button;
         private System.Windows.Forms.CheckBox ExportSummarised_Checkbox;
@@ -6194,7 +6281,6 @@
         private System.Windows.Forms.Label SessionStart_label;
         private System.Windows.Forms.Label SettingsSeparator_label;
         private System.Windows.Forms.GroupBox IRAccountSettings_groupBox;
-        private System.Windows.Forms.Button IRAccount_button;
         private System.Windows.Forms.ToolTip IRTickerTT_avgPrice;
         private System.Windows.Forms.ToolTip IRTickerTT_generic;
         private System.ComponentModel.BackgroundWorker pollingThread;
@@ -6500,6 +6586,16 @@
         private System.Windows.Forms.Label IRUSD_TRX_Label2;
         private System.Windows.Forms.Label IRUSD_TRX_Label1;
         private System.Windows.Forms.Label IRUSD_TRX_Label3;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.GroupBox Settings_coinbase_panel;
+        private System.Windows.Forms.TextBox Settings_coinbase_secret_textbox;
+        private System.Windows.Forms.Label Settings_coinbase_secret_label;
+        private System.Windows.Forms.Label Settings_coinbase_apikey_label;
+        private System.Windows.Forms.TextBox Settings_coinbase_apikey_textbox;
+        private System.Windows.Forms.TextBox Settings_coinbase_passphrase_textbox;
+        private System.Windows.Forms.Label Settings_coinbase_passphrase_label;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox TradingVenues_comboBox;
     }
 }
 

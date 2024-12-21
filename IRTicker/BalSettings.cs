@@ -24,7 +24,7 @@ namespace IRTicker
             BalSettingsB2C2Token_textbox.Text = Properties.Settings.Default.B2C2Token;
 
             BalSettingsCoinbaseAPIKey_textbox.Text = Properties.Settings.Default.CoinbaseAPIKey;
-            BalSettingsCoinbaseAPISecret_textbox.Text = Properties.Settings.Default.CoinbaseAPIKey;
+            BalSettingsCoinbaseAPISecret_textbox.Text = Properties.Settings.Default.CoinbaseAPISecret;
             BalSettingsCoinbasePassPhrase_textbox.Text = Properties.Settings.Default.CoinbasePassPhrase;
 
             BalSettingsTrigonXToken_textbox.Text = Properties.Settings.Default.TrigonXToken;

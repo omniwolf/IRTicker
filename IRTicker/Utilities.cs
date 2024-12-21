@@ -335,5 +335,29 @@ namespace IRTicker {
             }
             return "";
         }
+
+        // builds the combo box items in the trade drop down menu on the main panel
+        public static void buildTradingVenueItems (ComboBox combo) {
+
+            combo.Items.Clear();
+            combo.Items.Add("Trade");  // always
+            
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) &&
+                !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
+
+                combo.Items.Add("IR");
+            }
+
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.CoinbaseAPIKey) &&
+                !string.IsNullOrEmpty(Properties.Settings.Default.CoinbasePassPhrase) &&
+                !string.IsNullOrEmpty(Properties.Settings.Default.CoinbaseAPISecret)) {
+
+                combo.Items.Add("Coinbase");
+            }
+
+            if (combo.Items.Count == 1) {
+                combo.Items.Add("No trade venues available");
+            }
+        }
     }
 }

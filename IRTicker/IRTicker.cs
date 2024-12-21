@@ -49,6 +49,7 @@ namespace IRTicker {
         public readonly SynchronizationContext synchronizationContext;  // use this to do UI stuff from the market baiter thread
 
         IRAccountsForm IRAF;
+        CBAccountsForm CBAF;  // coinbase trading form
 
         TelegramBot TGBot = null;
 
@@ -181,7 +182,6 @@ namespace IRTicker {
             Properties.Settings.Default.Save();
 
             refreshFrequencyTextbox.Text = Properties.Settings.Default.RefreshFreq.ToString();
-            EnableGDAXLevel3_CheckBox.Checked = Properties.Settings.Default.FullGDAXOB;
 
             ExportSummarised_Checkbox.Checked = Properties.Settings.Default.ExportSummarised;
             spreadHistoryCustomFolderValue_Textbox.Text = Properties.Settings.Default.SpreadHistoryCustomFolder;
@@ -200,6 +200,15 @@ namespace IRTicker {
             TelegramBotAPIToken_textBox.Text = Properties.Settings.Default.TelegramAPIToken;
             TGBot_Enable_checkBox.Checked = Properties.Settings.Default.TGBot_Enable;
             TelegramNewMessages_checkBox.Checked = Properties.Settings.Default.TelegramAllNewMessages;
+            Settings_coinbase_apikey_textbox.Text = Properties.Settings.Default.CoinbaseAPIKey;
+            Settings_coinbase_passphrase_textbox.Text = Properties.Settings.Default.CoinbasePassPhrase;
+            Settings_coinbase_secret_textbox.Text = Properties.Settings.Default.CoinbaseAPISecret;
+
+            // initialise the trade drop down
+            Utilities.buildTradingVenueItems(TradingVenues_comboBox);
+            TradingVenues_comboBox.SelectedIndex = 0;  // set to "Trade"
+
+
             if (string.IsNullOrEmpty(Properties.Settings.Default.SlackNameFiatCurrency)) Properties.Settings.Default.SlackNameFiatCurrency = "AUD";
 
             if (Slack_checkBox.Checked) {
@@ -1194,7 +1203,6 @@ namespace IRTicker {
                         // if (null != pIR) pIR.populateClosedOrders();
 
                         if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
-                            IRAccount_button.Enabled = false;
                             pIR = null;
                         }
                         else {
@@ -2296,6 +2304,7 @@ namespace IRTicker {
             Main.Visible = false;
         }
 
+        // thi sis the Save and close button on the Settings panel
         private void SettingsOKButton_Click(object sender, EventArgs e) {
             if(int.TryParse(refreshFrequencyTextbox.Text, out int refreshInt)) {
                 if(refreshInt >= minRefreshFrequency) {
@@ -2318,11 +2327,10 @@ namespace IRTicker {
                         UITimerFreq_maskedTextBox.Text = Properties.Settings.Default.UITimerFreq.ToString();  // set it back to the last save value
                     }
 
-                    if (!IRAccount_button.Enabled &&
-                        !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) &&
-                        !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
+                    Utilities.buildTradingVenueItems(TradingVenues_comboBox);  // show the correct entries in the trade drop down.
 
-                        IRAccount_button.Enabled = true;
+                    if (!string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) &&
+                        !string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
 
                         pIR = new PrivateIR();
                         pIR.PrivateIR_init(Properties.Settings.Default.IRAPIPubKey, Properties.Settings.Default.IRAPIPrivKey, IRAF, DCEs["IR"], TGBot);
@@ -2330,7 +2338,6 @@ namespace IRTicker {
                     }
 
                     if (string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPubKey) || string.IsNullOrEmpty(Properties.Settings.Default.IRAPIPrivKey)) {
-                        IRAccount_button.Enabled = false;
                         pIR = null;
                     }
 
@@ -2380,6 +2387,11 @@ namespace IRTicker {
                     Properties.Settings.Default.TelegramAllNewMessages = TelegramNewMessages_checkBox.Checked;
                     Properties.Settings.Default.TGBot_Enable = TGBot_Enable_checkBox.Checked;
                     Properties.Settings.Default.TelegramAPIToken = TelegramBotAPIToken_textBox.Text;
+
+                    // coinbase
+                    Properties.Settings.Default.CoinbaseAPIKey = Settings_coinbase_apikey_textbox.Text;
+                    Properties.Settings.Default.CoinbasePassPhrase = Settings_coinbase_passphrase_textbox.Text;
+                    Properties.Settings.Default.CoinbaseAPISecret = Settings_coinbase_secret_textbox.Text;
 
                     Properties.Settings.Default.Save();
                     /*try {  // don't need this anymore, we do it in InitialiseAccountsPanel() sub below
@@ -2895,18 +2907,6 @@ namespace IRTicker {
             }
         }
 
-        private void IRAccount_button_Click(object sender, EventArgs e) {
-            if ((null == IRAF) || IRAF.IsDisposed) {
-                IRAF = new IRAccountsForm(this, pIR, DCEs["IR"], TGBot);
-                IRAF.Show();
-            }
-            else {
-                IRAF.BringToFront();
-                IRAF.Show();
-                IRAF.Activate();
-            }            
-        }
-
         private void EditKeys_button_Click(object sender, EventArgs e) {
             Form EditKeys = new AccountAPIKeys();
             EditKeys.ShowDialog();
@@ -2957,7 +2957,6 @@ namespace IRTicker {
                 AccountAPIKeys.APIKeyGroup grp = new AccountAPIKeys.APIKeyGroup(Properties.Settings.Default.APIFriendly5, Properties.Settings.Default.IRAPIPubKey5, Properties.Settings.Default.IRAPIPrivKey5);
                 APIKeys_comboBox.Items.Add(grp);
                 if (IRAFavailable) _IRAF.AccountAPIKeys_comboBox.Items.Add(grp);
-
             }
 
             bool foundKey = false;
@@ -3065,6 +3064,43 @@ namespace IRTicker {
             else {
                 showBalloon("TelegramBot", "No action taken - the TelegramBot is not currently authenticated");
             }
+        }
+
+        private void TradingVenues_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            System.Windows.Forms.ComboBox combo = (System.Windows.Forms.ComboBox)sender;
+
+            switch (combo.SelectedItem.ToString()) {
+                case "Trade":  // these are not actionable choices, do nothing.
+                case "No trade venues available":
+                    return;
+
+                case "IR":
+                    if ((null == IRAF) || IRAF.IsDisposed) {
+                        IRAF = new IRAccountsForm(this, pIR, DCEs["IR"], TGBot);
+                        IRAF.Show();
+                    }
+                    else {
+                        IRAF.BringToFront();
+                        IRAF.Show();
+                        IRAF.Activate();
+                    }
+                    break;
+
+                case "Coinbase":
+                    if ((null == CBAF) || CBAF.IsDisposed) {
+                        CBAF = new CBAccountsForm();
+                        CBAF.Show();
+                    }
+                    else {
+                        CBAF.BringToFront();
+                        CBAF.Show();
+                        CBAF.Activate();
+                    }
+                    break;
+            }
+
+            // after their choice, set the trade drop down back to "Trade"
+            combo.SelectedIndex = 0;
         }
 
         public void showBalloon(string title, string body) {

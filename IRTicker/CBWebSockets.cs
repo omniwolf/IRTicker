@@ -17,7 +17,6 @@ namespace IRTicker {
         private readonly string _productId;  // this is the pair, eg "USDT-USD"
         private readonly OrderBook _orderBook = new OrderBook();
 
-        // Add your API credentials here
         private readonly string _apiKey;
         private readonly string _apiSecret;     // base64 secret
         private readonly string _apiPassphrase;
