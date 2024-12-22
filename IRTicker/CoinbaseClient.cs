@@ -15,25 +15,70 @@ namespace IRTicker
 {
     class CoinbaseClient
     {
-        private string ApiKey { get; set; }
-        private string UnsignedSignature { get; set; }
-        private string PassPhrase { get; set; }
 
-        public async Task<string> GetAccounts(string inAPIKey, string inAPISecret, string inPassPhrase) {
+        public static async Task<string> CB_cancel_order(string order_id, string APIKey = null, string APISecret = null, string PassPhrase = null) {
+            if (APIKey == null || APISecret == null || PassPhrase == null) {
+                APIKey = Properties.Settings.Default.CoinbaseAPIKey;
+                APISecret = Properties.Settings.Default.CoinbaseAPISecret;
+                PassPhrase = Properties.Settings.Default.CoinbasePassPhrase;
+            }
+
+            var response = await CB_DELETE(APIKey, APISecret, PassPhrase, "orders", order_id);
+            return response;
+        }
+
+        public static async Task<string> CB_get_open_orders(string APIKey = null, string APISecret = null, string PassPhrase = null) {
+            if (APIKey == null || APISecret == null || PassPhrase == null) {
+                APIKey = Properties.Settings.Default.CoinbaseAPIKey;
+                APISecret = Properties.Settings.Default.CoinbaseAPISecret;
+                PassPhrase = Properties.Settings.Default.CoinbasePassPhrase;
+            }
+
+            var response = await CB_GET(APIKey, APISecret, PassPhrase, "orders");
+            return response;
+        }
+
+        public static async Task<string> CB_get_fills(string pair, string APIKey = null, string APISecret = null, string PassPhrase = null) {
+            if (APIKey == null || APISecret == null || PassPhrase == null) {
+                APIKey = Properties.Settings.Default.CoinbaseAPIKey;
+                APISecret = Properties.Settings.Default.CoinbaseAPISecret;
+                PassPhrase = Properties.Settings.Default.CoinbasePassPhrase;
+            }
+
+            var response = await CB_GET(APIKey, APISecret, PassPhrase, "fills?product_id=" + pair);
+            return response;
+        }
+        public static async Task<string> CB_get_settled(string pair = "", string APIKey = null, string APISecret = null, string PassPhrase = null) {
+            if (APIKey == null || APISecret == null || PassPhrase == null) {
+                APIKey = Properties.Settings.Default.CoinbaseAPIKey;
+                APISecret = Properties.Settings.Default.CoinbaseAPISecret;
+                PassPhrase = Properties.Settings.Default.CoinbasePassPhrase;
+            }
+
+            string product_id = "";
+            if (pair != "") {
+                product_id = "&product_id=" + pair;
+            }
+
+            // this doesn't work, sorting works, but it seems to be missing orders.  need to inspect the return payload.
+            var response = await CB_GET(APIKey, APISecret, PassPhrase, "orders?status=done&sortedBy=created_at&sorting=desc" + product_id);
+            return response;
+        }
+
+        // does a basic GET request on the coinbase exchange 
+        // endPoint can be "orders" or whatever the first thing after the / is
+        // arg can be another folder deeper, eg /{order_id} in /orders/{order_id}
+        public static async Task<string> CB_GET(string APIKey, string APISecret, string PassPhrase, string endPoint, string arg = "") {
 
             HttpClient httpClient = new HttpClient();
 
-            ApiKey = inAPIKey;
-            UnsignedSignature = inAPISecret;
-            PassPhrase = inPassPhrase;
-
-            var httpRequestMessage = BuildHTTPRequest("https://api.exchange.coinbase.com", "/accounts", "", HttpMethod.Get);
+            var httpRequestMessage = BuildHTTPRequest("https://api.exchange.coinbase.com", "/" + endPoint + (string.IsNullOrEmpty(arg) ? "" : "/" + arg), "", HttpMethod.Get, APIKey, APISecret, PassPhrase);
             if (null == httpRequestMessage) return "";
 
             HttpResponseMessage httpResponseMessage;
             try {
                 httpResponseMessage = await httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
-                string res =  await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+                string res = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
                 return res;
             }
             catch (Exception ex) {
@@ -42,9 +87,41 @@ namespace IRTicker
             return "";
         }
 
-        private HttpRequestMessage BuildHTTPRequest(string apiUri, string requestUri, string contentBody, HttpMethod httpMethod) {
+        private static async Task<string> CB_DELETE(string APIKey, string APISecret, string PassPhrase, string endPoint, string arg = "") {
+            HttpClient httpClient = new HttpClient();
 
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, new Uri(new Uri(apiUri), requestUri)) {
+            // Build the HTTP request message
+            var httpRequestMessage = BuildHTTPRequest(
+                "https://api.exchange.coinbase.com",
+                "/" + endPoint + (string.IsNullOrEmpty(arg) ? "" : "/" + arg),
+                "",
+                HttpMethod.Delete,
+                APIKey,
+                APISecret,
+                PassPhrase
+            );
+
+            if (httpRequestMessage == null) return "";
+
+            HttpResponseMessage httpResponseMessage;
+            try {
+                // Send the DELETE request
+                httpResponseMessage = await httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
+                string res = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return res;
+            }
+            catch (Exception ex) {
+                Debug.Print(DateTime.Now + " - Caught exception in Coinbase class when doing network things: " + ex.Message);
+            }
+            return "";
+        }
+
+
+        /// AUTHENTICATION HELPERS
+
+        private static HttpRequestMessage BuildHTTPRequest(string apiUri, string requestUri, string contentBody, HttpMethod httpMethod, string APIKey, string APISecret, string PassPhrase) {
+
+            var requestMessage = new HttpRequestMessage(httpMethod, new Uri(new Uri(apiUri), requestUri)) {
                 Content = contentBody == string.Empty
                     ? null
                     : new StringContent(contentBody, Encoding.UTF8, "application/json")
@@ -52,20 +129,20 @@ namespace IRTicker
 
             double timeStamp = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;  // epoch time
 
-            if (string.IsNullOrEmpty(ApiKey) || string.IsNullOrEmpty(UnsignedSignature) || string.IsNullOrEmpty(PassPhrase)) {
+            if (string.IsNullOrEmpty(APIKey) || string.IsNullOrEmpty(APISecret) || string.IsNullOrEmpty(PassPhrase)) {
                 return null;
             }
 
-            string signedSignature = ComputeSignature(httpMethod, UnsignedSignature, timeStamp, requestUri, contentBody);
-            string signedSig2 = GenerateSignature(timeStamp.ToString("F0", CultureInfo.InvariantCulture), httpMethod.ToString().ToUpper(), requestUri, "", UnsignedSignature);
+            string signedSignature = ComputeSignature(httpMethod, APISecret, timeStamp, requestUri, contentBody);
+            //string signedSig2 = GenerateSignature(timeStamp.ToString("F0", CultureInfo.InvariantCulture), httpMethod.ToString().ToUpper(), requestUri, "", APISecret);
 
-            AddHeaders(requestMessage, signedSignature, timeStamp);  // requestMessage is manipulated by this method
+            AddHeaders(requestMessage, signedSignature, timeStamp, APIKey, PassPhrase);  // requestMessage is manipulated by this method
 
             return requestMessage;
         }
 
 
-        private void AddHeaders(HttpRequestMessage httpRequestMessage, string signedSignature, double timeStamp) {
+        private static void AddHeaders(HttpRequestMessage httpRequestMessage, string signedSignature, double timeStamp, string APIkey, string PassPhrase) {
 
             httpRequestMessage.Headers.Add("User-Agent", "IRTicker");
 
@@ -73,7 +150,7 @@ namespace IRTicker
             // CB - ACCESS - SIGN The base64-encoded signature(see Signing a Message).
             // CB - ACCESS - TIMESTAMP A timestamp for your request.
             // CB - ACCESS - PASSPHRASE The passphrase you specified when creating the API key.
-            httpRequestMessage.Headers.Add("CB-ACCESS-KEY", ApiKey);
+            httpRequestMessage.Headers.Add("CB-ACCESS-KEY", APIkey);
             httpRequestMessage.Headers.Add("CB-ACCESS-TIMESTAMP", timeStamp.ToString("F0", CultureInfo.InvariantCulture));
             httpRequestMessage.Headers.Add("CB-ACCESS-SIGN", signedSignature);
             httpRequestMessage.Headers.Add("CB-ACCESS-PASSPHRASE", PassPhrase);
@@ -84,7 +161,7 @@ namespace IRTicker
         // The CB-ACCESS-SIGN header is generated by creating a sha256 HMAC using the base64-decoded secret key on the prehash 
         // string timestamp + method + requestPath + body (where + represents string concatenation) and base64-encode the output. 
         // The timestamp value is the same as the CB-ACCESS-TIMESTAMP header.
-        private string ComputeSignature(
+        private static string ComputeSignature(
             HttpMethod httpMethod,
             string secret,
             double timestamp,
@@ -97,15 +174,16 @@ namespace IRTicker
         }
 
         // ... magic
-        private string HashString(string str, byte[] secret) {
+        public static string HashString(string str, byte[] secret) {
             var bytes = Encoding.UTF8.GetBytes(str);
             using (var hmaccsha = new HMACSHA256(secret)) {
                 return Convert.ToBase64String(hmaccsha.ComputeHash(bytes));
             }
         }
 
+        // i think these next three functions i was trying to figure out why cb wasn't working, but it was a typo in another file.  I think i can delete.
 
-        static string ByteToHexString(byte[] bytes) {
+        /*static string ByteToHexString(byte[] bytes) {
             char[] c = new char[bytes.Length * 2];
             int b;
             for (int i = 0; i < bytes.Length; i++) {
@@ -115,13 +193,13 @@ namespace IRTicker
                 c[i * 2 + 1] = (char)(87 + b + (((b - 10) >> 31) & -39));
             }
             return new string(c);
-        }
+        }*/
 
-        public static string GenerateSignature(string timestamp, string method, string url, string body, string appSecret) {
-            return GetHMACInHex(appSecret, timestamp + method + url + body);
-        }
+        /* public static string GenerateSignature(string timestamp, string method, string url, string body, string appSecret) {
+             return GetHMACInHex(appSecret, timestamp + method + url + body);
+         }*/
 
-        internal static string GetHMACInHex(string key, string data) {
+        /*internal static string GetHMACInHex(string key, string data) {
             var hmacKey = Encoding.UTF8.GetBytes(key);
             var dataBytes = Encoding.UTF8.GetBytes(data);
 
@@ -129,6 +207,6 @@ namespace IRTicker
                 var sig = hmac.ComputeHash(dataBytes);
                 return ByteToHexString(sig);
             }
-        }
+        }*/
     }
 }

@@ -697,7 +697,7 @@ namespace IRTicker
         }
 
         private async void DrawCoinbase() {
-            CoinbaseClient cbc = new CoinbaseClient();
+            //CoinbaseClient cbc = new CoinbaseClient();  // static class now
 
             if (string.IsNullOrEmpty(Properties.Settings.Default.CoinbaseAPIKey) || 
                 string.IsNullOrEmpty(Properties.Settings.Default.CoinbaseAPISecret) || 
@@ -710,7 +710,7 @@ namespace IRTicker
                 return;
             }
 
-            Task<string> cbResponseTask = cbc.GetAccounts(Properties.Settings.Default.CoinbaseAPIKey, Properties.Settings.Default.CoinbaseAPISecret, Properties.Settings.Default.CoinbasePassPhrase);
+            Task<string> cbResponseTask = CoinbaseClient.CB_GET(Properties.Settings.Default.CoinbaseAPIKey, Properties.Settings.Default.CoinbaseAPISecret, Properties.Settings.Default.CoinbasePassPhrase, "accounts");
 
             if (!masterBalanceDict.ContainsKey("Coinbase"))
                 masterBalanceDict.Add("Coinbase", new Dictionary<string, BalanceData>());
