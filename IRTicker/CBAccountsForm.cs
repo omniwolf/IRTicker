@@ -16,6 +16,7 @@ namespace IRTicker {
     public partial class CBAccountsForm : Form {
 
         private CBWebSockets _client;
+        private string current_product_id;
         public CBAccountsForm() {
             InitializeComponent();
 
@@ -28,11 +29,59 @@ namespace IRTicker {
             string apiSecret = Properties.Settings.Default.CoinbaseAPISecret;       // base64 encoded  // ?? this was in the chatgpt code.  is it fine as is?
             string apiPassphrase = Properties.Settings.Default.CoinbasePassPhrase;
 
-            _client = new CBWebSockets("USDT-USD", apiKey, apiSecret, apiPassphrase);
+            CB_pair_comboBox.Text = "USDT-USD";  // default
+
+            _client = new CBWebSockets(apiKey, apiSecret, apiPassphrase);
             _client.OnOrderBookUpdated += UpdateOrderBookUI;
             _client.OnOpenOrdersUpdated += UpdateOpenOrdersUI;
             _client.OnClosedOrdersUpdated += UpdateClosedOrdersUI;
-            _client.Start();
+            _client.OnFailedToLoad += CloseForm;
+            _client.OnProductsUpdated += UpdateProductsComboBox;
+            _client.OnFinishNetworkTasks += EnableProductComboBox;
+
+            _client.Start("USDT-USD");
+            current_product_id = "USDT-USD";
+
+            CB_order_type_listbox.SelectedIndex = 0;
+            CB_order_side_listbox.SelectedIndex = 0;
+        }
+
+        private void CloseForm() {
+            this.Close();
+        }
+
+        private void EnableProductComboBox() {
+            CB_pair_comboBox.Enabled = true;
+        }
+
+        // firstLoad = true, then we set USDT-USD by default.
+        private void UpdateProductsComboBox(List<Products> pairs) {
+
+            CB_pair_comboBox.Items.Clear();
+            // now let's build the pairs drop down menu on the CB form
+            foreach (Products pair in pairs) {
+                if (!pair.trading_disabled && pair.status == "online") { 
+                    CB_pair_comboBox.Items.Add(new ComboBoxItem_Product(pair.id, pair));
+                }
+            }
+
+            // now let's select USDT-USD as we'll probably be trading this
+            CB_pair_comboBox.SelectedItem = "USDT-USD";
+        }
+
+        private class ComboBoxItem_Product {
+            public string DisplayText { get; set; }
+            public Products Pair { get; set; }
+
+            public ComboBoxItem_Product(string displayText, Products pair) {
+                DisplayText = displayText;
+                Pair = pair;
+            }
+
+            // Override ToString to display the text in the ComboBox
+            public override string ToString() {
+                return DisplayText;
+            }
         }
 
         private void CBAccountsForm_FormClosing(object sender, FormClosingEventArgs e) {
@@ -68,7 +117,7 @@ namespace IRTicker {
             }
         }
 
-        private void UpdateClosedOrdersUI(ConcurrentDictionary<string, Order> openOrders) {
+        private void UpdateClosedOrdersUI(List<Order> openOrders) {
             if (this.InvokeRequired) {  // if we're not on the UI thread, call again from the UI thread
                 this.BeginInvoke((Action)(() => UpdateClosedOrdersUI(openOrders)));
                 return;
@@ -79,11 +128,11 @@ namespace IRTicker {
             int count = 0;
             foreach (var order in openOrders) {
 
-                ListViewItem lvi = new ListViewItem(new string[] { order.Value.done_at.ToShortDateString(), order.Value.price, order.Value.size, order.Value.executed_value });
-                lvi.Tag = order.Value;  // just in case
+                ListViewItem lvi = new ListViewItem(new string[] { order.done_at.ToShortDateString(), order.price, order.size, order.executed_value });
+                lvi.Tag = order;  // just in case
                 CB_closed_orders_listview.Items.Add(lvi);
                 count++;
-                if (count > 5) break;
+                if (count > 4) break;
             }
         }
 
@@ -144,6 +193,70 @@ namespace IRTicker {
                     else {
                         Debug.Print("CB-trade - cancel order failed for order id: " + order.id);
                         Debug.Print("-- CB-trade - response: " + response.ToString());
+                    }
+                }
+            }
+        }
+
+        private void CB_pair_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
+
+            if (current_product_id == CB_pair_comboBox.Text) return;  // already selected
+
+            CB_pair_comboBox.Enabled = false;
+            // now we clear all listView controls and rebuild
+            _client.Stop();
+            CB_open_orders_listview.Items.Clear();
+            CB_closed_orders_listview.Items.Clear();
+            CB_asks_listview.Items.Clear();
+            CB_bids_listview.Items.Clear();
+
+            // loading!
+            CB_open_orders_listview.Items.Add(new ListViewItem(new string[] { "Loading..."} ));
+            CB_closed_orders_listview.Items.Add(new ListViewItem(new string[] { "Loading..." }));
+            CB_asks_listview.Items.Add(new ListViewItem(new string[] { "Loading..." }));
+            CB_bids_listview.Items.Add(new ListViewItem(new string[] { "Loading..." }));
+
+            _client.Start(CB_pair_comboBox.Text);
+        }
+
+        private async void CB_place_order_button_Click(object sender, EventArgs e) {
+            string side = (CB_order_side_listbox.SelectedIndex == 0 ? "buy" : "sell");
+            
+            string type = "";
+            switch (CB_order_type_listbox.SelectedIndex) {
+                case 0:
+                    type = "limit";
+                    break;
+                case 1:
+                    type = "market";
+                    break;
+                case 3:
+                    // market bait!
+                    break;
+            }
+
+            if (string.IsNullOrEmpty(type)) {
+                return;
+            }
+
+            // check volume
+            if (!string.IsNullOrEmpty(CB_volume_textbox.Text)) {
+                if (decimal.TryParse(CB_volume_textbox.Text, out decimal volume)) {
+                    
+                    if (!string.IsNullOrEmpty(CB_price_textbox.Text)) {
+                        if (decimal.TryParse(CB_price_textbox.Text, out decimal price)) {
+
+                            if ((volume > 0) && (price > 0)) {
+
+                                if (type == "limit") {
+                                    var response = await CoinbaseClient.CB_post_order(current_product_id, side, price.ToString(), volume.ToString(), type);
+                                }
+                                else if (type == "market") {
+                                    var response = await CoinbaseClient.CB_post_order(current_product_id, side, price.ToString(), volume.ToString(), type);
+                                }
+
+                            }
+                        }
                     }
                 }
             }

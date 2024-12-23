@@ -9,12 +9,24 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Newtonsoft.Json;
 
 
 namespace IRTicker
 {
     class CoinbaseClient
     {
+        // gets trading pairs
+        public static async Task<string> CB_get_pairs(string APIKey = null, string APISecret = null, string PassPhrase = null) {
+            if (APIKey == null || APISecret == null || PassPhrase == null) {
+                APIKey = Properties.Settings.Default.CoinbaseAPIKey;
+                APISecret = Properties.Settings.Default.CoinbaseAPISecret;
+                PassPhrase = Properties.Settings.Default.CoinbasePassPhrase;
+            }
+
+            var response = await CB_GET(APIKey, APISecret, PassPhrase, "products");
+            return response;
+        }
 
         public static async Task<string> CB_cancel_order(string order_id, string APIKey = null, string APISecret = null, string PassPhrase = null) {
             if (APIKey == null || APISecret == null || PassPhrase == null) {
@@ -65,6 +77,49 @@ namespace IRTicker
             return response;
         }
 
+        // side is "buy" or "sell
+        // type is "limit" or "market" or "stop"
+        // time in force is assumed GTC
+        public static async Task<string> CB_post_order(string pair, string side, string price, string size, string type, string APIKey = null, string APISecret = null, string PassPhrase = null) {
+            if (APIKey == null || APISecret == null || PassPhrase == null) {
+                APIKey = Properties.Settings.Default.CoinbaseAPIKey;
+                APISecret = Properties.Settings.Default.CoinbaseAPISecret;
+                PassPhrase = Properties.Settings.Default.CoinbasePassPhrase;
+            }
+
+            string jsonBody;
+            if (type == "limit") {
+                var orderData = new
+                {
+                    product_id = pair,
+                    side,
+                    price,
+                    size,
+                    type,
+                    time_in_force = "GTC"
+                };
+
+                jsonBody = JsonConvert.SerializeObject(orderData);
+            }
+            else if (type == "market") {
+                var orderData = new
+                {
+                    product_id = pair,
+                    side,
+                    size,
+                    type,
+                };
+
+                jsonBody = JsonConvert.SerializeObject(orderData);
+            }
+            else {
+                return null;
+            }
+
+            var response = await CB_POST(APIKey, APISecret, PassPhrase, "orders", jsonBody);
+            return response;
+        }
+
         // does a basic GET request on the coinbase exchange 
         // endPoint can be "orders" or whatever the first thing after the / is
         // arg can be another folder deeper, eg /{order_id} in /orders/{order_id}
@@ -82,7 +137,7 @@ namespace IRTicker
                 return res;
             }
             catch (Exception ex) {
-                Debug.Print(DateTime.Now + " - Caught exception in Coinbase class when doing network things: " + ex.Message);
+                Debug.Print(DateTime.Now + " - Caught exception in Coinbase class when performing a GET (/" + endPoint + "), error: " + ex.Message);
             }
             return "";
         }
@@ -111,10 +166,39 @@ namespace IRTicker
                 return res;
             }
             catch (Exception ex) {
-                Debug.Print(DateTime.Now + " - Caught exception in Coinbase class when doing network things: " + ex.Message);
+                Debug.Print(DateTime.Now + " - Caught exception in Coinbase class when making a DELETE (/" + endPoint + "), error: " + ex.Message);
             }
             return "";
         }
+
+        public static async Task<string> CB_POST(string APIKey, string APISecret, string PassPhrase, string endPoint, string jsonBody) {
+            HttpClient httpClient = new HttpClient();
+
+            // Build the HTTP request message
+            var httpRequestMessage = BuildHTTPRequest(
+                "https://api.exchange.coinbase.com",
+                "/" + endPoint,
+                jsonBody,
+                HttpMethod.Post,
+                APIKey,
+                APISecret,
+                PassPhrase
+            );
+            if (httpRequestMessage == null) return "";
+
+            HttpResponseMessage httpResponseMessage;
+            try {
+                // Send the POST request
+                httpResponseMessage = await httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
+                string response = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+                return response;
+            }
+            catch (Exception ex) {
+                Debug.Print(DateTime.Now + " - Caught exception in Coinbase class when making a POST (/" + endPoint + "), error: " + ex.Message);
+            }
+            return "";
+        }
+
 
 
         /// AUTHENTICATION HELPERS

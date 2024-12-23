@@ -14,13 +14,14 @@ using System.Threading;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using Telegram.Bot.Requests;
+using static IRTicker.CBWebSockets;
 
 namespace IRTicker {
     internal class CBWebSockets {
 
         private readonly Uri _wsUrl = new Uri("wss://ws-feed.exchange.coinbase.com");
         private WebsocketClient _client;
-        private readonly string _productId;  // this is the pair, eg "USDT-USD"
+        private string _productId = "USDT-USD";  // this is the pair, eg "USDT-USD"
         private readonly OrderBook _orderBook = new OrderBook();
 
         private readonly string _apiKey;
@@ -28,7 +29,7 @@ namespace IRTicker {
         private readonly string _apiPassphrase;
 
         ConcurrentDictionary<string, Order> openOrders = new ConcurrentDictionary<string, Order>();  // holds all current open orders
-        ConcurrentDictionary<string, Order> closedOrders = new ConcurrentDictionary<string, Order>();  // holds all fills
+        List<Order> closedOrders = new List<Order>();  // holds all closed orders.  Don't need a dictionary as we won't be needing to pick out entries to manipulate
 
 
         // this bit is super fancy.  It creates an event of type Action.  Action has no return type, so when the event
@@ -37,16 +38,22 @@ namespace IRTicker {
         // and the arguments of the event (the bids and offers) are sent with it, allowing us to update the UI.
         public event Action<IEnumerable<OrderBookEntry>, IEnumerable<OrderBookEntry>> OnOrderBookUpdated;
         public event Action<ConcurrentDictionary<string, Order>> OnOpenOrdersUpdated;
-        public event Action<ConcurrentDictionary<string, Order>> OnClosedOrdersUpdated;
+        public event Action<List<Order>> OnClosedOrdersUpdated;
+        public event Action OnFailedToLoad;
+        public event Action<List<Products>> OnProductsUpdated;
+        public event Action OnFinishNetworkTasks;
 
-        public CBWebSockets(string productId, string apiKey, string apiSecret, string apiPassphrase) {
-            _productId = productId;
+        public CBWebSockets(string apiKey, string apiSecret, string apiPassphrase) {
             _apiKey = apiKey;
             _apiSecret = apiSecret;
             _apiPassphrase = apiPassphrase;
+
+            getAndParseProducts();  // only need to do this once
         }
 
-        public async void Start() {
+        public async void Start(string productId) {
+            _productId = productId;
+
             if (_client != null) {
                 _client.Dispose();
                 _client = null;
@@ -66,18 +73,52 @@ namespace IRTicker {
 
             // now we pull the open orders to make sure we can see them all.
             //var openOrders = await CoinbaseClient.CB_GET(_apiKey, _apiSecret, _apiPassphrase, "orders");
-            var openOrders = await CoinbaseClient.CB_get_open_orders();
-            parseOpenOrders(openOrders);
+            bool success = await parseOpenOrders();
 
-            var closedOrders = await CoinbaseClient.CB_get_settled("USDT-USD");
+            if (success) {
+                success = await parseClosedOrders();
+            }
 
-            parseClosedOrders(closedOrders);
-
+            if (!success) {
+                OnFailedToLoad?.Invoke();  // something failed in loading API data, close the form
+            }
+            else {
+                // enable the pair drop down menu again
+                OnFinishNetworkTasks?.Invoke();
+            }
         }
 
-        private void parseOpenOrders(string openOrders_raw) {
+        private async Task<bool> getAndParseProducts() {
+            var trading_pairs = await CoinbaseClient.CB_get_pairs();
 
-            List<Order> openOrders_list = JsonConvert.DeserializeObject<List<Order>>(openOrders_raw);
+            List<Products> trading_pairs_list;
+            try {
+                trading_pairs_list = JsonConvert.DeserializeObject<List<Products>>(trading_pairs);
+            }
+            catch (Exception ex) {
+                System.Windows.Forms.MessageBox.Show("Failed to start Coinbase when pulling pairs." + Environment.NewLine + Environment.NewLine + "Response: " + trading_pairs + Environment.NewLine + Environment.NewLine + "Error:" + Environment.NewLine + Environment.NewLine + ex.Message);
+                return false;
+            }
+
+            // now re-order the list to be in alphabetical order
+            var orderedProducts = trading_pairs_list.OrderBy(p => p.id).ToList();
+
+            OnProductsUpdated?.Invoke(orderedProducts);
+            return true;
+        }
+
+        private async Task<bool> parseOpenOrders() {
+
+            var openOrders_raw = await CoinbaseClient.CB_get_open_orders();
+
+            List<Order> openOrders_list;
+            try {
+                openOrders_list = JsonConvert.DeserializeObject<List<Order>>(openOrders_raw);
+            }
+            catch (Exception ex) {
+                System.Windows.Forms.MessageBox.Show("Failed to start Coinbase when pulling open orders." + Environment.NewLine + Environment.NewLine + "Response: " + openOrders_raw + Environment.NewLine + Environment.NewLine  + "Error:" + Environment.NewLine + Environment.NewLine + ex.Message);
+                return false;
+            }
 
             // convert the list to a dictionary with the order_id as the key
             foreach (var order in openOrders_list) {
@@ -87,23 +128,24 @@ namespace IRTicker {
                 }
             }
 
-            if (openOrders.Count > 0) OnOpenOrdersUpdated?.Invoke(openOrders);
+            OnOpenOrdersUpdated?.Invoke(openOrders);
+            return true;
         }
 
-        private void parseClosedOrders(string closedOrders_raw) {
+        private async Task<bool> parseClosedOrders() {
 
-            List<Order> closedOrders_list = JsonConvert.DeserializeObject<List<Order>>(closedOrders_raw);
-            ConcurrentDictionary<string, Order> closedOrders_temp = new ConcurrentDictionary<string, Order>();
+            var closedOrders_raw = await CoinbaseClient.CB_get_settled(_productId);
 
-            // convert the list to a dictionary with the order_id as the key
-            foreach (var order in closedOrders_list) {
-                if (!closedOrders.ContainsKey(order.id)) // Avoid duplicate keys
-                {
-                    closedOrders[order.id] = order;
-                }
+            try {
+                closedOrders = JsonConvert.DeserializeObject<List<Order>>(closedOrders_raw);
+            }
+            catch (Exception ex) {
+                System.Windows.Forms.MessageBox.Show("Failed to start Coinbase when pulling closed orders."+ Environment.NewLine + Environment.NewLine +  "Response: " + closedOrders_raw + Environment.NewLine + Environment.NewLine + "Error:" + Environment.NewLine + Environment.NewLine + ex.Message);
+                return false;
             }
 
-            if (closedOrders.Count > 0) OnClosedOrdersUpdated?.Invoke(closedOrders);
+            OnClosedOrdersUpdated?.Invoke(closedOrders);
+            return true;
         }
 
         private void updateOpenOrders(Order changedOrder) {
@@ -236,7 +278,7 @@ namespace IRTicker {
                 // these are openOrder tings
                 case "done":
                 case "open":
-                case "received":
+                case "received":  // actually i think we should do nothing on received.  open and done should be for open and closed.. ?
                     Order updatedOrder = JsonConvert.DeserializeObject<Order>(json);
 
                     // now we have to map some properties as wss uses different names
@@ -346,22 +388,25 @@ namespace IRTicker {
             public string funding_currency { get; set; }
         }
 
-        public class Fill {
-            public int trade_id { get; set; }
-            public string product_id { get; set; }
-            public string order_id { get; set; }
-            public string user_id { get; set; }
-            public string profile_id { get; set; }
-            public string liquidity { get; set; }
-            public string price { get; set; }
-            public string size { get; set; }
-            public string fee { get; set; }
-            public DateTime created_at { get; set; }
-            public string side { get; set; }
-            public bool settled { get; set; }
-            public string usd_volume { get; set; }
-            public string market_type { get; set; }
-            public string funding_currency { get; set; }
+        public class Products {
+            public string id { get; set; }
+            public string base_currency { get; set; }
+            public string quote_currency { get; set; }
+            public string quote_increment { get; set; }
+            public string base_increment { get; set; }
+            public string display_name { get; set; }
+            public string min_market_funds { get; set; }
+            public bool margin_enabled { get; set; }
+            public bool post_only { get; set; }
+            public bool limit_only { get; set; }
+            public bool cancel_only { get; set; }
+            public string status { get; set; }
+            public string status_message { get; set; }
+            public bool trading_disabled { get; set; }
+            public bool fx_stablecoin { get; set; }
+            public string max_slippage_percentage { get; set; }
+            public bool auction_mode { get; set; }
+            public string high_bid_limit_percentage { get; set; }
         }
     }
 }
