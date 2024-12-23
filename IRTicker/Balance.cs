@@ -710,7 +710,7 @@ namespace IRTicker
                 return;
             }
 
-            Task<string> cbResponseTask = CoinbaseClient.CB_GET(Properties.Settings.Default.CoinbaseAPIKey, Properties.Settings.Default.CoinbaseAPISecret, Properties.Settings.Default.CoinbasePassPhrase, "accounts");
+            Task<string> cbResponseTask = CoinbaseClient.CB_get_accounts();
 
             if (!masterBalanceDict.ContainsKey("Coinbase"))
                 masterBalanceDict.Add("Coinbase", new Dictionary<string, BalanceData>());

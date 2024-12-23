@@ -15,6 +15,7 @@ using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using Telegram.Bot.Requests;
 using static IRTicker.CBWebSockets;
+using IndependentReserve.DotNetClientApi.Data;
 
 namespace IRTicker {
     internal class CBWebSockets {
@@ -28,8 +29,9 @@ namespace IRTicker {
         private readonly string _apiSecret;     // base64 secret
         private readonly string _apiPassphrase;
 
-        ConcurrentDictionary<string, Order> openOrders = new ConcurrentDictionary<string, Order>();  // holds all current open orders
-        List<Order> closedOrders = new List<Order>();  // holds all closed orders.  Don't need a dictionary as we won't be needing to pick out entries to manipulate
+        private ConcurrentDictionary<string, Order> openOrders = new ConcurrentDictionary<string, Order>();  // holds all current open orders
+        private List<Order> closedOrders = new List<Order>();  // holds all closed orders.  Don't need a dictionary as we won't be needing to pick out entries to manipulate
+        private Dictionary<string, CB_Accounts> accounts;  // holds all account details
 
 
         // this bit is super fancy.  It creates an event of type Action.  Action has no return type, so when the event
@@ -42,6 +44,7 @@ namespace IRTicker {
         public event Action OnFailedToLoad;
         public event Action<List<Products>> OnProductsUpdated;
         public event Action OnFinishNetworkTasks;
+        public event Action<CB_Accounts, CB_Accounts> OnUpdatedPairBalance;
 
         public CBWebSockets(string apiKey, string apiSecret, string apiPassphrase) {
             _apiKey = apiKey;
@@ -49,6 +52,7 @@ namespace IRTicker {
             _apiPassphrase = apiPassphrase;
 
             getAndParseProducts();  // only need to do this once
+            getAndParseAccounts();
         }
 
         public async void Start(string productId) {
@@ -72,11 +76,14 @@ namespace IRTicker {
             SubscribeL2_and_user(_productId);
 
             // now we pull the open orders to make sure we can see them all.
-            //var openOrders = await CoinbaseClient.CB_GET(_apiKey, _apiSecret, _apiPassphrase, "orders");
             bool success = await parseOpenOrders();
 
             if (success) {
                 success = await parseClosedOrders();
+            }
+
+            if (success) {
+                success = await getAndParseAccount(_productId);
             }
 
             if (!success) {
@@ -88,6 +95,55 @@ namespace IRTicker {
             }
         }
 
+        private async Task<bool> getAndParseAccounts() {
+            string accounts_raw = await CoinbaseClient.CB_get_accounts();
+
+            List<CB_Accounts> accounts_list;
+            try {
+                accounts_list = JsonConvert.DeserializeObject<List<CB_Accounts>>(accounts_raw);
+            }
+            catch (Exception ex) {
+                System.Windows.Forms.MessageBox.Show("Failed to start Coinbase when pulling accounts." + Environment.NewLine + Environment.NewLine + "Response: " + accounts + Environment.NewLine + Environment.NewLine + "Error:" + Environment.NewLine + Environment.NewLine + ex.Message);
+                Debug.Print("CB-trade - couuldn't parse accounts.  error: " + ex.Message);
+                return false;
+            }
+            accounts = new Dictionary<string, CB_Accounts>();
+            foreach (CB_Accounts acc in accounts_list) {
+                accounts[acc.currency] = acc;
+            }
+            return true;
+        }
+
+        // this will pull the account (balance) details of a pair
+        // (one call for base and one for terms) and display the balance on the UI
+        private async Task<bool> getAndParseAccount(string pair) {
+            // first split the pair into two currencies
+            string[] currencies = pair.Split('-');
+
+            if (currencies.Length == 2) {
+                // now get each account value and update the accounts thing
+                if (accounts.ContainsKey(currencies[0]) && accounts.ContainsKey(currencies[1])) {
+                    var currency1 = await CoinbaseClient.CB_get_accounts(accounts[currencies[0]].id);
+                    var currency2 = await CoinbaseClient.CB_get_accounts(accounts[currencies[1]].id);
+
+                    CB_Accounts currency1_acc;
+                    CB_Accounts currency2_acc;
+                    try {
+                        currency1_acc = JsonConvert.DeserializeObject<CB_Accounts>(currency1);
+                        currency2_acc = JsonConvert.DeserializeObject<CB_Accounts>(currency2);
+                    }
+                    catch (Exception ex) {
+                        System.Windows.Forms.MessageBox.Show("Failed to parse currency1 or 2 (1: " + currencies[0] + ")(2: " + currencies[1] + ")" + Environment.NewLine + Environment.NewLine + "Response: " + accounts + Environment.NewLine + Environment.NewLine + "Error:" + Environment.NewLine + Environment.NewLine + ex.Message);
+                        Debug.Print("CB-trade - couuldn't parse account (1: " + currencies[0] + ")(2: " + currencies[1] + ").  error: " + ex.Message);
+                        return false;
+                    }
+
+                    OnUpdatedPairBalance?.Invoke(currency1_acc, currency2_acc);
+                    return true;
+                }
+            }
+            return false;
+        }
         private async Task<bool> getAndParseProducts() {
             var trading_pairs = await CoinbaseClient.CB_get_pairs();
 
@@ -407,6 +463,17 @@ namespace IRTicker {
             public string max_slippage_percentage { get; set; }
             public bool auction_mode { get; set; }
             public string high_bid_limit_percentage { get; set; }
+        }
+        public class CB_Accounts {
+            public string id { get; set; }
+            public string currency { get; set; }
+            public string balance { get; set; }
+            public string hold { get; set; }
+            public string available { get; set; }
+            public string profile_id { get; set; }
+            public bool trading_enabled { get; set; }
+            public string pending_deposit { get; set; }
+            public string display_name { get; set; }
         }
     }
 }

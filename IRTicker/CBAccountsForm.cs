@@ -1,16 +1,14 @@
-﻿using IndependentReserve.DotNetClientApi.Data;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using static IRTicker.CBWebSockets;
+
+// TODO
+// colour open and closed buy and sell differently
+// show pair in open orders, or maybe filter out only that currency? hmm
+// show price for market orders in closed orders
 
 namespace IRTicker {
     public partial class CBAccountsForm : Form {
@@ -38,12 +36,21 @@ namespace IRTicker {
             _client.OnFailedToLoad += CloseForm;
             _client.OnProductsUpdated += UpdateProductsComboBox;
             _client.OnFinishNetworkTasks += EnableProductComboBox;
+            _client.OnUpdatedPairBalance += UpdateBalance;
 
             _client.Start("USDT-USD");
             current_product_id = "USDT-USD";
 
             CB_order_type_listbox.SelectedIndex = 0;
             CB_order_side_listbox.SelectedIndex = 0;
+        }
+
+        private void UpdateBalance(CB_Accounts currency1, CB_Accounts currency2) {
+            CB_currency1_label.Text = currency1.currency;
+            CB_currency2_label.Text = currency2.currency;
+
+            CB_currency1_value.Text = currency1.balance;
+            CB_currency2_value.Text = currency2.balance;
         }
 
         private void CloseForm() {
@@ -58,15 +65,19 @@ namespace IRTicker {
         private void UpdateProductsComboBox(List<Products> pairs) {
 
             CB_pair_comboBox.Items.Clear();
+            int count = 0;
+            int default_selection = 0;
             // now let's build the pairs drop down menu on the CB form
             foreach (Products pair in pairs) {
                 if (!pair.trading_disabled && pair.status == "online") { 
                     CB_pair_comboBox.Items.Add(new ComboBoxItem_Product(pair.id, pair));
+                    if (pair.id == "USDT-USD") default_selection = count;
+                    count++;
                 }
             }
 
             // now let's select USDT-USD as we'll probably be trading this
-            CB_pair_comboBox.SelectedItem = "USDT-USD";
+            CB_pair_comboBox.SelectedIndex = default_selection;
         }
 
         private class ComboBoxItem_Product {
@@ -199,8 +210,9 @@ namespace IRTicker {
         }
 
         private void CB_pair_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
-
+            Debug.Print("CB-trade - selected Index changed for pair drop down!");
             if (current_product_id == CB_pair_comboBox.Text) return;  // already selected
+            current_product_id = CB_pair_comboBox.Text;
 
             CB_pair_comboBox.Enabled = false;
             // now we clear all listView controls and rebuild
@@ -215,6 +227,11 @@ namespace IRTicker {
             CB_closed_orders_listview.Items.Add(new ListViewItem(new string[] { "Loading..." }));
             CB_asks_listview.Items.Add(new ListViewItem(new string[] { "Loading..." }));
             CB_bids_listview.Items.Add(new ListViewItem(new string[] { "Loading..." }));
+
+            CB_currency1_label.Text = "...";
+            CB_currency2_label.Text = "...";
+            CB_currency1_value.Text = "...";
+            CB_currency2_value.Text = "...";
 
             _client.Start(CB_pair_comboBox.Text);
         }

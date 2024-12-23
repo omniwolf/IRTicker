@@ -16,6 +16,21 @@ namespace IRTicker
 {
     class CoinbaseClient
     {
+        public static async Task<string> CB_get_accounts(string account_id = "", string APIKey = null, string APISecret = null, string PassPhrase = null) {
+            if (APIKey == null || APISecret == null || PassPhrase == null) {
+                APIKey = Properties.Settings.Default.CoinbaseAPIKey;
+                APISecret = Properties.Settings.Default.CoinbaseAPISecret;
+                PassPhrase = Properties.Settings.Default.CoinbasePassPhrase;
+            }
+
+            string endPoint = "accounts";
+            if (!string.IsNullOrEmpty(account_id)) {
+                endPoint += "/" + account_id;
+            }
+
+            var response = await CB_GET(APIKey, APISecret, PassPhrase, endPoint);
+            return response;
+        }
         // gets trading pairs
         public static async Task<string> CB_get_pairs(string APIKey = null, string APISecret = null, string PassPhrase = null) {
             if (APIKey == null || APISecret == null || PassPhrase == null) {
@@ -123,7 +138,7 @@ namespace IRTicker
         // does a basic GET request on the coinbase exchange 
         // endPoint can be "orders" or whatever the first thing after the / is
         // arg can be another folder deeper, eg /{order_id} in /orders/{order_id}
-        public static async Task<string> CB_GET(string APIKey, string APISecret, string PassPhrase, string endPoint, string arg = "") {
+        private static async Task<string> CB_GET(string APIKey, string APISecret, string PassPhrase, string endPoint, string arg = "") {
 
             HttpClient httpClient = new HttpClient();
 
