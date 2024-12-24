@@ -21,7 +21,7 @@ namespace IRTicker {
     internal class CBWebSockets {
 
         private readonly Uri _wsUrl = new Uri("wss://ws-feed.exchange.coinbase.com");
-        private WebsocketClient _client;
+        private WebsocketClient _wsClient;
         private string _productId = "USDT-USD";  // this is the pair, eg "USDT-USD"
         private readonly OrderBook _orderBook = new OrderBook();
 
@@ -55,23 +55,23 @@ namespace IRTicker {
             getAndParseAccounts();
         }
 
-        public async void Start(string productId) {
+        public async Task Start(string productId) {
             _productId = productId;
 
-            if (_client != null) {
-                _client.Dispose();
-                _client = null;
+            if (_wsClient != null) {
+                _wsClient.Dispose();
+                _wsClient = null;
             }
 
-            _client = new WebsocketClient(_wsUrl);
-            _client.MessageReceived
+            _wsClient = new WebsocketClient(_wsUrl);
+            _wsClient.MessageReceived
                 .Where(msg => msg.MessageType == System.Net.WebSockets.WebSocketMessageType.Text)
                 .Subscribe(msg =>
                 {
                     HandleMessage(msg.Text);
                 });
 
-            await _client.Start();
+            await _wsClient.Start();
 
             SubscribeL2_and_user(_productId);
 
@@ -95,6 +95,7 @@ namespace IRTicker {
             }
         }
 
+        // gets ALL accounts
         private async Task<bool> getAndParseAccounts() {
             string accounts_raw = await CoinbaseClient.CB_get_accounts();
 
@@ -163,6 +164,7 @@ namespace IRTicker {
             return true;
         }
 
+        // should only be called at the start, uses the REST end point for the full list
         private async Task<bool> parseOpenOrders() {
 
             var openOrders_raw = await CoinbaseClient.CB_get_open_orders();
@@ -204,6 +206,7 @@ namespace IRTicker {
             return true;
         }
 
+        // gets updated open orders from sockets
         private void updateOpenOrders(Order changedOrder) {
             var type = changedOrder.OrderType?.ToString();
             string order_id = changedOrder.id?.ToString();
@@ -270,7 +273,11 @@ namespace IRTicker {
         }
 
         public void Stop() {
-            _client?.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "Stopped");
+            //_wsClient.IsReconnectionEnabled = false;
+            Task.Run(() => _wsClient?.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "Stopped"));
+            //_wsClient.IsReconnectionEnabled = true;
+
+            _wsClient?.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "Stopped");
         }
 
         private void SubscribeL2_and_user(string productId) {
@@ -295,7 +302,7 @@ namespace IRTicker {
             };
 
             string json = JsonConvert.SerializeObject(subMsg);
-            _client.Send(json);
+            _wsClient.Send(json);
         }
 
         private void HandleMessage(string json) {
@@ -332,9 +339,8 @@ namespace IRTicker {
                     break;
 
                 // these are openOrder tings
-                case "done":
                 case "open":
-                case "received":  // actually i think we should do nothing on received.  open and done should be for open and closed.. ?
+                //case "received":  // actually i think we should do nothing on received.  open and done should be for open and closed.. ?
                     Order updatedOrder = JsonConvert.DeserializeObject<Order>(json);
 
                     // now we have to map some properties as wss uses different names
@@ -351,7 +357,16 @@ namespace IRTicker {
                     }
 
                     updateOpenOrders(updatedOrder);
-                    // re-draw the open orders thing
+                    getAndParseAccount(_productId);
+                    break;
+
+                case "done":
+                    Debug.Print("OK, should be a completed order?");
+
+                    // refresh the closed orders, don't try and update with the sockets, why bother when it's a rare event that we can just pull the whole thing for.
+                    parseClosedOrders();
+                    getAndParseAccount(_productId);
+
                     break;
 
                 default:

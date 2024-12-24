@@ -1085,15 +1085,16 @@ namespace IRTicker
                 AccountLimitPrice_textbox.Enabled = false;
                 if (oType == 2) {  // market baiter
 
+                    // this was annoying, i never used it.
                     // now ask if they want to start the avg price thingo
-                    res = MessageBox.Show("Start recording the average order price?" + Environment.NewLine + Environment.NewLine +
+                    /*res = MessageBox.Show("Start recording the average order price?" + Environment.NewLine + Environment.NewLine +
                         "This will open up the Average Price Calculator window and enable the auto update setting",
                         "Average Price Calculator", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                     if (res == DialogResult.Yes) {
                         var _AccAvgPrice = new AccAvgPrice(DCE_IR, pIR, this, true, AccountSelectedCrypto, DCE_IR.CurrentSecondaryCurrency, AccountBuySell_listbox.SelectedIndex);
                         _AccAvgPrice.Show();
-                    }
+                    }*/
 
                     AccountPlaceOrder_button.Size = new Size(170, 39);
                     StopBaitin_button.Enabled = true;

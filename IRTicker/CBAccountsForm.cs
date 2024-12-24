@@ -2,13 +2,17 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using static IRTicker.Balance;
 using static IRTicker.CBWebSockets;
 
 // TODO
 // colour open and closed buy and sell differently
 // show pair in open orders, or maybe filter out only that currency? hmm
 // show price for market orders in closed orders
+// store the updated balances in the accounts dictionary
 
 namespace IRTicker {
     public partial class CBAccountsForm : Form {
@@ -46,11 +50,35 @@ namespace IRTicker {
         }
 
         private void UpdateBalance(CB_Accounts currency1, CB_Accounts currency2) {
+
+            if (this.InvokeRequired) {  // if we're not on the UI thread, call again from the UI thread
+                this.BeginInvoke((Action)(() => UpdateBalance(currency1, currency2)));
+                return;
+            }
+
+            // first we convert the strings to decimals... before converting back to pretty strings :/
+
+            if (decimal.TryParse(currency1.balance, out decimal c1_dec)) {
+                try {
+                    CB_currency1_value.Text = Utilities.FormatValue(c1_dec);
+                }
+                catch (Exception ex) {
+                    Debug.Print("CB-trade - couldn't format new balance number");
+                }
+
+                if (decimal.TryParse(currency2.balance, out decimal c2_dec)) {
+                    CB_currency2_value.Text = Utilities.FormatValue(c2_dec);
+                }
+                else {
+                    Debug.Print("CB-trade - can't convert " + currency2.currency + " to decimal?  trying to convert: " + currency2.balance);
+                }
+            }
+            else {
+                Debug.Print("CB-trade - can't convert " + currency1.currency + " to decimal?  trying to convert: " + currency1.balance);
+            }
+
             CB_currency1_label.Text = currency1.currency;
             CB_currency2_label.Text = currency2.currency;
-
-            CB_currency1_value.Text = currency1.balance;
-            CB_currency2_value.Text = currency2.balance;
         }
 
         private void CloseForm() {
@@ -58,11 +86,20 @@ namespace IRTicker {
         }
 
         private void EnableProductComboBox() {
+            if (this.InvokeRequired) {  // if we're not on the UI thread, call again from the UI thread
+                this.BeginInvoke((Action)(() => EnableProductComboBox()));
+                return;
+            }
             CB_pair_comboBox.Enabled = true;
         }
 
         // firstLoad = true, then we set USDT-USD by default.
         private void UpdateProductsComboBox(List<Products> pairs) {
+
+            if (this.InvokeRequired) {  // if we're not on the UI thread, call again from the UI thread
+                this.BeginInvoke((Action)(() => UpdateProductsComboBox(pairs)));
+                return;
+            }
 
             CB_pair_comboBox.Items.Clear();
             int count = 0;
@@ -124,6 +161,12 @@ namespace IRTicker {
                 }
                 ListViewItem lvi = new ListViewItem(new string[] { order.Value.created_at.ToShortDateString(), order.Value.price, order.Value.size, remaining_vol });
                 lvi.Tag = order.Value;  // so when we want to cancel an order by double clicking the item, this is how we get the order id
+                if (order.Value.side == "buy") {
+                    lvi.BackColor = Color.Thistle;
+                }
+                else {
+                    lvi.BackColor = Color.PeachPuff;
+                }
                 CB_open_orders_listview.Items.Add(lvi);
             }
         }
@@ -141,6 +184,13 @@ namespace IRTicker {
 
                 ListViewItem lvi = new ListViewItem(new string[] { order.done_at.ToShortDateString(), order.price, order.size, order.executed_value });
                 lvi.Tag = order;  // just in case
+
+                if (order.side == "buy") {
+                    lvi.BackColor = Color.Thistle;
+                }
+                else {
+                    lvi.BackColor = Color.PeachPuff;
+                }
                 CB_closed_orders_listview.Items.Add(lvi);
                 count++;
                 if (count > 4) break;
@@ -159,15 +209,14 @@ namespace IRTicker {
 
             int count = 0;
             foreach (var b in bids) {
-
-                CB_bids_listview.Items.Add(new ListViewItem(new string[] { b.Price.ToString(), b.Size.ToString() }));
+                CB_bids_listview.Items.Add(new ListViewItem(new string[] { Utilities.FormatValue(b.Price), Utilities.FormatValue(b.Size) }));
                 count++;
                 if (count > 10) break;
             }
 
             count = 0;
             foreach (var a in asks) {
-                CB_asks_listview.Items.Insert(0, new ListViewItem(new string[] { a.Price.ToString(), a.Size.ToString() }));
+                CB_asks_listview.Items.Insert(0, new ListViewItem(new string[] { Utilities.FormatValue(a.Price), Utilities.FormatValue(a.Size) }));
                 count++;
                 if (count > 10) break;
             }
@@ -209,7 +258,7 @@ namespace IRTicker {
             }
         }
 
-        private void CB_pair_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
+        private async void CB_pair_comboBox_SelectedIndexChanged(object sender, EventArgs e) {
             Debug.Print("CB-trade - selected Index changed for pair drop down!");
             if (current_product_id == CB_pair_comboBox.Text) return;  // already selected
             current_product_id = CB_pair_comboBox.Text;
@@ -233,6 +282,7 @@ namespace IRTicker {
             CB_currency1_value.Text = "...";
             CB_currency2_value.Text = "...";
 
+            await Task.Delay(3000);
             _client.Start(CB_pair_comboBox.Text);
         }
 
@@ -259,23 +309,40 @@ namespace IRTicker {
             // check volume
             if (!string.IsNullOrEmpty(CB_volume_textbox.Text)) {
                 if (decimal.TryParse(CB_volume_textbox.Text, out decimal volume)) {
-                    
-                    if (!string.IsNullOrEmpty(CB_price_textbox.Text)) {
-                        if (decimal.TryParse(CB_price_textbox.Text, out decimal price)) {
+                    if (type == "limit") {
+                        if (!string.IsNullOrEmpty(CB_price_textbox.Text)) {
+                            if (decimal.TryParse(CB_price_textbox.Text, out decimal price)) {
 
-                            if ((volume > 0) && (price > 0)) {
-
-                                if (type == "limit") {
+                                if ((volume > 0) && (price > 0)) {
                                     var response = await CoinbaseClient.CB_post_order(current_product_id, side, price.ToString(), volume.ToString(), type);
                                 }
-                                else if (type == "market") {
-                                    var response = await CoinbaseClient.CB_post_order(current_product_id, side, price.ToString(), volume.ToString(), type);
+                                else {
+                                    MessageBox.Show("volume or price < 0?");
                                 }
-
                             }
+                            else {
+                                MessageBox.Show("price not a number?");
+                            }
+                        }
+                        else {
+                            MessageBox.Show("price empty?");
+                        }
+                    }
+                    else if (type == "market") {
+                        if (volume > 0) {
+                            var response = await CoinbaseClient.CB_post_order(current_product_id, side, "", volume.ToString(), type);
+                        }
+                        else {
+                            MessageBox.Show("volume < 0?");
                         }
                     }
                 }
+                else {
+                    MessageBox.Show("volume not a number?");
+                }
+            }
+            else {
+                MessageBox.Show("volume empty?");
             }
         }
     }
