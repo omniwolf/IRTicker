@@ -178,6 +178,8 @@ namespace IRTicker {
                 return false;
             }
 
+            openOrders.Clear();
+
             // convert the list to a dictionary with the order_id as the key
             foreach (var order in openOrders_list) {
                 if (!openOrders.ContainsKey(order.id)) // Avoid duplicate keys
@@ -305,7 +307,7 @@ namespace IRTicker {
             _wsClient.Send(json);
         }
 
-        private void HandleMessage(string json) {
+        private async Task HandleMessage(string json) {
             var msg = JObject.Parse(json);
             var type = msg["type"]?.ToString();  // ? here safely evaluates the expression to null if the "type" property doesn't exist or is null.  no need to code around it
 
@@ -340,12 +342,16 @@ namespace IRTicker {
 
                 // these are openOrder tings
                 case "open":
-                //case "received":  // actually i think we should do nothing on received.  open and done should be for open and closed.. ?
+                case "received":  // actually i think we should do nothing on received.  open and done should be for open and closed.. ?
                     Order updatedOrder = JsonConvert.DeserializeObject<Order>(json);
 
                     // now we have to map some properties as wss uses different names
-                    if (!string.IsNullOrEmpty(msg["order_id"]?.ToString())) {  // if the order_id property exists, then map it to the id variable
+                    /*if (!string.IsNullOrEmpty(msg["order_id"]?.ToString())) {  // if the order_id property exists, then map it to the id variable
                         updatedOrder.id = msg["order_id"].ToString();
+                    }*/
+
+                    if (updatedOrder.order_id != null) {
+                        updatedOrder.id = updatedOrder.order_id.ToString();
                     }
 
                     if (!string.IsNullOrEmpty(msg["time"]?.ToString())) {  // if the order_id property exists, then map it to the id variable
@@ -357,15 +363,16 @@ namespace IRTicker {
                     }
 
                     updateOpenOrders(updatedOrder);
-                    getAndParseAccount(_productId);
+                    await getAndParseAccount(_productId);
                     break;
 
                 case "done":
                     Debug.Print("OK, should be a completed order?");
 
                     // refresh the closed orders, don't try and update with the sockets, why bother when it's a rare event that we can just pull the whole thing for.
-                    parseClosedOrders();
-                    getAndParseAccount(_productId);
+                    await parseOpenOrders();
+                    await parseClosedOrders();
+                    await getAndParseAccount(_productId);
 
                     break;
 
@@ -435,6 +442,7 @@ namespace IRTicker {
         // this is the format we get from the REST /orders endpoint
         // have to convert WSS format (order_id -> id, time -> created_at)
         public class Order {
+            public string order_id { get; set; }
             public string id { get; set; }
             public string client_oid { get; set; }
             public string price { get; set; }

@@ -58,7 +58,7 @@ namespace IRTicker {
 
             // first we convert the strings to decimals... before converting back to pretty strings :/
 
-            if (decimal.TryParse(currency1.balance, out decimal c1_dec)) {
+            if (decimal.TryParse(currency1.available, out decimal c1_dec)) {
                 try {
                     CB_currency1_value.Text = Utilities.FormatValue(c1_dec);
                 }
@@ -66,7 +66,7 @@ namespace IRTicker {
                     Debug.Print("CB-trade - couldn't format new balance number");
                 }
 
-                if (decimal.TryParse(currency2.balance, out decimal c2_dec)) {
+                if (decimal.TryParse(currency2.available, out decimal c2_dec)) {
                     CB_currency2_value.Text = Utilities.FormatValue(c2_dec);
                 }
                 else {
