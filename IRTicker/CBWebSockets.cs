@@ -16,6 +16,7 @@ using System.Collections.Specialized;
 using Telegram.Bot.Requests;
 using static IRTicker.CBWebSockets;
 using IndependentReserve.DotNetClientApi.Data;
+using System.Net.WebSockets;
 
 namespace IRTicker {
     internal class CBWebSockets {
@@ -31,7 +32,7 @@ namespace IRTicker {
 
         private ConcurrentDictionary<string, Order> openOrders = new ConcurrentDictionary<string, Order>();  // holds all current open orders
         private List<Order> closedOrders = new List<Order>();  // holds all closed orders.  Don't need a dictionary as we won't be needing to pick out entries to manipulate
-        private Dictionary<string, CB_Accounts> accounts;  // holds all account details
+        private ConcurrentDictionary<string, CB_Accounts> accounts;  // holds all account details, key is currency (product)
 
 
         // this bit is super fancy.  It creates an event of type Action.  Action has no return type, so when the event
@@ -58,9 +59,28 @@ namespace IRTicker {
         public async Task Start(string productId) {
             _productId = productId;
 
+
+            /*while (_wsClient != null) {
+                await Task.Delay(500);
+                if (!_wsClient.IsRunning) {
+                    Debug.Print("CB-trade - _wsClient has stopped running!");
+                    _wsClient.Dispose();
+                    _wsClient = null;
+                }
+                else {
+                    await _wsClient.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "changed product");
+                    Debug.Print("CB-trade - _wsClient is still running.  giving it more time...");
+                }
+            }*/
+
+            // replaced with the shitty while loop above
             if (_wsClient != null) {
+                Debug.Print("CB-trade - _wsClient isRunning: " + _wsClient.IsRunning);
                 _wsClient.Dispose();
                 _wsClient = null;
+            }
+            else {
+                Debug.Print("CB-trade - _wsClient is null");
             }
 
             _wsClient = new WebsocketClient(_wsUrl);
@@ -68,6 +88,7 @@ namespace IRTicker {
                 .Where(msg => msg.MessageType == System.Net.WebSockets.WebSocketMessageType.Text)
                 .Subscribe(msg =>
                 {
+                    //Task.Run(async () => await HandleMessage(msg.Text));
                     HandleMessage(msg.Text);
                 });
 
@@ -108,9 +129,10 @@ namespace IRTicker {
                 Debug.Print("CB-trade - couuldn't parse accounts.  error: " + ex.Message);
                 return false;
             }
-            accounts = new Dictionary<string, CB_Accounts>();
+            accounts = new ConcurrentDictionary<string, CB_Accounts>();
             foreach (CB_Accounts acc in accounts_list) {
-                accounts[acc.currency] = acc;
+                //accounts[acc.currency] = acc;
+                accounts.TryAdd(acc.currency, acc);
             }
             return true;
         }
@@ -273,13 +295,21 @@ namespace IRTicker {
                 Debug.Print("CB-trade - tried to add new order, but failed.  price: " + orderEvent.price);
             }
         }
-
+            
         public void Stop() {
             //_wsClient.IsReconnectionEnabled = false;
-            Task.Run(() => _wsClient?.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "Stopped"));
+            //Task.Run(() => _wsClient?.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "Stopped"));
             //_wsClient.IsReconnectionEnabled = true;
 
-            _wsClient?.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "Stopped");
+
+            // Turn off reconnection, maybe this is what was screwing up my re-starting attempts..
+            _wsClient.IsReconnectionEnabled = false;
+
+            // .Stop will never return if you await it (sometimes), so we must just try to stop and then continue with our lives.
+            Task.Run(() => _wsClient.Stop(WebSocketCloseStatus.NormalClosure, "Stopped"));
+
+            // just make it go away.  we're starting again.
+            _wsClient.Dispose();
         }
 
         private void SubscribeL2_and_user(string productId) {
@@ -342,7 +372,7 @@ namespace IRTicker {
 
                 // these are openOrder tings
                 case "open":
-                case "received":  // actually i think we should do nothing on received.  open and done should be for open and closed.. ?
+                case "received":  // will add the order to the dictionary here, but will only actually show on the UI when the open event is received
                     Order updatedOrder = JsonConvert.DeserializeObject<Order>(json);
 
                     // now we have to map some properties as wss uses different names
@@ -362,11 +392,11 @@ namespace IRTicker {
                         updatedOrder.created_at = createdAt;
                     }
 
-                    updateOpenOrders(updatedOrder);
-                    await getAndParseAccount(_productId);
+                    updateOpenOrders(updatedOrder);  // no need to await, we are sending all the data it needs to update the open Orders
+                    await getAndParseAccount(_productId);  // need to await this as it calls the accounts/account_id and pulls balance data from the CB API
                     break;
 
-                case "done":
+                case "done":  // when an order is done, don't try and update it, just grab all new data from the REST API and throw it up on the UI
                     Debug.Print("OK, should be a completed order?");
 
                     // refresh the closed orders, don't try and update with the sockets, why bother when it's a rare event that we can just pull the whole thing for.

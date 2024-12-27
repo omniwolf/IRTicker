@@ -25,13 +25,14 @@ namespace IRTicker {
             // Need to start Coinbase websockets.
         }
 
-        private void CBAccountsForm_Load(object sender, EventArgs e) {
+        private async void CBAccountsForm_Load(object sender, EventArgs e) {
             // Replace with your actual credentials:
             string apiKey = Properties.Settings.Default.CoinbaseAPIKey;
             string apiSecret = Properties.Settings.Default.CoinbaseAPISecret;       // base64 encoded  // ?? this was in the chatgpt code.  is it fine as is?
             string apiPassphrase = Properties.Settings.Default.CoinbasePassPhrase;
+            current_product_id = "USDT-USD";
 
-            CB_pair_comboBox.Text = "USDT-USD";  // default
+            CB_pair_comboBox.Text = current_product_id;  // default
 
             _client = new CBWebSockets(apiKey, apiSecret, apiPassphrase);
             _client.OnOrderBookUpdated += UpdateOrderBookUI;
@@ -42,8 +43,12 @@ namespace IRTicker {
             _client.OnFinishNetworkTasks += EnableProductComboBox;
             _client.OnUpdatedPairBalance += UpdateBalance;
 
-            _client.Start("USDT-USD");
-            current_product_id = "USDT-USD";
+            await _client.Start(current_product_id);
+
+            string[] currencies = current_product_id.Split('-');
+
+            CB_currency1_label.Text = currencies[0] + "...";
+            CB_currency2_label.Text = currencies[1] + "...";
 
             CB_order_type_listbox.SelectedIndex = 0;
             CB_order_side_listbox.SelectedIndex = 0;
@@ -277,13 +282,16 @@ namespace IRTicker {
             CB_asks_listview.Items.Add(new ListViewItem(new string[] { "Loading..." }));
             CB_bids_listview.Items.Add(new ListViewItem(new string[] { "Loading..." }));
 
-            CB_currency1_label.Text = "...";
-            CB_currency2_label.Text = "...";
+            string[] currencies = current_product_id.Split('-');
+
+
+            CB_currency1_label.Text = currencies[0] + "...";
+            CB_currency2_label.Text = currencies[1] + "...";
             CB_currency1_value.Text = "...";
             CB_currency2_value.Text = "...";
 
-            await Task.Delay(3000);
-            _client.Start(CB_pair_comboBox.Text);
+            //await Task.Delay(1000);
+            await _client.Start(CB_pair_comboBox.Text);
         }
 
         private async void CB_place_order_button_Click(object sender, EventArgs e) {

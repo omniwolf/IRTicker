@@ -24,6 +24,10 @@
         /// </summary>
         private void InitializeComponent() {
             this.CB_trade_controls_panel = new System.Windows.Forms.Panel();
+            this.CB_currency2_value = new System.Windows.Forms.Label();
+            this.CB_currency1_value = new System.Windows.Forms.Label();
+            this.CB_currency2_label = new System.Windows.Forms.Label();
+            this.CB_currency1_label = new System.Windows.Forms.Label();
             this.CB_order_side_listbox = new System.Windows.Forms.ListBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -52,10 +56,6 @@
             this.CB_asks_listview = new System.Windows.Forms.ListView();
             this.Price_asks = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Size_asks = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.CB_currency2_label = new System.Windows.Forms.Label();
-            this.CB_currency1_label = new System.Windows.Forms.Label();
-            this.CB_currency2_value = new System.Windows.Forms.Label();
-            this.CB_currency1_value = new System.Windows.Forms.Label();
             this.CB_trade_controls_panel.SuspendLayout();
             this.CB_orderbook_panel.SuspendLayout();
             this.SuspendLayout();
@@ -84,6 +84,38 @@
             this.CB_trade_controls_panel.Name = "CB_trade_controls_panel";
             this.CB_trade_controls_panel.Size = new System.Drawing.Size(311, 449);
             this.CB_trade_controls_panel.TabIndex = 0;
+            // 
+            // CB_currency2_value
+            // 
+            this.CB_currency2_value.AutoSize = true;
+            this.CB_currency2_value.Location = new System.Drawing.Point(48, 84);
+            this.CB_currency2_value.Name = "CB_currency2_value";
+            this.CB_currency2_value.Size = new System.Drawing.Size(0, 13);
+            this.CB_currency2_value.TabIndex = 16;
+            // 
+            // CB_currency1_value
+            // 
+            this.CB_currency1_value.AutoSize = true;
+            this.CB_currency1_value.Location = new System.Drawing.Point(48, 63);
+            this.CB_currency1_value.Name = "CB_currency1_value";
+            this.CB_currency1_value.Size = new System.Drawing.Size(0, 13);
+            this.CB_currency1_value.TabIndex = 15;
+            // 
+            // CB_currency2_label
+            // 
+            this.CB_currency2_label.AutoSize = true;
+            this.CB_currency2_label.Location = new System.Drawing.Point(6, 84);
+            this.CB_currency2_label.Name = "CB_currency2_label";
+            this.CB_currency2_label.Size = new System.Drawing.Size(0, 13);
+            this.CB_currency2_label.TabIndex = 14;
+            // 
+            // CB_currency1_label
+            // 
+            this.CB_currency1_label.AutoSize = true;
+            this.CB_currency1_label.Location = new System.Drawing.Point(6, 63);
+            this.CB_currency1_label.Name = "CB_currency1_label";
+            this.CB_currency1_label.Size = new System.Drawing.Size(0, 13);
+            this.CB_currency1_label.TabIndex = 13;
             // 
             // CB_order_side_listbox
             // 
@@ -279,7 +311,7 @@
             this.Bids_price,
             this.Bids_size});
             this.CB_bids_listview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CB_bids_listview.ForeColor = System.Drawing.Color.LightGreen;
+            this.CB_bids_listview.ForeColor = System.Drawing.Color.Thistle;
             this.CB_bids_listview.HideSelection = false;
             this.CB_bids_listview.Location = new System.Drawing.Point(0, 233);
             this.CB_bids_listview.Name = "CB_bids_listview";
@@ -307,7 +339,7 @@
             this.Price_asks,
             this.Size_asks});
             this.CB_asks_listview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CB_asks_listview.ForeColor = System.Drawing.Color.Red;
+            this.CB_asks_listview.ForeColor = System.Drawing.Color.PeachPuff;
             this.CB_asks_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.CB_asks_listview.HideSelection = false;
             this.CB_asks_listview.Location = new System.Drawing.Point(0, 0);
@@ -328,40 +360,6 @@
             this.Size_asks.Text = "Volume";
             this.Size_asks.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.Size_asks.Width = 90;
-            // 
-            // CB_currency2_label
-            // 
-            this.CB_currency2_label.AutoSize = true;
-            this.CB_currency2_label.Location = new System.Drawing.Point(6, 84);
-            this.CB_currency2_label.Name = "CB_currency2_label";
-            this.CB_currency2_label.Size = new System.Drawing.Size(19, 13);
-            this.CB_currency2_label.TabIndex = 14;
-            this.CB_currency2_label.Text = "c2";
-            // 
-            // CB_currency1_label
-            // 
-            this.CB_currency1_label.AutoSize = true;
-            this.CB_currency1_label.Location = new System.Drawing.Point(6, 63);
-            this.CB_currency1_label.Name = "CB_currency1_label";
-            this.CB_currency1_label.Size = new System.Drawing.Size(19, 13);
-            this.CB_currency1_label.TabIndex = 13;
-            this.CB_currency1_label.Text = "c1";
-            // 
-            // CB_currency2_value
-            // 
-            this.CB_currency2_value.AutoSize = true;
-            this.CB_currency2_value.Location = new System.Drawing.Point(48, 84);
-            this.CB_currency2_value.Name = "CB_currency2_value";
-            this.CB_currency2_value.Size = new System.Drawing.Size(0, 13);
-            this.CB_currency2_value.TabIndex = 16;
-            // 
-            // CB_currency1_value
-            // 
-            this.CB_currency1_value.AutoSize = true;
-            this.CB_currency1_value.Location = new System.Drawing.Point(48, 63);
-            this.CB_currency1_value.Name = "CB_currency1_value";
-            this.CB_currency1_value.Size = new System.Drawing.Size(0, 13);
-            this.CB_currency1_value.TabIndex = 15;
             // 
             // CBAccountsForm
             // 
