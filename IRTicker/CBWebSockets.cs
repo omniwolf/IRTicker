@@ -4,18 +4,12 @@ using Websocket.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
-using System.Security.Cryptography;
-using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
-using System.Net.Http;
-using System.Threading;
+
 using System.Collections.Concurrent;
-using System.Collections.Specialized;
-using Telegram.Bot.Requests;
-using static IRTicker.CBWebSockets;
-using IndependentReserve.DotNetClientApi.Data;
+
 using System.Net.WebSockets;
 
 namespace IRTicker {
@@ -34,6 +28,12 @@ namespace IRTicker {
         private List<Order> closedOrders = new List<Order>();  // holds all closed orders.  Don't need a dictionary as we won't be needing to pick out entries to manipulate
         private ConcurrentDictionary<string, CB_Accounts> accounts;  // holds all account details, key is currency (product)
 
+        // buffering and sending to UI on a timer
+        private System.Timers.Timer _throttleTimer;
+        private volatile bool _snapshotDirty;
+        private readonly object _snapshotLock = new object();
+        private IEnumerable<OrderBookEntry> _currentBids;
+        private IEnumerable<OrderBookEntry> _currentAsks;
 
         // this bit is super fancy.  It creates an event of type Action.  Action has no return type, so when the event
         // is called, it's like a broadcast to anyone subscribed.  You can see further down when we get an L2Update
@@ -51,6 +51,10 @@ namespace IRTicker {
             _apiKey = apiKey;
             _apiSecret = apiSecret;
             _apiPassphrase = apiPassphrase;
+
+            _throttleTimer = new System.Timers.Timer(100);
+            _throttleTimer.Elapsed += (s, e) => ThrottleTimerElapsed();
+            _throttleTimer.Start();
 
             getAndParseProducts();  // only need to do this once
             getAndParseAccounts();
@@ -85,7 +89,7 @@ namespace IRTicker {
 
             _wsClient = new WebsocketClient(_wsUrl);
             _wsClient.MessageReceived
-                .Where(msg => msg.MessageType == System.Net.WebSockets.WebSocketMessageType.Text)
+                .Where(msg => msg.MessageType == WebSocketMessageType.Text)
                 .Subscribe(msg =>
                 {
                     //Task.Run(async () => await HandleMessage(msg.Text));
@@ -114,6 +118,20 @@ namespace IRTicker {
                 // enable the pair drop down menu again
                 OnFinishNetworkTasks?.Invoke();
             }
+        }
+
+        private void ThrottleTimerElapsed() {
+            // If there's no new data, do nothing
+            if (!_snapshotDirty) return;
+
+            IEnumerable<OrderBookEntry> bids, asks;
+            lock (_snapshotLock) {
+                bids = _currentBids.ToList();
+                asks = _currentAsks.ToList();
+                _snapshotDirty = false;
+            }
+
+            OnOrderBookUpdated?.Invoke(bids, asks);
         }
 
         // gets ALL accounts
@@ -361,7 +379,13 @@ namespace IRTicker {
                             if (!decimal.TryParse(change[2].ToString(), out var size)) continue;
                             _orderBook.UpdateFromL2Update(side, price, size);
                         }
-                        OnOrderBookUpdated?.Invoke(_orderBook.Bids, _orderBook.Asks);
+
+                        lock (_snapshotLock) {
+                            _currentBids = _orderBook.Bids.ToList();  // snapshot
+                            _currentAsks = _orderBook.Asks.ToList();
+                            _snapshotDirty = true;
+                        }
+                        //OnOrderBookUpdated?.Invoke(_orderBook.Bids, _orderBook.Asks);
                     }
                     break;
 
@@ -434,8 +458,8 @@ namespace IRTicker {
             // Asks stored in ascending order by price
             private readonly SortedDictionary<decimal, decimal> _asks = new SortedDictionary<decimal, decimal>();
 
-            public IEnumerable<OrderBookEntry> Bids => _bids.Select(kv => new OrderBookEntry { Price = kv.Key, Size = kv.Value }).ToList();
-            public IEnumerable<OrderBookEntry> Asks => _asks.Select(kv => new OrderBookEntry { Price = kv.Key, Size = kv.Value }).ToList();
+            public IEnumerable<OrderBookEntry> Bids => _bids.Select(kv => new OrderBookEntry { Price = kv.Key, Size = kv.Value });//.ToList();
+            public IEnumerable<OrderBookEntry> Asks => _asks.Select(kv => new OrderBookEntry { Price = kv.Key, Size = kv.Value });//.ToList();
 
             /**
              * this is tricky.  the _bids and _asks properties of the OrderBook class are automatically sorted

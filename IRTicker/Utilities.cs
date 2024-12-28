@@ -359,5 +359,30 @@ namespace IRTicker {
                 combo.Items.Add("No trade venues available");
             }
         }
+
+        public static int? countDecimalPrecision(decimal number) {
+            // Remove trailing zeros
+            number = decimal.Parse(number.ToString().TrimEnd('0'));
+
+            // Get the string representation of the number
+            string[] parts = number.ToString().Split('.');
+            if (parts.Length == 2) // If there's a decimal part
+            {
+                return parts[1].Length; // Length of the decimal part
+            }
+            return null; // No decimal part
+        }
+
+        public static int? countDecimalPrecision(string number) {
+            // Remove trailing zeros
+
+            // Get the string representation of the number
+            string[] parts = number.ToString().Split('.');
+            if (parts.Length == 2) // If there's a decimal part
+            {
+                return parts[1].Length; // Length of the decimal part
+            }
+            return null; // No decimal part
+        }
     }
 }

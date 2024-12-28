@@ -1,4 +1,6 @@
-﻿namespace IRTicker {
+﻿using System.Windows.Forms;
+
+namespace IRTicker {
     partial class CBAccountsForm {
         /// <summary>
         /// Required designer variable.
@@ -50,6 +52,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.CB_pair_comboBox = new System.Windows.Forms.ComboBox();
             this.CB_orderbook_panel = new System.Windows.Forms.Panel();
+            this.CB_spread_label = new System.Windows.Forms.Label();
             this.CB_bids_listview = new System.Windows.Forms.ListView();
             this.Bids_price = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Bids_size = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -297,12 +300,24 @@
             // CB_orderbook_panel
             // 
             this.CB_orderbook_panel.BackColor = System.Drawing.Color.Black;
+            this.CB_orderbook_panel.Controls.Add(this.CB_spread_label);
             this.CB_orderbook_panel.Controls.Add(this.CB_bids_listview);
             this.CB_orderbook_panel.Controls.Add(this.CB_asks_listview);
             this.CB_orderbook_panel.Location = new System.Drawing.Point(310, 0);
             this.CB_orderbook_panel.Name = "CB_orderbook_panel";
-            this.CB_orderbook_panel.Size = new System.Drawing.Size(200, 449);
+            this.CB_orderbook_panel.Size = new System.Drawing.Size(200, 456);
             this.CB_orderbook_panel.TabIndex = 1;
+            // 
+            // CB_spread_label
+            // 
+            this.CB_spread_label.AutoSize = true;
+            this.CB_spread_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CB_spread_label.ForeColor = System.Drawing.Color.White;
+            this.CB_spread_label.Location = new System.Drawing.Point(8, 216);
+            this.CB_spread_label.Name = "CB_spread_label";
+            this.CB_spread_label.Size = new System.Drawing.Size(62, 17);
+            this.CB_spread_label.TabIndex = 1;
+            this.CB_spread_label.Text = "Spread: ";
             // 
             // CB_bids_listview
             // 
@@ -313,10 +328,10 @@
             this.CB_bids_listview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CB_bids_listview.ForeColor = System.Drawing.Color.Thistle;
             this.CB_bids_listview.HideSelection = false;
-            this.CB_bids_listview.Location = new System.Drawing.Point(0, 233);
+            this.CB_bids_listview.Location = new System.Drawing.Point(0, 240);
             this.CB_bids_listview.Name = "CB_bids_listview";
             this.CB_bids_listview.ShowGroups = false;
-            this.CB_bids_listview.Size = new System.Drawing.Size(200, 216);
+            this.CB_bids_listview.Size = new System.Drawing.Size(200, 215);
             this.CB_bids_listview.TabIndex = 0;
             this.CB_bids_listview.UseCompatibleStateImageBehavior = false;
             this.CB_bids_listview.View = System.Windows.Forms.View.Details;
@@ -324,7 +339,7 @@
             // Bids_price
             // 
             this.Bids_price.Text = "Price";
-            this.Bids_price.Width = 90;
+            this.Bids_price.Width = 80;
             // 
             // Bids_size
             // 
@@ -345,7 +360,7 @@
             this.CB_asks_listview.Location = new System.Drawing.Point(0, 0);
             this.CB_asks_listview.Name = "CB_asks_listview";
             this.CB_asks_listview.ShowGroups = false;
-            this.CB_asks_listview.Size = new System.Drawing.Size(200, 222);
+            this.CB_asks_listview.Size = new System.Drawing.Size(200, 215);
             this.CB_asks_listview.TabIndex = 0;
             this.CB_asks_listview.UseCompatibleStateImageBehavior = false;
             this.CB_asks_listview.View = System.Windows.Forms.View.Details;
@@ -353,7 +368,7 @@
             // Price_asks
             // 
             this.Price_asks.Text = "Price";
-            this.Price_asks.Width = 90;
+            this.Price_asks.Width = 80;
             // 
             // Size_asks
             // 
@@ -365,7 +380,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(511, 449);
+            this.ClientSize = new System.Drawing.Size(519, 577);
             this.Controls.Add(this.CB_orderbook_panel);
             this.Controls.Add(this.CB_trade_controls_panel);
             this.Name = "CBAccountsForm";
@@ -375,6 +390,7 @@
             this.CB_trade_controls_panel.ResumeLayout(false);
             this.CB_trade_controls_panel.PerformLayout();
             this.CB_orderbook_panel.ResumeLayout(false);
+            this.CB_orderbook_panel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -414,5 +430,6 @@
         private System.Windows.Forms.Label CB_currency1_value;
         private System.Windows.Forms.Label CB_currency2_label;
         private System.Windows.Forms.Label CB_currency1_label;
+        private System.Windows.Forms.Label CB_spread_label;
     }
 }

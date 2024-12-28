@@ -3,6 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static IRTicker.Balance;
@@ -13,12 +15,15 @@ using static IRTicker.CBWebSockets;
 // show pair in open orders, or maybe filter out only that currency? hmm
 // show price for market orders in closed orders
 // store the updated balances in the accounts dictionary
+// decimal places need re-thinking - BTC order book needs 2 dp
 
 namespace IRTicker {
     public partial class CBAccountsForm : Form {
 
         private CBWebSockets _client;
         private string current_product_id;
+        private string spreadTicker = "\\";
+
         public CBAccountsForm() {
             InitializeComponent();
 
@@ -212,19 +217,48 @@ namespace IRTicker {
             CB_asks_listview.Items.Clear();
             CB_bids_listview.Items.Clear();
 
+            // get the decimals we need
+            string quote_accuracy = ((ComboBoxItem_Product)CB_pair_comboBox.Items[CB_pair_comboBox.SelectedIndex]).Pair.quote_increment;
+            int? quote_accuracy_dps = Utilities.countDecimalPrecision(quote_accuracy);
+            int quote_accuracy_dps_final = -1;
+            if (quote_accuracy_dps.HasValue) {
+                quote_accuracy_dps_final = quote_accuracy_dps.Value;
+            }
+
             int count = 0;
             foreach (var b in bids) {
-                CB_bids_listview.Items.Add(new ListViewItem(new string[] { Utilities.FormatValue(b.Price), Utilities.FormatValue(b.Size) }));
+                CB_bids_listview.Items.Add(new ListViewItem(new string[] { Utilities.FormatValue(b.Price, quote_accuracy_dps_final), Utilities.FormatValue(b.Size) }));
                 count++;
                 if (count > 10) break;
             }
 
             count = 0;
             foreach (var a in asks) {
-                CB_asks_listview.Items.Insert(0, new ListViewItem(new string[] { Utilities.FormatValue(a.Price), Utilities.FormatValue(a.Size) }));
+                CB_asks_listview.Items.Insert(0, new ListViewItem(new string[] { Utilities.FormatValue(a.Price, quote_accuracy_dps_final), Utilities.FormatValue(a.Size) }));
                 count++;
                 if (count > 10) break;
             }
+
+            // update the spread label
+            decimal bestBid = bids.FirstOrDefault().Price;
+            decimal bestAsk = asks.FirstOrDefault().Price;
+
+            switch (spreadTicker) {
+                case "\\":
+                    spreadTicker = "-";
+                    break;
+                case "-":
+                    spreadTicker = "/";
+                    break;
+                case "/":
+                    spreadTicker = "|";
+                    break;
+                case "|":
+                    spreadTicker = "\\";
+                    break;
+            }
+
+            CB_spread_label.Text = "Spread: " + Utilities.FormatValue(bestAsk - bestBid)  + "  " + spreadTicker;
         }
 
         private async void CB_open_orders_listview_DoubleClick(object sender, EventArgs e) {
