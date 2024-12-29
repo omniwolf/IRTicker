@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Collections.Concurrent;
 
 using System.Net.WebSockets;
+using System.Windows;
 
 namespace IRTicker {
     internal class CBWebSockets {
@@ -20,9 +21,9 @@ namespace IRTicker {
         private string _productId = "USDT-USD";  // this is the pair, eg "USDT-USD"
         private readonly OrderBook _orderBook = new OrderBook();
 
-        private readonly string _apiKey;
-        private readonly string _apiSecret;     // base64 secret
-        private readonly string _apiPassphrase;
+        private string _apiKey;
+        private string _apiSecret;     // base64 secret
+        private string _apiPassphrase;
 
         private ConcurrentDictionary<string, Order> openOrders = new ConcurrentDictionary<string, Order>();  // holds all current open orders
         private List<Order> closedOrders = new List<Order>();  // holds all closed orders.  Don't need a dictionary as we won't be needing to pick out entries to manipulate
@@ -47,21 +48,64 @@ namespace IRTicker {
         public event Action OnFinishNetworkTasks;
         public event Action<CB_Accounts, CB_Accounts> OnUpdatedPairBalance;
 
-        public CBWebSockets(string apiKey, string apiSecret, string apiPassphrase) {
+        private CBWebSockets(string apiKey, string apiSecret, string apiPassphrase) {
             _apiKey = apiKey;
             _apiSecret = apiSecret;
             _apiPassphrase = apiPassphrase;
 
-            _throttleTimer = new System.Timers.Timer(100);
+            _throttleTimer = new System.Timers.Timer(150);
             _throttleTimer.Elapsed += (s, e) => ThrottleTimerElapsed();
             _throttleTimer.Start();
-
-            getAndParseProducts();  // only need to do this once
-            getAndParseAccounts();
         }
 
-        public async Task Start(string productId) {
+        /// <summary>
+        /// We want to run some async tasks from the constructor, but you cannot mark
+        /// the constructor as async.  So we create this "factory method".  We make the constructor
+        /// method private, so when creating the instance of the class we don't use "new"
+        /// (it won't work), we call this factory method first, which in turn calls the 
+        /// constructor to create the instance. From the factory method we run our async
+        /// tasks, and then return the instance object back to the caller, so it appears
+        /// to the caller that they have created a new instance of the class, in just the
+        /// same way they would if they used the "new" keyword.
+        /// </summary>
+        /// <param name="apiKey"></param>
+        /// <param name="apiSecret"></param>
+        /// <param name="apiPassphrase"></param>
+        /// <returns></returns>
+        public static async Task<CBWebSockets> CreateAsync(string apiKey, string apiSecret, string apiPassphrase) {
+
+            CBWebSockets instance = new CBWebSockets(apiKey, apiSecret, apiPassphrase);
+            
+             // now done in the .start() function
+            /*bool success = await instance.getAndParseProducts();
+            if (!success) {
+                MessageBox.Show("Failed to pull Products from Coinbase API");
+                return null;
+            }*/
+
+            bool success = await instance.getAndParseAccounts();
+            if (!success) {
+                MessageBox.Show("Failed to pull Accounts from Coinbase API");
+                return null;
+            }
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Starts everything off.  Downloads pairs, accounts, open orders, closed orders, and subscribes to the wss 
+        /// </summary>
+        /// <param name="productId"></param> eg "USDT-USD"
+        /// <param name="getProducts"></param> if true, we pull the products from Coinbase API.  Should only be true once per opening of the form
+        /// <returns></returns>
+        public async Task Start(string productId, bool getProducts) {
             _productId = productId;
+
+            // first we check if we have a list of products already.
+            // if not, we pull it
+            if (getProducts) {
+                await getAndParseProducts();
+            }
 
 
             /*while (_wsClient != null) {
@@ -77,7 +121,7 @@ namespace IRTicker {
                 }
             }*/
 
-            // replaced with the shitty while loop above
+                // replaced with the shitty while loop above
             if (_wsClient != null) {
                 Debug.Print("CB-trade - _wsClient isRunning: " + _wsClient.IsRunning);
                 _wsClient.Dispose();
@@ -179,6 +223,8 @@ namespace IRTicker {
                         return false;
                     }
 
+                    if ((null == currency1_acc) || (null == currency2_acc)) return false;
+
                     OnUpdatedPairBalance?.Invoke(currency1_acc, currency2_acc);
                     return true;
                 }
@@ -196,6 +242,8 @@ namespace IRTicker {
                 System.Windows.Forms.MessageBox.Show("Failed to start Coinbase when pulling pairs." + Environment.NewLine + Environment.NewLine + "Response: " + trading_pairs + Environment.NewLine + Environment.NewLine + "Error:" + Environment.NewLine + Environment.NewLine + ex.Message);
                 return false;
             }
+
+            if (null == trading_pairs_list) return false;
 
             // now re-order the list to be in alphabetical order
             var orderedProducts = trading_pairs_list.OrderBy(p => p.id).ToList();
@@ -368,7 +416,14 @@ namespace IRTicker {
                     var askEntries = ConvertArrayToEntries(asks);
 
                     _orderBook.LoadSnapshot(bidEntries, askEntries);
-                    OnOrderBookUpdated?.Invoke(_orderBook.Bids, _orderBook.Asks);
+
+                    lock (_snapshotLock) {
+                        _currentBids = _orderBook.Bids.ToList();  // snapshot
+                        _currentAsks = _orderBook.Asks.ToList();
+                        _snapshotDirty = true;
+                    }
+
+                    //OnOrderBookUpdated?.Invoke(_orderBook.Bids, _orderBook.Asks);
                     break;
                 case "l2update":
                     var changes = msg["changes"] as JArray;

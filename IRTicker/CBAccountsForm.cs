@@ -4,18 +4,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static IRTicker.Balance;
 using static IRTicker.CBWebSockets;
 
 // TODO
-// colour open and closed buy and sell differently
-// show pair in open orders, or maybe filter out only that currency? hmm
-// show price for market orders in closed orders
 // store the updated balances in the accounts dictionary
-// decimal places need re-thinking - BTC order book needs 2 dp
+// put a button next to the balance so that we can buy/sell max
+// hide price field when market order selected
+// maybe colour the buy/sell box differently depending on what's selected?
 
 namespace IRTicker {
     public partial class CBAccountsForm : Form {
@@ -37,9 +33,27 @@ namespace IRTicker {
             string apiPassphrase = Properties.Settings.Default.CoinbasePassPhrase;
             current_product_id = "USDT-USD";
 
+            string[] currencies = current_product_id.Split('-');
+
+            CB_currency1_label.Text = currencies[0] + "...";
+            CB_currency2_label.Text = currencies[1] + "...";
+
+            CB_order_type_listbox.SelectedIndex = 0;
+            CB_order_side_listbox.SelectedIndex = 0;
+
+            CB_closed_orders_label.Text = "Closed orders (" + current_product_id + "):";
+
             CB_pair_comboBox.Text = current_product_id;  // default
 
-            _client = new CBWebSockets(apiKey, apiSecret, apiPassphrase);
+            try {
+                _client = await CBWebSockets.CreateAsync(apiKey, apiSecret, apiPassphrase);
+            }
+            catch (Exception ex) {
+                //MessageBox.Show("Failed to connect to Coinbase API");  // we already put a message up at the actual fail, don't need it here too
+                this.Close();
+                return;
+            }
+
             _client.OnOrderBookUpdated += UpdateOrderBookUI;
             _client.OnOpenOrdersUpdated += UpdateOpenOrdersUI;
             _client.OnClosedOrdersUpdated += UpdateClosedOrdersUI;
@@ -48,19 +62,12 @@ namespace IRTicker {
             _client.OnFinishNetworkTasks += EnableProductComboBox;
             _client.OnUpdatedPairBalance += UpdateBalance;
 
-            await _client.Start(current_product_id);
-
-            string[] currencies = current_product_id.Split('-');
-
-            CB_currency1_label.Text = currencies[0] + "...";
-            CB_currency2_label.Text = currencies[1] + "...";
-
-            CB_order_type_listbox.SelectedIndex = 0;
-            CB_order_side_listbox.SelectedIndex = 0;
+            await _client.Start(current_product_id, true);  // true - tells the method to download the products list as this is the first time
         }
 
         private void UpdateBalance(CB_Accounts currency1, CB_Accounts currency2) {
 
+            if ((null == currency1) || (null == currency2)) return;
             if (this.InvokeRequired) {  // if we're not on the UI thread, call again from the UI thread
                 this.BeginInvoke((Action)(() => UpdateBalance(currency1, currency2)));
                 return;
@@ -169,7 +176,8 @@ namespace IRTicker {
                         }
                     }
                 }
-                ListViewItem lvi = new ListViewItem(new string[] { order.Value.created_at.ToShortDateString(), order.Value.price, order.Value.size, remaining_vol });
+                ListViewItem lvi = new ListViewItem(new string[] { order.Value.product_id, Utilities.FormatValue(order.Value.price, GetPriceDPs()), Utilities.FormatValue(order.Value.size, GetSizeDPs()), Utilities.FormatValue(remaining_vol, GetSizeDPs()) });
+                lvi.ToolTipText = buildTTtext(order.Value);
                 lvi.Tag = order.Value;  // so when we want to cancel an order by double clicking the item, this is how we get the order id
                 if (order.Value.side == "buy") {
                     lvi.BackColor = Color.Thistle;
@@ -181,19 +189,56 @@ namespace IRTicker {
             }
         }
 
-        private void UpdateClosedOrdersUI(List<Order> openOrders) {
+        private string buildTTtext(Order order, string price = "") {
+            string tt = "";
+
+            if (string.IsNullOrEmpty(price)) {
+                price = Utilities.FormatValue(order.price, GetPriceDPs());
+            }
+
+            tt += (order.OrderType + " " + order.side).ToUpper() + Environment.NewLine +
+                "Result: " + order.done_reason + Environment.NewLine +
+                "Price: " + price + Environment.NewLine +
+                "Filled size: " + Utilities.FormatValue(order.filled_size, GetSizeDPs()) + Environment.NewLine +
+                "Original size: " + Utilities.FormatValue(order.size, GetSizeDPs()) + Environment.NewLine +
+                "Value of trade: " + Utilities.FormatValue(order.executed_value, GetPriceDPs()) + Environment.NewLine +
+                "Created on: " + order.created_at.ToLocalTime() + Environment.NewLine +
+                "Fees paid: " + Utilities.FormatValue(order.fill_fees);
+
+            return tt;
+        }
+
+        private void UpdateClosedOrdersUI(List<Order> closedOrders) {
             if (this.InvokeRequired) {  // if we're not on the UI thread, call again from the UI thread
-                this.BeginInvoke((Action)(() => UpdateClosedOrdersUI(openOrders)));
+                this.BeginInvoke((Action)(() => UpdateClosedOrdersUI(closedOrders)));
                 return;
             }
 
             CB_closed_orders_listview.Items.Clear();
 
             int count = 0;
-            foreach (var order in openOrders) {
+            foreach (var order in closedOrders) {
+                string price;
+                if (null == order.price) {
+                    if (decimal.TryParse(order.executed_value, out decimal exec_val_dec)) {
+                        if (decimal.TryParse(order.filled_size, out decimal filled_size_dec)) {
+                            price = Utilities.FormatValue((exec_val_dec / filled_size_dec), GetPriceDPs());
+                        }
+                        else {
+                            price = Utilities.FormatValue(order.price, GetPriceDPs());
+                        }
+                    }
+                    else {
+                        price = Utilities.FormatValue(order.price, GetPriceDPs());
+                    }
+                }
+                else {
+                    price = Utilities.FormatValue(order.price, GetPriceDPs());
+                }
 
-                ListViewItem lvi = new ListViewItem(new string[] { order.done_at.ToShortDateString(), order.price, order.size, order.executed_value });
+                ListViewItem lvi = new ListViewItem(new string[] { order.done_at.ToShortDateString(), price, Utilities.FormatValue(order.size, GetSizeDPs()), Utilities.FormatValue(order.executed_value) });
                 lvi.Tag = order;  // just in case
+                lvi.ToolTipText = buildTTtext(order, price);
 
                 if (order.side == "buy") {
                     lvi.BackColor = Color.Thistle;
@@ -203,10 +248,40 @@ namespace IRTicker {
                 }
                 CB_closed_orders_listview.Items.Add(lvi);
                 count++;
-                if (count > 4) break;
+                if (count > 20) break;
             }
         }
 
+        // For use with the Utilities.FormatValue() sub - decimalPlaces argument
+        private int GetPriceDPs() {
+            // get the decimals we need
+            if (CB_pair_comboBox.SelectedIndex < 0) return -1;  // i guess no selection?
+            string quote_accuracy = ((ComboBoxItem_Product)CB_pair_comboBox.Items[CB_pair_comboBox.SelectedIndex]).Pair.quote_increment;
+            int? quote_accuracy_dps = Utilities.countDecimalPrecision(quote_accuracy);
+            int quote_accuracy_dps_final = -1;
+            if (quote_accuracy_dps.HasValue) {
+                quote_accuracy_dps_final = quote_accuracy_dps.Value;
+            }
+
+            return quote_accuracy_dps_final;
+        }
+        /// <summary>
+        /// Get's the currently selected pair's volume decimal places.  Eg if you can
+        /// trade to 0.0001, the return value will be 4
+        /// </summary>
+        /// <returns>int, number of decimal places</returns>
+        private int GetSizeDPs() {
+            // get the decimals we need
+            if (CB_pair_comboBox.SelectedIndex < 0) return -1;  // no selection in the crypto pair dropdown yet
+            string base_accuracy = ((ComboBoxItem_Product)CB_pair_comboBox.Items[CB_pair_comboBox.SelectedIndex]).Pair.base_increment;
+            int? base_accuracy_dps = Utilities.countDecimalPrecision(base_accuracy);
+            int base_accuracy_dps_final = -1;
+            if (base_accuracy_dps.HasValue) {
+                base_accuracy_dps_final = base_accuracy_dps.Value;
+            }
+
+            return base_accuracy_dps_final;
+        }
 
         private void UpdateOrderBookUI(IEnumerable<OrderBookEntry> bids, IEnumerable<OrderBookEntry> asks) {
             if (this.InvokeRequired) {  // if we're not on the UI thread, call again from the UI thread
@@ -217,26 +292,20 @@ namespace IRTicker {
             CB_asks_listview.Items.Clear();
             CB_bids_listview.Items.Clear();
 
-            // get the decimals we need
-            string quote_accuracy = ((ComboBoxItem_Product)CB_pair_comboBox.Items[CB_pair_comboBox.SelectedIndex]).Pair.quote_increment;
-            int? quote_accuracy_dps = Utilities.countDecimalPrecision(quote_accuracy);
-            int quote_accuracy_dps_final = -1;
-            if (quote_accuracy_dps.HasValue) {
-                quote_accuracy_dps_final = quote_accuracy_dps.Value;
-            }
+            int priceDPs = GetPriceDPs();
 
             int count = 0;
             foreach (var b in bids) {
-                CB_bids_listview.Items.Add(new ListViewItem(new string[] { Utilities.FormatValue(b.Price, quote_accuracy_dps_final), Utilities.FormatValue(b.Size) }));
+                CB_bids_listview.Items.Add(new ListViewItem(new string[] { Utilities.FormatValue(b.Price, priceDPs), Utilities.FormatValue(b.Size) }));
                 count++;
-                if (count > 10) break;
+                if (count > 7) break;
             }
 
             count = 0;
             foreach (var a in asks) {
-                CB_asks_listview.Items.Insert(0, new ListViewItem(new string[] { Utilities.FormatValue(a.Price, quote_accuracy_dps_final), Utilities.FormatValue(a.Size) }));
+                CB_asks_listview.Items.Insert(0, new ListViewItem(new string[] { Utilities.FormatValue(a.Price, priceDPs), Utilities.FormatValue(a.Size) }));
                 count++;
-                if (count > 10) break;
+                if (count > 7) break;
             }
 
             // update the spread label
@@ -324,8 +393,10 @@ namespace IRTicker {
             CB_currency1_value.Text = "...";
             CB_currency2_value.Text = "...";
 
+            CB_closed_orders_label.Text = "Closed orders (" + current_product_id + "):";
+
             //await Task.Delay(1000);
-            await _client.Start(CB_pair_comboBox.Text);
+            await _client.Start(CB_pair_comboBox.Text, false);  // false - do not download products list as we should already have it.
         }
 
         private async void CB_place_order_button_Click(object sender, EventArgs e) {
@@ -386,6 +457,12 @@ namespace IRTicker {
             else {
                 MessageBox.Show("volume empty?");
             }
+        }
+
+        private void CB_asks_listview_Click(object sender, EventArgs e) {
+
+            if (((ListView)sender).SelectedItems.Count == 0) return;
+            CB_price_textbox.Text = ((ListView)sender).SelectedItems[0].Text;
         }
     }
 }
