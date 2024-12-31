@@ -334,6 +334,7 @@ namespace IRTicker {
             this.CB_bids_listview.TabIndex = 0;
             this.CB_bids_listview.UseCompatibleStateImageBehavior = false;
             this.CB_bids_listview.View = System.Windows.Forms.View.Details;
+            this.CB_bids_listview.Click += new System.EventHandler(this.CB_bids_listview_Click);
             // 
             // Bids_price
             // 

@@ -12,6 +12,8 @@ using static IRTicker.CBWebSockets;
 // put a button next to the balance so that we can buy/sell max
 // hide price field when market order selected
 // maybe colour the buy/sell box differently depending on what's selected?
+// change to L2 batch
+// need to do reconnection code
 
 namespace IRTicker {
     public partial class CBAccountsForm : Form {
@@ -19,6 +21,9 @@ namespace IRTicker {
         private CBWebSockets _client;
         private string current_product_id;
         private string spreadTicker = "\\";
+
+        private ConcurrentBag<Guid> clientIDs = new ConcurrentBag<Guid>();  // holds client IDs for orders, so we can check and highlight the order book row if we have a match
+
 
         public CBAccountsForm() {
             InitializeComponent();
@@ -44,6 +49,7 @@ namespace IRTicker {
             CB_closed_orders_label.Text = "Closed orders (" + current_product_id + "):";
 
             CB_pair_comboBox.Text = current_product_id;  // default
+            CB_pair_comboBox.Enabled = false; // don't let them try and change it while loading
 
             try {
                 _client = await CBWebSockets.CreateAsync(apiKey, apiSecret, apiPassphrase);
@@ -296,6 +302,7 @@ namespace IRTicker {
 
             int count = 0;
             foreach (var b in bids) {
+                //if (b.)
                 CB_bids_listview.Items.Add(new ListViewItem(new string[] { Utilities.FormatValue(b.Price, priceDPs), Utilities.FormatValue(b.Size) }));
                 count++;
                 if (count > 7) break;
@@ -427,6 +434,8 @@ namespace IRTicker {
                             if (decimal.TryParse(CB_price_textbox.Text, out decimal price)) {
 
                                 if ((volume > 0) && (price > 0)) {
+                                    // create a client UID so we can identify orders on the book
+                                    Guid uuid = Guid.NewGuid();
                                     var response = await CoinbaseClient.CB_post_order(current_product_id, side, price.ToString(), volume.ToString(), type);
                                 }
                                 else {
@@ -461,6 +470,11 @@ namespace IRTicker {
 
         private void CB_asks_listview_Click(object sender, EventArgs e) {
 
+            if (((ListView)sender).SelectedItems.Count == 0) return;
+            CB_price_textbox.Text = ((ListView)sender).SelectedItems[0].Text;
+        }
+
+        private void CB_bids_listview_Click(object sender, EventArgs e) {
             if (((ListView)sender).SelectedItems.Count == 0) return;
             CB_price_textbox.Text = ((ListView)sender).SelectedItems[0].Text;
         }

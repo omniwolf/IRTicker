@@ -140,6 +140,10 @@ namespace IRTicker {
                     HandleMessage(msg.Text);
                 });
 
+            _wsClient.ReconnectionHappened.Subscribe(info => {
+                SubscribeL2_and_user(_productId);
+            });
+
             await _wsClient.Start();
 
             SubscribeL2_and_user(_productId);
@@ -392,7 +396,7 @@ namespace IRTicker {
             {
                 type = "subscribe",
                 product_ids = new string[] { productId },
-                channels = new string[] { "level2", "user" },
+                channels = new string[] { "level2_batch", "user" },
                 key = _apiKey,
                 passphrase = _apiPassphrase,
                 timestamp = timestamp,
@@ -530,14 +534,18 @@ namespace IRTicker {
 
             public void UpdateFromL2Update(string side, decimal price, decimal size) {
                 if (side == "buy") {
-                    if (size == 0m)
+                    if (size == 0m) {
+                        //Debug.Print("CB-trade - removing entry from _bids, price: " + price);
                         _bids.Remove(price);
+                    }
                     else
                         _bids[price] = size;
                 }
                 else if (side == "sell") {
-                    if (size == 0m)
+                    if (size == 0m) {
+                        //Debug.Print("CB-trade - removing entry from _asks, price: " + price);
                         _asks.Remove(price);
+                    }
                     else
                         _asks[price] = size;
                 }
