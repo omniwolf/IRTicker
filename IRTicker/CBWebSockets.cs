@@ -339,8 +339,6 @@ namespace IRTicker {
                             }
                         }
                         break;
-
-
                 }
 
                 // now we broadcast an event that we need to update the open orders UI

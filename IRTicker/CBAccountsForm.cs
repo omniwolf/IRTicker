@@ -21,9 +21,7 @@ namespace IRTicker {
         private CBWebSockets _client;
         private string current_product_id;
         private string spreadTicker = "\\";
-
-        private ConcurrentBag<Guid> clientIDs = new ConcurrentBag<Guid>();  // holds client IDs for orders, so we can check and highlight the order book row if we have a match
-
+        ConcurrentDictionary<string, Order> openOrders = new ConcurrentDictionary<string, Order>();
 
         public CBAccountsForm() {
             InitializeComponent();
@@ -160,11 +158,13 @@ namespace IRTicker {
         }
 
 
-        private void UpdateOpenOrdersUI(ConcurrentDictionary<string, Order> openOrders) {
+        private void UpdateOpenOrdersUI(ConcurrentDictionary<string, Order> _openOrders) {
             if (this.InvokeRequired) {  // if we're not on the UI thread, call again from the UI thread
-                this.BeginInvoke((Action)(() => UpdateOpenOrdersUI(openOrders)));
+                this.BeginInvoke((Action)(() => UpdateOpenOrdersUI(_openOrders)));
                 return;
             }
+
+            openOrders = _openOrders;
 
             CB_open_orders_listview.Items.Clear();
 
@@ -434,8 +434,6 @@ namespace IRTicker {
                             if (decimal.TryParse(CB_price_textbox.Text, out decimal price)) {
 
                                 if ((volume > 0) && (price > 0)) {
-                                    // create a client UID so we can identify orders on the book
-                                    Guid uuid = Guid.NewGuid();
                                     var response = await CoinbaseClient.CB_post_order(current_product_id, side, price.ToString(), volume.ToString(), type);
                                 }
                                 else {
