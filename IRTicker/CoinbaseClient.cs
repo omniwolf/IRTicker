@@ -95,7 +95,7 @@ namespace IRTicker
         // side is "buy" or "sell
         // type is "limit" or "market" or "stop"
         // time in force is assumed GTC
-        public static async Task<string> CB_post_order(string pair, string side, string price, string size, string type, string client_uid = "", string APIKey = null, string APISecret = null, string PassPhrase = null) {
+        public static async Task<string> CB_post_order(string pair, string side, string price, string size, string type, bool post_only = false, string client_uid = "", string APIKey = null, string APISecret = null, string PassPhrase = null) {
             if (APIKey == null || APISecret == null || PassPhrase == null) {
                 APIKey = Properties.Settings.Default.CoinbaseAPIKey;
                 APISecret = Properties.Settings.Default.CoinbaseAPISecret;
@@ -112,7 +112,8 @@ namespace IRTicker
                     size,
                     type,
                     time_in_force = "GTC",
-                    client_uid
+                    client_uid,
+                    post_only
                 };
 
                 jsonBody = JsonConvert.SerializeObject(orderData);

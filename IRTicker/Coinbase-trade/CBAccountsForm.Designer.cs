@@ -26,10 +26,13 @@ namespace IRTicker {
         /// </summary>
         private void InitializeComponent() {
             this.CB_trade_controls_panel = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.CB_balances_panel = new System.Windows.Forms.Panel();
+            this.CB_balances_label = new System.Windows.Forms.Label();
             this.CB_currency2_value = new System.Windows.Forms.Label();
+            this.CB_currency1_label = new System.Windows.Forms.Label();
             this.CB_currency1_value = new System.Windows.Forms.Label();
             this.CB_currency2_label = new System.Windows.Forms.Label();
-            this.CB_currency1_label = new System.Windows.Forms.Label();
             this.CB_order_side_listbox = new System.Windows.Forms.ListBox();
             this.CB_closed_orders_label = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -44,7 +47,7 @@ namespace IRTicker {
             this.CB_open_orders_size_col = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.CB_open_orders_remaining_col = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.CB_place_order_button = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
+            this.CB_price_label = new System.Windows.Forms.Label();
             this.CB_price_textbox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.CB_volume_textbox = new System.Windows.Forms.TextBox();
@@ -58,12 +61,9 @@ namespace IRTicker {
             this.CB_asks_listview = new System.Windows.Forms.ListView();
             this.Price_asks = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Size_asks = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.CB_balances_panel = new System.Windows.Forms.Panel();
-            this.CB_balances_label = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.CB_trade_controls_panel.SuspendLayout();
-            this.CB_orderbook_panel.SuspendLayout();
             this.CB_balances_panel.SuspendLayout();
+            this.CB_orderbook_panel.SuspendLayout();
             this.SuspendLayout();
             // 
             // CB_trade_controls_panel
@@ -77,7 +77,7 @@ namespace IRTicker {
             this.CB_trade_controls_panel.Controls.Add(this.CB_closed_orders_listview);
             this.CB_trade_controls_panel.Controls.Add(this.CB_open_orders_listview);
             this.CB_trade_controls_panel.Controls.Add(this.CB_place_order_button);
-            this.CB_trade_controls_panel.Controls.Add(this.label3);
+            this.CB_trade_controls_panel.Controls.Add(this.CB_price_label);
             this.CB_trade_controls_panel.Controls.Add(this.CB_price_textbox);
             this.CB_trade_controls_panel.Controls.Add(this.label2);
             this.CB_trade_controls_panel.Controls.Add(this.CB_volume_textbox);
@@ -88,6 +88,38 @@ namespace IRTicker {
             this.CB_trade_controls_panel.Size = new System.Drawing.Size(495, 540);
             this.CB_trade_controls_panel.TabIndex = 0;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 129);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(59, 13);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "Order type:";
+            // 
+            // CB_balances_panel
+            // 
+            this.CB_balances_panel.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.CB_balances_panel.Controls.Add(this.CB_balances_label);
+            this.CB_balances_panel.Controls.Add(this.CB_currency2_value);
+            this.CB_balances_panel.Controls.Add(this.CB_currency1_label);
+            this.CB_balances_panel.Controls.Add(this.CB_currency1_value);
+            this.CB_balances_panel.Controls.Add(this.CB_currency2_label);
+            this.CB_balances_panel.Location = new System.Drawing.Point(6, 39);
+            this.CB_balances_panel.Name = "CB_balances_panel";
+            this.CB_balances_panel.Size = new System.Drawing.Size(267, 84);
+            this.CB_balances_panel.TabIndex = 17;
+            // 
+            // CB_balances_label
+            // 
+            this.CB_balances_label.AutoSize = true;
+            this.CB_balances_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CB_balances_label.Location = new System.Drawing.Point(9, 4);
+            this.CB_balances_label.Name = "CB_balances_label";
+            this.CB_balances_label.Size = new System.Drawing.Size(83, 20);
+            this.CB_balances_label.TabIndex = 17;
+            this.CB_balances_label.Text = "Balances";
+            // 
             // CB_currency2_value
             // 
             this.CB_currency2_value.AutoSize = true;
@@ -96,6 +128,15 @@ namespace IRTicker {
             this.CB_currency2_value.Name = "CB_currency2_value";
             this.CB_currency2_value.Size = new System.Drawing.Size(0, 17);
             this.CB_currency2_value.TabIndex = 16;
+            // 
+            // CB_currency1_label
+            // 
+            this.CB_currency1_label.AutoSize = true;
+            this.CB_currency1_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CB_currency1_label.Location = new System.Drawing.Point(10, 36);
+            this.CB_currency1_label.Name = "CB_currency1_label";
+            this.CB_currency1_label.Size = new System.Drawing.Size(0, 17);
+            this.CB_currency1_label.TabIndex = 13;
             // 
             // CB_currency1_value
             // 
@@ -115,15 +156,6 @@ namespace IRTicker {
             this.CB_currency2_label.Size = new System.Drawing.Size(0, 17);
             this.CB_currency2_label.TabIndex = 14;
             // 
-            // CB_currency1_label
-            // 
-            this.CB_currency1_label.AutoSize = true;
-            this.CB_currency1_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CB_currency1_label.Location = new System.Drawing.Point(10, 36);
-            this.CB_currency1_label.Name = "CB_currency1_label";
-            this.CB_currency1_label.Size = new System.Drawing.Size(0, 17);
-            this.CB_currency1_label.TabIndex = 13;
-            // 
             // CB_order_side_listbox
             // 
             this.CB_order_side_listbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -136,6 +168,7 @@ namespace IRTicker {
             this.CB_order_side_listbox.Name = "CB_order_side_listbox";
             this.CB_order_side_listbox.Size = new System.Drawing.Size(82, 62);
             this.CB_order_side_listbox.TabIndex = 12;
+            this.CB_order_side_listbox.SelectedIndexChanged += new System.EventHandler(this.CB_order_side_listbox_SelectedIndexChanged);
             // 
             // CB_closed_orders_label
             // 
@@ -240,14 +273,14 @@ namespace IRTicker {
             this.CB_place_order_button.UseVisualStyleBackColor = true;
             this.CB_place_order_button.Click += new System.EventHandler(this.CB_place_order_button_Click);
             // 
-            // label3
+            // CB_price_label
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 230);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(34, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Price:";
+            this.CB_price_label.AutoSize = true;
+            this.CB_price_label.Location = new System.Drawing.Point(12, 230);
+            this.CB_price_label.Name = "CB_price_label";
+            this.CB_price_label.Size = new System.Drawing.Size(34, 13);
+            this.CB_price_label.TabIndex = 6;
+            this.CB_price_label.Text = "Price:";
             // 
             // CB_price_textbox
             // 
@@ -285,6 +318,7 @@ namespace IRTicker {
             this.CB_order_type_listbox.Name = "CB_order_type_listbox";
             this.CB_order_type_listbox.Size = new System.Drawing.Size(100, 64);
             this.CB_order_type_listbox.TabIndex = 2;
+            this.CB_order_type_listbox.SelectedIndexChanged += new System.EventHandler(this.CB_order_type_listbox_SelectedIndexChanged);
             // 
             // CB_pair_comboBox
             // 
@@ -310,11 +344,11 @@ namespace IRTicker {
             // CB_spread_label
             // 
             this.CB_spread_label.AutoSize = true;
-            this.CB_spread_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CB_spread_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CB_spread_label.ForeColor = System.Drawing.Color.White;
-            this.CB_spread_label.Location = new System.Drawing.Point(8, 181);
+            this.CB_spread_label.Location = new System.Drawing.Point(6, 182);
             this.CB_spread_label.Name = "CB_spread_label";
-            this.CB_spread_label.Size = new System.Drawing.Size(62, 17);
+            this.CB_spread_label.Size = new System.Drawing.Size(53, 15);
             this.CB_spread_label.TabIndex = 1;
             this.CB_spread_label.Text = "Spread: ";
             // 
@@ -377,38 +411,6 @@ namespace IRTicker {
             this.Size_asks.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.Size_asks.Width = 90;
             // 
-            // CB_balances_panel
-            // 
-            this.CB_balances_panel.BackColor = System.Drawing.Color.CornflowerBlue;
-            this.CB_balances_panel.Controls.Add(this.CB_balances_label);
-            this.CB_balances_panel.Controls.Add(this.CB_currency2_value);
-            this.CB_balances_panel.Controls.Add(this.CB_currency1_label);
-            this.CB_balances_panel.Controls.Add(this.CB_currency1_value);
-            this.CB_balances_panel.Controls.Add(this.CB_currency2_label);
-            this.CB_balances_panel.Location = new System.Drawing.Point(6, 39);
-            this.CB_balances_panel.Name = "CB_balances_panel";
-            this.CB_balances_panel.Size = new System.Drawing.Size(267, 84);
-            this.CB_balances_panel.TabIndex = 17;
-            // 
-            // CB_balances_label
-            // 
-            this.CB_balances_label.AutoSize = true;
-            this.CB_balances_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CB_balances_label.Location = new System.Drawing.Point(9, 4);
-            this.CB_balances_label.Name = "CB_balances_label";
-            this.CB_balances_label.Size = new System.Drawing.Size(83, 20);
-            this.CB_balances_label.TabIndex = 17;
-            this.CB_balances_label.Text = "Balances";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 129);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 13);
-            this.label1.TabIndex = 18;
-            this.label1.Text = "Order type:";
-            // 
             // CBAccountsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -422,10 +424,10 @@ namespace IRTicker {
             this.Load += new System.EventHandler(this.CBAccountsForm_Load);
             this.CB_trade_controls_panel.ResumeLayout(false);
             this.CB_trade_controls_panel.PerformLayout();
-            this.CB_orderbook_panel.ResumeLayout(false);
-            this.CB_orderbook_panel.PerformLayout();
             this.CB_balances_panel.ResumeLayout(false);
             this.CB_balances_panel.PerformLayout();
+            this.CB_orderbook_panel.ResumeLayout(false);
+            this.CB_orderbook_panel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -438,7 +440,7 @@ namespace IRTicker {
         private System.Windows.Forms.TextBox CB_volume_textbox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button CB_place_order_button;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label CB_price_label;
         private System.Windows.Forms.TextBox CB_price_textbox;
         private System.Windows.Forms.Panel CB_orderbook_panel;
         private System.Windows.Forms.ListView CB_asks_listview;

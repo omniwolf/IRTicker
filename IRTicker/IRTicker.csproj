@@ -194,14 +194,18 @@
     <Compile Include="BalSettings.Designer.cs">
       <DependentUpon>BalSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="CBAccountsForm.cs">
+    <Compile Include="Coinbase-trade\CBAccountsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CBAccountsForm.Designer.cs">
+    <Compile Include="Coinbase-trade\CBAccountsForm.Designer.cs">
       <DependentUpon>CBAccountsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="CBWebSockets.cs" />
+    <Compile Include="Coinbase-trade\CBWebSockets.cs" />
     <Compile Include="CE.cs" />
+    <Compile Include="Coinbase-trade\Models\CB-Accounts.cs" />
+    <Compile Include="Coinbase-trade\Models\CB-Order.cs" />
+    <Compile Include="Coinbase-trade\Models\CB-Orderbook.cs" />
+    <Compile Include="Coinbase-trade\Models\CB-Products.cs" />
     <Compile Include="CoinbaseClient.cs" />
     <Compile Include="DCEs.cs" />
     <Compile Include="Help.cs">
@@ -269,7 +273,7 @@
     <EmbeddedResource Include="BalSettings.resx">
       <DependentUpon>BalSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CBAccountsForm.resx">
+    <EmbeddedResource Include="Coinbase-trade\CBAccountsForm.resx">
       <DependentUpon>CBAccountsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DCEControl.resx">

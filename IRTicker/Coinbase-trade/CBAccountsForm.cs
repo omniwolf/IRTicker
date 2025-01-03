@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IRTicker.Coinbase_trade.Models;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,8 +13,7 @@ using static IRTicker.CBWebSockets;
 // put a button next to the balance so that we can buy/sell max
 // hide price field when market order selected
 // maybe colour the buy/sell box differently depending on what's selected?
-// change to L2 batch
-// need to do reconnection code
+// remember what extra columns i want for closed orders!!!!!!!!!!! :(  (sad face because I CAN'T REMEMBER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
 
 namespace IRTicker {
     public partial class CBAccountsForm : Form {
@@ -21,7 +21,9 @@ namespace IRTicker {
         private CBWebSockets _client;
         private string current_product_id;
         private string spreadTicker = "\\";
-        ConcurrentDictionary<string, Order> openOrders = new ConcurrentDictionary<string, Order>();
+        ConcurrentDictionary<string, CB_Order> openOrders = new ConcurrentDictionary<string, CB_Order>();
+
+        bool baiter_Active = false;
 
         public CBAccountsForm() {
             InitializeComponent();
@@ -65,8 +67,31 @@ namespace IRTicker {
             _client.OnProductsUpdated += UpdateProductsComboBox;
             _client.OnFinishNetworkTasks += EnableProductComboBox;
             _client.OnUpdatedPairBalance += UpdateBalance;
+            _client.OnBaiterComplete += BaiterComplete;
+            _client.OnBaiterStarted += BaiterStarted;
 
             await _client.Start(current_product_id, true);  // true - tells the method to download the products list as this is the first time
+        }
+
+        private void BaiterStarted(string order_id) {
+            foreach (ListViewItem lvi in CB_open_orders_listview.Items) {
+                CB_Order order = (CB_Order)lvi.Tag;
+                if (order.order_id == order_id) {
+                    lvi.ForeColor = Color.Blue;
+                    order.isBaiter = true;
+                }
+            }
+        }
+
+        private void BaiterComplete() {
+
+            if (this.InvokeRequired) {  // if we're not on the UI thread, call again from the UI thread
+                this.BeginInvoke((Action)(() => BaiterComplete()));
+                return;
+            }
+
+            baiter_Active = false;
+            CB_orderbook_panel.BackColor = Color.DimGray;
         }
 
         private void UpdateBalance(CB_Accounts currency1, CB_Accounts currency2) {
@@ -79,24 +104,17 @@ namespace IRTicker {
 
             // first we convert the strings to decimals... before converting back to pretty strings :/
 
-            if (decimal.TryParse(currency1.available, out decimal c1_dec)) {
-                try {
-                    CB_currency1_value.Text = Utilities.FormatValue(c1_dec);
-                }
+            // i don't think i need a try/catch here.. i guess i got a crash but i don't use it anywhere else around the formatValue.  Let's see how it goes without try/catch
+               // try {
+                    CB_currency1_value.Text = Utilities.FormatValue(currency1.available);
+               /* }
                 catch (Exception ex) {
                     Debug.Print("CB-trade - couldn't format new balance number");
-                }
+                }*/
 
-                if (decimal.TryParse(currency2.available, out decimal c2_dec)) {
-                    CB_currency2_value.Text = Utilities.FormatValue(c2_dec);
-                }
-                else {
-                    Debug.Print("CB-trade - can't convert " + currency2.currency + " to decimal?  trying to convert: " + currency2.balance);
-                }
-            }
-            else {
-                Debug.Print("CB-trade - can't convert " + currency1.currency + " to decimal?  trying to convert: " + currency1.balance);
-            }
+                    CB_currency2_value.Text = Utilities.FormatValue(currency2.available);
+
+
 
             CB_currency1_label.Text = currency1.currency;
             CB_currency2_label.Text = currency2.currency;
@@ -115,7 +133,7 @@ namespace IRTicker {
         }
 
         // firstLoad = true, then we set USDT-USD by default.
-        private void UpdateProductsComboBox(List<Products> pairs) {
+        private void UpdateProductsComboBox(List<CB_Products> pairs) {
 
             if (this.InvokeRequired) {  // if we're not on the UI thread, call again from the UI thread
                 this.BeginInvoke((Action)(() => UpdateProductsComboBox(pairs)));
@@ -126,7 +144,7 @@ namespace IRTicker {
             int count = 0;
             int default_selection = 0;
             // now let's build the pairs drop down menu on the CB form
-            foreach (Products pair in pairs) {
+            foreach (CB_Products pair in pairs) {
                 if (!pair.trading_disabled && pair.status == "online") { 
                     CB_pair_comboBox.Items.Add(new ComboBoxItem_Product(pair.id, pair));
                     if (pair.id == "USDT-USD") default_selection = count;
@@ -140,9 +158,9 @@ namespace IRTicker {
 
         private class ComboBoxItem_Product {
             public string DisplayText { get; set; }
-            public Products Pair { get; set; }
+            public CB_Products Pair { get; set; }
 
-            public ComboBoxItem_Product(string displayText, Products pair) {
+            public ComboBoxItem_Product(string displayText, CB_Products pair) {
                 DisplayText = displayText;
                 Pair = pair;
             }
@@ -158,29 +176,28 @@ namespace IRTicker {
         }
 
 
-        private void UpdateOpenOrdersUI(ConcurrentDictionary<string, Order> _openOrders) {
+        private void UpdateOpenOrdersUI(ConcurrentDictionary<string, CB_Order> openOrders) {
             if (this.InvokeRequired) {  // if we're not on the UI thread, call again from the UI thread
-                this.BeginInvoke((Action)(() => UpdateOpenOrdersUI(_openOrders)));
+                this.BeginInvoke((Action)(() => UpdateOpenOrdersUI(openOrders)));
                 return;
             }
-
-            openOrders = _openOrders;
 
             CB_open_orders_listview.Items.Clear();
 
             foreach (var order in openOrders) {
                 // if we don't have "remaining_size" but we do have a filled_size, then we can use this to calculate the remaining_size :|
-                string remaining_vol = order.Value.size;
-                if (!string.IsNullOrEmpty(order.Value.remaining_size)) {
+                decimal remaining_vol = order.Value.size;
+                if (order.Value.remaining_size > 0) {
                     remaining_vol = order.Value.remaining_size;
                 }
-                else if (!string.IsNullOrEmpty(order.Value.filled_size)) {
-                    if (decimal.TryParse(order.Value.size, out decimal size_d)) {
+                else if (order.Value.filled_size > 0) {
+                    order.Value.remaining_size = order.Value.size - order.Value.filled_size;
+                    /*if (decimal.TryParse(order.Value.size, out decimal size_d)) {
                         if (decimal.TryParse(order.Value.filled_size, out decimal filled_size_d)) {
                             remaining_vol = (size_d - filled_size_d).ToString();
                             order.Value.remaining_size = remaining_vol;
                         }
-                    }
+                    }*/
                 }
                 ListViewItem lvi = new ListViewItem(new string[] { order.Value.product_id, Utilities.FormatValue(order.Value.price, GetPriceDPs()), Utilities.FormatValue(order.Value.size, GetSizeDPs()), Utilities.FormatValue(remaining_vol, GetSizeDPs()) });
                 lvi.ToolTipText = buildTTtext(order.Value);
@@ -191,11 +208,15 @@ namespace IRTicker {
                 else {
                     lvi.BackColor = Color.PeachPuff;
                 }
+
+                if (order.Value.isBaiter) {
+                    lvi.ForeColor = Color.Blue;
+                }
                 CB_open_orders_listview.Items.Add(lvi);
             }
         }
 
-        private string buildTTtext(Order order, string price = "") {
+        private string buildTTtext(CB_Order order, string price = "") {
             string tt = "";
 
             if (string.IsNullOrEmpty(price)) {
@@ -214,7 +235,7 @@ namespace IRTicker {
             return tt;
         }
 
-        private void UpdateClosedOrdersUI(List<Order> closedOrders) {
+        private void UpdateClosedOrdersUI(List<CB_Order> closedOrders) {
             if (this.InvokeRequired) {  // if we're not on the UI thread, call again from the UI thread
                 this.BeginInvoke((Action)(() => UpdateClosedOrdersUI(closedOrders)));
                 return;
@@ -225,18 +246,19 @@ namespace IRTicker {
             int count = 0;
             foreach (var order in closedOrders) {
                 string price;
-                if (null == order.price) {
-                    if (decimal.TryParse(order.executed_value, out decimal exec_val_dec)) {
-                        if (decimal.TryParse(order.filled_size, out decimal filled_size_dec)) {
-                            price = Utilities.FormatValue((exec_val_dec / filled_size_dec), GetPriceDPs());
-                        }
+                // need to find ouht what happens here - is order.price null? or 0
+                if (order.price == 0) {  // closed orders seem to have 0 price, we have to calculate the average price manually...
+                    //if (decimal.TryParse(order.executed_value, out decimal exec_val_dec)) {
+                        //if (decimal.TryParse(order.filled_size, out decimal filled_size_dec)) {
+                            price = Utilities.FormatValue((order.executed_value / order.filled_size), GetPriceDPs());
+                        /*}
                         else {
                             price = Utilities.FormatValue(order.price, GetPriceDPs());
                         }
                     }
                     else {
                         price = Utilities.FormatValue(order.price, GetPriceDPs());
-                    }
+                    }*/
                 }
                 else {
                     price = Utilities.FormatValue(order.price, GetPriceDPs());
@@ -262,7 +284,7 @@ namespace IRTicker {
         private int GetPriceDPs() {
             // get the decimals we need
             if (CB_pair_comboBox.SelectedIndex < 0) return -1;  // i guess no selection?
-            string quote_accuracy = ((ComboBoxItem_Product)CB_pair_comboBox.Items[CB_pair_comboBox.SelectedIndex]).Pair.quote_increment;
+            string quote_accuracy = ((ComboBoxItem_Product)CB_pair_comboBox.Items[CB_pair_comboBox.SelectedIndex]).Pair.quote_increment.ToString();
             int? quote_accuracy_dps = Utilities.countDecimalPrecision(quote_accuracy);
             int quote_accuracy_dps_final = -1;
             if (quote_accuracy_dps.HasValue) {
@@ -279,7 +301,7 @@ namespace IRTicker {
         private int GetSizeDPs() {
             // get the decimals we need
             if (CB_pair_comboBox.SelectedIndex < 0) return -1;  // no selection in the crypto pair dropdown yet
-            string base_accuracy = ((ComboBoxItem_Product)CB_pair_comboBox.Items[CB_pair_comboBox.SelectedIndex]).Pair.base_increment;
+            string base_accuracy = ((ComboBoxItem_Product)CB_pair_comboBox.Items[CB_pair_comboBox.SelectedIndex]).Pair.base_increment.ToString();
             int? base_accuracy_dps = Utilities.countDecimalPrecision(base_accuracy);
             int base_accuracy_dps_final = -1;
             if (base_accuracy_dps.HasValue) {
@@ -289,9 +311,9 @@ namespace IRTicker {
             return base_accuracy_dps_final;
         }
 
-        private void UpdateOrderBookUI(IEnumerable<OrderBookEntry> bids, IEnumerable<OrderBookEntry> asks) {
+        private void UpdateOrderBookUI(IEnumerable<CB_OrderBookEntry> bids, IEnumerable<CB_OrderBookEntry> asks, ConcurrentDictionary<string, CB_Order> openOrders) {
             if (this.InvokeRequired) {  // if we're not on the UI thread, call again from the UI thread
-                this.BeginInvoke((Action)(() => UpdateOrderBookUI(bids, asks)));
+                this.BeginInvoke((Action)(() => UpdateOrderBookUI(bids, asks, openOrders)));
                 return;
             }
 
@@ -300,17 +322,31 @@ namespace IRTicker {
 
             int priceDPs = GetPriceDPs();
 
+            // convert openOrders into this hashset so it's easier to lookup
+            var orderPrices = new HashSet<decimal>(openOrders.Values.Select(order => order.price));
+
             int count = 0;
             foreach (var b in bids) {
-                //if (b.)
-                CB_bids_listview.Items.Add(new ListViewItem(new string[] { Utilities.FormatValue(b.Price, priceDPs), Utilities.FormatValue(b.Size) }));
+
+                ListViewItem lvi = new ListViewItem(new string[] { Utilities.FormatValue(b.Price, priceDPs), Utilities.FormatValue(b.Size) });
+                if (orderPrices.Contains(b.Price)) {  // colour for own orders
+                    lvi.BackColor = Color.DarkBlue;
+                }
+
+                CB_bids_listview.Items.Add(lvi);
                 count++;
                 if (count > 7) break;
             }
 
             count = 0;
             foreach (var a in asks) {
-                CB_asks_listview.Items.Insert(0, new ListViewItem(new string[] { Utilities.FormatValue(a.Price, priceDPs), Utilities.FormatValue(a.Size) }));
+                ListViewItem lvi = new ListViewItem(new string[] { Utilities.FormatValue(a.Price, priceDPs), Utilities.FormatValue(a.Size) });
+                
+                if (orderPrices.Contains(a.Price)) {  // colour for own orders
+                    lvi.BackColor = Color.DarkBlue;
+                }
+
+                CB_asks_listview.Items.Insert(0, lvi);
                 count++;
                 if (count > 7) break;
             }
@@ -335,11 +371,12 @@ namespace IRTicker {
             }
 
             CB_spread_label.Text = "Spread: " + Utilities.FormatValue(bestAsk - bestBid)  + "  " + spreadTicker;
+            if (baiter_Active) CB_spread_label.Text += "  MB active!";
         }
 
         private async void CB_open_orders_listview_DoubleClick(object sender, EventArgs e) {
 
-            Order order = (Order)CB_open_orders_listview.Items[CB_open_orders_listview.SelectedItems[0].Index].Tag;
+            CB_Order order = (CB_Order)CB_open_orders_listview.Items[CB_open_orders_listview.SelectedItems[0].Index].Tag;
 
             DialogResult res;
             try {
@@ -359,16 +396,15 @@ namespace IRTicker {
                 if (CB_open_orders_listview.SelectedItems.Count == 0) return;
 
                 // ok, let's actually cancel the order.
-                var response = await CoinbaseClient.CB_cancel_order(order.id);
+                bool response = await _client.CB_cancel_order(order.id);
 
-                if (response != null) {
-                    if (response == "\"" + order.id + "\"") {
-                        Debug.Print("CB-trade - seems the cancel order was successful for id: " + order.id);
-                    }
-                    else {
-                        Debug.Print("CB-trade - cancel order failed for order id: " + order.id);
-                        Debug.Print("-- CB-trade - response: " + response.ToString());
-                    }
+                if (response == true) {
+                    Debug.Print("CB-trade - seems the cancel order was successful for id: " + order.id);
+                }
+                else {
+                    Debug.Print("CB-trade - cancel order failed for order id: " + order.id);
+                    Debug.Print("-- CB-trade - response: " + response.ToString());
+                    MessageBox.Show("Failed to cancel the order for some reason...");
                 }
             }
         }
@@ -407,63 +443,82 @@ namespace IRTicker {
         }
 
         private async void CB_place_order_button_Click(object sender, EventArgs e) {
+
+            CB_place_order_button.Enabled = false;
             string side = (CB_order_side_listbox.SelectedIndex == 0 ? "buy" : "sell");
-            
-            string type = "";
-            switch (CB_order_type_listbox.SelectedIndex) {
-                case 0:
-                    type = "limit";
-                    break;
-                case 1:
-                    type = "market";
-                    break;
-                case 3:
-                    // market bait!
-                    break;
-            }
 
-            if (string.IsNullOrEmpty(type)) {
-                return;
-            }
-
-            // check volume
+            decimal volume;
+            // all orders need volume, let's make sure it's legit.
             if (!string.IsNullOrEmpty(CB_volume_textbox.Text)) {
-                if (decimal.TryParse(CB_volume_textbox.Text, out decimal volume)) {
-                    if (type == "limit") {
-                        if (!string.IsNullOrEmpty(CB_price_textbox.Text)) {
-                            if (decimal.TryParse(CB_price_textbox.Text, out decimal price)) {
-
-                                if ((volume > 0) && (price > 0)) {
-                                    var response = await CoinbaseClient.CB_post_order(current_product_id, side, price.ToString(), volume.ToString(), type);
-                                }
-                                else {
-                                    MessageBox.Show("volume or price < 0?");
-                                }
-                            }
-                            else {
-                                MessageBox.Show("price not a number?");
-                            }
-                        }
-                        else {
-                            MessageBox.Show("price empty?");
-                        }
-                    }
-                    else if (type == "market") {
-                        if (volume > 0) {
-                            var response = await CoinbaseClient.CB_post_order(current_product_id, side, "", volume.ToString(), type);
-                        }
-                        else {
-                            MessageBox.Show("volume < 0?");
-                        }
-                    }
+                if (decimal.TryParse(CB_volume_textbox.Text, out decimal _volume)) {
+                    volume = _volume;
                 }
                 else {
                     MessageBox.Show("volume not a number?");
+                    CB_place_order_button.Enabled = true;
+                    return;
                 }
             }
             else {
                 MessageBox.Show("volume empty?");
+                CB_place_order_button.Enabled = true;
+                return;
             }
+
+            switch (CB_order_type_listbox.SelectedIndex) {
+                case 0:  // limit order
+                    if (!string.IsNullOrEmpty(CB_price_textbox.Text)) {
+                        if (decimal.TryParse(CB_price_textbox.Text, out decimal price)) {
+
+                            if ((volume > 0) && (price > 0)) {
+                                var response = await _client.CB_place_order(current_product_id, side, price.ToString(), volume.ToString(), "limit", false);
+                            }
+                            else {
+                                MessageBox.Show("volume or price < 0?");
+                            }
+                        }
+                        else {
+                            MessageBox.Show("price not a number?");
+                        }
+                    }
+                    else {
+                        MessageBox.Show("price empty?");
+                    }
+                    break;
+
+                case 1:  // market order
+                    if (volume > 0) {
+                        var response = await _client.CB_place_order(current_product_id, side, "", volume.ToString(), "market", false);
+                    }
+                    else {
+                        MessageBox.Show("volume < 0?");
+                    }
+                    break;
+
+                case 2:  // market bait!
+                        
+                    if (baiter_Active) {
+                        MessageBox.Show("Baiter already running, cannot run it twice");
+                        CB_place_order_button.Enabled = true;
+                        return;
+                    }
+
+                    if (volume > 0) {
+                        baiter_Active = await _client.CB_start_baiter(current_product_id, side, volume);
+
+                        if (baiter_Active) {
+                            CB_orderbook_panel.BackColor = Color.DarkBlue;
+                        }
+                        else {
+                            MessageBox.Show("Failed to start market baiter");
+                        }
+                    }
+                    else {
+                        MessageBox.Show("volume < 0?");
+                    }
+                    break;
+            }
+            CB_place_order_button.Enabled = true;
         }
 
         private void CB_asks_listview_Click(object sender, EventArgs e) {
@@ -475,6 +530,31 @@ namespace IRTicker {
         private void CB_bids_listview_Click(object sender, EventArgs e) {
             if (((ListView)sender).SelectedItems.Count == 0) return;
             CB_price_textbox.Text = ((ListView)sender).SelectedItems[0].Text;
+        }
+
+        // hide price in market and market baiter options
+        private void CB_order_type_listbox_SelectedIndexChanged(object sender, EventArgs e) {
+            switch (CB_order_type_listbox.SelectedIndex) {
+                case 0:
+                    CB_price_label.Visible = true;
+                    CB_price_textbox.Visible = true;
+                    break;
+
+                case 1:
+                case 2:
+                    CB_price_label.Visible = false;
+                    CB_price_textbox.Visible = false;
+                    break;
+            }
+        }
+
+        private void CB_order_side_listbox_SelectedIndexChanged(object sender, EventArgs e) {
+            if (CB_order_side_listbox.SelectedIndex == 0) {
+
+            }
+            else {
+
+            }
         }
     }
 }

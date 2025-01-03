@@ -12,6 +12,11 @@ using System.Collections.Concurrent;
 
 using System.Net.WebSockets;
 using System.Windows;
+using IRTicker.Coinbase_trade.Models;
+using static IRTicker.DCE;
+using Telegram.Bot.Types;
+using System.Runtime.InteropServices;
+using static IRTicker.Balance;
 
 namespace IRTicker {
     internal class CBWebSockets {
@@ -19,34 +24,47 @@ namespace IRTicker {
         private readonly Uri _wsUrl = new Uri("wss://ws-feed.exchange.coinbase.com");
         private WebsocketClient _wsClient;
         private string _productId = "USDT-USD";  // this is the pair, eg "USDT-USD"
-        private readonly OrderBook _orderBook = new OrderBook();
+        private readonly CB_Orderbook _orderBook = new CB_Orderbook();
 
         private string _apiKey;
         private string _apiSecret;     // base64 secret
         private string _apiPassphrase;
 
-        private ConcurrentDictionary<string, Order> openOrders = new ConcurrentDictionary<string, Order>();  // holds all current open orders
-        private List<Order> closedOrders = new List<Order>();  // holds all closed orders.  Don't need a dictionary as we won't be needing to pick out entries to manipulate
+        private ConcurrentDictionary<string, CB_Order> openOrders = new ConcurrentDictionary<string, CB_Order>();  // holds all current open orders
+        private List<CB_Order> closedOrders = new List<CB_Order>();  // holds all closed orders.  Don't need a dictionary as we won't be needing to pick out entries to manipulate
         private ConcurrentDictionary<string, CB_Accounts> accounts;  // holds all account details, key is currency (product)
 
         // buffering and sending to UI on a timer
         private System.Timers.Timer _throttleTimer;
         private volatile bool _snapshotDirty;
         private readonly object _snapshotLock = new object();
-        private IEnumerable<OrderBookEntry> _currentBids;
-        private IEnumerable<OrderBookEntry> _currentAsks;
+        private IEnumerable<CB_OrderBookEntry> _currentBids;
+        private IEnumerable<CB_OrderBookEntry> _currentAsks;
+
+        // some baiter variables
+        private bool baiter_Active = false;
+        private string baiter_order_id;
+        private decimal baiter_RemainingSize;
+        private string baiter_Side;
+        private string baiter_Pair;
+        private decimal baiter_price;
+        private int baiter_pause_and_retry = 0;  // if 0, nothing to do.  If above 0 and below 5, then we increase it, if above 5, we try and re-create the order
+        private int baiter_retries = 0;  // how many times we have paused and retried.  give up after.. say 5?
+        private bool baiter_changing_price = false;  // we set to true when we're in the process of cancelling and re-creating the baiter order so we don't try a million times
 
         // this bit is super fancy.  It creates an event of type Action.  Action has no return type, so when the event
         // is called, it's like a broadcast to anyone subscribed.  You can see further down when we get an L2Update
         // type event that we broadcast to this onOrderBookUpdated event.  It is listened to in the UI forms class
         // and the arguments of the event (the bids and offers) are sent with it, allowing us to update the UI.
-        public event Action<IEnumerable<OrderBookEntry>, IEnumerable<OrderBookEntry>> OnOrderBookUpdated;
-        public event Action<ConcurrentDictionary<string, Order>> OnOpenOrdersUpdated;
-        public event Action<List<Order>> OnClosedOrdersUpdated;
+        public event Action<IEnumerable<CB_OrderBookEntry>, IEnumerable<CB_OrderBookEntry>, ConcurrentDictionary<string, CB_Order>> OnOrderBookUpdated;
+        public event Action<ConcurrentDictionary<string, CB_Order>> OnOpenOrdersUpdated;
+        public event Action<List<CB_Order>> OnClosedOrdersUpdated;
         public event Action OnFailedToLoad;
-        public event Action<List<Products>> OnProductsUpdated;
+        public event Action<List<CB_Products>> OnProductsUpdated;
         public event Action OnFinishNetworkTasks;
         public event Action<CB_Accounts, CB_Accounts> OnUpdatedPairBalance;
+        public event Action OnBaiterComplete;
+        public event Action<string> OnBaiterStarted;
 
         private CBWebSockets(string apiKey, string apiSecret, string apiPassphrase) {
             _apiKey = apiKey;
@@ -141,6 +159,7 @@ namespace IRTicker {
                 });
 
             _wsClient.ReconnectionHappened.Subscribe(info => {
+                Debug.Print("CB-trade - sockets reconnection happened.  Resubscribing...");
                 SubscribeL2_and_user(_productId);
             });
 
@@ -168,18 +187,55 @@ namespace IRTicker {
             }
         }
 
-        private void ThrottleTimerElapsed() {
+        private async void ThrottleTimerElapsed() {
             // If there's no new data, do nothing
             if (!_snapshotDirty) return;
 
-            IEnumerable<OrderBookEntry> bids, asks;
+            IEnumerable<CB_OrderBookEntry> bids, asks;
             lock (_snapshotLock) {
                 bids = _currentBids.ToList();
                 asks = _currentAsks.ToList();
                 _snapshotDirty = false;
             }
 
-            OnOrderBookUpdated?.Invoke(bids, asks);
+            OnOrderBookUpdated?.Invoke(bids, asks, openOrders);
+
+            // let's see if baiter needs any help
+            if (baiter_pause_and_retry > 0) {
+                if (baiter_pause_and_retry < 6) {
+                    baiter_pause_and_retry++;
+                }
+                else {  // OK we have paused long enough, let's do something
+                    // first let's see if the order exists
+                    Debug.Print("CB-trade - baiter needs to retry");
+                    if (openOrders.ContainsKey(baiter_order_id)) {
+                        Debug.Print("CB-trade - but the order appears to already exist.. so let's do nothing");
+                        baiter_pause_and_retry = 0;
+                    }
+                    else {
+                        Debug.Print("CB-trade - let's try and re-create the baiter order");
+                        bool orderCreatedSuccessfully = await TryCreateBaiterOrder();
+                        if (!orderCreatedSuccessfully) {
+
+                            baiter_retries++;
+                            Debug.Print("CB-trade-baiter - failed to recreate the baiter order " + baiter_retries + " time(s)");
+
+                            if (baiter_retries > 6) {
+                                MessageBox.Show("Baiter has failed 5 times in a row to create the new order, stopping now.");
+                                baiter_Active = false;
+                                OnBaiterComplete?.Invoke();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ForceOrderBookRedraw() {
+            lock (_snapshotLock) {
+                _snapshotDirty = true;
+            }
+            ThrottleTimerElapsed();
         }
 
         // gets ALL accounts
@@ -238,9 +294,9 @@ namespace IRTicker {
         private async Task<bool> getAndParseProducts() {
             var trading_pairs = await CoinbaseClient.CB_get_pairs();
 
-            List<Products> trading_pairs_list;
+            List<CB_Products> trading_pairs_list;
             try {
-                trading_pairs_list = JsonConvert.DeserializeObject<List<Products>>(trading_pairs);
+                trading_pairs_list = JsonConvert.DeserializeObject<List<CB_Products>>(trading_pairs);
             }
             catch (Exception ex) {
                 System.Windows.Forms.MessageBox.Show("Failed to start Coinbase when pulling pairs." + Environment.NewLine + Environment.NewLine + "Response: " + trading_pairs + Environment.NewLine + Environment.NewLine + "Error:" + Environment.NewLine + Environment.NewLine + ex.Message);
@@ -256,14 +312,82 @@ namespace IRTicker {
             return true;
         }
 
+        public async Task<bool> CB_start_baiter(string pair, string side, decimal startingSize) {
+            if (baiter_Active) return false;
+            
+            baiter_RemainingSize = startingSize;
+            baiter_Side = side;
+            baiter_Pair = pair;
+            baiter_changing_price = false;
+            baiter_pause_and_retry = 0;
+            baiter_retries = 0;
+
+            Debug.Print("CB-trade-baiter - starting : " + side + " " + pair + " " + startingSize);
+
+            // next we need to figure out what the top of the order book is and place the order there
+            var ourOrderbook = (side == "buy" ? _currentBids : _currentAsks);
+            decimal topOrderPrice;
+            // we don't need to lock this - it's read only basically
+            lock (_snapshotLock) {
+                CB_OrderBookEntry topOrder = ourOrderbook.FirstOrDefault();
+                topOrderPrice = topOrder.Price;
+            }
+
+            Debug.Print("CB-trade-baiter: starting price: " + topOrderPrice);
+            baiter_price = topOrderPrice;
+
+            // now we place the order quick smart
+            baiter_Active = await TryCreateBaiterOrder();
+
+            return baiter_Active;
+        }
+
+        private async Task<bool> TryCreateBaiterOrder() {
+
+            var create_baiter_order = await CB_place_order(baiter_Pair, baiter_Side, baiter_price.ToString(), baiter_RemainingSize.ToString(), "limit", true);
+
+            if (null != create_baiter_order) {
+                Debug.Print("CB-trade-baiter - new order response not null...");
+                if (null != create_baiter_order.status) {
+                    Debug.Print("CB-trade-baiter - new order status: " + create_baiter_order.status);
+                    if (create_baiter_order.status != "rejected") {
+                        // but if it is rejected or null, how do we signal a pause then a retry?
+                        baiter_order_id = create_baiter_order.order_id;
+                        baiter_changing_price = false;  // ok, we should be finished with this price update, can resume checks
+                        baiter_pause_and_retry = 0;
+                        baiter_retries = 0;
+                        Debug.Print("CB-trade-baiter - all good on order placement - changing price false again");
+
+                        // now we check the current open orders, there's a good chance the baiter order
+                        // has been already added to the list, and so is not coloured correctly
+                        OnBaiterStarted?.Invoke(baiter_order_id);
+                        return true;
+                    }
+                    else {
+                        baiter_pause_and_retry = 1;
+                        Debug.Print("CB-trade-baiter - baiter order was rejected, will try again in a bit");
+                    }
+                }
+                else {
+                    baiter_pause_and_retry = 1;
+                    Debug.Print("CB-trade-baiter - baiter order status was null, will try again in a bit");
+                }
+            }
+            else {
+                baiter_pause_and_retry = 1;
+                Debug.Print("CB-trade-baiter - baiter order had a null response, will try again in a bit");
+            }
+            return false;
+        }
+
         // should only be called at the start, uses the REST end point for the full list
         private async Task<bool> parseOpenOrders() {
 
             var openOrders_raw = await CoinbaseClient.CB_get_open_orders();
 
-            List<Order> openOrders_list;
+            List<CB_Order> openOrders_list;
             try {
-                openOrders_list = JsonConvert.DeserializeObject<List<Order>>(openOrders_raw);
+                openOrders_list = JsonConvert.DeserializeObject<List<CB_Order>>(openOrders_raw);
             }
             catch (Exception ex) {
                 System.Windows.Forms.MessageBox.Show("Failed to start Coinbase when pulling open orders." + Environment.NewLine + Environment.NewLine + "Response: " + openOrders_raw + Environment.NewLine + Environment.NewLine  + "Error:" + Environment.NewLine + Environment.NewLine + ex.Message);
@@ -289,11 +413,27 @@ namespace IRTicker {
             var closedOrders_raw = await CoinbaseClient.CB_get_settled(_productId);
 
             try {
-                closedOrders = JsonConvert.DeserializeObject<List<Order>>(closedOrders_raw);
+                closedOrders = JsonConvert.DeserializeObject<List<CB_Order>>(closedOrders_raw);
             }
             catch (Exception ex) {
                 System.Windows.Forms.MessageBox.Show("Failed to start Coinbase when pulling closed orders."+ Environment.NewLine + Environment.NewLine +  "Response: " + closedOrders_raw + Environment.NewLine + Environment.NewLine + "Error:" + Environment.NewLine + Environment.NewLine + ex.Message);
                 return false;
+            }
+
+            // clean it up
+            foreach (CB_Order closedOrder in closedOrders) {
+                if (string.IsNullOrEmpty(closedOrder.order_id) && !string.IsNullOrEmpty(closedOrder.id)) {
+                    closedOrder.order_id = closedOrder.id;
+                }
+
+                // let's check here if we have the baiter order and it's closed.  If so, and baiter
+                // is still active, shut it down
+                if (baiter_Active) {
+                    if (closedOrder.order_id == baiter_order_id) {
+                        baiter_Active = false;
+                        OnBaiterComplete?.Invoke();
+                    }
+                }
             }
 
             OnClosedOrdersUpdated?.Invoke(closedOrders);
@@ -301,19 +441,19 @@ namespace IRTicker {
         }
 
         // gets updated open orders from sockets
-        private void updateOpenOrders(Order changedOrder) {
-            var type = changedOrder.OrderType?.ToString();
-            string order_id = changedOrder.id?.ToString();
+        private void updateOpenOrders(CB_Order changedOrder) {
+            var type = changedOrder.OrderType;
+            string order_id = changedOrder.id;
 
             if (null != type) {
                 switch (type) {
                     case "done":
                         if (!string.IsNullOrEmpty(order_id)) {
-                            if (openOrders.TryRemove(order_id, out Order removed)) {
-                                Debug.Print("CB-trade: order removed from open orders, price: " + changedOrder.price?.ToString());
+                            if (openOrders.TryRemove(order_id, out CB_Order removed)) {
+                                Debug.Print("CB-trade: order removed from open orders, price: " + changedOrder.price.ToString());
                             }
                             else {
-                                Debug.Print("CB-trade - can't' remove open order - order_id: " + order_id + ", price: " + changedOrder.price?.ToString());
+                                Debug.Print("CB-trade - can't' remove open order - order_id: " + order_id + ", price: " + changedOrder.price.ToString());
                             }
                         }
                         break;
@@ -335,7 +475,13 @@ namespace IRTicker {
                         if (!string.IsNullOrEmpty(order_id)) {
                             if (openOrders.ContainsKey(order_id)) {
                                 // let's update the order
-                                openOrders[order_id].remaining_size = changedOrder.remaining_size?.ToString();
+                                openOrders[order_id].remaining_size = changedOrder.remaining_size;
+                                if (order_id == baiter_order_id) {
+                                    openOrders[order_id].isBaiter = true;
+                                }
+                                else {
+                                    openOrders[order_id].isBaiter = false;
+                                }
                             }
                         }
                         break;
@@ -343,19 +489,22 @@ namespace IRTicker {
 
                 // now we broadcast an event that we need to update the open orders UI
                 OnOpenOrdersUpdated?.Invoke(openOrders);
+                ForceOrderBookRedraw();  // force the order book to be updated (eg to remove highlighting for own order if it's been cancelled)
             }
         }
 
         // creates the Order object and adds it to the openOrders global dictionary
-        private void OpenOrders_Add(Order orderEvent) {
+        private void OpenOrders_Add(CB_Order orderEvent) {
 
             if (openOrders.ContainsKey(orderEvent.id)) {  // check if the order is already in the dictionary.. if it is remove it.
                 Debug.Print("CB-trade - strangely we were given a new order, but it's already in the openOrders dictionary.  ID: " + orderEvent.id);
-                if (!openOrders.TryRemove(orderEvent.id, out Order removed)) {
+                if (!openOrders.TryRemove(orderEvent.id, out CB_Order removed)) {
                     Debug.Print("-- CB-trade - Tried to remove and it failed.. id: " + orderEvent.id);
                 }
             }
             // now let's add it
+            Debug.Print("CB-trade - baiter about to be checked.  order id: " + orderEvent.id + ", baiter id: " + baiter_order_id);
+            if (orderEvent.id == baiter_order_id) orderEvent.isBaiter = true;
             if (openOrders.TryAdd(orderEvent.id, orderEvent)) {
                 Debug.Print("CB-trade - added new order, price: " + orderEvent.price);
             }
@@ -437,12 +586,59 @@ namespace IRTicker {
                             _orderBook.UpdateFromL2Update(side, price, size);
                         }
 
+                        // for baiter, we grab the top of book as well
+                        decimal topBid, topAsk = 0;
+
                         lock (_snapshotLock) {
                             _currentBids = _orderBook.Bids.ToList();  // snapshot
                             _currentAsks = _orderBook.Asks.ToList();
                             _snapshotDirty = true;
+                            topBid = _currentBids.FirstOrDefault().Price;
+                            topAsk = _currentAsks.FirstOrDefault().Price;
                         }
-                        //OnOrderBookUpdated?.Invoke(_orderBook.Bids, _orderBook.Asks);
+
+                        // now should decide if the baiter is active and order is not at top of book, re-create order
+                        // don't bother with baiter stuff if 1. it's not even active, 2. we're already trying to change the price, or 3. we're pausing to try again a bit later
+                        if (baiter_Active && !baiter_changing_price && (baiter_pause_and_retry == 0)) {
+                            //Debug.Print("CB-trade-baiter - baiter is active, we are not currently changing price");
+                            baiter_changing_price = true;  // OK, don't try and change price again until we have created the new order
+
+                            decimal baiter_new_price = 0;
+                            if (baiter_Side == "buy") {
+                                //Debug.Print("CB-trade-baiter - baiter is a buy order");
+                                if (topBid > baiter_price) {
+                                    Debug.Print("CB-trade-baiter - best bid (" + _currentBids.FirstOrDefault().Price + ") is greater than baiter price (" + baiter_price + ")");
+                                    // ok, we need to change.  set some variables
+                                    baiter_new_price = topBid;
+                                }
+                            }
+                            else {  // sell
+                                //Debug.Print("CB-trade-baiter - baiter is a sell order");
+                                if (topAsk < baiter_price) {
+                                    Debug.Print("CB-trade-baiter - best offer (" + _currentAsks.FirstOrDefault().Price + ") is less than baiter price (" + baiter_price + ")");
+
+                                    // ok, we need to change.  set some variables
+                                    baiter_new_price = topAsk;
+                                }
+                            }
+
+                            if (baiter_new_price > 0) {
+                                Debug.Print("CB-trade-baiter - about to cancel old order");
+                                bool cancel_response = await CB_cancel_order(baiter_order_id);
+                                if (cancel_response) {
+                                    Debug.Print("CB-trade-baiter - cancelling successful, creating new " + baiter_Side + " order at price " + baiter_new_price.ToString());
+                                    baiter_price = baiter_new_price;
+                                    await TryCreateBaiterOrder();
+                                }
+                                else {
+                                    Debug.Print("CB-trade-baiter - couldn't cancel the order?");
+                                    baiter_changing_price = false;
+                                }
+                            }
+                            else {
+                                baiter_changing_price = false;  // this order doesn't require a cancel and re-post
+                            }
+                        }                        
                     }
                     break;
 
@@ -454,7 +650,15 @@ namespace IRTicker {
                 // these are openOrder tings
                 case "open":
                 case "received":  // will add the order to the dictionary here, but will only actually show on the UI when the open event is received
-                    Order updatedOrder = JsonConvert.DeserializeObject<Order>(json);
+                    CB_Order updatedOrder;
+                    try {
+                        updatedOrder = JsonConvert.DeserializeObject<CB_Order>(json);
+                        if (updatedOrder == null) throw new Exception("deserialized object was null");
+                    }
+                    catch (Exception ex) {
+                        Debug.Print("CB-trade - tried to deserialize the wss received/open event in handleMessage, but failed.  json: " + json);
+                        return;
+                    }
 
                     // now we have to map some properties as wss uses different names
                     /*if (!string.IsNullOrEmpty(msg["order_id"]?.ToString())) {  // if the order_id property exists, then map it to the id variable
@@ -462,7 +666,11 @@ namespace IRTicker {
                     }*/
 
                     if (updatedOrder.order_id != null) {
-                        updatedOrder.id = updatedOrder.order_id.ToString();
+                        updatedOrder.id = updatedOrder.order_id;
+                    }
+
+                    if (updatedOrder.order_id == baiter_order_id) {
+                        updatedOrder.isBaiter = true;
                     }
 
                     if (!string.IsNullOrEmpty(msg["time"]?.ToString())) {  // if the order_id property exists, then map it to the id variable
@@ -477,6 +685,19 @@ namespace IRTicker {
                     await getAndParseAccount(_productId);  // need to await this as it calls the accounts/account_id and pulls balance data from the CB API
                     break;
 
+                case "match":  // when one of our orders is matched (partially)
+                    CB_Order_matched match;
+                    try {  // convert the json to the CB_Order_match object
+                        match = JsonConvert.DeserializeObject<CB_Order_matched>(json);
+                    }
+                    catch (Exception ex) {
+                        Debug.Print("CB-trade - tried to deserialize the wss match event in handleMessage, but failed.  json: " + json);
+                        return;
+                    }
+
+                    parseOrderMatched(match);
+                    break;
+
                 case "done":  // when an order is done, don't try and update it, just grab all new data from the REST API and throw it up on the UI
                     Debug.Print("OK, should be a completed order?");
 
@@ -484,6 +705,25 @@ namespace IRTicker {
                     await parseOpenOrders();
                     await parseClosedOrders();
                     await getAndParseAccount(_productId);
+
+                    // check if this was market baiter
+                    // need to deserialise?
+
+                    CB_Order done_order;
+                    try {  // convert the json to the CB_Order_match object
+                        done_order = JsonConvert.DeserializeObject<CB_Order>(json);
+                    }
+                    catch (Exception ex) {
+                        Debug.Print("CB-trade - tried to deserialize the wss done event in handleMessage, but failed.  json: " + json);
+                        return;
+                    }
+
+                    if (!baiter_changing_price && (done_order.order_id == baiter_order_id)) {
+                        Debug.Print("CB-trade - it seems the baiter order is complete/cancelled");
+                        baiter_Active = false;
+                        // i guess should raise an event for hte UI
+                        OnBaiterComplete?.Invoke();
+                    }
 
                     break;
 
@@ -493,125 +733,86 @@ namespace IRTicker {
             }
         }
 
-        private IEnumerable<OrderBookEntry> ConvertArrayToEntries(JArray arr) {
-            var result = new List<OrderBookEntry>();
+        private void parseOrderMatched(CB_Order_matched match) {
+            // first, update the openOrders
+            // acttuuaally first we need to figure out what the order_id is.
+            // coinbase makes this difficult
+            string order_id = "";
+            if (match.taker_user_id != null) {
+                // OK, this kinda means we are the taker?
+                order_id = match.taker_order_id;
+            }
+            else if (match.maker_user_id != null) {
+                order_id = match.maker_order_id;
+            }
+
+            if (!string.IsNullOrEmpty(order_id)) {
+
+                if (openOrders.ContainsKey(order_id)) {
+                    openOrders[order_id].remaining_size = openOrders[order_id].remaining_size - match.size;
+                    
+                    // now, baiter
+                    if (openOrders[order_id].isBaiter) {
+                        if (order_id == baiter_order_id) {
+                            baiter_RemainingSize -= match.size;
+                        }
+                    }
+                }
+            }
+
+            // then we check if baiter is active, and if so update the remaining vol
+        }
+
+        public async Task<CB_Order> CB_place_order(string pair, string side, string price, string size, string type, bool post_only = false, string client_uid = "") {
+            var response = await CoinbaseClient.CB_post_order(pair, side, price, size, type, post_only);
+
+            // convert to Order
+            CB_Order openedOrder;
+            try {
+                openedOrder = JsonConvert.DeserializeObject<CB_Order>(response);
+                if (openedOrder == null) throw new Exception("deserialized object was null");
+            }
+            catch (Exception ex) {
+                Debug.Print("CB-trade - tried to deserialize the response from opening a new order, but failed.  json: " + response);
+                return null;
+            }
+
+            if (string.IsNullOrEmpty(openedOrder.order_id) && !string.IsNullOrEmpty(openedOrder.id)) {
+                openedOrder.order_id = openedOrder.id;
+            }
+
+            return openedOrder;
+        }
+
+        /// <summary>
+        /// cancels an order
+        /// </summary>
+        /// <param name="order_id"></param>
+        /// <returns>order ID of the order cancelled (if successful)</returns>
+        public async Task<bool> CB_cancel_order(string order_id) {
+            string response = await CoinbaseClient.CB_cancel_order(order_id);
+
+            if (!string.IsNullOrEmpty(response)) {
+                if (response == "\"" + order_id + "\"") return true;
+            }
+            Debug.Print("CB-trade - failed to cancel order?  respose: " + response + ", order id: " + order_id);
+            return false;
+        }
+
+        private IEnumerable<CB_OrderBookEntry> ConvertArrayToEntries(JArray arr) {
+            var result = new List<CB_OrderBookEntry>();
             foreach (var item in arr) {
                 if (!decimal.TryParse(item[0].ToString(), out var price)) continue;
                 if (!decimal.TryParse(item[1].ToString(), out var size)) continue;
 
-                result.Add(new OrderBookEntry { Price = price, Size = size });
+                result.Add(new CB_OrderBookEntry { Price = price, Size = size });
             }
             return result;
-        }
-
-        public class OrderBookEntry {
-            public decimal Price { get; set; }
-            public decimal Size { get; set; }
-        }
-
-        public class OrderBook {
-            // Bids stored in descending order by price
-            private readonly SortedDictionary<decimal, decimal> _bids = new SortedDictionary<decimal, decimal>(new DescendingComparer<decimal>());
-            // Asks stored in ascending order by price
-            private readonly SortedDictionary<decimal, decimal> _asks = new SortedDictionary<decimal, decimal>();
-
-            public IEnumerable<OrderBookEntry> Bids => _bids.Select(kv => new OrderBookEntry { Price = kv.Key, Size = kv.Value });//.ToList();
-            public IEnumerable<OrderBookEntry> Asks => _asks.Select(kv => new OrderBookEntry { Price = kv.Key, Size = kv.Value });//.ToList();
-
-            /**
-             * this is tricky.  the _bids and _asks properties of the OrderBook class are automatically sorted
-             * So, by simply adding the price/size object (OrderBookEntry) to the _bids and _offers property,
-             * they get sorted in the correct order.
-             */
-            public void LoadSnapshot(IEnumerable<OrderBookEntry> bids, IEnumerable<OrderBookEntry> asks) {
-                _bids.Clear();
-                _asks.Clear();
-                foreach (var b in bids) _bids[b.Price] = b.Size;
-                foreach (var a in asks) _asks[a.Price] = a.Size;
-            }
-
-            public void UpdateFromL2Update(string side, decimal price, decimal size) {
-                if (side == "buy") {
-                    if (size == 0m) {
-                        //Debug.Print("CB-trade - removing entry from _bids, price: " + price);
-                        _bids.Remove(price);
-                    }
-                    else
-                        _bids[price] = size;
-                }
-                else if (side == "sell") {
-                    if (size == 0m) {
-                        //Debug.Print("CB-trade - removing entry from _asks, price: " + price);
-                        _asks.Remove(price);
-                    }
-                    else
-                        _asks[price] = size;
-                }
-            }
         }
 
         public class DescendingComparer<T> : IComparer<T> where T : IComparable<T> {
             public int Compare(T x, T y) => y.CompareTo(x);
         }
 
-        // this is the format we get from the REST /orders endpoint
-        // have to convert WSS format (order_id -> id, time -> created_at)
-        public class Order {
-            public string order_id { get; set; }
-            public string id { get; set; }
-            public string client_oid { get; set; }
-            public string price { get; set; }
-            public string size { get; set; }
-            public string remaining_size { get; set; }
-            public string product_id { get; set; }
-            public string profile_id { get; set; }
-            public string side { get; set; }
-            [JsonProperty("type")]
-            public string OrderType { get; set; }
-            public string time_in_force { get; set; }
-            public bool post_only { get; set; }
-            public DateTime created_at { get; set; }
-            public string fill_fees { get; set; }
-            public string filled_size { get; set; }
-            public string executed_value { get; set; }
-            public string market_type { get; set; }
-            public string status { get; set; }
-            public bool settled { get; set; }
-            public DateTime done_at { get; set; }
-            public string done_reason { get; set; }
-            public string funding_currency { get; set; }
-        }
-
-        public class Products {
-            public string id { get; set; }
-            public string base_currency { get; set; }
-            public string quote_currency { get; set; }
-            public string quote_increment { get; set; }
-            public string base_increment { get; set; }
-            public string display_name { get; set; }
-            public string min_market_funds { get; set; }
-            public bool margin_enabled { get; set; }
-            public bool post_only { get; set; }
-            public bool limit_only { get; set; }
-            public bool cancel_only { get; set; }
-            public string status { get; set; }
-            public string status_message { get; set; }
-            public bool trading_disabled { get; set; }
-            public bool fx_stablecoin { get; set; }
-            public string max_slippage_percentage { get; set; }
-            public bool auction_mode { get; set; }
-            public string high_bid_limit_percentage { get; set; }
-        }
-        public class CB_Accounts {
-            public string id { get; set; }
-            public string currency { get; set; }
-            public string balance { get; set; }
-            public string hold { get; set; }
-            public string available { get; set; }
-            public string profile_id { get; set; }
-            public bool trading_enabled { get; set; }
-            public string pending_deposit { get; set; }
-            public string display_name { get; set; }
-        }
     }
 }
