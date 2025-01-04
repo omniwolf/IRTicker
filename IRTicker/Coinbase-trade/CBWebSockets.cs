@@ -115,8 +115,9 @@ namespace IRTicker {
         /// </summary>
         /// <param name="productId"></param> eg "USDT-USD"
         /// <param name="getProducts"></param> if true, we pull the products from Coinbase API.  Should only be true once per opening of the form
+        /// <param name="ignoreSockets"></param> if true, we don't try and recraete or subscribe to sockets, just do REST things
         /// <returns></returns>
-        public async Task Start(string productId, bool getProducts) {
+        public async Task Start(string productId, bool getProducts, bool ignoreSockets) {
             _productId = productId;
 
             // first we check if we have a list of products already.
@@ -125,47 +126,38 @@ namespace IRTicker {
                 await getAndParseProducts();
             }
 
-
-            /*while (_wsClient != null) {
-                await Task.Delay(500);
-                if (!_wsClient.IsRunning) {
-                    Debug.Print("CB-trade - _wsClient has stopped running!");
+            if (!ignoreSockets) {
+                Debug.Print("CB-trade - running sockets startup tasks");
+                if (_wsClient != null) {
+                    Debug.Print("CB-trade - _wsClient isRunning: " + _wsClient.IsRunning);
                     _wsClient.Dispose();
                     _wsClient = null;
                 }
                 else {
-                    await _wsClient.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "changed product");
-                    Debug.Print("CB-trade - _wsClient is still running.  giving it more time...");
+                    Debug.Print("CB-trade - _wsClient is null");
                 }
-            }*/
 
-                // replaced with the shitty while loop above
-            if (_wsClient != null) {
-                Debug.Print("CB-trade - _wsClient isRunning: " + _wsClient.IsRunning);
-                _wsClient.Dispose();
-                _wsClient = null;
-            }
-            else {
-                Debug.Print("CB-trade - _wsClient is null");
-            }
+                _wsClient = new WebsocketClient(_wsUrl);
+                _wsClient.MessageReceived
+                    .Where(msg => msg.MessageType == WebSocketMessageType.Text)
+                    .Subscribe(msg =>
+                    {
+                        //Task.Run(async () => await HandleMessage(msg.Text));
+                        HandleMessage(msg.Text);
+                    });
 
-            _wsClient = new WebsocketClient(_wsUrl);
-            _wsClient.MessageReceived
-                .Where(msg => msg.MessageType == WebSocketMessageType.Text)
-                .Subscribe(msg =>
+                _wsClient.ReconnectionHappened.Subscribe(info =>
                 {
-                    //Task.Run(async () => await HandleMessage(msg.Text));
-                    HandleMessage(msg.Text);
+                    Debug.Print("CB-trade - sockets reconnection happened.  Resubscribing...");
+                    SubscribeL2_and_user(_productId);
                 });
 
-            _wsClient.ReconnectionHappened.Subscribe(info => {
-                Debug.Print("CB-trade - sockets reconnection happened.  Resubscribing...");
-                SubscribeL2_and_user(_productId);
-            });
+                await _wsClient.Start();
 
-            await _wsClient.Start();
-
-            SubscribeL2_and_user(_productId);
+                // turns out when you connect, it calls the ReconnectionHappened block, which will subscribe
+                // automatically, so we don't need to do it here.
+                //SubscribeL2_and_user(_productId);
+            }
 
             // now we pull the open orders to make sure we can see them all.
             bool success = await parseOpenOrders();
@@ -178,7 +170,7 @@ namespace IRTicker {
                 success = await getAndParseAccount(_productId);
             }
 
-            if (!success) {
+            if (!success && !ignoreSockets) {  // let's only fully bail if we're doing a full reconnect.  If we're just refreshing REST endpoints and it fails, ignore and move on
                 OnFailedToLoad?.Invoke();  // something failed in loading API data, close the form
             }
             else {
@@ -380,7 +372,8 @@ namespace IRTicker {
             return false;
         }
 
-        // should only be called at the start, uses the REST end point for the full list
+        // should only be called at the start and if a "Rrefresh all" is called,
+        // uses the REST end point for the full list
         private async Task<bool> parseOpenOrders() {
 
             var openOrders_raw = await CoinbaseClient.CB_get_open_orders();
@@ -401,6 +394,10 @@ namespace IRTicker {
                 if (!openOrders.ContainsKey(order.id)) // Avoid duplicate keys
                 {
                     openOrders[order.id] = order;
+
+                    if (baiter_Active && (order.id == baiter_order_id)) {
+                        openOrders[order.id].isBaiter = true;
+                    }
                 }
             }
 
@@ -543,7 +540,7 @@ namespace IRTicker {
             {
                 type = "subscribe",
                 product_ids = new string[] { productId },
-                channels = new string[] { "level2_batch", "user" },
+                channels = new string[] { "level2_batch", "user", "matches" },
                 key = _apiKey,
                 passphrase = _apiPassphrase,
                 timestamp = timestamp,
@@ -685,6 +682,7 @@ namespace IRTicker {
                     await getAndParseAccount(_productId);  // need to await this as it calls the accounts/account_id and pulls balance data from the CB API
                     break;
 
+                case "last_match":
                 case "match":  // when one of our orders is matched (partially)
                     CB_Order_matched match;
                     try {  // convert the json to the CB_Order_match object

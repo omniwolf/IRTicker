@@ -70,7 +70,7 @@ namespace IRTicker {
             _client.OnBaiterComplete += BaiterComplete;
             _client.OnBaiterStarted += BaiterStarted;
 
-            await _client.Start(current_product_id, true);  // true - tells the method to download the products list as this is the first time
+            await _client.Start(current_product_id, true, false);  // first true - tells the method to download the products list as this is the first time.  second false - do not ignore sockets, we want to start them
         }
 
         private void BaiterStarted(string order_id) {
@@ -223,14 +223,16 @@ namespace IRTicker {
                 price = Utilities.FormatValue(order.price, GetPriceDPs());
             }
 
+            string[] currencies = current_product_id.Split('-');
+
             tt += (order.OrderType + " " + order.side).ToUpper() + Environment.NewLine +
                 "Result: " + order.done_reason + Environment.NewLine +
-                "Price: " + price + Environment.NewLine +
-                "Filled size: " + Utilities.FormatValue(order.filled_size, GetSizeDPs()) + Environment.NewLine +
-                "Original size: " + Utilities.FormatValue(order.size, GetSizeDPs()) + Environment.NewLine +
-                "Value of trade: " + Utilities.FormatValue(order.executed_value, GetPriceDPs()) + Environment.NewLine +
+                "Price: " + currencies[1] + " " + price + Environment.NewLine +
+                "Filled size: " + currencies[0] + " " + Utilities.FormatValue(order.filled_size, GetSizeDPs()) + Environment.NewLine +
+                "Original size: " + currencies[0] + " " + Utilities.FormatValue(order.size, GetSizeDPs()) + Environment.NewLine +
+                "Value of trade: " + currencies[1] + " " + Utilities.FormatValue(order.executed_value, GetPriceDPs()) + Environment.NewLine +
                 "Created on: " + order.created_at.ToLocalTime() + Environment.NewLine +
-                "Fees paid: " + Utilities.FormatValue(order.fill_fees);
+                "Fees paid: " + currencies[1] + " " + Utilities.FormatValue(order.fill_fees);
 
             return tt;
         }
@@ -246,37 +248,41 @@ namespace IRTicker {
             int count = 0;
             foreach (var order in closedOrders) {
                 string price;
-                // need to find ouht what happens here - is order.price null? or 0
+                // need to find ouht what happens here - is order.price null? or 0  (it's 0)
                 if (order.price == 0) {  // closed orders seem to have 0 price, we have to calculate the average price manually...
-                    //if (decimal.TryParse(order.executed_value, out decimal exec_val_dec)) {
-                        //if (decimal.TryParse(order.filled_size, out decimal filled_size_dec)) {
-                            price = Utilities.FormatValue((order.executed_value / order.filled_size), GetPriceDPs());
-                        /*}
-                        else {
-                            price = Utilities.FormatValue(order.price, GetPriceDPs());
-                        }
-                    }
-                    else {
-                        price = Utilities.FormatValue(order.price, GetPriceDPs());
-                    }*/
+                    price = Utilities.FormatValue((order.executed_value / order.filled_size), GetPriceDPs());
                 }
                 else {
                     price = Utilities.FormatValue(order.price, GetPriceDPs());
                 }
 
-                ListViewItem lvi = new ListViewItem(new string[] { order.done_at.ToShortDateString(), price, Utilities.FormatValue(order.size, GetSizeDPs()), Utilities.FormatValue(order.executed_value) });
+                ListViewItem lvi = new ListViewItem(new string[] {
+                    order.done_at.ToShortDateString(),
+                    price,
+                    Utilities.FormatValue(order.filled_size, GetSizeDPs()),
+                    Utilities.FormatValue(order.executed_value),
+                    Utilities.FormatValue(order.size, GetSizeDPs()),
+                    Utilities.FormatValue(order.fill_fees)
+                });
+
+                lvi.UseItemStyleForSubItems = false;  // needed to allow us to colour individual cell item (subitem) text.  Consequence is we can't set formatting per row, must now be done on every subitem
+
+                // let's see if we can colour the volume differently if the filled != size
+                if (order.filled_size < order.size) {
+                    lvi.SubItems[2].ForeColor = Color.Red;
+                    lvi.SubItems[4].ForeColor = Color.Red;
+                }
+
                 lvi.Tag = order;  // just in case
                 lvi.ToolTipText = buildTTtext(order, price);
 
-                if (order.side == "buy") {
-                    lvi.BackColor = Color.Thistle;
-                }
-                else {
-                    lvi.BackColor = Color.PeachPuff;
-                }
+                foreach (ListViewItem.ListViewSubItem subitem in lvi.SubItems) {
+                    subitem.BackColor = (order.side == "buy" ? Color.Thistle : Color.PeachPuff);
+                }                    
+      
                 CB_closed_orders_listview.Items.Add(lvi);
                 count++;
-                if (count > 20) break;
+                if (count > 50) break;
             }
         }
 
@@ -335,7 +341,7 @@ namespace IRTicker {
 
                 CB_bids_listview.Items.Add(lvi);
                 count++;
-                if (count > 7) break;
+                if (count > 8) break;
             }
 
             count = 0;
@@ -348,7 +354,7 @@ namespace IRTicker {
 
                 CB_asks_listview.Items.Insert(0, lvi);
                 count++;
-                if (count > 7) break;
+                if (count > 8) break;
             }
 
             // update the spread label
@@ -439,7 +445,7 @@ namespace IRTicker {
             CB_closed_orders_label.Text = "Closed orders (" + current_product_id + "):";
 
             //await Task.Delay(1000);
-            await _client.Start(CB_pair_comboBox.Text, false);  // false - do not download products list as we should already have it.
+            await _client.Start(CB_pair_comboBox.Text, false, false);  // first false - do not download products list as we should already have it. second - do NOT ignore sockets, we want to reload them
         }
 
         private async void CB_place_order_button_Click(object sender, EventArgs e) {
@@ -555,6 +561,23 @@ namespace IRTicker {
             else {
 
             }
+        }
+
+        private async void CB_refresh_button_Click(object sender, EventArgs e) {
+            CB_pair_comboBox.Enabled = false;
+            CB_open_orders_listview.Items.Clear();
+            CB_closed_orders_listview.Items.Clear();
+            CB_open_orders_listview.Items.Add(new ListViewItem(new string[] { "Loading..." }));
+            CB_closed_orders_listview.Items.Add(new ListViewItem(new string[] { "Loading..." }));
+            string[] currencies = current_product_id.Split('-');
+
+
+            CB_currency1_label.Text = currencies[0] + "...";
+            CB_currency2_label.Text = currencies[1] + "...";
+            CB_currency1_value.Text = "...";
+            CB_currency2_value.Text = "...";
+
+            await _client.Start(current_product_id, false, true);
         }
     }
 }
