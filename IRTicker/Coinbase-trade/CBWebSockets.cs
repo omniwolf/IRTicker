@@ -540,7 +540,7 @@ namespace IRTicker {
             {
                 type = "subscribe",
                 product_ids = new string[] { productId },
-                channels = new string[] { "level2_batch", "user", "matches" },
+                channels = new string[] { "level2_batch", "user" },
                 key = _apiKey,
                 passphrase = _apiPassphrase,
                 timestamp = timestamp,
@@ -682,7 +682,6 @@ namespace IRTicker {
                     await getAndParseAccount(_productId);  // need to await this as it calls the accounts/account_id and pulls balance data from the CB API
                     break;
 
-                case "last_match":
                 case "match":  // when one of our orders is matched (partially)
                     CB_Order_matched match;
                     try {  // convert the json to the CB_Order_match object
@@ -757,8 +756,6 @@ namespace IRTicker {
                     }
                 }
             }
-
-            // then we check if baiter is active, and if so update the remaining vol
         }
 
         public async Task<CB_Order> CB_place_order(string pair, string side, string price, string size, string type, bool post_only = false, string client_uid = "") {
