@@ -237,7 +237,7 @@ namespace IRTicker {
             }
 
             // turning off IR for coinbase testing
-            //wSocketConnect = new WebSocketsConnect(DCEs, pollingThread, pIR);
+            wSocketConnect = new WebSocketsConnect(DCEs, pollingThread, pIR);
             //LastPanel = Main;
 
 
@@ -246,9 +246,9 @@ namespace IRTicker {
             VersionLabel.Text = "IR Ticker version " + FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
 
             // turning off IR for coinbase testing
-            //pollingThread.RunWorkerAsync();
-            LoadingPanel.Visible = false;
-            Main.Visible = true;
+            pollingThread.RunWorkerAsync();
+            LoadingPanel.Visible = true;
+            //Main.Visible = true;
         }
 
         // super manual function to push the UI controls into objects so we can read them programattically

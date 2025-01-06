@@ -152,7 +152,13 @@ namespace IRTicker {
                     SubscribeL2_and_user(_productId);
                 });
 
-                await _wsClient.Start();
+                try {
+                    await _wsClient.Start();
+                }
+                catch (Exception ex) {
+                    Debug.Print("CB-trade - tried to start sockets connection, but it failed: " + ex.Message);
+                    MessageBox.Show("Failed to start sockets for Coinbase trade, this could be expected if you closed the window right after opening it or changing markets");
+                }
 
                 // turns out when you connect, it calls the ReconnectionHappened block, which will subscribe
                 // automatically, so we don't need to do it here.
@@ -517,13 +523,15 @@ namespace IRTicker {
 
 
             // Turn off reconnection, maybe this is what was screwing up my re-starting attempts..
-            _wsClient.IsReconnectionEnabled = false;
+            if (_wsClient != null) {
+                _wsClient.IsReconnectionEnabled = false;
 
-            // .Stop will never return if you await it (sometimes), so we must just try to stop and then continue with our lives.
-            Task.Run(() => _wsClient.Stop(WebSocketCloseStatus.NormalClosure, "Stopped"));
+                // .Stop will never return if you await it (sometimes), so we must just try to stop and then continue with our lives.
+                Task.Run(() => _wsClient.Stop(WebSocketCloseStatus.NormalClosure, "Stopped"));
 
-            // just make it go away.  we're starting again.
-            _wsClient.Dispose();
+                // just make it go away.  we're starting again.
+                _wsClient.Dispose();
+            }
         }
 
         private void SubscribeL2_and_user(string productId) {
@@ -744,8 +752,10 @@ namespace IRTicker {
             }
 
             if (!string.IsNullOrEmpty(order_id)) {
+                Debug.Print("CB-trade - we have received a match event for " + order_id + ", FYI baiter is active: " + baiter_Active.ToString() + " and baiter_id is: " + baiter_order_id);
 
                 if (openOrders.ContainsKey(order_id)) {
+                    Debug.Print("CB-trade - we know about this match, it is in openOrders");
                     openOrders[order_id].remaining_size = openOrders[order_id].remaining_size - match.size;
                     
                     // now, baiter
@@ -754,6 +764,9 @@ namespace IRTicker {
                             baiter_RemainingSize -= match.size;
                         }
                     }
+
+                    OnOpenOrdersUpdated?.Invoke(openOrders);
+                    ForceOrderBookRedraw();  // force the order book to be updated (eg to remove highlighting for own order if it's been cancelled)
                 }
             }
         }

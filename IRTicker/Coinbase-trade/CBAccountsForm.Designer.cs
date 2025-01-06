@@ -25,6 +25,7 @@ namespace IRTicker {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CBAccountsForm));
             this.CB_trade_controls_panel = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.CB_balances_panel = new System.Windows.Forms.Panel();
@@ -208,7 +209,7 @@ namespace IRTicker {
             this.CB_closed_orders_listview.Name = "CB_closed_orders_listview";
             this.CB_closed_orders_listview.ShowGroups = false;
             this.CB_closed_orders_listview.ShowItemToolTips = true;
-            this.CB_closed_orders_listview.Size = new System.Drawing.Size(454, 110);
+            this.CB_closed_orders_listview.Size = new System.Drawing.Size(458, 110);
             this.CB_closed_orders_listview.TabIndex = 9;
             this.CB_closed_orders_listview.UseCompatibleStateImageBehavior = false;
             this.CB_closed_orders_listview.View = System.Windows.Forms.View.Details;
@@ -221,6 +222,7 @@ namespace IRTicker {
             // CB_closed_orders_price_col
             // 
             this.CB_closed_orders_price_col.Text = "Price";
+            this.CB_closed_orders_price_col.Width = 63;
             // 
             // CB_closed_orders_filled_volume_col
             // 
@@ -343,7 +345,7 @@ namespace IRTicker {
             this.CB_orderbook_panel.Controls.Add(this.CB_spread_label);
             this.CB_orderbook_panel.Controls.Add(this.CB_bids_listview);
             this.CB_orderbook_panel.Controls.Add(this.CB_asks_listview);
-            this.CB_orderbook_panel.Location = new System.Drawing.Point(285, 8);
+            this.CB_orderbook_panel.Location = new System.Drawing.Point(283, 8);
             this.CB_orderbook_panel.Name = "CB_orderbook_panel";
             this.CB_orderbook_panel.Size = new System.Drawing.Size(181, 388);
             this.CB_orderbook_panel.TabIndex = 1;
@@ -449,8 +451,9 @@ namespace IRTicker {
             this.ClientSize = new System.Drawing.Size(468, 536);
             this.Controls.Add(this.CB_orderbook_panel);
             this.Controls.Add(this.CB_trade_controls_panel);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CBAccountsForm";
-            this.Text = "CBAccountsForm";
+            this.Text = "Coinbase trading";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CBAccountsForm_FormClosing);
             this.Load += new System.EventHandler(this.CBAccountsForm_Load);
             this.CB_trade_controls_panel.ResumeLayout(false);

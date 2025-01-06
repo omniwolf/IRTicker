@@ -47,6 +47,8 @@ namespace IRTicker {
             CB_order_side_listbox.SelectedIndex = 0;
 
             CB_closed_orders_label.Text = "Closed orders (" + current_product_id + "):";
+            CB_closed_orders_listview.Columns[3].Text = "Value (" + currencies[1] + ")";
+
 
             CB_pair_comboBox.Text = current_product_id;  // default
             CB_pair_comboBox.Enabled = false; // don't let them try and change it while loading
@@ -443,6 +445,7 @@ namespace IRTicker {
             CB_currency2_value.Text = "...";
 
             CB_closed_orders_label.Text = "Closed orders (" + current_product_id + "):";
+            CB_closed_orders_listview.Columns[3].Text = "Value (" + currencies[1] + ")";
 
             //await Task.Delay(1000);
             await _client.Start(CB_pair_comboBox.Text, false, false);  // first false - do not download products list as we should already have it. second - do NOT ignore sockets, we want to reload them
