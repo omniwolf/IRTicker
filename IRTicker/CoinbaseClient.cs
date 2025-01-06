@@ -87,7 +87,6 @@ namespace IRTicker
                 product_id = "&product_id=" + pair;
             }
 
-            // this doesn't work, sorting works, but it seems to be missing orders.  need to inspect the return payload.
             var response = await CB_GET(APIKey, APISecret, PassPhrase, "orders?status=done&sortedBy=created_at&sorting=desc" + product_id);
             return response;
         }

@@ -47,7 +47,7 @@ namespace IRTicker.Coinbase_trade.Models {
         }
     }
 
-    internal class CB_OrderBookEntry {
+    public class CB_OrderBookEntry {
         public decimal Price { get; set; }
         public decimal Size { get; set; }
     }

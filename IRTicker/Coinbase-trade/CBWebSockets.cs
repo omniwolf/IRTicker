@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 using static IRTicker.Balance;
 
 namespace IRTicker {
-    internal class CBWebSockets {
+    public class CBWebSockets {
 
         private readonly Uri _wsUrl = new Uri("wss://ws-feed.exchange.coinbase.com");
         private WebsocketClient _wsClient;
@@ -33,6 +33,7 @@ namespace IRTicker {
         private ConcurrentDictionary<string, CB_Order> openOrders = new ConcurrentDictionary<string, CB_Order>();  // holds all current open orders
         private List<CB_Order> closedOrders = new List<CB_Order>();  // holds all closed orders.  Don't need a dictionary as we won't be needing to pick out entries to manipulate
         private ConcurrentDictionary<string, CB_Accounts> accounts;  // holds all account details, key is currency (product)
+        List<CB_Products> Products;  // all the markets
 
         // buffering and sending to UI on a timer
         private System.Timers.Timer _throttleTimer;
@@ -304,10 +305,14 @@ namespace IRTicker {
             if (null == trading_pairs_list) return false;
 
             // now re-order the list to be in alphabetical order
-            var orderedProducts = trading_pairs_list.OrderBy(p => p.id).ToList();
+            Products = trading_pairs_list.OrderBy(p => p.id).ToList();
 
-            OnProductsUpdated?.Invoke(orderedProducts);
+            OnProductsUpdated?.Invoke(Products);
             return true;
+        }
+
+        public List<CB_Products> getProducts() {
+            return Products;
         }
 
         public async Task<bool> CB_start_baiter(string pair, string side, decimal startingSize) {

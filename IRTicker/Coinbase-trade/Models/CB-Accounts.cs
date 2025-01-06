@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace IRTicker.Coinbase_trade.Models {
-    internal class CB_Accounts {
+    public class CB_Accounts {
         public string id { get; set; }
         public string currency { get; set; }
         public decimal balance { get; set; }

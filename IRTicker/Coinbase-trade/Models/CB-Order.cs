@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace IRTicker.Coinbase_trade.Models {
-    internal class CB_Order {
+    public class CB_Order {
         public string order_id { get; set; }
         public string id { get; set; }
         public string client_oid { get; set; }

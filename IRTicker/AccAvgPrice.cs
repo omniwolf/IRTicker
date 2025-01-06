@@ -10,6 +10,7 @@ using System.Collections.Concurrent;
 using System.Windows.Forms;
 using IndependentReserve.DotNetClientApi.Data;
 using System.Diagnostics;
+using static IRTicker.Balance;
 
 namespace IRTicker
 {
@@ -24,15 +25,33 @@ namespace IRTicker
         private int oldDealSizeCurrencySelected = 1;  // remembers which dealsize currency (eg crypto or fiat) is selected for when we force crypto and disable the control if they choose more than one fiat currency, and then deselect to just 1 currency and we need to remember which option they had selected bofer
         public ConcurrentDictionary<string, Tuple<Button, bool>> fiatCurrenciesSelected = new ConcurrentDictionary<string, Tuple<Button, bool>>();
 
-        public AccAvgPrice(DCE _DCE, PrivateIR _pIR, IRAccountsForm _IRT, bool enableAutoUpdate = false, string crypto = "", string fiat = "AUD", int direction = 0) {
+        // if this is coming from coinbase, then the crypto argument is hte full pair eg "USDT-USD"
+        public AccAvgPrice(DCE _DCE, PrivateIR _pIR, IRAccountsForm _IRT, CBWebSockets CBClient, bool enableAutoUpdate = false, string crypto = "", string fiat = "AUD", int direction = 0) {
             InitializeComponent();
             dce = _DCE;
             pIR = _pIR;
             IRT = _IRT;
 
             // initialise the controls
-            Utilities.PopulateCryptoComboBox(dce, AccAvgPrice_Crypto_ComboBox);
-            //PopulateFiatComboBox();
+            if (_pIR != null) {
+                Utilities.PopulateCryptoComboBox(dce, AccAvgPrice_Crypto_ComboBox);
+            }
+            else if (CBClient != null) {
+                // OK, now we grab the products list and throw it into the combox ourselves.
+
+                AccAvgPrice_Crypto_ComboBox.Items.Clear();
+                AccAvgPrice_Crypto_ComboBox.ResetText();
+                AccAvgPrice_Crypto_ComboBox.Items.Add("");  // add an empty option as the first one so it can be selected when we need to "reset"
+                AccAvgPrice_Crypto_ComboBox.SelectedIndex = 0;
+
+                List<Coinbase_trade.Models.CB_Products> CB_products = CBClient.getProducts();
+                foreach (var product in CB_products) {
+                    if (!product.trading_disabled && product.status == "online") {
+                        AccAvgPrice_Crypto_ComboBox.Items.Add(product.id);
+                    }
+                }
+            }
+                //PopulateFiatComboBox();
             AccAvgPrice_Start_DTPicker.Value = DateTime.Now;
             AccAvgPrice_End_DTPicker.Value = DateTime.Now + TimeSpan.FromHours(24);
             AccAvgPrice_BuySell_ComboBox.SelectedIndex = direction;  // 0 = buy, 1 = sell
@@ -44,15 +63,25 @@ namespace IRTicker
                 else Debug.Print("Can't find the crypto to set the crypto combobox: " + crypto);
             }
 
+            if (_pIR != null) {
+                fiatCurrenciesSelected.TryAdd("AUD", new Tuple<Button, bool>(AccAvgPrice_FiatAUD_button, false));
+                fiatCurrenciesSelected.TryAdd("USD", new Tuple<Button, bool>(AccAvgPrice_FiatUSD_button, false));
+                fiatCurrenciesSelected.TryAdd("NZD", new Tuple<Button, bool>(AccAvgPrice_FiatNZD_button, false));
+                fiatCurrenciesSelected.TryAdd("SGD", new Tuple<Button, bool>(AccAvgPrice_FiatSGD_button, false));
 
-            fiatCurrenciesSelected.TryAdd("AUD", new Tuple<Button, bool>(AccAvgPrice_FiatAUD_button, false));
-            fiatCurrenciesSelected.TryAdd("USD", new Tuple<Button, bool>(AccAvgPrice_FiatUSD_button, false));
-            fiatCurrenciesSelected.TryAdd("NZD", new Tuple<Button, bool>(AccAvgPrice_FiatNZD_button, false));
-            fiatCurrenciesSelected.TryAdd("SGD", new Tuple<Button, bool>(AccAvgPrice_FiatSGD_button, false));
+                // simulate clicking on the button to make it selected by default
+                AccAvgPrice_Fiat_button_click(fiatCurrenciesSelected[fiat].Item1, null);
+            }
+            else if (CBClient != null) {
+                // let's disable some controls we don't care about.
+                AccAvgPrice_FiatAUD_button.Enabled = false;
+                AccAvgPrice_FiatUSD_button.Enabled = false;
+                AccAvgPrice_FiatNZD_button.Enabled = false;
+                AccAvgPrice_FiatSGD_button.Enabled = false;
 
-            // simulate clicking on the button to make it selected by default
-            AccAvgPrice_Fiat_button_click(fiatCurrenciesSelected[fiat].Item1, null);
+                AccAvgPrice_SendRemainingToVolumeField_button.Enabled = false;  // maybe we can do this later
 
+            }
         }
 
         // I guess to do this fully properly I should run this every time they choose a crypto to ensure that the crypto-fiat pair exists (ie check it against dce.usablepairs())
@@ -90,21 +119,24 @@ namespace IRTicker
                 return;
             }
 
-            bool atLeastOneCurrencySelected = false;
-            foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
-                if (fiatButton.Value.Item2) {
-                    atLeastOneCurrencySelected = true;
-                    break;
+            if (pIR != null) {
+                bool atLeastOneFiatCurrencySelected = false;
+                foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
+                    if (fiatButton.Value.Item2) {
+                        atLeastOneFiatCurrencySelected = true;
+                        break;
+                    }
                 }
-            }
-            if (!atLeastOneCurrencySelected) {
-                AccAvgPrice_Status_Label.Text = "Choose a crypto and fiat please";
-                return;
+                if (!atLeastOneFiatCurrencySelected) {
+                    AccAvgPrice_Status_Label.Text = "Choose a crypto and fiat please";
+                    return;
+                }
             }
 
             AccAvgPrice_Status_Label.Text = "Pulling closed orders...";
             AccAvgPrice_Crypto_ComboBox.Enabled = false;
 
+            // for Coinbase, this will just be an empty dictionary, so don't need to if pir != null around it
             foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
                 fiatButton.Value.Item1.Enabled = false;
             }
