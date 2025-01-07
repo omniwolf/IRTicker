@@ -324,6 +324,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ir_eagel_transparent___small_Oe3_icon.ico" />
+    <None Include="Resources\tiny-i.png" />
     <None Include="Resources\colour-circle.gif" />
     <None Include="Resources\web-sparks.gif" />
     <None Include="Resources\btcm-tri2.png" />

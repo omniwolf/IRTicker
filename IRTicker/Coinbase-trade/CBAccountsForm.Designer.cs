@@ -25,9 +25,14 @@ namespace IRTicker {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CBAccountsForm));
             this.CB_trade_controls_panel = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
+            this.CB_baiter_i_image_panel = new System.Windows.Forms.Panel();
+            this.CB_price_spread_button = new System.Windows.Forms.Button();
+            this.CB_volume_max_button = new System.Windows.Forms.Button();
+            this.CB_AccAvgPrice_button = new System.Windows.Forms.Button();
+            this.CB_refresh_button = new System.Windows.Forms.Button();
             this.CB_balances_panel = new System.Windows.Forms.Panel();
             this.CB_balances_label = new System.Windows.Forms.Label();
             this.CB_currency2_value = new System.Windows.Forms.Label();
@@ -42,6 +47,8 @@ namespace IRTicker {
             this.CB_closed_orders_price_col = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.CB_closed_orders_filled_volume_col = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.CB_closed_orders_value_col = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.CB_closed_orders_original_volume_col = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.CB_closed_orders_fees_col = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.CB_open_orders_listview = new System.Windows.Forms.ListView();
             this.CB_open_orders_product_col = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.CB_open_orders_price_col = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -62,9 +69,7 @@ namespace IRTicker {
             this.CB_asks_listview = new System.Windows.Forms.ListView();
             this.Price_asks = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Size_asks = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.CB_refresh_button = new System.Windows.Forms.Button();
-            this.CB_closed_orders_original_volume_col = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.CB_closed_orders_fees_col = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.CB_baiter_i_TT = new System.Windows.Forms.ToolTip(this.components);
             this.CB_trade_controls_panel.SuspendLayout();
             this.CB_balances_panel.SuspendLayout();
             this.CB_orderbook_panel.SuspendLayout();
@@ -73,8 +78,11 @@ namespace IRTicker {
             // CB_trade_controls_panel
             // 
             this.CB_trade_controls_panel.BackColor = System.Drawing.Color.YellowGreen;
+            this.CB_trade_controls_panel.Controls.Add(this.CB_baiter_i_image_panel);
+            this.CB_trade_controls_panel.Controls.Add(this.CB_price_spread_button);
+            this.CB_trade_controls_panel.Controls.Add(this.CB_volume_max_button);
+            this.CB_trade_controls_panel.Controls.Add(this.CB_AccAvgPrice_button);
             this.CB_trade_controls_panel.Controls.Add(this.CB_refresh_button);
-            this.CB_trade_controls_panel.Controls.Add(this.label1);
             this.CB_trade_controls_panel.Controls.Add(this.CB_balances_panel);
             this.CB_trade_controls_panel.Controls.Add(this.CB_order_side_listbox);
             this.CB_trade_controls_panel.Controls.Add(this.CB_closed_orders_label);
@@ -90,17 +98,65 @@ namespace IRTicker {
             this.CB_trade_controls_panel.Controls.Add(this.CB_pair_comboBox);
             this.CB_trade_controls_panel.Location = new System.Drawing.Point(0, 0);
             this.CB_trade_controls_panel.Name = "CB_trade_controls_panel";
-            this.CB_trade_controls_panel.Size = new System.Drawing.Size(469, 540);
+            this.CB_trade_controls_panel.Size = new System.Drawing.Size(469, 545);
             this.CB_trade_controls_panel.TabIndex = 0;
             // 
-            // label1
+            // CB_baiter_i_image_panel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 129);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 13);
-            this.label1.TabIndex = 18;
-            this.label1.Text = "Order type:";
+            this.CB_baiter_i_image_panel.BackColor = System.Drawing.Color.YellowGreen;
+            this.CB_baiter_i_image_panel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("CB_baiter_i_image_panel.BackgroundImage")));
+            this.CB_baiter_i_image_panel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.CB_baiter_i_image_panel.Location = new System.Drawing.Point(31, 173);
+            this.CB_baiter_i_image_panel.Name = "CB_baiter_i_image_panel";
+            this.CB_baiter_i_image_panel.Size = new System.Drawing.Size(20, 20);
+            this.CB_baiter_i_image_panel.TabIndex = 23;
+            // 
+            // CB_price_spread_button
+            // 
+            this.CB_price_spread_button.Location = new System.Drawing.Point(148, 230);
+            this.CB_price_spread_button.Name = "CB_price_spread_button";
+            this.CB_price_spread_button.Size = new System.Drawing.Size(49, 20);
+            this.CB_price_spread_button.TabIndex = 22;
+            this.CB_price_spread_button.Text = "Spread";
+            this.CB_price_spread_button.UseVisualStyleBackColor = true;
+            this.CB_price_spread_button.Click += new System.EventHandler(this.CB_price_spread_button_Click);
+            // 
+            // CB_volume_max_button
+            // 
+            this.CB_volume_max_button.Location = new System.Drawing.Point(148, 202);
+            this.CB_volume_max_button.Name = "CB_volume_max_button";
+            this.CB_volume_max_button.Size = new System.Drawing.Size(49, 20);
+            this.CB_volume_max_button.TabIndex = 21;
+            this.CB_volume_max_button.Text = "Max";
+            this.CB_volume_max_button.UseVisualStyleBackColor = true;
+            this.CB_volume_max_button.Click += new System.EventHandler(this.CB_volume_max_button_Click);
+            // 
+            // CB_AccAvgPrice_button
+            // 
+            this.CB_AccAvgPrice_button.BackColor = System.Drawing.Color.ForestGreen;
+            this.CB_AccAvgPrice_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CB_AccAvgPrice_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CB_AccAvgPrice_button.ForeColor = System.Drawing.Color.PaleGreen;
+            this.CB_AccAvgPrice_button.Location = new System.Drawing.Point(353, 402);
+            this.CB_AccAvgPrice_button.Name = "CB_AccAvgPrice_button";
+            this.CB_AccAvgPrice_button.Size = new System.Drawing.Size(111, 22);
+            this.CB_AccAvgPrice_button.TabIndex = 20;
+            this.CB_AccAvgPrice_button.Text = "Avg price calculator";
+            this.CB_AccAvgPrice_button.UseVisualStyleBackColor = false;
+            this.CB_AccAvgPrice_button.Click += new System.EventHandler(this.CB_AccAvgPrice_button_Click);
+            // 
+            // CB_refresh_button
+            // 
+            this.CB_refresh_button.BackColor = System.Drawing.Color.ForestGreen;
+            this.CB_refresh_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CB_refresh_button.ForeColor = System.Drawing.Color.PaleGreen;
+            this.CB_refresh_button.Location = new System.Drawing.Point(191, 12);
+            this.CB_refresh_button.Name = "CB_refresh_button";
+            this.CB_refresh_button.Size = new System.Drawing.Size(82, 21);
+            this.CB_refresh_button.TabIndex = 19;
+            this.CB_refresh_button.Text = "Refresh all";
+            this.CB_refresh_button.UseVisualStyleBackColor = false;
+            this.CB_refresh_button.Click += new System.EventHandler(this.CB_refresh_button_Click);
             // 
             // CB_balances_panel
             // 
@@ -169,29 +225,31 @@ namespace IRTicker {
             this.CB_order_side_listbox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.CB_order_side_listbox.Location = new System.Drawing.Point(191, 129);
+            this.CB_order_side_listbox.Location = new System.Drawing.Point(203, 129);
             this.CB_order_side_listbox.Name = "CB_order_side_listbox";
-            this.CB_order_side_listbox.Size = new System.Drawing.Size(82, 62);
+            this.CB_order_side_listbox.Size = new System.Drawing.Size(70, 62);
             this.CB_order_side_listbox.TabIndex = 12;
             this.CB_order_side_listbox.SelectedIndexChanged += new System.EventHandler(this.CB_order_side_listbox_SelectedIndexChanged);
             // 
             // CB_closed_orders_label
             // 
             this.CB_closed_orders_label.AutoSize = true;
+            this.CB_closed_orders_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CB_closed_orders_label.Location = new System.Drawing.Point(6, 403);
             this.CB_closed_orders_label.Name = "CB_closed_orders_label";
-            this.CB_closed_orders_label.Size = new System.Drawing.Size(74, 13);
+            this.CB_closed_orders_label.Size = new System.Drawing.Size(111, 20);
             this.CB_closed_orders_label.TabIndex = 11;
             this.CB_closed_orders_label.Text = "Closed orders:";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 267);
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(6, 261);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(127, 13);
+            this.label4.Size = new System.Drawing.Size(195, 20);
             this.label4.TabIndex = 10;
-            this.label4.Text = "Open orders (all markets):";
+            this.label4.Text = "Open orders (all markets): ";
             // 
             // CB_closed_orders_listview
             // 
@@ -205,7 +263,7 @@ namespace IRTicker {
             this.CB_closed_orders_listview.FullRowSelect = true;
             this.CB_closed_orders_listview.GridLines = true;
             this.CB_closed_orders_listview.HideSelection = false;
-            this.CB_closed_orders_listview.Location = new System.Drawing.Point(6, 421);
+            this.CB_closed_orders_listview.Location = new System.Drawing.Point(6, 426);
             this.CB_closed_orders_listview.Name = "CB_closed_orders_listview";
             this.CB_closed_orders_listview.ShowGroups = false;
             this.CB_closed_orders_listview.ShowItemToolTips = true;
@@ -233,6 +291,15 @@ namespace IRTicker {
             // 
             this.CB_closed_orders_value_col.Text = "Value";
             this.CB_closed_orders_value_col.Width = 80;
+            // 
+            // CB_closed_orders_original_volume_col
+            // 
+            this.CB_closed_orders_original_volume_col.Text = "Req volume";
+            this.CB_closed_orders_original_volume_col.Width = 80;
+            // 
+            // CB_closed_orders_fees_col
+            // 
+            this.CB_closed_orders_fees_col.Text = "Fees paid";
             // 
             // CB_open_orders_listview
             // 
@@ -274,9 +341,9 @@ namespace IRTicker {
             // 
             // CB_place_order_button
             // 
-            this.CB_place_order_button.Location = new System.Drawing.Point(191, 202);
+            this.CB_place_order_button.Location = new System.Drawing.Point(203, 202);
             this.CB_place_order_button.Name = "CB_place_order_button";
-            this.CB_place_order_button.Size = new System.Drawing.Size(82, 48);
+            this.CB_place_order_button.Size = new System.Drawing.Size(70, 48);
             this.CB_place_order_button.TabIndex = 7;
             this.CB_place_order_button.Text = "Place order";
             this.CB_place_order_button.UseVisualStyleBackColor = true;
@@ -293,9 +360,9 @@ namespace IRTicker {
             // 
             // CB_price_textbox
             // 
-            this.CB_price_textbox.Location = new System.Drawing.Point(83, 230);
+            this.CB_price_textbox.Location = new System.Drawing.Point(57, 230);
             this.CB_price_textbox.Name = "CB_price_textbox";
-            this.CB_price_textbox.Size = new System.Drawing.Size(100, 20);
+            this.CB_price_textbox.Size = new System.Drawing.Size(85, 20);
             this.CB_price_textbox.TabIndex = 5;
             // 
             // label2
@@ -309,9 +376,9 @@ namespace IRTicker {
             // 
             // CB_volume_textbox
             // 
-            this.CB_volume_textbox.Location = new System.Drawing.Point(83, 202);
+            this.CB_volume_textbox.Location = new System.Drawing.Point(57, 202);
             this.CB_volume_textbox.Name = "CB_volume_textbox";
-            this.CB_volume_textbox.Size = new System.Drawing.Size(100, 20);
+            this.CB_volume_textbox.Size = new System.Drawing.Size(85, 20);
             this.CB_volume_textbox.TabIndex = 3;
             // 
             // CB_order_type_listbox
@@ -323,9 +390,9 @@ namespace IRTicker {
             "Limit",
             "Market",
             "Market baiter"});
-            this.CB_order_type_listbox.Location = new System.Drawing.Point(83, 129);
+            this.CB_order_type_listbox.Location = new System.Drawing.Point(57, 129);
             this.CB_order_type_listbox.Name = "CB_order_type_listbox";
-            this.CB_order_type_listbox.Size = new System.Drawing.Size(100, 64);
+            this.CB_order_type_listbox.Size = new System.Drawing.Size(140, 64);
             this.CB_order_type_listbox.TabIndex = 2;
             this.CB_order_type_listbox.SelectedIndexChanged += new System.EventHandler(this.CB_order_type_listbox_SelectedIndexChanged);
             // 
@@ -422,33 +489,16 @@ namespace IRTicker {
             this.Size_asks.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.Size_asks.Width = 90;
             // 
-            // CB_refresh_button
+            // CB_baiter_i_TT
             // 
-            this.CB_refresh_button.BackColor = System.Drawing.Color.ForestGreen;
-            this.CB_refresh_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CB_refresh_button.ForeColor = System.Drawing.Color.PaleGreen;
-            this.CB_refresh_button.Location = new System.Drawing.Point(191, 12);
-            this.CB_refresh_button.Name = "CB_refresh_button";
-            this.CB_refresh_button.Size = new System.Drawing.Size(82, 21);
-            this.CB_refresh_button.TabIndex = 19;
-            this.CB_refresh_button.Text = "Refresh all";
-            this.CB_refresh_button.UseVisualStyleBackColor = false;
-            this.CB_refresh_button.Click += new System.EventHandler(this.CB_refresh_button_Click);
-            // 
-            // CB_closed_orders_original_volume_col
-            // 
-            this.CB_closed_orders_original_volume_col.Text = "Req volume";
-            this.CB_closed_orders_original_volume_col.Width = 80;
-            // 
-            // CB_closed_orders_fees_col
-            // 
-            this.CB_closed_orders_fees_col.Text = "Fees paid";
+            this.CB_baiter_i_TT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.CB_baiter_i_TT.ToolTipTitle = "Market baiter";
             // 
             // CBAccountsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(468, 536);
+            this.ClientSize = new System.Drawing.Size(468, 541);
             this.Controls.Add(this.CB_orderbook_panel);
             this.Controls.Add(this.CB_trade_controls_panel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -503,9 +553,13 @@ namespace IRTicker {
         private System.Windows.Forms.Label CB_spread_label;
         private Panel CB_balances_panel;
         private Label CB_balances_label;
-        private Label label1;
         private Button CB_refresh_button;
         private ColumnHeader CB_closed_orders_original_volume_col;
         private ColumnHeader CB_closed_orders_fees_col;
+        private Button CB_AccAvgPrice_button;
+        private Button CB_price_spread_button;
+        private Button CB_volume_max_button;
+        private Panel CB_baiter_i_image_panel;
+        private ToolTip CB_baiter_i_TT;
     }
 }

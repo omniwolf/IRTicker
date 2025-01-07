@@ -1340,7 +1340,7 @@ namespace IRTicker
             AccountOrderVolume_textbox.Text = pIR.accounts[AccountSelectedCrypto].AvailableBalance.ToString();
         }
         private void IRAccount_AvgPrice_Button_Click(object sender, EventArgs e) {
-            var _AccAvgPrice = new AccAvgPrice(DCE_IR, pIR, this, enableAutoUpdate: true, crypto: AccountSelectedCrypto, fiat: DCE_IR.CurrentSecondaryCurrency, direction: AccountBuySell_listbox.SelectedIndex);
+            var _AccAvgPrice = new AccAvgPrice(DCE_IR, pIR, this, null, enableAutoUpdate: true, crypto: AccountSelectedCrypto, fiat: DCE_IR.CurrentSecondaryCurrency, direction: AccountBuySell_listbox.SelectedIndex);
             _AccAvgPrice.Show();
         }
 

@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using IndependentReserve.DotNetClientApi.Data;
 using System.Diagnostics;
 using static IRTicker.Balance;
+using IRTicker.Coinbase_trade.Models;
 
 namespace IRTicker
 {
@@ -19,6 +20,7 @@ namespace IRTicker
         private PrivateIR pIR;
         private DCE dce;
         private IRAccountsForm IRT;
+        private CBWebSockets CBClient;
         private string AvgPriceResult = "";  // holds the unformatted version of the average price
         private string TotalCryptoDealt = "";  // holds the unformatted version of the total crypto dealt
         private string TotalFiatDealt = "";  // holds the unformatted version of the total fiat dealt
@@ -26,11 +28,12 @@ namespace IRTicker
         public ConcurrentDictionary<string, Tuple<Button, bool>> fiatCurrenciesSelected = new ConcurrentDictionary<string, Tuple<Button, bool>>();
 
         // if this is coming from coinbase, then the crypto argument is hte full pair eg "USDT-USD"
-        public AccAvgPrice(DCE _DCE, PrivateIR _pIR, IRAccountsForm _IRT, CBWebSockets CBClient, bool enableAutoUpdate = false, string crypto = "", string fiat = "AUD", int direction = 0) {
+        public AccAvgPrice(DCE _DCE, PrivateIR _pIR, IRAccountsForm _IRT, CBWebSockets _CBClient, bool enableAutoUpdate = false, string crypto = "", string fiat = "AUD", int direction = 0) {
             InitializeComponent();
             dce = _DCE;
             pIR = _pIR;
             IRT = _IRT;
+            CBClient = _CBClient;
 
             // initialise the controls
             if (_pIR != null) {
@@ -80,7 +83,7 @@ namespace IRTicker
                 AccAvgPrice_FiatSGD_button.Enabled = false;
 
                 AccAvgPrice_SendRemainingToVolumeField_button.Enabled = false;  // maybe we can do this later
-
+                
             }
         }
 
@@ -119,7 +122,7 @@ namespace IRTicker
                 return;
             }
 
-            if (pIR != null) {
+            if (pIR != null) {  // don't worry about fiat stuff for Coinbase
                 bool atLeastOneFiatCurrencySelected = false;
                 foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
                     if (fiatButton.Value.Item2) {
@@ -156,43 +159,128 @@ namespace IRTicker
             AccAvgPrice_RemaingToDealCurrency_Label.Text = "";
 
 
-            string crypto = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString();
-            List<BankHistoryOrder> ultimateBHO = new List<BankHistoryOrder>();
-            List<BankHistoryOrder> allOrders = new List<BankHistoryOrder>();
-            int fiatCurrenciesSelectedCount = 0;
-            try {
-                // now we need to grab all the orders for each fiat currency selected and concatenate them into one, then stuff it back in the Page<> object and send it to get calculated
-                foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
-                    if (fiatButton.Value.Item2) {
-                        fiatCurrenciesSelectedCount++;
-                        Task<List<BankHistoryOrder>> cOrdersTask = new Task<List<BankHistoryOrder>>(() => pIR.GetClosedOrders(crypto, fiatButton.Key, false));  // false - we just want the results, don't try and tell every other function about it.
-                        cOrdersTask.Start();
-                        ultimateBHO = await cOrdersTask;
+            if (pIR != null) {
+                string crypto = AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString();
+                List<BankHistoryOrder> ultimateBHO = new List<BankHistoryOrder>();
+                List<BankHistoryOrder> allOrders = new List<BankHistoryOrder>();
+                int fiatCurrenciesSelectedCount = 0;
+                try {
+                    // now we need to grab all the orders for each fiat currency selected and concatenate them into one, then stuff it back in the Page<> object and send it to get calculated
+                    foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
+                        if (fiatButton.Value.Item2) {
+                            fiatCurrenciesSelectedCount++;
+                            Task<List<BankHistoryOrder>> cOrdersTask = new Task<List<BankHistoryOrder>>(() => pIR.GetClosedOrders(crypto, fiatButton.Key, false));  // false - we just want the results, don't try and tell every other function about it.
+                            cOrdersTask.Start();
+                            ultimateBHO = await cOrdersTask;
 
-                        allOrders.AddRange(ultimateBHO);
+                            allOrders.AddRange(ultimateBHO);
 
-                        /*foreach (BankHistoryOrder order in ultimateBHO) {  // bad pattern here.  we should check that ultimateBHO is null, but basically if it is null, we want to do everything in the catch block... so just let it fail and get caught
-                            allOrders.Add(order);
-                        }*/
+                            /*foreach (BankHistoryOrder order in ultimateBHO) {  // bad pattern here.  we should check that ultimateBHO is null, but basically if it is null, we want to do everything in the catch block... so just let it fail and get caught
+                                allOrders.Add(order);
+                            }*/
+                        }
+                    }
+                    //ultimateBHO.Data = allOrders;
+                    CalculateAvgPrice(allOrders, (fiatCurrenciesSelectedCount > 1));
+                }
+                catch (Exception ex) {
+                    Debug.Print(DateTime.Now + " - failed to pull closed orders when clicking the average price go button.  error: " + ex.Message);
+                    AccAvgPrice_Status_Label.Text = "Failed to pull closed orders, please try again.";
+
+                    // pulling closed orders failed, lets re-enable the controls
+                    AccAvgPrice_Crypto_ComboBox.Enabled = true;
+
+                    foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
+                        fiatButton.Value.Item1.Enabled = true;
+                    }
+
+                    AccAvgPrice_Start_DTPicker.Enabled = true;
+                    AccAvgPrice_End_DTPicker.Enabled = true;
+                }
+            }
+            else if (CBClient != null) {
+                List<CB_Order> allOrders = await CoinbaseClient.CB_get_settled(
+                    AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString(),
+                    AccAvgPrice_Start_DTPicker.Value.ToUniversalTime());
+
+                // now we convert the CB_Order into a BanHistoryOrder :(
+                List<BankHistoryOrder> bho_list = convert_CB_Order_to_IR_BHO(allOrders);
+                CalculateAvgPrice(bho_list, false);
+
+            }
+        }
+
+        private List<BankHistoryOrder> convert_CB_Order_to_IR_BHO(List<CB_Order> CB_Order_list) {
+
+            List<BankHistoryOrder> bho_list = new List<BankHistoryOrder>();
+
+
+            foreach (CB_Order cbo in CB_Order_list) {
+                BankHistoryOrder bho = new BankHistoryOrder();
+
+                switch (cbo.done_reason) {
+                    case "filled":
+                        bho.Status = OrderStatus.Filled;
+                        break;
+
+                    case "canceled":
+                        if (cbo.filled_size > 0) {
+                            bho.Status = OrderStatus.PartiallyFilledAndCancelled;
+                        }
+                        else {
+                            bho.Status = OrderStatus.Cancelled;
+                        }
+                        break;
+                }
+
+                bho.FeePercent = cbo.fill_fees / cbo.filled_size;
+                bho.AvgPrice = cbo.price;
+                bho.Price = cbo.price;
+                if (cbo.price == 0) {
+                    bho.AvgPrice = bho.Price = cbo.executed_value / cbo.filled_size;
+                }
+
+                try {
+                    bho.OrderGuid = new Guid(cbo.order_id);
+                }
+                catch (Exception e) {
+                    Debug.Print("CB-trade - couldn't convert order_id to an actual Guid, but we don't use it, so move on");
+                }
+
+                // note - we don't fill out primary or secondary currencies - they're never used.
+
+                bho.Outstanding = cbo.remaining_size;
+                bho.CreatedTimestampUtc = cbo.created_at;
+               
+                if (cbo.side == "Buy") {
+                    if (cbo.OrderType == "limit") {
+                        bho.OrderType = OrderType.LimitBid;
+                    }
+                    else if (cbo.OrderType == "market") {
+                        bho.OrderType = OrderType.MarketBid;
                     }
                 }
-                //ultimateBHO.Data = allOrders;
-                CalculateAvgPrice(allOrders, (fiatCurrenciesSelectedCount > 1));
-            }
-            catch (Exception ex) {
-                Debug.Print(DateTime.Now + " - failed to pull closed orders when clicking the average price go button.  error: " + ex.Message);
-                AccAvgPrice_Status_Label.Text = "Failed to pull closed orders, please try again.";
-
-                // pulling closed orders failed, lets re-enable the controls
-                AccAvgPrice_Crypto_ComboBox.Enabled = true;
-
-                foreach (KeyValuePair<string, Tuple<Button, bool>> fiatButton in fiatCurrenciesSelected) {
-                    fiatButton.Value.Item1.Enabled = true;
+                else if (cbo.side == "Sell") {
+                    if (cbo.OrderType == "limit") {
+                        bho.OrderType = OrderType.LimitOffer;
+                    }
+                    else if (cbo.OrderType == "market") {
+                        bho.OrderType = OrderType.MarketOffer;
+                    }
                 }
 
-                AccAvgPrice_Start_DTPicker.Enabled = true;
-                AccAvgPrice_End_DTPicker.Enabled = true;
+                BankOrderVolume bankOrderVolume = new BankOrderVolume();
+                bankOrderVolume.Volume = cbo.size;
+                bankOrderVolume.VolumeCurrencyType = IndependentReserve.DotNetClientApi.Data.CurrencyType.Primary;
+                bankOrderVolume.Outstanding = cbo.remaining_size;
+                bho.Original = bankOrderVolume;
+
+                bho.Value = cbo.executed_value;
+                bho.Volume = cbo.size;
+
+                bho_list.Add(bho);
             }
+            return bho_list;
         }
 
         public void CalculateAvgPrice(List<BankHistoryOrder> cOrders, bool isMultipleFiatCurrenciesSelected) {
@@ -229,8 +317,26 @@ namespace IRTicker
             }
 
             AccAvgPrice_Status_Label.Text = "Found " + count + (count == 1 ? " order that matches" : " orders that match") + " this criteria";
-            string crypto = (AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() == "BTC" ? "XBT" : AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString());
-            int decimals = dce.currencyDecimalPlaces[crypto].Item1;  // crypto vol should go to 8 dp
+
+            int decimals = 2;  // yeah i know.  it's "decimal places".. 
+            if (pIR != null) {
+                string crypto = (AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() == "BTC" ? "XBT" : AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString());
+                decimals = dce.currencyDecimalPlaces[crypto].Item1;  // crypto vol should go to 8 dp
+            }
+            else if (CBClient != null) {
+                List<CB_Products> prods = CBClient.getProducts();
+                foreach (CB_Products prod in prods) {
+                    if (prod.id == AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString()) {
+                        string base_accuracy = prod.base_increment.ToString();
+                        int? base_accuracy_dps = Utilities.countDecimalPrecision(base_accuracy);
+                        decimals = 2;
+                        if (base_accuracy_dps.HasValue) {
+                            decimals = base_accuracy_dps.Value;
+                        }
+                        break;
+                    }
+                }
+            }
 
             if (AccAvgPrice_DealSizeCurrency_ComboBox.SelectedIndex == 2) decimals = 2;  // fiat just do 2
 
@@ -451,7 +557,9 @@ namespace IRTicker
             // make a note of the start date, so we only pull orders from this date onwards to reduce our closedOrders cost.  
             // this way when pulling closed orders we only pull what's required because we know how far back we have to look
             //pIR.earliestClosedOrderRequired = AccAvgPrice_Start_DTPicker.Value;
-            IRT.RecalculateAvgPriceVariables(null);  // send a nonsense date as we don't want to ignore anything
+            if (pIR != null) {
+                IRT.RecalculateAvgPriceVariables(null);  // send a nonsense date as we don't want to ignore anything
+            }
             if (AccAvgPrice_Start_DTPicker.Value.Date == DateTime.Now.Date) {
                 AccAvgPrice_StartDay_Label.Text = "Today";
             }
@@ -477,7 +585,9 @@ namespace IRTicker
 
         private void AccAvgPrice_FormClosing(object sender, FormClosingEventArgs e) {
             //pIR.earliestClosedOrderRequired = null;  // no more start date, just grab the 7 newest closed orders
-            IRT.RecalculateAvgPriceVariables(this);  // It's possible to have multiple accAvgPrice forms open, so when closing one we need to figure out again which is the furthest back starting time
+            if (pIR != null) {
+                IRT.RecalculateAvgPriceVariables(this);  // It's possible to have multiple accAvgPrice forms open, so when closing one we need to figure out again which is the furthest back starting time
+            }
         }
 
         private void AccAvgPrice_Crypto_ComboBox_SelectedIndexChanged(object sender, EventArgs e) {
@@ -485,7 +595,9 @@ namespace IRTicker
 
             string normalisedCrypto = (AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString() == "BTC" ? "XBT" : AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString());
 
-            IRT.RecalculateAvgPriceVariables(null);
+            if (pIR != null) {
+                IRT.RecalculateAvgPriceVariables(null);
+            }
 
             AccAvgPrice_DealSize_TextBox_TextChanged(null, null);  // simulate text change to validate and adjust
         }
@@ -550,19 +662,40 @@ namespace IRTicker
             if (decimal.TryParse(AccAvgPrice_DealSize_TextBox.Text, out decimal dealSize)) {
                 if (dealSize > 0) {
                     int mantissaLen = BitConverter.GetBytes(decimal.GetBits(dealSize)[3])[2];
-                    if (mantissaLen > dce.currencyDecimalPlaces[crypto].Item1) {
-                        adjustedVol = Utilities.Truncate(dealSize, (byte)(dce.currencyDecimalPlaces[crypto].Item1));
+
+                    int primaryDPs = 2;
+                    if (pIR != null) {
+                        primaryDPs = dce.currencyDecimalPlaces[crypto].Item1;
+                    }
+                    else if (CBClient != null) {
+                        List<CB_Products> prods = CBClient.getProducts();
+                        foreach (CB_Products prod in prods) {
+                            if (prod.id == AccAvgPrice_Crypto_ComboBox.SelectedItem.ToString()) {
+                                string base_accuracy = prod.base_increment.ToString();
+                                int? base_accuracy_dps = Utilities.countDecimalPrecision(base_accuracy);
+                                primaryDPs = 2;
+                                if (base_accuracy_dps.HasValue) {
+                                    primaryDPs = base_accuracy_dps.Value;
+                                }
+                                break;
+                            }
+                        }
+                    }
+
+                    if (mantissaLen > primaryDPs) {
+                        adjustedVol = Utilities.Truncate(dealSize, (byte)(primaryDPs));
                         AccAvgPrice_DealSize_TextBox.Text = adjustedVol.ToString();
                         AccAvgPrice_DealSize_TextBox.SelectionStart = AccAvgPrice_DealSize_TextBox.Text.Length;
                         AccAvgPrice_DealSize_TextBox.SelectionLength = 0;
                     }
                 }
-
             }
         }
 
         private void AccAvgPrice_Load(object sender, EventArgs e) {
-            IRT.RecalculateAvgPriceVariables(null);
+            if (pIR != null) {
+                IRT.RecalculateAvgPriceVariables(null);
+            }
         }
     }
 }

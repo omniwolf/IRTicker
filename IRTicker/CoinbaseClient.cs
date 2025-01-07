@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using IRTicker.Coinbase_trade.Models;
 
 
 namespace IRTicker
@@ -29,7 +30,7 @@ namespace IRTicker
             }
 
             var response = await CB_GET(APIKey, APISecret, PassPhrase, endPoint);
-            return response;
+            return response.Body;
         }
         // gets trading pairs
         public static async Task<string> CB_get_pairs(string APIKey = null, string APISecret = null, string PassPhrase = null) {
@@ -40,7 +41,7 @@ namespace IRTicker
             }
 
             var response = await CB_GET(APIKey, APISecret, PassPhrase, "products");
-            return response;
+            return response.Body;
         }
 
         public static async Task<string> CB_cancel_order(string order_id, string APIKey = null, string APISecret = null, string PassPhrase = null) {
@@ -62,7 +63,7 @@ namespace IRTicker
             }
 
             var response = await CB_GET(APIKey, APISecret, PassPhrase, "orders");
-            return response;
+            return response.Body;
         }
 
         public static async Task<string> CB_get_fills(string pair, string APIKey = null, string APISecret = null, string PassPhrase = null) {
@@ -73,23 +74,107 @@ namespace IRTicker
             }
 
             var response = await CB_GET(APIKey, APISecret, PassPhrase, "fills?product_id=" + pair);
-            return response;
+            return response.Body;
         }
-        public static async Task<string> CB_get_settled(string pair = "", string APIKey = null, string APISecret = null, string PassPhrase = null) {
+        public static async Task<List<CB_Order>> CB_get_settled(string pair = "", DateTime? fromDate = null, string APIKey = null, string APISecret = null, string PassPhrase = null) {
+
+            // Default to your stored credentials if none provided
             if (APIKey == null || APISecret == null || PassPhrase == null) {
                 APIKey = Properties.Settings.Default.CoinbaseAPIKey;
                 APISecret = Properties.Settings.Default.CoinbaseAPISecret;
                 PassPhrase = Properties.Settings.Default.CoinbasePassPhrase;
             }
 
-            string product_id = "";
-            if (pair != "") {
-                product_id = "&product_id=" + pair;
+            // We'll store all results here
+            var allOrders = new List<CB_Order>();
+
+            // We'll be requesting in descending order by created_at
+            // and using "CB-BEFORE" to fetch older pages if needed
+            // https://docs.cdp.coinbase.com/exchange/docs/pagination
+
+            string beforeCursor = null;
+            bool keepPaging = true;
+
+            while (keepPaging) {
+                // Build the query string
+                // e.g.: orders?status=done&sortedBy=created_at&sorting=desc&product_id=BTC-USD
+                string endpoint = "orders?status=done&sortedBy=created_at&sorting=desc";
+
+                if (!string.IsNullOrEmpty(pair)) {
+                    endpoint += "&product_id=" + pair;
+                }
+
+                if (!string.IsNullOrEmpty(beforeCursor)) {
+                    // This indicates we want the page of data that occurs before this cursor
+                    endpoint += "&before=" + beforeCursor;
+                }
+
+                // Make the request
+                CoinbaseResponse resp = await CB_GET(APIKey, APISecret, PassPhrase, endpoint);
+
+                // Deserialize the response body
+                // Coinbase returns an array of orders for this endpoint
+                List<CB_Order> pageOrders = new List<CB_Order>();
+                try {
+                    pageOrders = JsonConvert.DeserializeObject<List<CB_Order>>(resp.Body)
+                                        ?? new List<CB_Order>();
+                }
+                catch (Exception ex) {
+                    Debug.Print("CB-trade - trying to deserialise the CB_GET body, but it failed: " + ex.Message);
+                    break;
+                }
+
+                if (pageOrders.Count == 0) {
+                    // No more orders to fetch, or we've reached the end
+                    break;
+                }
+
+                // Add them to our overall list
+                allOrders.AddRange(pageOrders);
+
+                // 1) If we find an order older than fromDate, we can stop
+                //    Because we sorted descending, that means everything after
+                //    this is also older.
+                // 2) We could also wait until we've fetched all pages, then do a final filter,
+                //    but this short-circuits early.
+                if (fromDate.HasValue) {  // if fromDate is null, we just finish here
+                    DateTime oldestOnThisPage = pageOrders[pageOrders.Count - 1].created_at;
+                    if (oldestOnThisPage < fromDate) {
+                        // We have gone past the fromDate in descending order
+                        keepPaging = false;
+                        break;
+                    }
+                }
+                else {
+                    return allOrders;
+                }
+
+                // Otherwise, we must retrieve the "CB-BEFORE" header from this response
+                // so we can get the next older page.
+                // If there's no such header, it means no more pages exist.
+                if (resp.Headers.TryGetValue("CB-BEFORE", out string nextBefore)) {
+                    // If the header is empty, we can't proceed
+                    if (string.IsNullOrWhiteSpace(nextBefore)) {
+                        break;
+                    }
+                    beforeCursor = nextBefore;
+                }
+                else {
+                    // No more pages
+                    break;
+                }
             }
 
-            var response = await CB_GET(APIKey, APISecret, PassPhrase, "orders?status=done&sortedBy=created_at&sorting=desc" + product_id);
-            return response;
+            // At this point, `allOrders` contains all orders from "now" down to some older date,
+            // possibly older than your fromDate. Let's filter out anything older than fromDate if you want:
+            var finalList = allOrders
+                .Where(o => o.created_at >= fromDate)
+                .ToList();
+
+            // Return the final chunk
+            return finalList;
         }
+
 
         // side is "buy" or "sell
         // type is "limit" or "market" or "stop"
@@ -136,27 +221,79 @@ namespace IRTicker
             return response;
         }
 
+        // for use in CB_GET, like a tuple I guess so we can return the body and headers in one object
+        public class CoinbaseResponse {
+            public string Body { get; set; }
+            public Dictionary<string, string> Headers { get; set; }
+
+            public CoinbaseResponse() {
+                Body = string.Empty;
+                Headers = new Dictionary<string, string>();
+            }
+        }
+
+
         // does a basic GET request on the coinbase exchange 
         // endPoint can be "orders" or whatever the first thing after the / is
         // arg can be another folder deeper, eg /{order_id} in /orders/{order_id}
-        private static async Task<string> CB_GET(string APIKey, string APISecret, string PassPhrase, string endPoint, string arg = "") {
-
+        private static async Task<CoinbaseResponse> CB_GET(
+            string APIKey,
+            string APISecret,
+            string PassPhrase,
+            string endPoint,
+            string arg = "") {
             HttpClient httpClient = new HttpClient();
 
-            var httpRequestMessage = BuildHTTPRequest("https://api.exchange.coinbase.com", "/" + endPoint + (string.IsNullOrEmpty(arg) ? "" : "/" + arg), "", HttpMethod.Get, APIKey, APISecret, PassPhrase);
-            if (null == httpRequestMessage) return "";
+            // Build the request (assuming BuildHTTPRequest is the same method you use in CB_GET)
+            var httpRequestMessage = BuildHTTPRequest(
+                "https://api.exchange.coinbase.com",
+                "/" + endPoint + (string.IsNullOrEmpty(arg) ? "" : "/" + arg),
+                "",
+                HttpMethod.Get,
+                APIKey,
+                APISecret,
+                PassPhrase
+            );
 
-            HttpResponseMessage httpResponseMessage;
+            if (httpRequestMessage == null) {
+                return new CoinbaseResponse { Body = "" };
+            }
+
             try {
-                httpResponseMessage = await httpClient.SendAsync(httpRequestMessage).ConfigureAwait(false);
-                string res = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return res;
+                // Send the request
+                HttpResponseMessage httpResponseMessage = await httpClient
+                    .SendAsync(httpRequestMessage)
+                    .ConfigureAwait(false);
+
+                // Capture the body
+                string body = await httpResponseMessage.Content
+                    .ReadAsStringAsync()
+                    .ConfigureAwait(false);
+
+                // Prepare our CoinbaseResponse
+                var response = new CoinbaseResponse
+                {
+                    Body = body
+                };
+
+                // Capture headers (like CB-BEFORE, CB-AFTER, etc.)
+                foreach (var header in httpResponseMessage.Headers) {
+                    // If a header has multiple values, join them into a single comma-separated string
+                    response.Headers[header.Key] = string.Join(",", header.Value);
+                }
+
+                return response;
             }
             catch (Exception ex) {
-                Debug.Print(DateTime.Now + " - Caught exception in Coinbase class when performing a GET (/" + endPoint + "), error: " + ex.Message);
+                Debug.Print(DateTime.Now +
+                    " - Caught exception in Coinbase class when performing a GET (/" + endPoint +
+                    "), error: " + ex.Message);
+
+                // Return an empty response or handle error as needed
+                return new CoinbaseResponse { Body = "" };
             }
-            return "";
         }
+
 
         private static async Task<string> CB_DELETE(string APIKey, string APISecret, string PassPhrase, string endPoint, string arg = "") {
             HttpClient httpClient = new HttpClient();
@@ -221,7 +358,8 @@ namespace IRTicker
 
         private static HttpRequestMessage BuildHTTPRequest(string apiUri, string requestUri, string contentBody, HttpMethod httpMethod, string APIKey, string APISecret, string PassPhrase) {
 
-            var requestMessage = new HttpRequestMessage(httpMethod, new Uri(new Uri(apiUri), requestUri)) {
+            var requestMessage = new HttpRequestMessage(httpMethod, new Uri(new Uri(apiUri), requestUri))
+            {
                 Content = contentBody == string.Empty
                     ? null
                     : new StringContent(contentBody, Encoding.UTF8, "application/json")

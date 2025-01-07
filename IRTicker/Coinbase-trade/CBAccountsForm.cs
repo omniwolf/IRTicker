@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using static IRTicker.CBWebSockets;
 
 // TODO
 // store the updated balances in the accounts dictionary
@@ -49,6 +48,8 @@ namespace IRTicker {
             CB_closed_orders_label.Text = "Closed orders (" + current_product_id + "):";
             CB_closed_orders_listview.Columns[3].Text = "Value (" + currencies[1] + ")";
 
+            CB_baiter_i_TT.SetToolTip(CB_baiter_i_image_panel, "The Market baiter option will put an order at the spread," + Environment.NewLine + "and move your order with the spread.  It will keep doing this" + Environment.NewLine + "until you either cancel the order, or the volume has been filled.");
+
 
             CB_pair_comboBox.Text = current_product_id;  // default
             CB_pair_comboBox.Enabled = false; // don't let them try and change it while loading
@@ -76,8 +77,10 @@ namespace IRTicker {
         }
 
         private void BaiterStarted(string order_id) {
+            Debug.Print("CB-trade-baiter - trying to set baiter order blue.  Order_id: " + order_id + ", number of open orders: " + CB_open_orders_listview.Items.Count);
             foreach (ListViewItem lvi in CB_open_orders_listview.Items) {
                 CB_Order order = (CB_Order)lvi.Tag;
+                Debug.Print("-- CB-trade-baiter - looking at order id: " + order.order_id + ", id: " + order.id);
                 if (order.order_id == order_id) {
                     lvi.ForeColor = Color.Blue;
                     order.isBaiter = true;
@@ -104,19 +107,11 @@ namespace IRTicker {
                 return;
             }
 
-            // first we convert the strings to decimals... before converting back to pretty strings :/
+            CB_currency1_value.Text = Utilities.FormatValue(currency1.available);
+            CB_currency1_value.Tag = currency1.available;
 
-            // i don't think i need a try/catch here.. i guess i got a crash but i don't use it anywhere else around the formatValue.  Let's see how it goes without try/catch
-               // try {
-                    CB_currency1_value.Text = Utilities.FormatValue(currency1.available);
-               /* }
-                catch (Exception ex) {
-                    Debug.Print("CB-trade - couldn't format new balance number");
-                }*/
-
-                    CB_currency2_value.Text = Utilities.FormatValue(currency2.available);
-
-
+            CB_currency2_value.Text = Utilities.FormatValue(currency2.available);
+            CB_currency2_value.Tag = currency2.available;
 
             CB_currency1_label.Text = currency1.currency;
             CB_currency2_label.Text = currency2.currency;
@@ -259,7 +254,7 @@ namespace IRTicker {
                 }
 
                 ListViewItem lvi = new ListViewItem(new string[] {
-                    order.done_at.ToShortDateString(),
+                    order.done_at.ToLocalTime().ToShortDateString(),
                     price,
                     Utilities.FormatValue(order.filled_size, GetSizeDPs()),
                     Utilities.FormatValue(order.executed_value),
@@ -341,6 +336,8 @@ namespace IRTicker {
                     lvi.BackColor = Color.DarkBlue;
                 }
 
+                lvi.SubItems[0].Tag = b.Price;
+
                 CB_bids_listview.Items.Add(lvi);
                 count++;
                 if (count > 8) break;
@@ -353,6 +350,8 @@ namespace IRTicker {
                 if (orderPrices.Contains(a.Price)) {  // colour for own orders
                     lvi.BackColor = Color.DarkBlue;
                 }
+
+                lvi.SubItems[0].Tag = a.Price;
 
                 CB_asks_listview.Items.Insert(0, lvi);
                 count++;
@@ -547,12 +546,14 @@ namespace IRTicker {
                 case 0:
                     CB_price_label.Visible = true;
                     CB_price_textbox.Visible = true;
+                    CB_price_spread_button.Visible = true;
                     break;
 
                 case 1:
                 case 2:
                     CB_price_label.Visible = false;
                     CB_price_textbox.Visible = false;
+                    CB_price_spread_button.Visible = false;
                     break;
             }
         }
@@ -581,6 +582,26 @@ namespace IRTicker {
             CB_currency2_value.Text = "...";
 
             await _client.Start(current_product_id, false, true);
+        }
+
+        private void CB_AccAvgPrice_button_Click(object sender, EventArgs e) {
+            var _AccAvgPrice = new AccAvgPrice(null, null, null, _client, enableAutoUpdate: true, crypto: current_product_id, fiat: "", direction: CB_order_side_listbox.SelectedIndex);
+            _AccAvgPrice.Show();
+        }
+
+        private void CB_volume_max_button_Click(object sender, EventArgs e) {
+            CB_volume_textbox.Text = ((decimal)CB_currency1_value.Tag).ToString();
+        }
+
+        private void CB_price_spread_button_Click(object sender, EventArgs e) {
+            if (CB_order_side_listbox.SelectedIndex == 0) {  // buy
+                var lvis = CB_bids_listview.Items;
+                CB_price_textbox.Text = ((decimal)lvis[0].SubItems[0].Tag).ToString();  // the first subItem is the price.  The tag on the price contains a decial - the price (not in pretty string format)
+            }
+            else {  // sell
+                var lvis = CB_asks_listview.Items;
+                CB_price_textbox.Text = ((decimal)lvis[lvis.Count - 1].SubItems[0].Tag).ToString();
+            }
         }
     }
 }

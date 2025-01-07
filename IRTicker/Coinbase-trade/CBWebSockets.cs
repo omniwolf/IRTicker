@@ -13,10 +13,6 @@ using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Windows;
 using IRTicker.Coinbase_trade.Models;
-using static IRTicker.DCE;
-using Telegram.Bot.Types;
-using System.Runtime.InteropServices;
-using static IRTicker.Balance;
 
 namespace IRTicker {
     public class CBWebSockets {
@@ -207,7 +203,7 @@ namespace IRTicker {
                 else {  // OK we have paused long enough, let's do something
                     // first let's see if the order exists
                     Debug.Print("CB-trade - baiter needs to retry");
-                    if (openOrders.ContainsKey(baiter_order_id)) {
+                    if ((baiter_order_id != null) && (openOrders.ContainsKey(baiter_order_id))) {
                         Debug.Print("CB-trade - but the order appears to already exist.. so let's do nothing");
                         baiter_pause_and_retry = 0;
                     }
@@ -353,6 +349,7 @@ namespace IRTicker {
                 Debug.Print("CB-trade-baiter - new order response not null...");
                 if (null != create_baiter_order.status) {
                     Debug.Print("CB-trade-baiter - new order status: " + create_baiter_order.status);
+                    Debug.Print("CB-trade-baiter - new order id: " + create_baiter_order.id + ", order_id: " + create_baiter_order.order_id);
                     if (create_baiter_order.status != "rejected") {
                         // but if it is rejected or null, how do we signal a pause then a retry?
                         baiter_order_id = create_baiter_order.order_id;
@@ -418,14 +415,11 @@ namespace IRTicker {
 
         private async Task<bool> parseClosedOrders() {
 
-            var closedOrders_raw = await CoinbaseClient.CB_get_settled(_productId);
+            var closedOrders = await CoinbaseClient.CB_get_settled(_productId);
 
-            try {
-                closedOrders = JsonConvert.DeserializeObject<List<CB_Order>>(closedOrders_raw);
-            }
-            catch (Exception ex) {
-                System.Windows.Forms.MessageBox.Show("Failed to start Coinbase when pulling closed orders."+ Environment.NewLine + Environment.NewLine +  "Response: " + closedOrders_raw + Environment.NewLine + Environment.NewLine + "Error:" + Environment.NewLine + Environment.NewLine + ex.Message);
-                return false;
+            if (closedOrders.Count == 0) {
+                Debug.Print("CB-trade - No orders were returned, or there a fail in the request");
+                return true;
             }
 
             // clean it up
@@ -679,6 +673,8 @@ namespace IRTicker {
                         updatedOrder.id = updatedOrder.order_id;
                     }
 
+                    Debug.Print("CB-trade: baiter id: " + baiter_order_id);
+                    Debug.Print("CB-trade - new order received, order_id: " + msg["order_id"]?.ToString() + ", id: " + msg["id"]?.ToString());
                     if (updatedOrder.order_id == baiter_order_id) {
                         updatedOrder.isBaiter = true;
                     }

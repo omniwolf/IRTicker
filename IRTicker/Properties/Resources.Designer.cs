@@ -163,6 +163,16 @@ namespace IRTicker.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap tiny_i {
+            get {
+                object obj = ResourceManager.GetObject("tiny_i", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap web_sparks {
             get {
                 object obj = ResourceManager.GetObject("web_sparks", resourceCulture);
