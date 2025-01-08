@@ -403,7 +403,7 @@ namespace IRTicker {
                 if (CB_open_orders_listview.SelectedItems.Count == 0) return;
 
                 // ok, let's actually cancel the order.
-                bool response = await _client.CB_cancel_order(order.id);
+                bool response = await _client.CB_cancel_order(order.id, true);  // true - user cancelled
 
                 if (response == true) {
                     Debug.Print("CB-trade - seems the cancel order was successful for id: " + order.id);

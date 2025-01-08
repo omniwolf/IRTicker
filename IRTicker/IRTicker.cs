@@ -151,7 +151,7 @@ namespace IRTicker {
             // Actually I'm not sure about the above comment, i think some of them do?  But the main issue is most of them have
             // currencies that we don't want to deal with, so we set the currencies manually here.  IR we want all currencies, so
             // we use the API.  This is probably not really smart, as the UI is static, so when new currencies turn up IR breaks.  meh
-            DCEs["IRSGD"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"DOT\",\"XLM\",\"GRT\",\"ETC\",\"LINK\",\"USDC\",\"USDT\",\"UNI\",\"ADA\",\"MATIC\",\"DOGE\",\"SAND\",\"MANA\",\"SOL\"";
+            DCEs["IRSGD"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"DOT\",\"XLM\",\"GRT\",\"ETC\",\"LINK\",\"USDC\",\"USDT\",\"UNI\",\"ADA\",\"MATIC\",\"DOGE\",\"SAND\",\"MANA\",\"SOL\",\"SHIB\",\"WIF\",\"TRX\",\"RENDER\",\"RLUSD\"";
             DCEs["IRSGD"].SecondaryCurrencyCodes = "\"SGD\"";
 
             DCEs["IRUSD"].SecondaryCurrencyCodes = "\"USD\"";
@@ -357,6 +357,12 @@ namespace IRTicker {
             UIControls_Dict["IR"].TRX_Label = IR_TRX_Label1;
             UIControls_Dict["IR"].TRX_Price = IR_TRX_Label2;
             UIControls_Dict["IR"].TRX_Spread = IR_TRX_Label3;
+            UIControls_Dict["IR"].RENDER_Label = IR_RENDER_Label1;
+            UIControls_Dict["IR"].RENDER_Price = IR_RENDER_Label2;
+            UIControls_Dict["IR"].RENDER_Spread = IR_RENDER_Label3;
+            UIControls_Dict["IR"].WIF_Label = IR_WIF_Label1;
+            UIControls_Dict["IR"].WIF_Price = IR_WIF_Label2;
+            UIControls_Dict["IR"].WIF_Spread = IR_WIF_Label3;
 
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
@@ -425,6 +431,21 @@ namespace IRTicker {
             UIControls_Dict["IRSGD"].SAND_Label = IRSGD_SAND_Label1;
             UIControls_Dict["IRSGD"].SAND_Price = IRSGD_SAND_Label2;
             UIControls_Dict["IRSGD"].SAND_Spread = IRSGD_SAND_Label3;
+            UIControls_Dict["IRSGD"].RENDER_Label = IRSGD_RENDER_Label1;
+            UIControls_Dict["IRSGD"].RENDER_Price = IRSGD_RENDER_Label2;
+            UIControls_Dict["IRSGD"].RENDER_Spread = IRSGD_RENDER_Label3;
+            UIControls_Dict["IRSGD"].RLUSD_Label = IRSGD_RLUSD_Label1;
+            UIControls_Dict["IRSGD"].RLUSD_Price = IRSGD_RLUSD_Label2;
+            UIControls_Dict["IRSGD"].RLUSD_Spread = IRSGD_RLUSD_Label3;
+            UIControls_Dict["IRSGD"].WIF_Label = IRSGD_WIF_Label1;
+            UIControls_Dict["IRSGD"].WIF_Price = IRSGD_WIF_Label2;
+            UIControls_Dict["IRSGD"].WIF_Spread = IRSGD_WIF_Label3;
+            UIControls_Dict["IRSGD"].SHIB_Label = IRSGD_SHIB_Label1;
+            UIControls_Dict["IRSGD"].SHIB_Price = IRSGD_SHIB_Label2;
+            UIControls_Dict["IRSGD"].SHIB_Spread = IRSGD_SHIB_Label3;
+            UIControls_Dict["IRSGD"].TRX_Label = IRSGD_TRX_Label1;
+            UIControls_Dict["IRSGD"].TRX_Price = IRSGD_TRX_Label2;
+            UIControls_Dict["IRSGD"].TRX_Spread = IRSGD_TRX_Label3;
 
 
 
@@ -521,6 +542,12 @@ namespace IRTicker {
             UIControls_Dict["IRUSD"].TRX_Label = IRUSD_TRX_Label1;
             UIControls_Dict["IRUSD"].TRX_Price = IRUSD_TRX_Label2;
             UIControls_Dict["IRUSD"].TRX_Spread = IRUSD_TRX_Label3;
+            UIControls_Dict["IRUSD"].RENDER_Label = IRUSD_RENDER_Label1;
+            UIControls_Dict["IRUSD"].RENDER_Price = IRUSD_RENDER_Label2;
+            UIControls_Dict["IRUSD"].RENDER_Spread = IRUSD_RENDER_Label3;
+            UIControls_Dict["IRUSD"].WIF_Label = IRUSD_WIF_Label1;
+            UIControls_Dict["IRUSD"].WIF_Price = IRUSD_WIF_Label2;
+            UIControls_Dict["IRUSD"].WIF_Spread = IRUSD_WIF_Label3;
 
 
             // BTCM

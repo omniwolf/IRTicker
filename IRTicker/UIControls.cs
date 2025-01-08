@@ -49,6 +49,9 @@ namespace IRTicker
         public Label SAND_Label { get; set; }
         public Label SHIB_Label { get; set; }
         public Label TRX_Label { get; set; }
+        public Label RENDER_Label { get; set; }
+        public Label RLUSD_Label { get; set; }
+        public Label WIF_Label { get; set; }
 
         public Label XBT_Price { get; set; }
         public Label ETH_Price { get; set; }
@@ -83,6 +86,9 @@ namespace IRTicker
         public Label SAND_Price { get; set; }
         public Label SHIB_Price { get; set; }
         public Label TRX_Price { get; set; }
+        public Label RENDER_Price { get; set; }
+        public Label RLUSD_Price { get; set; }
+        public Label WIF_Price { get; set; }
 
 
         public Label XBT_Spread { get; set; }
@@ -118,6 +124,9 @@ namespace IRTicker
         public Label SAND_Spread { get; set; }
         public Label SHIB_Spread { get; set; }
         public Label TRX_Spread { get; set; }
+        public Label RENDER_Spread { get; set; }
+        public Label RLUSD_Spread { get; set; }
+        public Label WIF_Spread { get; set; }
 
 
         public ComboBox AvgPrice_BuySell { get; set; }
@@ -170,6 +179,9 @@ namespace IRTicker
         public Label Account_SAND_Label { get; set; }
         public Label Account_SHIB_Label { get; set; }
         public Label Account_TRX_Label { get; set; }
+        public Label Account_RENDER_Label { get; set; }
+        public Label Account_RLUSD_Label { get; set; }
+        public Label Account_WIF_Label { get; set; }
 
         public Label Account_XBT_Value { get; set; }
         public Label Account_ETH_Value { get; set; }
@@ -206,6 +218,9 @@ namespace IRTicker
         public Label Account_SAND_Value { get; set; }
         public Label Account_SHIB_Value { get; set; }
         public Label Account_TRX_Value { get; set; }
+        public Label Account_RENDER_Value { get; set; }
+        public Label Account_RLUSD_Value { get; set; }
+        public Label Account_WIF_Value { get; set; }
 
 
         public Label Account_XBT_Total { get; set; }
@@ -247,6 +262,10 @@ namespace IRTicker
         public Label Account_SAND_Total { get; set; }
         public Label Account_SHIB_Total { get; set; }
         public Label Account_TRX_Total { get; set; }
+        public Label Account_RENDER_Total { get; set; }
+        public Label Account_RLUSD_Total { get; set; }
+        public Label Account_WIF_Total { get; set; }
+
 
 
         public void CreateIRAccountControlDictionary()
@@ -291,6 +310,10 @@ namespace IRTicker
             if (Account_SAND_Label != null) Label_Dict["SAND_Account_Label"] = Account_SAND_Label;
             if (Account_SHIB_Label != null) Label_Dict["SHIB_Account_Label"] = Account_SHIB_Label;
             if (Account_TRX_Label != null) Label_Dict["TRX_Account_Label"] = Account_TRX_Label;
+            if (Account_RENDER_Label != null) Label_Dict["RENDER_Account_Label"] = Account_RENDER_Label;
+            if (Account_RLUSD_Label != null) Label_Dict["RLUSD_Account_Label"] = Account_RLUSD_Label;
+            if (Account_WIF_Label != null) Label_Dict["WIF_Account_Label"] = Account_WIF_Label;
+
 
             if (Account_XBT_Value != null) Label_Dict["XBT_Account_Value"] = Account_XBT_Value;
             if (Account_ETH_Value != null) Label_Dict["ETH_Account_Value"] = Account_ETH_Value;
@@ -327,6 +350,10 @@ namespace IRTicker
             if (Account_SAND_Value != null) Label_Dict["SAND_Account_Value"] = Account_SAND_Value;
             if (Account_SHIB_Value != null) Label_Dict["SHIB_Account_Value"] = Account_SHIB_Value;
             if (Account_TRX_Value != null) Label_Dict["TRX_Account_Value"] = Account_TRX_Value;
+            if (Account_RENDER_Value != null) Label_Dict["RENDER_Account_Value"] = Account_RENDER_Value;
+            if (Account_RLUSD_Value != null) Label_Dict["RLUSD_Account_Value"] = Account_RLUSD_Value;
+            if (Account_WIF_Value != null) Label_Dict["WIF_Account_Value"] = Account_WIF_Value;
+
 
             if (Account_XBT_Total != null) Label_Dict["XBT_Account_Total"] = Account_XBT_Total;
             if (Account_ETH_Total != null) Label_Dict["ETH_Account_Total"] = Account_ETH_Total;
@@ -367,7 +394,11 @@ namespace IRTicker
             if (Account_SAND_Total != null) Label_Dict["SAND_Account_Total"] = Account_SAND_Total;
             if (Account_SHIB_Total != null) Label_Dict["SHIB_Account_Total"] = Account_SHIB_Total;
             if (Account_TRX_Total != null) Label_Dict["TRX_Account_Total"] = Account_TRX_Total;
+            if (Account_RENDER_Total != null) Label_Dict["RENDER_Account_Total"] = Account_RENDER_Total;
+            if (Account_RLUSD_Total != null) Label_Dict["RLUSD_Account_Total"] = Account_RLUSD_Total;
+            if (Account_WIF_Total != null) Label_Dict["WIF_Account_Total"] = Account_WIF_Total;
         }
+
 
         public void CreateControlDictionaries()
         {
@@ -407,6 +438,10 @@ namespace IRTicker
             if (SAND_Label != null) Label_Dict.Add("SAND_Label", SAND_Label);
             if (SHIB_Label != null) Label_Dict.Add("SHIB_Label", SHIB_Label);
             if (TRX_Label != null) Label_Dict.Add("TRX_Label", TRX_Label);
+            if (RENDER_Label != null) Label_Dict.Add("RENDER_Label", RENDER_Label);
+            if (RLUSD_Label != null) Label_Dict.Add("RLUSD_Label", RLUSD_Label);
+            if (WIF_Label != null) Label_Dict.Add("WIF_Label", WIF_Label);
+
 
 
             if (XBT_Price != null) Label_Dict.Add("XBT_Price", XBT_Price);
@@ -442,6 +477,10 @@ namespace IRTicker
             if (SAND_Price != null) Label_Dict.Add("SAND_Price", SAND_Price);
             if (SHIB_Price != null) Label_Dict.Add("SHIB_Price", SHIB_Price);
             if (TRX_Price != null) Label_Dict.Add("TRX_Price", TRX_Price);
+            if (RENDER_Price != null) Label_Dict.Add("RENDER_Price", RENDER_Price);
+            if (RLUSD_Price != null) Label_Dict.Add("RLUSD_Price", RLUSD_Price);
+            if (WIF_Price != null) Label_Dict.Add("WIF_Price", WIF_Price);
+
 
             if (XBT_Spread != null) Label_Dict.Add("XBT_Spread", XBT_Spread);
             if (ETH_Spread != null) Label_Dict.Add("ETH_Spread", ETH_Spread);
@@ -476,6 +515,9 @@ namespace IRTicker
             if (SAND_Spread != null) Label_Dict.Add("SAND_Spread", SAND_Spread);
             if (SHIB_Spread != null) Label_Dict.Add("SHIB_Spread", SHIB_Spread);
             if (TRX_Spread != null) Label_Dict.Add("TRX_Spread", TRX_Spread);
+            if (RENDER_Spread != null) Label_Dict.Add("RENDER_Spread", RENDER_Spread);
+            if (RLUSD_Spread != null) Label_Dict.Add("RLUSD_Spread", RLUSD_Spread);
+            if (WIF_Spread != null) Label_Dict.Add("WIF_Spread", WIF_Spread);
         }
     }
 }

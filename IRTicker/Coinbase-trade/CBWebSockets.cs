@@ -628,7 +628,7 @@ namespace IRTicker {
 
                             if (baiter_new_price > 0) {
                                 Debug.Print("CB-trade-baiter - about to cancel old order");
-                                bool cancel_response = await CB_cancel_order(baiter_order_id);
+                                bool cancel_response = await CB_cancel_order(baiter_order_id, false);
                                 if (cancel_response) {
                                     Debug.Print("CB-trade-baiter - cancelling successful, creating new " + baiter_Side + " order at price " + baiter_new_price.ToString());
                                     baiter_price = baiter_new_price;
@@ -724,7 +724,8 @@ namespace IRTicker {
                         return;
                     }
 
-                    if (!baiter_changing_price && (done_order.order_id == baiter_order_id)) {
+                    // If the size is now zero, cancel baiter.  Otherwise it's still active.
+                    if (!baiter_changing_price && (done_order.order_id == baiter_order_id) && (baiter_RemainingSize == 0)) {
                         Debug.Print("CB-trade - it seems the baiter order is complete/cancelled");
                         baiter_Active = false;
                         // i guess should raise an event for hte UI
@@ -798,11 +799,18 @@ namespace IRTicker {
         /// </summary>
         /// <param name="order_id"></param>
         /// <returns>order ID of the order cancelled (if successful)</returns>
-        public async Task<bool> CB_cancel_order(string order_id) {
+        public async Task<bool> CB_cancel_order(string order_id, bool cancelByUser) {
             string response = await CoinbaseClient.CB_cancel_order(order_id);
 
             if (!string.IsNullOrEmpty(response)) {
-                if (response == "\"" + order_id + "\"") return true;
+                if (response == "\"" + order_id + "\"") {
+                    if (cancelByUser && (baiter_order_id == order_id)) {
+                        baiter_Active = false;
+                        Debug.Print("CB-trade-baiter - baiter cancelled by user");
+                        OnBaiterComplete?.Invoke();
+                    }
+                    return true;
+                }
             }
             Debug.Print("CB-trade - failed to cancel order?  respose: " + response + ", order id: " + order_id);
             return false;
