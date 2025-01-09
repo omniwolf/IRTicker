@@ -70,6 +70,8 @@ namespace IRTicker {
             this.Price_asks = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Size_asks = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.CB_baiter_i_TT = new System.Windows.Forms.ToolTip(this.components);
+            this.CB_volume_per_min_label = new System.Windows.Forms.Label();
+            this.CB_general_TT = new System.Windows.Forms.ToolTip(this.components);
             this.CB_trade_controls_panel.SuspendLayout();
             this.CB_balances_panel.SuspendLayout();
             this.CB_orderbook_panel.SuspendLayout();
@@ -78,6 +80,7 @@ namespace IRTicker {
             // CB_trade_controls_panel
             // 
             this.CB_trade_controls_panel.BackColor = System.Drawing.Color.YellowGreen;
+            this.CB_trade_controls_panel.Controls.Add(this.CB_volume_per_min_label);
             this.CB_trade_controls_panel.Controls.Add(this.CB_baiter_i_image_panel);
             this.CB_trade_controls_panel.Controls.Add(this.CB_price_spread_button);
             this.CB_trade_controls_panel.Controls.Add(this.CB_volume_max_button);
@@ -494,6 +497,17 @@ namespace IRTicker {
             this.CB_baiter_i_TT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.CB_baiter_i_TT.ToolTipTitle = "Market baiter";
             // 
+            // CB_volume_per_min_label
+            // 
+            this.CB_volume_per_min_label.AutoSize = true;
+            this.CB_volume_per_min_label.ForeColor = System.Drawing.Color.Gray;
+            this.CB_volume_per_min_label.Location = new System.Drawing.Point(234, 406);
+            this.CB_volume_per_min_label.Name = "CB_volume_per_min_label";
+            this.CB_volume_per_min_label.Size = new System.Drawing.Size(110, 13);
+            this.CB_volume_per_min_label.TabIndex = 24;
+            this.CB_volume_per_min_label.Text = "V/m: gathering data...";
+            this.CB_baiter_i_TT.SetToolTip(this.CB_volume_per_min_label, "Volume per minute");
+            // 
             // CBAccountsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -561,5 +575,7 @@ namespace IRTicker {
         private Button CB_volume_max_button;
         private Panel CB_baiter_i_image_panel;
         private ToolTip CB_baiter_i_TT;
+        private Label CB_volume_per_min_label;
+        private ToolTip CB_general_TT;
     }
 }

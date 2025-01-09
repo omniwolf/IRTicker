@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Numerics;
 
 namespace IRTicker.Coinbase_trade.Models {
     public class CB_Order {
@@ -38,7 +35,7 @@ namespace IRTicker.Coinbase_trade.Models {
     internal class CB_Order_matched {
         public string type { get; set; }
         public int trade_id { get; set; }
-        public int sequence { get; set; }
+        public BigInteger sequence { get; set; }
         public string maker_order_id { get; set; }
         public string taker_order_id { get; set; }
         public DateTime time { get; set; }

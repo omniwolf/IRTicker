@@ -49,7 +49,7 @@ namespace IRTicker {
             CB_closed_orders_listview.Columns[3].Text = "Value (" + currencies[1] + ")";
 
             CB_baiter_i_TT.SetToolTip(CB_baiter_i_image_panel, "The Market baiter option will put an order at the spread," + Environment.NewLine + "and move your order with the spread.  It will keep doing this" + Environment.NewLine + "until you either cancel the order, or the volume has been filled.");
-
+            CB_general_TT.SetToolTip(CB_volume_per_min_label, "Volume traded per minute on the selected side. Eg if 'Buy' is" + Environment.NewLine + "selected, value here will be the volume of taker offers (sell" + Environment.NewLine + "orders that cross the spread) per minute." + Environment.NewLine + Environment.NewLine + "If the text is grey we don't have enough data for the rate." + Environment.NewLine + "Black text indicates we have enough data for a reliable rate.");
 
             CB_pair_comboBox.Text = current_product_id;  // default
             CB_pair_comboBox.Enabled = false; // don't let them try and change it while loading
@@ -72,8 +72,30 @@ namespace IRTicker {
             _client.OnUpdatedPairBalance += UpdateBalance;
             _client.OnBaiterComplete += BaiterComplete;
             _client.OnBaiterStarted += BaiterStarted;
+            _client.OnVolumePerMinUpdate += UpdateVolumePerMin;
 
             await _client.Start(current_product_id, true, false);  // first true - tells the method to download the products list as this is the first time.  second false - do not ignore sockets, we want to start them
+        }
+
+        private void UpdateVolumePerMin(decimal volumePerMin_bids, decimal volumePerMin_asks, bool volumeVelocityRunForOneMin) {
+            if (this.InvokeRequired) {  // if we're not on the UI thread, call again from the UI thread
+                this.BeginInvoke((Action)(() => UpdateVolumePerMin(volumePerMin_bids, volumePerMin_asks, volumeVelocityRunForOneMin)));
+                return;
+            }
+
+            if (CB_order_side_listbox.SelectedIndex == 0) { // 
+                CB_volume_per_min_label.Text = "V/m: " + Utilities.FormatValue(volumePerMin_bids);  // the bids value is how many market sells are happening
+            }
+            else {
+                CB_volume_per_min_label.Text = "V/m: " + Utilities.FormatValue(volumePerMin_asks);
+            }
+
+            if (volumeVelocityRunForOneMin) {
+                CB_volume_per_min_label.ForeColor = Color.Black;
+            }
+            else {
+                CB_volume_per_min_label.ForeColor = Color.Gray;
+            }
         }
 
         private void BaiterStarted(string order_id) {

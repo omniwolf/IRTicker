@@ -13,6 +13,7 @@ using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Windows;
 using IRTicker.Coinbase_trade.Models;
+using System.Collections;
 
 namespace IRTicker {
     public class CBWebSockets {
@@ -38,6 +39,13 @@ namespace IRTicker {
         private IEnumerable<CB_OrderBookEntry> _currentBids;
         private IEnumerable<CB_OrderBookEntry> _currentAsks;
 
+        // this holds how much traded, so we can display a volume/minute rate
+        private ConcurrentQueue<Tuple<DateTime, decimal>> volumeTraded_bids = new ConcurrentQueue<Tuple<DateTime, decimal>>();
+        private ConcurrentQueue<Tuple<DateTime, decimal>> volumeTraded_asks = new ConcurrentQueue<Tuple<DateTime, decimal>>();
+        int UI_update_delay = 50;  // in milliseconds; how long we pause between UI updates
+        int volumeVelocityCount = 0;  // use this to only update the UI every second
+        bool volumeVelocityRunForOneMin = false;
+
         // some baiter variables
         private bool baiter_Active = false;
         private string baiter_order_id;
@@ -62,13 +70,14 @@ namespace IRTicker {
         public event Action<CB_Accounts, CB_Accounts> OnUpdatedPairBalance;
         public event Action OnBaiterComplete;
         public event Action<string> OnBaiterStarted;
+        public event Action<decimal, decimal, bool> OnVolumePerMinUpdate;
 
         private CBWebSockets(string apiKey, string apiSecret, string apiPassphrase) {
             _apiKey = apiKey;
             _apiSecret = apiSecret;
             _apiPassphrase = apiPassphrase;
 
-            _throttleTimer = new System.Timers.Timer(150);
+            _throttleTimer = new System.Timers.Timer(UI_update_delay);
             _throttleTimer.Elapsed += (s, e) => ThrottleTimerElapsed();
             _throttleTimer.Start();
         }
@@ -116,6 +125,9 @@ namespace IRTicker {
         /// <returns></returns>
         public async Task Start(string productId, bool getProducts, bool ignoreSockets) {
             _productId = productId;
+            volumeTraded_bids = new ConcurrentQueue<Tuple<DateTime, decimal>>();
+            volumeTraded_asks = new ConcurrentQueue<Tuple<DateTime, decimal>>();
+            volumeVelocityRunForOneMin = false;
 
             // first we check if we have a list of products already.
             // if not, we pull it
@@ -183,6 +195,56 @@ namespace IRTicker {
         }
 
         private async void ThrottleTimerElapsed() {
+
+            // first let's do the volume/minute stuff
+
+            if (volumeVelocityCount == 20) {
+
+                var cutoff = DateTime.Now.AddMinutes(-1); // Define the 1-minute cutoff
+
+                while (volumeTraded_bids.TryPeek(out var item)) // Look at the first item without removing it
+                {
+                    if (item.Item1 < cutoff) {
+                        // If the item is older than the cutoff, remove it
+                        volumeTraded_bids.TryDequeue(out _); // Remove the item
+                        volumeVelocityRunForOneMin = true;
+                    }
+                    else {
+                        break; // Stop once you reach an item within the time range
+                    }
+                }
+
+                while (volumeTraded_asks.TryPeek(out var item)) // Look at the first item without removing it
+{
+                    if (item.Item1 < cutoff) {
+                        // If the item is older than the cutoff, remove it
+                        volumeTraded_asks.TryDequeue(out _); // Remove the item
+                        volumeVelocityRunForOneMin = true;
+                    }
+                    else {
+                        break; // Stop once you reach an item within the time range
+                    }
+                }
+
+                decimal volumeTradedLastMinute_bids = 0;
+                decimal volumeTradedLastMinute_asks = 0;
+                // Now iterate over the remaining items
+                foreach (var item in volumeTraded_bids) {
+                    volumeTradedLastMinute_bids += item.Item2;
+                }
+
+                foreach (var item in volumeTraded_asks) {
+                    volumeTradedLastMinute_asks += item.Item2;
+                }
+
+                OnVolumePerMinUpdate?.Invoke(volumeTradedLastMinute_bids, volumeTradedLastMinute_asks, volumeVelocityRunForOneMin);
+                volumeVelocityCount = 0;
+
+            }
+            else {
+                volumeVelocityCount++;
+            }
+
             // If there's no new data, do nothing
             if (!_snapshotDirty) return;
 
@@ -417,11 +479,6 @@ namespace IRTicker {
 
             var closedOrders = await CoinbaseClient.CB_get_settled(_productId);
 
-            if (closedOrders.Count == 0) {
-                Debug.Print("CB-trade - No orders were returned, or there a fail in the request");
-                return true;
-            }
-
             // clean it up
             foreach (CB_Order closedOrder in closedOrders) {
                 if (string.IsNullOrEmpty(closedOrder.order_id) && !string.IsNullOrEmpty(closedOrder.id)) {
@@ -547,7 +604,7 @@ namespace IRTicker {
             {
                 type = "subscribe",
                 product_ids = new string[] { productId },
-                channels = new string[] { "level2_batch", "user" },
+                channels = new string[] { "level2_batch", "user", "matches" },
                 key = _apiKey,
                 passphrase = _apiPassphrase,
                 timestamp = timestamp,
@@ -741,6 +798,15 @@ namespace IRTicker {
         }
 
         private void parseOrderMatched(CB_Order_matched match) {
+
+            // double actually first let's just record the size of the trade for my velocity calculations
+            if (match.side == "buy") {
+                volumeTraded_bids.Enqueue(new Tuple<DateTime, decimal>(DateTime.Now, match.size));
+            }
+            else if (match.side == "sell") {
+                volumeTraded_asks.Enqueue(new Tuple<DateTime, decimal>(DateTime.Now, match.size));
+            }
+
             // first, update the openOrders
             // acttuuaally first we need to figure out what the order_id is.
             // coinbase makes this difficult
