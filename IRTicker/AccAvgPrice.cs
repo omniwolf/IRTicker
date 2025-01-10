@@ -294,8 +294,8 @@ namespace IRTicker
                 if ((cOrder.Status == OrderStatus.Filled) || (cOrder.Status == OrderStatus.PartiallyFilledAndCancelled) || (cOrder.Status == OrderStatus.PartiallyFilled) ||
                     (cOrder.Status == OrderStatus.PartiallyFilledAndExpired) || (cOrder.Status == OrderStatus.PartiallyFilledAndFailed)) {
                     // then we make sure it's within the time period
-                    Debug.Print(" -- order timestamp: " + cOrder.CreatedTimestampUtc);
-                    Debug.Print("-- DTPicker value: " + AccAvgPrice_Start_DTPicker.Value + ", UTC val: " + AccAvgPrice_Start_DTPicker.Value.ToUniversalTime());
+                    //Debug.Print(" -- order timestamp: " + cOrder.CreatedTimestampUtc);
+                    //Debug.Print("-- DTPicker value: " + AccAvgPrice_Start_DTPicker.Value + ", UTC val: " + AccAvgPrice_Start_DTPicker.Value.ToUniversalTime());
                     if ((cOrder.CreatedTimestampUtc >= AccAvgPrice_Start_DTPicker.Value.ToUniversalTime()) && (cOrder.CreatedTimestampUtc <= AccAvgPrice_End_DTPicker.Value.ToUniversalTime())) {
                         // then we makse sure it's a buy or sell as specified
                         if (((AccAvgPrice_BuySell_ComboBox.SelectedIndex == 0) && ((cOrder.OrderType == OrderType.LimitBid) || (cOrder.OrderType == OrderType.MarketBid))) ||
