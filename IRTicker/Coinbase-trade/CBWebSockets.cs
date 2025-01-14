@@ -258,7 +258,7 @@ namespace IRTicker {
             OnOrderBookUpdated?.Invoke(bids, asks, openOrders);
 
             // let's see if baiter needs any help
-            if (baiter_pause_and_retry > 0) {
+            if (baiter_Active && (baiter_pause_and_retry > 0)) {
                 if (baiter_pause_and_retry < 6) {
                     baiter_pause_and_retry++;
                 }

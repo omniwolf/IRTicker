@@ -99,6 +99,11 @@ namespace IRTicker {
         }
 
         private void BaiterStarted(string order_id) {
+            if (this.InvokeRequired) {  // if we're not on the UI thread, call again from the UI thread
+                this.BeginInvoke((Action)(() => BaiterStarted(order_id)));
+                return;
+            }
+
             Debug.Print("CB-trade-baiter - trying to set baiter order blue.  Order_id: " + order_id + ", number of open orders: " + CB_open_orders_listview.Items.Count);
             foreach (ListViewItem lvi in CB_open_orders_listview.Items) {
                 CB_Order order = (CB_Order)lvi.Tag;
@@ -140,6 +145,11 @@ namespace IRTicker {
         }
 
         private void CloseForm() {
+            if (this.InvokeRequired) {  // if we're not on the UI thread, call again from the UI thread
+                this.BeginInvoke((Action)(() => CloseForm()));
+                return;
+            }
+
             this.Close();
         }
 
