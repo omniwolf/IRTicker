@@ -13,7 +13,7 @@ using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Windows;
 using IRTicker.Coinbase_trade.Models;
-using System.Collections;
+
 
 namespace IRTicker {
     public class CBWebSockets {
@@ -407,14 +407,21 @@ namespace IRTicker {
 
             var create_baiter_order = await CB_place_order(baiter_Pair, baiter_Side, baiter_price.ToString(), baiter_RemainingSize.ToString(), "limit", true);
 
+            if (!string.IsNullOrEmpty(create_baiter_order.ErrorMessage)) {
+                Debug.Print("CB-trade-baiter - received an error when trying to create the order: " + create_baiter_order.ErrorMessage);
+                MessageBox.Show("Error when creating baiter order.  Error message:" + Environment.NewLine + Environment.NewLine + create_baiter_order.ErrorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            // if we get here, there's no error message
             if (null != create_baiter_order) {
                 Debug.Print("CB-trade-baiter - new order response not null...");
-                if (null != create_baiter_order.status) {
-                    Debug.Print("CB-trade-baiter - new order status: " + create_baiter_order.status);
-                    Debug.Print("CB-trade-baiter - new order id: " + create_baiter_order.id + ", order_id: " + create_baiter_order.order_id);
-                    if (create_baiter_order.status != "rejected") {
+                if (null != create_baiter_order.Data.status) {
+                    Debug.Print("CB-trade-baiter - new order status: " + create_baiter_order.Data.status);
+                    Debug.Print("CB-trade-baiter - new order id: " + create_baiter_order.Data.id + ", order_id: " + create_baiter_order.Data.order_id);
+                    if (create_baiter_order.Data.status != "rejected") {
                         // but if it is rejected or null, how do we signal a pause then a retry?
-                        baiter_order_id = create_baiter_order.order_id;
+                        baiter_order_id = create_baiter_order.Data.order_id;
                         baiter_changing_price = false;  // ok, we should be finished with this price update, can resume checks
                         baiter_pause_and_retry = 0;
                         baiter_retries = 0;
@@ -839,25 +846,40 @@ namespace IRTicker {
             }
         }
 
-        public async Task<CB_Order> CB_place_order(string pair, string side, string price, string size, string type, bool post_only = false, string client_uid = "") {
+        public async Task<CoinbaseResponse<CB_Order>> CB_place_order(string pair, string side, string price, string size, string type, bool post_only = false, string client_uid = "") {
             var response = await CoinbaseClient.CB_post_order(pair, side, price, size, type, post_only);
 
             // convert to Order
-            CB_Order openedOrder;
             try {
-                openedOrder = JsonConvert.DeserializeObject<CB_Order>(response);
-                if (openedOrder == null) throw new Exception("deserialized object was null");
+
+                // Check if the JSON contains an error message
+                var errorResponse = JsonConvert.DeserializeObject<CoinbaseErrorResponse>(response);
+                if (!string.IsNullOrEmpty(errorResponse.Message)) {
+                    return new CoinbaseResponse<CB_Order>
+                    {
+                        ErrorMessage = errorResponse.Message
+                    };
+                }
+
+                // Otherwise, try to deserialize into the expected object
+                var order = JsonConvert.DeserializeObject<CB_Order>(response);
+
+                if (string.IsNullOrEmpty(order.order_id) && !string.IsNullOrEmpty(order.id)) {
+                    order.order_id = order.id;
+                }
+
+                return new CoinbaseResponse<CB_Order>
+                {
+                    Data = order
+                };
             }
             catch (Exception ex) {
                 Debug.Print("CB-trade - tried to deserialize the response from opening a new order, but failed.  json: " + response);
-                return null;
+                return new CoinbaseResponse<CB_Order>
+                {
+                    ErrorMessage = "Invalid response format: " + ex.Message
+                };
             }
-
-            if (string.IsNullOrEmpty(openedOrder.order_id) && !string.IsNullOrEmpty(openedOrder.id)) {
-                openedOrder.order_id = openedOrder.id;
-            }
-
-            return openedOrder;
         }
 
         /// <summary>
@@ -897,5 +919,14 @@ namespace IRTicker {
             public int Compare(T x, T y) => y.CompareTo(x);
         }
 
+        public class CoinbaseResponse<T> {
+            public T Data { get; set; } // Holds the valid response object
+            public string ErrorMessage { get; set; } // Holds the error message (if any)
+        }
+
+        public class CoinbaseErrorResponse {
+            [JsonProperty("message")]
+            public string Message { get; set; }
+        }
     }
 }

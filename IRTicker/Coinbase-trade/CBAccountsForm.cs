@@ -512,6 +512,10 @@ namespace IRTicker {
 
                             if ((volume > 0) && (price > 0)) {
                                 var response = await _client.CB_place_order(current_product_id, side, price.ToString(), volume.ToString(), "limit", false);
+
+                                if (!string.IsNullOrEmpty(response.ErrorMessage)) {
+                                    MessageBox.Show("Error when placing order: " + Environment.NewLine + Environment.NewLine +  response.ErrorMessage);
+                                }
                             }
                             else {
                                 MessageBox.Show("volume or price < 0?");
@@ -529,6 +533,9 @@ namespace IRTicker {
                 case 1:  // market order
                     if (volume > 0) {
                         var response = await _client.CB_place_order(current_product_id, side, "", volume.ToString(), "market", false);
+                        if (!string.IsNullOrEmpty(response.ErrorMessage)) {
+                            MessageBox.Show("Error when placing order: " + Environment.NewLine + Environment.NewLine + response.ErrorMessage);
+                        }
                     }
                     else {
                         MessageBox.Show("volume < 0?");

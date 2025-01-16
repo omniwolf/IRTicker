@@ -28,6 +28,7 @@ namespace IRTicker {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CBAccountsForm));
             this.CB_trade_controls_panel = new System.Windows.Forms.Panel();
+            this.CB_volume_per_min_label = new System.Windows.Forms.Label();
             this.CB_baiter_i_image_panel = new System.Windows.Forms.Panel();
             this.CB_price_spread_button = new System.Windows.Forms.Button();
             this.CB_volume_max_button = new System.Windows.Forms.Button();
@@ -70,7 +71,6 @@ namespace IRTicker {
             this.Price_asks = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Size_asks = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.CB_baiter_i_TT = new System.Windows.Forms.ToolTip(this.components);
-            this.CB_volume_per_min_label = new System.Windows.Forms.Label();
             this.CB_general_TT = new System.Windows.Forms.ToolTip(this.components);
             this.CB_trade_controls_panel.SuspendLayout();
             this.CB_balances_panel.SuspendLayout();
@@ -104,19 +104,30 @@ namespace IRTicker {
             this.CB_trade_controls_panel.Size = new System.Drawing.Size(469, 545);
             this.CB_trade_controls_panel.TabIndex = 0;
             // 
+            // CB_volume_per_min_label
+            // 
+            this.CB_volume_per_min_label.AutoSize = true;
+            this.CB_volume_per_min_label.ForeColor = System.Drawing.Color.Gray;
+            this.CB_volume_per_min_label.Location = new System.Drawing.Point(234, 406);
+            this.CB_volume_per_min_label.Name = "CB_volume_per_min_label";
+            this.CB_volume_per_min_label.Size = new System.Drawing.Size(110, 13);
+            this.CB_volume_per_min_label.TabIndex = 24;
+            this.CB_volume_per_min_label.Text = "V/m: gathering data...";
+            this.CB_baiter_i_TT.SetToolTip(this.CB_volume_per_min_label, "Volume per minute");
+            // 
             // CB_baiter_i_image_panel
             // 
             this.CB_baiter_i_image_panel.BackColor = System.Drawing.Color.YellowGreen;
             this.CB_baiter_i_image_panel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("CB_baiter_i_image_panel.BackgroundImage")));
             this.CB_baiter_i_image_panel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.CB_baiter_i_image_panel.Location = new System.Drawing.Point(31, 173);
+            this.CB_baiter_i_image_panel.Location = new System.Drawing.Point(31, 170);
             this.CB_baiter_i_image_panel.Name = "CB_baiter_i_image_panel";
             this.CB_baiter_i_image_panel.Size = new System.Drawing.Size(20, 20);
             this.CB_baiter_i_image_panel.TabIndex = 23;
             // 
             // CB_price_spread_button
             // 
-            this.CB_price_spread_button.Location = new System.Drawing.Point(148, 230);
+            this.CB_price_spread_button.Location = new System.Drawing.Point(148, 227);
             this.CB_price_spread_button.Name = "CB_price_spread_button";
             this.CB_price_spread_button.Size = new System.Drawing.Size(49, 20);
             this.CB_price_spread_button.TabIndex = 22;
@@ -126,7 +137,7 @@ namespace IRTicker {
             // 
             // CB_volume_max_button
             // 
-            this.CB_volume_max_button.Location = new System.Drawing.Point(148, 202);
+            this.CB_volume_max_button.Location = new System.Drawing.Point(148, 199);
             this.CB_volume_max_button.Name = "CB_volume_max_button";
             this.CB_volume_max_button.Size = new System.Drawing.Size(49, 20);
             this.CB_volume_max_button.TabIndex = 21;
@@ -153,7 +164,7 @@ namespace IRTicker {
             this.CB_refresh_button.BackColor = System.Drawing.Color.ForestGreen;
             this.CB_refresh_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CB_refresh_button.ForeColor = System.Drawing.Color.PaleGreen;
-            this.CB_refresh_button.Location = new System.Drawing.Point(191, 12);
+            this.CB_refresh_button.Location = new System.Drawing.Point(191, 9);
             this.CB_refresh_button.Name = "CB_refresh_button";
             this.CB_refresh_button.Size = new System.Drawing.Size(82, 21);
             this.CB_refresh_button.TabIndex = 19;
@@ -169,7 +180,7 @@ namespace IRTicker {
             this.CB_balances_panel.Controls.Add(this.CB_currency1_label);
             this.CB_balances_panel.Controls.Add(this.CB_currency1_value);
             this.CB_balances_panel.Controls.Add(this.CB_currency2_label);
-            this.CB_balances_panel.Location = new System.Drawing.Point(6, 39);
+            this.CB_balances_panel.Location = new System.Drawing.Point(6, 36);
             this.CB_balances_panel.Name = "CB_balances_panel";
             this.CB_balances_panel.Size = new System.Drawing.Size(267, 84);
             this.CB_balances_panel.TabIndex = 17;
@@ -228,7 +239,7 @@ namespace IRTicker {
             this.CB_order_side_listbox.Items.AddRange(new object[] {
             "Buy",
             "Sell"});
-            this.CB_order_side_listbox.Location = new System.Drawing.Point(203, 129);
+            this.CB_order_side_listbox.Location = new System.Drawing.Point(203, 126);
             this.CB_order_side_listbox.Name = "CB_order_side_listbox";
             this.CB_order_side_listbox.Size = new System.Drawing.Size(70, 62);
             this.CB_order_side_listbox.TabIndex = 12;
@@ -248,7 +259,7 @@ namespace IRTicker {
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(6, 261);
+            this.label4.Location = new System.Drawing.Point(6, 258);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(195, 20);
             this.label4.TabIndex = 10;
@@ -314,7 +325,7 @@ namespace IRTicker {
             this.CB_open_orders_listview.FullRowSelect = true;
             this.CB_open_orders_listview.GridLines = true;
             this.CB_open_orders_listview.HideSelection = false;
-            this.CB_open_orders_listview.Location = new System.Drawing.Point(6, 283);
+            this.CB_open_orders_listview.Location = new System.Drawing.Point(6, 280);
             this.CB_open_orders_listview.Name = "CB_open_orders_listview";
             this.CB_open_orders_listview.ShowGroups = false;
             this.CB_open_orders_listview.ShowItemToolTips = true;
@@ -344,7 +355,7 @@ namespace IRTicker {
             // 
             // CB_place_order_button
             // 
-            this.CB_place_order_button.Location = new System.Drawing.Point(203, 202);
+            this.CB_place_order_button.Location = new System.Drawing.Point(203, 199);
             this.CB_place_order_button.Name = "CB_place_order_button";
             this.CB_place_order_button.Size = new System.Drawing.Size(70, 48);
             this.CB_place_order_button.TabIndex = 7;
@@ -355,7 +366,7 @@ namespace IRTicker {
             // CB_price_label
             // 
             this.CB_price_label.AutoSize = true;
-            this.CB_price_label.Location = new System.Drawing.Point(6, 233);
+            this.CB_price_label.Location = new System.Drawing.Point(6, 230);
             this.CB_price_label.Name = "CB_price_label";
             this.CB_price_label.Size = new System.Drawing.Size(34, 13);
             this.CB_price_label.TabIndex = 6;
@@ -363,7 +374,7 @@ namespace IRTicker {
             // 
             // CB_price_textbox
             // 
-            this.CB_price_textbox.Location = new System.Drawing.Point(57, 230);
+            this.CB_price_textbox.Location = new System.Drawing.Point(57, 227);
             this.CB_price_textbox.Name = "CB_price_textbox";
             this.CB_price_textbox.Size = new System.Drawing.Size(85, 20);
             this.CB_price_textbox.TabIndex = 5;
@@ -371,7 +382,7 @@ namespace IRTicker {
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 205);
+            this.label2.Location = new System.Drawing.Point(6, 202);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(45, 13);
             this.label2.TabIndex = 4;
@@ -379,7 +390,7 @@ namespace IRTicker {
             // 
             // CB_volume_textbox
             // 
-            this.CB_volume_textbox.Location = new System.Drawing.Point(57, 202);
+            this.CB_volume_textbox.Location = new System.Drawing.Point(57, 199);
             this.CB_volume_textbox.Name = "CB_volume_textbox";
             this.CB_volume_textbox.Size = new System.Drawing.Size(85, 20);
             this.CB_volume_textbox.TabIndex = 3;
@@ -393,7 +404,7 @@ namespace IRTicker {
             "Limit",
             "Market",
             "Market baiter"});
-            this.CB_order_type_listbox.Location = new System.Drawing.Point(57, 129);
+            this.CB_order_type_listbox.Location = new System.Drawing.Point(57, 126);
             this.CB_order_type_listbox.Name = "CB_order_type_listbox";
             this.CB_order_type_listbox.Size = new System.Drawing.Size(140, 64);
             this.CB_order_type_listbox.TabIndex = 2;
@@ -403,7 +414,7 @@ namespace IRTicker {
             // 
             this.CB_pair_comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CB_pair_comboBox.FormattingEnabled = true;
-            this.CB_pair_comboBox.Location = new System.Drawing.Point(6, 12);
+            this.CB_pair_comboBox.Location = new System.Drawing.Point(6, 9);
             this.CB_pair_comboBox.Name = "CB_pair_comboBox";
             this.CB_pair_comboBox.Size = new System.Drawing.Size(177, 21);
             this.CB_pair_comboBox.TabIndex = 0;
@@ -417,7 +428,7 @@ namespace IRTicker {
             this.CB_orderbook_panel.Controls.Add(this.CB_asks_listview);
             this.CB_orderbook_panel.Location = new System.Drawing.Point(283, 8);
             this.CB_orderbook_panel.Name = "CB_orderbook_panel";
-            this.CB_orderbook_panel.Size = new System.Drawing.Size(181, 388);
+            this.CB_orderbook_panel.Size = new System.Drawing.Size(181, 368);
             this.CB_orderbook_panel.TabIndex = 1;
             // 
             // CB_spread_label
@@ -440,11 +451,12 @@ namespace IRTicker {
             this.CB_bids_listview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CB_bids_listview.ForeColor = System.Drawing.Color.Thistle;
             this.CB_bids_listview.FullRowSelect = true;
+            this.CB_bids_listview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.CB_bids_listview.HideSelection = false;
             this.CB_bids_listview.Location = new System.Drawing.Point(0, 205);
             this.CB_bids_listview.Name = "CB_bids_listview";
             this.CB_bids_listview.ShowGroups = false;
-            this.CB_bids_listview.Size = new System.Drawing.Size(181, 183);
+            this.CB_bids_listview.Size = new System.Drawing.Size(181, 163);
             this.CB_bids_listview.TabIndex = 0;
             this.CB_bids_listview.UseCompatibleStateImageBehavior = false;
             this.CB_bids_listview.View = System.Windows.Forms.View.Details;
@@ -496,17 +508,6 @@ namespace IRTicker {
             // 
             this.CB_baiter_i_TT.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.CB_baiter_i_TT.ToolTipTitle = "Market baiter";
-            // 
-            // CB_volume_per_min_label
-            // 
-            this.CB_volume_per_min_label.AutoSize = true;
-            this.CB_volume_per_min_label.ForeColor = System.Drawing.Color.Gray;
-            this.CB_volume_per_min_label.Location = new System.Drawing.Point(234, 406);
-            this.CB_volume_per_min_label.Name = "CB_volume_per_min_label";
-            this.CB_volume_per_min_label.Size = new System.Drawing.Size(110, 13);
-            this.CB_volume_per_min_label.TabIndex = 24;
-            this.CB_volume_per_min_label.Text = "V/m: gathering data...";
-            this.CB_baiter_i_TT.SetToolTip(this.CB_volume_per_min_label, "Volume per minute");
             // 
             // CBAccountsForm
             // 
