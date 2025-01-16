@@ -1276,7 +1276,7 @@ namespace IRTicker
                 AccountPlaceOrder_button.Enabled = false;
                 AccountEstOrderValue_value.Text = "";
                 AccountEstOrderValue_value.Tag = null;
-                ValidateLimitOrder();
+                //ValidateLimitOrder();  // this only checks price, if the price or volume aren't parseable, then why are we calling this?
             }
             else {
                 AccountPlaceOrder_button.Enabled = false;
