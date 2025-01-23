@@ -629,7 +629,16 @@ namespace IRTicker {
         }
 
         private void CB_volume_max_button_Click(object sender, EventArgs e) {
-            CB_volume_textbox.Text = ((decimal)CB_currency1_value.Tag).ToString();
+            if (CB_order_side_listbox.SelectedIndex == 0) {
+                if (null != CB_currency2_value.Tag) {
+                    CB_volume_textbox.Text = ((decimal)CB_currency2_value.Tag).ToString();
+                }
+            }
+            else {  // sell
+                if (null != CB_currency1_value.Tag) {
+                    CB_volume_textbox.Text = ((decimal)CB_currency1_value.Tag).ToString();
+                }
+            }
         }
 
         private void CB_price_spread_button_Click(object sender, EventArgs e) {
