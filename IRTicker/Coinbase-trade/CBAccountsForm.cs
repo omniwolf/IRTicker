@@ -14,6 +14,8 @@ using System.Windows.Forms;
 // maybe colour the buy/sell box differently depending on what's selected?
 // remember what extra columns i want for closed orders!!!!!!!!!!! :(  (sad face because I CAN'T REMEMBER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
 
+// baiter bug - the order doesn't go away, but baiter seems to finish and there is nothing listed in open or closed orders, the spread text was still blue.  then later it went grey and the order turned up in closed?? dunno how
+
 namespace IRTicker {
     public partial class CBAccountsForm : Form {
 
