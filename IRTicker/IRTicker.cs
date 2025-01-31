@@ -151,7 +151,7 @@ namespace IRTicker {
             // Actually I'm not sure about the above comment, i think some of them do?  But the main issue is most of them have
             // currencies that we don't want to deal with, so we set the currencies manually here.  IR we want all currencies, so
             // we use the API.  This is probably not really smart, as the UI is static, so when new currencies turn up IR breaks.  meh
-            DCEs["IRSGD"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"DOT\",\"XLM\",\"GRT\",\"ETC\",\"LINK\",\"USDC\",\"USDT\",\"UNI\",\"ADA\",\"MATIC\",\"DOGE\",\"SAND\",\"MANA\",\"SOL\",\"SHIB\",\"WIF\",\"TRX\",\"RENDER\",\"RLUSD\"";
+            DCEs["IRSGD"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"DOT\",\"XLM\",\"GRT\",\"ETC\",\"LINK\",\"USDC\",\"USDT\",\"UNI\",\"ADA\",\"MATIC\",\"DOGE\",\"SAND\",\"MANA\",\"SOL\",\"SHIB\",\"WIF\",\"TRX\",\"RENDER\",\"RLUSD\",\"PEPE\"";
             DCEs["IRSGD"].SecondaryCurrencyCodes = "\"SGD\"";
 
             DCEs["IRUSD"].SecondaryCurrencyCodes = "\"USD\"";
@@ -363,6 +363,13 @@ namespace IRTicker {
             UIControls_Dict["IR"].WIF_Label = IR_WIF_Label1;
             UIControls_Dict["IR"].WIF_Price = IR_WIF_Label2;
             UIControls_Dict["IR"].WIF_Spread = IR_WIF_Label3;
+            UIControls_Dict["IR"].PEPE_Label = IR_PEPE_Label1;
+            UIControls_Dict["IR"].PEPE_Price = IR_PEPE_Label2;
+            UIControls_Dict["IR"].PEPE_Spread = IR_PEPE_Label3;
+            UIControls_Dict["IR"].TRUMP_Label = IR_TRUMP_Label1;
+            UIControls_Dict["IR"].TRUMP_Price = IR_TRUMP_Label2;
+            UIControls_Dict["IR"].TRUMP_Spread = IR_TRUMP_Label3;
+
 
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
             UIControls_Dict["IR"].AvgPrice_NumCoins = IR_NumCoinsTextBox;
@@ -446,7 +453,9 @@ namespace IRTicker {
             UIControls_Dict["IRSGD"].TRX_Label = IRSGD_TRX_Label1;
             UIControls_Dict["IRSGD"].TRX_Price = IRSGD_TRX_Label2;
             UIControls_Dict["IRSGD"].TRX_Spread = IRSGD_TRX_Label3;
-
+            UIControls_Dict["IRSGD"].PEPE_Label = IRSGD_PEPE_Label1;
+            UIControls_Dict["IRSGD"].PEPE_Price = IRSGD_PEPE_Label2;
+            UIControls_Dict["IRSGD"].PEPE_Spread = IRSGD_PEPE_Label3;
 
 
             // IR USD
@@ -548,6 +557,12 @@ namespace IRTicker {
             UIControls_Dict["IRUSD"].WIF_Label = IRUSD_WIF_Label1;
             UIControls_Dict["IRUSD"].WIF_Price = IRUSD_WIF_Label2;
             UIControls_Dict["IRUSD"].WIF_Spread = IRUSD_WIF_Label3;
+            UIControls_Dict["IRUSD"].PEPE_Label = IRUSD_PEPE_Label1;
+            UIControls_Dict["IRUSD"].PEPE_Price = IRUSD_PEPE_Label2;
+            UIControls_Dict["IRUSD"].PEPE_Spread = IRUSD_PEPE_Label3;
+            UIControls_Dict["IRUSD"].TRUMP_Label = IRUSD_TRUMP_Label1;
+            UIControls_Dict["IRUSD"].TRUMP_Price = IRUSD_TRUMP_Label2;
+            UIControls_Dict["IRUSD"].TRUMP_Spread = IRUSD_TRUMP_Label3;
 
 
             // BTCM
