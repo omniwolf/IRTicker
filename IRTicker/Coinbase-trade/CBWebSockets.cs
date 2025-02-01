@@ -45,6 +45,8 @@ namespace IRTicker {
         int UI_update_delay = 50;  // in milliseconds; how long we pause between UI updates
         int volumeVelocityCount = 0;  // use this to only update the UI every second
         bool volumeVelocityRunForOneMin = false;
+        int orderRefresh = 0;
+        bool orderUpdateHappening = false;  // if true, we ignore the order update code as we're probably awaiting some network calls
 
         // some baiter variables
         private bool baiter_Active = false;
@@ -196,9 +198,20 @@ namespace IRTicker {
 
         private async void ThrottleTimerElapsed() {
 
-            // first let's do the volume/minute stuff
+            // refresh open and closed orders
+            Debug.Print("CB-trade - order refrehs: " + orderRefresh + ", 30 * 1000 / UIupdate: " + (30 * 1000 / UI_update_delay).ToString());
+            if ((orderRefresh == (10 * 1000 / UI_update_delay)) && !orderUpdateHappening) {  // every 30 seconds
+                orderUpdateHappening = true;
+                await parseOpenOrders();
+                await parseClosedOrders();
+                await getAndParseAccount(_productId);
+                orderRefresh = 0;
+                orderUpdateHappening = false;  // kinda like a lock, we have finished updating the orders, and can now safely enter this if block again.
+            }
+            else orderRefresh++;
 
-            if (volumeVelocityCount == 20) {
+            // first let's do the volume/minute stuff
+            if (volumeVelocityCount == (1000 / UI_update_delay)) {  // every 1 second
 
                 var cutoff = DateTime.Now.AddMinutes(-1); // Define the 1-minute cutoff
 

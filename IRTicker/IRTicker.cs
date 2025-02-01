@@ -43,6 +43,8 @@ namespace IRTicker {
         private decimal BTCfee = 0;  // holds the estimated BTC network fee for the next block in sats/byte
         private decimal ETHfee = 0;  // holds the estimated ETH network fee for the next block in gwei
 
+        private bool noIRconnections = true;
+
         public ConcurrentDictionary<string, SpreadGraph> SpreadGraph_Dict = new ConcurrentDictionary<string, SpreadGraph>();  // needs to be public because it gets accessed from the graphs object
 
         PrivateIR pIR = new PrivateIR();
@@ -236,8 +238,10 @@ namespace IRTicker {
                 }
             }
 
-            // turning off IR for coinbase testing
-            wSocketConnect = new WebSocketsConnect(DCEs, pollingThread, pIR);
+            // noIRconnections will be true if we want to not do any IR stuff (for testing usually)
+            if (!noIRconnections) {
+                wSocketConnect = new WebSocketsConnect(DCEs, pollingThread, pIR);
+            }
             //LastPanel = Main;
 
 
@@ -245,10 +249,13 @@ namespace IRTicker {
 
             VersionLabel.Text = "IR Ticker version " + FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
 
-            // turning off IR for coinbase testing
-            pollingThread.RunWorkerAsync();
-            LoadingPanel.Visible = true;
-            //Main.Visible = true;
+            if (!noIRconnections) { // noIRconnections will be true if we want to not do any IR stuff (for testing usually)
+                pollingThread.RunWorkerAsync();
+                LoadingPanel.Visible = true;
+            }
+            else {
+                Main.Visible = true;  // the backgroundworker doesn't run, so it never shows the main panel.  we must force it 
+            }
         }
 
         // super manual function to push the UI controls into objects so we can read them programattically
@@ -2320,8 +2327,10 @@ namespace IRTicker {
             if (Properties.Settings.Default.Slack && (Properties.Settings.Default.SlackToken != "")) {
                 slackObj.setStatus("", "");
            }
-            wSocketConnect.IR_Disconnect();  // let's see if this stops the occasional crash on exit
-            wSocketConnect.stopUITimerThread();  // needed otherwise the app never actually closes
+            if (wSocketConnect != null) {
+                wSocketConnect.IR_Disconnect();  // let's see if this stops the occasional crash on exit
+                wSocketConnect.stopUITimerThread();  // needed otherwise the app never actually closes
+            }
         }
 
         public void SettingsButton_Click(object sender, EventArgs e) {
