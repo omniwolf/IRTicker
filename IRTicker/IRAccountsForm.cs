@@ -191,6 +191,12 @@ namespace IRTicker
             IRT.UIControls_Dict["IR"].Account_WIF_Total = AccountWIF_total;
             IRT.UIControls_Dict["IR"].Account_WIF_Value = AccountWIF_value;
             IRT.UIControls_Dict["IR"].Account_WIF_Label = AccountWIF_label;
+            IRT.UIControls_Dict["IR"].Account_PEPE_Total = AccountPEPE_total;
+            IRT.UIControls_Dict["IR"].Account_PEPE_Value = AccountPEPE_value;
+            IRT.UIControls_Dict["IR"].Account_PEPE_Label = AccountPEPE_label;
+            IRT.UIControls_Dict["IR"].Account_TRUMP_Total = AccountTRUMP_total;
+            IRT.UIControls_Dict["IR"].Account_TRUMP_Value = AccountTRUMP_value;
+            IRT.UIControls_Dict["IR"].Account_TRUMP_Label = AccountTRUMP_label;
 
             IRT.UIControls_Dict["IR"].CreateIRAccountControlDictionary();  // now that we have finally opened this form, we can add the form labels to the dictionary
 
@@ -899,8 +905,9 @@ namespace IRTicker
                     }
                 }
             }
-            if ((AccountOrderType_listbox.SelectedIndex > 0) &&  //  limit or bait
-                decimal.TryParse(AccountLimitPrice_textbox.Text, out decimal ignore)) ValidateLimitOrder();
+            if (AccountOrderType_listbox.SelectedIndex > 0) {   //  limit or bait
+                ValidateLimitOrder();
+            }
 
             Task.Run(() => pIR.compileAccountOrderBookAsync(AccountSelectedCrypto + "-" + DCE_IR.CurrentSecondaryCurrency));
         }
@@ -1194,7 +1201,10 @@ namespace IRTicker
         private void ValidateLimitOrder() {
 
             if ((AccountOrderType_listbox.SelectedIndex == 0) || string.IsNullOrEmpty(AccountLimitPrice_textbox.Text)) return;  // this can happen when changing cryptos, we simulate a price text box update to validate and adjust
-            decimal price = decimal.Parse(AccountLimitPrice_textbox.Text);  // why no tryParse?  the only way this gets called really is if the price has been validated as a number, or it's the result of clicking the place order button, which is only clickable if the vol/price are validated.  so we should be safe here...
+            
+            if (!decimal.TryParse(AccountLimitPrice_textbox.Text, out decimal price)) {
+                return;
+            }
             if (AccountOrders_listview.Items.Count > 0) {  // only continue if we have orders in the OB
                 // we need to make sure we have the top order of the order book we'd be trading on with a market order.  If it's on the
                 // side of the order book we're not showing, then the best price of the correct order book will be stored in the topPriceOtherOB variable.

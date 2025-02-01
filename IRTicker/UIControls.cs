@@ -52,6 +52,8 @@ namespace IRTicker
         public Label RENDER_Label { get; set; }
         public Label RLUSD_Label { get; set; }
         public Label WIF_Label { get; set; }
+        public Label PEPE_Label { get; set; }
+        public Label TRUMP_Label { get; set; }
 
         public Label XBT_Price { get; set; }
         public Label ETH_Price { get; set; }
@@ -89,6 +91,8 @@ namespace IRTicker
         public Label RENDER_Price { get; set; }
         public Label RLUSD_Price { get; set; }
         public Label WIF_Price { get; set; }
+        public Label PEPE_Price { get; set; }
+        public Label TRUMP_Price { get; set; }
 
 
         public Label XBT_Spread { get; set; }
@@ -127,7 +131,8 @@ namespace IRTicker
         public Label RENDER_Spread { get; set; }
         public Label RLUSD_Spread { get; set; }
         public Label WIF_Spread { get; set; }
-
+        public Label PEPE_Spread { get; set; }
+        public Label TRUMP_Spread { get; set; }
 
         public ComboBox AvgPrice_BuySell { get; set; }
         public MaskedTextBox AvgPrice_NumCoins { get; set; }
@@ -182,6 +187,8 @@ namespace IRTicker
         public Label Account_RENDER_Label { get; set; }
         public Label Account_RLUSD_Label { get; set; }
         public Label Account_WIF_Label { get; set; }
+        public Label Account_PEPE_Label { get; set; }
+        public Label Account_TRUMP_Label { get; set; }
 
         public Label Account_XBT_Value { get; set; }
         public Label Account_ETH_Value { get; set; }
@@ -221,6 +228,8 @@ namespace IRTicker
         public Label Account_RENDER_Value { get; set; }
         public Label Account_RLUSD_Value { get; set; }
         public Label Account_WIF_Value { get; set; }
+        public Label Account_PEPE_Value { get; set; }
+        public Label Account_TRUMP_Value { get; set; }
 
 
         public Label Account_XBT_Total { get; set; }
@@ -265,6 +274,8 @@ namespace IRTicker
         public Label Account_RENDER_Total { get; set; }
         public Label Account_RLUSD_Total { get; set; }
         public Label Account_WIF_Total { get; set; }
+        public Label Account_PEPE_Total { get; set; }
+        public Label Account_TRUMP_Total { get; set; }
 
 
 
@@ -313,6 +324,8 @@ namespace IRTicker
             if (Account_RENDER_Label != null) Label_Dict["RENDER_Account_Label"] = Account_RENDER_Label;
             if (Account_RLUSD_Label != null) Label_Dict["RLUSD_Account_Label"] = Account_RLUSD_Label;
             if (Account_WIF_Label != null) Label_Dict["WIF_Account_Label"] = Account_WIF_Label;
+            if (Account_PEPE_Label != null) Label_Dict["PEPE_Account_Label"] = Account_PEPE_Label;
+            if (Account_TRUMP_Label != null) Label_Dict["TRUMP_Account_Label"] = Account_TRUMP_Label;
 
 
             if (Account_XBT_Value != null) Label_Dict["XBT_Account_Value"] = Account_XBT_Value;
@@ -353,6 +366,8 @@ namespace IRTicker
             if (Account_RENDER_Value != null) Label_Dict["RENDER_Account_Value"] = Account_RENDER_Value;
             if (Account_RLUSD_Value != null) Label_Dict["RLUSD_Account_Value"] = Account_RLUSD_Value;
             if (Account_WIF_Value != null) Label_Dict["WIF_Account_Value"] = Account_WIF_Value;
+            if (Account_PEPE_Value != null) Label_Dict["PEPE_Account_Value"] = Account_PEPE_Value;
+            if (Account_TRUMP_Value != null) Label_Dict["TRUMP_Account_Value"] = Account_TRUMP_Value;
 
 
             if (Account_XBT_Total != null) Label_Dict["XBT_Account_Total"] = Account_XBT_Total;
@@ -397,6 +412,8 @@ namespace IRTicker
             if (Account_RENDER_Total != null) Label_Dict["RENDER_Account_Total"] = Account_RENDER_Total;
             if (Account_RLUSD_Total != null) Label_Dict["RLUSD_Account_Total"] = Account_RLUSD_Total;
             if (Account_WIF_Total != null) Label_Dict["WIF_Account_Total"] = Account_WIF_Total;
+            if (Account_PEPE_Total != null) Label_Dict["PEPE_Account_Total"] = Account_PEPE_Total;
+            if (Account_TRUMP_Total != null) Label_Dict["TRUMP_Account_Total"] = Account_TRUMP_Total;
         }
 
 
@@ -441,6 +458,8 @@ namespace IRTicker
             if (RENDER_Label != null) Label_Dict.Add("RENDER_Label", RENDER_Label);
             if (RLUSD_Label != null) Label_Dict.Add("RLUSD_Label", RLUSD_Label);
             if (WIF_Label != null) Label_Dict.Add("WIF_Label", WIF_Label);
+            if (PEPE_Label != null) Label_Dict.Add("PEPE_Label", PEPE_Label);
+            if (TRUMP_Label != null) Label_Dict.Add("TRUMP_Label", TRUMP_Label);
 
 
 
@@ -480,6 +499,8 @@ namespace IRTicker
             if (RENDER_Price != null) Label_Dict.Add("RENDER_Price", RENDER_Price);
             if (RLUSD_Price != null) Label_Dict.Add("RLUSD_Price", RLUSD_Price);
             if (WIF_Price != null) Label_Dict.Add("WIF_Price", WIF_Price);
+            if (PEPE_Price != null) Label_Dict.Add("PEPE_Price", PEPE_Price);
+            if (TRUMP_Price != null) Label_Dict.Add("TRUMP_Price", TRUMP_Price);
 
 
             if (XBT_Spread != null) Label_Dict.Add("XBT_Spread", XBT_Spread);
@@ -518,6 +539,8 @@ namespace IRTicker
             if (RENDER_Spread != null) Label_Dict.Add("RENDER_Spread", RENDER_Spread);
             if (RLUSD_Spread != null) Label_Dict.Add("RLUSD_Spread", RLUSD_Spread);
             if (WIF_Spread != null) Label_Dict.Add("WIF_Spread", WIF_Spread);
+            if (PEPE_Spread != null) Label_Dict.Add("PEPE_Spread", PEPE_Spread);
+            if (TRUMP_Spread != null) Label_Dict.Add("TRUMP_Spread", TRUMP_Spread);
         }
     }
 }

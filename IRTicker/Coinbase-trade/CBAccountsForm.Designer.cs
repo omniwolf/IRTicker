@@ -517,6 +517,8 @@ namespace IRTicker {
             this.Controls.Add(this.CB_orderbook_panel);
             this.Controls.Add(this.CB_trade_controls_panel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximumSize = new System.Drawing.Size(484, 580);
+            this.MinimumSize = new System.Drawing.Size(484, 580);
             this.Name = "CBAccountsForm";
             this.Text = "Coinbase trading";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CBAccountsForm_FormClosing);
