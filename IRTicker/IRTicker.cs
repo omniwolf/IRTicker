@@ -43,7 +43,7 @@ namespace IRTicker {
         private decimal BTCfee = 0;  // holds the estimated BTC network fee for the next block in sats/byte
         private decimal ETHfee = 0;  // holds the estimated ETH network fee for the next block in gwei
 
-        private bool noIRconnections = true;
+        private bool noIRconnections = false;
 
         public ConcurrentDictionary<string, SpreadGraph> SpreadGraph_Dict = new ConcurrentDictionary<string, SpreadGraph>();  // needs to be public because it gets accessed from the graphs object
 
