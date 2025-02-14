@@ -25,7 +25,7 @@ namespace IRTicker {
         private bool UITimerThreadProceed = true;
         //private ManualResetEvent startSocket_exitEvent = new ManualResetEvent(false);
         private string IRSocketsURL = "wss://websockets.independentreserve.com";
-        //private string IRSocketsURL = "ws://dev.pushservice.independentreserve.net";
+        //private string IRSocketsURL = "ws://dev.pushservice.independentreserve.net";  // maybe it's now wss://push.dev.independentreserve.net  ?
         List<string> IRdExchanges = new List<string>() { "IR", "IRUSD", "IRSGD" };
         private PrivateIR pIR;
         private List<DateTime> ThrottleConnection_BTCM = new List<DateTime>();  // tracks .Start() attempts on the wss API

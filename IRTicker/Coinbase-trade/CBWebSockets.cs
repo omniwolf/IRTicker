@@ -199,7 +199,7 @@ namespace IRTicker {
         private async void ThrottleTimerElapsed() {
 
             // refresh open and closed orders
-            Debug.Print("CB-trade - order refrehs: " + orderRefresh + ", 30 * 1000 / UIupdate: " + (30 * 1000 / UI_update_delay).ToString());
+            //Debug.Print("CB-trade - order refrehs: " + orderRefresh + ", 30 * 1000 / UIupdate: " + (30 * 1000 / UI_update_delay).ToString());
             if ((orderRefresh == (10 * 1000 / UI_update_delay)) && !orderUpdateHappening) {  // every 30 seconds
                 orderUpdateHappening = true;
                 await parseOpenOrders();
