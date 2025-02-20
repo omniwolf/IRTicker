@@ -1270,8 +1270,24 @@ namespace IRTicker
                         try {
                             foreach (BankHistoryOrder cOrder in ordersToNotify) {
                                 if ((cOrder.Status == OrderStatus.Filled) && (cOrder.CreatedTimestampUtc > sessionStarted.ToUniversalTime())) {
+                                    string direction = "";
+                                    switch (cOrder.OrderType)
+                                    {
+                                        case OrderType.LimitBid:
+                                            direction = "Limit bid";
+                                            break;
+                                        case OrderType.LimitOffer:
+                                            direction = "Limit offer";
+                                            break;
+                                        case OrderType.MarketBid:
+                                            direction = "Market bid";
+                                            break;
+                                        case OrderType.MarketOffer:
+                                            direction = "Market offer";
+                                            break;
+                                    }
                                     string crypto = cOrder.PrimaryCurrencyCode.ToString().ToUpper();
-                                    await SendMessage("*Order Filled!* 🤝" + Environment.NewLine +
+                                    await SendMessage("*" + direction + " order filled!* 🤝" + Environment.NewLine +
                                         "  Pair: " + crypto + "-" + cOrder.SecondaryCurrencyCode.ToString().ToUpper() + "" + Environment.NewLine +
                                         "  Value: $" + Utilities.FormatValue(cOrder.Value.Value, 2) + Environment.NewLine +
                                         "  Avg price: $" + Utilities.FormatValue(cOrder.AvgPrice.Value, 2) + Environment.NewLine +
