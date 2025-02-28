@@ -1413,7 +1413,8 @@ namespace IRTicker {
                     }
 
                     // separate this because it's possible to hit this code where the socketsreset == true for some other reason that heartbeat
-                    if (DCEs[dExchange].socketsReset) {
+                    // we check NetworkAvailable here as well - if it's false this will give the code a chance to try and make it true again
+                    if (DCEs[dExchange].socketsReset || !DCEs[dExchange].NetworkAvailable) {
                         // just in case sockets is still broken, let's grab some REST data
                         foreach (string primaryCode in DCEs[dExchange].PrimaryCurrencyList) {
                             switch (dExchange) {

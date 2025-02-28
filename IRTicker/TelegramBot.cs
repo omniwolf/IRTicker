@@ -1287,7 +1287,7 @@ namespace IRTicker
                                             break;
                                     }
                                     string crypto = cOrder.PrimaryCurrencyCode.ToString().ToUpper();
-                                    await SendMessage("*" + direction + " order filled!* 🤝" + Environment.NewLine +
+                                    await SendMessage("*" + direction + " filled!* 🤝" + Environment.NewLine +
                                         "  Pair: " + crypto + "-" + cOrder.SecondaryCurrencyCode.ToString().ToUpper() + "" + Environment.NewLine +
                                         "  Value: $" + Utilities.FormatValue(cOrder.Value.Value, 2) + Environment.NewLine +
                                         "  Avg price: $" + Utilities.FormatValue(cOrder.AvgPrice.Value, 2) + Environment.NewLine +
