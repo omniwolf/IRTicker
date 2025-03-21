@@ -554,8 +554,8 @@ namespace IRTicker {
                             if (OB_IR.ContainsKey(OrderPrice)) {
                                 if (OB_IR[OrderPrice].Count > 1) {
                                     if (!OB_IR[OrderPrice].TryRemove(order.OrderGuid, out OrderBook_IR ignore1)) {
-                                        Debug.Print(DateTime.Now + " - couldn't remove order from OB (order changed, vol was 0)!  guid: " + ignore1.OrderGuid);
-                                    }
+                                        Debug.Print(DateTime.Now + " - couldn't remove order from OB (order changed, vol was 0)!  guid: " + order.OrderGuid);
+                                    }   
                                     //Debug.Print("order changed to 0, price: " + OrderPrice + " guid: " + ignore1.OrderGuid);
                                 }
                                 else {  // need to remove the whole outer thang
