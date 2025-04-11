@@ -367,6 +367,9 @@ namespace IRTicker {
             UIControls_Dict["IR"].RENDER_Label = IR_RENDER_Label1;
             UIControls_Dict["IR"].RENDER_Price = IR_RENDER_Label2;
             UIControls_Dict["IR"].RENDER_Spread = IR_RENDER_Label3;
+            UIControls_Dict["IR"].RLUSD_Label = IR_RLUSD_Label1;
+            UIControls_Dict["IR"].RLUSD_Price = IR_RLUSD_Label2;
+            UIControls_Dict["IR"].RLUSD_Spread = IR_RLUSD_Label3;
             UIControls_Dict["IR"].WIF_Label = IR_WIF_Label1;
             UIControls_Dict["IR"].WIF_Price = IR_WIF_Label2;
             UIControls_Dict["IR"].WIF_Spread = IR_WIF_Label3;
