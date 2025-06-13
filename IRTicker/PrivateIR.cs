@@ -97,7 +97,7 @@ namespace IRTicker {
         public Dictionary<string, Account> GetAccounts(string APIKey = "", string APISecret = "") {
             if (string.IsNullOrEmpty(APIKey) || (APIKey == Properties.Settings.Default.IRAPIPubKey)) {
                 lock (pIR_Lock) {
-                    accounts = (IRclient.GetAccounts()).ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);
+                    accounts = (IRclient.GetAccounts()).ToDictionary(x => x.CurrencyCode.ToString().ToUpper(), x => x);  // had a crash here.. need to catch it?  jsonReader failed to parse
                 }
                 return accounts;
             }
