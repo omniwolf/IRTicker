@@ -31,7 +31,7 @@ namespace IRTicker {
         public Dictionary<string, UIControls> UIControls_Dict;
         private List<string> Exchanges;
         List<string> IRdExchanges = new List<string>() { "IR", "IRUSD", "IRSGD" };
-        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "USDT", "DOT", "GRT", "AAVE", "YFI", "PMGT", "SNX", "COMP", "LINK", "ADA", "UNI", "MATIC", "DOGE", "ADA", "MANA", "SAND", "SHIB" };  // we don't poll the shit coins as often to help with rate limiting
+        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "USDT", "DOT", "GRT", "AAVE", "YFI", "PMGT", "SNX", "COMP", "LINK", "ADA", "UNI", "MATIC", "DOGE", "ADA", "MANA", "SAND", "SHIB", "TRUMP", "AVAX", "PEPE", "RENDER", "WIF", "RLUSD" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
         private BlinkStick bStick, bStickETH, bStickUSDT, bStickXRP;
@@ -153,12 +153,12 @@ namespace IRTicker {
             // Actually I'm not sure about the above comment, i think some of them do?  But the main issue is most of them have
             // currencies that we don't want to deal with, so we set the currencies manually here.  IR we want all currencies, so
             // we use the API.  This is probably not really smart, as the UI is static, so when new currencies turn up IR breaks.  meh
-            DCEs["IRSGD"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"DOT\",\"XLM\",\"GRT\",\"ETC\",\"LINK\",\"USDC\",\"USDT\",\"UNI\",\"ADA\",\"MATIC\",\"DOGE\",\"SAND\",\"MANA\",\"SOL\",\"SHIB\",\"WIF\",\"TRX\",\"RENDER\",\"RLUSD\",\"PEPE\"";
+            DCEs["IRSGD"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"DOT\",\"XLM\",\"GRT\",\"ETC\",\"LINK\",\"USDC\",\"USDT\",\"UNI\",\"ADA\",\"MATIC\",\"DOGE\",\"SAND\",\"MANA\",\"SOL\",\"SHIB\",\"WIF\",\"TRX\",\"RENDER\",\"RLUSD\",\"PEPE\",\"TRUMP\",\"AVAX\",\"HYPE\"";
             DCEs["IRSGD"].SecondaryCurrencyCodes = "\"SGD\"";
 
             DCEs["IRUSD"].SecondaryCurrencyCodes = "\"USD\"";
 
-            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"XLM\",\"BAT\",\"ETC\",\"LINK\",\"COMP\",\"USDT\",\"UNI\",\"SAND\",\"MANA\",\"USDC\",\"AAVE\",\"DOT\",\"SOL\",\"ADA\"";
+            DCEs["BTCM"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"XLM\",\"BAT\",\"ETC\",\"LINK\",\"COMP\",\"USDT\",\"UNI\",\"SAND\",\"MANA\",\"USDC\",\"AAVE\",\"DOT\",\"SOL\",\"ADA\",\"AVAX\"";
             DCEs["BTCM"].SecondaryCurrencyCodes = "\"AUD\"";
             DCEs["BTCM"].HasStaticData = false;  // want to set this to false so we run the subscribe code once.
 
@@ -292,9 +292,6 @@ namespace IRTicker {
             UIControls_Dict["IR"].ZRX_Label = IR_ZRX_Label1;
             UIControls_Dict["IR"].ZRX_Price = IR_ZRX_Label2;
             UIControls_Dict["IR"].ZRX_Spread = IR_ZRX_Label3;
-            UIControls_Dict["IR"].EOS_Label = IR_EOS_Label1;
-            UIControls_Dict["IR"].EOS_Price = IR_EOS_Label2;
-            UIControls_Dict["IR"].EOS_Spread = IR_EOS_Label3;
             UIControls_Dict["IR"].XLM_Label = IR_XLM_Label1;
             UIControls_Dict["IR"].XLM_Price = IR_XLM_Label2;
             UIControls_Dict["IR"].XLM_Spread = IR_XLM_Label3;
@@ -379,6 +376,12 @@ namespace IRTicker {
             UIControls_Dict["IR"].TRUMP_Label = IR_TRUMP_Label1;
             UIControls_Dict["IR"].TRUMP_Price = IR_TRUMP_Label2;
             UIControls_Dict["IR"].TRUMP_Spread = IR_TRUMP_Label3;
+            UIControls_Dict["IR"].AVAX_Label = IR_AVAX_Label1;
+            UIControls_Dict["IR"].AVAX_Price = IR_AVAX_Label2;
+            UIControls_Dict["IR"].AVAX_Spread = IR_AVAX_Label3;
+            UIControls_Dict["IR"].HYPE_Label = IR_HYPE_Label1;
+            UIControls_Dict["IR"].HYPE_Price = IR_HYPE_Label2;
+            UIControls_Dict["IR"].HYPE_Spread = IR_HYPE_Label3;
 
 
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
@@ -466,6 +469,15 @@ namespace IRTicker {
             UIControls_Dict["IRSGD"].PEPE_Label = IRSGD_PEPE_Label1;
             UIControls_Dict["IRSGD"].PEPE_Price = IRSGD_PEPE_Label2;
             UIControls_Dict["IRSGD"].PEPE_Spread = IRSGD_PEPE_Label3;
+            UIControls_Dict["IRSGD"].TRUMP_Label = IRSGD_TRUMP_Label1;
+            UIControls_Dict["IRSGD"].TRUMP_Price = IRSGD_TRUMP_Label2;
+            UIControls_Dict["IRSGD"].TRUMP_Spread = IRSGD_TRUMP_Label3;
+            UIControls_Dict["IRSGD"].AVAX_Label = IRSGD_AVAX_Label1;
+            UIControls_Dict["IRSGD"].AVAX_Price = IRSGD_AVAX_Label2;
+            UIControls_Dict["IRSGD"].AVAX_Spread = IRSGD_AVAX_Label3;
+            UIControls_Dict["IRSGD"].HYPE_Label = IRSGD_HYPE_Label1;
+            UIControls_Dict["IRSGD"].HYPE_Price = IRSGD_HYPE_Label2;
+            UIControls_Dict["IRSGD"].HYPE_Spread = IRSGD_HYPE_Label3;
 
 
             // IR USD
@@ -489,9 +501,6 @@ namespace IRTicker {
             UIControls_Dict["IRUSD"].ZRX_Label = IRUSD_ZRX_Label1;
             UIControls_Dict["IRUSD"].ZRX_Price = IRUSD_ZRX_Label2;
             UIControls_Dict["IRUSD"].ZRX_Spread = IRUSD_ZRX_Label3;
-            UIControls_Dict["IRUSD"].EOS_Label = IRUSD_EOS_Label1;
-            UIControls_Dict["IRUSD"].EOS_Price = IRUSD_EOS_Label2;
-            UIControls_Dict["IRUSD"].EOS_Spread = IRUSD_EOS_Label3;
             UIControls_Dict["IRUSD"].XLM_Label = IRUSD_XLM_Label1;
             UIControls_Dict["IRUSD"].XLM_Price = IRUSD_XLM_Label2;
             UIControls_Dict["IRUSD"].XLM_Spread = IRUSD_XLM_Label3;
@@ -573,6 +582,12 @@ namespace IRTicker {
             UIControls_Dict["IRUSD"].TRUMP_Label = IRUSD_TRUMP_Label1;
             UIControls_Dict["IRUSD"].TRUMP_Price = IRUSD_TRUMP_Label2;
             UIControls_Dict["IRUSD"].TRUMP_Spread = IRUSD_TRUMP_Label3;
+            UIControls_Dict["IRUSD"].AVAX_Label = IRUSD_AVAX_Label1;
+            UIControls_Dict["IRUSD"].AVAX_Price = IRUSD_AVAX_Label2;
+            UIControls_Dict["IRUSD"].AVAX_Spread = IRUSD_AVAX_Label3;
+            UIControls_Dict["IRUSD"].HYPE_Label = IRUSD_HYPE_Label1;
+            UIControls_Dict["IRUSD"].HYPE_Price = IRUSD_HYPE_Label2;
+            UIControls_Dict["IRUSD"].HYPE_Spread = IRUSD_HYPE_Label3;
 
 
             // BTCM
@@ -634,6 +649,9 @@ namespace IRTicker {
             UIControls_Dict["BTCM"].AAVE_Label = BTCM_AAVE_Label1;
             UIControls_Dict["BTCM"].AAVE_Price = BTCM_AAVE_Label2;
             UIControls_Dict["BTCM"].AAVE_Spread = BTCM_AAVE_Label3;
+            UIControls_Dict["BTCM"].AVAX_Label = BTCM_AVAX_Label1;
+            UIControls_Dict["BTCM"].AVAX_Price = BTCM_AVAX_Label2;
+            UIControls_Dict["BTCM"].AVAX_Spread = BTCM_AVAX_Label3;
 
             UIControls_Dict["BTCM"].DOT_Label = BTCM_DOT_Label1;
             UIControls_Dict["BTCM"].DOT_Price = BTCM_DOT_Label2;
@@ -881,7 +899,7 @@ namespace IRTicker {
                 if (TGBot != null) TGBot.BTCMemoji = "😭";
             }
             else if (IRvol > BTCMvol * 1.05M) {
-                slackObj.setStatus("", ":sunglasses:", status_emoji_duration, name);
+                slackObj.setStatus("", ":tiger:", status_emoji_duration, name);
                 if (TGBot != null) TGBot.BTCMemoji = "😎";
             }
             else if ((IRvol <= BTCMvol * 1.05M) && (IRvol >= BTCMvol * 0.95M)) {

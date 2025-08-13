@@ -197,6 +197,12 @@ namespace IRTicker
             IRT.UIControls_Dict["IR"].Account_TRUMP_Total = AccountTRUMP_total;
             IRT.UIControls_Dict["IR"].Account_TRUMP_Value = AccountTRUMP_value;
             IRT.UIControls_Dict["IR"].Account_TRUMP_Label = AccountTRUMP_label;
+            IRT.UIControls_Dict["IR"].Account_AVAX_Total = AccountAVAX_total;
+            IRT.UIControls_Dict["IR"].Account_AVAX_Value = AccountAVAX_value;
+            IRT.UIControls_Dict["IR"].Account_AVAX_Label = AccountAVAX_label;
+            IRT.UIControls_Dict["IR"].Account_HYPE_Total = AccountHYPE_total;
+            IRT.UIControls_Dict["IR"].Account_HYPE_Value = AccountHYPE_value;
+            IRT.UIControls_Dict["IR"].Account_HYPE_Label = AccountHYPE_label;
 
             IRT.UIControls_Dict["IR"].CreateIRAccountControlDictionary();  // now that we have finally opened this form, we can add the form labels to the dictionary
 

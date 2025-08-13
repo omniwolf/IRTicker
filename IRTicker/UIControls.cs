@@ -21,7 +21,6 @@ namespace IRTicker
         public Label BCH_Label { get; set; }
         public Label LTC_Label { get; set; }
         public Label XRP_Label { get; set; }
-        public Label EOS_Label { get; set; }
         public Label ZRX_Label { get; set; }
         public Label XLM_Label { get; set; }
         public Label BAT_Label { get; set; }
@@ -54,13 +53,14 @@ namespace IRTicker
         public Label WIF_Label { get; set; }
         public Label PEPE_Label { get; set; }
         public Label TRUMP_Label { get; set; }
+        public Label AVAX_Label { get; set; }
+        public Label HYPE_Label { get; set; }
 
         public Label XBT_Price { get; set; }
         public Label ETH_Price { get; set; }
         public Label BCH_Price { get; set; }
         public Label LTC_Price { get; set; }
         public Label XRP_Price { get; set; }
-        public Label EOS_Price { get; set; }
         public Label ZRX_Price { get; set; }
         public Label XLM_Price { get; set; }
         public Label BAT_Price { get; set; }
@@ -93,6 +93,8 @@ namespace IRTicker
         public Label WIF_Price { get; set; }
         public Label PEPE_Price { get; set; }
         public Label TRUMP_Price { get; set; }
+        public Label AVAX_Price { get; set; }
+        public Label HYPE_Price { get; set; }
 
 
         public Label XBT_Spread { get; set; }
@@ -100,7 +102,6 @@ namespace IRTicker
         public Label BCH_Spread { get; set; }
         public Label LTC_Spread { get; set; }
         public Label XRP_Spread { get; set; }
-        public Label EOS_Spread { get; set; }
         public Label ZRX_Spread { get; set; }
         public Label XLM_Spread { get; set; }
         public Label BAT_Spread { get; set; }
@@ -133,6 +134,8 @@ namespace IRTicker
         public Label WIF_Spread { get; set; }
         public Label PEPE_Spread { get; set; }
         public Label TRUMP_Spread { get; set; }
+        public Label AVAX_Spread { get; set; }
+        public Label HYPE_Spread { get; set; }
 
         public ComboBox AvgPrice_BuySell { get; set; }
         public MaskedTextBox AvgPrice_NumCoins { get; set; }
@@ -189,6 +192,8 @@ namespace IRTicker
         public Label Account_WIF_Label { get; set; }
         public Label Account_PEPE_Label { get; set; }
         public Label Account_TRUMP_Label { get; set; }
+        public Label Account_AVAX_Label { get; set; }
+        public Label Account_HYPE_Label { get; set; }
 
         public Label Account_XBT_Value { get; set; }
         public Label Account_ETH_Value { get; set; }
@@ -230,6 +235,8 @@ namespace IRTicker
         public Label Account_WIF_Value { get; set; }
         public Label Account_PEPE_Value { get; set; }
         public Label Account_TRUMP_Value { get; set; }
+        public Label Account_AVAX_Value { get; set; }
+        public Label Account_HYPE_Value { get; set; }
 
 
         public Label Account_XBT_Total { get; set; }
@@ -276,6 +283,8 @@ namespace IRTicker
         public Label Account_WIF_Total { get; set; }
         public Label Account_PEPE_Total { get; set; }
         public Label Account_TRUMP_Total { get; set; }
+        public Label Account_AVAX_Total { get; set; }
+        public Label Account_HYPE_Total { get; set; }
 
 
 
@@ -326,6 +335,8 @@ namespace IRTicker
             if (Account_WIF_Label != null) Label_Dict["WIF_Account_Label"] = Account_WIF_Label;
             if (Account_PEPE_Label != null) Label_Dict["PEPE_Account_Label"] = Account_PEPE_Label;
             if (Account_TRUMP_Label != null) Label_Dict["TRUMP_Account_Label"] = Account_TRUMP_Label;
+            if (Account_AVAX_Label != null) Label_Dict["AVAX_Account_Label"] = Account_AVAX_Label;
+            if (Account_HYPE_Label != null) Label_Dict["HYPE_Account_Label"] = Account_HYPE_Label;
 
 
             if (Account_XBT_Value != null) Label_Dict["XBT_Account_Value"] = Account_XBT_Value;
@@ -368,6 +379,8 @@ namespace IRTicker
             if (Account_WIF_Value != null) Label_Dict["WIF_Account_Value"] = Account_WIF_Value;
             if (Account_PEPE_Value != null) Label_Dict["PEPE_Account_Value"] = Account_PEPE_Value;
             if (Account_TRUMP_Value != null) Label_Dict["TRUMP_Account_Value"] = Account_TRUMP_Value;
+            if (Account_AVAX_Value != null) Label_Dict["AVAX_Account_Value"] = Account_AVAX_Value;
+            if (Account_HYPE_Value != null) Label_Dict["HYPE_Account_Value"] = Account_HYPE_Value;
 
 
             if (Account_XBT_Total != null) Label_Dict["XBT_Account_Total"] = Account_XBT_Total;
@@ -414,6 +427,8 @@ namespace IRTicker
             if (Account_WIF_Total != null) Label_Dict["WIF_Account_Total"] = Account_WIF_Total;
             if (Account_PEPE_Total != null) Label_Dict["PEPE_Account_Total"] = Account_PEPE_Total;
             if (Account_TRUMP_Total != null) Label_Dict["TRUMP_Account_Total"] = Account_TRUMP_Total;
+            if (Account_AVAX_Total != null) Label_Dict["AVAX_Account_Total"] = Account_AVAX_Total;
+            if (Account_HYPE_Total != null) Label_Dict["HYPE_Account_Total"] = Account_HYPE_Total;
         }
 
 
@@ -427,7 +442,6 @@ namespace IRTicker
             if (LTC_Label != null) Label_Dict.Add("LTC_Label", LTC_Label);
             if (XRP_Label != null) Label_Dict.Add("XRP_Label", XRP_Label);
             if (BCH_Label != null) Label_Dict.Add("BCH_Label", BCH_Label);
-            if (EOS_Label != null) Label_Dict.Add("EOS_Label", EOS_Label);
             if (ZRX_Label != null) Label_Dict.Add("ZRX_Label", ZRX_Label);
             if (XLM_Label != null) Label_Dict.Add("XLM_Label", XLM_Label);
             if (BAT_Label != null) Label_Dict.Add("BAT_Label", BAT_Label);
@@ -460,6 +474,8 @@ namespace IRTicker
             if (WIF_Label != null) Label_Dict.Add("WIF_Label", WIF_Label);
             if (PEPE_Label != null) Label_Dict.Add("PEPE_Label", PEPE_Label);
             if (TRUMP_Label != null) Label_Dict.Add("TRUMP_Label", TRUMP_Label);
+            if (AVAX_Label != null) Label_Dict.Add("AVAX_Label", AVAX_Label);
+            if (HYPE_Label != null) Label_Dict.Add("HYPE_Label", HYPE_Label);
 
 
 
@@ -468,7 +484,6 @@ namespace IRTicker
             if (LTC_Price != null) Label_Dict.Add("LTC_Price", LTC_Price);
             if (XRP_Price != null) Label_Dict.Add("XRP_Price", XRP_Price);
             if (BCH_Price != null) Label_Dict.Add("BCH_Price", BCH_Price);
-            if (EOS_Price != null) Label_Dict.Add("EOS_Price", EOS_Price);
             if (ZRX_Price != null) Label_Dict.Add("ZRX_Price", ZRX_Price);
             if (XLM_Price != null) Label_Dict.Add("XLM_Price", XLM_Price);
             if (BAT_Price != null) Label_Dict.Add("BAT_Price", BAT_Price);
@@ -501,6 +516,8 @@ namespace IRTicker
             if (WIF_Price != null) Label_Dict.Add("WIF_Price", WIF_Price);
             if (PEPE_Price != null) Label_Dict.Add("PEPE_Price", PEPE_Price);
             if (TRUMP_Price != null) Label_Dict.Add("TRUMP_Price", TRUMP_Price);
+            if (AVAX_Price != null) Label_Dict.Add("AVAX_Price", AVAX_Price);
+            if (HYPE_Price != null) Label_Dict.Add("HYPE_Price", HYPE_Price);
 
 
             if (XBT_Spread != null) Label_Dict.Add("XBT_Spread", XBT_Spread);
@@ -508,7 +525,6 @@ namespace IRTicker
             if (LTC_Spread != null) Label_Dict.Add("LTC_Spread", LTC_Spread);
             if (XRP_Spread != null) Label_Dict.Add("XRP_Spread", XRP_Spread);
             if (BCH_Spread != null) Label_Dict.Add("BCH_Spread", BCH_Spread);
-            if (EOS_Spread != null) Label_Dict.Add("EOS_Spread", EOS_Spread);
             if (ZRX_Spread != null) Label_Dict.Add("ZRX_Spread", ZRX_Spread);
             if (XLM_Spread != null) Label_Dict.Add("XLM_Spread", XLM_Spread);
             if (BAT_Spread != null) Label_Dict.Add("BAT_Spread", BAT_Spread);
@@ -541,6 +557,8 @@ namespace IRTicker
             if (WIF_Spread != null) Label_Dict.Add("WIF_Spread", WIF_Spread);
             if (PEPE_Spread != null) Label_Dict.Add("PEPE_Spread", PEPE_Spread);
             if (TRUMP_Spread != null) Label_Dict.Add("TRUMP_Spread", TRUMP_Spread);
+            if (AVAX_Spread != null) Label_Dict.Add("AVAX_Spread", AVAX_Spread);
+            if (HYPE_Spread != null) Label_Dict.Add("HYPE_Spread", HYPE_Spread);
         }
     }
 }
