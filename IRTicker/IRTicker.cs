@@ -21,6 +21,8 @@ using Newtonsoft.Json.Linq;
 // todo:
 // blinkstick tasks, a non-null CTS is never returned from the method, are we doing this right?
 // still show slack emoji even if BTCM sockets are down
+// avgPrice - when it's green / complete, and you change accounts, even though it's not complete (not $0) anymore, the value field is still highlighted green
+// notional sans fees tool time in the irAccounts page closed orders doesn't work for buy orders
 
 namespace IRTicker {
     public partial class IRTicker : Form {
