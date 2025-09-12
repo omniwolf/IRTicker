@@ -33,7 +33,7 @@ namespace IRTicker {
         public Dictionary<string, UIControls> UIControls_Dict;
         private List<string> Exchanges;
         List<string> IRdExchanges = new List<string>() { "IR", "IRUSD", "IRSGD" };
-        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "USDT", "DOT", "GRT", "AAVE", "YFI", "PMGT", "SNX", "COMP", "LINK", "ADA", "UNI", "MATIC", "DOGE", "ADA", "MANA", "SAND", "SHIB", "TRUMP", "AVAX", "PEPE", "RENDER", "WIF", "RLUSD" };  // we don't poll the shit coins as often to help with rate limiting
+        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "USDT", "DOT", "GRT", "AAVE", "YFI", "PMGT", "SNX", "COMP", "LINK", "ADA", "UNI", "MATIC", "DOGE", "ADA", "MANA", "SAND", "SHIB", "TRUMP", "AVAX", "PEPE", "RENDER", "WIF", "RLUSD", "BONK", "AUSD", "PENGU" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
         private BlinkStick bStick, bStickETH, bStickUSDT, bStickXRP;
@@ -155,7 +155,7 @@ namespace IRTicker {
             // Actually I'm not sure about the above comment, i think some of them do?  But the main issue is most of them have
             // currencies that we don't want to deal with, so we set the currencies manually here.  IR we want all currencies, so
             // we use the API.  This is probably not really smart, as the UI is static, so when new currencies turn up IR breaks.  meh
-            DCEs["IRSGD"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"DOT\",\"XLM\",\"GRT\",\"ETC\",\"LINK\",\"USDC\",\"USDT\",\"UNI\",\"ADA\",\"MATIC\",\"DOGE\",\"SAND\",\"MANA\",\"SOL\",\"SHIB\",\"WIF\",\"TRX\",\"RENDER\",\"RLUSD\",\"PEPE\",\"TRUMP\",\"AVAX\",\"HYPE\"";
+            DCEs["IRSGD"].PrimaryCurrencyCodes = "\"XBT\",\"ETH\",\"BCH\",\"LTC\",\"XRP\",\"DOT\",\"XLM\",\"GRT\",\"ETC\",\"LINK\",\"USDC\",\"USDT\",\"UNI\",\"ADA\",\"MATIC\",\"DOGE\",\"SAND\",\"MANA\",\"SOL\",\"SHIB\",\"WIF\",\"TRX\",\"RENDER\",\"RLUSD\",\"PEPE\",\"TRUMP\",\"AVAX\",\"HYPE\",\"AUSD\",\"BONK\",\"PENGU\"";
             DCEs["IRSGD"].SecondaryCurrencyCodes = "\"SGD\"";
 
             DCEs["IRUSD"].SecondaryCurrencyCodes = "\"USD\"";
@@ -384,6 +384,15 @@ namespace IRTicker {
             UIControls_Dict["IR"].HYPE_Label = IR_HYPE_Label1;
             UIControls_Dict["IR"].HYPE_Price = IR_HYPE_Label2;
             UIControls_Dict["IR"].HYPE_Spread = IR_HYPE_Label3;
+            UIControls_Dict["IR"].AUSD_Label = IR_AUSD_Label1;
+            UIControls_Dict["IR"].AUSD_Price = IR_AUSD_Label2;
+            UIControls_Dict["IR"].AUSD_Spread = IR_AUSD_Label3;
+            UIControls_Dict["IR"].BONK_Label = IR_BONK_Label1;
+            UIControls_Dict["IR"].BONK_Price = IR_BONK_Label2;
+            UIControls_Dict["IR"].BONK_Spread = IR_BONK_Label3;
+            UIControls_Dict["IR"].PENGU_Label = IR_PENGU_Label1;
+            UIControls_Dict["IR"].PENGU_Price = IR_PENGU_Label2;
+            UIControls_Dict["IR"].PENGU_Spread = IR_PENGU_Label3;
 
 
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
@@ -480,6 +489,15 @@ namespace IRTicker {
             UIControls_Dict["IRSGD"].HYPE_Label = IRSGD_HYPE_Label1;
             UIControls_Dict["IRSGD"].HYPE_Price = IRSGD_HYPE_Label2;
             UIControls_Dict["IRSGD"].HYPE_Spread = IRSGD_HYPE_Label3;
+            UIControls_Dict["IRSGD"].AUSD_Label = IRSGD_AUSD_Label1;
+            UIControls_Dict["IRSGD"].AUSD_Price = IRSGD_AUSD_Label2;
+            UIControls_Dict["IRSGD"].AUSD_Spread = IRSGD_AUSD_Label3;
+            UIControls_Dict["IRSGD"].BONK_Label = IRSGD_BONK_Label1;
+            UIControls_Dict["IRSGD"].BONK_Price = IRSGD_BONK_Label2;
+            UIControls_Dict["IRSGD"].BONK_Spread = IRSGD_BONK_Label3;
+            UIControls_Dict["IRSGD"].PENGU_Label = IRSGD_PENGU_Label1;
+            UIControls_Dict["IRSGD"].PENGU_Price = IRSGD_PENGU_Label2;
+            UIControls_Dict["IRSGD"].PENGU_Spread = IRSGD_PENGU_Label3;
 
 
             // IR USD
@@ -590,6 +608,15 @@ namespace IRTicker {
             UIControls_Dict["IRUSD"].HYPE_Label = IRUSD_HYPE_Label1;
             UIControls_Dict["IRUSD"].HYPE_Price = IRUSD_HYPE_Label2;
             UIControls_Dict["IRUSD"].HYPE_Spread = IRUSD_HYPE_Label3;
+            UIControls_Dict["IRUSD"].AUSD_Label = IRUSD_AUSD_Label1;
+            UIControls_Dict["IRUSD"].AUSD_Price = IRUSD_AUSD_Label2;
+            UIControls_Dict["IRUSD"].AUSD_Spread = IRUSD_AUSD_Label3;
+            UIControls_Dict["IRUSD"].BONK_Label = IRUSD_BONK_Label1;
+            UIControls_Dict["IRUSD"].BONK_Price = IRUSD_BONK_Label2;
+            UIControls_Dict["IRUSD"].BONK_Spread = IRUSD_BONK_Label3;
+            UIControls_Dict["IRUSD"].PENGU_Label = IRUSD_PENGU_Label1;
+            UIControls_Dict["IRUSD"].PENGU_Price = IRUSD_PENGU_Label2;
+            UIControls_Dict["IRUSD"].PENGU_Spread = IRUSD_PENGU_Label3;
 
 
             // BTCM

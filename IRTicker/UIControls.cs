@@ -55,6 +55,9 @@ namespace IRTicker
         public Label TRUMP_Label { get; set; }
         public Label AVAX_Label { get; set; }
         public Label HYPE_Label { get; set; }
+        public Label AUSD_Label { get; set; }
+        public Label BONK_Label { get; set; }
+        public Label PENGU_Label { get; set; }
 
         public Label XBT_Price { get; set; }
         public Label ETH_Price { get; set; }
@@ -95,6 +98,9 @@ namespace IRTicker
         public Label TRUMP_Price { get; set; }
         public Label AVAX_Price { get; set; }
         public Label HYPE_Price { get; set; }
+        public Label AUSD_Price { get; set; }
+        public Label BONK_Price { get; set; }
+        public Label PENGU_Price { get; set; }
 
 
         public Label XBT_Spread { get; set; }
@@ -136,6 +142,9 @@ namespace IRTicker
         public Label TRUMP_Spread { get; set; }
         public Label AVAX_Spread { get; set; }
         public Label HYPE_Spread { get; set; }
+        public Label AUSD_Spread { get; set; }
+        public Label BONK_Spread { get; set; }
+        public Label PENGU_Spread { get; set; }
 
         public ComboBox AvgPrice_BuySell { get; set; }
         public MaskedTextBox AvgPrice_NumCoins { get; set; }
@@ -194,6 +203,9 @@ namespace IRTicker
         public Label Account_TRUMP_Label { get; set; }
         public Label Account_AVAX_Label { get; set; }
         public Label Account_HYPE_Label { get; set; }
+        public Label Account_AUSD_Label { get; set; }
+        public Label Account_BONK_Label { get; set; }
+        public Label Account_PENGU_Label { get; set; }
 
         public Label Account_XBT_Value { get; set; }
         public Label Account_ETH_Value { get; set; }
@@ -237,6 +249,9 @@ namespace IRTicker
         public Label Account_TRUMP_Value { get; set; }
         public Label Account_AVAX_Value { get; set; }
         public Label Account_HYPE_Value { get; set; }
+        public Label Account_AUSD_Value { get; set; }
+        public Label Account_BONK_Value { get; set; }
+        public Label Account_PENGU_Value { get; set; }
 
 
         public Label Account_XBT_Total { get; set; }
@@ -285,6 +300,9 @@ namespace IRTicker
         public Label Account_TRUMP_Total { get; set; }
         public Label Account_AVAX_Total { get; set; }
         public Label Account_HYPE_Total { get; set; }
+        public Label Account_AUSD_Total { get; set; }
+        public Label Account_BONK_Total { get; set; }
+        public Label Account_PENGU_Total { get; set; }
 
 
 
@@ -337,6 +355,9 @@ namespace IRTicker
             if (Account_TRUMP_Label != null) Label_Dict["TRUMP_Account_Label"] = Account_TRUMP_Label;
             if (Account_AVAX_Label != null) Label_Dict["AVAX_Account_Label"] = Account_AVAX_Label;
             if (Account_HYPE_Label != null) Label_Dict["HYPE_Account_Label"] = Account_HYPE_Label;
+            if (Account_AUSD_Label != null) Label_Dict["AUSD_Account_Label"] = Account_AUSD_Label;
+            if (Account_BONK_Label != null) Label_Dict["BONK_Account_Label"] = Account_BONK_Label;
+            if (Account_PENGU_Label != null) Label_Dict["PENGU_Account_Label"] = Account_PENGU_Label;
 
 
             if (Account_XBT_Value != null) Label_Dict["XBT_Account_Value"] = Account_XBT_Value;
@@ -381,6 +402,9 @@ namespace IRTicker
             if (Account_TRUMP_Value != null) Label_Dict["TRUMP_Account_Value"] = Account_TRUMP_Value;
             if (Account_AVAX_Value != null) Label_Dict["AVAX_Account_Value"] = Account_AVAX_Value;
             if (Account_HYPE_Value != null) Label_Dict["HYPE_Account_Value"] = Account_HYPE_Value;
+            if (Account_AUSD_Value != null) Label_Dict["AUSD_Account_Value"] = Account_AUSD_Value;
+            if (Account_BONK_Value != null) Label_Dict["BONK_Account_Value"] = Account_BONK_Value;
+            if (Account_PENGU_Value != null) Label_Dict["PENGU_Account_Value"] = Account_PENGU_Value;
 
 
             if (Account_XBT_Total != null) Label_Dict["XBT_Account_Total"] = Account_XBT_Total;
@@ -429,6 +453,9 @@ namespace IRTicker
             if (Account_TRUMP_Total != null) Label_Dict["TRUMP_Account_Total"] = Account_TRUMP_Total;
             if (Account_AVAX_Total != null) Label_Dict["AVAX_Account_Total"] = Account_AVAX_Total;
             if (Account_HYPE_Total != null) Label_Dict["HYPE_Account_Total"] = Account_HYPE_Total;
+            if (Account_AUSD_Total != null) Label_Dict["AUSD_Account_Total"] = Account_AUSD_Total;
+            if (Account_BONK_Total != null) Label_Dict["BONK_Account_Total"] = Account_BONK_Total;
+            if (Account_PENGU_Total != null) Label_Dict["PENGU_Account_Total"] = Account_PENGU_Total;
         }
 
 
@@ -476,6 +503,9 @@ namespace IRTicker
             if (TRUMP_Label != null) Label_Dict.Add("TRUMP_Label", TRUMP_Label);
             if (AVAX_Label != null) Label_Dict.Add("AVAX_Label", AVAX_Label);
             if (HYPE_Label != null) Label_Dict.Add("HYPE_Label", HYPE_Label);
+            if (AUSD_Label != null) Label_Dict.Add("AUSD_Label", AUSD_Label);
+            if (BONK_Label != null) Label_Dict.Add("BONK_Label", BONK_Label);
+            if (PENGU_Label != null) Label_Dict.Add("PENGU_Label", PENGU_Label);
 
 
 
@@ -518,6 +548,9 @@ namespace IRTicker
             if (TRUMP_Price != null) Label_Dict.Add("TRUMP_Price", TRUMP_Price);
             if (AVAX_Price != null) Label_Dict.Add("AVAX_Price", AVAX_Price);
             if (HYPE_Price != null) Label_Dict.Add("HYPE_Price", HYPE_Price);
+            if (AUSD_Price != null) Label_Dict.Add("AUSD_Price", AUSD_Price);
+            if (BONK_Price != null) Label_Dict.Add("BONK_Price", BONK_Price);
+            if (PENGU_Price != null) Label_Dict.Add("PENGU_Price", PENGU_Price);
 
 
             if (XBT_Spread != null) Label_Dict.Add("XBT_Spread", XBT_Spread);
@@ -559,6 +592,9 @@ namespace IRTicker
             if (TRUMP_Spread != null) Label_Dict.Add("TRUMP_Spread", TRUMP_Spread);
             if (AVAX_Spread != null) Label_Dict.Add("AVAX_Spread", AVAX_Spread);
             if (HYPE_Spread != null) Label_Dict.Add("HYPE_Spread", HYPE_Spread);
+            if (AUSD_Spread != null) Label_Dict.Add("AUSD_Spread", AUSD_Spread);
+            if (BONK_Spread != null) Label_Dict.Add("BONK_Spread", BONK_Spread);
+            if (PENGU_Spread != null) Label_Dict.Add("PENGU_Spread", PENGU_Spread);
         }
     }
 }
