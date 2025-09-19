@@ -33,6 +33,15 @@ namespace IRTicker
             this.IRTickerTT_generic = new System.Windows.Forms.ToolTip(this.components);
             this.AccountTradingFees_value = new System.Windows.Forms.Label();
             this.GetAccounts_panel = new System.Windows.Forms.Panel();
+            this.AccountPENGU_total = new System.Windows.Forms.Label();
+            this.AccountPENGU_value = new System.Windows.Forms.Label();
+            this.AccountPENGU_label = new System.Windows.Forms.Label();
+            this.AccountBONK_total = new System.Windows.Forms.Label();
+            this.AccountBONK_value = new System.Windows.Forms.Label();
+            this.AccountBONK_label = new System.Windows.Forms.Label();
+            this.AccountAUSD_total = new System.Windows.Forms.Label();
+            this.AccountAUSD_value = new System.Windows.Forms.Label();
+            this.AccountAUSD_label = new System.Windows.Forms.Label();
             this.AccountHYPE_total = new System.Windows.Forms.Label();
             this.AccountHYPE_value = new System.Windows.Forms.Label();
             this.AccountHYPE_label = new System.Windows.Forms.Label();
@@ -214,15 +223,6 @@ namespace IRTicker
             this.AccountNZD_label = new System.Windows.Forms.Label();
             this.AccountAUD_total = new System.Windows.Forms.Label();
             this.AccountAUD_label = new System.Windows.Forms.Label();
-            this.AccountAUSD_total = new System.Windows.Forms.Label();
-            this.AccountAUSD_value = new System.Windows.Forms.Label();
-            this.AccountAUSD_label = new System.Windows.Forms.Label();
-            this.AccountBONK_total = new System.Windows.Forms.Label();
-            this.AccountBONK_value = new System.Windows.Forms.Label();
-            this.AccountBONK_label = new System.Windows.Forms.Label();
-            this.AccountPENGU_total = new System.Windows.Forms.Label();
-            this.AccountPENGU_value = new System.Windows.Forms.Label();
-            this.AccountPENGU_label = new System.Windows.Forms.Label();
             this.GetAccounts_panel.SuspendLayout();
             this.IRAccountAddress_panel.SuspendLayout();
             this.AccountClosedOrders_panel.SuspendLayout();
@@ -387,6 +387,102 @@ namespace IRTicker
             this.GetAccounts_panel.Name = "GetAccounts_panel";
             this.GetAccounts_panel.Size = new System.Drawing.Size(297, 678);
             this.GetAccounts_panel.TabIndex = 0;
+            // 
+            // AccountPENGU_total
+            // 
+            this.AccountPENGU_total.AutoSize = true;
+            this.AccountPENGU_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountPENGU_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountPENGU_total.Location = new System.Drawing.Point(84, 572);
+            this.AccountPENGU_total.Name = "AccountPENGU_total";
+            this.AccountPENGU_total.Size = new System.Drawing.Size(0, 18);
+            this.AccountPENGU_total.TabIndex = 153;
+            // 
+            // AccountPENGU_value
+            // 
+            this.AccountPENGU_value.AutoSize = true;
+            this.AccountPENGU_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountPENGU_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountPENGU_value.Location = new System.Drawing.Point(184, 572);
+            this.AccountPENGU_value.Name = "AccountPENGU_value";
+            this.AccountPENGU_value.Size = new System.Drawing.Size(0, 18);
+            this.AccountPENGU_value.TabIndex = 152;
+            // 
+            // AccountPENGU_label
+            // 
+            this.AccountPENGU_label.AutoSize = true;
+            this.AccountPENGU_label.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.AccountPENGU_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountPENGU_label.Location = new System.Drawing.Point(12, 572);
+            this.AccountPENGU_label.Name = "AccountPENGU_label";
+            this.AccountPENGU_label.Size = new System.Drawing.Size(72, 18);
+            this.AccountPENGU_label.TabIndex = 151;
+            this.AccountPENGU_label.Text = "PENGU:";
+            this.AccountPENGU_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountBONK_total
+            // 
+            this.AccountBONK_total.AutoSize = true;
+            this.AccountBONK_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountBONK_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountBONK_total.Location = new System.Drawing.Point(83, 312);
+            this.AccountBONK_total.Name = "AccountBONK_total";
+            this.AccountBONK_total.Size = new System.Drawing.Size(0, 18);
+            this.AccountBONK_total.TabIndex = 150;
+            // 
+            // AccountBONK_value
+            // 
+            this.AccountBONK_value.AutoSize = true;
+            this.AccountBONK_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountBONK_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountBONK_value.Location = new System.Drawing.Point(183, 312);
+            this.AccountBONK_value.Name = "AccountBONK_value";
+            this.AccountBONK_value.Size = new System.Drawing.Size(0, 18);
+            this.AccountBONK_value.TabIndex = 149;
+            // 
+            // AccountBONK_label
+            // 
+            this.AccountBONK_label.AutoSize = true;
+            this.AccountBONK_label.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.AccountBONK_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountBONK_label.Location = new System.Drawing.Point(12, 312);
+            this.AccountBONK_label.Name = "AccountBONK_label";
+            this.AccountBONK_label.Size = new System.Drawing.Size(60, 18);
+            this.AccountBONK_label.TabIndex = 148;
+            this.AccountBONK_label.Text = "BONK:";
+            this.AccountBONK_label.Click += new System.EventHandler(this.Account_label_Click);
+            // 
+            // AccountAUSD_total
+            // 
+            this.AccountAUSD_total.AutoSize = true;
+            this.AccountAUSD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountAUSD_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountAUSD_total.Location = new System.Drawing.Point(83, 232);
+            this.AccountAUSD_total.Name = "AccountAUSD_total";
+            this.AccountAUSD_total.Size = new System.Drawing.Size(0, 18);
+            this.AccountAUSD_total.TabIndex = 147;
+            // 
+            // AccountAUSD_value
+            // 
+            this.AccountAUSD_value.AutoSize = true;
+            this.AccountAUSD_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountAUSD_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.AccountAUSD_value.Location = new System.Drawing.Point(183, 232);
+            this.AccountAUSD_value.Name = "AccountAUSD_value";
+            this.AccountAUSD_value.Size = new System.Drawing.Size(0, 18);
+            this.AccountAUSD_value.TabIndex = 146;
+            // 
+            // AccountAUSD_label
+            // 
+            this.AccountAUSD_label.AutoSize = true;
+            this.AccountAUSD_label.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.AccountAUSD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AccountAUSD_label.Location = new System.Drawing.Point(12, 232);
+            this.AccountAUSD_label.Name = "AccountAUSD_label";
+            this.AccountAUSD_label.Size = new System.Drawing.Size(58, 18);
+            this.AccountAUSD_label.TabIndex = 145;
+            this.AccountAUSD_label.Text = "AUSD:";
+            this.AccountAUSD_label.Click += new System.EventHandler(this.Account_label_Click);
             // 
             // AccountHYPE_total
             // 
@@ -2319,99 +2415,6 @@ namespace IRTicker
             this.AccountAUD_label.TabIndex = 31;
             this.AccountAUD_label.Text = "AUD:";
             this.AccountAUD_label.Click += new System.EventHandler(this.fiatLabel_Click);
-            // 
-            // AccountAUSD_total
-            // 
-            this.AccountAUSD_total.AutoSize = true;
-            this.AccountAUSD_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountAUSD_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountAUSD_total.Location = new System.Drawing.Point(83, 232);
-            this.AccountAUSD_total.Name = "AccountAUSD_total";
-            this.AccountAUSD_total.Size = new System.Drawing.Size(0, 18);
-            this.AccountAUSD_total.TabIndex = 147;
-            // 
-            // AccountAUSD_value
-            // 
-            this.AccountAUSD_value.AutoSize = true;
-            this.AccountAUSD_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountAUSD_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountAUSD_value.Location = new System.Drawing.Point(183, 232);
-            this.AccountAUSD_value.Name = "AccountAUSD_value";
-            this.AccountAUSD_value.Size = new System.Drawing.Size(0, 18);
-            this.AccountAUSD_value.TabIndex = 146;
-            // 
-            // AccountAUSD_label
-            // 
-            this.AccountAUSD_label.AutoSize = true;
-            this.AccountAUSD_label.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.AccountAUSD_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountAUSD_label.Location = new System.Drawing.Point(12, 232);
-            this.AccountAUSD_label.Name = "AccountAUSD_label";
-            this.AccountAUSD_label.Size = new System.Drawing.Size(58, 18);
-            this.AccountAUSD_label.TabIndex = 145;
-            this.AccountAUSD_label.Text = "AUSD:";
-            // 
-            // AccountBONK_total
-            // 
-            this.AccountBONK_total.AutoSize = true;
-            this.AccountBONK_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountBONK_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBONK_total.Location = new System.Drawing.Point(83, 312);
-            this.AccountBONK_total.Name = "AccountBONK_total";
-            this.AccountBONK_total.Size = new System.Drawing.Size(0, 18);
-            this.AccountBONK_total.TabIndex = 150;
-            // 
-            // AccountBONK_value
-            // 
-            this.AccountBONK_value.AutoSize = true;
-            this.AccountBONK_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountBONK_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountBONK_value.Location = new System.Drawing.Point(183, 312);
-            this.AccountBONK_value.Name = "AccountBONK_value";
-            this.AccountBONK_value.Size = new System.Drawing.Size(0, 18);
-            this.AccountBONK_value.TabIndex = 149;
-            // 
-            // AccountBONK_label
-            // 
-            this.AccountBONK_label.AutoSize = true;
-            this.AccountBONK_label.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.AccountBONK_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountBONK_label.Location = new System.Drawing.Point(12, 312);
-            this.AccountBONK_label.Name = "AccountBONK_label";
-            this.AccountBONK_label.Size = new System.Drawing.Size(60, 18);
-            this.AccountBONK_label.TabIndex = 148;
-            this.AccountBONK_label.Text = "BONK:";
-            // 
-            // AccountPENGU_total
-            // 
-            this.AccountPENGU_total.AutoSize = true;
-            this.AccountPENGU_total.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountPENGU_total.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountPENGU_total.Location = new System.Drawing.Point(84, 572);
-            this.AccountPENGU_total.Name = "AccountPENGU_total";
-            this.AccountPENGU_total.Size = new System.Drawing.Size(0, 18);
-            this.AccountPENGU_total.TabIndex = 153;
-            // 
-            // AccountPENGU_value
-            // 
-            this.AccountPENGU_value.AutoSize = true;
-            this.AccountPENGU_value.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountPENGU_value.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.AccountPENGU_value.Location = new System.Drawing.Point(184, 572);
-            this.AccountPENGU_value.Name = "AccountPENGU_value";
-            this.AccountPENGU_value.Size = new System.Drawing.Size(0, 18);
-            this.AccountPENGU_value.TabIndex = 152;
-            // 
-            // AccountPENGU_label
-            // 
-            this.AccountPENGU_label.AutoSize = true;
-            this.AccountPENGU_label.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.AccountPENGU_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AccountPENGU_label.Location = new System.Drawing.Point(12, 572);
-            this.AccountPENGU_label.Name = "AccountPENGU_label";
-            this.AccountPENGU_label.Size = new System.Drawing.Size(72, 18);
-            this.AccountPENGU_label.TabIndex = 151;
-            this.AccountPENGU_label.Text = "PENGU:";
             // 
             // IRAccountsForm
             // 
