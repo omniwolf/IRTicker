@@ -1516,7 +1516,7 @@ namespace IRTicker {
                 }
                 else BTCfee = -1;  // tells the system to signal failure on the "Last updated" label
 
-                feeTup = Utilities.Get("https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=VGGBNCFAISMZAQKC1SDN92WDI1WF75KDKP");
+                feeTup = Utilities.Get("https://api.etherscan.io/v2/api?chainid=1&module=gastracker&action=gasoracle&apikey=VGGBNCFAISMZAQKC1SDN92WDI1WF75KDKP");
                 if (feeTup.Item1) {
                     EtherscanRoot ESData;
                     try {
@@ -3346,18 +3346,12 @@ namespace IRTicker {
 
         public class EGSRoot
         {
-            public int fast { get; set; }
-            public int fastest { get; set; }
-            public int safeLow { get; set; }
-            public int average { get; set; }
-            public double block_time { get; set; }
-            public int blockNum { get; set; }
-            public double speed { get; set; }
-            public double safeLowWait { get; set; }
-            public double avgWait { get; set; }
-            public double fastWait { get; set; }
-            public double fastestWait { get; set; }
-            public GasPriceRange gasPriceRange { get; set; }
+            public string LastBlock { get; set; }
+            public string SafeGasPrice { get; set; }
+            public string ProposeGasPrice { get; set; }
+            public string FastGasPrice { get; set; }
+            public string suggestBaseFee { get; set; }
+            public string gasUsedRatio { get; set; }
         }
         private void Balance_button_Click(object sender, EventArgs e) {
             if (null != pIR) {
