@@ -70,10 +70,8 @@ namespace IRTicker
             switch (platform) {
                 case Platform.IROTC:
                     return pIR.GetAccounts(Properties.Settings.Default.IROTCAPIKey, Properties.Settings.Default.IROTCAPISecret);
-                    break;
                 case Platform.IROTCSG:
                     return pIR.GetAccounts(Properties.Settings.Default.IROTCSGAPIKey, Properties.Settings.Default.IROTCSGAPISecret);
-                    break;
             }
             Debug.Print("In Balance class, should never get here.  tried to pull IR settings for some thing we don't know about");
              return null;
