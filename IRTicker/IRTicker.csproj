@@ -194,6 +194,7 @@
     <Compile Include="BalSettings.Designer.cs">
       <DependentUpon>BalSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="BinanceClient.cs" />
     <Compile Include="Coinbase-trade\CBAccountsForm.cs">
       <SubType>Form</SubType>
     </Compile>

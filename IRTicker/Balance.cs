@@ -1,18 +1,19 @@
-﻿using System;
+﻿using IndependentReserve.DotNetClientApi.Data;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Net;
-using System.IO;
-using System.Diagnostics;
-using Newtonsoft.Json;
-using IndependentReserve.DotNetClientApi.Data;
-using System.Globalization;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace IRTicker
 {
@@ -62,7 +63,7 @@ namespace IRTicker
             B2C2,
             Coinbase,
             MetaMask,
-            TrigonX
+            Binance
         }
 
         private async Task<Dictionary<string, Account>> pullAccounts(Platform platform) {
@@ -231,9 +232,10 @@ namespace IRTicker
             return RowCount;
         }
 
-        private async void DrawTrigonX() {
-            string platformName = "TrigonX";
-            if (string.IsNullOrEmpty(Properties.Settings.Default.TrigonXToken)) {
+        private async void DrawBinance() {
+            string platformName = "Binance";
+            if (string.IsNullOrEmpty(Properties.Settings.Default.BinanceAPIkey) || string.IsNullOrEmpty(Properties.Settings.Default.BinanceAPIsecret))
+            {
                 balSetting_form = new BalSettings();
                 balSetting_form.Show();
                 Platform_comboBox.SelectedIndex = 0;
@@ -241,10 +243,10 @@ namespace IRTicker
                 return;
             }
 
-            /// Will return something like this on a good day:
-            /// 
-            /// {"ADA":"0","USD":"0.0045115155","ETH":"0","UST":"-0.0068","XRP":"0.000001","AUD":"-0.006411","BTC":"0","BCH":"0","DOT":"0","BNB":"0","CAD":"0","CHF":"0","CNH":"0","DOG":"0","EOS":"0","ETC":"0","EUR":"0","GBP":"0","ICP":"0","JPY":"0","KSM":"0","LNK":"0","LTC":"0","MXN":"0","NZD":"0","SGD":"0","TRX":"0","UNI":"0","USC":"0","XAU":"0","XLM":"0","XMR":"0","XTZ":"0","ZEC":"0"}
-            Task<string> res = Utilities.GetWebData("https://trading.trigonx.com/otc/api/customer/", "Token " + Properties.Settings.Default.TrigonXToken);
+            BinanceClient binanceClient = new BinanceClient();
+
+            // let the downloading begin!
+            Task<string> res = binanceClient.GetSpotBalancesAsync(Properties.Settings.Default.BinanceAPIkey, Properties.Settings.Default.BinanceAPIsecret);
 
             if (!masterBalanceDict.ContainsKey(platformName))
                 masterBalanceDict.Add(platformName, new Dictionary<string, BalanceData>());
@@ -253,55 +255,70 @@ namespace IRTicker
 
             ClearDynamicRows(DCE_IR.SecondaryCurrencyList);
             ClearDynamicRows(IRCurrencies_and_extras);
-            LoanSlushDecode(Properties.Settings.Default.LoanSlushEncoded_TrigonX, platformName);
+            LoanSlushDecode(Properties.Settings.Default.LoanSlushEncoded_Binance, platformName);
 
-            string TrigonXres = await res;
-            if (string.IsNullOrEmpty(TrigonXres)) {
-                TotalBalDict.FirstOrDefault().Value.Text = "Failed to pull TrigonX data";
+            string binanceRes = await res;
+
+            if (string.IsNullOrEmpty(binanceRes)) {
+                TotalBalDict.FirstOrDefault().Value.Text = "Failed to pull " + platformName + " data";
             }
             else {
-                Dictionary<string, Account> TrigonXBalances = parseTrigonXResponse(TrigonXres);
-                DrawDynamicRows(DCE_IR.SecondaryCurrencyList, TrigonXBalances, false, platformName);
+                Dictionary<string, Account> BinanceBalances = parseBinanceResponse(binanceRes);
+                DrawDynamicRows(DCE_IR.SecondaryCurrencyList, BinanceBalances, false, platformName);
 
-                DrawDynamicRows(IRCurrencies_and_extras, TrigonXBalances, true, platformName);
+                DrawDynamicRows(IRCurrencies_and_extras, BinanceBalances, true, platformName);
             }
         }
 
-        private Dictionary<string, Account> parseTrigonXResponse(string jsonResp) {
-            Dictionary<string, Account> Balances = new Dictionary<string, Account>();
-            List<TrigonXResponse> TrigonDeserialised;
+        private Dictionary<string, Account> parseBinanceResponse(string binanceRes) {
+
+            Dictionary<string, Account> balances = new Dictionary<string, Account>();
+
+            Binance_AccountResponse acct;
             try {
-                TrigonDeserialised = JsonConvert.DeserializeObject<List<TrigonXResponse>>(jsonResp);
+                acct = JsonConvert.DeserializeObject<Binance_AccountResponse>(binanceRes);
             }
-            catch (Exception ex) {
-                Debug.Print("Could not parse Trigon response: " + ex.Message);
-                return Balances;
+            catch {
+                Debug.Print("parseBinanceResponse: try/catch could not deserialize response");
+                return balances;
+            }
+            if (acct == null) {
+                Debug.Print("parseBinanceResponse: could not deserialize response");
+                return balances;
             }
 
-            foreach (KeyValuePair<string, double> bal in TrigonDeserialised.FirstOrDefault().balances) {
-                string currency = bal.Key;
+            // let's spin through the balances and build the Account dictionary
+            foreach (Binance_Balance crypto in acct.Balances) {
+                string currency = crypto.Asset;
                 switch (currency) {
                     case "BTC":
                         currency = "XBT";
                         break;
                 }
+
+                // if it's one of our Balance currencies, or a fiat currency we care about
                 if (IRCurrencies_and_extras.Contains(currency) || DCE_IR.SecondaryCurrencyList.Contains(currency)) {
                     Account tempAcc = new Account();
 
                     if (Enum.TryParse(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(currency.ToLower()), out CurrencyCode currencyEnum)) {
                         tempAcc.CurrencyCode = currencyEnum;
                     }
-                    else Debug.Print("Cannot parse " + currency + " in TrigonX for the ticker");
+                    else {
+                        Debug.Print("Balances^2: Cannot parse " + currency + " from Binance API response into a known crypto");
+                        continue;
+                    }
 
-                    tempAcc.TotalBalance = Convert.ToDecimal(bal.Value);
+                    tempAcc.TotalBalance = Convert.ToDecimal(crypto.Free);
 
-                    tempAcc.AccountStatus = AccountStatus.Active;
-                    Balances.Add(currency, tempAcc);
+                    tempAcc.AccountStatus = AccountStatus.Active;  // just assume it's active
+                    balances.Add(currency, tempAcc);
+
                 }
-            }
-            return Balances;
-        }
 
+            }
+            return balances;
+
+        }
 
         private async void DrawB2C2() {
             string platformName = "B2C2";
@@ -519,8 +536,8 @@ namespace IRTicker
                 case "IROTC MetaMask":
                     Properties.Settings.Default.LoanSlushEncoded_IROTCMetaMask = loanSlushEncoded;
                     break;
-                case "TrigonX":
-                    Properties.Settings.Default.LoanSlushEncoded_TrigonX = loanSlushEncoded;
+                case "Binance":
+                    Properties.Settings.Default.LoanSlushEncoded_Binance = loanSlushEncoded;
                     break;
             }
 
@@ -571,9 +588,6 @@ namespace IRTicker
                 switch (slackPlatformName) {
                     case "Independent Reserve":
                         slackPlatformName = ":ir:";
-                        break;
-                    case "TrigonX":
-                        slackPlatformName = ":trigon:";
                         break;
                     default:
                         slackPlatformName = "`" + slackPlatformName + "`";
@@ -984,9 +998,9 @@ namespace IRTicker
                     SaveLoanSlush = true;
                     break;
 
-                case "TrigonX":
+                case "Binance":
                     SaveLoanSlush = false;
-                    DrawTrigonX();
+                    DrawBinance();
                     SaveLoanSlush = true;
                     break;
 
@@ -1140,18 +1154,30 @@ namespace IRTicker
             public double CreditLimit { get; set; }
         }
 
-        public class TrigonXResponse
-        {
-            public List<Pair> pairs { get; set; }
-            public string credit_limit { get; set; }
-            public string credit_used { get; set; }
-            public string discretion_bps { get; set; }
-            public Dictionary<string, double> balances { get; set; }
-            //public Balances balances { get; set; }
-            public string name { get; set; }
-            public object credit_limit_since { get; set; }
-            public object customer_template { get; set; }
-            public string internal_account { get; set; }
+        class Binance_AccountResponse {
+            [JsonProperty("accountType")]
+            public string AccountType { get; set; } = "";
+
+            [JsonProperty("updateTime")]
+            public long UpdateTime { get; set; }
+            [JsonProperty("canTrade")]
+            public bool CanTrade { get; set; }
+            [JsonProperty("canWithdraw")]
+            public bool CanWithdraw { get; set; }
+
+            [JsonProperty("balances")]
+            public List<Binance_Balance> Balances { get; set; } = new List<Binance_Balance>();
+        }
+
+        class Binance_Balance {
+            [JsonProperty("asset")]
+            public string Asset { get; set; } = "";
+
+            [JsonProperty("free")]
+            public string Free { get; set; } = "0";
+
+            [JsonProperty("locked")]
+            public string Locked { get; set; } = "0";
         }
 
         private void BalSettings_button_Click(object sender, EventArgs e) {

@@ -44,7 +44,7 @@ namespace IRTicker
             "Independent Reserve IROTC",
             "Independent Reserve IROTCSG",
             "B2C2",
-            "TrigonX",
+            "Binance",
             "Coinbase",
             "IROTC MetaMask"});
             this.Platform_comboBox.Location = new System.Drawing.Point(12, 12);

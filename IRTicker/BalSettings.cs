@@ -27,7 +27,8 @@ namespace IRTicker
             BalSettingsCoinbaseAPISecret_textbox.Text = Properties.Settings.Default.CoinbaseAPISecret;
             BalSettingsCoinbasePassPhrase_textbox.Text = Properties.Settings.Default.CoinbasePassPhrase;
 
-            BalSettingsTrigonXToken_textbox.Text = Properties.Settings.Default.TrigonXToken;
+            BalSettingsBinanceAPIKey_textbox.Text = Properties.Settings.Default.BinanceAPIkey;
+            BalSettingsBinanceAPISecret_textbox.Text = Properties.Settings.Default.BinanceAPIsecret;
 
             BalSettingsETHWallet_textbox.Text = Properties.Settings.Default.ETHWalletAddress;
 
@@ -54,7 +55,8 @@ namespace IRTicker
             Properties.Settings.Default.CoinbaseAPISecret = BalSettingsCoinbaseAPISecret_textbox.Text;
             Properties.Settings.Default.CoinbasePassPhrase = BalSettingsCoinbasePassPhrase_textbox.Text;
 
-            Properties.Settings.Default.TrigonXToken = BalSettingsTrigonXToken_textbox.Text;
+            Properties.Settings.Default.BinanceAPIkey = BalSettingsBinanceAPIKey_textbox.Text;
+            Properties.Settings.Default.BinanceAPIsecret = BalSettingsBinanceAPISecret_textbox.Text;
 
             Properties.Settings.Default.ETHWalletAddress = BalSettingsETHWallet_textbox.Text;
 
@@ -79,6 +81,7 @@ namespace IRTicker
             BalSettingsIROTCAPISecret_textbox.Text = Properties.Settings.Default.IRAPIPrivKey;
         }
 
+        // IROTC-SG "Copy from currently seleceted amount" button
         private void button1_Click(object sender, EventArgs e) {
             BalSettingsIROTCSGAPIKey_textbox.Text = Properties.Settings.Default.IRAPIPubKey;
             BalSettingsIROTCSGAPISecret_textbox.Text = Properties.Settings.Default.IRAPIPrivKey;

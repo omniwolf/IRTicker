@@ -12,7 +12,7 @@ namespace IRTicker.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.1.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.14.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -566,12 +566,12 @@ namespace IRTicker.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string TrigonXToken {
+        public string BinanceAPIkey {
             get {
-                return ((string)(this["TrigonXToken"]));
+                return ((string)(this["BinanceAPIkey"]));
             }
             set {
-                this["TrigonXToken"] = value;
+                this["BinanceAPIkey"] = value;
             }
         }
         
@@ -638,12 +638,12 @@ namespace IRTicker.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string LoanSlushEncoded_TrigonX {
+        public string LoanSlushEncoded_Binance {
             get {
-                return ((string)(this["LoanSlushEncoded_TrigonX"]));
+                return ((string)(this["LoanSlushEncoded_Binance"]));
             }
             set {
-                this["LoanSlushEncoded_TrigonX"] = value;
+                this["LoanSlushEncoded_Binance"] = value;
             }
         }
         
@@ -704,6 +704,18 @@ namespace IRTicker.Properties {
             }
             set {
                 this["LoanSlushEncodedIROTCSG"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string BinanceAPIsecret {
+            get {
+                return ((string)(this["BinanceAPIsecret"]));
+            }
+            set {
+                this["BinanceAPIsecret"] = value;
             }
         }
     }

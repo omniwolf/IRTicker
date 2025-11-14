@@ -137,7 +137,7 @@
     <Setting Name="LoanSlushEncoded_Coinbase" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="TrigonXToken" Type="System.String" Scope="User">
+    <Setting Name="BinanceAPIkey" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="ETHWalletAddress" Type="System.String" Scope="User">
@@ -155,7 +155,7 @@
     <Setting Name="GDriveFolder_BalSettings" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="LoanSlushEncoded_TrigonX" Type="System.String" Scope="User">
+    <Setting Name="LoanSlushEncoded_Binance" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="IROTCAPIKey" Type="System.String" Scope="User">
@@ -171,6 +171,9 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="LoanSlushEncodedIROTCSG" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="BinanceAPIsecret" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

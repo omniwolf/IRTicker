@@ -39,9 +39,11 @@ namespace IRTicker
             this.BalSettingsCoinbaseAPIKey_label = new System.Windows.Forms.Label();
             this.BalSettingsSave_button = new System.Windows.Forms.Button();
             this.BalSettingsDiscard_button = new System.Windows.Forms.Button();
-            this.BalSettingsTrigonX_groupbox = new System.Windows.Forms.GroupBox();
-            this.BalSettingsTrigonXToken_textbox = new System.Windows.Forms.TextBox();
-            this.BalSettingsTrigonXToken_label = new System.Windows.Forms.Label();
+            this.BalSettingsBinance_groupbox = new System.Windows.Forms.GroupBox();
+            this.BalSettingsBinanceAPISecret_textbox = new System.Windows.Forms.TextBox();
+            this.BalSettingsBinanceAPISecret_label = new System.Windows.Forms.Label();
+            this.BalSettingsBinanceAPIKey_textbox = new System.Windows.Forms.TextBox();
+            this.BalSettingsBinanceAPIKey_label = new System.Windows.Forms.Label();
             this.BalSettingsETHWallet_groupbox = new System.Windows.Forms.GroupBox();
             this.BalSettingsETHWallet_textbox = new System.Windows.Forms.TextBox();
             this.BalSettingsETHWallet_label = new System.Windows.Forms.Label();
@@ -55,20 +57,20 @@ namespace IRTicker
             this.BalSettingsGDriveFolder_label = new System.Windows.Forms.Label();
             this.BalSettingsGDrive_folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.BalSettingsIR_groupbox1 = new System.Windows.Forms.GroupBox();
+            this.BalSettingsCopyToIROTC_button = new System.Windows.Forms.Button();
             this.BalSettingsIROTCAPISecret_textbox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.BalSettingsIROTCAPIKey_textbox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.BalSettingsIR_groupbox2 = new System.Windows.Forms.GroupBox();
-            this.BalSettingsCopyToIROTC_button = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.BalSettingsIROTCSGAPISecret_textbox = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.BalSettingsIROTCSGAPIKey_textbox = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.BalSettingsB2C2_groupbox.SuspendLayout();
             this.BalSettingsCoinbase_groupbox.SuspendLayout();
-            this.BalSettingsTrigonX_groupbox.SuspendLayout();
+            this.BalSettingsBinance_groupbox.SuspendLayout();
             this.BalSettingsETHWallet_groupbox.SuspendLayout();
             this.BalSettingsSlack_groupbox.SuspendLayout();
             this.BalSettingsGDrive_groupbox.SuspendLayout();
@@ -189,41 +191,59 @@ namespace IRTicker
             this.BalSettingsDiscard_button.UseVisualStyleBackColor = true;
             this.BalSettingsDiscard_button.Click += new System.EventHandler(this.BalSettingsDiscard_button_Click);
             // 
-            // BalSettingsTrigonX_groupbox
+            // BalSettingsBinance_groupbox
             // 
-            this.BalSettingsTrigonX_groupbox.Controls.Add(this.BalSettingsTrigonXToken_textbox);
-            this.BalSettingsTrigonX_groupbox.Controls.Add(this.BalSettingsTrigonXToken_label);
-            this.BalSettingsTrigonX_groupbox.Location = new System.Drawing.Point(284, 108);
-            this.BalSettingsTrigonX_groupbox.Name = "BalSettingsTrigonX_groupbox";
-            this.BalSettingsTrigonX_groupbox.Size = new System.Drawing.Size(266, 68);
-            this.BalSettingsTrigonX_groupbox.TabIndex = 2;
-            this.BalSettingsTrigonX_groupbox.TabStop = false;
-            this.BalSettingsTrigonX_groupbox.Text = "TrigonX";
+            this.BalSettingsBinance_groupbox.Controls.Add(this.BalSettingsBinanceAPISecret_textbox);
+            this.BalSettingsBinance_groupbox.Controls.Add(this.BalSettingsBinanceAPISecret_label);
+            this.BalSettingsBinance_groupbox.Controls.Add(this.BalSettingsBinanceAPIKey_textbox);
+            this.BalSettingsBinance_groupbox.Controls.Add(this.BalSettingsBinanceAPIKey_label);
+            this.BalSettingsBinance_groupbox.Location = new System.Drawing.Point(284, 183);
+            this.BalSettingsBinance_groupbox.Name = "BalSettingsBinance_groupbox";
+            this.BalSettingsBinance_groupbox.Size = new System.Drawing.Size(266, 132);
+            this.BalSettingsBinance_groupbox.TabIndex = 2;
+            this.BalSettingsBinance_groupbox.TabStop = false;
+            this.BalSettingsBinance_groupbox.Text = "Binance";
             // 
-            // BalSettingsTrigonXToken_textbox
+            // BalSettingsBinanceAPISecret_textbox
             // 
-            this.BalSettingsTrigonXToken_textbox.Location = new System.Drawing.Point(64, 34);
-            this.BalSettingsTrigonXToken_textbox.Name = "BalSettingsTrigonXToken_textbox";
-            this.BalSettingsTrigonXToken_textbox.Size = new System.Drawing.Size(188, 20);
-            this.BalSettingsTrigonXToken_textbox.TabIndex = 1;
-            this.BalSettingsTrigonXToken_textbox.UseSystemPasswordChar = true;
+            this.BalSettingsBinanceAPISecret_textbox.Location = new System.Drawing.Point(80, 56);
+            this.BalSettingsBinanceAPISecret_textbox.Name = "BalSettingsBinanceAPISecret_textbox";
+            this.BalSettingsBinanceAPISecret_textbox.Size = new System.Drawing.Size(172, 20);
+            this.BalSettingsBinanceAPISecret_textbox.TabIndex = 9;
+            this.BalSettingsBinanceAPISecret_textbox.UseSystemPasswordChar = true;
             // 
-            // BalSettingsTrigonXToken_label
+            // BalSettingsBinanceAPISecret_label
             // 
-            this.BalSettingsTrigonXToken_label.AutoSize = true;
-            this.BalSettingsTrigonXToken_label.Location = new System.Drawing.Point(6, 37);
-            this.BalSettingsTrigonXToken_label.Name = "BalSettingsTrigonXToken_label";
-            this.BalSettingsTrigonXToken_label.Size = new System.Drawing.Size(41, 13);
-            this.BalSettingsTrigonXToken_label.TabIndex = 0;
-            this.BalSettingsTrigonXToken_label.Text = "Token:";
+            this.BalSettingsBinanceAPISecret_label.AutoSize = true;
+            this.BalSettingsBinanceAPISecret_label.Location = new System.Drawing.Point(6, 59);
+            this.BalSettingsBinanceAPISecret_label.Name = "BalSettingsBinanceAPISecret_label";
+            this.BalSettingsBinanceAPISecret_label.Size = new System.Drawing.Size(59, 13);
+            this.BalSettingsBinanceAPISecret_label.TabIndex = 8;
+            this.BalSettingsBinanceAPISecret_label.Text = "API secret:";
+            // 
+            // BalSettingsBinanceAPIKey_textbox
+            // 
+            this.BalSettingsBinanceAPIKey_textbox.Location = new System.Drawing.Point(80, 30);
+            this.BalSettingsBinanceAPIKey_textbox.Name = "BalSettingsBinanceAPIKey_textbox";
+            this.BalSettingsBinanceAPIKey_textbox.Size = new System.Drawing.Size(172, 20);
+            this.BalSettingsBinanceAPIKey_textbox.TabIndex = 7;
+            // 
+            // BalSettingsBinanceAPIKey_label
+            // 
+            this.BalSettingsBinanceAPIKey_label.AutoSize = true;
+            this.BalSettingsBinanceAPIKey_label.Location = new System.Drawing.Point(6, 33);
+            this.BalSettingsBinanceAPIKey_label.Name = "BalSettingsBinanceAPIKey_label";
+            this.BalSettingsBinanceAPIKey_label.Size = new System.Drawing.Size(47, 13);
+            this.BalSettingsBinanceAPIKey_label.TabIndex = 6;
+            this.BalSettingsBinanceAPIKey_label.Text = "API key:";
             // 
             // BalSettingsETHWallet_groupbox
             // 
             this.BalSettingsETHWallet_groupbox.Controls.Add(this.BalSettingsETHWallet_textbox);
             this.BalSettingsETHWallet_groupbox.Controls.Add(this.BalSettingsETHWallet_label);
-            this.BalSettingsETHWallet_groupbox.Location = new System.Drawing.Point(284, 183);
+            this.BalSettingsETHWallet_groupbox.Location = new System.Drawing.Point(284, 108);
             this.BalSettingsETHWallet_groupbox.Name = "BalSettingsETHWallet_groupbox";
-            this.BalSettingsETHWallet_groupbox.Size = new System.Drawing.Size(266, 132);
+            this.BalSettingsETHWallet_groupbox.Size = new System.Drawing.Size(266, 68);
             this.BalSettingsETHWallet_groupbox.TabIndex = 3;
             this.BalSettingsETHWallet_groupbox.TabStop = false;
             this.BalSettingsETHWallet_groupbox.Text = "ETH wallet";
@@ -234,7 +254,6 @@ namespace IRTicker
             this.BalSettingsETHWallet_textbox.Name = "BalSettingsETHWallet_textbox";
             this.BalSettingsETHWallet_textbox.Size = new System.Drawing.Size(160, 20);
             this.BalSettingsETHWallet_textbox.TabIndex = 1;
-            this.BalSettingsETHWallet_textbox.UseSystemPasswordChar = true;
             // 
             // BalSettingsETHWallet_label
             // 
@@ -334,6 +353,17 @@ namespace IRTicker
             this.BalSettingsIR_groupbox1.TabStop = false;
             this.BalSettingsIR_groupbox1.Text = "IROTC";
             // 
+            // BalSettingsCopyToIROTC_button
+            // 
+            this.BalSettingsCopyToIROTC_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BalSettingsCopyToIROTC_button.Location = new System.Drawing.Point(64, 8);
+            this.BalSettingsCopyToIROTC_button.Name = "BalSettingsCopyToIROTC_button";
+            this.BalSettingsCopyToIROTC_button.Size = new System.Drawing.Size(188, 23);
+            this.BalSettingsCopyToIROTC_button.TabIndex = 6;
+            this.BalSettingsCopyToIROTC_button.Text = "Copy from currently selected account";
+            this.BalSettingsCopyToIROTC_button.UseVisualStyleBackColor = true;
+            this.BalSettingsCopyToIROTC_button.Click += new System.EventHandler(this.BalSettingsCopyToIROTC_button_Click);
+            // 
             // BalSettingsIROTCAPISecret_textbox
             // 
             this.BalSettingsIROTCAPISecret_textbox.Location = new System.Drawing.Point(64, 61);
@@ -381,16 +411,16 @@ namespace IRTicker
             this.BalSettingsIR_groupbox2.TabStop = false;
             this.BalSettingsIR_groupbox2.Text = "IROTC-SG";
             // 
-            // BalSettingsCopyToIROTC_button
+            // button1
             // 
-            this.BalSettingsCopyToIROTC_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BalSettingsCopyToIROTC_button.Location = new System.Drawing.Point(64, 8);
-            this.BalSettingsCopyToIROTC_button.Name = "BalSettingsCopyToIROTC_button";
-            this.BalSettingsCopyToIROTC_button.Size = new System.Drawing.Size(188, 23);
-            this.BalSettingsCopyToIROTC_button.TabIndex = 6;
-            this.BalSettingsCopyToIROTC_button.Text = "Copy from currently selected account";
-            this.BalSettingsCopyToIROTC_button.UseVisualStyleBackColor = true;
-            this.BalSettingsCopyToIROTC_button.Click += new System.EventHandler(this.BalSettingsCopyToIROTC_button_Click);
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(64, 8);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(188, 23);
+            this.button1.TabIndex = 11;
+            this.button1.Text = "Copy from currently selected account";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // BalSettingsIROTCSGAPISecret_textbox
             // 
@@ -399,6 +429,15 @@ namespace IRTicker
             this.BalSettingsIROTCSGAPISecret_textbox.Size = new System.Drawing.Size(188, 20);
             this.BalSettingsIROTCSGAPISecret_textbox.TabIndex = 10;
             this.BalSettingsIROTCSGAPISecret_textbox.UseSystemPasswordChar = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 37);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(47, 13);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "API key:";
             // 
             // label3
             // 
@@ -416,26 +455,6 @@ namespace IRTicker
             this.BalSettingsIROTCSGAPIKey_textbox.Size = new System.Drawing.Size(188, 20);
             this.BalSettingsIROTCSGAPIKey_textbox.TabIndex = 8;
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 37);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(47, 13);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "API key:";
-            // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(64, 8);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(188, 23);
-            this.button1.TabIndex = 11;
-            this.button1.Text = "Copy from currently selected account";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // BalSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -447,7 +466,7 @@ namespace IRTicker
             this.Controls.Add(this.BalSettingsGDrive_groupbox);
             this.Controls.Add(this.BalSettingsSlack_groupbox);
             this.Controls.Add(this.BalSettingsETHWallet_groupbox);
-            this.Controls.Add(this.BalSettingsTrigonX_groupbox);
+            this.Controls.Add(this.BalSettingsBinance_groupbox);
             this.Controls.Add(this.BalSettingsDiscard_button);
             this.Controls.Add(this.BalSettingsSave_button);
             this.Controls.Add(this.BalSettingsCoinbase_groupbox);
@@ -463,8 +482,8 @@ namespace IRTicker
             this.BalSettingsB2C2_groupbox.PerformLayout();
             this.BalSettingsCoinbase_groupbox.ResumeLayout(false);
             this.BalSettingsCoinbase_groupbox.PerformLayout();
-            this.BalSettingsTrigonX_groupbox.ResumeLayout(false);
-            this.BalSettingsTrigonX_groupbox.PerformLayout();
+            this.BalSettingsBinance_groupbox.ResumeLayout(false);
+            this.BalSettingsBinance_groupbox.PerformLayout();
             this.BalSettingsETHWallet_groupbox.ResumeLayout(false);
             this.BalSettingsETHWallet_groupbox.PerformLayout();
             this.BalSettingsSlack_groupbox.ResumeLayout(false);
@@ -493,9 +512,7 @@ namespace IRTicker
         private System.Windows.Forms.Label BalSettingsCoinbaseAPIKey_label;
         private System.Windows.Forms.Button BalSettingsSave_button;
         private System.Windows.Forms.Button BalSettingsDiscard_button;
-        private System.Windows.Forms.GroupBox BalSettingsTrigonX_groupbox;
-        private System.Windows.Forms.TextBox BalSettingsTrigonXToken_textbox;
-        private System.Windows.Forms.Label BalSettingsTrigonXToken_label;
+        private System.Windows.Forms.GroupBox BalSettingsBinance_groupbox;
         private System.Windows.Forms.GroupBox BalSettingsETHWallet_groupbox;
         private System.Windows.Forms.TextBox BalSettingsETHWallet_textbox;
         private System.Windows.Forms.Label BalSettingsETHWallet_label;
@@ -520,5 +537,9 @@ namespace IRTicker
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox BalSettingsIROTCSGAPIKey_textbox;
+        private System.Windows.Forms.TextBox BalSettingsBinanceAPISecret_textbox;
+        private System.Windows.Forms.Label BalSettingsBinanceAPISecret_label;
+        private System.Windows.Forms.TextBox BalSettingsBinanceAPIKey_textbox;
+        private System.Windows.Forms.Label BalSettingsBinanceAPIKey_label;
     }
 }
