@@ -212,6 +212,9 @@ namespace IRTicker
             IRT.UIControls_Dict["IR"].Account_AUSD_Total = AccountAUSD_total;
             IRT.UIControls_Dict["IR"].Account_AUSD_Value = AccountAUSD_value;
             IRT.UIControls_Dict["IR"].Account_AUSD_Label = AccountAUSD_label;
+            IRT.UIControls_Dict["IR"].Account_XAUT_Total = AccountXAUT_total;
+            IRT.UIControls_Dict["IR"].Account_XAUT_Value = AccountXAUT_value;
+            IRT.UIControls_Dict["IR"].Account_XAUT_Label = AccountXAUT_label;
 
             IRT.UIControls_Dict["IR"].CreateIRAccountControlDictionary();  // now that we have finally opened this form, we can add the form labels to the dictionary
 
@@ -702,7 +705,7 @@ namespace IRTicker
                 oldLabel = IRT.UIControls_Dict["IR"].Label_Dict[AccountSelectedCrypto + "_Account_Value"];
                 oldLabel.ForeColor = Color.FromArgb(64, 64, 64);
 
-                AccountSelectedCrypto = clickedLabel.Text.Substring(0, clickedLabel.Text.IndexOf(':'));
+                AccountSelectedCrypto = (clickedLabel.Text.Substring(0, clickedLabel.Text.IndexOf(':'))).ToUpper();
 
                 AccountOpenOrders_label.Text = AccountSelectedCrypto + " open orders";
                 drawOpenOrders(null);
