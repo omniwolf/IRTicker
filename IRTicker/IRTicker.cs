@@ -32,7 +32,7 @@ namespace IRTicker {
         public Dictionary<string, UIControls> UIControls_Dict;
         private List<string> Exchanges;
         List<string> IRdExchanges = new List<string>() { "IR", "IRUSD", "IRSGD" };
-        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "USDT", "DOT", "GRT", "AAVE", "YFI", "PMGT", "SNX", "COMP", "LINK", "ADA", "UNI", "MATIC", "DOGE", "ADA", "MANA", "SAND", "SHIB", "TRUMP", "AVAX", "PEPE", "RENDER", "WIF", "RLUSD", "BONK", "AUSD", "PENGU", "XAUT" };  // we don't poll the shit coins as often to help with rate limiting
+        private List<string> shitCoins = new List<string>() { "BCH", "LTC", "XRP", "EOS", "OMG", "ZRX", "XLM", "BAT", "USDT", "DOT", "GRT", "AAVE", "YFI", "PMGT", "SNX", "COMP", "LINK", "ADA", "UNI", "MATIC", "DOGE", "ADA", "MANA", "SAND", "SHIB", "TRUMP", "AVAX", "PEPE", "RENDER", "WIF", "RLUSD", "BONK", "AUSD", "PENGU", "XAUT", "AUDM" };  // we don't poll the shit coins as often to help with rate limiting
         private int shitCoinPollRate = 3; // this is how many polls we loop before we call shit coin APIs.  eg 3 means we only poll the shit coins once every 3 polls.
         private WebSocketsConnect wSocketConnect;
         private BlinkStick bStick, bStickETH, bStickUSDT, bStickXRP;
@@ -395,6 +395,9 @@ namespace IRTicker {
             UIControls_Dict["IR"].XAUT_Label = IR_XAUT_Label1;
             UIControls_Dict["IR"].XAUT_Price = IR_XAUT_Label2;
             UIControls_Dict["IR"].XAUT_Spread = IR_XAUT_Label3;
+            UIControls_Dict["IR"].AUDM_Label = IR_AUDM_Label1;
+            UIControls_Dict["IR"].AUDM_Price = IR_AUDM_Label2;
+            UIControls_Dict["IR"].AUDM_Spread = IR_AUDM_Label3;
 
 
             UIControls_Dict["IR"].AvgPrice_BuySell = IR_BuySellComboBox;
@@ -625,6 +628,9 @@ namespace IRTicker {
             UIControls_Dict["IRUSD"].XAUT_Label = IRUSD_XAUT_Label1;
             UIControls_Dict["IRUSD"].XAUT_Price = IRUSD_XAUT_Label2;
             UIControls_Dict["IRUSD"].XAUT_Spread = IRUSD_XAUT_Label3;
+            UIControls_Dict["IRUSD"].AUDM_Label = IRUSD_AUDM_Label1;
+            UIControls_Dict["IRUSD"].AUDM_Price = IRUSD_AUDM_Label2;
+            UIControls_Dict["IRUSD"].AUDM_Spread = IRUSD_AUDM_Label3;
 
 
             // BTCM
