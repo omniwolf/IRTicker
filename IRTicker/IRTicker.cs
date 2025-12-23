@@ -102,7 +102,12 @@ namespace IRTicker {
                     }
 
                     if (bSticks[i].OpenDevice())  // activateee
-                        bSticks[i].Blink("yellow", 1, 200);
+                        try {
+                            bSticks[i].Blink("yellow", 1, 200);
+                        }
+                        catch (Exception ex) {
+                            Debug.Print("BlinkStick " + bSticks[i].Meta.Serial + " open but blink failed.  Error: " + ex.Message);
+                        }
                     else
                         Debug.Print("BlinkStick " + bSticks[i].Meta.Serial + " couldn't be accessed or opened");
 
