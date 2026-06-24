@@ -471,6 +471,9 @@ namespace IRTicker {
             List<CB_Order> openOrders_list;
             try {
                 openOrders_list = JsonConvert.DeserializeObject<List<CB_Order>>(openOrders_raw);
+                if (openOrders_list.Count == 0) {
+                    throw new Exception("No open orders found in the response.");
+                }
             }
             catch (Exception ex) {
                 System.Windows.Forms.MessageBox.Show("Failed to start Coinbase when pulling open orders." + Environment.NewLine + Environment.NewLine + "Response: " + openOrders_raw + Environment.NewLine + Environment.NewLine  + "Error:" + Environment.NewLine + Environment.NewLine + ex.Message);

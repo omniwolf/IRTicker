@@ -78,6 +78,8 @@ namespace IRTicker {
             }
 
 
+
+
             /*if (bSticks.Length == 4) {
                 Debug.Print("bs1: " + bSticks[0].Meta.Serial);
                 Debug.Print("bs2: " + bSticks[1].Meta.Serial);
@@ -188,6 +190,10 @@ namespace IRTicker {
             }
             else Properties.Settings.Default.RefreshFreq = minRefreshFrequency.ToString();
             Properties.Settings.Default.Save();
+
+        
+
+
 
             refreshFrequencyTextbox.Text = Properties.Settings.Default.RefreshFreq.ToString();
 
@@ -340,6 +346,12 @@ namespace IRTicker {
             UIControls_Dict["IR"].GRT_Label = IR_GRT_Label1;
             UIControls_Dict["IR"].GRT_Price = IR_GRT_Label2;
             UIControls_Dict["IR"].GRT_Spread = IR_GRT_Label3;
+            UIControls_Dict["IR"].AUDM_Label = IR_AUDM_Label1;
+            UIControls_Dict["IR"].AUDM_Price = IR_AUDM_Label2;
+            UIControls_Dict["IR"].AUDM_Spread = IR_AUDM_Label3;
+            UIControls_Dict["IR"].AUDX_Label = IR_AUDX_Label1;
+            UIControls_Dict["IR"].AUDX_Price = IR_AUDX_Label2;
+            UIControls_Dict["IR"].AUDX_Spread = IR_AUDX_Label3;
             UIControls_Dict["IR"].UNI_Label = IR_UNI_Label1;
             UIControls_Dict["IR"].UNI_Price = IR_UNI_Label2;
             UIControls_Dict["IR"].UNI_Spread = IR_UNI_Label3;
@@ -636,6 +648,12 @@ namespace IRTicker {
             UIControls_Dict["IRUSD"].AUDM_Label = IRUSD_AUDM_Label1;
             UIControls_Dict["IRUSD"].AUDM_Price = IRUSD_AUDM_Label2;
             UIControls_Dict["IRUSD"].AUDM_Spread = IRUSD_AUDM_Label3;
+            UIControls_Dict["IRUSD"].AUDX_Label = IRUSD_AUDX_Label1;
+            UIControls_Dict["IRUSD"].AUDX_Price = IRUSD_AUDX_Label2;
+            UIControls_Dict["IRUSD"].AUDX_Spread = IRUSD_AUDX_Label3;
+            UIControls_Dict["IRUSD"].RLUSD_Label = IRUSD_RLUSD_Label1;
+            UIControls_Dict["IRUSD"].RLUSD_Price = IRUSD_RLUSD_Label2;
+            UIControls_Dict["IRUSD"].RLUSD_Spread = IRUSD_RLUSD_Label3;
 
 
             // BTCM

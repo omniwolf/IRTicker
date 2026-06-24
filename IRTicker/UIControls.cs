@@ -60,6 +60,7 @@ namespace IRTicker
         public Label PENGU_Label { get; set; }
         public Label XAUT_Label { get; set; }
         public Label AUDM_Label { get; set; }
+        public Label AUDX_Label { get; set; }
 
         public Label XBT_Price { get; set; }
         public Label ETH_Price { get; set; }
@@ -105,6 +106,7 @@ namespace IRTicker
         public Label PENGU_Price { get; set; }
         public Label XAUT_Price { get; set; }
         public Label AUDM_Price { get; set; }
+        public Label AUDX_Price { get; set; }
 
 
 
@@ -152,6 +154,7 @@ namespace IRTicker
         public Label PENGU_Spread { get; set; }
         public Label XAUT_Spread { get; set; }
         public Label AUDM_Spread { get; set; }
+        public Label AUDX_Spread { get; set; }
 
         public ComboBox AvgPrice_BuySell { get; set; }
         public MaskedTextBox AvgPrice_NumCoins { get; set; }
@@ -214,6 +217,7 @@ namespace IRTicker
         public Label Account_BONK_Label { get; set; }
         public Label Account_PENGU_Label { get; set; }
         public Label Account_XAUT_Label { get; set; }
+        public Label Account_AUDX_Label { get; set; }
         public Label Account_AUDM_Label { get; set; }
 
         public Label Account_XBT_Value { get; set; }
@@ -262,6 +266,7 @@ namespace IRTicker
         public Label Account_BONK_Value { get; set; }
         public Label Account_PENGU_Value { get; set; }
         public Label Account_XAUT_Value { get; set; }
+        public Label Account_AUDX_Value { get; set; }
         public Label Account_AUDM_Value { get; set; }
 
 
@@ -315,6 +320,7 @@ namespace IRTicker
         public Label Account_BONK_Total { get; set; }
         public Label Account_PENGU_Total { get; set; }
         public Label Account_XAUT_Total { get; set; }
+        public Label Account_AUDX_Total { get; set; }
         public Label Account_AUDM_Total { get; set; }
 
 
@@ -372,6 +378,7 @@ namespace IRTicker
             if (Account_BONK_Label != null) Label_Dict["BONK_Account_Label"] = Account_BONK_Label;
             if (Account_PENGU_Label != null) Label_Dict["PENGU_Account_Label"] = Account_PENGU_Label;
             if (Account_XAUT_Label != null) Label_Dict["XAUT_Account_Label"] = Account_XAUT_Label;
+            if (Account_AUDX_Label != null) Label_Dict["AUDX_Account_Label"] = Account_AUDX_Label;
             if (Account_AUDM_Label != null) Label_Dict["AUDM_Account_Label"] = Account_AUDM_Label;
 
 
@@ -421,6 +428,7 @@ namespace IRTicker
             if (Account_BONK_Value != null) Label_Dict["BONK_Account_Value"] = Account_BONK_Value;
             if (Account_PENGU_Value != null) Label_Dict["PENGU_Account_Value"] = Account_PENGU_Value;
             if (Account_XAUT_Value != null) Label_Dict["XAUT_Account_Value"] = Account_XAUT_Value;
+            if (Account_AUDX_Value != null) Label_Dict["AUDX_Account_Value"] = Account_AUDX_Value;
             if (Account_AUDM_Value != null) Label_Dict["AUDM_Account_Value"] = Account_AUDM_Value;
 
 
@@ -474,6 +482,7 @@ namespace IRTicker
             if (Account_BONK_Total != null) Label_Dict["BONK_Account_Total"] = Account_BONK_Total;
             if (Account_PENGU_Total != null) Label_Dict["PENGU_Account_Total"] = Account_PENGU_Total;
             if (Account_XAUT_Total != null) Label_Dict["XAUT_Account_Total"] = Account_XAUT_Total;
+            if (Account_AUDX_Total != null) Label_Dict["AUDX_Account_Total"] = Account_AUDX_Total;
             if (Account_AUDM_Total != null) Label_Dict["AUDM_Account_Total"] = Account_AUDM_Total;
         }
 
@@ -527,6 +536,7 @@ namespace IRTicker
             if (PENGU_Label != null) Label_Dict.Add("PENGU_Label", PENGU_Label);
             if (XAUT_Label != null) Label_Dict.Add("XAUT_Label", XAUT_Label);
             if (AUDM_Label != null) Label_Dict.Add("AUDM_Label", AUDM_Label);
+            if (AUDX_Label != null) Label_Dict.Add("AUDX_Label", AUDX_Label);
 
 
 
@@ -574,6 +584,7 @@ namespace IRTicker
             if (PENGU_Price != null) Label_Dict.Add("PENGU_Price", PENGU_Price);
             if (XAUT_Price != null) Label_Dict.Add("XAUT_Price", XAUT_Price);
             if (AUDM_Price != null) Label_Dict.Add("AUDM_Price", AUDM_Price);
+            if (AUDX_Price != null) Label_Dict.Add("AUDX_Price", AUDX_Price);
 
 
             if (XBT_Spread != null) Label_Dict.Add("XBT_Spread", XBT_Spread);
@@ -620,6 +631,7 @@ namespace IRTicker
             if (PENGU_Spread != null) Label_Dict.Add("PENGU_Spread", PENGU_Spread);
             if (XAUT_Spread != null) Label_Dict.Add("XAUT_Spread", XAUT_Spread);
             if (AUDM_Spread != null) Label_Dict.Add("AUDM_Spread", AUDM_Spread);
+            if (AUDX_Spread != null) Label_Dict.Add("AUDX_Spread", AUDX_Spread);
         }
     }
 }

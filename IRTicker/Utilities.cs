@@ -156,8 +156,8 @@ namespace IRTicker {
         public static Color PriceColour(List<Tuple<DateTime, decimal>> priceList) {
 
             //var priceList = priceListSource.ToList();
-            if (priceList.Count <= 1) {  // if there's 1 price, well we can't compare that with anything, so just bail.  if there's no prices, well shit you know you gotta bail
-                //Debug.Print("PriceColour function was sent an empty list.  bailing.");
+            if (priceList.Count <=1) { // if there's1 price, well we can't compare that with anything, so just bail. if there's no prices, well shit you know you gotta bail
+            //Debug.Print("PriceColour function was sent an empty list. bailing.");
                 return Color.Black;
             }
 
@@ -175,33 +175,37 @@ namespace IRTicker {
             }
             */
 
-            //if (priceList == null || priceList.Count == 0 || PriceListLast == null || PriceListFirst == null || PriceListLastItem1 == null || PriceListFirstItem1 == null) return Color.Black;
-            if (priceList.Count < 5) return Color.Black;
+            //if (priceList == null || priceList.Count ==0 || PriceListLast == null || PriceListFirst == null || PriceListLastItem1 == null || PriceListFirstItem1 == null) return Color.Black;
+            if (priceList.Count <5) return Color.Black;
             if (priceListLast.Item1 - priceListFirst.Item1 < TimeSpan.FromMinutes(5)) return Color.Black;
 
+            // Cache the current time once and the last price to avoid expensive calls in tight loops
+            DateTime nowUtc = DateTime.UtcNow;
+            decimal lastPrice = priceListLast.Item2;
 
             foreach (Tuple<DateTime, decimal> pricePoint in priceList) {
-                if (pricePoint.Item1 >= DateTime.Now - TimeSpan.FromMinutes(5)) {
-                    decimal lastPrice = priceList.LastOrDefault().Item2;
-                    if (lastPrice > pricePoint.Item2 * 1.01m) {
+                // Compare using UTC to avoid repeated DateTime.Now costs; convert stored timestamp to UTC if necessary
+                DateTime ptUtc = (pricePoint.Item1.Kind == DateTimeKind.Utc) ? pricePoint.Item1 : pricePoint.Item1.ToUniversalTime();
+                if (ptUtc >= nowUtc - TimeSpan.FromMinutes(5)) {
+                    if (lastPrice > pricePoint.Item2 *1.01m) {
                         // colour dark green
                         //return Color.Lime;
                         return Color.Lime;
                     }
-                    else if (lastPrice > pricePoint.Item2 * 1.005m) {
+                    else if (lastPrice > pricePoint.Item2 *1.005m) {
                         // colour light green etc
                         //return Color.PaleGreen;
                         return Color.MediumAquamarine;
                     }
-                    else if (lastPrice < pricePoint.Item2 * 0.99m) {
+                    else if (lastPrice < pricePoint.Item2 *0.99m) {
                         // colur red
                         return Color.Red;
                     }
-                    else if (lastPrice < pricePoint.Item2 * 0.995m) {
+                    else if (lastPrice < pricePoint.Item2 *0.995m) {
                         // colour light red
                         return Color.LightCoral;
                     }
-                    else {  // anything between 99.5% and 100.5% is not much movement, so we say black.
+                    else { // anything between99.5% and100.5% is not much movement, so we say black.
                         return Color.Black;
                     }
                 }

@@ -623,7 +623,7 @@ namespace IRTicker {
                             if (!Order_OB_IR.TryRemove(order.OrderGuid, out decimal ignore2)) Debug.Print("!! 3 failed to remove (" + pair + ") from guid dict - " + order.OrderGuid);
                         }
                         else {  // else we did NOT find the order in the order guid dictionary.  let's check the main dictionary in case it's there.  if it is remove it.
-                            Debug.Print(DateTime.Now.ToString() + " |(" + pair + ") Trying to cancel event, but it doesn't exist in order guid dictionary - " + order.OrderGuid);
+                            //Debug.Print(DateTime.Now.ToString() + " |(" + pair + ") Trying to cancel event, but it doesn't exist in order guid dictionary - " + order.OrderGuid);
                             foreach (KeyValuePair<decimal, ConcurrentDictionary<string, OrderBook_IR>> priceLevel in OB_IR) {
                                 if (priceLevel.Value.ContainsKey(order.OrderGuid)) {
                                     Debug.Print("- but the other dictionary has it...");
