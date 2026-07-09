@@ -30,6 +30,8 @@ namespace IRTicker {
         private PrivateIR pIR;
         private List<DateTime> ThrottleConnection_BTCM = new List<DateTime>();  // tracks .Start() attempts on the wss API
         private List<DateTime> ThrottleSubscription_BTCM = new List<DateTime>();  // tracks .Send() subscription attempts on the API
+        private List<DateTime> ThrottleConnection_IR = new List<DateTime>();  // tracks .Start() attempts on the IR wss API (shared socket for IR/IRUSD/IRSGD)
+        private bool IR_expectedDisconnect = false;  // set true just before WE intentionally Stop() the IR socket, so DisconnectionHappened doesn't treat it as a failure and trigger a reconnect loop
 
         // constructor
         public WebSocketsConnect(Dictionary<string, DCE> _DCEs, BackgroundWorker _pollingThread, PrivateIR _pIR) {
@@ -122,7 +124,11 @@ namespace IRTicker {
                     Debug.Print(dExchange + " websocket subcribe/unsubscribe - " + (subscribe ? "subscribe" : "unsubscribe") + " event: " + channel);
 
                     if (client_IR.IsRunning) {
-                        //Task.Run(() => 
+                        // NB: deliberately NOT throttling IR subscription Sends. Unlike BTCM, IR uses this same path for routine per-pair
+                        // order-book resyncs ("too many buffered nonces -> dump and restart"), which are a normal recovery mechanism.
+                        // Throttling them starves that recovery and creates a feedback loop. Connection throttling (+ IsReconnectionEnabled=false)
+                        // is the actual anti-ban protection; in-band subscribe messages on an already-open socket are not the spam risk.
+                        //Task.Run(() =>
                         client_IR.Send(channel)
                         //)
                         ;
@@ -253,6 +259,7 @@ namespace IRTicker {
         }
 
         private void stopSockets(List<string> dExchanges) {
+            IR_expectedDisconnect = true;  // this is an intentional stop, don't let DisconnectionHappened treat it as a failure
             client_IR.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "byee");
             foreach (string dExchange in dExchanges) DCEs[dExchange].socketsAlive = false;
             //startSocket_exitEvent.Set();  // hopefully this should let the existing startSockets() sub complete
@@ -274,12 +281,45 @@ namespace IRTicker {
             //using (client_IR = new WebsocketClient(url)) {  getting rid of using statement..
             client_IR = new WebsocketClient(url);
             client_IR.ReconnectTimeout = TimeSpan.FromSeconds(70);
+
+            // Disable the library's built-in auto-reconnect (same as BTCM at BTCM_Connect_v3).  Without this, the library silently
+            // reconnects on failure/timeout, firing WSS handshakes that BYPASS our ThrottleConnection_IR counter - which is exactly
+            // how the app used to spam the exchange.  With it off, every reconnect goes through startSockets() and is throttled.
+            client_IR.IsReconnectionEnabled = false;
+
+            // Because auto-reconnect is off, we need to notice drops ourselves (otherwise recovery waits up to 100s for the heartbeat
+            // timeout in the doWork loop).  This mirrors the BTCM DisconnectionHappened handler: flag the socket down and let the
+            // doWork loop pick up socketsReset and reconnect via the throttled path.  We ignore disconnects that WE caused (Stop()).
+            client_IR.DisconnectionHappened.Subscribe(info =>
+            {
+                if (IR_expectedDisconnect) {
+                    IR_expectedDisconnect = false;  // consume the flag; this was our own Stop(), not a failure
+                    Debug.Print(DateTime.Now + " - IR DisconnectionHappened (expected/intentional, ignored). Type: " + info.Type);
+                    return;
+                }
+                Debug.Print(DateTime.Now + " - IR DisconnectionHappened (unexpected), flagging for reconnect. Type: " + info.Type);
+                foreach (string dExchange in dExchanges) {
+                    DCEs[dExchange].socketsAlive = false;
+                    DCEs[dExchange].CurrentDCEStatus = "Socket error";
+                }
+                pollingThread.ReportProgress(12, "IR");  // 12 is error
+                DCEs["IR"].socketsReset = true;  // doWork only reconnects the "IR" exchange (the shared socket), see IRTicker.cs
+            });
+
             client_IR.ReconnectionHappened.Subscribe(info =>
             {
                 if (info.Type == ReconnectionType.Initial) {
-                    Debug.Print("Initial 'reconnection', ignored");
+                    Debug.Print(DateTime.Now + " - IR Initial connection - subscribing to all pairs");
                     foreach (string dExchange in dExchanges) DCEs[dExchange].socketsAlive = true;
                     foreach (string dExchange in dExchanges) DCEs[dExchange].socketsReset = false;
+
+                    // Subscribe HERE, on the confirmed-up socket, instead of relying on the racy startup subscribe call (which often fires
+                    // before Start() completes -> "sockets down" -> no channels subscribed -> static prices).  Previously the library's
+                    // auto-reconnect would fire the else-branch below and cover this, but that's now disabled (IsReconnectionEnabled=false),
+                    // so the initial subscribe must happen here.  "IR" has to be first.
+                    subscribe_unsubscribe_new("IR", subscribe: true, crypto: "none", fiat: DCEs["IR"].CurrentSecondaryCurrency);
+                    subscribe_unsubscribe_new("IRUSD", subscribe: true, crypto: "none", fiat: DCEs["IRUSD"].CurrentSecondaryCurrency);
+                    subscribe_unsubscribe_new("IRSGD", subscribe: true, crypto: "none", fiat: DCEs["IRSGD"].CurrentSecondaryCurrency);
                 }
                 /*else if (info.Type == ReconnectionType.Lost) {
                     Debug.Print("Lost 'reconnection' ignored, attached to a Reset button click?");
@@ -313,7 +353,41 @@ namespace IRTicker {
                 //}
             });
 
-            Task.Run(() => client_IR.Start());
+            // same throttling story as BTCM: don't spam the IR wss API with connection attempts.  Cap at 100 .Start() attempts in an hour.
+            bool tooManyConnectionAttempts = false;
+            if (ThrottleConnection_IR.Count >= 100) {
+                Debug.Print(DateTime.Now + " - we have over 100 attempts to connect to IR sockets.  Checking if it's within the last hour...");
+                DateTime hundredthFromNewest = ThrottleConnection_IR[ThrottleConnection_IR.Count - 100];
+                if (DateTime.Now < (hundredthFromNewest + TimeSpan.FromHours(1))) {
+                    Debug.Print(" -- it is, throttle code has kicked in.  Won't connect");
+                    foreach (string dExchange in dExchanges) {
+                        DCEs[dExchange].socketsAlive = false;
+                        DCEs[dExchange].CurrentDCEStatus = "Internally throttled";
+                    }
+                    tooManyConnectionAttempts = true;
+                }
+            }
+
+            if (!tooManyConnectionAttempts) {
+                // count the attempt BEFORE starting (same reasoning as BTCM): a failing/blocked connection must still be throttled,
+                // otherwise a URL that never connects could retry unthrottled.
+                ThrottleConnection_IR.Add(DateTime.Now);
+                if (ThrottleConnection_IR.Count > 500) ThrottleConnection_IR.RemoveAt(0);  // clean up the list, don't let it grow forever
+                Task.Run(async () => {
+                    try {
+                        await client_IR.Start();
+                    }
+                    catch (Exception ex) {
+                        // fire-and-forget Start() can throw (bad/unreachable URL, or a rapid Reset disposing this client mid-connect);
+                        // without this it becomes an unobserved task exception.  Log it and flag the socket down.
+                        Debug.Print(DateTime.Now + " - IR client_IR.Start() failed: " + ex.GetType().Name + " - " + ex.Message);
+                        foreach (string dExchange in dExchanges) {
+                            DCEs[dExchange].socketsAlive = false;
+                            DCEs[dExchange].CurrentDCEStatus = "Socket error";
+                        }
+                    }
+                });
+            }
 
             //DCEs["IR"].socketsReset = false;  // i think this needs to be set.
 
@@ -473,9 +547,20 @@ namespace IRTicker {
             }
 
             if (!tooManyConnectionAttempts) {
-                await client_BTCM.Start();
+                // count the attempt BEFORE awaiting: a failing/blocked connection is exactly the spam scenario, so a Start() that
+                // throws must still count towards the throttle or rapid retries could hammer the exchange unthrottled.
                 ThrottleConnection_BTCM.Add(DateTime.Now);
                 if (ThrottleConnection_BTCM.Count > 500) ThrottleConnection_BTCM.RemoveAt(0);  // clean up the list, don't let it grow forever
+                try {
+                    await client_BTCM.Start();
+                }
+                catch (Exception ex) {
+                    // Start() throws TaskCanceledException if the connection times out / is blocked, or if a rapid Reset disposed this
+                    // client mid-connect (DisconnectionHappened races with a fresh BTCM_Connect_v3).  Don't let it crash the app.
+                    Debug.Print(DateTime.Now + " - BTCM client_BTCM.Start() failed: " + ex.GetType().Name + " - " + ex.Message);
+                    DCEs["BTCM"].socketsAlive = false;
+                    DCEs["BTCM"].CurrentDCEStatus = "Socket error";
+                }
             }
 
             //Task.Run(() => client_BTCM.Start());
