@@ -1,7 +1,7 @@
 # IRTicker Rebuild — Design Spec (living document)
 
 **Started:** 2026-07-09
-**Status:** In progress — *Main window designed and approved. Other surfaces still to design.*
+**Status:** In progress — *Main window, trading window, and average-price tracker designed and approved. Remaining surfaces (Slack/volume-sentiment, Nanoleaf, architecture, Phase 2/3) still to design.*
 **Companion review of the old app:** see `REBUILD_NOTES.md` (repo root).
 
 ---
@@ -77,9 +77,43 @@
 
 ---
 
+## Trading window — DESIGNED ✅  *(order-entry pixel layout deferred to the baiter, Phase 2)*
+
+Separate window (lives on its own virtual desktop). **Taller, not wider** — tight width (~350px), tall (~800–1000px of height available); the vertical space goes to a deep order book.
+
+**Behaviour (locked; layout of the entry controls to be finalised with the baiter):**
+- **Account** selector — **unlimited** stored accounts (secure storage). **Selecting an account clears the fiat**, forcing a re-pick (prevents trading against the wrong fiat after an account switch — a real bug today).
+- **Crypto + fiat** selectors. **Order type defaults to Limit** (Market available).
+- **BUY / SELL** — large colour-coded toggle (green / red) that recolours the whole order-entry area. Direction must be unmistakable (wrong-direction trade is the scary failure).
+- **Price + Volume** — grouped, sized inputs (not full-width). Volume is always the **primary** (crypto).
+- **Order book** — shows the side you'd trade against; columns price / size / **cumulative**. Setting the **limit price highlights crossable orders** (better than the limit) in green. **Double-click a level → volume = cumulative depth to that level** (limit price untouched). Tall + scrollable.
+- **Sweep** button — sets volume to **all crossable orders inside the limit** and executes; must be **callable programmatically by the baiter**.
+- **Volume validation** — field goes **red** on insufficient balance (buy: order fiat value > fiat balance; sell: volume > crypto balance) or insufficient book depth.
+- **Max** button — **Sell only** (= crypto balance). **Hidden on Buy** (fiat ÷ price is fragile to a price uptick).
+- **Place button** dynamic text: **"Place limit buy/sell"** (rests) vs amber **"Marketable buy/sell — crosses"** (takes liquidity). Market type → "Buy/Sell now"; baiter → "Start baitin'". **Spacebar confirms.**
+- **Colour semantics:** red = real error (insufficient balance); **amber = will cross / take liquidity** (usually intentional in the sweep flow, so not alarm-red).
+- **Balances** — compact scrollable pane; the **two active-trade currencies pinned to the top**. Deposit address removed. Fee shown as a one-liner.
+- **Baiter (Phase 2)** — space reserved below the order book; adds its own controls (price ceiling, size, start/stop). The precise arrangement of the entry controls is deliberately deferred until then.
+
+---
+
+## Average-price tracker — DESIGNED ✅
+
+A **tabbed single window** — multiple trackers as tabs (`＋` to add), each independent. (Supersedes the earlier "multiple separate windows" idea.)
+
+- **Per tab:** a free-text **Comment** (also serves as the tab label); crypto/fiat pair; **Buy/Sell direction**, colour-coded green/red like the trade window.
+- **Start / End date-time** — **time is the primary field** (prominent); the date is small/secondary (rarely changed — trackers seldom run more than ~an hour). **Start defaults to now** on open / new tab. End can be **"ongoing"** (keeps counting live fills).
+- **Target total** — settable in **either crypto or secondary** (unit toggle); target / remaining / progress all switch currency with the toggle.
+- **Results:** Traded shown in **both** crypto and fiat; volume-weighted **avg price**; **progress bar colour-coded** — blue (going, <100%), green (done, =100%), **red (OVER, >100%, shows overshoot)**; remaining in both units.
+- **Copy icons** on fiat-traded, avg price, and both remaining values (raw number, for pasting into other systems).
+- **Refresh** button (manual re-pull) alongside live auto-update.
+- **"Send remaining → trade volume"** — pushes the outstanding amount into the trading window's volume field.
+- *Optional later:* a per-fill list to audit which trades are counted.
+
+---
+
 ## Still to design (next sessions)
 
-- [ ] **Trading window** (separate window; most-used surface; full-precision order-book depth; market/limit orders; where average-fill-price lives — integrated vs separate).
 - [ ] **Exchanges / volume-comparison panel** (BTCM + Kraken; the sentiment computation).
 - [ ] **Nanoleaf integration** (reference the existing C# POC).
 - [ ] **Slack status/name integration.**
@@ -88,4 +122,4 @@
 
 ---
 
-*Next step per brainstorming: design the trading window, then the architecture/data-model, then transition to a per-phase implementation plan (writing-plans) once Phase 1 design is complete.*
+*Next step per brainstorming: design the remaining Phase-1 surfaces (Slack/volume-sentiment, Nanoleaf) and the architecture/data-model, then transition to a per-phase implementation plan (writing-plans) once Phase 1 design is complete.*
